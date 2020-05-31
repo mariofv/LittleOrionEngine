@@ -20,6 +20,7 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton> & skeleton
 			continue;
 		}
 		float weight = j != ClipType::ACTIVE ? playing_clips[j].current_time / (active_transition->interpolation_time * 1.0f) : 0.0f;
+		//float current_keyframe = playing_clips[j].current_time*(((clip->animation->frames) - 1.0f) / clip->animation_time) + 1.0f;
 		float current_keyframe = ((playing_clips[j].current_time*(clip->animation->frames - 1)) / clip->animation_time) + 1;
 		size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
 		size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
@@ -73,12 +74,12 @@ bool AnimController::Update()
 {
 	for (auto & playing_clip : playing_clips)
 	{
-		playing_clip.Update(1.0f);
+		//playing_clip.Update(1.0f);
 		if (active_state)
 		{
 			playing_clip.Update(active_state->speed);
 		}
-		if (active_transition) 
+		if (apply_transition) 
 		{
 			playing_clip.Update(1.0f);
 		}
@@ -144,13 +145,13 @@ void PlayingClip::Update(float speed)
 	{
 		return;
 	}
-	current_time = (current_time + static_cast<int>(App->time->delta_time)) * speed;
+	current_time = (current_time + (App->time->delta_time)* speed) ;
 	if (current_time >= clip->animation_time)
 	{
 		if (clip->loop)
 		{
 
-			current_time = current_time % clip->animation_time;
+			current_time = current_time / clip->animation_time;//before it was %
 		}
 		else
 		{

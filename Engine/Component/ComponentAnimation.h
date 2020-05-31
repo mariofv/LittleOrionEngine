@@ -33,7 +33,8 @@ public:
 	void Copy(Component* component_to_copy) const override;
 
 	void SetStateMachine(uint32_t state_machine_uuid);
-
+	//to find it from NodeEditor
+	AnimController* GetAnimController();
 	//API
 	ENGINE_API void Play();
 	ENGINE_API void Stop();
@@ -46,6 +47,8 @@ public:
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
+	
+	bool playing = false;
 private:
 	void GetChildrenMeshes(GameObject * current_mesh);
 	void GenerateJointChannelMaps();
@@ -54,8 +57,7 @@ private:
 	std::vector<ComponentMeshRenderer*> skinned_meshes;
 	AnimController* animation_controller = nullptr;
 	std::vector<float4x4> pose;
-	bool playing = false;
-
+	
 	friend class PanelComponent;
 	
 };

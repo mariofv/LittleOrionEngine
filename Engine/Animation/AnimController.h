@@ -15,7 +15,7 @@ struct Transition;
 struct PlayingClip
 {
 	std::shared_ptr<Clip> clip;
-	int current_time = 0;
+	float current_time = 0;
 	bool playing = false;
 	void Update(float speed);
 };
@@ -41,6 +41,7 @@ public:
 	void SetStateMachine(uint32_t state_machine_uuid);
 	void GetClipTransform(const std::shared_ptr<Skeleton> & skeleton, std::vector<math::float4x4>& pose);
 	void StartNextState(const std::string& trigger);
+	std::shared_ptr<Transition> active_transition;
 private:
 	void SetActiveState(std::shared_ptr<State> & state);
 	void FinishActiveState();
@@ -50,7 +51,7 @@ public:
 
 private:
 	std::shared_ptr<State> active_state;
-	std::shared_ptr<Transition> active_transition;
+	
 	bool apply_transition = false;
 	friend class PanelComponent;
 };

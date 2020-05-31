@@ -2,10 +2,13 @@
 #define _PANELSTATEMACHINE_H_
 #define IMGUI_DEFINE_MATH_OPERATORS
 
-#include "NodeEditor/imgui_node_editor.h"
+#include "ax/Widgets.h"
+
+#include "Component/ComponentAnimation.h"
+
 #include "EditorUI/Panel/Panel.h"
 
-#include "ax/Widgets.h"
+#include "NodeEditor/imgui_node_editor.h"
 
 #include <vector>
 #include <string>
@@ -13,8 +16,6 @@
 #include <map>
 #include <algorithm>
 #include <utility>
-
-//namespace ed = ax::NodeEditor; Implement in the future
 
 using namespace ax;
 using ax::Widgets::IconType;
@@ -39,17 +40,14 @@ struct NodeInfo
 	ax::NodeEditor::PinId input;
 	ax::NodeEditor::PinId output;
 	ImVec2 Pos, Size = {100.0f, 100.0f};
-	//ImColor Color;
+	ImVec4  Color;
 	std::shared_ptr<State> state;
 	float speed = 1.0f;
-	//drawing pins
-	ImVec2 GetInputSlotPos(std::string target) const { return ImVec2(Pos.x, Pos.y); }
-	ImVec2 GetOutputSlotPos(std::string source) const { return ImVec2(Pos.x, Pos.y); }
-	//
+	
 };
 
-
 class File;
+
 class PanelStateMachine : public Panel
 {
 
@@ -67,14 +65,16 @@ public:
 	void LeftPanel();
 	void CreateNodeMenu();
 
+	//polishing node editor
 	ImDrawList* draw_list = nullptr;
 	const float NODE_SLOT_RADIUS = 6.2f;
-	
-	
+
+	//debug playing animation
+	ComponentAnimation* animation_comp = nullptr;
+
 private:
 	std::vector<NodeInfo*> GetSelectedNodes();
 	std::vector<LinkInfo*> GetSelectedLinks();
-
 private:
 	ax::NodeEditor::EditorContext* editor_context = nullptr;
 	std::shared_ptr<StateMachine> state_machine;
@@ -85,11 +85,12 @@ private:
 	//Editor
 	ImVector<LinkInfo*> links;
 	ImVector<NodeInfo*> nodes;
-
-
 	int uniqueid = 1;
 	std::shared_ptr<State> selected_state;
+	std::vector<NodeInfo*> selected_nodes;
+	NodeInfo* selected_node = nullptr ;
 	bool modified_by_user = false;
+
 };
 #endif // !_PANELSTATEMACHINE_H_
 

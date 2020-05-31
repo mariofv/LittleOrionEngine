@@ -1,16 +1,22 @@
 #include "PanelStateMachine.h"
-#include "Filesystem/File.h"
+
+#include "Animation/AnimController.h"
 
 #include "EditorUI/Helper/ImGuiHelper.h"
+
+#include "Filesystem/File.h"
+
 #include "Main/Application.h"
+
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleFileSystem.h"
+#include "Module/ModuleEditor.h"
+
 #include "ResourceManagement/Resources/StateMachine.h"
 
 #include <imgui_internal.h>
 #include <imgui_stdlib.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
-
 
 PanelStateMachine::PanelStateMachine()
 {
@@ -36,6 +42,17 @@ PanelStateMachine::~PanelStateMachine()
 void PanelStateMachine::Render()
 {
 	modified_by_user = false;
+	//initialize GO to get corresponding animation controller
+	if (App->editor->selected_game_object != nullptr)
+	{
+		for (auto & component : App->editor->selected_game_object->components)
+		{
+			if (component->GetType() == Component::ComponentType::ANIMATION)
+			{
+				animation_comp = (ComponentAnimation*)App->editor->selected_game_object->GetComponent(Component::ComponentType::ANIMATION);
+			}
+		}
+	}
 	if (ImGui::Begin(window_name.c_str(), &opened, ImGuiWindowFlags_MenuBar))
 	{
 			ax::NodeEditor::SetCurrentEditor(editor_context);
@@ -58,10 +75,10 @@ void PanelStateMachine::Render()
 				ax::NodeEditor::NavigateToContent(0.0f);
 				firstFrame = false;
 			}
-
 	}
 	ImGui::End();
-	if (modified_by_user)//save each time user modifies smth
+	//save each time user modifies smth
+	if (modified_by_user)
 	{
 		App->resources->Save<StateMachine>(state_machine);
 	}
@@ -70,8 +87,7 @@ void PanelStateMachine::RenderStates()
 {
 	ImGuiIO& io = ImGui::GetIO();
 	ImVec2 position(10,10);
-	static ImVec2 scrolling = ImVec2(0.0f, 0.0f);
-	const ImVec2 offset = ImGui::GetCursorScreenPos() + scrolling;
+
 	draw_list = ImGui::GetWindowDrawList();
 	for (auto & node : nodes)
 	{
@@ -81,7 +97,6 @@ void PanelStateMachine::RenderStates()
 		if (firstFrame)
 		{
 			ax::NodeEditor::SetNodePosition(node->id, position);
-			node->Pos = position;
 			if (ImGui::IsMouseDragging(ImGuiMouseButton_Left))
 			{
 				node->Pos = node->Pos + io.MouseDelta;
@@ -90,8 +105,9 @@ void PanelStateMachine::RenderStates()
 		ax::NodeEditor::BeginNode(node->id);
 		ImGui::PushItemWidth(node->Size.x);
 		uint64_t old_hash = node->state->name_hash;
-		//ImGui::BeginHorizontal("State:", ImVec2(node->Size.x, 20), -1.0f);
-		ImGui::BeginVertical("", ImVec2(0, 0), -1.0f);
+		
+		ImGui::TextColored(ImVec4(0, 0, 255, 255), "State Name");
+		ImGui::SameLine();
 		if(ImGui::InputText("###Node name Input", &node->state->name))
 		{
 			node->state->name_hash = std::hash<std::string>{}(node->state->name);
@@ -108,7 +124,6 @@ void PanelStateMachine::RenderStates()
 			}
 			modified_by_user = true;
 		}
-		//ImGui::EndHorizontal();
 		
 		std::string clip_name = node->state->clip ? node->state->clip->name : "Clip";
 		ImGui::Button(clip_name.c_str(), ImVec2(node->Size.x, 0));
@@ -117,12 +132,11 @@ void PanelStateMachine::RenderStates()
 		{
 			state_machine->AddClipToState(node->state, incoming_animation_uuid);
 		}
-
 		if (node->state->clip)
 		{
 			ImGui::Checkbox("Loop", &node->state->clip->loop);
 			modified_by_user = true;
-			ImGui::SameLine();
+			ImGui::SameLine(node->Size.x/2 + 20);
 		}
 		bool is_default_state = node->state->name_hash == state_machine->default_state;
 		if (ImGui::Checkbox("Default", &is_default_state))
@@ -131,50 +145,88 @@ void PanelStateMachine::RenderStates()
 			modified_by_user = true;
 		}
 		
-		if (ImGui::InputFloat("Speed", &node->speed, 0.1f, 1.0f, "%.2f", 0))
+		if (ImGui::InputFloat("Speed", &node->speed, 0.5f, 0.0f, "%.2f", 0))
 		{
 			node->state->speed = node->speed;
 			modified_by_user = true;
 		}
-		//ImGui::BeginGroup();
-		auto alpha = ImGui::GetStyle().Alpha; //to get alpha
-		ImGui::BeginHorizontal("State:", ImVec2(node->Size.x, 0), 0.0f);
+
+		ImGui::BeginGroup();
 		ax::NodeEditor::BeginPin(node->input, ax::NodeEditor::PinKind::Input);
-		//Testing alignment to fix transition clipping nicely on pinsIO
-		//ax::NodeEditor::PinPivotAlignment(ImVec2(0.5f, 0.5f));
-		//ax::NodeEditor::PinPivotSize(ImVec2(0.0f, 0.0f));
-		ImGui::Text("In");
-		//draw_list->AddCircle(node->Pos + ImVec2(-node->Size.x, node->Size.y), NODE_SLOT_RADIUS, IM_COL32(255, 150, 150, 150), 100.0f, 1.5f);
-		
+		Widgets::Icon(node->Size/5, ax::Drawing::IconType::Diamond, true, ImVec4(255, 127, 80, 255), ImVec4(255, 127, 80, 255));
 		ax::NodeEditor::EndPin();
-		//ImGui::EndGroup();
-		ImGui::SameLine(node->Size.x, -1.0f);
-		//ImGui::BeginGroup();
+		ImGui::EndGroup();
+
+		ImGui::SameLine(node->Size.x - 1.5);
+
+		ImGui::BeginGroup();
 		ax::NodeEditor::BeginPin(node->output, ax::NodeEditor::PinKind::Output);
-		//ax::NodeEditor::PinPivotAlignment(ImVec2(0.0f, 0.5f));
-		//ax::NodeEditor::PinPivotSize(ImVec2(0.0f, 0.0f));
-		ImGui::Text("Out");
-		//draw_list->AddTriangle(node->Pos + ImVec2(-node->Size.x, node->Size.y), node->Pos + ImVec2(-node->Size.x, node->Size.y-1), node->Pos + ImVec2(-node->Size.x+10, node->Size.y - 5), IM_COL32(150, 150, 255, 150), 2.0f);
-		
+		Widgets::Icon(node->Size / 5, ax::Drawing::IconType::Flow, true, ImVec4(0, 0, 255, 255), ImVec4(0, 0, 255, 255));
 		ax::NodeEditor::EndPin();
-		ImGui::EndHorizontal();
-		//ImGui::EndGroup();
+		ImGui::EndGroup();
+
 		ax::NodeEditor::EndNode();
-		ImGui::EndVertical();
+		
+		selected_nodes = GetSelectedNodes();
+
 		if (ImGui::IsMouseClicked(1) && ImGui::IsItemHovered())
 		{
 			ax::NodeEditor::Suspend();
 			ImGui::OpenPopup("Create State");
 			ax::NodeEditor::Resume();
 		}
+		//update node->position
 		position = ax::NodeEditor::GetNodePosition(node->id);
 		position.x+= ax::NodeEditor::GetNodeSize(node->id).x;
 		node->Pos = position;
 
 		ImGui::PopItemWidth();
 		ImGui::PopID();
+		
+		//get the current running animation controller to verify playing clip and select corresponding node/link
+		if (animation_comp != nullptr)
+		{
+			AnimController* anim = nullptr;
+			if (animation_comp->GetAnimController() != nullptr)
+			{
+				anim = animation_comp->GetAnimController();
+			}
+			if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered() || animation_comp->playing == true)
+			{
+				
+				for (auto & playing_clip : anim->playing_clips)
+				{
+					if (playing_clip.playing == true && playing_clip.clip->name == node->state->clip->name)
+					{
+						ax::NodeEditor::SelectNode(node->id);
+					}
+				}
+			}
 
+			//for each transition currently on progress, animate the corresponding transition link
+			if (anim->active_transition)
+			{
+				for (auto& link : links)
+				{
+					if (anim->active_transition->source_hash == link->transition->source_hash && anim->active_transition->target_hash == link->transition->target_hash)
+					{
+						ax::NodeEditor::Flow(link->id);
+					}
+					
+				}
+			}
+		}
+
+		//for each animation clip that is currently playing, display circle on correspodning node->state
+		for(auto& selected : selected_nodes)
+		{
+			if (node == selected)
+			{
+				draw_list->AddCircleFilled(node->Pos, NODE_SLOT_RADIUS, IM_COL32(0, 0, 255, 255), 12);
+			}
+		}
 	}
+
 	for (auto& link : links)
 	{
 		ax::NodeEditor::Link(link->id, link->input_id, link->output_id);
@@ -247,24 +299,18 @@ void PanelStateMachine::InteractionCreation()
 					std::shared_ptr<Transition> new_transition = std::make_shared<Transition>();
 					std::string source_name;
 					std::string target_name;
-					ImVec2 p1 = { 0.0f, 0.0f };
-					ImVec2 p2 = { 0.0f, 0.0f };
 					for (auto node : nodes)
 					{
 						if (node->input == end_pin_id)
 						{
 							new_transition->target_hash = node->state->name_hash;
 							target_name = node->state->name;
-							p2 = node->GetInputSlotPos(target_name);
 						}
 
 						if (node->output == start_pin_id)
 						{
 							new_transition->source_hash = node->state->name_hash;
 							source_name = node->state->name;
-							p1 = node->GetOutputSlotPos(source_name);
-							//draw_list = ImGui::GetWindowDrawList();
-							//draw_list->AddCircleFilled(node->Pos, NODE_SLOT_RADIUS, IM_COL32(255, 150, 150, 150));
 						}
 					}
 					state_machine->transitions.push_back(new_transition);
@@ -272,6 +318,7 @@ void PanelStateMachine::InteractionCreation()
 
 					// Draw new link.
 					ax::NodeEditor::Link(links.back()->id, links.back()->input_id, links.back()->output_id);
+				
 				}
 
 			}
@@ -285,7 +332,6 @@ void PanelStateMachine::InteractionCreation()
 				ImGui::OpenPopup("Editor Menu");
 				ax::NodeEditor::Resume();
 			}
-
 		}
 	}
 	ax::NodeEditor::EndCreate();
@@ -304,7 +350,6 @@ void PanelStateMachine::CreateNodeMenu()
 				state_machine->states.push_back(node->state);
 				node->input = uniqueid++;
 				node->output = uniqueid++;
-				node->speed = uniqueid++;
 				nodes.push_back(std::move(node));
 			}
 			ImGui::EndMenu();
@@ -313,6 +358,7 @@ void PanelStateMachine::CreateNodeMenu()
 	}
 	ax::NodeEditor::Resume();
 }
+
 
 std::vector<NodeInfo*> PanelStateMachine::GetSelectedNodes()
 {
@@ -352,24 +398,16 @@ std::vector<LinkInfo*> PanelStateMachine::GetSelectedLinks()
 
 void PanelStateMachine::LeftPanel()
 {
+	
 	if (ImGui::BeginChild("Details", ImVec2(300, 0)))
 	{
-		if (ImGui::Button("Save"))
-		{
-			modified_by_user = true;
-			App->resources->Save<StateMachine>(state_machine);
-			//TODO: Change this to be saved after eachtime user modifies anything, see PanelMaterial for reference
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Load"))
-		{
-			OpenStateMachine(state_machine->GetUUID());
-		}
 		ImGui::Separator();
 		auto& links = GetSelectedLinks();
 		for (auto & link : links)
 		{
-			ImGui::Text(link->source.c_str());ImGui::SameLine(); ImGui::Text("->");ImGui::SameLine(); ImGui::Text(link->target.c_str());
+			ImGui::LabelText("Transition From: ", link->source.c_str()); 
+			ImGui::LabelText("To: ", link->target.c_str());
+			//ImGui::Text(link->source.c_str());ImGui::SameLine(); ImGui::Text("->");ImGui::SameLine(); ImGui::Text(link->target.c_str());
 			ImGui::PushID(link->id.AsPointer());
 			ImGui::Text("Interpolation time: ");
 			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(link->transition->interpolation_time)); ImGui::SameLine(); ImGui::Text("ms");
@@ -385,6 +423,18 @@ void PanelStateMachine::LeftPanel()
 			ImGui::InputText("###Trigger Name", &(link->transition->trigger));
 			ImGui::PopID();
 		}
+		ImGui::Separator();
+		if (ImGui::Button("Save"))
+		{
+			modified_by_user = true;
+			App->resources->Save<StateMachine>(state_machine);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Load"))
+		{
+			OpenStateMachine(state_machine->GetUUID());
+		}
+		ImGui::Separator();
 	}
 	ImGui::EndChild();
 	ImGui::SameLine(0.0f, 12.0f);
@@ -412,7 +462,6 @@ void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 		node->state = state;
 		node->output = uniqueid++;
 		node->input = uniqueid++;
-		node->speed = uniqueid++;
 		nodes.push_back(node);
 	}
 

@@ -499,7 +499,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 				break;
 			}
 			ImGui::Checkbox("Loop", &(playing_clip.clip->loop));
-			ImGui::SliderInt("Animation time", &playing_clip.current_time, 0, playing_clip.clip->animation_time);
+			ImGui::SliderFloat("Animation time", &playing_clip.current_time, 0, playing_clip.clip->animation_time);
 		}
 
 	}

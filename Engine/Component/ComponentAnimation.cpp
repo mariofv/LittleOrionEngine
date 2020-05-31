@@ -23,6 +23,11 @@ ComponentAnimation::ComponentAnimation(GameObject* owner) : Component(owner, Com
 	Init();
 }
 
+AnimController* ComponentAnimation::GetAnimController()
+{
+	return animation_controller;
+}
+
 void ComponentAnimation::Init()
 {
 	skinned_meshes.clear();
@@ -75,7 +80,7 @@ void ComponentAnimation::Play()
 	{
 		return;
 	}
-	playing_clip->current_time = 0;
+	playing_clip->current_time = 0.0f;
 	playing_clip->playing = true;
 	playing = true;
 }

@@ -24,7 +24,7 @@ struct Clip
 
 	//RunTime only
 	std::unordered_map<uint32_t,std::vector<size_t>> skeleton_channels_joints_map;
-	int animation_time = 0;
+	float animation_time = 0.0f;
 };
 
 struct State
