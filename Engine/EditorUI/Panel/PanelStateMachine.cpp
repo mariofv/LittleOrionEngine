@@ -405,10 +405,11 @@ void PanelStateMachine::LeftPanel()
 		auto& links = GetSelectedLinks();
 		for (auto & link : links)
 		{
-			ImGui::LabelText("Transition From: ", link->source.c_str()); 
-			ImGui::LabelText("To: ", link->target.c_str());
-			//ImGui::Text(link->source.c_str());ImGui::SameLine(); ImGui::Text("->");ImGui::SameLine(); ImGui::Text(link->target.c_str());
+			/*ImGui::LabelText(link->source.c_str(),"Transition From:");
+			ImGui::LabelText(link->target.c_str(), "Transition To:");*/
+			ImGui::Text(link->source.c_str()); ImGui::SameLine(); ImGui::Text("->"); ImGui::SameLine(); ImGui::Text(link->target.c_str());
 			ImGui::PushID(link->id.AsPointer());
+			ImGui::Separator();
 			ImGui::Text("Interpolation time: ");
 			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(link->transition->interpolation_time)); ImGui::SameLine(); ImGui::Text("ms");
 			ImGui::Spacing();
@@ -419,7 +420,7 @@ void PanelStateMachine::LeftPanel()
 			{
 				ImGui::InputScalar("Priority", ImGuiDataType_U64, &(link->transition->priority));
 			}
-			ImGui::Text("Trigger Name:");
+			ImGui::BulletText("Trigger Name:");
 			ImGui::InputText("###Trigger Name", &(link->transition->trigger));
 			ImGui::PopID();
 		}
