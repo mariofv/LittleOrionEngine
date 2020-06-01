@@ -31,6 +31,7 @@ struct CurrentModelData
 	float scale = 1.f;
 	std::map<std::string, uint32_t> skeleton_cache;
  ModelMetafile* model_metafile;
+ bool remmaped_changed = false;
 };
 
 public:
