@@ -9,10 +9,10 @@
 #include "Module/ModuleResourceManager.h"
 #include "Main/GameObject.h"
 
+#include "ResourceManagement/Metafile/ModelMetafile.h"
 #include "ResourceManagement/Resources/Material.h"
 #include "ResourceManagement/Resources/Mesh.h"
 #include "ResourceManagement/Resources/Skeleton.h"
-#include "ResourceManagement/Metafile/ModelMetafile.h"
 
 #include <stack>
 

@@ -3,9 +3,9 @@
 #include "EditorUI/Helper/ImGuiHelper.h"
 
 #include "Main/Application.h"
-#include "Main/Application.h"
-#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleFileSystem.h"
+#include "Module/ModuleResourceManager.h"
+#include "Module/ModuleScene.h"
 
 #include "ResourceManagement/Metafile/Metafile.h"
 #include "ResourceManagement/Metafile/ModelMetafile.h"
@@ -50,7 +50,13 @@ void PanelMetaFile::ApplyMetafileChanges(Metafile * metafile)
 	App->resources->metafile_manager->UpdateMetafile(*metafile);
 	Path* imported_file_path = App->filesystem->GetPath(metafile->imported_file_path);
 	App->resources->Import(*imported_file_path, true);
-	App->resources->CleanResourceCache();
+
+	bool found = App->resources->CleanResourceFromCache(metafile->uuid);
+	if (found)
+	{
+		App->scene->SaveTmpScene();
+		App->scene->LoadScene();
+	}
 }
 
 void PanelMetaFile::ShowSpecializedMetaFile(Metafile * metafile)
