@@ -336,37 +336,45 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			ImGui::DragFloat("Life (in seconds)", &particle_system->particles_life_time, 1.0F, 0.0F, 100.0F);
 			ImGui::Spacing();
 
-			/*ImGui::DragInt("Number of Particles", &particle_system->max_particles, 1.0F, 0.0F, 1000.0F);
-			ImGui::Spacing();*/
-
 			ImGui::DragFloat("Time Between Particles", &particle_system->time_between_particles, 0.1F, 0.0F, 10.0f);
 			ImGui::Spacing();
-			if (particle_system->enabled_random_x)
+			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::BOX)
 			{
-				ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 1000);
-				ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -1000, 0);
-			}
-			else
-			{
-				ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -100, 1000);
-			}
-			ImGui::SameLine();
-			ImGui::Checkbox("Rand X", &particle_system->enabled_random_x);
+				if (particle_system->enabled_random_x)
+				{
+					ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 1000);
+					ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -1000, 0);
+				}
+				else
+				{
+					ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -100, 1000);
+				}
+				ImGui::SameLine();
+				ImGui::Checkbox("Rand X", &particle_system->enabled_random_x);
 
-			ImGui::Spacing();
+				ImGui::Spacing();
 
-			if (particle_system->enabled_random_z)
-			{
-				ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 1000);
-				ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -1000, 0);
+				if (particle_system->enabled_random_z)
+				{
+					ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 1000);
+					ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -1000, 0);
+				}
+				else
+				{
+					ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -100, 1000);
+				}
+				ImGui::SameLine();
+				ImGui::Checkbox("Rand Z", &particle_system->enabled_random_z);
+			
 			}
-			else
+			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::CONE)
 			{
-				ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -100, 1000);
+				ImGui::DragFloat("Outer radius", &particle_system->outer_radius, 0.1F, 0.1, 10);
+				ImGui::DragFloat("Inner radius", &particle_system->inner_radius, 0.1F, 0.1, 10);
 			}
-			ImGui::SameLine();
-			ImGui::Checkbox("Rand Z", &particle_system->enabled_random_z);
 		}
+
+		//Color of Particles
 		if (ImGui::CollapsingHeader(ICON_FA_SQUARE "Color Over Time"))
 		{
 			ImGui::Checkbox("Fade", &particle_system->color_fade);

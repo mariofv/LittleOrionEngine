@@ -32,7 +32,6 @@ void ComponentParticleSystem::Init()
 		particles[i].particle_scale = 1.0F;
 	}
 	
-	
 }
 
 unsigned int ComponentParticleSystem::FirstUnusedParticle()
@@ -59,9 +58,8 @@ unsigned int ComponentParticleSystem::FirstUnusedParticle()
 
 void ComponentParticleSystem::RespawnParticle(Particle& particle)
 {
-	float random_x = (rand() % ((max_range_random_x - min_range_random_x) + 1) + min_range_random_x) / 100.f;
-
-	float random_z = (rand() % ((max_range_random_z - min_range_random_z) + 1) + min_range_random_z) / 100.f;
+	particle.position = float3(0.0f, 0.0f, 0.0f);
+	particle.rotation = owner->transform.GetGlobalRotation();
 
 	float scale = (rand() % ((max_size_of_particle - min_size_of_particle) + 1) + min_size_of_particle) / 100.f;
 
@@ -74,8 +72,8 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 		particle.particle_scale = 1.0f;
 	}
 
-	particle.position = owner->transform.GetGlobalTranslation();
-	particle.rotation = owner->transform.GetGlobalRotation();
+	
+	
 
 	switch (type_of_particle_system)
 	{
@@ -83,24 +81,45 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 			particle.velocity = float3::RandomDir(LCG(), velocity_particles) / 1000;
 		break;
 		case BOX:
+		{
+			float random_x = (rand() % ((max_range_random_x - min_range_random_x) + 1) + min_range_random_x) / 100.f;
+
+			float random_z = (rand() % ((max_range_random_z - min_range_random_z) + 1) + min_range_random_z) / 100.f;
+
 			particle.velocity.y = velocity_particles / 1000;
 			if (enabled_random_x)
 			{
-				particle.position.x += random_x;
+				particle.position.x = random_x;
 			}
 			else
 			{
-				particle.position.x += position_x / 100.0F;
+				particle.position.x = position_x / 100.0F;
 			}
 			if (enabled_random_z)
 			{
-				particle.position.z += random_z;
+				particle.position.z = random_z;
 			}
 			else
 			{
-				particle.position.z += position_z / 100.0F;
+				particle.position.z = position_z / 100.0F;
 			}
+		
 		break;
+		}
+		case CONE:
+			
+			float angle = ((rand() % 100)/100.f) * 2 * math::pi;
+			float radius = inner_radius * sqrt((rand() % 100) / 100.f);
+			float proportion = outer_radius / inner_radius;
+			particle.position.x = radius * math::Cos(angle);
+			particle.position.z = radius * math::Sin(angle);
+			float distance = velocity_particles * particles_life_time;
+			float height = sqrt((distance*distance) - ((radius*proportion) - radius)*((radius*proportion) - radius));
+			float3 final_local_position = float3(particle.position.x*proportion, height, particle.position.z*proportion);
+			particle.velocity = (final_local_position - particle.position);
+			particle.velocity = particle.velocity.ScaledToLength(velocity_particles) / 1000;
+		break;
+
 	}
 	
 	particle.color = float4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -109,15 +128,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	float4 aux_velocity(particle.velocity, 1.0F);
 	aux_velocity = particle.rotation * aux_velocity;
 	particle.velocity = aux_velocity.xyz();
-
-	/*float u = (rand() % 100) / 100.0f;
-	float v = (rand() % 100) / 100.0f;
-	float theta = 2.0f * 3.1415f *u;
-	float phi = acos(2 * v - 1);
-	particle.position.x += (sin(phi)*cos(theta)) /10.0f;
-	particle.position.y += (sin(phi)*cos(theta)) / 10.0f;
-	particle.position.z += (sin(phi)) / 10.0f;
-	APP_LOG_INFO("%f, %f, %f", particle.position.x, particle.position.y, particle.position.z);*/
+	particle.position = owner->transform.GetGlobalTranslation()+(particle.rotation *particle.position);
 
 }
 

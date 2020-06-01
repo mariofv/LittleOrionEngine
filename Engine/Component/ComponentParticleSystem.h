@@ -92,6 +92,9 @@ public:
 	int min_range_random_z = -100;
 	int position_z = 0;
 
+	//Cone properties
+	float inner_radius = 1.0F;
+	float outer_radius = 3.0F;
 	
 	//color
 	bool color_fade = false;

@@ -527,15 +527,56 @@ void ModuleDebugDraw::RenderParticleSystem() const
 		{
 			case ComponentParticleSystem::TypeOfParticleSystem::SPHERE:
 			/*	dd::sphere(App->editor->selected_game_object->transform.GetGlobalTranslation(), ddVec3(1.0f, 1.0f, 1.0f), 10.0f);*/
-				dd::point_light(App->editor->selected_game_object->transform.GetGlobalTranslation(), float3(1.f, 1.f, 0.f),selected_particle_system->particles_life_time*selected_particle_system->velocity_particles);
+				dd::point_light(
+					App->editor->selected_game_object->transform.GetGlobalTranslation(), 
+					float3(1.f, 1.f, 0.f),
+					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles
+				);
 			break;
 			case ComponentParticleSystem::TypeOfParticleSystem::BOX:
-				dd::box(App->editor->selected_game_object->transform.GetGlobalTranslation(), ddVec3(1.f, 1.f, 0.f),
-					(selected_particle_system->max_range_random_x - selected_particle_system->min_range_random_x)/100,
+			{
+				float min_x = selected_particle_system->min_range_random_x;
+				float max_x = selected_particle_system->max_range_random_x;
+				float min_z = selected_particle_system->min_range_random_z;
+				float max_z = selected_particle_system->max_range_random_z;
+				float height = selected_particle_system->particles_life_time*selected_particle_system->velocity_particles *100;
+				float3 box_points[8] = {
+					float3(min_x,0.0f,min_z) / 100,
+					float3(min_x, 0.0f, max_z) / 100,
+					float3(max_x, 0.0f, max_z) / 100,
+					float3(max_x, 0.0f, min_z) / 100,
+
+					float3(min_x,height,min_z) / 100,
+					float3(min_x, height, max_z) / 100,
+					float3(max_x, height, max_z) / 100,
+					float3(max_x, height, min_z) / 100
+				};
+				/*dd::box(
+					App->editor->selected_game_object->transform.GetGlobalTranslation(), ddVec3(1.f, 1.f, 0.f),
+					(selected_particle_system->max_range_random_x - selected_particle_system->min_range_random_x) / 100,
 					selected_particle_system->particles_life_time,
-					(selected_particle_system->max_range_random_z - selected_particle_system->min_range_random_z)/100
+					(selected_particle_system->max_range_random_z - selected_particle_system->min_range_random_z) / 100
+				);*/
+				for (unsigned int i = 0; i < 8; ++i)
+				{
+					box_points[i] = App->editor->selected_game_object->transform.GetGlobalTranslation() + (App->editor->selected_game_object->transform.GetGlobalRotation() *box_points[i]);
+				}
+				dd::box(box_points, ddVec3(1.f, 1.f, 0.f));
+			
+			break;
+			}
+			case ComponentParticleSystem::TypeOfParticleSystem::CONE:
+			
+				dd::cone(
+					App->editor->selected_game_object->transform.GetGlobalTranslation(), 
+					App->editor->selected_game_object->transform.GetGlobalRotation()*float3::unitY * 
+					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles,
+					float3(1.f, 1.f, 0.f), 
+					selected_particle_system->outer_radius, 
+					selected_particle_system->inner_radius
 				);
-				break;
+				
+			break;
 		}
 	}
 }
