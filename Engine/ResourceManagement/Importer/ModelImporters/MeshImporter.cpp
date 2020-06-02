@@ -54,13 +54,14 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		Mesh::Vertex new_vertex;
 		aiVector3D transformed_position = node_transformation * mesh->mVertices[i];
 		new_vertex.position = float3(transformed_position.x, transformed_position.y, transformed_position.z);
-		if (mesh->mTextureCoords[0]) 
+		for (size_t j = 0; j < MAX_NUMBER_OF_CHANNELS; j++)
 		{
-			new_vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
-		}
-		if (mesh->mTextureCoords[1])
-		{
-			new_vertex.second_tex_coords = float2(mesh->mTextureCoords[1][i].x, mesh->mTextureCoords[1][i].y);
+			float2 text_coordinate;
+			if (mesh->mTextureCoords[j])
+			{
+				text_coordinate = float2(mesh->mTextureCoords[j][i].x, mesh->mTextureCoords[j][i].y);
+			}
+			new_vertex.tex_coords[j] = text_coordinate;
 		}
 		if (mesh->mNormals)
 		{

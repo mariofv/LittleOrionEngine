@@ -11,6 +11,7 @@
 class Metafile;
 
 static const size_t MAX_JOINTS = 4;
+static const size_t MAX_NUMBER_OF_CHANNELS = 4;
 class Mesh : public Resource
 {
 public:
@@ -20,8 +21,7 @@ public:
 		float3 normals;
 		float3 tangent;
 		float3 bitangent;
-		float2 tex_coords;
-		float2 second_tex_coords;
+		float2 tex_coords[MAX_NUMBER_OF_CHANNELS];
 		uint32_t joints[MAX_JOINTS] = {0,0,0,0};
 		float weights[MAX_JOINTS] = {0,0,0,0};
 		uint32_t num_joints = 0;
