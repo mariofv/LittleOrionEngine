@@ -29,7 +29,7 @@ public:
 
 	void Enable() override;
 
-	void LoadName(std::string& script_name);
+	void LoadName(const std::string& script_name);
 
 	void Update();
 	void AwakeScript();

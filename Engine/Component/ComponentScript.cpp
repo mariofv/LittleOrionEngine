@@ -20,10 +20,7 @@ ComponentScript::ComponentScript(GameObject* owner, std::string& script_name) : 
 
 ComponentScript & ComponentScript::operator=(const ComponentScript & component_to_copy)
 {
-	name = component_to_copy.name;
-	awaken = component_to_copy.awaken;
-	started = component_to_copy.started;
-	script = App->scripts->CreateResourceScript(name, owner);
+	LoadName(component_to_copy.name);
 	return *this;
 }
 
@@ -59,7 +56,7 @@ void ComponentScript::Enable()
 	}
 }
 
-void ComponentScript::LoadName(std::string& script_name) 
+void ComponentScript::LoadName(const std::string& script_name) 
 {
 	this->name = script_name;
 	script = App->scripts->CreateResourceScript(script_name, owner);
