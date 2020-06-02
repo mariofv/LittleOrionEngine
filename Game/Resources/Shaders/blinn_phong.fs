@@ -5,6 +5,7 @@
 in vec3 position;
 in vec3 normal;
 in vec2 texCoord;
+in vec2 texCoordLightmap;
 in vec3 tangent;
 
 //Without tangent transform
@@ -94,6 +95,7 @@ uniform PointLight point_lights[10];
 //COLOR TEXTURES
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord);
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord);
+vec4 GetLightMapColor(const Material mat, const vec2 texCoordLightmap);
 vec3 GetOcclusionColor(const Material mat, const vec2 texCoord);
 vec3 GetEmissiveColor(const Material mat, const vec2 texCoord);
 
@@ -186,6 +188,11 @@ vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 		discard;
 	}
 	return result;
+}
+
+vec4 GetLightMapColor(const Material mat, const vec2 texCoord)
+{
+	return texture(mat.specular_map, texCoord)*mat.specular_color;
 }
 
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord)

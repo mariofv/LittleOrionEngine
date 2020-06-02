@@ -54,9 +54,9 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		Mesh::Vertex new_vertex;
 		aiVector3D transformed_position = node_transformation * mesh->mVertices[i];
 		new_vertex.position = float3(transformed_position.x, transformed_position.y, transformed_position.z);
-		for (size_t j = 0; j < MAX_NUMBER_OF_CHANNELS; j++)
+		for (size_t j = 0; j < UVChannel::TOTALUVS; j++)
 		{
-			float2 text_coordinate;
+			float2 text_coordinate(float2::zero);
 			if (mesh->mTextureCoords[j])
 			{
 				text_coordinate = float2(mesh->mTextureCoords[j][i].x, mesh->mTextureCoords[j][i].y);
