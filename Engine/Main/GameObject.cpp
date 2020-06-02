@@ -122,7 +122,7 @@ void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 		prefab_reference->RemoveInstance(this);
 	}
 }
-void GameObject::Duplicate(const GameObject & gameobject_to_copy)
+void GameObject::Duplicate(const GameObject& gameobject_to_copy)
 {
 	if (!is_prefab_parent && gameobject_to_copy.transform.modified_by_user)
 	{
@@ -146,21 +146,7 @@ void GameObject::Duplicate(const GameObject & gameobject_to_copy)
 		this->prefab_reference = nullptr;
 	}
 
-	if (App->time->isGameRunning())
-	{
-		for (unsigned int i = 0; i < components.size(); ++i)
-		{
-			if (components[i]->type == Component::ComponentType::SCRIPT)
-			{
-				ComponentScript* script = (ComponentScript*)components[i];
-				if (!script->awaken)
-				{
-					script->AwakeScript();
-					script->StartScript();
-				}
-			}
-		}
-	}
+
 
 	return;
 }

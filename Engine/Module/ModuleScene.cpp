@@ -132,6 +132,36 @@ GameObject* ModuleScene::AddGameObject(std::unique_ptr<GameObject>& game_object_
 
 GameObject* ModuleScene::DuplicateGameObject(GameObject* game_object, GameObject* parent_go)
 {
+
+	//Duplicate code
+	GameObject* clone_GO = DuplicateGO(game_object, parent_go);
+
+
+	//Awake start scripts if needed
+	if (App->time->isGameRunning())
+	{
+		GameObject* current_clone = clone_GO;
+		std::stack<GameObject*> clone_stack;
+		clone_stack.push(clone_GO);
+		while (!clone_stack.empty()) 
+		{
+			current_clone = clone_stack.top();
+			clone_stack.pop();
+
+			InitDuplicatedScripts(current_clone);
+
+			for (auto& go : current_clone->children) 
+			{
+				clone_stack.push(go);
+			}		
+		}
+	}
+
+	return clone_GO;
+}
+
+GameObject* ModuleScene::DuplicateGO(GameObject* game_object, GameObject* parent_go)
+{
 	std::unique_ptr<GameObject> aux_copy_pointer = std::make_unique<GameObject>();
 	aux_copy_pointer.get()->Duplicate(*game_object);
 	GameObject* duplicated_go = App->scene->AddGameObject(aux_copy_pointer);
@@ -139,17 +169,33 @@ GameObject* ModuleScene::DuplicateGameObject(GameObject* game_object, GameObject
 	duplicated_go->SetTransform(game_object);
 	duplicated_go->name += "(1)";
 
-	if(game_object->is_prefab_parent)
+	if (game_object->is_prefab_parent)
 	{
 		game_object->prefab_reference->Duplicate(duplicated_go);
 	}
-	
+
 	for (const auto go : game_object->children)
 	{
 		DuplicateGameObject(go, duplicated_go);
 	}
 
 	return duplicated_go;
+}
+
+void ModuleScene::InitDuplicatedScripts(GameObject* clone_go)
+{
+	for (unsigned int i = 0; i < clone_go->components.size(); ++i)
+	{
+		if (clone_go->components[i]->type == Component::ComponentType::SCRIPT)
+		{
+			ComponentScript* script = (ComponentScript*)clone_go->components[i];
+			if (!script->awaken)
+			{
+				script->AwakeScript();
+				script->StartScript();
+			}
+		}
+	}
 }
 
 
