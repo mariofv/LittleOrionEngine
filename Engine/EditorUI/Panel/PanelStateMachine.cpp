@@ -89,6 +89,10 @@ void PanelStateMachine::RenderStates()
 	ImVec2 position(10,10);
 
 	draw_list = ImGui::GetWindowDrawList();
+	if (modified_by_user)
+	{
+		App->resources->Save<StateMachine>(state_machine);
+	}
 	for (auto & node : nodes)
 	{
 		assert(!node->id.Invalid);
@@ -236,6 +240,7 @@ void PanelStateMachine::RenderStates()
 			ImGui::OpenPopup("Link Menu");
 			ax::NodeEditor::Resume();
 		}
+		ax::NodeEditor::Flow(link->id);
 	}
 }
 
@@ -407,6 +412,7 @@ void PanelStateMachine::LeftPanel()
 		{
 			/*ImGui::LabelText(link->source.c_str(),"Transition From:");
 			ImGui::LabelText(link->target.c_str(), "Transition To:");*/
+			ImGui::TextColored(ImVec4{0, 0, 255, 255}, "Transition:");
 			ImGui::Text(link->source.c_str()); ImGui::SameLine(); ImGui::Text("->"); ImGui::SameLine(); ImGui::Text(link->target.c_str());
 			ImGui::PushID(link->id.AsPointer());
 			ImGui::Separator();
