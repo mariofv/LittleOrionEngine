@@ -3,10 +3,9 @@
 //Commit addition (sorry)
 
 layout(location = 0) in vec3 vertex_position;
-layout(location = 1) in vec2 vertex_uv0;
+layout(location = 1) in vec2 vertex_uv[2];
 layout(location = 2) in vec3 vertex_normal;
 layout(location = 3) in vec3 vertex_tangent;
-layout(location = 7) in vec2 vertex_uv1;
 
 layout (std140) uniform Matrices
 {
@@ -63,8 +62,8 @@ void main()
 {
 
 // General variables
-	texCoord = vertex_uv0;
-	texCoordLightmap = vertex_uv1;
+	texCoord = vertex_uv[0];
+	texCoordLightmap = vertex_uv[1];
 	position = (matrices.model*vec4(vertex_position, 1.0)).xyz;
 	normal = (matrices.model*vec4(vertex_normal, 0.0)).xyz;
 	tangent = (matrices.model*vec4(vertex_tangent, 0.0)).xyz;
