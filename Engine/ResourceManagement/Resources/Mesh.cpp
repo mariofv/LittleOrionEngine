@@ -92,6 +92,10 @@ void Mesh::LoadInMemory()
 	glEnableVertexAttribArray(6);
 	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, weights));
 
+	// VERTEX TEXTURE COORDS 2nd channel
+	glEnableVertexAttribArray(7);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, second_tex_coords));
+
 	glBindVertexArray(0);
 }
 

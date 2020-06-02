@@ -58,6 +58,10 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		{
 			new_vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 		}
+		if (mesh->mTextureCoords[1])
+		{
+			new_vertex.second_tex_coords = float2(mesh->mTextureCoords[1][i].x, mesh->mTextureCoords[1][i].y);
+		}
 		if (mesh->mNormals)
 		{
 			new_vertex.normals = float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);

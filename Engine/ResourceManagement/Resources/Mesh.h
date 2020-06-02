@@ -21,6 +21,7 @@ public:
 		float3 tangent;
 		float3 bitangent;
 		float2 tex_coords;
+		float2 second_tex_coords;
 		uint32_t joints[MAX_JOINTS] = {0,0,0,0};
 		float weights[MAX_JOINTS] = {0,0,0,0};
 		uint32_t num_joints = 0;
