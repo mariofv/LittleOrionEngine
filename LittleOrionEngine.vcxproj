@@ -103,6 +103,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
