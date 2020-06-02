@@ -6,7 +6,7 @@
 #include "Module/ModuleScriptManager.h"
 #include "Script/Script.h"
 
-#include "imgui.h"
+#include <imgui.h>
 
 ComponentScript::ComponentScript() : Component(nullptr, ComponentType::SCRIPT)
 {

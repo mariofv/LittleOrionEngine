@@ -1,7 +1,9 @@
 #ifndef _ENGINELOG_H_
 #define _ENGINELOG_H_
 
-#include "imgui.h"
+#include "Main/Globals.h"
+
+#include <imgui.h>
 
 #include <vector>
 

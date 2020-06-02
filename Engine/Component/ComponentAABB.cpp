@@ -1,7 +1,7 @@
 #include "ComponentAABB.h"
 #include "ComponentMeshRenderer.h"
 #include "Main/GameObject.h"
-#include "Brofiler/Brofiler.h"
+#include <Brofiler/Brofiler.h>
 
 ComponentAABB::ComponentAABB() : Component(nullptr, ComponentType::AABB)
 {

@@ -4,7 +4,7 @@
 #include "Component.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
-#include "AK/SoundEngine/Common/AkTypes.h"
+#include <AK/SoundEngine/Common/AkTypes.h>
 #include <unordered_map>
 
 class GameObject;

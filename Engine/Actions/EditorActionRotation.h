@@ -2,7 +2,7 @@
 #define _EDITORACTIONROTATION_H_
 
 #include "EditorAction.h"
-#include "MathGeoLib.h"
+#include <MathGeoLib.h>
 
 class GameObject;
 

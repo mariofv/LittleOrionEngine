@@ -2,7 +2,7 @@
 #define _COMPONENTSPHERECOLLIDER_H
 
 #include "ComponentCollider.h"
-#include "bullet3/btBulletDynamicsCommon.h"
+#include <bullet3/btBulletDynamicsCommon.h>
 
 
 class ComponentSphereCollider : public ComponentCollider

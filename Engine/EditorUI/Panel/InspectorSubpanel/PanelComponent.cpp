@@ -33,7 +33,6 @@
 #include "Component/ComponentTransform2D.h"
 
 #include "Helper/Utils.h"
-#include "Math/Rect.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"

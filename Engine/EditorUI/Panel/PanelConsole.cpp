@@ -4,7 +4,7 @@
 #include "Main/Globals.h"
 #include "Module/ModuleResourceManager.h"
 
-#include "imgui.h"
+#include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
 #include <algorithm>
