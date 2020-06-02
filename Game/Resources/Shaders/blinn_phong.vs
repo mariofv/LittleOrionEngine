@@ -27,6 +27,7 @@ struct Material {
 	sampler2D emissive_map;
 	vec4 emissive_color;
 	sampler2D normal_map;
+	sampler2D light_map;
 
 	float roughness;
 	float metalness;

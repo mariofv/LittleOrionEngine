@@ -38,6 +38,7 @@ struct Material
 	sampler2D emissive_map;
 	vec4 emissive_color;
 	sampler2D normal_map;
+	sampler2D light_map;
 
 	float roughness;
 	float metalness;
@@ -95,7 +96,7 @@ uniform PointLight point_lights[10];
 //COLOR TEXTURES
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord);
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord);
-vec4 GetLightMapColor(const Material mat, const vec2 texCoordLightmap);
+vec3 GetLightMapColor(const Material mat, const vec2 texCoordLightmap);
 vec3 GetOcclusionColor(const Material mat, const vec2 texCoord);
 vec3 GetEmissiveColor(const Material mat, const vec2 texCoord);
 
@@ -123,6 +124,7 @@ void main()
 	//computation of colors
 	vec4 diffuse_color  = GetDiffuseColor(material, tiling);
 	vec4 specular_color  = GetSpecularColor(material, tiling);
+	vec3 lightmap_color  = GetLightMapColor(material, tiling);
 	vec3 occlusion_color = GetOcclusionColor(material, tiling);
 	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
@@ -168,8 +170,8 @@ void main()
 		}
 	}
 
-
 	result += emissive_color;
+	result += lightmap_color;
 	//FragColor = vec4(vec3(normalize(tangent)),1.0);
 	FragColor = vec4(result,1.0);
 
@@ -190,9 +192,9 @@ vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 	return result;
 }
 
-vec4 GetLightMapColor(const Material mat, const vec2 texCoord)
+vec3 GetLightMapColor(const Material mat, const vec2 texCoord)
 {
-	return texture(mat.specular_map, texCoord)*mat.specular_color;
+	return texture(mat.light_map, texCoord).rgb;
 }
 
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord)

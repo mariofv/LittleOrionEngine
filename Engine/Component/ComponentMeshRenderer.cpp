@@ -97,6 +97,7 @@ void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 
 	AddAmbientOclusionUniforms(shader_program);
 	AddNormalUniforms(shader_program);
+	AddLightMapUniforms(shader_program);
 
 	AddExtraUniforms(shader_program);
 	
@@ -149,6 +150,13 @@ void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
 	BindTexture(Material::MaterialTextureType::NORMAL);
 	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 4);
 	glUniform1i(glGetUniformLocation(shader_program, "material.use_normal_map"), material_to_render->use_normal_map);
+}
+
+void ComponentMeshRenderer::AddLightMapUniforms(unsigned int shader_program) const
+{
+	glActiveTexture(GL_TEXTURE5);
+	BindTexture(Material::MaterialTextureType::LIGHTMAP);
+	glUniform1i(glGetUniformLocation(shader_program, "material.light_map"), 5);
 }
 
 void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
