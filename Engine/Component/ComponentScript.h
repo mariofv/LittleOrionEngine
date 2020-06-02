@@ -21,7 +21,7 @@ public:
 	ComponentScript(const ComponentScript& component_to_copy) = default;
 	ComponentScript(ComponentScript&& component_to_move) = default;
 
-	ComponentScript & operator=(const ComponentScript & component_to_copy) = default;
+	ComponentScript & operator=(const ComponentScript & component_to_copy);
 	ComponentScript & operator=(ComponentScript && component_to_move) = default;
 
 	Component* Clone(bool original_prefab = false) const override;
