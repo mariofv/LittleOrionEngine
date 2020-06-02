@@ -2,7 +2,7 @@
 #define _SOUNDBANK_H_
 
 #include "Resource.h"
-#include "AK/SoundEngine/Common/AkSoundEngine.h"
+#include <AK/SoundEngine/Common/AkSoundEngine.h>
 #include "ResourceManagement/Manager/SoundManager.h"
 
 class SoundBank : public Resource

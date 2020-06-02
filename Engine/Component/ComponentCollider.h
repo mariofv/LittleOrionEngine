@@ -4,7 +4,7 @@
 #define ENGINE_EXPORTS
 
 #include "Component.h"
-#include "bullet3/btBulletDynamicsCommon.h"
+#include <bullet3/btBulletDynamicsCommon.h>
 
 
 class ComponentCollider : public Component
