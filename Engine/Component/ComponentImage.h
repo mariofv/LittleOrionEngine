@@ -26,6 +26,8 @@ public:
 
 	void Render(float4x4* projection);
 
+	void SetNativeSize() const;
+
 private:
 	virtual void InitData();
 

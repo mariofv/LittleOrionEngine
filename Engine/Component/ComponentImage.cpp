@@ -152,3 +152,8 @@ void ComponentImage::SetColor(float4 color)
 {
 	this->color = color;
 }
+
+void ComponentImage::SetNativeSize() const
+{
+	owner->transform_2d.SetSize(float2(texture_to_render->width, texture_to_render->height));
+}

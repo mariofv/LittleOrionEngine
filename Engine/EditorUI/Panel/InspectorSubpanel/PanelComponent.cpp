@@ -507,6 +507,11 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image)
 		ImGui::ColorEdit3("Color", component_image->color.ptr());
 
 		ImGui::Checkbox("Preserve Aspect Ratio", &component_image->preserve_aspect_ratio);
+
+		if (ImGui::Button("Set Native Size"))
+		{
+			component_image->SetNativeSize();
+		}
 	}
 }
 
