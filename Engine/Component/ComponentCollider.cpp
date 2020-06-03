@@ -546,12 +546,12 @@ std::vector<float4> ComponentCollider::GetCollisions()
 				if (obA->getWorldArrayIndex() == body->getWorldArrayIndex())
 				{
 					float4 normal(pt.m_normalWorldOnB.getX(), pt.m_normalWorldOnB.getY(), pt.m_normalWorldOnB.getZ(), -pt.getDistance());
-					collisions.push_back(normal);
+					collisions.emplace_back(normal);
 				}
 				else if (obB->getWorldArrayIndex() == body->getWorldArrayIndex())
 				{
 					float4 normal(-pt.m_normalWorldOnB.getX(), -pt.m_normalWorldOnB.getY(), -pt.m_normalWorldOnB.getZ(), -pt.getDistance());
-					collisions.push_back(normal);
+					collisions.emplace_back(normal);
 				}
 			}
 		}
