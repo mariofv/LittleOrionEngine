@@ -90,13 +90,14 @@ private:
 	void RemoveComponentsCopying(const GameObject& gameobject_to_copy);
 
 public:
-	std::vector<Component*> components;
 	std::string name = "";
-
+	uint64_t UUID = -1;
+	std::string tag = ""; // Please don't modify this parameter in a script, always use the editor!
+	
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> children;
 
-	uint64_t UUID = -1;
+	std::vector<Component*> components;
 
 	ComponentTransform transform;
 	ComponentTransform2D transform_2d;

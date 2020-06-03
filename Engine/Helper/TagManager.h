@@ -16,10 +16,7 @@ public:
 	bool LoadTags();
 	bool SaveTags() const;
 
-private:
 	std::vector<std::string> tags;
-
-	friend class PanelTags;
 };
 
 #endif //__TAGMANAGER_H__
