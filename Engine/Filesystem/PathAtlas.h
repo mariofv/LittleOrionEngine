@@ -40,6 +40,7 @@
 #define RESOURCES_NAVMESH_PATH "/Resources/NavMesh"
 
 #define RESOURCES_BUILD_OPTIONS "/Resources/Scenes/build.options"
+#define PROJECT_TAGS_PATH "/Assets/ProjectSettings/tags.options"
 
 #define DEFAULT_SCENE_PATH "/Resources/Scenes/default_scene.scene"
 #define SAVED_SCENE_PATH "/Assets/Scenes/scene.scene"

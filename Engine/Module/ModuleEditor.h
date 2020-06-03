@@ -13,6 +13,8 @@
 
 class Component;
 
+class GameObject;
+
 class Panel;
 class PanelBuildOptions;
 class PanelMenuBar;
@@ -31,7 +33,7 @@ class PanelResourceDatabase;
 class PanelPopups;
 class PanelNavMesh;
 
-class GameObject;
+class TagManager;
 
 struct ImFont;
 
@@ -92,6 +94,8 @@ private:
 	std::vector<Panel*> panels;
 	ImGuiID editor_dockspace_id;
 	ImGuiContext* imgui_context = nullptr;
+	
+	TagManager* tag_manager = nullptr;
 };
 
 #endif //_MODULEEDITOR_H_

@@ -499,6 +499,9 @@
     <ClCompile Include="Engine\Component\ComponentEventSystem.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Helper\TagManager.cpp">
+      <Filter>Engine\Helper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -983,6 +986,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentImage.h">
       <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helper\TagManager.h">
+      <Filter>Engine\Helper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -19,6 +19,7 @@
 
 #include "Filesystem/PathAtlas.h"
 #include "Helper/Config.h"
+#include "Helper/TagManager.h"
 
 #include "Main/Application.h"
 #include "ModuleActions.h"
@@ -66,6 +67,9 @@ bool ModuleEditor::Init()
 	panels.push_back(nav_mesh = new PanelNavMesh());
 	panels.push_back(state_machine = new PanelStateMachine());
 	panels.push_back(build_options = new PanelBuildOptions());
+
+	tag_manager = new TagManager();
+	tag_manager->LoadTags();
 
 	return ret;
 }
