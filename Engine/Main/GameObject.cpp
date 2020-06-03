@@ -299,6 +299,7 @@ void GameObject::Save(Config& config) const
 		config.AddUInt(parent->UUID, "ParentUUID");
 	}
 	config.AddString(name, "Name");
+	config.AddString(tag, "Tag");
 
 	config.AddBool(is_static, "IsStatic");
 	config.AddBool(active, "Active");
@@ -327,6 +328,7 @@ void GameObject::Load(const Config& config)
 	assert(UUID != 0);
 
 	config.GetString("Name", name, "GameObject");
+	config.GetString("Tag", tag, "");
 
 	uint64_t parent_UUID = config.GetUInt("ParentUUID", 0);
 	GameObject* game_object_parent = App->scene->GetGameObject(parent_UUID);
