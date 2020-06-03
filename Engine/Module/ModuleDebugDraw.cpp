@@ -718,6 +718,7 @@ void ModuleDebugDraw::RenderSelectedGameObjectHelpers() const
 
 		RenderCameraFrustum();
 		RenderLightGizmo();
+		RenderRectTransform(App->editor->selected_game_object);
 		//RenderBones();
 	}
 }
