@@ -14,6 +14,7 @@
 #include "EditorUI/Panel/PanelNavMesh.h"
 #include "EditorUI/Panel/PanelProjectExplorer.h"
 #include "EditorUI/Panel/PanelScene.h"
+#include "EditorUI/Panel/PanelTags.h"
 #include "EditorUI/Panel/PanelResourceDatabase.h"
 #include "EditorUI/Panel/PopupsPanel/PanelPopupSceneLoader.h"
 #include "EditorUI/Panel/PopupsPanel/PanelPopupSceneSaver.h"
@@ -229,6 +230,10 @@ void PanelMenuBar::ShowWindowMenu()
 			if (ImGui::MenuItem((ICON_FA_DATABASE " Resource Database"), (const char*)0, App->editor->resource_database->IsOpened()))
 			{
 				App->editor->resource_database->SwitchOpen();
+			}
+			if (ImGui::MenuItem((ICON_FA_TAGS " Tags"), (const char*)0, App->editor->tags_panel->IsOpened()))
+			{
+				App->editor->tags_panel->SwitchOpen();
 			}
 
 			ImGui::EndMenu();

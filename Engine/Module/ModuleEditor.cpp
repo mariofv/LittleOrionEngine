@@ -16,6 +16,7 @@
 #include "EditorUI/Panel/PanelStateMachine.h"
 #include "EditorUI/Panel/PanelScene.h"
 #include "EditorUI/Panel/PanelToolBar.h"
+#include "EditorUI/Panel/PanelTags.h"
 
 #include "Filesystem/PathAtlas.h"
 #include "Helper/Config.h"
@@ -67,6 +68,7 @@ bool ModuleEditor::Init()
 	panels.push_back(nav_mesh = new PanelNavMesh());
 	panels.push_back(state_machine = new PanelStateMachine());
 	panels.push_back(build_options = new PanelBuildOptions());
+	panels.push_back(tags_panel = new PanelTags());
 
 	tag_manager = new TagManager();
 	tag_manager->LoadTags();

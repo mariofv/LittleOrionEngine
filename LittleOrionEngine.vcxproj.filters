@@ -502,6 +502,7 @@
     <ClCompile Include="Engine\Helper\TagManager.cpp">
       <Filter>Engine\Helper</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelTags.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -990,6 +991,7 @@
     <ClInclude Include="Engine\Helper\TagManager.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

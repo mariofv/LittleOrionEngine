@@ -75,7 +75,15 @@ bool TagManager::SaveTags() const
 	std::string serialized_tags_string;
 	tags_config.GetSerializedString(serialized_tags_string);
 
-	App->filesystem->Save(PROJECT_TAGS_PATH, serialized_tags_string);
+	if (App->filesystem->Exists(PROJECT_TAGS_PATH))
+	{
+		App->filesystem->Save(PROJECT_TAGS_PATH, serialized_tags_string);
+	}
+	else
+	{
+		APP_LOG_ERROR("Couldn't update tags file, please create it under the path %s", PROJECT_TAGS_PATH);
+		return false;
+	}
 
 	return true;
 }

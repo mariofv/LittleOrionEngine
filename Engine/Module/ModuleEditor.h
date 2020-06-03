@@ -32,6 +32,7 @@ class PanelAbout;
 class PanelResourceDatabase;
 class PanelPopups;
 class PanelNavMesh;
+class PanelTags;
 
 class TagManager;
 
@@ -67,11 +68,15 @@ private:
 
 public:
 	GameObject *selected_game_object = nullptr;
-	Metafile *selected_meta_file = nullptr;
 	bool show_game_object_inspector = true;
+
 	float3 selected_position = float3(0.0f, 0.0f, 0.0f);
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
+	
+	Metafile *selected_meta_file = nullptr;
 	std::string current_scene_path = "";
+
+	TagManager* tag_manager = nullptr;
 
 	PanelBuildOptions* build_options = nullptr;
 	PanelMenuBar* menu_bar = nullptr;
@@ -89,13 +94,12 @@ public:
 	PanelPopups* popups = nullptr;
 	PanelNavMesh* nav_mesh = nullptr;
 	PanelStateMachine* state_machine = nullptr;
+	PanelTags* tags_panel = nullptr;
 
 private:
 	std::vector<Panel*> panels;
 	ImGuiID editor_dockspace_id;
-	ImGuiContext* imgui_context = nullptr;
-	
-	TagManager* tag_manager = nullptr;
+	ImGuiContext* imgui_context = nullptr;	
 };
 
 #endif //_MODULEEDITOR_H_
