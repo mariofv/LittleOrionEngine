@@ -3,8 +3,10 @@
 #include "Filesystem/File.h"
 #include "Filesystem/PathAtlas.h"
 #include "Helper/Config.h"
+
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
+#include "Module/ModuleScene.h"
 
 
 void TagManager::AddTag(const std::string& new_tag)
@@ -28,7 +30,13 @@ void TagManager::RemoveTag(const std::string& tag_to_remove)
 		return;
 	}
 
+	std::vector<GameObject*> tagged_game_objects = App->scene->GetGameObjectsWithTag(tag_to_remove);
+	for (auto& tagged_game_object : tagged_game_objects)
+	{
+		tagged_game_object->tag = "";
+	}
 	tags.erase(tag_position);
+
 	SaveTags();
 }
 
@@ -63,12 +71,6 @@ bool TagManager::LoadTags()
 
 bool TagManager::SaveTags() const
 {
-	if (tags.empty())
-	{
-		APP_LOG_INFO("Tags are empty.")
-		return false;
-	}
-
 	Config tags_config;
 	tags_config.AddVector<std::string>(tags, "Tags");
 
