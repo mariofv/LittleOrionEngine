@@ -236,6 +236,13 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 	
 	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Particle System", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		if (ImGui::Checkbox("Active", &particle_system->active))
+		{
+			//UndoRedo
+			App->actions->action_component = particle_system;
+			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+		}
+		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
 			App->actions->DeleteComponentUndo(particle_system);
@@ -378,13 +385,16 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 		if (ImGui::CollapsingHeader(ICON_FA_SQUARE "Color Over Time"))
 		{
 			ImGui::Checkbox("Fade", &particle_system->color_fade);
+			ImGui::Checkbox("Fade Between Colors", &particle_system->fade_between_colors);
 			if (particle_system->color_fade)
 			{
 				ImGui::DragFloat("Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
 			}
-			ImGui::ColorEdit4("Particle Color##2f", (float*)&particle_system->billboard->color, ImGuiColorEditFlags_Float );
-			
-			
+			ImGui::ColorEdit4("Particle Color##2f", (float*)&particle_system->color_particle, ImGuiColorEditFlags_Float );
+			if (particle_system->fade_between_colors)
+			{
+				ImGui::ColorEdit4("Particle Color To Fade##2f", (float*)&particle_system->color_to_fade, ImGuiColorEditFlags_Float);
+			}
 		}
 		
 	}

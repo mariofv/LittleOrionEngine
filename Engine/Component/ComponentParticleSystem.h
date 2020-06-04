@@ -17,9 +17,9 @@ public:
 		float3 velocity;
 		Quat rotation;
 		float particle_scale;
-		float4 color;
 		float time_counter;
 		float  life;
+		float time_passed;
 	};
 	enum TypeOfParticleSystem
 	{
@@ -65,6 +65,7 @@ public:
 	int max_particles = 500;
 	unsigned int last_used_particle = 0;
 	unsigned int nr_new_particles = 2;
+	bool active = true;
 
 	//size
 	int min_size_of_particle = 2;
@@ -97,8 +98,12 @@ public:
 	float outer_radius = 3.0F;
 	
 	//color
+	float color_particle[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	bool color_fade = false;
 	float color_fade_time = 1.0F;
+	bool fade_between_colors = false;
+	float color_to_fade[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
 };
 
 #endif
