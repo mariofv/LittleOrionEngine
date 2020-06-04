@@ -26,7 +26,6 @@ public:
 	void RemoveGameObject(GameObject* game_object_to_remove);
 	GameObject* AddGameObject(std::unique_ptr<GameObject> & game_object_to_add);
 	ENGINE_API GameObject* DuplicateGameObject(GameObject* game_object, GameObject* parent_go);
-	GameObject* DuplicateGO(GameObject* game_object, GameObject* parent_go);
 	void InitDuplicatedScripts(GameObject* clone_go);
 
 	ENGINE_API GameObject* GetRoot() const;
@@ -51,6 +50,9 @@ private:
 	void OpenScene();
 	inline void GetSceneResource();
 	void GetSceneFromPath(const std::string& path);
+	//Don't use this function use the public one
+	GameObject* DuplicateGO(GameObject* game_object, GameObject* parent_go);
+
 
 private:
 	GameObject* root = nullptr;
