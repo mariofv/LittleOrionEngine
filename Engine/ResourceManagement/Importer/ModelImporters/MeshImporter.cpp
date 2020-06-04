@@ -42,7 +42,7 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 	}
 
 	std::vector<std::pair<std::vector<uint32_t>, std::vector<float>>> vertex_skinning__info;
-	if (mesh->HasBones())
+	if (mesh->HasBones() && mesh_skeleton_uuid != 0)
 	{
 		vertex_skinning__info = GetSkinning(mesh, mesh_skeleton_uuid);
 	}

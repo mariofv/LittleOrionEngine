@@ -282,6 +282,7 @@ void Scene::LoadPrefabModifiedComponents(const Config& config) const
 		config.GetChildConfig("Transform", transform_config);
 
 		prefab_child->transform.Load(transform_config);
+		prefab_child->transform.modified_by_user = true;
 	}
 	if (config.config_document.HasMember("Name"))
 	{

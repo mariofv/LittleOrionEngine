@@ -321,3 +321,18 @@ void ModuleResourceManager::CleanResourceCache()
 {
 	resource_cache.clear();
 }
+
+bool ModuleResourceManager::CleanResourceFromCache(uint32_t uuid)
+{
+	bool found = false;
+	const auto it = std::remove_if(resource_cache.begin(), resource_cache.end(), [uuid](const std::shared_ptr<Resource> & resource) {
+		return resource->GetUUID() == uuid;
+	});
+	if (it != resource_cache.end())
+	{
+		found = true;
+		resource_cache.erase(it, resource_cache.end());
+	}
+
+	return found;
+}

@@ -1,8 +1,11 @@
 #include "PanelMetaFile.h"
 
+#include "EditorUI/Helper/ImGuiHelper.h"
+
 #include "Main/Application.h"
-#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleFileSystem.h"
+#include "Module/ModuleResourceManager.h"
+#include "Module/ModuleScene.h"
 
 #include "ResourceManagement/Metafile/Metafile.h"
 #include "ResourceManagement/Metafile/ModelMetafile.h"
@@ -38,10 +41,21 @@ void PanelMetaFile::Render(Metafile * metafile)
 	ImGui::Separator();
 	if (ImGui::Button("Apply"))
 	{
-		App->resources->metafile_manager->UpdateMetafile(*metafile);
-		Path* imported_file_path = App->filesystem->GetPath(metafile->imported_file_path);
-		App->resources->Import(*imported_file_path, true);
-		App->resources->CleanResourceCache();
+		ApplyMetafileChanges(metafile);
+	}
+}
+
+void PanelMetaFile::ApplyMetafileChanges(Metafile * metafile)
+{
+	App->resources->metafile_manager->UpdateMetafile(*metafile);
+	Path* imported_file_path = App->filesystem->GetPath(metafile->imported_file_path);
+	App->resources->Import(*imported_file_path, true);
+
+	bool found = App->resources->CleanResourceFromCache(metafile->uuid);
+	if (found)
+	{
+		App->scene->SaveTmpScene();
+		App->scene->LoadScene();
 	}
 }
 
@@ -78,6 +92,22 @@ void PanelMetaFile::ShowModelMetaFile(ModelMetafile * metafile)
 		ImGui::Checkbox("Complex Rigging", &metafile->complex_skeleton);
 	}
 	ImGui::Checkbox("Import Materials", &metafile->import_material);
+	if (metafile->import_material)
+	{
+		ImGui::Text("Remapped Materials");
+		for (auto & pair : metafile->remapped_materials)
+		{
+			ImGui::Text(pair.first.c_str());
+			ImGui::SameLine();
+			ImGui::Button(std::to_string(pair.second).c_str());
+			uint32_t incoming_material_uuid = ImGui::ResourceDropper<Material>();
+			if (incoming_material_uuid != 0)
+			{
+				metafile->remapped_materials[pair.first] = incoming_material_uuid;
+			}
+
+		}
+	}
 }
 
 void PanelMetaFile::ShowTextureMetaFile(TextureMetafile * metafile)

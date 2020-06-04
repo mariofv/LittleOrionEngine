@@ -3,6 +3,7 @@
 #include "Main/Application.h"
 #include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Metafile/MetafileManager.h"
+#include "ResourceManagement/Metafile/ModelMetafile.h"
 
 void ResourceDataBase::AddEntry(const Path& metafile_path)
 {
@@ -15,6 +16,13 @@ void ResourceDataBase::AddEntry(Metafile* metafile)
 	if (entries.find(metafile->uuid) == entries.end())
 	{
 		entries[metafile->uuid] = metafile;
+		if (metafile->resource_type == ResourceType::MODEL)
+		{
+			for (auto & node : static_cast<ModelMetafile*>(metafile)->nodes)
+			{
+				entries[node->uuid] = node.get();
+			}
+		}
 	}
 }
 

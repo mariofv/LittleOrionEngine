@@ -1,18 +1,25 @@
 #ifndef _MODELMETAFILE_H_
 #define _MODELMETAFILE_H_
 #include "Metafile.h"
-
+#include <vector>
+#include <unordered_map>
+class Path;
 class ModelMetafile : public Metafile
 {
 
 public:
+
 	ModelMetafile() = default;
 	~ModelMetafile() = default;
 
 	void Save(Config& config) const override;
+	void SaveExtractedNodes() const;
+	void LoadExtractedNodes();
 	void Load(const Config& config) override;
 
 
+	Path* GetExtractedNodesPath() const;
+	void GetModelNode(Metafile& model_node_metafile ) const;
 	//Model
 	float scale_factor = 0.01f;
 	bool convert_units = true;
@@ -25,6 +32,14 @@ public:
 	//Skeleton
 	bool complex_skeleton = false;
 
+	//Material
+	std::unordered_map<std::string, uint32_t> remapped_materials;
 
+	//Extracted Nodes
+	std::vector<std::unique_ptr<Metafile>> nodes;
+
+private:
+
+	Path* GetExtractedNodesFolder() const;
 };
 #endif // _MODELMETAFILE_H_

@@ -549,6 +549,10 @@ void ModuleDebugDraw::RenderOutline() const
 		BROFILER_CATEGORY("Render Outline Write Stencil", Profiler::Color::Lavender);
 
 		ComponentMeshRenderer* selected_object_mesh = static_cast<ComponentMeshRenderer*>(selected_object_mesh_component);
+		if (!selected_object_mesh->mesh_to_render)
+		{
+			return;
+		}
 		glEnable(GL_STENCIL_TEST);
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
@@ -718,6 +722,7 @@ void ModuleDebugDraw::RenderSelectedGameObjectHelpers() const
 
 		RenderCameraFrustum();
 		RenderLightGizmo();
+		RenderRectTransform(App->editor->selected_game_object);
 		//RenderBones();
 	}
 }

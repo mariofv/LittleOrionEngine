@@ -122,7 +122,7 @@ void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 		prefab_reference->RemoveInstance(this);
 	}
 }
-void GameObject::Duplicate(const GameObject & gameobject_to_copy)
+void GameObject::Duplicate(const GameObject& gameobject_to_copy)
 {
 	if (!is_prefab_parent && gameobject_to_copy.transform.modified_by_user)
 	{
@@ -146,21 +146,7 @@ void GameObject::Duplicate(const GameObject & gameobject_to_copy)
 		this->prefab_reference = nullptr;
 	}
 
-	if (App->time->isGameRunning())
-	{
-		for (unsigned int i = 0; i < components.size(); ++i)
-		{
-			if (components[i]->type == Component::ComponentType::SCRIPT)
-			{
-				ComponentScript* script = (ComponentScript*)components[i];
-				if (!script->awaken)
-				{
-					script->AwakeScript();
-					script->StartScript();
-				}
-			}
-		}
-	}
+
 
 	return;
 }
@@ -299,6 +285,7 @@ void GameObject::Save(Config& config) const
 		config.AddUInt(parent->UUID, "ParentUUID");
 	}
 	config.AddString(name, "Name");
+	config.AddString(tag, "Tag");
 
 	config.AddBool(is_static, "IsStatic");
 	config.AddBool(active, "Active");
@@ -327,6 +314,7 @@ void GameObject::Load(const Config& config)
 	assert(UUID != 0);
 
 	config.GetString("Name", name, "GameObject");
+	config.GetString("Tag", tag, "");
 
 	uint64_t parent_UUID = config.GetUInt("ParentUUID", 0);
 	GameObject* game_object_parent = App->scene->GetGameObject(parent_UUID);

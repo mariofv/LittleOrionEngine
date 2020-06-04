@@ -17,6 +17,10 @@ void Component::Load(const Config &config)
 	SpecializedLoad(config);
 }
 
+void Component::CloneBase(Component* component) const
+{
+	*component = *this;
+}
 bool Component::Is2DComponent() const
 {
 	return

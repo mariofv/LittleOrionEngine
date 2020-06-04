@@ -526,3 +526,35 @@ float3 ComponentCollider::GetCurrentVelocity() const
 
 	return float3(velocity.getX(), velocity.getY(), velocity.getZ());
 }
+
+std::vector<float4> ComponentCollider::GetCollisions()
+{
+	std::vector<float4> collisions;
+	int numManifolds = App->physics->world->getDispatcher()->getNumManifolds();
+	for (int i = 0; i < numManifolds; i++)
+	{
+		btPersistentManifold* contactManifold = App->physics->world->getDispatcher()->getManifoldByIndexInternal(i);
+		const btCollisionObject* obA = contactManifold->getBody0();
+		const btCollisionObject* obB = contactManifold->getBody1();
+
+		int numContacts = contactManifold->getNumContacts();
+		for (int j = 0; j < numContacts; j++)
+		{
+			btManifoldPoint pt = contactManifold->getContactPoint(j);
+			if (pt.getDistance() < 0.0f)
+			{
+				if (obA->getWorldArrayIndex() == body->getWorldArrayIndex())
+				{
+					float4 normal(pt.m_normalWorldOnB.getX(), pt.m_normalWorldOnB.getY(), pt.m_normalWorldOnB.getZ(), -pt.getDistance());
+					collisions.emplace_back(normal);
+				}
+				else if (obB->getWorldArrayIndex() == body->getWorldArrayIndex())
+				{
+					float4 normal(-pt.m_normalWorldOnB.getX(), -pt.m_normalWorldOnB.getY(), -pt.m_normalWorldOnB.getZ(), -pt.getDistance());
+					collisions.emplace_back(normal);
+				}
+			}
+		}
+	}
+	return collisions;
+}

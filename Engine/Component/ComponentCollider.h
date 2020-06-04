@@ -4,7 +4,7 @@
 #define ENGINE_EXPORTS
 
 #include "Component.h"
-#include "bullet3/btBulletDynamicsCommon.h"
+#include <bullet3/btBulletDynamicsCommon.h>
 
 
 class ComponentCollider : public Component
@@ -69,7 +69,7 @@ public:
 
 	void SetColliderCenter(float3& new_center);
 	float3 GetColliderCenter() const;
-	
+	ENGINE_API std::vector<float4> GetCollisions();
 
 protected:
 	void CommonAssign(const ComponentCollider& component_to_copy);
