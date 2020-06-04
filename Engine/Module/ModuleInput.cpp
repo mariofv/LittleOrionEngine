@@ -202,11 +202,11 @@ update_status ModuleInput::PreUpdate()
 			left_joystick[which] = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
 			right_joystick[which] = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
 
-			left_controller_trigger[which] = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERLEFT);
-			right_controller_trigger[which] = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+			left_controller_trigger_raw[which] = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+			right_controller_trigger_raw[which] = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
 
-			left_controller_trigger_raw[which] = left_controller_trigger[which] / MAX_SDL_CONTROLLER_RANGE;
-			right_controller_trigger_raw[which] = right_controller_trigger[which] / MAX_SDL_CONTROLLER_RANGE;
+			left_controller_trigger[which] = left_controller_trigger_raw[which] / MAX_SDL_CONTROLLER_RANGE;
+			right_controller_trigger[which] = right_controller_trigger_raw[which] / MAX_SDL_CONTROLLER_RANGE;
 		}
 		break;
 
@@ -677,41 +677,41 @@ ENGINE_API float2 ModuleInput::GetAxisController(ControllerAxis type, Controller
 {
 	switch (type)
 	{
-	case ControllerAxis::LEFT_JOYSTICK:
-		return left_joystick[(int)controller_id];
+		case ControllerAxis::LEFT_JOYSTICK:
+			return left_joystick[(int)controller_id];
 
-	case ControllerAxis::RIGHT_JOYSTICK:
-		return right_joystick[(int)controller_id];
+		case ControllerAxis::RIGHT_JOYSTICK:
+			return right_joystick[(int)controller_id];
 
-	case ControllerAxis::LEFT_JOYSTICK_RAW:
-		return left_joystick_raw[(int)controller_id];
+		case ControllerAxis::LEFT_JOYSTICK_RAW:
+			return left_joystick_raw[(int)controller_id];
 
-	case ControllerAxis::RIGHT_JOYSTICK_RAW:
-		return right_joystick_raw[(int)controller_id];
+		case ControllerAxis::RIGHT_JOYSTICK_RAW:
+			return right_joystick_raw[(int)controller_id];
 
-	default:
-		return float2(0.0f, 0.0f);
+		default:
+			return float2(0.0f, 0.0f);
 	}
 }
 
-ENGINE_API Sint16 ModuleInput::GetTriggerController(ControllerAxis type, ControllerID controller_id) const
+ENGINE_API float ModuleInput::GetTriggerController(ControllerAxis type, ControllerID controller_id) const
 {
 	switch (type)
 	{
-	case ControllerAxis::LEFT_TRIGGER:
-		return left_controller_trigger[(int)controller_id];
+		case ControllerAxis::LEFT_TRIGGER:
+			return left_controller_trigger[(int)controller_id];
 
-	case ControllerAxis::RIGHT_TRIGGER:
-		return right_controller_trigger[(int)controller_id];
+		case ControllerAxis::RIGHT_TRIGGER:
+			return right_controller_trigger[(int)controller_id];
 
-	case ControllerAxis::LEFT_TRIGGER_RAW:
-		return left_controller_trigger_raw[(int)controller_id];
+		case ControllerAxis::LEFT_TRIGGER_RAW:
+			return left_controller_trigger_raw[(int)controller_id];
 
-	case ControllerAxis::RIGHT_TRIGGER_RAW:
-		return right_controller_trigger_raw[(int)controller_id];
+		case ControllerAxis::RIGHT_TRIGGER_RAW:
+			return right_controller_trigger_raw[(int)controller_id];
 
-	default:
-		return 0;
+		default:
+			return 0;
 	}
 }
 
@@ -719,29 +719,29 @@ ENGINE_API float2 ModuleInput::GetAxisControllerRaw(ControllerAxis type, Control
 {
 	switch (type)
 	{
-	case ControllerAxis::LEFT_JOYSTICK_RAW:
-		return left_joystick_raw[(int)controller_id];
+		case ControllerAxis::LEFT_JOYSTICK_RAW:
+			return left_joystick_raw[(int)controller_id];
 
-	case ControllerAxis::RIGHT_JOYSTICK_RAW:
-		return right_joystick_raw[(int)controller_id];
+		case ControllerAxis::RIGHT_JOYSTICK_RAW:
+			return right_joystick_raw[(int)controller_id];
 
-	default:
-		return float2(0.0f, 0.0f);
+		default:
+			return float2(0.0f, 0.0f);
 	}
 }
 
-ENGINE_API float ModuleInput::GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const
+ENGINE_API Sint16 ModuleInput::GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const
 {
 	switch (type)
 	{
-	case ControllerAxis::LEFT_TRIGGER_RAW:
-		return left_controller_trigger_raw[(int)controller_id];
+		case ControllerAxis::LEFT_TRIGGER_RAW:
+			return left_controller_trigger_raw[(int)controller_id];
 
-	case ControllerAxis::RIGHT_TRIGGER_RAW:
-		return right_controller_trigger_raw[(int)controller_id];
+		case ControllerAxis::RIGHT_TRIGGER_RAW:
+			return right_controller_trigger_raw[(int)controller_id];
 
-	default:
-		0.0f;
+		default:
+			0.0f;
 	}
 }
 

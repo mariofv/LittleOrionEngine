@@ -468,10 +468,10 @@ public:
 	bool IsMouseMoving() const;
 
 	ENGINE_API float2 GetAxisController(ControllerAxis type, ControllerID controller_id) const;
-	ENGINE_API Sint16 GetTriggerController(ControllerAxis type, ControllerID controller_id) const;
+	ENGINE_API float GetTriggerController(ControllerAxis type, ControllerID controller_id) const;
 
 	ENGINE_API float2 GetAxisControllerRaw(ControllerAxis type, ControllerID controller_id) const;
-	ENGINE_API float GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const;
+	ENGINE_API Sint16 GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const;
 
 	ENGINE_API float GetVerticalRaw(PlayerID player_id);
 	ENGINE_API float GetHorizontalRaw(PlayerID player_id);
@@ -524,11 +524,11 @@ private:
 	float2 left_joystick_raw[MAX_PLAYERS];
 	float2 right_joystick_raw[MAX_PLAYERS];
 
-	Sint32 left_controller_trigger[MAX_PLAYERS];
-	Sint32 right_controller_trigger[MAX_PLAYERS];
+	Sint32 left_controller_trigger_raw[MAX_PLAYERS];
+	Sint32 right_controller_trigger_raw[MAX_PLAYERS];
 
-	float left_controller_trigger_raw[MAX_PLAYERS];
-	float right_controller_trigger_raw[MAX_PLAYERS];
+	float left_controller_trigger[MAX_PLAYERS];
+	float right_controller_trigger[MAX_PLAYERS];
 
 	SDL_GameController* controller[MAX_PLAYERS];
 
