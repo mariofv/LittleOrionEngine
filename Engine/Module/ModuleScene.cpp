@@ -176,7 +176,7 @@ GameObject* ModuleScene::DuplicateGO(GameObject* game_object, GameObject* parent
 
 	for (const auto go : game_object->children)
 	{
-		DuplicateGameObject(go, duplicated_go);
+		DuplicateGO(go, duplicated_go);
 	}
 
 	return duplicated_go;
