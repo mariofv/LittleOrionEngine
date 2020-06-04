@@ -58,6 +58,7 @@ Component* ComponentCamera::Clone(bool original_prefab) const
 		created_component = App->cameras->CreateComponentCamera();
 	}
 	*created_component = *this;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 };
 void ComponentCamera::Copy(Component* component_to_copy) const

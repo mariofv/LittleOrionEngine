@@ -18,6 +18,12 @@ ComponentScript::ComponentScript(GameObject* owner, std::string& script_name) : 
 	App->scripts->scripts.push_back(this);
 }
 
+ComponentScript & ComponentScript::operator=(const ComponentScript & component_to_copy)
+{
+	LoadName(component_to_copy.name);
+	return *this;
+}
+
 Component* ComponentScript::Clone(bool original_prefab) const
 {
 	ComponentScript * created_component;
@@ -30,8 +36,9 @@ Component* ComponentScript::Clone(bool original_prefab) const
 		created_component = App->scripts->CreateComponentScript();
 	}
 	*created_component = *this;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
-};
+}
 
 void ComponentScript::Copy(Component * component_to_copy) const
 {
@@ -49,7 +56,7 @@ void ComponentScript::Enable()
 	}
 }
 
-void ComponentScript::LoadName(std::string& script_name) 
+void ComponentScript::LoadName(const std::string& script_name) 
 {
 	this->name = script_name;
 	script = App->scripts->CreateResourceScript(script_name, owner);
