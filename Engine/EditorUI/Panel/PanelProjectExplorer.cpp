@@ -111,7 +111,7 @@ void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 		if (path_child->IsDirectory())
 		{
 
-			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
+			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
 
 			std::string filename = ICON_FA_FOLDER " " + path_child->GetFilename();
 			if (path_child->sub_folders == 0)
