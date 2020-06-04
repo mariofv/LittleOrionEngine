@@ -5,6 +5,8 @@
 
 #include "Module.h"
 #include "Main/Globals.h"
+#include "EditorUI/Panel/PanelToolBar.h"
+#include "EditorUI/Panel/PanelConfiguration.h"
 
 class Timer;
 
