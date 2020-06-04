@@ -469,7 +469,8 @@ void PanelComponent::ShowComponentCanvasRendererWindow(ComponentCanvasRenderer* 
 	}
 }
 
-void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image) {
+void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image)
+{
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (!ShowCommonComponentWindow(component_image))
@@ -503,7 +504,14 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image) {
 			component_image->SetTextureToRender(selected_resource);
 		}
 
-		ImGui::ColorPicker3("Color", component_image->color.ptr());
+		ImGui::ColorEdit3("Color", component_image->color.ptr());
+
+		ImGui::Checkbox("Preserve Aspect Ratio", &component_image->preserve_aspect_ratio);
+
+		if (ImGui::Button("Set Native Size"))
+		{
+			component_image->SetNativeSize();
+		}
 	}
 }
 
