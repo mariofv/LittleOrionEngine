@@ -125,9 +125,9 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	
 	for (int i = 0; i < 4; ++i)
 	{
-		color_particle[i] = 1.0f;
+		billboard->color[i] = color_particle[i];
 	}
-	
+	particle.color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	particle.life = particles_life_time*1000;
 	particle.time_passed = particle.life;
 	float4 aux_velocity(particle.velocity, 1.0F);
@@ -165,10 +165,10 @@ void ComponentParticleSystem::Render()
 			if (p.life > 0.0f)
 			{
 				p.position += p.velocity * App->time->real_time_delta_time;
-				if (color_fade)
+				if (fade)
 				{
-					color_particle[3] -= App->time->real_time_delta_time * (color_fade_time / 1000);
-					billboard->color[3] = color_particle[3];
+					p.color.w -= App->time->real_time_delta_time * (fade_time / 1000);
+					billboard->color[3] = p.color.w;
 				}
 				else
 				{
@@ -176,7 +176,7 @@ void ComponentParticleSystem::Render()
 				}
 				if (fade_between_colors)
 				{
-					float time = time_spend / 1000;
+					float time = (time_spend / 1000) * (color_fade_time/10);
 					float temp_color[3] = { color_particle[0] ,color_particle[1] ,color_particle[2] };
 					temp_color[0] = (1-time) * color_particle[0] + time *  color_to_fade[0];
 					temp_color[1] = (1-time) * color_particle[1] + time *  color_to_fade[1];

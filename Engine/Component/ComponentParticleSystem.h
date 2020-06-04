@@ -15,6 +15,7 @@ public:
 	struct Particle {
 		float3 position;
 		float3 velocity;
+		float4 color;
 		Quat rotation;
 		float particle_scale;
 		float time_counter;
@@ -99,7 +100,8 @@ public:
 	
 	//color
 	float color_particle[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	bool color_fade = false;
+	bool fade = false;
+	float fade_time = 1.0F;
 	float color_fade_time = 1.0F;
 	bool fade_between_colors = false;
 	float color_to_fade[4] = { 1.0f, 1.0f, 1.0f, 1.0f };

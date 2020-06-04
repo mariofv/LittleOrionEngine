@@ -384,16 +384,17 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 		//Color of Particles
 		if (ImGui::CollapsingHeader(ICON_FA_SQUARE "Color Over Time"))
 		{
-			ImGui::Checkbox("Fade", &particle_system->color_fade);
+			ImGui::Checkbox("Fade", &particle_system->fade);
 			ImGui::Checkbox("Fade Between Colors", &particle_system->fade_between_colors);
-			if (particle_system->color_fade)
+			if (particle_system->fade)
 			{
-				ImGui::DragFloat("Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
+				ImGui::DragFloat("Fade time", &particle_system->fade_time, 0.01f, 0.0f, 10.0F);
 			}
 			ImGui::ColorEdit4("Particle Color##2f", (float*)&particle_system->color_particle, ImGuiColorEditFlags_Float );
 			if (particle_system->fade_between_colors)
 			{
 				ImGui::ColorEdit4("Particle Color To Fade##2f", (float*)&particle_system->color_to_fade, ImGuiColorEditFlags_Float);
+				ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
 			}
 		}
 		
