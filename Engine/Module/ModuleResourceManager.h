@@ -125,6 +125,7 @@ public:
 	void CleanBinariesInDirectory(const Path& directory_path);
 
 	void CleanResourceCache();
+	bool CleanResourceFromCache(uint32_t uuid);
 	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);
 	uint32_t CreateFromData(FileData data, const std::string& created_resource_path);
 
