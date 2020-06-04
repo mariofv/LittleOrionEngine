@@ -111,7 +111,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		ImGui::Text("Skeleton");
 		ImGui::SameLine();
 
-		std::string skeleton_name = mesh_renderer->skeleton == nullptr ? "None (Skeleton)" : App->resources->resource_DB->GetEntry(mesh_renderer->material_to_render->GetUUID())->resource_name;;
+		std::string skeleton_name = mesh_renderer->skeleton == nullptr ? "None (Skeleton)" : App->resources->resource_DB->GetEntry(mesh_renderer->skeleton->GetUUID())->resource_name;;
 		element_id = ImGui::GetID((std::to_string(mesh_renderer->UUID) + "SkeletonSelector").c_str());
 		if (ImGui::Button(skeleton_name.c_str()))
 		{
@@ -469,7 +469,8 @@ void PanelComponent::ShowComponentCanvasRendererWindow(ComponentCanvasRenderer* 
 	}
 }
 
-void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image) {
+void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image)
+{
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (!ShowCommonComponentWindow(component_image))
@@ -503,7 +504,14 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image) {
 			component_image->SetTextureToRender(selected_resource);
 		}
 
-		ImGui::ColorPicker3("Color", component_image->color.ptr());
+		ImGui::ColorEdit3("Color", component_image->color.ptr());
+
+		ImGui::Checkbox("Preserve Aspect Ratio", &component_image->preserve_aspect_ratio);
+
+		if (ImGui::Button("Set Native Size"))
+		{
+			component_image->SetNativeSize();
+		}
 	}
 }
 
@@ -794,7 +802,7 @@ void PanelComponent::ShowScriptsCreated(ComponentScript* component_script)
 		ImGui::Separator();
 		if (ImGui::Selectable("Create new Script"))
 		{
-			App->editor->popups->create_script_shown = true;
+			App->editor->popups->create_script_popup_shown = true;
 		}
 
 		ImGui::EndCombo();
