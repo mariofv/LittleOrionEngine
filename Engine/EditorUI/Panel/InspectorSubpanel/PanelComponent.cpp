@@ -955,7 +955,7 @@ void PanelComponent::ShowComponentSphereColliderWindow(ComponentSphereCollider* 
 	{
 		if (ShowCommonColliderWindow(sphere_collider))
 		{
-			if (ImGui::DragFloat("Radius", &sphere_collider->scale.x, 0.01F, 0.1F, 10.0F))
+			if (ImGui::DragFloat("Radius", &sphere_collider->scale.x, 0.01F, 0.01F, 10.0F))
 			{
 				sphere_collider->Scale();
 			}
