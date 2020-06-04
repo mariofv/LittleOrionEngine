@@ -101,27 +101,25 @@ void ModuleCamera::SetDirectionalLightFrustums()
 	
 
 }
-void ModuleCamera::UpdateDirectionalLightFrustums(AABB& light_aabb)
+void ModuleCamera::UpdateDirectionalLightFrustums(float3 max, float3 min)
 {
 	//Setting far planes also from AABB 
-	App->cameras->directional_light_camera->SetFarDistance(light_aabb.maxPoint.z - light_aabb.minPoint.z);
-	App->cameras->directional_light_mid->SetFarDistance(light_aabb.maxPoint.z - light_aabb.minPoint.z);
-	App->cameras->directional_light_far->SetFarDistance(light_aabb.maxPoint.z - light_aabb.minPoint.z);
+	App->cameras->directional_light_camera->SetFarDistance(max.z - min.z);
+	App->cameras->directional_light_mid->SetFarDistance(max.z - min.z);
+	App->cameras->directional_light_far->SetFarDistance(max.z - min.z);
 
 	//Setting frustums' width and height
 
-	App->cameras->directional_light_camera->camera_frustum.orthographicWidth =  light_aabb.maxPoint.x - light_aabb.minPoint.x;
-	App->cameras->directional_light_camera->camera_frustum.orthographicHeight = light_aabb.maxPoint.y - light_aabb.minPoint.y;
+	App->cameras->directional_light_camera->camera_frustum.orthographicWidth = max.x - min.x;
+	App->cameras->directional_light_camera->camera_frustum.orthographicHeight = max.y - min.y;
 
-	App->cameras->directional_light_mid->camera_frustum.orthographicWidth = light_aabb.maxPoint.x - light_aabb.minPoint.x;
-	App->cameras->directional_light_mid->camera_frustum.orthographicHeight = light_aabb.maxPoint.y - light_aabb.minPoint.y;
+	App->cameras->directional_light_mid->camera_frustum.orthographicWidth = max.x - min.x;
+	App->cameras->directional_light_mid->camera_frustum.orthographicHeight = max.y - min.y;
 
-	App->cameras->directional_light_far->camera_frustum.orthographicWidth = light_aabb.maxPoint.x - light_aabb.minPoint.x;
-	App->cameras->directional_light_far->camera_frustum.orthographicHeight = light_aabb.maxPoint.y - light_aabb.minPoint.y;
+	App->cameras->directional_light_far->camera_frustum.orthographicWidth = max.x - min.x;
+	App->cameras->directional_light_far->camera_frustum.orthographicHeight = max.y - min.y;
 
 	
-
-
 	directional_light_camera->Update();
 	directional_light_mid->Update();
 	directional_light_far->Update();

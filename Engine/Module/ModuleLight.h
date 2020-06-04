@@ -23,7 +23,7 @@ public:
 	void RenderDirectionalLight(const float3& mesh_position);
 	void RenderSpotLights(const float3& mesh_position, GLuint program);
 	void RenderPointLights(const float3& mesh_position, GLuint program);
-	void UpdateLightAABB(AABB& object_aabb);
+	void UpdateLightAABB(GameObject& object_aabb);
 
 	ComponentLight* CreateComponentLight();
 	void RemoveComponentLight(ComponentLight* light_to_remove);
@@ -49,7 +49,10 @@ public:
 	ComponentAABB*   light_aabb = nullptr;
 	float3 light_position = float3::zero;
 	float3 light_wotld_pos = float3::zero;
-
+	OBB light_obb;
+	
+	float3 obb_max_point;
+	float3 obb_min_point;
 
 
 

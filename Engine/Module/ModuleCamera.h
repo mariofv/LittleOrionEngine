@@ -29,7 +29,7 @@ public:
 	void RemoveComponentCamera(ComponentCamera* camera_to_remove);
 
 	bool IsSceneCameraMoving() const;
-	void UpdateDirectionalLightFrustums(AABB& light_aabb);
+	void UpdateDirectionalLightFrustums(float3 maxp, float3 minp);
 
 
 private:

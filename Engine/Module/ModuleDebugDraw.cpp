@@ -489,12 +489,29 @@ void ModuleDebugDraw::Render()
 		//dd::aabb(App->cameras->main_camera->GetMinimalEnclosingAABB().minPoint, App->cameras->main_camera->GetMinimalEnclosingAABB().maxPoint, float3(1, 1, 0));
 	}
 
-	if(App->renderer->toggle_ortho_frustum)
+	if (App->renderer->toggle_ortho_frustum);
 		dd::frustum(App->cameras->directional_light_camera->GetInverseClipMatrix(), float3(1, 0, 0)); //Its the same for all three 
 
 
-	if(App->renderer->toggle_directional_light_aabb)
-		dd::aabb(App->lights->light_aabb->bounding_box.minPoint, App->lights->light_aabb->bounding_box.maxPoint, float3(1, 1, 0));
+	if (App->renderer->toggle_directional_light_aabb);
+		dd::aabb(App->lights->light_aabb->bounding_box.minPoint, App->lights->light_aabb->bounding_box.maxPoint, float3(1, 1, 1));
+	float3 points[8];
+	App->lights->light_obb.GetCornerPoints(points);
+	dd::box(points, float3(1, 1, 0), 0, true);
+
+
+	dd::sphere(App->lights->light_obb.CornerPoint(0), float3(1, 0, 0), 1, 0, true); // Max X -- Min Y -- Min Z
+	dd::sphere(App->lights->light_obb.CornerPoint(1), float3(1, 0, 0), 1, 0, true); // Max X -- Min Y -- Max Z
+
+	dd::sphere(App->lights->light_obb.CornerPoint(2), float3(0, 1, 0), 1, 0, true); // Max X -- Max Y -- Min Z
+	dd::sphere(App->lights->light_obb.CornerPoint(3), float3(0, 1, 0), 1, 0, true); // Max X -- Max Y -- Max Z
+
+	dd::sphere(App->lights->light_obb.CornerPoint(4), float3(0, 0, 1), 1, 0, true); // Min X -- Min Y -- Min Z
+	dd::sphere(App->lights->light_obb.CornerPoint(5), float3(0, 0, 1), 1, 0, true); // Min X -- Min Y -- Max Z
+
+
+
+
 
 
 	if (App->renderer->toggle_perspective_sub_frustums)

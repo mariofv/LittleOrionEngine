@@ -151,22 +151,62 @@ void ModuleLight::SendShadowMatricesToShader(GLuint program)
 
 }
 
-void ModuleLight::UpdateLightAABB(AABB& object_aabb)
+void ModuleLight::UpdateLightAABB(GameObject& object)
 {
+
 
 	//Light aabb will enclose every object in the scene
 	AABB temp;
-	temp = object_aabb;
-	temp.TransformAsAABB(directional_light_rotation);
-	light_aabb->bounding_box.Enclose(temp);
+	temp = object.aabb.bounding_box;
+	
+	OBB object_obb;
+	object_obb.SetFrom(temp); //get translation and rotation from the GO
+	float3 obb_last_pos = object_obb.CenterPoint();
+
+	object_obb.Translate(-object_obb.CenterPoint()); //translate to the origin
+	object_obb.Transform(directional_light_rotation);		  //rotate
+	object_obb.Translate(obb_last_pos);  //translate to its original position
+
+
+	light_aabb->bounding_box.Enclose(object_obb);
+
+	
+
+	light_obb.SetFrom(light_aabb->bounding_box);
+	light_obb.Translate(-light_aabb->bounding_box.CenterPoint()); //translate to the origin
+	light_obb.Transform(directional_light_rotation);		  //rotate
+	light_obb.Scale(light_obb.CenterPoint(), float3(1.5, 1.5, 1.5));
+	light_obb.Translate(light_aabb->bounding_box.CenterPoint()); //translate to the origin
+
+	
+
+	
+	//Create max and min points to create camera frustum
+
+	float MaxX = light_obb.CornerPoint(3).x;
+	float MaxY = light_obb.CornerPoint(3).y;
+	float MaxZ = light_obb.CornerPoint(3).z;
+
+	float minX = light_obb.CornerPoint(4).x;
+	float minY = light_obb.CornerPoint(4).y;
+	float minZ = light_obb.CornerPoint(4).z;
+
+	obb_max_point.x = MaxX;
+	obb_max_point.y = MaxY;
+	obb_max_point.z = MaxZ;
+
+	obb_min_point.x = minX;
+	obb_min_point.y = minY;
+	obb_min_point.z = minZ;
 
 	//Light position at the far plane of the aabb, in the middle
-	light_position = float3((light_aabb->bounding_box.maxPoint.x + light_aabb->bounding_box.minPoint.x) * 0.5, (light_aabb->bounding_box.maxPoint.y + light_aabb->bounding_box.minPoint.y) * 0.5, light_aabb->bounding_box.maxPoint.z);
+	light_position = float3((obb_max_point.x + obb_min_point.x) * 0.5, (obb_max_point.y + obb_min_point.y) * 0.5, obb_max_point.z);
 	light_transform->transform.SetTranslation(light_position);
-	App->cameras->dir_light_game_object->transform.SetRotation(directional_light_rotation);
+	
+	//App->cameras->dir_light_game_object->transform.SetRotation(directional_light_rotation);
 	App->cameras->dir_light_game_object->transform.SetTranslation(light_position);
 
-	App->cameras->UpdateDirectionalLightFrustums(light_aabb->bounding_box);
+	App->cameras->UpdateDirectionalLightFrustums(obb_max_point, obb_min_point);
 }
 
 void ModuleLight::RenderPointLights(const float3& mesh_position, GLuint program)
