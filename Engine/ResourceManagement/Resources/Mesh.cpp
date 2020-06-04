@@ -70,7 +70,7 @@ void Mesh::LoadInMemory()
 
 	// VERTEX TEXTURE COORDS
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, UVChannel::TOTALUVS*2, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tex_coords));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tex_coords[0]));
 
 	// VERTEX NORMALS
 	glEnableVertexAttribArray(2);
@@ -92,6 +92,8 @@ void Mesh::LoadInMemory()
 	glEnableVertexAttribArray(6);
 	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, weights));
 
+	glEnableVertexAttribArray(7);
+	glVertexAttribPointer(7, 2, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tex_coords[1]));
 	glBindVertexArray(0);
 }
 

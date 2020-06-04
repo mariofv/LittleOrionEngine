@@ -107,7 +107,7 @@ vec3 GetNormalMap(const Material mat, const vec2 texCoord);
 vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
 vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
 vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
-
+vec3 CalculateLightmap(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
 //COMPUTE NORMALIZED LIGHTS
 vec3 ComputeDiffuseColor(vec3 diffuse_color, vec3 specular_color);
 float ComputeSpecularLight(vec3 normal, vec3 half_dir);
@@ -149,6 +149,7 @@ void main()
 		{
 			result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 		}
+		result += CalculateLightmap(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
 
 	else
@@ -168,10 +169,11 @@ void main()
 		{
 			result += CalculatePointLight(point_lights[i], normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 		}
+
+		result += CalculateLightmap(normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
 
 	result += emissive_color;
-	result += lightmap_color;
 	//FragColor = vec4(vec3(normalize(tangent)),1.0);
 	FragColor = vec4(result,1.0);
 
@@ -314,4 +316,28 @@ float ComputeSpecularLight(vec3 normal, vec3 half_dir) // Refference: http://www
 	float normalization_nom = 8*PI *(pow(2, -material.specular_color.w/2) + material.specular_color.w);
 
 	return pow(spec, material.specular_color.w) * (normalization_denom/normalization_nom);
+}
+
+vec3 CalculateLightmap(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
+{
+
+	vec3 lightmap_color  = GetLightMapColor(material, texCoordLightmap);
+
+	vec3 light_dir   = vec3(1.0,1.0,1.0);
+	float diffuse    = max(0.0, dot(normalized_normal, light_dir));
+	float specular   = 0.0;
+
+	vec3 half_dir = normalize(light_dir + view_dir);
+
+	if(diffuse > 0.0 && material.k_specular > 0.0 && material.specular_color.w > 0.0)
+	{
+		specular = ComputeSpecularLight(normalized_normal, half_dir);
+	}
+
+	return lightmap_color  * (
+
+		+ diffuse_color.rgb * (occlusion_color*material.k_ambient)
+		+ ComputeDiffuseColor(diffuse_color.rgb, specular_color.rgb) * 1/PI * diffuse
+		+ specular_color.rgb * specular
+	);
 }

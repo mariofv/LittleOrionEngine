@@ -52,7 +52,7 @@ private:
 	void AddLightMapUniforms(unsigned int shader_program) const;
 	void AddExtraUniforms(unsigned int shader_program) const;
 
-	void BindTexture(Material::MaterialTextureType id) const;
+	bool BindTexture(Material::MaterialTextureType id) const;
 	bool BindTextureNormal(Material::MaterialTextureType id) const;
 
 public:
