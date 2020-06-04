@@ -69,7 +69,7 @@ public:
 
 	void SetColliderCenter(float3& new_center);
 	float3 GetColliderCenter() const;
-	
+	ENGINE_API std::vector<float4> GetCollisions();
 
 protected:
 	void CommonAssign(const ComponentCollider& component_to_copy);
