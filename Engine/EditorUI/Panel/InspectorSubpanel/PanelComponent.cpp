@@ -802,7 +802,7 @@ void PanelComponent::ShowScriptsCreated(ComponentScript* component_script)
 		ImGui::Separator();
 		if (ImGui::Selectable("Create new Script"))
 		{
-			App->editor->popups->create_script_shown = true;
+			App->editor->popups->create_script_popup_shown = true;
 		}
 
 		ImGui::EndCombo();
