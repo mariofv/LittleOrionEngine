@@ -33,7 +33,7 @@ void ComponentAABB::GenerateBoundingBox()
 	BROFILER_CATEGORY("GenerateBoundingBox", Profiler::Color::Lavender);
 	bool has_mesh = false;
 	ComponentMeshRenderer* owner_mesh_renderer = static_cast<ComponentMeshRenderer*>(owner->GetComponent(ComponentType::MESH_RENDERER));
-	has_mesh = owner_mesh_renderer->mesh_to_render != nullptr;
+	has_mesh = owner_mesh_renderer != nullptr && owner_mesh_renderer->mesh_to_render != nullptr;
 	
 	if (has_mesh)
 	{
