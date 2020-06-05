@@ -126,53 +126,29 @@ void main()
 	//computation of colors
 	vec4 diffuse_color  = GetDiffuseColor(material, tiling);
 	vec4 specular_color  = GetSpecularColor(material, tiling);
-	vec3 lightmap_color  = GetLightMapColor(material, tiling);
 	vec3 occlusion_color = GetOcclusionColor(material, tiling);
 	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
+	vec3 fragment_normal = normal;
 	if(material.use_normal_map)
 	{
 		vec3 normal_from_texture = GetNormalMap(material, tiling);
-
-		vec3 fragment_normal = normalize(TBN * normal_from_texture);
-
-		result += CalculateLightmap(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
-		for (int i = 0; i < directional_light.num_directional_lights; ++i)
-		{
-			result += CalculateDirectionalLight(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
-
-		}
-
-		for (int i = 0; i < num_spot_lights; ++i)
-		{
-			result += CalculateSpotLight(spot_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
-		}
-
-		for (int i = 0; i < num_point_lights; ++i)
-		{
-			result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
-		}
+		fragment_normal= normalize(TBN * normal_from_texture);
+	}
+	result += CalculateLightmap(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
+	for (int i = 0; i < directional_light.num_directional_lights; ++i)
+	{
+		result += CalculateDirectionalLight(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
 
-	else
+	for (int i = 0; i < num_spot_lights; ++i)
 	{
-		result += CalculateLightmap(normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
-		for (int i = 0; i < directional_light.num_directional_lights; ++i)
-		{
-			result += CalculateDirectionalLight(normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
+		result += CalculateSpotLight(spot_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
+	}
 
-		}
-
-		for (int i = 0; i < num_spot_lights; ++i)
-		{
-			result += CalculateSpotLight(spot_lights[i], normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
-		}
-
-		for (int i = 0; i < num_point_lights; ++i)
-		{
-			result += CalculatePointLight(point_lights[i], normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
-		}
-
+	for (int i = 0; i < num_point_lights; ++i)
+	{
+		result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
 
 	result += emissive_color;
