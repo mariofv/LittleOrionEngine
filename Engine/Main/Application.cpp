@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "EditorUI/EngineLog.h"
+#include "Event/EventManager.h"
 #include "Module/ModuleActions.h"
 #include "Module/ModuleAI.h"
 #include "Module/ModuleAudio.h"
@@ -54,6 +55,7 @@ Application::Application()
 	modules.emplace_back(debug_draw = new ModuleDebugDraw());
 		
 	engine_log = std::make_unique<EngineLog>();
+	event_manager = std::make_unique<EventManager>();
 }
 
 Application::~Application()

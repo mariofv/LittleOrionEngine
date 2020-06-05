@@ -992,6 +992,15 @@
       <Filter>Engine\Helper</Filter>
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h" />
+    <ClInclude Include="Engine\Event\FunctionHandler.h">
+      <Filter>Engine\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Event\Event.h">
+      <Filter>Engine\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Event\EventManager.h">
+      <Filter>Engine\Event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -1083,6 +1092,9 @@
     </Filter>
     <Filter Include="Engine\Component\Collider">
       <UniqueIdentifier>{2234ff4f-964f-49d9-9553-0f966006fc99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Event">
+      <UniqueIdentifier>{84abb3ed-4874-4016-9b01-8f15283c78c8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

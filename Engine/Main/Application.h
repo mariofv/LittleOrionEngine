@@ -7,31 +7,32 @@
 #include <vector>
 #include <memory>
 
+class EngineLog;
+
+class EventManager;
+
+class ModuleActions;
 class ModuleAI;
 class ModuleAnimation;
 class ModuleAudio;
-class ModuleRender;
-class ModuleWindow;
-class ModuleTextures;
-class ModuleInput;
-class ModuleProgram;
-class ModuleTexture;
-class ModuleEditor;
 class ModuleCamera;
-class ModuleTime;
-class ModuleScene;
-class ModuleFileSystem;
 class ModuleDebug;
 class ModuleDebugDraw;
-class ModuleUI;
+class ModuleEditor;
+class ModuleFileSystem;
+class ModuleInput;
 class ModuleLight;
+class ModulePhysics;
+class ModuleProgram;
+class ModuleRender;
 class ModuleResourceManager;
+class ModuleScene;
 class ModuleScriptManager;
 class ModuleSpacePartitioning;
-class ModuleActions;
-class ModulePhysics;
-
-class EngineLog;
+class ModuleTexture;
+class ModuleTime;
+class ModuleUI;
+class ModuleWindow;
 
 class TimerUs;
 
@@ -47,35 +48,35 @@ public:
 	bool CleanUp();
 
 public:
-	ModuleAnimation* animations = nullptr;
-	ModuleRender* renderer = nullptr;
-	ModuleWindow* window = nullptr;
-	ModuleInput* input = nullptr;
-	ModuleProgram* program = nullptr;
-	ModuleTexture* texture = nullptr;
-	ModuleEditor* editor = nullptr;
-	ModuleCamera* cameras = nullptr;
-	ModuleTime* time = nullptr;
-	ModuleScene* scene = nullptr;
-	ModuleFileSystem* filesystem = nullptr;
-	ModuleDebug* debug = nullptr;
-	ModuleDebugDraw* debug_draw = nullptr;
-	ModuleUI* ui = nullptr;
-	ModuleLight* lights = nullptr;
-	ModuleResourceManager* resources = nullptr;
-	ModuleScriptManager* scripts = nullptr;
-	ModuleSpacePartitioning* space_partitioning = nullptr;
-	ModuleActions* actions = nullptr;
-	ModuleAI* artificial_intelligence = nullptr;
-	ModulePhysics* physics = nullptr;
-	ModuleAudio* audio = nullptr;
 
 	std::unique_ptr<EngineLog> engine_log = nullptr;
+	std::unique_ptr<EventManager> event_manager = nullptr;
+
+	ModuleActions* actions = nullptr;
+	ModuleAI* artificial_intelligence = nullptr;
+	ModuleAnimation* animations = nullptr;
+	ModuleAudio* audio = nullptr;
+	ModuleCamera* cameras = nullptr;
+	ModuleDebug* debug = nullptr;
+	ModuleDebugDraw* debug_draw = nullptr;
+	ModuleEditor* editor = nullptr;
+	ModuleFileSystem* filesystem = nullptr;
+	ModuleInput* input = nullptr;
+	ModuleLight* lights = nullptr;
+	ModulePhysics* physics = nullptr;
+	ModuleProgram* program = nullptr;
+	ModuleRender* renderer = nullptr;
+	ModuleResourceManager* resources = nullptr;
+	ModuleScene* scene = nullptr;
+	ModuleScriptManager* scripts = nullptr;
+	ModuleSpacePartitioning* space_partitioning = nullptr;
+	ModuleTexture* texture = nullptr;
+	ModuleTime* time = nullptr;
+	ModuleUI* ui = nullptr;
+	ModuleWindow* window = nullptr;
 
 private:
-
 	std::vector<Module*> modules;
-
 };
 
 extern Application* App;

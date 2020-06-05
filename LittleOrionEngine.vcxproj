@@ -164,6 +164,9 @@
     <ClInclude Include="Engine\DLL\DLLManager.h" />
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h" />
+    <ClInclude Include="Engine\Event\Event.h" />
+    <ClInclude Include="Engine\Event\EventManager.h" />
+    <ClInclude Include="Engine\Event\FunctionHandler.h" />
     <ClInclude Include="Engine\Helper\BuildOptions.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
