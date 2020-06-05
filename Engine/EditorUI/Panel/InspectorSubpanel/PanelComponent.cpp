@@ -314,6 +314,8 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			}
 		
 			ImGui::Checkbox("Loop", &particle_system->loop);
+			ImGui::SameLine();
+			ImGui::Checkbox("Follow GO Parent", &particle_system->follow_owner);
 			ImGui::Spacing();
 			
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);

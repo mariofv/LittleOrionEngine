@@ -73,9 +73,6 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 		particle.particle_scale = 1.0f;
 	}
 
-	
-	
-
 	switch (type_of_particle_system)
 	{
 		case SPHERE:
@@ -123,17 +120,21 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 	}
 	
-	for (int i = 0; i < 4; ++i)
-	{
-		billboard->color[i] = color_particle[i];
-	}
-	particle.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	particle.color = { color_particle[0], color_particle[1], color_particle[2], 1.0f };
 	particle.life = particles_life_time*1000;
 	particle.time_passed = particle.life;
 	float4 aux_velocity(particle.velocity, 1.0F);
 	aux_velocity = particle.rotation * aux_velocity;
 	particle.velocity = aux_velocity.xyz();
-	particle.position = owner->transform.GetGlobalTranslation()+(particle.rotation *particle.position);
+	if (follow_owner)
+	{
+
+	}
+	else
+	{
+		particle.position = owner->transform.GetGlobalTranslation() + (particle.rotation *particle.position);
+	}
+	
 
 }
 
@@ -159,46 +160,57 @@ void ComponentParticleSystem::Render()
 		for (unsigned int i = 0; i < max_particles; ++i)
 		{
 			Particle& p = particles[i];
-			float time_spend = p.time_passed;
-			p.life -= App->time->real_time_delta_time; // reduce life
-			time_spend -=  p.life;
+		
 			if (p.life > 0.0f)
 			{
-				p.position += p.velocity * App->time->real_time_delta_time;
-				if (fade)
+				UpdateParticle(p);
+				if (follow_owner)
 				{
-					p.color.w -= App->time->real_time_delta_time * (fade_time / 1000);
-					billboard->color[3] = p.color.w;
+					billboard->Render(owner->transform.GetGlobalTranslation() + (p.rotation *p.position));
 				}
 				else
 				{
-					billboard->color[3] = 1.0F;
-				}
-				if (fade_between_colors)
-				{
-					float time = (time_spend / 1000) * (color_fade_time/10);
-					float temp_color[3] = { color_particle[0] ,color_particle[1] ,color_particle[2] };
-					temp_color[0] = (1-time) * color_particle[0] + time *  color_to_fade[0];
-					temp_color[1] = (1-time) * color_particle[1] + time *  color_to_fade[1];
-					temp_color[2] = (1-time ) * color_particle[2] + time *  color_to_fade[2];
-					billboard->color[0] = temp_color[0];
-					billboard->color[1] = temp_color[1];
-					billboard->color[2] = temp_color[2];
+					billboard->Render(p.position);
 				}
 				
-
-				//size
-				billboard->width = particles_width * p.particle_scale;
-				billboard->height = particles_height * p.particle_scale;
-
-				billboard->Render(p.position);
 			}
 		}
 	}
 	
 	glDisable(GL_BLEND);
 }
+void ComponentParticleSystem::UpdateParticle(Particle& p)
+{
+	float time_spend = p.time_passed;
+	p.life -= App->time->real_time_delta_time; // reduce life
+	time_spend -= p.life;
+	p.position += p.velocity * App->time->real_time_delta_time;
+	if (fade)
+	{
+		p.color.w -= App->time->real_time_delta_time * (fade_time / 1000);
+		billboard->color[3] = p.color.w;
+	}
+	else
+	{
+		billboard->color[3] = 1.0F;
+	}
+	if (fade_between_colors)
+	{
+		float time = (time_spend / 1000) * (color_fade_time / 10);
+		float temp_color[3] = { p.color.x ,p.color.y ,p.color.z };
+		temp_color[0] = (1 - time) * p.color.x + time * color_to_fade[0];
+		temp_color[1] = (1 - time) * p.color.y + time * color_to_fade[1];
+		temp_color[2] = (1 - time) * p.color.z + time * color_to_fade[2];
+		billboard->color[0] = temp_color[0];
+		billboard->color[1] = temp_color[1];
+		billboard->color[2] = temp_color[2];
+	}
 
+
+	//size
+	billboard->width = particles_width * p.particle_scale;
+	billboard->height = particles_height * p.particle_scale;
+}
 void ComponentParticleSystem::SetParticleTexture(uint32_t texture_uuid)
 {
 	this->texture_uuid = texture_uuid;

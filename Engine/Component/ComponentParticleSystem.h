@@ -38,6 +38,7 @@ public:
 	unsigned int FirstUnusedParticle();
 	void RespawnParticle(Particle& particle);
 	void Render();
+	void UpdateParticle(Particle & particle);
 	void SetParticleTexture(uint32_t texture_uuid);
 	void UpdateParticle();
 	float3 GetPositionOfParticle();
@@ -81,6 +82,8 @@ public:
 	float time_counter = 0.0F;
 	float time_between_particles = 0.2F;
 	float particles_life_time = 3.0F;
+
+	bool follow_owner = false;
 
 	//position X
 	bool enabled_random_x = true;
