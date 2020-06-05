@@ -482,34 +482,34 @@ void ModuleDebugDraw::Render()
 		RenderTangentsAndBitangents();
 	}
 
-	RenderDebugDraws(*App->cameras->scene_camera);
-
-	if (App->cameras->main_camera != nullptr)
-	{
-		//dd::aabb(App->cameras->main_camera->GetMinimalEnclosingAABB().minPoint, App->cameras->main_camera->GetMinimalEnclosingAABB().maxPoint, float3(1, 1, 0));
-	}
-
-	if (App->renderer->toggle_ortho_frustum);
-		dd::frustum(App->cameras->directional_light_camera->GetInverseClipMatrix(), float3(1, 0, 0)); //Its the same for all three 
 
 
-	if (App->renderer->toggle_directional_light_aabb);
-		dd::aabb(App->lights->light_aabb->bounding_box.minPoint, App->lights->light_aabb->bounding_box.maxPoint, float3(1, 1, 1));
+
+	
 	float3 points[8];
-	App->lights->light_obb.GetCornerPoints(points);
-	dd::box(points, float3(1, 1, 0), 0, true);
+	App->cameras->directional_light_camera->camera_frustum.GetCornerPoints(points);
+	dd::box(points, float3(1, 1, 0), false); //Its the same for all three 
+
+	////dd::sphere(App->lights->light_position, float3::one, 10, 0, false); // light space
+
+	////dd::sphere(App->lights->new_pos, float3(0, 1, 1), 10, 0, false);
+
+	//
+
+	//float3 points2[8];
+	//float3 points3[8];
+	//float3 points4[8];
+	//float3 points5[8];
 
 
-	dd::sphere(App->lights->light_obb.CornerPoint(0), float3(1, 0, 0), 1, 0, true); // Max X -- Min Y -- Min Z
-	dd::sphere(App->lights->light_obb.CornerPoint(1), float3(1, 0, 0), 1, 0, true); // Max X -- Min Y -- Max Z
+	//App->lights->object_obb.GetCornerPoints(points3);
+	//dd::box(points3, float3(1, 0, 0), 0, true);
 
-	dd::sphere(App->lights->light_obb.CornerPoint(2), float3(0, 1, 0), 1, 0, true); // Max X -- Max Y -- Min Z
-	dd::sphere(App->lights->light_obb.CornerPoint(3), float3(0, 1, 0), 1, 0, true); // Max X -- Max Y -- Max Z
+	//App->lights->light_aabb.GetCornerPoints(points4);
+	//dd::box(points4, float3(0, 1, 0), 0, true);
 
-	dd::sphere(App->lights->light_obb.CornerPoint(4), float3(0, 0, 1), 1, 0, true); // Min X -- Min Y -- Min Z
-	dd::sphere(App->lights->light_obb.CornerPoint(5), float3(0, 0, 1), 1, 0, true); // Min X -- Min Y -- Max Z
-
-
+	//App->lights->light_obb.GetCornerPoints(points5);
+	//dd::box(points5, float3(0, 0, 1), 0, true);
 
 
 
@@ -521,6 +521,7 @@ void ModuleDebugDraw::Render()
 		dd::frustum(App->cameras->camera_far->GetInverseClipMatrix(), float3(1, 0, 1));
 	}
 
+	RenderDebugDraws(*App->cameras->scene_camera);
 
 	
 }
@@ -582,7 +583,15 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 	if (selected_camera_component != nullptr) {
 		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
 
-		dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
+		if(selected_camera->camera_frustum.type == FrustumType::PerspectiveFrustum)
+			dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
+
+		if (selected_camera->camera_frustum.type == FrustumType::OrthographicFrustum)
+		{
+			float3 points[8];
+			selected_camera->camera_frustum.GetCornerPoints(points);
+			dd::box(points, float3(1, 1, 1), 0, true);
+		}
 	}	
 }
 

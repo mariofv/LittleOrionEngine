@@ -352,14 +352,6 @@ float ShadowCalculation()
 	vec3 far_coords = vec3(normalized_far_depth.xy, normalized_far_depth.z - bias);
 
 
-	vec2 close_size = 1.0 / textureSize(close_depth_map, 0); //Represents the size of a texel
-	vec2 mid_size = 1.0 / textureSize(mid_depth_map, 0); 
-	vec2 far_size = 1.0 / textureSize(far_depth_map, 0); 
-
-	float close_texture_depth = texture(close_depth_map, close_coords).r;
-	float mid_texture_depth = texture(mid_depth_map, mid_coords).r;
-	float far_texture_depth = texture(far_depth_map, far_coords).r;
-
 	for(int x = -1; x <= 1; ++x) //PCF, solution for edgy shadoWs
     {
         for(int y = -1; y <= 1; ++y)
@@ -369,19 +361,19 @@ float ShadowCalculation()
 
 			if(normalized_close_cam_pos.z > 0 && normalized_close_cam_pos.z < 1)
 			{
-				close_coords.xy = normalized_close_depth.xy + vec2(x, y)*close_size;
+				close_coords.xy = normalized_close_depth.xy + vec2(x, y)* (1.0 / textureSize(close_depth_map, 0));
 				factor += texture(close_depth_map, close_coords);
 			}
 
 			if(normalized_close_cam_pos.z >= 1 && normalized_mid_cam_pos.z < 1) // Until depth detection is fixed (stops calculating at 50% depth)
 			{
-				mid_coords.xy = normalized_mid_depth.xy + vec2(x, y)*mid_size;
+				mid_coords.xy = normalized_mid_depth.xy + vec2(x, y)*(1.0 / textureSize(mid_depth_map, 0));
 				factor += texture(mid_depth_map, mid_coords);
 			}
 
 			if(normalized_mid_cam_pos.z >= 1 && normalized_main_cam_pos.z < 1) // Looks weird, but works
 			{
-				far_coords.xy = normalized_far_depth.xy + vec2(x, y)*far_size;
+				far_coords.xy = normalized_far_depth.xy + vec2(x, y)*(1.0 / textureSize(far_depth_map, 0));
 				factor += texture(far_depth_map, far_coords);
 			}
 			

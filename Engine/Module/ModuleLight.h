@@ -44,17 +44,12 @@ public:
 
 	std::vector<ComponentLight*> lights;
 
-	GameObject*		 light_aabb_game_object = nullptr;
-	GameObject*		 light_transform = nullptr;
-	ComponentAABB*   light_aabb = nullptr;
-	float3 light_position = float3::zero;
-	float3 light_wotld_pos = float3::zero;
-	OBB light_obb;
 	
-	float3 obb_max_point;
-	float3 obb_min_point;
-
-
+	AABB   light_aabb;
+	float3 light_position = float3::zero;
+	
+	OBB light_obb;
+	OBB object_obb;
 
 private:
 	std::vector< std::pair<float, ComponentLight*> >  closest_lights;

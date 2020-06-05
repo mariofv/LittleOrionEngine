@@ -307,6 +307,10 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::Checkbox("Toggle sub frustums", &App->renderer->toggle_perspective_sub_frustums);
 		ImGui::Checkbox("Render shadows", &App->renderer->render_shadows);
 
+		//ImGui::SliderFloat("Ortho near plane", &App->cameras->directional_light_camera->camera_frustum.nearPlaneDistance,0, 100);
+		//ImGui::SliderFloat("Ortho far plane", &App->cameras->directional_light_camera->camera_frustum.farPlaneDistance, 0, 100);
+
+
 	}
 }
 
