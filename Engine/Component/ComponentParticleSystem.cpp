@@ -105,7 +105,6 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 		break;
 		}
 		case CONE:
-			
 			float angle = ((rand() % 100)/100.f) * 2 * math::pi;
 			float radius = inner_radius * sqrt((rand() % 100) / 100.f);
 			float proportion = outer_radius / inner_radius;
@@ -126,9 +125,9 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	float4 aux_velocity(particle.velocity, 1.0F);
 	aux_velocity = particle.rotation * aux_velocity;
 	particle.velocity = aux_velocity.xyz();
+
 	if (follow_owner)
 	{
-
 	}
 	else
 	{
@@ -140,7 +139,6 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 void ComponentParticleSystem::Render()
 {
-	
 	glEnable(GL_BLEND);
 	if (active) 
 	{
@@ -185,6 +183,9 @@ void ComponentParticleSystem::UpdateParticle(Particle& p)
 	p.life -= App->time->real_time_delta_time; // reduce life
 	time_spend -= p.life;
 	p.position += p.velocity * App->time->real_time_delta_time;
+
+	//alpha fade
+
 	if (fade)
 	{
 		p.color.w -= App->time->real_time_delta_time * (fade_time / 1000);
@@ -194,6 +195,9 @@ void ComponentParticleSystem::UpdateParticle(Particle& p)
 	{
 		billboard->color[3] = 1.0F;
 	}
+
+	//fade color
+
 	if (fade_between_colors)
 	{
 		float time = (time_spend / 1000) * (color_fade_time / 10);
@@ -205,7 +209,6 @@ void ComponentParticleSystem::UpdateParticle(Particle& p)
 		billboard->color[1] = temp_color[1];
 		billboard->color[2] = temp_color[2];
 	}
-
 
 	//size
 	billboard->width = particles_width * p.particle_scale;
