@@ -92,6 +92,8 @@ uniform SpotLight spot_lights[10];
 uniform int num_point_lights;
 uniform PointLight point_lights[10];
 
+uniform int use_light_map;
+
 
 //COLOR TEXTURES
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord);
@@ -134,6 +136,7 @@ void main()
 
 		vec3 fragment_normal = normalize(TBN * normal_from_texture);
 
+		result += CalculateLightmap(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 		for (int i = 0; i < directional_light.num_directional_lights; ++i)
 		{
 			result += CalculateDirectionalLight(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
@@ -149,11 +152,11 @@ void main()
 		{
 			result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 		}
-		result += CalculateLightmap(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
 
 	else
 	{
+		result += CalculateLightmap(normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 		for (int i = 0; i < directional_light.num_directional_lights; ++i)
 		{
 			result += CalculateDirectionalLight(normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
@@ -170,7 +173,6 @@ void main()
 			result += CalculatePointLight(point_lights[i], normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 		}
 
-		result += CalculateLightmap(normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
 
 	result += emissive_color;
@@ -232,8 +234,6 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	{
 		specular = ComputeSpecularLight(normalized_normal, half_dir);
 	}
-
-
 
 	return directional_light.color * (
 
@@ -334,7 +334,7 @@ vec3 CalculateLightmap(const vec3 normalized_normal, vec4 diffuse_color, vec4 sp
 		specular = ComputeSpecularLight(normalized_normal, half_dir);
 	}
 
-	return lightmap_color  * (
+	return use_light_map * lightmap_color  * (
 
 		+ diffuse_color.rgb * (occlusion_color*material.k_ambient)
 		+ ComputeDiffuseColor(diffuse_color.rgb, specular_color.rgb) * 1/PI * diffuse

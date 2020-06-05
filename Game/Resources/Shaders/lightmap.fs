@@ -45,7 +45,7 @@ struct Material
 	float transparency;
 	float tiling_x;
 	float tiling_y;
-	int use_normal_map;
+	bool use_normal_map;
 };
 uniform Material material;
 
