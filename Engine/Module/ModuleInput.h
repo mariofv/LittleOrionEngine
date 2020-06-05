@@ -451,10 +451,6 @@ public:
 	ENGINE_API bool GetControllerButtonDown(ControllerCode code, ControllerID controller_id);
 	ENGINE_API bool GetControllerButtonUp(ControllerCode code, ControllerID controller_id);
 
-	ENGINE_API bool GetGameInput(const char* name, PlayerID player_id);
-	ENGINE_API bool GetGameInputDown(const char* name, PlayerID player_id);
-	ENGINE_API bool GetGameInputUp(const char* name, PlayerID player_id);
-
 	ENGINE_API bool GetAnyKeyPressedDown() const;
 
 	void CreateGameInput(const GameInput& game_input);
@@ -473,11 +469,8 @@ public:
 	ENGINE_API float2 GetAxisControllerRaw(ControllerAxis type, ControllerID controller_id) const;
 	ENGINE_API Sint16 GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const;
 
-	ENGINE_API float GetVerticalRaw(PlayerID player_id);
-	ENGINE_API float GetHorizontalRaw(PlayerID player_id);
-
-	ENGINE_API float GetVertical(PlayerID player_id);
-	ENGINE_API float GetHorizontal(PlayerID player_id);
+	ENGINE_API bool DetectedKeyboardInput(const GameInput& button, KeyState state);
+	ENGINE_API bool DetectedGameControllerInput(const GameInput& button, KeyState state, ControllerID controller_id);
 
 private:
 	void SaveGameInputs(Config &config);
@@ -485,8 +478,6 @@ private:
 
 	float2 Filter2D(Sint16 input_x, Sint16 input_y) const;
 
-	bool DetectedKeyboardInput(const GameInput& button, KeyState state);
-	bool DetectedGameControllerInput(const GameInput& button, KeyState state, ControllerID controller_id);
 
 public:
 	const float MAX_SDL_CONTROLLER_RANGE = 32767.0f;
@@ -499,6 +490,7 @@ public:
 
 	bool singleplayer_input = true;
 	int total_game_controllers = 0;
+	std::map<std::string, GameInput> game_inputs;
 
 private:
 	std::map<KeyCode, KeyState> key_bible;
@@ -507,7 +499,6 @@ private:
 
 	//Predefined buttons
 	Path* game_inputs_file_path = nullptr;
-	std::map<std::string, GameInput> game_inputs;
 
 	const Uint8 *keys = nullptr;
 
