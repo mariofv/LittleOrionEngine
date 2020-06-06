@@ -33,11 +33,11 @@ void AnimController::GetClipTransform( uint32_t skeleton_uuid, std::vector<math:
 			size_t joint_index = joint_channels_map[i];
 			if (joint_index < pose.size())
 			{
-				float3 last_translation = current_pose[i].translation;
-				float3 next_translation = next_pose[i].translation;
+				const float3& last_translation = current_pose[i].translation;
+				const float3& next_translation = next_pose[i].translation;
 
-				Quat last_rotation = current_pose[i].rotation;
-				Quat next_rotation = next_pose[i].rotation;
+				const Quat& last_rotation = current_pose[i].rotation;
+				const Quat& next_rotation = next_pose[i].rotation;
 
 				float3 position = Utils::Interpolate(last_translation, next_translation, interpolation_lambda);
 				Quat rotation = Utils::Interpolate(last_rotation, next_rotation, interpolation_lambda);
@@ -106,7 +106,17 @@ void AnimController::StartNextState(const std::string& trigger)
 	std::shared_ptr<State> next_state;
 	active_transition = next_transition;
 	next_state = state_machine->GetState(active_transition->target_hash);
-	playing_clips[ClipType::NEXT] ={ next_state->clip, 0, true};
+	playing_clips[ClipType::NEXT] = { next_state->clip, 0, true };
+	if (!playing_clips[ClipType::ACTIVE].playing)
+	{
+		FinishActiveState();
+	}
+}
+
+bool AnimController::IsOnState(const std::string& state)
+{
+	uint64_t state_hash = std::hash<std::string>{}(state);
+	return active_state.get()->name_hash == state_hash;
 }
 
 void AnimController::FinishActiveState()
@@ -120,7 +130,7 @@ void AnimController::FinishActiveState()
 
 void PlayingClip::Update()
 {
-	if (!playing || !clip)
+	if (!playing || !clip || clip->animation == nullptr)
 	{
 		return;
 	}

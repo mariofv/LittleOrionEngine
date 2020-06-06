@@ -1,10 +1,11 @@
 #ifndef _PANELSTATEMACHINE_H_
 #define _PANELSTATEMACHINE_H_
 
-#include "NodeEditor/imgui_node_editor.h"
 #include "EditorUI/Panel/Panel.h"
 
+#include <NodeEditor/imgui_node_editor.h>
 #include <vector>
+
 class StateMachine;
 struct Transition;
 struct State;

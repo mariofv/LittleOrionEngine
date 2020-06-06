@@ -6,6 +6,7 @@
 #include "ModuleFileSystem.h"
 
 #include "ResourceManagement/Resources/Animation.h"
+#include "ResourceManagement/Resources/Font.h"
 #include "ResourceManagement/Resources/Material.h"
 #include "ResourceManagement/Resources/Mesh.h"
 #include "ResourceManagement/Resources/Prefab.h"
@@ -28,6 +29,7 @@ class Path;
 class Timer;
 
 class AnimationImporter;
+class FontImporter;
 class MaterialImporter;
 class MeshImporter;
 class ModelImporter;
@@ -39,15 +41,7 @@ class StateMachineImporter;
 class SoundImporter;
 class TextureImporter;
 
-class AnimationManager;
-class MaterialManager;
-class MeshManager;
-class PrefabManager;
 class SceneManager;
-class SkeletonManager;
-class SkyboxManager;
-class StateMachineManager;
-class TextureManager;
 
 class ModuleResourceManager : public Module
 {
@@ -129,9 +123,9 @@ public:
 	void CleanMetafilesInDirectory(const Path& directory_path);
 	void ImportAssetsInDirectory(const Path& directory_path, bool force = false);
 	void CleanBinariesInDirectory(const Path& directory_path);
-	void CleanEmptyDirectories(const Path& directory_path);
 
 	void CleanResourceCache();
+	bool CleanResourceFromCache(uint32_t uuid);
 	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);
 	uint32_t CreateFromData(FileData data, const std::string& created_resource_path);
 
@@ -154,28 +148,31 @@ public:
 	} thread_comunication;
 
 	//Importers
-	std::unique_ptr<AnimationImporter> animation_importer = nullptr;
-	std::unique_ptr<MaterialImporter> material_importer = nullptr;
-	std::unique_ptr<MeshImporter> mesh_importer = nullptr;
-	std::unique_ptr<ModelImporter> model_importer = nullptr;
-	std::unique_ptr<PrefabImporter> prefab_importer = nullptr;
-	std::unique_ptr<SceneImporter> scene_importer = nullptr;
-	std::unique_ptr<SkeletonImporter> skeleton_importer = nullptr;
-	std::unique_ptr<SkyboxImporter> skybox_importer = nullptr;
-	std::unique_ptr<StateMachineImporter> state_machine_importer = nullptr;
-	std::unique_ptr<TextureImporter> texture_importer = nullptr;
-	std::unique_ptr<SoundImporter> sound_importer = nullptr;
+	std::unique_ptr<AnimationImporter> animation_importer;
+	std::unique_ptr<FontImporter> font_importer;
+	std::unique_ptr<MaterialImporter> material_importer;
+	std::unique_ptr<MeshImporter> mesh_importer;
+	std::unique_ptr<ModelImporter> model_importer;
+	std::unique_ptr<PrefabImporter> prefab_importer;
+	std::unique_ptr<SceneImporter> scene_importer;
+	std::unique_ptr<SkeletonImporter> skeleton_importer;
+	std::unique_ptr<SkyboxImporter> skybox_importer;
+	std::unique_ptr<StateMachineImporter> state_machine_importer;
+	std::unique_ptr<TextureImporter> texture_importer;
+	std::unique_ptr<SoundImporter> sound_importer;
 
-	std::unique_ptr<MetafileManager> metafile_manager = nullptr;
-	std::unique_ptr<SceneManager> scene_manager = nullptr;
-	std::unique_ptr<ResourceDataBase> resource_DB = nullptr;
+	std::unique_ptr<MetafileManager> metafile_manager;
+	std::unique_ptr<SceneManager> scene_manager;
+	std::unique_ptr<ResourceDataBase> resource_DB;
 
 private:
 	const size_t importer_interval_millis = 15 * 1000;
 	float last_imported_time = 0;
 	std::thread importing_thread;
 	std::unique_ptr<Timer> thread_timer = std::make_unique<Timer>();
-
+	
+	float cache_time = 0;
+	const size_t cache_interval_millis = 15* 1000 ;
 	mutable std::vector<std::shared_ptr<Resource>> resource_cache;
 
 	friend class MaterialImporter;

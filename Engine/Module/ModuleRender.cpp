@@ -158,10 +158,11 @@ void ModuleRender::Render() const
 	if (App->cameras->main_camera != nullptr) 
 	{
 		App->cameras->main_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
+		App->cameras->main_camera->RecordDebugDraws();
 	}
-#else
-	App->editor->Render();
 #endif
+
+	App->editor->Render();
 
 	BROFILER_CATEGORY("Swap Window (VSYNC)", Profiler::Color::Aquamarine);
 	SDL_GL_SwapWindow(App->window->window);
@@ -198,6 +199,10 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 		}
 	}
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation(GL_FUNC_ADD);
 	for (auto &mesh : transparent_mesh_to_render)
 	{
 		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
@@ -210,10 +215,8 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			
 		}
 	}
+	glDisable(GL_BLEND);
 	
-	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
-	App->ui->Render(&camera);
-
 	for (auto &billboard : billboards)
 	{
 		billboard->Render(billboard->owner->transform.GetGlobalTranslation());
@@ -222,11 +225,13 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	{
 		particles->Render();
 	}
-	
-	
+
+	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
+	App->ui->Render(&camera);
 
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
+	
 }
 
 void ModuleRender::GetMeshesToRender(const ComponentCamera* camera)
@@ -401,7 +406,6 @@ void ModuleRender::RemoveComponentBillboard(ComponentBillboard* billboard_to_rem
 	}
 }
 
-
 ComponentParticleSystem* ModuleRender::CreateComponentParticleSystem()
 {
 	ComponentParticleSystem* created_particle_system = new ComponentParticleSystem();
@@ -418,15 +422,19 @@ void ModuleRender::RemoveComponentParticleSystem(ComponentParticleSystem* partic
 		particle_systems.erase(it);
 	}
 }
-GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
+
+RaycastHit* ModuleRender::GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* cam)
 {
 	BROFILER_CATEGORY("Do Raycast", Profiler::Color::HotPink);
-	App->space_partitioning->GetCullingMeshes(App->cameras->scene_camera);
+	App->space_partitioning->GetCullingMeshes(cam);
 	std::vector<ComponentMeshRenderer*> intersected_meshes;
 	for (const auto&  mesh : meshes_to_render)
 	{
 		if (mesh->owner->aabb.bounding_box.Intersects(ray))
 		{
+			//Allow non touchable meshes to be ignored from mouse picking in game mode
+			if (cam != App->cameras->scene_camera && !mesh->is_raycastable) continue;
+
 			intersected_meshes.push_back(mesh);
 		}
 	}
@@ -435,6 +443,9 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 	std::vector<GameObject*> intersected;
 	GameObject* selected = nullptr;
 	float min_distance = INFINITY;
+
+	RaycastHit* result = new RaycastHit();
+
 	for (const auto&  mesh : intersected_meshes)
 	{
 		LineSegment transformed_ray = ray;
@@ -450,49 +461,20 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 			Triangle triangle(first_point, second_point, third_point);
 
 			float distance;
-			bool intersected = triangle.Intersects(transformed_ray, &distance);
+			float3 intersected_point;
+			bool intersected = triangle.Intersects(transformed_ray, &distance, &intersected_point);
 			if (intersected && distance < min_distance)
 			{
 				selected = mesh->owner;
 				min_distance = distance;
+
+				result->game_object = mesh->owner;
+				result->hit_distance = distance;
+				result->hit_point = intersected_point;
 			}
 		}
 	}
-	return selected;
-}
-
-bool ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray, float3& position)
-{
-	App->space_partitioning->GetCullingMeshes(App->cameras->scene_camera);
-	std::vector<ComponentMeshRenderer*> intersected_meshes;
-	for (const auto&  mesh : meshes_to_render)
-	{
-		if (mesh->owner->aabb.bounding_box.Intersects(ray))
-		{
-			intersected_meshes.push_back(mesh);
-		}
-	}
-
-	bool intersected = false;
-	float min_distance = INFINITY;
-	for (const auto&  mesh : intersected_meshes)
-	{
-		LineSegment transformed_ray = ray;
-		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
-		std::vector<Triangle> triangles = mesh->mesh_to_render->GetTriangles();
-		for (const auto&  triangle : triangles)
-		{
-			float distance;
-			float3 intersected_point;
-			intersected = triangle.Intersects(transformed_ray, &distance, &intersected_point);
-			if (intersected && distance < min_distance)
-			{
-				position = intersected_point;
-				min_distance = distance;
-			}
-		}
-	}
-	return intersected;
+	return result;
 }
 
 int ModuleRender::GetRenderedTris() const

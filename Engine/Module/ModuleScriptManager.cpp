@@ -13,8 +13,8 @@
 #include "Script/Script.h"
 
 #include <algorithm>
+#include <Brofiler/Brofiler.h>
 #include <fstream>
-
 
 bool ModuleScriptManager::Init()
 {
@@ -30,10 +30,29 @@ bool ModuleScriptManager::Init()
 update_status ModuleScriptManager::Update()
 {
 	
-	if (!scripts.empty() && App->time->isGameRunning()) 
+	if (App->time->isGameRunning()) 
 	{
+		for (size_t i = 0; i < scripts.size(); ++i)
+		{
+			BROFILER_CATEGORY("AwakeScript", Profiler::Color::Lavender);
+			if (!scripts[i]->awaken)
+			{
+				scripts[i]->AwakeScript();
+			}
+		}
+
+		for (size_t i = 0; i < scripts.size(); ++i)
+		{
+			BROFILER_CATEGORY("StartScript", Profiler::Color::Lavender);
+			if (scripts[i]->awaken && !scripts[i]->started)
+			{
+				scripts[i]->StartScript();
+			}
+		}
+
 		RunScripts();
 	}
+
 #if !GAME
 	if (!App->time->isGameRunning()) 
 	{
@@ -44,6 +63,7 @@ update_status ModuleScriptManager::Update()
 		}
 	}
 #endif
+
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -156,20 +176,22 @@ void ModuleScriptManager::LoadScriptList()
 
 void ModuleScriptManager::InitScripts()
 {
-	for (const auto& component_script : scripts)
+	for (size_t i = 0; i < scripts.size(); ++i)
 	{
-		component_script->AwakeScript();
+		scripts[i]->AwakeScript();
 	}
-	for (const auto& component_script : scripts)
+	for (size_t i = 0; i < scripts.size(); ++i)
 	{
-		component_script->StartScript();
+		scripts[i]->StartScript();
 	}
 }
 
 void ModuleScriptManager::RunScripts()
 {
+	BROFILER_CATEGORY("Run Scripts", Profiler::Color::Aqua);
 	for (const auto& component_script : scripts)
 	{
+		BROFILER_CATEGORY("Script", Profiler::Color::Lavender);
 		component_script->Update();
 	}
 }
@@ -238,7 +260,8 @@ void ModuleScriptManager::LoadVariables(std::unordered_map<uint64_t, Config> con
 		if (component_script->script != nullptr)
 		{
 			std::unordered_map<uint64_t, Config>::const_iterator got = config_list.find(component_script->UUID);
-			if (got != config_list.end()) {
+			if (got != config_list.end()) 
+			{
 				component_script->script->Load(got->second);
 				component_script->script->Link();
 			}
@@ -250,7 +273,7 @@ void ModuleScriptManager::LoadVariables(std::unordered_map<uint64_t, Config> con
 void ModuleScriptManager::CheckGameplayFolderStatus()
 {
 #if !GAME
-	if(!hot_reloading)
+	if(!hot_reloading && !App->time->isGameRunning())
 	{
 		dll->CheckGameplayFolderStatus();
 	}

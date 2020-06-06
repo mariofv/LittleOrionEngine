@@ -16,17 +16,21 @@
 #include "EditorUI/Panel/PanelStateMachine.h"
 #include "EditorUI/Panel/PanelScene.h"
 #include "EditorUI/Panel/PanelToolBar.h"
+#include "EditorUI/Panel/PanelTags.h"
 
 #include "Filesystem/PathAtlas.h"
 #include "Helper/Config.h"
+#include "Helper/TagManager.h"
 
 #include "Main/Application.h"
+#include "ModuleActions.h"
+#include "ModuleDebug.h"
+#include "ModuleInput.h"
 #include "ModuleResourceManager.h"
 #include "ModuleScene.h"
 #include "ModuleScriptManager.h"
 #include "ModuleActions.h"
 #include "ModuleWindow.h"
-#include "ModuleInput.h"
 
 #include "ResourceManagement/Manager/SceneManager.h"
 
@@ -64,6 +68,10 @@ bool ModuleEditor::Init()
 	panels.push_back(nav_mesh = new PanelNavMesh());
 	panels.push_back(state_machine = new PanelStateMachine());
 	panels.push_back(build_options = new PanelBuildOptions());
+	panels.push_back(tags_panel = new PanelTags());
+
+	tag_manager = new TagManager();
+	tag_manager->LoadTags();
 
 	return ret;
 }
@@ -98,10 +106,6 @@ bool ModuleEditor::InitImgui()
 
 update_status ModuleEditor::PreUpdate()
 {
-#if GAME
-	return update_status::UPDATE_CONTINUE;
-#endif
-
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
@@ -118,32 +122,32 @@ update_status ModuleEditor::Update()
 	if (!inital_scene_loaded)
 	{
 		App->scene->LoadScene(0);
-		App->scripts->InitScripts();
 		inital_scene_loaded = true;
 		return update_status::UPDATE_CONTINUE;
 	}
-#else	
+#else
 	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)
 	{
 		App->scene->LoadScene(0);
 		inital_scene_loaded = true;
 	}
-	//ImGui::ShowStyleEditor();
-	//ImGui::ShowDemoWindow();
+	if (App->debug->show_imgui_demo)
+	{
+		ImGui::ShowDemoWindow();
+	}
+
 #endif
 
+	imgui_context = ImGui::GetCurrentContext();
 
 	return update_status::UPDATE_CONTINUE;
 }
 
 void ModuleEditor::Render()
 {
-#if GAME
-	return;
-#endif
-
 	BROFILER_CATEGORY("Render UI", Profiler::Color::BlueViolet);
 	
+#if !GAME
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth(), App->window->GetHeight()));
 	if (ImGui::Begin("MainWindow", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBringToFrontOnFocus))
@@ -156,7 +160,7 @@ void ModuleEditor::Render()
 		RenderEditorDockspace();
 	}
 	ImGui::End();
-
+#endif
 	ImGui::Render();
 
 	BROFILER_CATEGORY("Render ImGui Draws", Profiler::Color::BlueViolet);
@@ -169,7 +173,7 @@ void ModuleEditor::RenderEditorDockspace()
 	{
 		editor_dockspace_id = ImGui::GetID("EditorDockspace");
 		bool initialized = ImGui::DockBuilderGetNode(editor_dockspace_id) != NULL;
-		
+
 		ImGui::DockSpace(editor_dockspace_id);
 
 		if (!initialized)
@@ -250,6 +254,11 @@ ImFont* ModuleEditor::GetFont(const Fonts & font) const
 {
 	ImGuiIO& io = ImGui::GetIO();
 	return io.Fonts->Fonts[static_cast<int>(font)];
+}
+
+ImGuiContext * ModuleEditor::GetImGuiContext() const
+{
+	return imgui_context;
 }
 
 void ModuleEditor::LoadFonts()

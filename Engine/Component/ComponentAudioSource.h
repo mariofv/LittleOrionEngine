@@ -4,7 +4,7 @@
 #include "Component.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
-#include "AK/SoundEngine/Common/AkTypes.h"
+#include <AK/SoundEngine/Common/AkTypes.h>
 #include <unordered_map>
 
 class GameObject;
@@ -29,8 +29,9 @@ public:
 
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
+
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
 
 private:
 	AkSoundPosition sound_position;

@@ -34,7 +34,6 @@ public:
 	std::string imported_file_path = "";
 	std::string exported_file_path = "";
 
-	int64_t timestamp = 0; //PLACEHOLDER
 	int version = 0;
 };
 

@@ -1,6 +1,0 @@
-Event	ID	Name			Wwise Object Path	Notes
-	1193902085	Play_main			\Default Work Unit\Play_main	
-
-In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
-	261149998	Test-Orquestration_Potential	D:\Izzy\gitHub\WWiseProject\WwiseProject\.cache\Windows\SFX\Test-Orquestration_Potential_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\Test-Orquestration_Potential		27425856
-

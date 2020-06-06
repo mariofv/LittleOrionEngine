@@ -1,13 +1,7 @@
 #include "ModuleActions.h"
-#include "ModuleEditor.h"
-#include "ModuleInput.h"
-
-#include "Main/Application.h"
-#include "Main/GameObject.h"
 
 #include "Actions/EditorActionEnableDisableComponent.h"
 #include "Actions/EditorActionModifyCamera.h"
-//#include "Actions/EditorActionSetTexture.h"
 #include "Actions/EditorActionModifyLight.h"
 #include "Actions/EditorActionAddComponent.h"
 #include "Actions/EditorActionDeleteComponent.h"
@@ -16,9 +10,16 @@
 #include "Actions/EditorActionTranslate.h"
 #include "Actions/EditorActionRotation.h"
 #include "Actions/EditorActionScale.h"
-#include "Actions/EditorActionrect2D.h"
-#include "Actions/EditorActionRotation2D.h"
 #include "Actions/EditorAction.h"
+
+#include "EditorUI/Panel/PanelPopups.h"
+#include "Filesystem/PathAtlas.h"
+#include "ModuleEditor.h"
+#include "ModuleInput.h"
+#include "ModuleScene.h"
+#include "ModuleTime.h"
+#include "Main/Application.h"
+#include "Main/GameObject.h"
 
 
 bool ModuleActions::Init()
@@ -130,22 +131,6 @@ void ModuleActions::AddUndoAction(UndoActionType type)
 		);
 		break;
 
-	case UndoActionType::EDIT_RECT2D:
-		new_action = new EditorActionRect2D(
-			(ComponentTransform2D*)action_component,
-			App->editor->selected_game_object->transform_2d.rect,
-			App->editor->selected_game_object
-		);
-		break; 
-	
-	case UndoActionType::EDIT_RECT2D_ROTATION:
-		new_action = new EditorActionRotation2D(
-			(ComponentTransform2D*)action_component,
-			App->editor->selected_game_object->transform_2d.rotation,
-			App->editor->selected_game_object
-		);
-		break;
-
 	case UndoActionType::ADD_GAMEOBJECT:
 		new_action = new EditorActionAddGameObject(
 			action_game_object
@@ -234,6 +219,87 @@ void ModuleActions::HandleInput()
 	{
 		Redo();
 		control_key_down = false;
+	}
+	if (App->input->GetKeyDown(KeyCode::Delete))
+	{
+		GameObject* selected_game_object = App->editor->selected_game_object;
+		if (selected_game_object)
+		{
+			action_game_object = selected_game_object;
+			AddUndoAction(ModuleActions::UndoActionType::DELETE_GAMEOBJECT);
+
+			App->scene->RemoveGameObject(selected_game_object);
+
+			App->editor->selected_game_object = nullptr;
+		}
+		
+	}
+	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::D))
+	{
+		GameObject* selected_game_object = App->editor->selected_game_object;
+		if (selected_game_object)
+		{
+			action_game_object = App->scene->DuplicateGameObject(selected_game_object, selected_game_object->parent);
+			AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
+		}
+	}
+
+	if(App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::S) && !App->input->GetKey(KeyCode::LeftShift))
+	{
+		//Differenciate when we have to save as or save normally
+		if(App->editor->current_scene_path != "")
+		{
+			//Save Scene normally
+			App->editor->SaveScene(App->editor->current_scene_path);
+		}
+		else
+		{
+			if (!App->time->isGameRunning())
+			{
+				App->editor->popups->scene_saver_popup.popup_shown = true;
+			}
+			else
+			{
+				APP_LOG_INFO("You must stop play mode to save scene.");
+			}
+		}
+	}
+
+	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::S) && App->input->GetKey(KeyCode::LeftShift))
+	{
+		if (!App->time->isGameRunning())
+		{
+			App->editor->popups->scene_saver_popup.popup_shown = true;
+		}
+		else
+		{
+			APP_LOG_INFO("You must stop play mode to save scene.");
+		}
+
+	}
+
+	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::N))
+	{
+		App->editor->current_scene_path = "";
+		App->editor->OpenScene(DEFAULT_SCENE_PATH);
+	}
+
+	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::O))
+	{
+		App->editor->popups->scene_loader_popup.popup_shown = true;
+	}
+
+	if(App->input->GetKeyDown(KeyCode::W) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
+	{
+		App->editor->gizmo_operation = ImGuizmo::TRANSLATE;
+	}
+	if(App->input->GetKeyDown(KeyCode::E) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
+	{
+		App->editor->gizmo_operation = ImGuizmo::ROTATE;
+	}
+	if(App->input->GetKeyDown(KeyCode::R) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
+	{
+		App->editor->gizmo_operation = ImGuizmo::SCALE;
 	}
 }
 

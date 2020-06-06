@@ -306,6 +306,26 @@ void PanelHierarchy::ShowComponentObjectCreationMenu(GameObject *game_object) co
 		created_game_object->CreateComponent(Component::ComponentType::CAMERA);
 	}
 
+	if (ImGui::BeginMenu("UI"))
+	{
+
+		if (ImGui::Selectable("Text"))
+		{
+			created_game_object = TemplatedGameObjectCreator::CreateUIText();
+		}
+		if (ImGui::Selectable("Image"))
+		{
+			created_game_object = TemplatedGameObjectCreator::CreateUIImage();
+		}
+		ImGui::Separator();
+		if (ImGui::Selectable("Button"))
+		{
+			created_game_object = TemplatedGameObjectCreator::CreateUIButton();
+
+		}
+		ImGui::EndMenu();
+	}
+
 	if (game_object != nullptr && created_game_object != nullptr)
 	{
 		created_game_object->SetParent(game_object);

@@ -12,16 +12,22 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleSpacePartitioning.h"
+#include "Module/ModuleTime.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleUI.h"
+#include "Module/ModulePhysics.h"
 #include "ResourceManagement/Resources/Texture.h"
 #include "ResourceManagement/Resources/Prefab.h"
 
 #include "Component/Component.h"
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentAudioSource.h"
+#include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
+#include "Component/ComponentCanvasRenderer.h"
+#include "Component/ComponentEventSystem.h"
+#include "Component/ComponentImage.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentLight.h"
@@ -29,8 +35,6 @@
 #include "Component/ComponentBillboard.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
-#include "Component/ComponentUI.h"
-#include "Component/ComponentButton.h"
 
 #include <Brofiler/Brofiler.h>
 #include <pcg_basic.h>
@@ -57,9 +61,14 @@ GameObject::GameObject(const std::string name) :
 	CreateTransforms();
 }
 
-GameObject::GameObject(const GameObject& gameobject_to_copy) :  aabb(gameobject_to_copy.aabb), transform(gameobject_to_copy.transform), UUID(pcg32_random())
+GameObject::GameObject(const GameObject& gameobject_to_copy) :
+	aabb(gameobject_to_copy.aabb),
+	transform(gameobject_to_copy.transform),
+	transform_2d(gameobject_to_copy.transform_2d),
+	UUID(pcg32_random())
 {
-	CreateTransforms();
+	transform.owner = this;
+	transform_2d.owner = this;
 	aabb.owner = this;
 	*this << gameobject_to_copy;
 }
@@ -70,7 +79,7 @@ GameObject& GameObject::operator<<(const GameObject& gameobject_to_copy)
 	if(!is_prefab_parent && gameobject_to_copy.transform.modified_by_user)
 	{
 		transform.SetTranslation(gameobject_to_copy.transform.GetTranslation());
-		transform.SetRotation(gameobject_to_copy.transform.GetRotationRadiants());
+		transform.SetRotation(gameobject_to_copy.transform.GetRotation());
 		//gameobject_to_copy.transform.modified_by_user = false;
 	}
 
@@ -115,7 +124,7 @@ void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 		prefab_reference->RemoveInstance(this);
 	}
 }
-void GameObject::Duplicate(const GameObject & gameobject_to_copy)
+void GameObject::Duplicate(const GameObject& gameobject_to_copy)
 {
 	if (!is_prefab_parent && gameobject_to_copy.transform.modified_by_user)
 	{
@@ -124,9 +133,11 @@ void GameObject::Duplicate(const GameObject & gameobject_to_copy)
 		//gameobject_to_copy.transform.modified_by_user = false;
 	}
 	transform.SetScale(gameobject_to_copy.transform.GetScale());
+	transform_2d = gameobject_to_copy.transform_2d;
 	CopyComponents(gameobject_to_copy);
 	this->name = gameobject_to_copy.name;
 	this->active = gameobject_to_copy.active;
+	this->transform_2d_enabled = gameobject_to_copy.transform_2d_enabled;
 	this->SetStatic(gameobject_to_copy.is_static);
 	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
@@ -136,7 +147,9 @@ void GameObject::Duplicate(const GameObject & gameobject_to_copy)
 		this->original_UUID = 0;
 		this->prefab_reference = nullptr;
 	}
-	
+
+
+
 	return;
 }
 
@@ -146,6 +159,7 @@ void GameObject::SetTransform(GameObject* game_object)
 	transform.SetRotation(game_object->transform.GetRotationRadiants());
 	transform.SetScale(game_object->transform.GetScale());
 }
+
 bool GameObject::IsEnabled() const
 {
 	return active;
@@ -154,7 +168,7 @@ bool GameObject::IsEnabled() const
 void GameObject::SetEnabled(bool able)
 {
 	active = able;
-	
+
 	for(const auto& component : components)
 	{
 		(able) ? component->Enable() : component->Disable();
@@ -179,27 +193,11 @@ void GameObject::SetHierarchyStatic(bool is_static)
 
 	//AABBTree
 	(is_static) ? App->space_partitioning->RemoveAABBTree(this) : App->space_partitioning->InsertAABBTree(this);
-	
+
 	for (const auto& child : children)
 	{
 		child->SetStatic(is_static);
 	}
-}
-
-Config GameObject::SaveTransform() const
-{
-	Config config;
-	transform.Save(config);
-
-	return config;
-}
-
-Config GameObject::SaveTransform2D() const
-{
-	Config config;
-	transform_2d.Save(config);
-
-	return config;
 }
 
 void GameObject::LoadTransforms(Config config)
@@ -219,8 +217,9 @@ void GameObject::CreateTransforms()
 {
 	transform = ComponentTransform();
 	transform.owner = this;
-	
-	transform_2d = ComponentTransform2D(this);
+
+	transform_2d = ComponentTransform2D();
+	transform_2d.owner = this;
 }
 
 bool GameObject::IsStatic() const
@@ -237,15 +236,44 @@ bool GameObject::IsVisible(const ComponentCamera& camera) const
 	}
 	return true;
 }
+
+void GameObject::PreUpdate()
+{
+	BROFILER_CATEGORY("GameObject PreUpdate", Profiler::Color::Green);
+
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+		if (components[i]->type != Component::ComponentType::SCRIPT)
+		{
+			components[i]->PreUpdate();
+		}
+
+	}
+}
+
 ENGINE_API void GameObject::Update()
 {
 	BROFILER_CATEGORY("GameObject Update", Profiler::Color::Green);
 
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
-		if (components[i]->type != Component::ComponentType::SCRIPT) 
+		if (components[i]->type != Component::ComponentType::SCRIPT)
 		{
 			components[i]->Update();
+		}
+
+	}
+}
+
+void GameObject::PostUpdate()
+{
+	BROFILER_CATEGORY("GameObject PostUpdate", Profiler::Color::Green);
+
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+		if (components[i]->type != Component::ComponentType::SCRIPT)
+		{
+			components[i]->PostUpdate();
 		}
 
 	}
@@ -259,15 +287,20 @@ void GameObject::Save(Config& config) const
 		config.AddUInt(parent->UUID, "ParentUUID");
 	}
 	config.AddString(name, "Name");
+	config.AddString(tag, "Tag");
 
 	config.AddBool(is_static, "IsStatic");
 	config.AddBool(active, "Active");
 
-	Config transform_config = SaveTransform();
+	Config transform_config;
+	transform.Save(transform_config);
 	config.AddChildConfig(transform_config, "Transform");
 
-	Config transform_2d_config = SaveTransform2D();
+	Config transform_2d_config;
+	transform_2d.Save(transform_2d_config);
 	config.AddChildConfig(transform_2d_config, "Transform2D");
+
+	config.AddBool(transform_2d_enabled, "Transform2DEnabled");
 
 	std::vector<Config> gameobject_components_config(components.size());
 	for (unsigned int i = 0; i < components.size(); ++i)
@@ -283,9 +316,10 @@ void GameObject::Load(const Config& config)
 	assert(UUID != 0);
 
 	config.GetString("Name", name, "GameObject");
+	config.GetString("Tag", tag, "");
 
 	uint64_t parent_UUID = config.GetUInt("ParentUUID", 0);
-	GameObject* game_object_parent = App->scene->GetGameObject(parent_UUID); 
+	GameObject* game_object_parent = App->scene->GetGameObject(parent_UUID);
 	//assert(game_object_parent != nullptr);
 	if (game_object_parent != nullptr && parent_UUID != 0)
 	{
@@ -297,19 +331,21 @@ void GameObject::Load(const Config& config)
 
 	LoadTransforms(config);
 
+	transform_2d_enabled = config.GetBool("Transform2DEnabled", false);
+
 	std::vector<Config> gameobject_components_config;
 	config.GetChildrenConfig("Components", gameobject_components_config);
 	for (unsigned int i = 0; i < gameobject_components_config.size(); ++i)
 	{
 		uint64_t component_type_uint = gameobject_components_config[i].GetUInt("ComponentType", 0);
-		ComponentUI::UIType ui_type = ComponentUI::UIType::IMAGE;
 		assert(component_type_uint != 0);
-		
+
 		Component::ComponentType component_type = static_cast<Component::ComponentType>(component_type_uint);
+
 		Component* created_component = nullptr;
-		if (component_type == Component::ComponentType::UI) {
-			ui_type = ComponentUI::UIType(gameobject_components_config[i].GetUInt("UIType", 0));
-			created_component = CreateComponentUI(ui_type);
+		if (component_type == Component::ComponentType::COLLIDER) {
+			ComponentCollider::ColliderType collider_type = static_cast<ComponentCollider::ColliderType>(gameobject_components_config[i].GetUInt("ColliderType", 0));
+			created_component = CreateComponent(collider_type);
 		}
 		else
 		{
@@ -326,7 +362,7 @@ void GameObject::SetParent(GameObject* new_parent)
 		return;
 	}
 
-	if (parent != nullptr) 
+	if (parent != nullptr)
 	{
 		parent->RemoveChild(this);
 	}
@@ -340,12 +376,13 @@ void GameObject::AddChild(GameObject* child)
 	{
 		child->parent->RemoveChild(child);
 	}
-	
+
 	child->parent = this;
 	child->UpdateHierarchyDepth();
 	child->UpdateHierarchyBranch();
 
 	child->transform.ChangeLocalSpace(transform.GetGlobalModelMatrix());
+	child->transform_2d.ChangeLocalSpace(transform_2d.GetGlobalModelMatrix());
 	children.push_back(child);
 }
 
@@ -354,7 +391,7 @@ void GameObject::RemoveChild(GameObject* child)
 	std::vector<GameObject*>::iterator found = std::find(children.begin(), children.end(), child);
 	if (found == children.end())
 	{
-		APP_LOG_ERROR("Incosistent GameObject Tree.");
+		APP_LOG_ERROR("Inconsistent GameObject Tree.")
 		return;
 	}
 	children.erase(found);
@@ -362,14 +399,46 @@ void GameObject::RemoveChild(GameObject* child)
 	child->hierarchy_depth = 0;
 }
 
+Component::ComponentType GameObject::GetTransformType() const
+{
+	if (transform_2d_enabled)
+	{
+		return Component::ComponentType::TRANSFORM2D;
+	}
+	else
+	{
+		return Component::ComponentType::TRANSFORM;
+	}
+}
+
+void GameObject::SetTransform2DStatus(bool enabled)
+{
+	transform_2d_enabled = enabled;
+}
 
 ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType type)
 {
 	Component* created_component;
 	switch (type)
 	{
+	case Component::ComponentType::ANIMATION:
+		created_component = App->animations->CreateComponentAnimation(this);
+		break;
+
+	case Component::ComponentType::CANVAS:
+		created_component = App->ui->CreateComponentCanvas();
+		break;
+
+	case Component::ComponentType::CANVAS_RENDERER:
+		created_component = App->ui->CreateComponentCanvasRenderer();
+		break;
+
 	case Component::ComponentType::CAMERA:
 		created_component = App->cameras->CreateComponentCamera();
+		break;
+
+	case Component::ComponentType::EVENT_SYSTEM:
+		created_component = App->ui->CreateComponentEventSystem();
 		break;
 
 	case Component::ComponentType::MESH_RENDERER:
@@ -379,12 +448,21 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	case Component::ComponentType::LIGHT:
 		created_component = App->lights->CreateComponentLight();
 		break;
+
 	case Component::ComponentType::SCRIPT:
 		created_component = App->scripts->CreateComponentScript();
 		break;
 
-	case Component::ComponentType::ANIMATION:
-		created_component = App->animations->CreateComponentAnimation();
+	case Component::ComponentType::UI_BUTTON:
+		created_component = App->ui->CreateComponentUI<ComponentButton>();
+		break;
+
+	case Component::ComponentType::UI_IMAGE:
+		created_component = App->ui->CreateComponentUI<ComponentImage>();
+		break;
+
+	case Component::ComponentType::UI_TEXT:
+		created_component = App->ui->CreateComponentUI<ComponentText>();
 		break;
 
 	case Component::ComponentType::BILLBOARD:
@@ -403,25 +481,32 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");
 		return nullptr;
 	}
-
 	created_component->owner = this;
+
 	created_component->Init();
+
 	components.push_back(created_component);
+
+	if (created_component->Is2DComponent())
+	{
+		transform_2d_enabled = true;
+	}
+
 	return created_component;
 }
 
 
-ENGINE_API Component* GameObject::CreateComponentUI(const ComponentUI::UIType ui_type)
+ENGINE_API Component* GameObject::CreateComponent(const ComponentCollider::ColliderType collider_type)
 {
-	Component* created_component = App->ui->CreateComponentUI(ui_type, this);
+	Component* created_component = App->physics->CreateComponentCollider(collider_type, this);
 	components.push_back(created_component);
 	return created_component;
 }
 
-void GameObject::RemoveComponent(Component* component_to_remove) 
+void GameObject::RemoveComponent(Component* component_to_remove)
 {
 	const auto it = std::find(components.begin(), components.end(), component_to_remove);
-	if (it != components.end()) 
+	if (it != components.end())
 	{
 		component_to_remove->Delete();
 		components.erase(it);
@@ -463,7 +548,6 @@ ENGINE_API ComponentScript* GameObject::GetComponentScript(const char* name) con
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
-
 		if (components[i]->type == Component::ComponentType::SCRIPT)
 		{
 			ComponentScript* script = (ComponentScript* )components[i];
@@ -477,16 +561,16 @@ ENGINE_API ComponentScript* GameObject::GetComponentScript(const char* name) con
 	return nullptr;
 }
 
-Component* GameObject::GetComponentUI(const ComponentUI::UIType type) const
+Component* GameObject::GetComponent(const ComponentCollider::ColliderType collider_type) const
 {
-	for (unsigned int i = 0; i < components.size(); ++i)
+	for (auto component : components)
 	{
-		if (components[i]->GetType() == Component::ComponentType::UI)
+		if (component->GetType() == Component::ComponentType::COLLIDER)
 		{
-			ComponentUI* ui = static_cast<ComponentUI*>(components[i]);
-			if (ui->ui_type == type)
+			ComponentCollider* collider = static_cast<ComponentCollider*>(component);
+			if (collider->collider_type == collider_type)
 			{
-				return ui;
+				return collider;
 			}
 		}
 	}
@@ -498,7 +582,7 @@ void GameObject::MoveUpInHierarchy() const
 	std::vector<GameObject*>::iterator silbings_position = std::find(parent->children.begin(), parent->children.end(), this);
 	if (silbings_position == parent->children.end())
 	{
-		APP_LOG_ERROR("Incosistent GameObject Tree.");
+		APP_LOG_ERROR("Inconsistent GameObject Tree.")
 		return;
 	}
 
@@ -511,7 +595,7 @@ void GameObject::MoveDownInHierarchy() const
 	std::vector<GameObject*>::iterator silbings_position = std::find(parent->children.begin(), parent->children.end(), this);
 	if (silbings_position == parent->children.end())
 	{
-		APP_LOG_ERROR("Incosistent GameObject Tree.");
+		APP_LOG_ERROR("Inconsistent GameObject Tree.")
 		return;
 	}
 
@@ -563,7 +647,7 @@ void GameObject::SetHierarchyDepth(int value)
 	hierarchy_depth = value;
 }
 
-GameObject * GameObject::GetPrefabParent() 
+GameObject * GameObject::GetPrefabParent()
 {
 	GameObject *to_reimport = this;
 	bool prefab_parent = is_prefab_parent;
@@ -621,14 +705,19 @@ void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 		component->modified_by_user = false;
 		//Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
 		Component* copy = nullptr;
-		if(component->type != Component::ComponentType::SCRIPT)
+		if(component->type == Component::ComponentType::SCRIPT)
 		{
-			copy = component->Clone(this->original_prefab);
+			copy = new ComponentScript(this, static_cast<ComponentScript*>(component)->name);
+			ComponentScript* copied_script = static_cast<ComponentScript*>(copy);
+			copied_script->name = static_cast<ComponentScript*>(component)->name;
+		}
+		else if (component->type == Component::ComponentType::COLLIDER)
+		{
+			copy = component->Clone(this, this->original_prefab);
 		}
 		else
 		{
-			copy = new ComponentScript(this, static_cast<ComponentScript*>(component)->name);
-			static_cast<ComponentScript*>(copy)->name = static_cast<ComponentScript*>(component)->name;
+			copy = component->Clone(this->original_prefab);
 		}
 		copy->owner = this;
 		this->components.push_back(copy);

@@ -2,6 +2,7 @@
 
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
+#include "Component/ComponentCanvas.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentMeshRenderer.h"
@@ -18,9 +19,11 @@
 #include "ModuleDebug.h"
 #include "ModuleEditor.h"
 #include "ModuleProgram.h"
+#include "ModulePhysics.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
 #include "ModuleSpacePartitioning.h"
+#include "ModuleUI.h"
 
 #include "SpacePartition/OLQuadTree.h"
 #include "SpacePartition/OLOctTree.h"
@@ -29,8 +32,9 @@
 #define DEBUG_DRAW_IMPLEMENTATION
 #include "EditorUI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
 
-#include <GL/glew.h>
+#include <array>
 #include <assert.h>
+#include <GL/glew.h>
 #include <Brofiler/Brofiler.h>
 
 class IDebugDrawOpenGLImplementation final : public dd::RenderInterface
@@ -391,91 +395,8 @@ bool ModuleDebugDraw::Init()
     APP_LOG_SUCCESS("Module Debug Draw initialized correctly.")
 
 	return true;
-}
-
-void ModuleDebugDraw::Render()
-{
-#if GAME
-	return;
-#endif
-
-	RenderBillboards();
-
-
-	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
-	if(App->debug->show_navmesh)
-	{
-		App->artificial_intelligence->RenderNavMesh(*App->cameras->scene_camera);
-	}
-
-	if (App->debug->show_quadtree)
-	{
-		BROFILER_CATEGORY("Render QuadTree", Profiler::Color::Lavender);
-
-		for (auto& ol_quadtree_node : App->space_partitioning->ol_quadtree->flattened_tree)
-		{
-			float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
-			float3 quadtree_node_max = float3(ol_quadtree_node->box.maxPoint.x, 0, ol_quadtree_node->box.maxPoint.y);
-			dd::aabb(quadtree_node_min, quadtree_node_max, float3::one);
-		}
-	}
-
-	if (App->debug->show_octtree)
-	{
-		for (auto& ol_octtree_node : App->space_partitioning->ol_octtree->flattened_tree)
-		{
-			float3 octtree_node_min = float3(ol_octtree_node->box.minPoint.x, ol_octtree_node->box.minPoint.y, ol_octtree_node->box.minPoint.z);
-			float3 octtree_node_max = float3(ol_octtree_node->box.maxPoint.x, ol_octtree_node->box.maxPoint.y, ol_octtree_node->box.maxPoint.z);
-			dd::aabb(octtree_node_min, octtree_node_max, float3::one);
-		}
-	}
-
-	if(App->debug->show_aabbtree)
-	{
-		App->space_partitioning->DrawAABBTree();
-	}
-
-	if (App->editor->selected_game_object != nullptr)
-	{
-		BROFILER_CATEGORY("Render Selected GameObject DebugDraws", Profiler::Color::Lavender);
-
-		RenderCameraFrustum();
-		RenderLightGizmo();
-		RenderParticleSystem();
-		//RenderBones();
-		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
-	}
-
-	if (App->debug->show_bounding_boxes)
-	{
-		RenderBoundingBoxes();
-	}
-
-	if (App->debug->show_global_bounding_boxes)
-	{
-		RenderGlobalBoundingBoxes();
-	}
-
-	if(App->debug->show_pathfind_points)
-	{
-		RenderPathfinding();
-	}
-
-
-	if (App->debug->show_grid)
-	{
-		float scene_camera_height = App->cameras->scene_camera->owner->transform.GetGlobalTranslation().y;
-		grid->ScaleOnDistance(scene_camera_height);
-		grid->Render();
-	}
-	if (App->debug->show_axis && App->renderer->meshes_to_render.size() != 0 )
-	{
-		RenderTangentsAndBitangents();
-	}
-
-	RenderDebugDraws(*App->cameras->scene_camera);
+}	
 	
-}
 
 void ModuleDebugDraw::RenderTangentsAndBitangents() const
 {
@@ -497,6 +418,35 @@ void ModuleDebugDraw::RenderTangentsAndBitangents() const
 	}
 }
 
+void ModuleDebugDraw::RenderRectTransform(const GameObject* rect_owner) const
+{
+	BROFILER_CATEGORY("Render Rect Transform", Profiler::Color::Lavender);
+
+	if (!App->debug->show_transform_2d || rect_owner->GetTransformType() == Component::ComponentType::TRANSFORM)
+	{
+		return;
+	}
+
+	float4x4 selected_game_object_global_2d_model_matrix = rect_owner->transform_2d.GetSizedGlobalModelMatrix();
+	std::array<float3, 4> rect_points = 
+	{
+		(selected_game_object_global_2d_model_matrix * float4(-0.5f, -0.5f, 0.f, 1.f)).xyz(),
+		(selected_game_object_global_2d_model_matrix * float4(-0.5f, 0.5f, 0.f, 1.f)).xyz(),
+		(selected_game_object_global_2d_model_matrix * float4(0.5f, 0.5f, 0.f, 1.f)).xyz(),
+		(selected_game_object_global_2d_model_matrix * float4(0.5f, -0.5f, 0.f, 1.f)).xyz()
+	};
+
+	dd::line(rect_points[1], rect_points[2], float3::one);
+	dd::line(rect_points[2], rect_points[3], float3::one);
+	dd::line(rect_points[3], rect_points[0], float3::one);
+	dd::line(rect_points[0], rect_points[1], float3::one);
+}
+
+void ModuleDebugDraw::RenderLine(float3 & a, float3 & b) const
+{
+	dd::line(a, b, float3::unitY);
+}
+
 void ModuleDebugDraw::RenderCameraFrustum() const
 {
 	BROFILER_CATEGORY("Render Selected GameObject Camera Frustum", Profiler::Color::Lavender);
@@ -513,6 +463,7 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 		dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
 	}	
 }
+
 void ModuleDebugDraw::RenderParticleSystem() const 
 {
 	BROFILER_CATEGORY("Render Selected GameObject Particle System Gizmo", Profiler::Color::Lavender);
@@ -521,12 +472,10 @@ void ModuleDebugDraw::RenderParticleSystem() const
 	if (particle_system != nullptr)
 	{
 		ComponentParticleSystem* selected_particle_system = static_cast<ComponentParticleSystem*>(particle_system);
-	/*	ComponentTransform* selected_light_transform = &selected_particle_system->owner->transform;*/
 		float gizmo_radius = 2.5F;
 		switch (selected_particle_system->type_of_particle_system)
 		{
 			case ComponentParticleSystem::TypeOfParticleSystem::SPHERE:
-			/*	dd::sphere(App->editor->selected_game_object->transform.GetGlobalTranslation(), ddVec3(1.0f, 1.0f, 1.0f), 10.0f);*/
 				dd::point_light(
 					App->editor->selected_game_object->transform.GetGlobalTranslation(), 
 					float3(1.f, 1.f, 0.f),
@@ -551,12 +500,7 @@ void ModuleDebugDraw::RenderParticleSystem() const
 					float3(max_x, height, max_z) / 100,
 					float3(max_x, height, min_z) / 100
 				};
-				/*dd::box(
-					App->editor->selected_game_object->transform.GetGlobalTranslation(), ddVec3(1.f, 1.f, 0.f),
-					(selected_particle_system->max_range_random_x - selected_particle_system->min_range_random_x) / 100,
-					selected_particle_system->particles_life_time,
-					(selected_particle_system->max_range_random_z - selected_particle_system->min_range_random_z) / 100
-				);*/
+
 				for (unsigned int i = 0; i < 8; ++i)
 				{
 					box_points[i] = App->editor->selected_game_object->transform.GetGlobalTranslation() + (App->editor->selected_game_object->transform.GetGlobalRotation() *box_points[i]);
@@ -580,6 +524,7 @@ void ModuleDebugDraw::RenderParticleSystem() const
 		}
 	}
 }
+
 void ModuleDebugDraw::RenderLightGizmo() const	
 {	
 	BROFILER_CATEGORY("Render Selected GameObject Light Gizmo", Profiler::Color::Lavender);
@@ -663,6 +608,10 @@ void ModuleDebugDraw::RenderOutline() const
 		BROFILER_CATEGORY("Render Outline Write Stencil", Profiler::Color::Lavender);
 
 		ComponentMeshRenderer* selected_object_mesh = static_cast<ComponentMeshRenderer*>(selected_object_mesh_component);
+		if (!selected_object_mesh->mesh_to_render)
+		{
+			return;
+		}
 		glEnable(GL_STENCIL_TEST);
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
@@ -778,6 +727,67 @@ void ModuleDebugDraw::RenderPathfinding() const
 	}
 }
 
+void ModuleDebugDraw::RenderGrid() const
+{
+	float scene_camera_height = App->cameras->scene_camera->owner->transform.GetGlobalTranslation().y;
+	grid->ScaleOnDistance(scene_camera_height);
+	grid->Render();
+}
+
+ENGINE_API void ModuleDebugDraw::RenderSingleAABB(AABB& aabb) const
+{
+	dd::aabb(aabb.minPoint, aabb.maxPoint, float3::one);
+}
+
+void ModuleDebugDraw::RenderNavMesh(ComponentCamera & cam) const
+{
+	App->artificial_intelligence->RenderNavMesh(cam);
+}
+
+void ModuleDebugDraw::RenderQuadTree() const
+{
+	for (auto& ol_quadtree_node : App->space_partitioning->ol_quadtree->flattened_tree)
+	{
+		float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
+		float3 quadtree_node_max = float3(ol_quadtree_node->box.maxPoint.x, 0, ol_quadtree_node->box.maxPoint.y);
+		dd::aabb(quadtree_node_min, quadtree_node_max, float3::one);
+	}
+}
+
+void ModuleDebugDraw::RenderOcTree() const
+{
+	for (auto& ol_octtree_node : App->space_partitioning->ol_octtree->flattened_tree)
+	{
+		float3 octtree_node_min = float3(ol_octtree_node->box.minPoint.x, ol_octtree_node->box.minPoint.y, ol_octtree_node->box.minPoint.z);
+		float3 octtree_node_max = float3(ol_octtree_node->box.maxPoint.x, ol_octtree_node->box.maxPoint.y, ol_octtree_node->box.maxPoint.z);
+		dd::aabb(octtree_node_min, octtree_node_max, float3::one);
+	}
+}
+
+void ModuleDebugDraw::RenderAABBTree() const
+{
+	App->space_partitioning->DrawAABBTree();
+}
+
+void ModuleDebugDraw::RenderPhysics() const
+{
+	App->physics->world->debugDrawWorld();
+}
+
+void ModuleDebugDraw::RenderSelectedGameObjectHelpers() const
+{
+	if (App->editor->selected_game_object != nullptr)
+	{
+		BROFILER_CATEGORY("Render Selected GameObject DebugDraws", Profiler::Color::Lavender);
+
+		RenderCameraFrustum();
+		RenderLightGizmo();
+		RenderRectTransform(App->editor->selected_game_object);
+		RenderParticleSystem();
+		//RenderBones();
+	}
+}
+
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 {
 	BROFILER_CATEGORY("Flush Debug Draw", Profiler::Color::Lavender);
@@ -790,7 +800,6 @@ void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 	dd_interface_implementation->mvpMatrix = proj * view;
 
 	dd::flush();
-
 }
 
 // Called before quitting

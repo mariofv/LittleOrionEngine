@@ -5,7 +5,6 @@
 #include "Component/ComponentAABB.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 #include "EditorUI/Panel/PanelScene.h"
-#include "Helper/TimerUs.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
@@ -24,7 +23,6 @@ public:
 	};
 	
 	ComponentBillboard();
-	ComponentBillboard(const std::string& texture_path, float width, float height, AlignmentType a_type);
 	ComponentBillboard(GameObject * owner);
 	~ComponentBillboard();
 
@@ -36,52 +34,44 @@ public:
 	ComponentBillboard & operator=(ComponentBillboard && component_to_move) = default;
 	void Delete() override;
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
+
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
+
+	void InitData();
 
 	void Render(const float3& position);
 	void SwitchFrame();
 
-	//TODO
 	void ChangeTexture(uint32_t texture_uuid);
-
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
 
-	AlignmentType alignment_type;
-	TimerUs self_timer;
+private:
+	AlignmentType alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;;
 
+    uint32_t texture_uuid = 0;
+	std::shared_ptr<Texture> billboard_texture = nullptr;
+	
 	//Spritesheet params
-	int x_tiles = 0;
-	int y_tiles = 0;
+	int x_tiles = 1;
+	int y_tiles = 1;
 
 	//color
 	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	//Current sprite position
+	float time_since_start = 0.f;
 	float current_sprite_x = 0, current_sprite_y = 0;
-	std::shared_ptr<Texture> billboard_texture = nullptr;
-	float sheet_speed = 0;
+	float sheet_speed = 1;
 	bool oriented_to_camera;
 
-private:
 	bool is_spritesheet = false;
 	float width = 5.f;
 	float height = 5.f;
 
-	float vertices[20] = {
-		 0.5f,  0.5f, 0.0f,		1.0f, 1.0f,
-		 0.5f, -0.5f, 0.0f,		1.0f, 0.0f,
-		-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
-		-0.5f,  0.5f, 0.0f,		0.0f, 1.0f
-	};
-	unsigned int indices[6] = {
-		0, 1, 3,
-		1, 2, 3
-	};
-
-	unsigned int EBO;
+	unsigned int vbo, vao, ebo;
 
 	//Determines when the sprite is changed
 	int innerCount = 0;

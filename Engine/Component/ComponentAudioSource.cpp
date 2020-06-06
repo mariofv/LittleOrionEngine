@@ -37,6 +37,7 @@ void ComponentAudioSource::Delete()
 {
 	StopAll();
 	AK::SoundEngine::UnregisterGameObj(gameobject_source);
+	App->audio->RemoveComponentAudioSource(this);
 }
 
 void ComponentAudioSource::SetSoundBank(uint32_t uuid)
@@ -50,7 +51,7 @@ void ComponentAudioSource::SetVolume(float volume)
 	AK::SoundEngine::SetGameObjectOutputBusVolume(gameobject_source,App->audio->main_sound_gameobject,volume);
 }
 
-unsigned long ComponentAudioSource::PlayEvent(const std::string & event_to_play)
+ENGINE_API unsigned long ComponentAudioSource::PlayEvent(const std::string & event_to_play)
 {
 	AkPlayingID playing_id = AK::SoundEngine::PostEvent(event_to_play.c_str(), gameobject_source);
 	if (playing_id == AK_INVALID_PLAYING_ID)
@@ -93,6 +94,7 @@ Component* ComponentAudioSource::Clone(bool original_prefab) const
 		created_component = App->audio->CreateComponentAudioSource();
 	}
 	*created_component = *this;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 };
 
@@ -102,19 +104,16 @@ void ComponentAudioSource::Copy(Component* component_to_copy) const
 	*static_cast<ComponentAudioSource*>(component_to_copy) = *this;
 }
 
-void ComponentAudioSource::Save(Config& config) const
+void ComponentAudioSource::SpecializedSave(Config& config) const
 {
-	Component::Save(config);
-
 	config.AddFloat(volume, "Volume");
 	uint32_t soundbank_uuid = soundbank ? soundbank->GetUUID() : 0;
 	config.AddUInt(soundbank_uuid, "SoundBank");
 	config.AddBool(sound_3d, "3DSound");
 }
 
-void ComponentAudioSource::Load(const Config& config)
+void ComponentAudioSource::SpecializedLoad(const Config& config)
 {
-	Component::Load(config);
 	volume = config.GetFloat("Volume", 1);
 	sound_3d = config.GetBool("3DSound", false);
 	uint32_t soundbank_uuid = config.GetUInt("SoundBank", 0);

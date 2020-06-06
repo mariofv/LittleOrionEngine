@@ -327,14 +327,17 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder
 .mfractor/
 
-!Libraries/**
+# Configuration files
 imgui.ini
-Game/Library/**
-TwinlightSouls/
-**/LittleOrionEngine.lib
+NodeEditor.json
 
+# Binaries Folders
+/[Bb]inaries*
+Game/Library/**
+!Libraries/**
+
+# Assets
+Game/Assets
 Game/Resources/Scenes/tmp_scene.*
 Game/Resources/Scripts/GameplaySystem*[0-9]*
-
-/[Bb]inaries*
 *.ps1

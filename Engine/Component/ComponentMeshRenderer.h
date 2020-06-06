@@ -28,8 +28,8 @@ public:
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
 
 	void Delete() override;
 
@@ -66,8 +66,9 @@ public:
 
 	std::vector<float4x4> palette;
 
-private:
+	bool is_raycastable = true;
 
+private:
 	friend class PanelComponent;
 };
 

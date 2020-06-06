@@ -1,8 +1,8 @@
 #ifndef _DEBUGDRAWGL_H_
 #define _DEBUGDRAWGL_H_
 
-#include "recast/DebugUtils/DebugDraw.h"
 #include "Component/ComponentCamera.h"
+#include <recast/DebugUtils/DebugDraw.h>
 
 class DebugDrawGL
 {

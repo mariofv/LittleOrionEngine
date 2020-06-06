@@ -100,6 +100,7 @@ void ModuleSpacePartitioning::RemoveAABBTree(GameObject* game_object)
 
 void ModuleSpacePartitioning::UpdateAABBTree(GameObject * game_object)
 {
+	BROFILER_CATEGORY("Update AABBTree", Profiler::Color::Lavender);
 	if(game_object->IsStatic())
 	{
 		return;

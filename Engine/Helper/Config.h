@@ -5,14 +5,16 @@
 
 #include "Main/Globals.h"
 #include <MathGeoLib.h>
-#include "SDL/SDL.h"
+#include <SDL/SDL.h>
 
 #include <rapidjson/document.h>
 
+struct FileData;
 class Config
 {
 public:
 	Config();
+	Config(FileData & data);
 	Config(const rapidjson::Value& object_value);
 	Config(const std::string& serialized_scene_string);
 	~Config() = default;

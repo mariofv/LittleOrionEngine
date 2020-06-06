@@ -22,6 +22,13 @@ struct SDL_Texture;
 struct SDL_Renderer;
 struct SDL_Rect;
 
+struct RaycastHit
+{
+	GameObject* game_object = nullptr;
+	float hit_distance = 0.0f;
+	float3 hit_point = float3::zero;
+};
+
 class ModuleRender : public Module
 {
 public:
@@ -54,8 +61,8 @@ public:
 	ENGINE_API int GetRenderedTris() const;
 	ENGINE_API int GetRenderedVerts() const;
 
-	GameObject* GetRaycastIntertectedObject(const LineSegment& ray);
-	bool GetRaycastIntertectedObject(const LineSegment& ray, float3& position);
+	ENGINE_API RaycastHit* GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* cam);
+	ENGINE_API void SetDrawMode(DrawMode draw_mode);
 
 private:
 	void SetVSync(bool vsync);
@@ -70,7 +77,6 @@ private:
 	void SetDithering(bool gl_dither);
 	void SetMinMaxing(bool gl_minmax);
 
-	void SetDrawMode(DrawMode draw_mode);
 	std::string GetDrawMode() const;
 
 	void GetMeshesToRender(const ComponentCamera* camera);
@@ -115,6 +121,7 @@ private:
 	Timer * rendering_measure_timer = new Timer();
 
 	friend class ModuleDebugDraw;
+	friend class ModuleDebug;
 	friend class ModuleSpacePartitioning;
 	friend class PanelConfiguration;
 	friend class PanelScene;

@@ -3,6 +3,7 @@
 #include "EditorUI/Helper/ImGuiHelper.h"
 #include "EditorUI/Panel/PanelPopups.h"
 #include "EditorUI/Panel/PopupsPanel/PanelPopupResourceSelector.h"
+#include "EditorUI/Panel/PanelProjectExplorer.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -12,6 +13,8 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleResourceManager.h"
+
+#include "ResourceManagement/Metafile/ModelMetafile.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -27,20 +30,26 @@ PanelMaterial::PanelMaterial()
 
 void PanelMaterial::Render(std::shared_ptr<Material> material)
 {
-	if (material->IsCoreResource())
+	
+	Metafile * metafile = App->resources->resource_DB->GetEntry(material->GetUUID());
+	bool extracted = IsMaterialExtracted(material);
+
+	bool is_core = material->IsCoreResource();
+
+	if (is_core || extracted)
 	{
 		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
 	}
 	modified_by_user = false;
 
-	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_CIRCLE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Spacing();
 		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(50, 50)); // TODO: Substitute this with resouce thumbnail
 		ImGui::SameLine();
 		ImGui::AlignTextToFramePadding();
-		ImGui::Text(App->resources->resource_DB->GetEntry(material->GetUUID())->resource_name.c_str());
+		ImGui::Text(metafile->resource_name.c_str());
 		ImGui::Spacing();
 
 		if (ImGui::BeginCombo("Shader", material->shader_program.c_str()))
@@ -73,7 +82,10 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 					material->ChangeTypeOfMaterial((Material::MaterialType)i);
 					const char* name = Material::GetMaterialTypeName(material->material_type).c_str();
 					if (is_selected)
+					{
 						ImGui::SetItemDefaultFocus();
+					}
+					modified_by_user = true;
 				}
 
 			}
@@ -110,18 +122,25 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 	{
 		App->resources->Save<Material>(material);
 	}
-	if (material->IsCoreResource())
+	if (is_core || extracted)
 	{
 		ImGui::PopItemFlag();
 		ImGui::PopStyleVar();
 	}
 }
 
-void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, Material::MaterialTextureType type)
+bool PanelMaterial::IsMaterialExtracted(const std::shared_ptr<Material> &material)
 {
+	Metafile * meta = App->resources->resource_DB->GetEntry(material->GetUUID());
+	return meta->version == 0;
+}
+
+bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, Material::MaterialTextureType type)
+{
+
 	ImGui::PushID(static_cast<unsigned int>(type));
 
-	float material_texture_map_size = 20.f;
+	float material_texture_map_size = 20.F;
 
 	void* display_image;
 	if (material->textures[type].get() != nullptr)
@@ -177,16 +196,31 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Spacing();
 		ImGui::Indent();
 
-		ImGui::ColorEdit3("Color", material->diffuse_color);
-		ImGui::SliderFloat("K diffuse", &material->k_diffuse, 0.f, 1.f);
+		if (ImGui::ColorEdit3("Color", material->diffuse_color))
+		{
+			modified_by_user = true;
+		}
+		if (ImGui::SliderFloat("K diffuse", &material->k_diffuse, 0.f, 1.f))
+		{
+			modified_by_user = true;
+		}
 
 		if (material->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
 		{
-			ImGui::SliderFloat("Transparency", &material->transparency, 0.01f, 1.f);
+			if (ImGui::SliderFloat("Transparency", &material->transparency, 0.01f, 1.f))
+			{
+				modified_by_user = true;
+			}
 		}
 
-		ImGui::SliderFloat("Tiling X", &material->tiling_x, 0.f, 10.f);
-		ImGui::SliderFloat("Tiling Y", &material->tiling_y, 0.f, 10.f);
+		if (ImGui::DragFloat("Tiling X", &material->tiling_x, 0.f, 10.f))
+		{
+			modified_by_user = true;
+		}
+		if (ImGui::DragFloat("Tiling Y", &material->tiling_y, 0.f, 10.f))
+		{
+			modified_by_user = true;
+		}
 		ImGui::Unindent();
 
 		break;
@@ -197,7 +231,10 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Spacing();
 		ImGui::Indent();
 
-		ImGui::ColorEdit3("Color", material->emissive_color);
+		if (ImGui::ColorEdit3("Color", material->emissive_color))
+		{
+			modified_by_user = true;
+		}
 		ImGui::Unindent();
 
 		break;
@@ -208,7 +245,10 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Spacing();
 		ImGui::Indent();
 
-		ImGui::SliderFloat("k ambient", &material->k_ambient, 0, 1);
+		if (ImGui::SliderFloat("k ambient", &material->k_ambient, 0, 1))
+		{
+			modified_by_user = true;
+		}
 		ImGui::Unindent();
 
 		break;
@@ -219,11 +259,14 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Spacing();
 		ImGui::Indent();
 
-		ImGui::ColorEdit3("Color", material->specular_color);
-
-		ImGui::SliderFloat("k specular", &material->k_specular, 0.f, 1.f);
-		//ImGui::SliderFloat("Roughness", &material->roughness, 0.f, 1.f);
-		//ImGui::SliderFloat("Metalness", &material->metalness, 0.f, 10.f);
+		if (ImGui::ColorEdit3("Color", material->specular_color))
+		{
+			modified_by_user = true;
+		}
+		if (ImGui::SliderFloat("k specular", &material->k_specular, 0.f, 1.f))
+		{
+			modified_by_user = true;
+		}
 
 		ImGui::Unindent();
 
@@ -239,11 +282,16 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 	{
 		material->RemoveMaterialTexture(type);
 		if (type == Material::MaterialTextureType::NORMAL)
+		{
 			material->use_normal_map = false;
+		}
+		modified_by_user = true;
 	}
 	ImGui::SameLine();
 	ImGui::Text("Remove Texture");
 	ImGui::PopID();
+
+	return modified_by_user;
 }
 
 std::string PanelMaterial::GetTypeName(Material::MaterialTextureType type)

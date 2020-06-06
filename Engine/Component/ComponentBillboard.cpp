@@ -4,56 +4,70 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleTime.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 ComponentBillboard::ComponentBillboard() : Component(nullptr, ComponentType::BILLBOARD)
 {
-	self_timer.Start();
-	this->alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
-	this->billboard_texture = App->resources->Load<Texture>(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
-	this->x_tiles = 1;
-	this->y_tiles = 1;
-	this->sheet_speed = 1;
-	//owner->aabb.GenerateBoundingBox();
+	InitData();
 }
 
 ComponentBillboard::ComponentBillboard(GameObject * _owner) : Component(owner, ComponentType::BILLBOARD)
 {
-	self_timer.Start();
-	this->billboard_texture = App->resources->Load<Texture>(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
-	this->alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
-	this->x_tiles = 1;
-	this->y_tiles = 1;
-	this->sheet_speed = 1;
-	//owner->aabb.GenerateBoundingBox();
+	InitData();
 }
-
-ComponentBillboard::ComponentBillboard(const std::string& texture_path, float width, float height, AlignmentType a_type) : width(width), height(height), alignment_type(a_type), Component(nullptr, ComponentType::BILLBOARD)
-{
-	self_timer.Start();
-	billboard_texture = App->resources->Load<Texture>(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
-	is_spritesheet = false;
-	oriented_to_camera = true;
-
-	if (a_type == SPRITESHEET)
-		is_spritesheet = true;
-	x_tiles = 6;
-	y_tiles = 6;
-	sheet_speed = 1;
-}
-
 
 ComponentBillboard::~ComponentBillboard()
 {
 	// TODO: Check if not deleting billboard_quad causes a memory leak.
 }
 
-void ComponentBillboard::SwitchFrame() {
+void ComponentBillboard::InitData()
+{
+	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
 
-	APP_LOG_INFO("%.1f", self_timer.Read());
+	float vertices[20] =
+	{
+			0.5f,  0.5f, 0.0f,		1.0f, 1.0f,
+			0.5f, -0.5f, 0.0f,		1.0f, 0.0f,
+		   -0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
+		   -0.5f,  0.5f, 0.0f,		0.0f, 1.0f
+	};
+	unsigned int indices[6] =
+	{
+		0, 1, 3,
+		1, 2, 3
+	};
 
-	if (self_timer.Read() * sheet_speed >= 1)
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo);
+	glGenBuffers(1, &ebo);
+
+	glBindVertexArray(vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
+void ComponentBillboard::SwitchFrame()
+{
+	time_since_start += App->time->delta_time;
+	APP_LOG_INFO("%.1f", time_since_start);
+
+	if (time_since_start * sheet_speed >= 1)
 	{
 		current_sprite_x += 1;
 
@@ -65,8 +79,7 @@ void ComponentBillboard::SwitchFrame() {
 		if ((int)current_sprite_y <= 0) {
 			current_sprite_y = y_tiles;
 		}
-		self_timer.Stop();
-		self_timer.Start();
+		time_since_start = 0.f;
 	}
 
 
@@ -142,26 +155,8 @@ void ComponentBillboard::Render(const float3& position)
 	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color"),1, (float*)color);
 	glUniform3fv(glGetUniformLocation(shader_program, "billboard.center_pos"), 1, position.ptr());
 
-	unsigned int VBO, VAO, EBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
 
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	glBindVertexArray(VAO);
+	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
@@ -195,37 +190,39 @@ void ComponentBillboard::Delete()
 	App->renderer->RemoveComponentBillboard(this);
 }
 
-void ComponentBillboard::Save(Config& config) const
+void ComponentBillboard::SpecializedSave(Config& config) const
 {
-	/*config.AddUInt(UUID, "UUID");
-	config.AddInt((unsigned int)type, "ComponentType");
-	config.AddBool(active, "Active");
 	config.AddFloat(sheet_speed, "SheetSpeed");
 	config.AddInt(static_cast<int>(alignment_type), "BillboardType");
-	config.AddString(billboard_texture->exported_file, "TexturePath");
+	config.AddUInt(texture_uuid, "TextureUUID");
 	config.AddFloat(width, "Width");
 	config.AddFloat(height, "Height");
 	config.AddInt((unsigned int)x_tiles, "Rows");
 	config.AddInt((unsigned int)y_tiles, "Columns");
-	*/
 }
 
-void ComponentBillboard::Load(const Config& config)
+void ComponentBillboard::SpecializedLoad(const Config& config)
 {
-	/*UUID = config.GetUInt("UUID", 0);
+	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
 	sheet_speed = config.GetFloat("SheetSpeed", 1.f);
-	alignment_type= static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::SPRITESHEET)));
-	config.GetString("TexturePath", billboard_texture->exported_file, "");
+	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::SPRITESHEET)));
+	texture_uuid = config.GetUInt("TextureUUID", 0);
+	ChangeTexture(texture_uuid);
+
 	width = config.GetFloat("Width", 1.f);
 	height = config.GetFloat("Height", 1.f);
 	x_tiles = config.GetInt("Rows", 1.f);
 	y_tiles = config.GetInt("Columns", 1.f);
-	*/
 }
 
-void ComponentBillboard::ChangeTexture(uint32_t texture_uuid) {
-	billboard_texture = App->resources->Load<Texture>(texture_uuid);
+void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)
+{
+	if (texture_uuid != 0)
+	{
+		this->texture_uuid = texture_uuid;
+		billboard_texture = App->resources->Load<Texture>(texture_uuid);
+	}
 }
 
 

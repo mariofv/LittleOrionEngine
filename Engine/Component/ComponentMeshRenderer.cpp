@@ -33,21 +33,15 @@ void ComponentMeshRenderer::Delete()
 	App->renderer->RemoveComponentMesh(this);
 }
 
-void ComponentMeshRenderer::Save(Config& config) const
+void ComponentMeshRenderer::SpecializedSave(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddInt((unsigned int)type, "ComponentType");
-	config.AddBool(active, "Active");
 	config.AddUInt(mesh_uuid, "Mesh");
 	config.AddUInt(material_uuid, "Material");
 	config.AddUInt(skeleton_uuid, "Skeleton");
 }
 
-void ComponentMeshRenderer::Load(const Config& config)
+void ComponentMeshRenderer::SpecializedLoad(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
-
 	mesh_uuid = config.GetUInt("Mesh", 0);
 	SetMesh(mesh_uuid);
 
@@ -60,14 +54,6 @@ void ComponentMeshRenderer::Load(const Config& config)
 
 void ComponentMeshRenderer::Render()
 {
-	if (material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
-	{
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		/*glBlendFunc(GL_ONE, GL_ONE); TODO -> FIX THISÇ*/
-		glBlendEquation(GL_FUNC_ADD);
-	}
 	if (material_to_render == nullptr)
 	{
 		return;
@@ -88,10 +74,7 @@ void ComponentMeshRenderer::Render()
 	App->lights->Render(owner->transform.GetGlobalTranslation(), program);
 	RenderMaterial(program);
 	RenderModel();
-	if (material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
-	{
-		glDisable(GL_BLEND);
-	}
+
 	glUseProgram(0);
 }	
 
@@ -229,6 +212,7 @@ Component* ComponentMeshRenderer::Clone(bool original_prefab) const
 		created_component = App->renderer->CreateComponentMeshRenderer();
 	}
 	*created_component = *this;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 }
 
@@ -267,7 +251,7 @@ void ComponentMeshRenderer::SetSkeleton(uint32_t skeleton_uuid)
 	if (skeleton_uuid != 0)
 	{
 		skeleton = App->resources->Load<Skeleton>(skeleton_uuid);
-		palette.resize(skeleton->skeleton.size());
+		palette.resize(skeleton ? skeleton->skeleton.size() : 0 );
 		for (auto & matrix : palette)
 		{
 			matrix = float4x4::identity;
