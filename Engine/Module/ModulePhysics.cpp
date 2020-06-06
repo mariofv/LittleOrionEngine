@@ -1,16 +1,19 @@
-#include "ModulePhysics.h"
+
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentCapsuleCollider.h"
 #include "Component/ComponentCollider.h"
 #include "Component/ComponentCylinderCollider.h"
 #include "Component/ComponentMeshCollider.h"
 #include "Component/ComponentSphereCollider.h"
+#include "EditorUI/DebugDraw.h"
+#include "Helper/Utils.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "ModulePhysics.h"
 #include "ModuleTime.h"
 #include "ModuleDebugDraw.h"
+
 #include <GL/glew.h>
-#include "EditorUI/DebugDraw.h"
 
 
 ModulePhysics::ModulePhysics()
@@ -174,36 +177,86 @@ int DebugDrawer::getDebugMode() const
 	return btIDebugDraw::DBG_DrawWireframe;
 }
 
-bool ModulePhysics::RaycastWorld(const btVector3 &Start, btVector3 &End, btVector3 &Normal)
+bool ModulePhysics::RaycastWorld(const float3& start, float3& end)
 {
+	float3 normal;
+	return RaycastWorld(start, end, normal);
+}
 
-	btCollisionWorld::ClosestRayResultCallback RayCallback(Start, End);
-	//btCollisionWorld::RayResultCallback RayCallback(Start, End);
-	//Magic Line for not jumping on enemies
-	//RayCallback.m_collisionFilterMask = btBroadphaseProxy::StaticFilter;
+bool ModulePhysics::RaycastWorld(const float3& start, float3& end, float3& normal)
+{
+	btVector3 bullet_start = Utils::Float3TobtVector3(start);
+	btVector3 bullet_end = Utils::Float3TobtVector3(end);
+
+	ShowRay(static_cast<float3>(start), end);
+
+	btCollisionWorld::ClosestRayResultCallback RayCallback(bullet_start, bullet_end);
 	
-	world->rayTest(Start, End, RayCallback);
-	if (RayCallback.hasHit())
+	world->rayTest(bullet_start, bullet_end, RayCallback);
+	if (RayCallback.hasHit() && RayCallback.m_collisionObject->hasContactResponse())
 	{
-		End = RayCallback.m_hitPointWorld;
-		Normal = RayCallback.m_hitNormalWorld;
+		end = float3(RayCallback.m_hitPointWorld);
+		normal = float3(RayCallback.m_hitNormalWorld);
 		return true;
 	}
 
 	return false;
 }
 
-int ModulePhysics::GetRaycastWorldId(const btVector3& start, btVector3& end, btVector3& normal)
+int ModulePhysics::GetRaycastWorldId(const float3& start, float3& end, float3& normal)
 {
-	btCollisionWorld::ClosestRayResultCallback RayCallback(start, end);
+	btVector3 bullet_start = Utils::Float3TobtVector3(start);
+	btVector3 bullet_end = Utils::Float3TobtVector3(end);
 
-	world->rayTest(start, end, RayCallback);
+	ShowRay(static_cast<float3>(start), end);
+	
+	btCollisionWorld::ClosestRayResultCallback RayCallback(bullet_start, bullet_end);
+
+	world->rayTest(bullet_start, bullet_end, RayCallback);
 	if (RayCallback.hasHit())
 	{
-		end = RayCallback.m_hitPointWorld;
-		normal = RayCallback.m_hitNormalWorld;
+		end = float3(RayCallback.m_hitPointWorld);
+		normal = float3(RayCallback.m_hitNormalWorld);
 		return RayCallback.m_collisionObject->getWorldArrayIndex();
 	}
 
 	return -1;
+}
+
+ComponentCollider* ModulePhysics::GetRaycastWorldTarget(const float3& start, float3& end)
+{
+	btVector3 bullet_start = Utils::Float3TobtVector3(start);
+	btVector3 bullet_end = Utils::Float3TobtVector3(end);
+
+	ShowRay(static_cast<float3>(start), end);
+
+	btCollisionWorld::ClosestRayResultCallback RayCallback(bullet_start, bullet_end);
+
+	world->rayTest(bullet_start, bullet_end, RayCallback);
+	if (RayCallback.hasHit())
+	{
+		end = float3(RayCallback.m_hitPointWorld);
+		return FinColliderByWorldId(RayCallback.m_collisionObject->getWorldArrayIndex());
+	}
+	return nullptr;
+}
+
+ComponentCollider* ModulePhysics::FinColliderByWorldId(int id)
+{
+	for (auto collider : colliders)
+	{
+		if (collider->body->getWorldArrayIndex() == id)
+		{
+			return collider;
+		}
+	}
+	return nullptr;
+}
+
+void ModulePhysics::ShowRay(float3& start, float3& end)
+{
+	if (show_rays)
+	{
+		App->debug_draw->RenderLine(static_cast<float3>(start), end);
+	}
 }

@@ -263,7 +263,7 @@ bool ComponentCollider::DetectCollision()
 	return false;
 }
 
-bool ComponentCollider::DetectCollisionWith(ComponentCollider * collider)
+bool ComponentCollider::DetectCollisionWith(ComponentCollider* collider)
 {
 	btVector3 body_minim;
 	btVector3 body_maxim;
@@ -311,11 +311,6 @@ bool ComponentCollider::DetectCollisionWith(ComponentCollider * collider)
 	return false;
 }
 
-ENGINE_API void ComponentCollider::ClearForces() const
-{
-	body->clearForces();
-}
-
 void ComponentCollider::SetStatic()
 {
 	int flags = body->getCollisionFlags();
@@ -336,38 +331,11 @@ void ComponentCollider::SetRotationAxis()
 	body->setAngularFactor(btVector3(int(!freeze_rotation_x), int(!freeze_rotation_y), int(!freeze_rotation_z)));
 }
 
-void ComponentCollider::AddForce(float3& force)
-{
-	body->applyCentralForce(btVector3(force.x, force.y, force.z));
-
-	
-	if (abs(force.x) > 0 || abs(force.z) > 0) {
-
-		float3 direction = float3(force.x, 0, force.z);
-		Quat new_rotation = owner->transform.GetRotation().LookAt(float3::unitZ, direction.Normalized(), float3::unitY, float3::unitY);
-
-		btTransform trans = body->getWorldTransform();
-		btQuaternion transrot = trans.getRotation();
-
-		transrot = btQuaternion(new_rotation.x, new_rotation.y, new_rotation.z, new_rotation.w);
-		trans.setRotation(transrot);
-		body->setWorldTransform(trans);
-	}
-}
-
 void ComponentCollider::SwitchPhysics(bool active)
 {
 	active_physics = active;
 	SwitchPhysics();
 }
-
-ENGINE_API bool ComponentCollider::RaycastHit(btVector3& origin, btVector3& end)
-{
-	//Vector normal to the surface
-	btVector3 normal;
-	return App->physics->RaycastWorld(origin, end, normal);
-}
-
 
 void ComponentCollider::SwitchPhysics()
 {
@@ -380,6 +348,11 @@ void ComponentCollider::SwitchPhysics()
 	{
 		body->forceActivationState(DISABLE_SIMULATION);
 	}
+}
+
+bool ComponentCollider::RaycastHit(float3& origin, float3& end)
+{
+	return App->physics->RaycastWorld(origin, end);
 }
 
 void ComponentCollider::UpdateFriction()
@@ -413,118 +386,12 @@ float3 ComponentCollider::GetColliderCenter() const
 	return center;
 }
 
-void ComponentCollider::SetVelocity(float3& velocity, float speed)
+bool ComponentCollider::IsGrounded()
 {
-	//bottom of the model
-	btVector3 bottom = body->getWorldTransform().getOrigin();
-	bottom.setY(bottom.getY() - (5 * box_size.getY()));
-
-	//Vector normal to the surface
-	btVector3 Normal; 
-	App->physics->RaycastWorld(body->getWorldTransform().getOrigin(), bottom, Normal);
-	float3 normal = float3(Normal);
-	normal.Normalize();
-
-	float2 normal_2D = float2(normal.x, normal.y);
-	float2 vector_vel = normal_2D.Perp();
-	
-	if (velocity.Length() > 0) 
-	{
-		velocity.Normalize();
-		body->setLinearVelocity(speed * btVector3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z));
-		
-		
-		//rotate collider
-		float3 direction = velocity.Normalized();
-		Quat new_rotation = Quat::LookAt(owner->transform.GetFrontVector(), direction, owner->transform.GetUpVector(), float3::unitY);
-		
-		btTransform trans = body->getWorldTransform();
-
-		btQuaternion quat = trans.getRotation();
-		btQuaternion transrot = btQuaternion(new_rotation.x, new_rotation.y, new_rotation.z, new_rotation.w);
-		quat *= transrot;
-		trans.setRotation(quat);
-		body->setWorldTransform(trans);
-		
-	}
-	
-}
-
-void ComponentCollider::SetVelocityEnemy(float3 & velocity, float speed)
-{
-	//bottom of the model
-	btVector3 bottom = body->getWorldTransform().getOrigin();
-	bottom.setY(bottom.getY() - 200 * box_size.getY());
-
-	//Vector normal to the surface
-	btVector3 Normal;
-	App->physics->RaycastWorld(body->getWorldTransform().getOrigin(), bottom, Normal);
-	float3 normal = float3(Normal);
-	normal.Normalize();
-
-	float2 normal_2D = float2(normal.x, normal.y);
-	float2 vector_vel = normal_2D.Perp();
-
-	if (abs(velocity.x) > 0 || abs(velocity.z) > 0)
-	{
-		velocity.Normalize();
-		body->setLinearVelocity(speed*btVector3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z));
-
-		//rotate collider
-
-		/*float3 direction = float3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z);*/
-		float3 direction = float3(velocity.x, 0, velocity.z);
-		Quat new_rotation = owner->transform.GetRotation().LookAt(float3::unitZ, direction.Normalized(), float3::unitY, float3::unitY);
-
-		btTransform trans = body->getWorldTransform();
-		btQuaternion transrot = trans.getRotation();
-
-		transrot = btQuaternion(new_rotation.x, new_rotation.y, new_rotation.z, new_rotation.w);
-		//trans.setRotation(transrot);
-		body->setWorldTransform(trans);
-	}
-}
-
-void ComponentCollider::LookAt(float3& velocity, float speed)
-{
-	//bottom of the model
-	btVector3 bottom = body->getWorldTransform().getOrigin();
-	bottom.setY(bottom.getY() - 200 * box_size.getY());
-
-	//Vector normal to the surface
-	btVector3 Normal;
-	App->physics->RaycastWorld(body->getWorldTransform().getOrigin(), bottom, Normal);
-	float3 normal = float3(Normal);
-	normal.Normalize();
-
-	float2 normal_2D = float2(normal.x, normal.y);
-	float2 vector_vel = normal_2D.Perp();
-
-	if (abs(velocity.x) > 0 || abs(velocity.z) > 0)
-	{
-		velocity.Normalize();
-		//body->setLinearVelocity(speed*btVector3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z));
-
-		//rotate collider
-
-		/*float3 direction = float3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z);*/
-		float3 direction = float3(velocity.x, 0, velocity.z);
-		Quat new_rotation = owner->transform.GetRotation().LookAt(float3::unitZ, direction.Normalized(), float3::unitY, float3::unitY);
-
-		btTransform trans = body->getWorldTransform();
-		btQuaternion transrot = trans.getRotation();
-
-		transrot = btQuaternion(new_rotation.x, new_rotation.y, new_rotation.z, new_rotation.w);
-		trans.setRotation(transrot);
-		body->setWorldTransform(trans);
-	}
-}
-
-float3 ComponentCollider::GetCurrentVelocity() const
-{
-	btVector3 velocity = body->getLinearVelocity();
-
-	return float3(velocity.getX(), velocity.getY(), velocity.getZ());
+	float3 origin = GetOrigin();
+	float3 end = origin;
+	end.y -= box_size.getY() * 0.75;
+	return App->physics->RaycastWorld(origin, end, normal);
 }
 
 std::vector<float4> ComponentCollider::GetCollisions()
@@ -543,12 +410,12 @@ std::vector<float4> ComponentCollider::GetCollisions()
 			btManifoldPoint pt = contactManifold->getContactPoint(j);
 			if (pt.getDistance() < 0.0f)
 			{
-				if (obA->getWorldArrayIndex() == body->getWorldArrayIndex())
+				if (obA->getWorldArrayIndex() == body->getWorldArrayIndex() && obB->hasContactResponse())
 				{
 					float4 normal(pt.m_normalWorldOnB.getX(), pt.m_normalWorldOnB.getY(), pt.m_normalWorldOnB.getZ(), -pt.getDistance());
 					collisions.emplace_back(normal);
 				}
-				else if (obB->getWorldArrayIndex() == body->getWorldArrayIndex())
+				else if (obB->getWorldArrayIndex() == body->getWorldArrayIndex() && obA->hasContactResponse())
 				{
 					float4 normal(-pt.m_normalWorldOnB.getX(), -pt.m_normalWorldOnB.getY(), -pt.m_normalWorldOnB.getZ(), -pt.getDistance());
 					collisions.emplace_back(normal);
@@ -557,4 +424,14 @@ std::vector<float4> ComponentCollider::GetCollisions()
 		}
 	}
 	return collisions;
+}
+
+float3 ComponentCollider::GetOrigin() const
+{
+	return float3(body->getWorldTransform().getOrigin());
+}
+
+float3 ComponentCollider::GetBoxSize() const
+{
+	return float3(box_size);
 }

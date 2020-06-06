@@ -49,10 +49,16 @@ public:
 	ComponentCollider* CreateComponentCollider(const ComponentCollider::ColliderType collider_type, GameObject* owner);
 	void RemoveComponentCollider(ComponentCollider* collider_to_remove);
 
-	ENGINE_API bool RaycastWorld(const btVector3 &Start, btVector3 &End, btVector3 &Normal);
-	ENGINE_API int GetRaycastWorldId(const btVector3& start, btVector3& end, btVector3& normal);
-
+	ENGINE_API bool RaycastWorld(const float3& start, float3& end, float3& normal);
+	ENGINE_API bool RaycastWorld(const float3& start, float3& end);
+	// See who uses this
+	ENGINE_API int GetRaycastWorldId(const float3& start, float3& end, float3& normal);
+	ENGINE_API ComponentCollider* GetRaycastWorldTarget(const float3& start, float3& end);
 	void UpdateAllDimensions();
+
+private:
+	ComponentCollider* FinColliderByWorldId(int id);
+	void ShowRay(float3& start, float3& end);
 
 public:
 
@@ -68,6 +74,8 @@ public:
 
 	std::vector<ComponentCollider*> colliders;
 	math::float3 gravity = float3(0.0f, -10.0f, 0.0f); //gravity world
+	
+	bool show_rays = false;
 
 private:
 

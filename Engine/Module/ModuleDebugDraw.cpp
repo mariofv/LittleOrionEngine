@@ -709,9 +709,10 @@ void ModuleDebugDraw::RenderAABBTree() const
 	App->space_partitioning->DrawAABBTree();
 }
 
-void ModuleDebugDraw::RenderPhysics() const
+void ModuleDebugDraw::RenderPhysics(bool show_physics) const
 {
 	App->physics->world->debugDrawWorld();
+	App->physics->show_rays = show_physics;
 }
 
 void ModuleDebugDraw::RenderSelectedGameObjectHelpers() const

@@ -38,14 +38,8 @@ public:
 	virtual void Scale() {}
 
 	btRigidBody* AddBody();
-	ENGINE_API void AddForce(float3& force);
 
-	ENGINE_API void SetVelocity(float3& velocity, float speed);
-	ENGINE_API void SetVelocityEnemy(float3& velocity, float speed);
-
-	ENGINE_API void LookAt(float3& velocity, float speed);
-	ENGINE_API bool RaycastHit(btVector3& origin, btVector3& end);
-	ENGINE_API float3 GetCurrentVelocity() const;
+	ENGINE_API bool RaycastHit(float3& origin, float3& end);
 
 	void MoveBody();
 	void SetMass(float new_mass);
@@ -55,7 +49,6 @@ public:
 	ENGINE_API bool DetectCollision(); //returns true if collides with any object in the world
 	ENGINE_API bool DetectCollisionWith(ComponentCollider* collider); //returns true if collides with a concrete object
 
-	ENGINE_API void ClearForces() const;
 	void SetStatic();
 	void SetRotationAxis();
 
@@ -69,7 +62,13 @@ public:
 
 	void SetColliderCenter(float3& new_center);
 	float3 GetColliderCenter() const;
+
+	ENGINE_API bool IsGrounded();
 	ENGINE_API std::vector<float4> GetCollisions();
+
+	ENGINE_API float3 GetOrigin() const;
+	ENGINE_API float3 GetBoxSize() const;
+
 
 protected:
 	void CommonAssign(const ComponentCollider& component_to_copy);
@@ -78,8 +77,6 @@ protected:
 public:
 
 	ColliderType collider_type;
-
-	btRigidBody* body = nullptr;
 	float mass = 1.0F; // 0.0F would create a static or inmutable body
 
 	btDefaultMotionState* motion_state = nullptr;
@@ -107,7 +104,11 @@ public:
 
 	bool active_physics = true;
 
+	float3 normal = float3::zero;
+
 protected:
+	btRigidBody* body = nullptr;
+	friend class ModulePhysics;
 	friend class PanelComponent;
 
 };

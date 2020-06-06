@@ -85,7 +85,7 @@ void ModuleDebug::Render(ComponentCamera* cam)
 
 	if (show_physics)
 	{
-		App->debug_draw->RenderPhysics();
+		App->debug_draw->RenderPhysics(show_physics);
 	}
 
 	App->debug_draw->RenderSelectedGameObjectHelpers();
