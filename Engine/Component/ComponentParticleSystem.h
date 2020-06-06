@@ -45,8 +45,8 @@ public:
 
 	void Delete() override;
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
 	//Copy and move
 	
 	Component* Clone(bool original_prefab = false) const override;

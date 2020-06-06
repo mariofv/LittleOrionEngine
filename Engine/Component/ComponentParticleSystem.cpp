@@ -224,12 +224,12 @@ void ComponentParticleSystem::Delete()
 	App->renderer->RemoveComponentParticleSystem(this);
 }
 
-void ComponentParticleSystem::Save(Config& config) const
+void ComponentParticleSystem::SpecializedSave(Config& config) const
 {
 
 }
 
-void ComponentParticleSystem::Load(const Config& config)
+void ComponentParticleSystem::SpecializedLoad(const Config& config)
 {
 	
 }
