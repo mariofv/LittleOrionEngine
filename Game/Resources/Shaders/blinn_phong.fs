@@ -101,9 +101,12 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, v
 vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 specular_color);
 float NormalizedSpecular(vec3 normal, vec3 half_dir);
 
+uniform float ambient_light_intensity;
+uniform vec4 ambient_light_color;
+
 //SHADOW MAPS
 float ShadowCalculation();
-uniform float render_depth_from_light;
+uniform bool render_shadows;
 
 in vec4 close_pos_from_light;
 in vec4 mid_pos_from_light;
@@ -181,7 +184,7 @@ void main()
 	}
 
 
-	result += diffuse_color.rgb * (occlusion_color*0.2); //Ambient light
+	result += diffuse_color.rgb * (ambient_light_color.xyz*ambient_light_intensity); //Ambient light
 	//result += FrustumsCheck();
 		FragColor = vec4(result,1.0);
 		FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
@@ -227,7 +230,15 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	vec3 view_dir    = normalize(view_pos - position);
 	vec3 light_dir   = normalize(-directional_light.direction );
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
-	float shadow	 = ShadowCalculation();
+
+
+	float shadow;	
+	
+	if(render_shadows)
+		shadow = ShadowCalculation();
+	else
+		shadow = 1;
+
 	float specular = NormalizedSpecular(normalized_normal, half_dir);
 
 

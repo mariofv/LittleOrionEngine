@@ -24,13 +24,10 @@ bool ModuleLight::Init()
 }
 
 
-
-
-
 update_status ModuleLight::PostUpdate()
 {
 
-	light_position = float3((light_aabb.maxPoint.x + light_aabb.minPoint.x) * 0.5, (light_aabb.maxPoint.y + light_aabb.minPoint.y) * 0.5, light_aabb.minPoint.z);
+	light_position = float3((light_aabb.maxPoint.x + light_aabb.minPoint.x) * 0.5, (light_aabb.maxPoint.y + light_aabb.minPoint.y) * 0.5, light_aabb.maxPoint.z);
 	
 	float3 new_pos;
 	new_pos = directional_light_rotation * light_position;

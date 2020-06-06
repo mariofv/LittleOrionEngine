@@ -197,6 +197,11 @@ void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
 
 	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_x"), material_to_render->tiling_x);
 	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_y"), material_to_render->tiling_y);
+
+	//Ambient light intesity and color
+	glUniform1f(glGetUniformLocation(shader_program, "ambient_light_intensity"), App->lights->ambient_light_intensity);
+	glUniform4fv(glGetUniformLocation(shader_program, "ambient_light_color"), 1, (float*)App->lights->ambient_light_color);
+	glUniform1i(glGetUniformLocation(shader_program, "render_shadows"), App->renderer->render_shadows);
 }
 
 void ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const
