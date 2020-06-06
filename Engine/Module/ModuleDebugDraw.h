@@ -44,7 +44,7 @@ public:
 	void RenderTangentsAndBitangents() const;
 	
 	void RenderRectTransform(const GameObject* rect_owner) const;
-	void RenderLine(float3& a, float3& b) const;
+	ENGINE_API void RenderLine(float3& a, float3& b) const;
 
 	ENGINE_API void RenderPhysics() const;
 
