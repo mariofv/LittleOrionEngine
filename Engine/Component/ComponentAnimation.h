@@ -18,9 +18,9 @@ class ComponentAnimation :	public Component
 public:
 	ComponentAnimation();
 	ComponentAnimation(GameObject* owner);
-	~ComponentAnimation() = default;
+	~ComponentAnimation();
 
-	void Init();
+	void Init() override;
 
 	//Copy and move
 	ComponentAnimation(const ComponentAnimation& component_to_copy) = default;
@@ -32,6 +32,8 @@ public:
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
+	void Disable() override;
+
 	void SetStateMachine(uint32_t state_machine_uuid);
 	//to find it from NodeEditor
 	AnimController* GetAnimController();
@@ -39,13 +41,15 @@ public:
 	ENGINE_API void Play();
 	ENGINE_API void Stop();
 	ENGINE_API void ActiveAnimation(const std::string & trigger);
+	ENGINE_API bool IsOnState(const std::string & trigger);
+	ENGINE_API float GetCurrentClipPercentatge() const;
 
 	void Update() override;
 	void UpdateMeshes();
 	void Delete() override;
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
 
 	
 	bool playing = false;

@@ -3,12 +3,14 @@
 #include "ComponentAnimation.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+
+#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
-#include "Module/ModuleTexture.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleTexture.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
@@ -31,21 +33,15 @@ void ComponentMeshRenderer::Delete()
 	App->renderer->RemoveComponentMesh(this);
 }
 
-void ComponentMeshRenderer::Save(Config& config) const
+void ComponentMeshRenderer::SpecializedSave(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddInt((unsigned int)type, "ComponentType");
-	config.AddBool(active, "Active");
 	config.AddUInt(mesh_uuid, "Mesh");
 	config.AddUInt(material_uuid, "Material");
 	config.AddUInt(skeleton_uuid, "Skeleton");
 }
 
-void ComponentMeshRenderer::Load(const Config& config)
+void ComponentMeshRenderer::SpecializedLoad(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
-
 	mesh_uuid = config.GetUInt("Mesh", 0);
 	SetMesh(mesh_uuid);
 
@@ -62,7 +58,6 @@ void ComponentMeshRenderer::Render()
 	{
 		return;
 	}
-
 	std::string program_name = material_to_render->shader_program;
 	GLuint program = App->program->GetShaderProgramId(program_name);
 	glUseProgram(program);
@@ -79,6 +74,7 @@ void ComponentMeshRenderer::Render()
 	App->lights->Render(owner->transform.GetGlobalTranslation(), program);
 	RenderMaterial(program);
 	RenderModel();
+
 	glUseProgram(0);
 }	
 
@@ -98,7 +94,12 @@ void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 	AddDiffuseUniforms(shader_program);
 	AddEmissiveUniforms(shader_program);
 	AddSpecularUniforms(shader_program);
+
 	AddAmbientOclusionUniforms(shader_program);
+	AddNormalUniforms(shader_program);
+
+	AddExtraUniforms(shader_program);
+	
 }
 
 
@@ -127,7 +128,11 @@ void ComponentMeshRenderer::AddSpecularUniforms(unsigned int shader_program) con
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 2);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)material_to_render->specular_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_specular"), material_to_render->k_specular);
-	glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), material_to_render->shininess);
+	glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), material_to_render->specular_color[3]);
+
+	//Material BRDF variables
+	//glUniform1f(glGetUniformLocation(shader_program, "material.roughness"), material_to_render->roughness);
+	//glUniform1f(glGetUniformLocation(shader_program, "material.metalness"), material_to_render->metalness);
 }
 
 void ComponentMeshRenderer::AddAmbientOclusionUniforms(unsigned int shader_program) const
@@ -136,6 +141,29 @@ void ComponentMeshRenderer::AddAmbientOclusionUniforms(unsigned int shader_progr
 	BindTexture(Material::MaterialTextureType::OCCLUSION);
 	glUniform1i(glGetUniformLocation(shader_program, "material.occlusion_map"), 3);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_ambient"), material_to_render->k_ambient);
+}
+
+void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
+{
+	glActiveTexture(GL_TEXTURE4);
+	BindTexture(Material::MaterialTextureType::NORMAL);
+	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 4);
+	glUniform1i(glGetUniformLocation(shader_program, "material.use_normal_map"), material_to_render->use_normal_map);
+}
+
+void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
+{
+	if (material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)
+	{
+		glUniform1f(glGetUniformLocation(shader_program, "material.transparency"), 1.f);
+	}
+	else
+	{
+		glUniform1f(glGetUniformLocation(shader_program, "material.transparency"), material_to_render->transparency);
+	}
+
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_x"), material_to_render->tiling_x);
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_y"), material_to_render->tiling_y);
 }
 
 void ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const
@@ -154,6 +182,22 @@ void ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const
 		texture_id = App->texture->whitefall_texture_id;
 	}
 	glBindTexture(GL_TEXTURE_2D, texture_id);
+}
+
+bool ComponentMeshRenderer::BindTextureNormal(Material::MaterialTextureType id) const
+{
+	GLuint texture_id;
+
+	if (material_to_render->textures[id] != nullptr)
+	{
+		texture_id = material_to_render->textures[id]->opengl_texture;
+		glBindTexture(GL_TEXTURE_2D, texture_id);
+		return true;
+	}
+	else {
+
+		return false;
+	}
 }
 
 Component* ComponentMeshRenderer::Clone(bool original_prefab) const
@@ -220,6 +264,15 @@ void ComponentMeshRenderer::UpdatePalette(const std::vector<float4x4>& pose)
 	auto &  joints = skeleton->skeleton;
 	for (size_t i = 0; i < pose.size(); ++i)
 	{
-		palette[i] = pose[i] * joints[i].transform_global;
+		auto &  joints = skeleton->skeleton;
+		size_t joint_index = i;
+		float4x4 global_transform = float4x4::identity;
+		while (joints[joint_index].parent_index != -1)
+		{
+			joint_index = joints[joint_index].parent_index;
+			global_transform = pose[joint_index] * global_transform;
+
+		}
+		palette[i] =  global_transform * pose[i] * joints[i].transform_global;
 	}
 }

@@ -11,6 +11,7 @@ enum class FileType
 {
 	ANIMATION,
 	ARCHIVE,
+	FONT,
 	MATERIAL,
 	MESH,
 	META,
@@ -21,6 +22,7 @@ enum class FileType
 	SKYBOX,
 	STATE_MACHINE,
 	TEXTURE,
+	SOUND,
 	UNKNOWN
 };
 

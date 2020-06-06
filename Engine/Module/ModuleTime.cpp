@@ -5,11 +5,13 @@
 #include "Helper/Timer.h"
 #include "Main/Application.h"
 #include "ModuleEditor.h"
+#include "ModuleAnimation.h"
 #include "ModuleScene.h"
 #include "ModuleScriptManager.h"
 #include "ModuleWindow.h"
 
 #include <SDL/SDL.h>
+#include <Brofiler/Brofiler.h>
 
 ModuleTime::~ModuleTime()
 {
@@ -39,14 +41,13 @@ bool ModuleTime::Init()
 
 update_status ModuleTime::PreUpdate()
 {
-	
-
 	return update_status::UPDATE_CONTINUE;
 }
 
 
 void ModuleTime::EndFrame()
 {
+	BROFILER_CATEGORY("End Frame", Profiler::Color::Lavender);
 	++frame_count;
 
 	float real_time = real_time_clock->Read();
@@ -120,7 +121,7 @@ void ModuleTime::Play()
 		App->scene->SaveTmpScene();
 		game_time_clock->Start();
 		frame_start_time = game_time_clock->Read();
-		App->scripts->InitScripts();
+		App->animations->PlayAnimations();
 	}
 	else
 	{

@@ -10,6 +10,11 @@
 class ComponentMeshRenderer : public Component
 {
 public:
+	enum Variations
+	{
+		ENABLE_NORMAL_MAP =1 << 0,
+		ENABLE_SPECULAR_MAP = 1 << 1
+	};
 	ComponentMeshRenderer();
 	ComponentMeshRenderer(GameObject * owner);
 	~ComponentMeshRenderer() = default;
@@ -23,8 +28,8 @@ public:
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
 
 	void Delete() override;
 
@@ -43,7 +48,11 @@ private:
 	void AddEmissiveUniforms(unsigned int shader_program) const;
 	void AddSpecularUniforms(unsigned int shader_program) const;
 	void AddAmbientOclusionUniforms(unsigned int shader_program) const;
+	void AddNormalUniforms(unsigned int shader_program) const;
+	void AddExtraUniforms(unsigned int shader_program) const;
+
 	void BindTexture(Material::MaterialTextureType id) const;
+	bool BindTextureNormal(Material::MaterialTextureType id) const;
 
 public:
 	uint32_t mesh_uuid;
@@ -57,8 +66,9 @@ public:
 
 	std::vector<float4x4> palette;
 
-private:
+	bool is_raycastable = true;
 
+private:
 	friend class PanelComponent;
 };
 

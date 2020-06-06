@@ -6,7 +6,7 @@
 #include "Module/ModuleScriptManager.h"
 #include "Script/Script.h"
 
-#include "imgui.h"
+#include <imgui.h>
 
 ComponentScript::ComponentScript() : Component(nullptr, ComponentType::SCRIPT)
 {
@@ -39,6 +39,16 @@ void ComponentScript::Copy(Component * component_to_copy) const
 	*static_cast<ComponentScript*>(component_to_copy) = *this;
 }
 
+void ComponentScript::Enable()
+{
+	active = true;
+	if(!awaken)
+	{
+		AwakeScript();
+		StartScript();
+	}
+}
+
 void ComponentScript::LoadName(std::string& script_name) 
 {
 	this->name = script_name;
@@ -47,7 +57,7 @@ void ComponentScript::LoadName(std::string& script_name)
 
 void ComponentScript::Update()
 {
-	if (script && active) 
+	if (script && active && awaken && started)
 	{
 		script->Update();
 	}
@@ -58,13 +68,15 @@ void ComponentScript::AwakeScript()
 	if (script && active)
 	{
 		script->Awake();
+		awaken = true;
 	}
 }
 
 void ComponentScript::StartScript()
 {
-	if (script && active)
+	if (script && awaken && active)
 	{
+		started = true;
 		script->Start();
 	}
 }
@@ -81,11 +93,8 @@ void ComponentScript::ShowComponentWindow()
 	}
 }
 
-void ComponentScript::Save(Config& config) const
+void ComponentScript::SpecializedSave(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddInt((unsigned int)type, "ComponentType");
-	config.AddBool(active, "Active");
 	config.AddString(name, "ScriptName");
 	if (script)
 	{
@@ -94,10 +103,8 @@ void ComponentScript::Save(Config& config) const
 	
 }
 
-void ComponentScript::Load(const Config& config)
+void ComponentScript::SpecializedLoad(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
 	config.GetString("ScriptName", this->name, "");
 	LoadName(this->name);
 	if (script)

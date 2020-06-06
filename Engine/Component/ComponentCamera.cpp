@@ -6,16 +6,18 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleAI.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleDebug.h"
 #include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
-#include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleTime.h"
+#include "Module/ModuleUI.h"
 #include "Module/ModuleWindow.h"
 
-#include "ResourceManagement/ResourcesDB/CoreResources.h"
 #include "ResourceManagement/Resources/Skybox.h"
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 ComponentCamera::ComponentCamera() : Component(nullptr, ComponentType::CAMERA)
 {
@@ -79,17 +81,15 @@ void ComponentCamera::InitCamera()
 	glGenFramebuffers(1, &fbo);
 	glGenFramebuffers(1, &msfbo);
 
-	aspect_ratio = 1.f;
+	aspect_ratio = 1.F;
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
 	camera_frustum.pos = float3::unitX;
 	camera_frustum.front = float3::unitZ;
 	camera_frustum.up = float3::unitY;
-	camera_frustum.nearPlaneDistance = 1.f;
-	camera_frustum.farPlaneDistance = 100.0f;
-	camera_frustum.verticalFov = math::pi / 4.0f;
-	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
-
-	SetSkybox(0);
+	camera_frustum.nearPlaneDistance = 1.F;
+	camera_frustum.farPlaneDistance = 100.0F;
+	camera_frustum.verticalFov = math::pi / 4.0F;
+	camera_frustum.horizontalFov = 2.F * atanf(tanf(camera_frustum.verticalFov * 0.5F) * aspect_ratio);
 }
 
 void ComponentCamera::Update()
@@ -118,11 +118,8 @@ void ComponentCamera::Delete()
 	App->cameras->RemoveComponentCamera(this);
 }
 
-void ComponentCamera::Save(Config& config) const
+void ComponentCamera::SpecializedSave(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddUInt((uint64_t)type, "ComponentType");
-	config.AddBool(active, "Active");
 	config.AddUInt(camera_frustum.type, "FrustumType");
 	config.AddFloat(camera_frustum.nearPlaneDistance, "NearPlaneDistance");
 	config.AddFloat(camera_frustum.farPlaneDistance, "FarPlaneDistance");
@@ -134,10 +131,8 @@ void ComponentCamera::Save(Config& config) const
 	config.AddUInt(skybox_uuid, "Skybox");
 }
 
-void ComponentCamera::Load(const Config& config)
+void ComponentCamera::SpecializedLoad(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
 	uint64_t frustum_type_int = config.GetUInt("FrustumType", 1);
 	switch (frustum_type_int)
 	{
@@ -191,7 +186,7 @@ float ComponentCamera::GetHeight() const
 	return last_height;
 }
 
-void ComponentCamera::RecordFrame(float width, float height)
+void ComponentCamera::RecordFrame(float width, float height, bool scene_mode)
 {
 	if (last_width != width || last_height != height || toggle_msaa)
 	{
@@ -231,6 +226,8 @@ void ComponentCamera::RecordFrame(float width, float height)
 	}
 
 	App->renderer->RenderFrame(*this);
+	App->ui->Render(scene_mode);
+
 
 #if !GAME
 	if (App->renderer->anti_aliasing)
@@ -242,25 +239,40 @@ void ComponentCamera::RecordFrame(float width, float height)
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #endif
-	
 }
 
-void ComponentCamera::RecordDebugDraws(float width, float height) const
+void ComponentCamera::RecordDebugDraws(bool scene_mode)
 {
+#if !GAME
 	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+#endif
+	glViewport(0, 0, last_width, last_height);
 
-	glViewport(0, 0, width, height);
+	if (scene_mode)
+	{
+		App->debug_draw->RenderGrid();
+		if (App->debug->show_navmesh)
+		{
+			App->debug_draw->RenderNavMesh(*this);
+		}
+		App->debug_draw->RenderBillboards();
+		if (App->editor->selected_game_object != nullptr)
+		{
+			App->debug_draw->RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
+		}
+	}
 
-	App->debug_draw->Render();
-
+	App->debug_draw->RenderDebugDraws(*this);
+#if !GAME
 	if (App->renderer->anti_aliasing)
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, last_width, last_height, 0, 0, last_width, last_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#endif
 }
 
 GLuint ComponentCamera::GetLastRecordedFrame() const
@@ -597,6 +609,11 @@ float4x4 ComponentCamera::GetProjectionMatrix() const
 	return proj;
 }
 
+float4x4 ComponentCamera::GetClipMatrix() const
+{
+	return proj * view;
+}
+
 float4x4 ComponentCamera::GetInverseClipMatrix() const
 {
 	return camera_frustum.ViewProjMatrix().Inverted();
@@ -624,14 +641,19 @@ std::vector<float> ComponentCamera::GetFrustumVertices() const
 	return vertices;
 }
 
-bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const
+ENGINE_API bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const
 {
 	return CheckAABBCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
 }
 
-bool ComponentCamera::IsInsideFrustum(const AABB2D& aabb) const
+ENGINE_API bool ComponentCamera::IsInsideFrustum(const AABB2D& aabb) const
 {
 	return CheckAABB2DCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
+}
+
+ENGINE_API bool ComponentCamera::IsCompletlyInsideFrustum(const AABB& aabb) const
+{
+	return CheckAABBCollision(aabb) == ComponentAABB::CollisionState::INSIDE;
 }
 
 ComponentAABB::CollisionState ComponentCamera::CheckAABBCollision(const AABB& reference_AABB) const
@@ -720,8 +742,28 @@ ComponentAABB::CollisionState ComponentCamera::CheckAABB2DCollision(const AABB2D
 	return ComponentAABB::CollisionState::INTERSECT;
 }
 
-void ComponentCamera::GetRay(const float2& normalized_position, LineSegment &return_value) const
+void ComponentCamera::GetRay(const float2 &mouse_position, LineSegment &return_value) const
 {
+	float2 normalized_position = float2::zero;
+#if GAME
+	float2 window_mouse_position = mouse_position - float2(App->window->GetWidth()/2, App->window->GetHeight()/2);
+	normalized_position = float2(window_mouse_position.x * 2 / App->window->GetWidth(), -window_mouse_position.y * 2 / App->window->GetHeight());
+#else
+	if (App->time->isGameRunning() && App->editor->game_panel->IsHovered())
+	{
+		float2 window_center_pos = App->editor->game_panel->game_window_content_area_pos + float2(App->editor->game_panel->game_window_content_area_width, App->editor->game_panel->game_window_content_area_height) / 2;
+
+		float2 window_mouse_position = mouse_position - window_center_pos;
+		normalized_position = float2(window_mouse_position.x * 2 / App->editor->game_panel->game_window_content_area_width, -window_mouse_position.y * 2 / App->editor->game_panel->game_window_content_area_height);
+	}
+	else
+	{
+		float2 window_center_pos = App->editor->scene_panel->scene_window_content_area_pos + float2(App->editor->scene_panel->scene_window_content_area_width, App->editor->scene_panel->scene_window_content_area_height) / 2;
+
+		float2 window_mouse_position = mouse_position - window_center_pos;
+		normalized_position = float2(window_mouse_position.x * 2 / App->editor->scene_panel->scene_window_content_area_width, -window_mouse_position.y * 2 / App->editor->scene_panel->scene_window_content_area_height);
+	}
+#endif
 	return_value = camera_frustum.UnProjectLineSegment(normalized_position.x, normalized_position.y);
 }
 

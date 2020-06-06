@@ -52,8 +52,8 @@ public:
 	static std::shared_ptr<Texture> Load(uint32_t uuid, const FileData& resource_data);
 
 private:
-	static std::vector<char> LoadCompressedDDS(const FileData& resource_data, DDS::DDS_HEADER & dds_header);
-	static std::vector<char> LoadImageData(const std::string& file_path, int & width, int & height);
+	static std::vector<char> LoadCompressedDDS(const FileData& resource_data, size_t offset,DDS::DDS_HEADER & dds_header);
+	static std::vector<char> LoadImageData(const FileData& resource_data, size_t offset,const std::string& file_path, int & width, int & height, int & num_channels);
 
 };
 

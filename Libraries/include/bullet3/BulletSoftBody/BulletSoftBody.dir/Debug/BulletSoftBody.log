@@ -1,0 +1,20 @@
+﻿  Building Custom Rule C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/src/BulletSoftBody/CMakeLists.txt
+  btSoftBody.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\src\BulletSoftBody\btSoftBody.cpp(3698): warning C4316: 'btDbvntNode': puede que el objeto asignado en el montón no esté alineado 16
+  btSoftBodyConcaveCollisionAlgorithm.cpp
+  btSoftBodyHelpers.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\src\BulletSoftBody\btSoftBodyHelpers.cpp(1315): warning C4018: '<': no coinciden signed/unsigned
+  btSoftBodyRigidBodyCollisionConfiguration.cpp
+  btSoftRigidCollisionAlgorithm.cpp
+  btSoftRigidDynamicsWorld.cpp
+  btSoftMultiBodyDynamicsWorld.cpp
+  btSoftSoftCollisionAlgorithm.cpp
+  btDefaultSoftBodySolver.cpp
+  btDeformableBackwardEulerObjective.cpp
+  btDeformableBodySolver.cpp
+  btDeformableMultiBodyConstraintSolver.cpp
+  btDeformableContactProjection.cpp
+  btDeformableMultiBodyDynamicsWorld.cpp
+  btDeformableContactConstraint.cpp
+  Generando código...
+  BulletSoftBody.vcxproj -> C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\lib\Debug\BulletSoftBody_Debug.lib

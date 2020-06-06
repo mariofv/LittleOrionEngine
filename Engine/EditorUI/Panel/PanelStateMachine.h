@@ -40,7 +40,6 @@ struct NodeInfo
 	ax::NodeEditor::PinId input;
 	ax::NodeEditor::PinId output;
 	ImVec2 Pos, Size = {100.0f, 100.0f};
-	ImVec4  Color;
 	std::shared_ptr<State> state;
 	float speed = 1.0f;
 	

@@ -493,6 +493,7 @@ void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 		}
 		links.push_back(new LinkInfo{ ax::NodeEditor::LinkId(uniqueid++) , target, source, target_name, source_name, link });
 	}
+	delete[] state_machine_data.buffer;
 }
 
 

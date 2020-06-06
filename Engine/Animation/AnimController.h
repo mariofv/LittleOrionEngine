@@ -42,16 +42,16 @@ public:
 	void GetClipTransform(const std::shared_ptr<Skeleton> & skeleton, std::vector<math::float4x4>& pose);
 	void StartNextState(const std::string& trigger);
 	std::shared_ptr<Transition> active_transition;
+	bool IsOnState(const std::string& state);
 private:
 	void SetActiveState(std::shared_ptr<State> & state);
 	void FinishActiveState();
 public:
-	std::shared_ptr<StateMachine> state_machine;
+	std::shared_ptr<StateMachine> state_machine = nullptr;
 	std::vector<PlayingClip> playing_clips;
 
 private:
-	std::shared_ptr<State> active_state;
-	
+	std::shared_ptr<State> active_state = nullptr;
 	bool apply_transition = false;
 	friend class PanelComponent;
 };

@@ -5,7 +5,7 @@
 
 #include "Main/Globals.h"
 #include <MathGeoLib.h>
-#include "SDL/SDL.h"
+#include <SDL/SDL.h>
 
 #include <rapidjson/document.h>
 

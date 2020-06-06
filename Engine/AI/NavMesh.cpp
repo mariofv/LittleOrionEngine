@@ -488,7 +488,7 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path, Pa
 	filter.setIncludeFlags(SAMPLE_POLYFLAGS_ALL ^ SAMPLE_POLYFLAGS_DISABLED);
 	filter.setExcludeFlags(0);
 
-	float poly_pick_ext[3] = { 2.0f, 4.0f, 2.0f};
+	float poly_pick_ext[3] = { 2.0F, 4.0F, 2.0F};
 
 	nav_query->findNearestPoly((float*)&start, poly_pick_ext, &filter, &start_ref, 0);
 	nav_query->findNearestPoly((float*)&end, poly_pick_ext, &filter, &end_ref, 0);
@@ -529,12 +529,13 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path, Pa
 			memcpy(polys, path_ref, sizeof(dtPolyRef)*path_count);
 			int npolys = path_count;
 
-			float iter_pos[3], target_pos[3];
+			float iter_pos[3]; 
+			float target_pos[3];
 			nav_query->closestPointOnPoly(start_ref, (float*)&start, iter_pos, 0);
 			nav_query->closestPointOnPoly(polys[npolys - 1], (float*)&end, target_pos, 0);
 
-			static const float STEP_SIZE = 0.5f;
-			static const float SLOP = 0.01f;
+			static const float STEP_SIZE = 0.5F;
+			static const float SLOP = 0.01F;
 
 			int nsmooth_path = 0;
 
@@ -560,7 +561,8 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path, Pa
 				bool off_mesh_connection = (steer_pos_flag & DT_STRAIGHTPATH_OFFMESH_CONNECTION) ? true : false;
 
 				// Find movement delta.
-				float delta[3], len;
+				float delta[3];
+				float len;
 				dtVsub(delta, steer_pos, iter_pos);
 				// sqrt of vector by itself to get the magnitud of the vector delta
 				len = dtMathSqrtf(dtVdot(delta, delta));
@@ -590,7 +592,7 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path, Pa
 				dtVcopy(iter_pos, result);
 
 				// Handle end of path and off-mesh links when close enough.
-				if (end_of_path && InRange(iter_pos, steer_pos, SLOP, 1.0f))
+				if (end_of_path && InRange(iter_pos, steer_pos, SLOP, 1.0F))
 				{
 					// Reached end of path.
 					dtVcopy(iter_pos, target_pos);
@@ -601,10 +603,11 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path, Pa
 					}
 					break;
 				}
-				else if (off_mesh_connection && InRange(iter_pos, steer_pos, SLOP, 1.0f))
+				else if (off_mesh_connection && InRange(iter_pos, steer_pos, SLOP, 1.0F))
 				{
 					// Reached off-mesh connection.
-					float startPos[3], endPos[3];
+					float startPos[3];
+					float endPos[3];
 
 					// Advance the path up to and over the off-mesh connection.
 					dtPolyRef prevRef = 0, polyRef = polys[0];
@@ -636,7 +639,7 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path, Pa
 						}
 						// Move position at the other side of the off-mesh link.
 						dtVcopy(iter_pos, endPos);
-						float eh = 0.0f;
+						float eh = 0.0F;
 						nav_query->getPolyHeight(polys[0], iter_pos, &eh);
 						iter_pos[1] = eh;
 					}
@@ -750,7 +753,10 @@ void NavMesh::SaveNavMesh(unsigned char* nav_data, unsigned int nav_data_size) c
 	Path* navmesh_path = App->filesystem->GetPath(RESOURCES_NAVMESH_PATH);
 	std::string navmesh_filename("survival_scene_navmesh.bin");
 
-	FileData navmesh_data{ reinterpret_cast<char*>(nav_data), nav_data_size };
+	unsigned char* copy_nav_data = new unsigned char[nav_data_size];
+	memcpy(copy_nav_data, nav_data, nav_data_size);
+
+	FileData navmesh_data{ reinterpret_cast<char*>(copy_nav_data), nav_data_size };
 
 	navmesh_path->Save(navmesh_filename.c_str(), navmesh_data);
 }
@@ -1043,5 +1049,145 @@ float NavMesh::DistancePtLine2d(const float * pt, const float * p, const float *
 	dx = p[0] + t * pqx - pt[0];
 	dz = p[2] + t * pqz - pt[2];
 	return dx * dx + dz * dz;
+}
+
+void NavMesh::drawMeshTile(SampleDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query,
+	const dtMeshTile* tile, unsigned char flags)
+{
+	dtPolyRef base = mesh.getPolyRefBase(tile);
+
+	int tileNum = mesh.decodePolyIdTile(base);
+	const unsigned int tileColor = DuIntToCol(tileNum, 128);
+
+
+	for (int i = 0; i < tile->header->polyCount; ++i)
+	{
+		const dtPoly* p = &tile->polys[i];
+		if (p->getType() == DT_POLYTYPE_OFFMESH_CONNECTION)	// Skip off-mesh links.
+			continue;
+
+		const dtPolyDetail* pd = &tile->detailMeshes[i];
+
+		unsigned int col;
+		if (query && query->isInClosedList(base | (dtPolyRef)i))
+			col = DuRGBA(255, 196, 0, 64);
+		else
+		{
+			if (flags & DU_DRAWNAVMESH_COLOR_TILES)
+				col = tileColor;
+			else
+				col = DuTransCol(dd->AreaToCol(p->getArea()), 64);
+		}
+
+		for (int j = 0; j < pd->triCount; ++j)
+		{
+			const unsigned char* t = &tile->detailTris[(pd->triBase + j) * 4];
+			for (int k = 0; k < 3; ++k)
+			{
+				if (t[k] < p->vertCount)
+					dd->Vertex(&tile->verts[p->verts[t[k]] * 3], col);
+				else
+					dd->Vertex(&tile->detailVerts[(pd->vertBase + t[k] - p->vertCount) * 3], col);
+			}
+		}
+	}
+	/*
+	// Draw inter poly boundaries
+	drawPolyBoundaries(dd, tile, duRGBA(0,48,64,32), 1.5f, true);
+
+	// Draw outer poly boundaries
+	drawPolyBoundaries(dd, tile, duRGBA(0,48,64,220), 2.5f, false);
+
+	if (flags & DU_DRAWNAVMESH_OFFMESHCONS)
+	{
+		dd->begin(DU_DRAW_LINES, 2.0f);
+		for (int i = 0; i < tile->header->polyCount; ++i)
+		{
+			const dtPoly* p = &tile->polys[i];
+			if (p->getType() != DT_POLYTYPE_OFFMESH_CONNECTION)	// Skip regular polys.
+				continue;
+
+			unsigned int col, col2;
+			if (query && query->isInClosedList(base | (dtPolyRef)i))
+				col = duRGBA(255,196,0,220);
+			else
+				col = duDarkenCol(duTransCol(dd->areaToCol(p->getArea()), 220));
+
+			const dtOffMeshConnection* con = &tile->offMeshCons[i - tile->header->offMeshBase];
+			const float* va = &tile->verts[p->verts[0]*3];
+			const float* vb = &tile->verts[p->verts[1]*3];
+
+			// Check to see if start and end end-points have links.
+			bool startSet = false;
+			bool endSet = false;
+			for (unsigned int k = p->firstLink; k != DT_NULL_LINK; k = tile->links[k].next)
+			{
+				if (tile->links[k].edge == 0)
+					startSet = true;
+				if (tile->links[k].edge == 1)
+					endSet = true;
+			}
+
+			// End points and their on-mesh locations.
+			dd->vertex(va[0],va[1],va[2], col);
+			dd->vertex(con->pos[0],con->pos[1],con->pos[2], col);
+			col2 = startSet ? col : duRGBA(220,32,16,196);
+			duAppendCircle(dd, con->pos[0],con->pos[1]+0.1f,con->pos[2], con->rad, col2);
+
+			dd->vertex(vb[0],vb[1],vb[2], col);
+			dd->vertex(con->pos[3],con->pos[4],con->pos[5], col);
+			col2 = endSet ? col : duRGBA(220,32,16,196);
+			duAppendCircle(dd, con->pos[3],con->pos[4]+0.1f,con->pos[5], con->rad, col2);
+
+			// End point vertices.
+			dd->vertex(con->pos[0],con->pos[1],con->pos[2], duRGBA(0,48,64,196));
+			dd->vertex(con->pos[0],con->pos[1]+0.2f,con->pos[2], duRGBA(0,48,64,196));
+
+			dd->vertex(con->pos[3],con->pos[4],con->pos[5], duRGBA(0,48,64,196));
+			dd->vertex(con->pos[3],con->pos[4]+0.2f,con->pos[5], duRGBA(0,48,64,196));
+
+			// Connection arc.
+			duAppendArc(dd, con->pos[0],con->pos[1],con->pos[2], con->pos[3],con->pos[4],con->pos[5], 0.25f,
+						(con->flags & 1) ? 0.6f : 0, 0.6f, col);
+		}
+		dd->end();
+	}
+
+	const unsigned int vcol = duRGBA(0,0,0,196);
+	dd->begin(DU_DRAW_POINTS, 3.0f);
+	for (int i = 0; i < tile->header->vertCount; ++i)
+	{
+		const float* v = &tile->verts[i*3];
+		dd->vertex(v[0], v[1], v[2], vcol);
+	}
+	dd->end();
+
+	*/
+}
+
+void NavMesh::duDebugDrawNavMesh(SampleDebugDraw* dd, const dtNavMesh& mesh, unsigned char flags)
+{
+	if (!dd) return;
+
+	for (int i = 0; i < mesh.getMaxTiles(); ++i)
+	{
+		const dtMeshTile* tile = mesh.getTile(i);
+		if (!tile->header) continue;
+		drawMeshTile(dd, mesh, 0, tile, flags);
+	}
+}
+
+void NavMesh::duDebugDrawNavMeshWithClosedList(SampleDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags)
+{
+	if (!dd) return;
+
+	const dtNavMeshQuery* q = (flags & DU_DRAWNAVMESH_CLOSEDLIST) ? &query : 0;
+
+	for (int i = 0; i < mesh.getMaxTiles(); ++i)
+	{
+		const dtMeshTile* tile = mesh.getTile(i);
+		if (!tile->header) continue;
+		drawMeshTile(dd, mesh, q, tile, flags);
+	}
 }
 

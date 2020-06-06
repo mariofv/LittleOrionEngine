@@ -12,7 +12,7 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 	std::string serialized_state_machine_string = std::string(state_machine_data_buffer, state_machine_data.size);
 
 	Config state_machine_config(serialized_state_machine_string);
-
+	delete[] state_machine_data.buffer;
 	std::vector<Config> clips_config;
 	state_machine_config.GetChildrenConfig("Clips", clips_config);
 

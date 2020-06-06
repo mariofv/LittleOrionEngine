@@ -66,6 +66,10 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		{
 			new_vertex.tangent = float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
 		}
+		if (mesh->mBitangents)
+		{
+			new_vertex.bitangent = float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z);
+		}
 		if (vertex_skinning__info.size() > 0)
 		{
 			assert(vertex_skinning__info[i].first.size() <= MAX_JOINTS);

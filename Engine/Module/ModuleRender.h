@@ -9,6 +9,7 @@
 
 #include <MathGeoLib/Geometry/LineSegment.h>
 #include <GL/glew.h>
+#include <list>
 
 class ComponentCamera;
 class ComponentMeshRenderer;
@@ -17,6 +18,13 @@ class GameObject;
 struct SDL_Texture;
 struct SDL_Renderer;
 struct SDL_Rect;
+
+struct RaycastHit
+{
+	GameObject* game_object = nullptr;
+	float hit_distance = 0.0f;
+	float3 hit_point = float3::zero;
+};
 
 class ModuleRender : public Module
 {
@@ -44,8 +52,8 @@ public:
 	ENGINE_API int GetRenderedTris() const;
 	ENGINE_API int GetRenderedVerts() const;
 
-	GameObject* GetRaycastIntertectedObject(const LineSegment& ray);
-	bool GetRaycastIntertectedObject(const LineSegment& ray, float3& position);
+	ENGINE_API RaycastHit* GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* cam);
+	ENGINE_API void SetDrawMode(DrawMode draw_mode);
 
 private:
 	void SetVSync(bool vsync);
@@ -60,11 +68,10 @@ private:
 	void SetDithering(bool gl_dither);
 	void SetMinMaxing(bool gl_minmax);
 
-	void SetDrawMode(DrawMode draw_mode);
 	std::string GetDrawMode() const;
 
 	void GetMeshesToRender(const ComponentCamera* camera);
-
+	void SetListOfMeshesToRender(const ComponentCamera* camera);
 
 public:
 	bool anti_aliasing = false;
@@ -78,7 +85,7 @@ private:
 	bool gl_depth_test = false;
 	bool gl_scissor_test = false;
 	bool gl_stencil_test = false;
-	bool gl_blend = false;
+	bool gl_blend = true;
 	bool gl_cull_face = false;
 	int culled_faces = 0;
 	int front_faces = 0;
@@ -90,12 +97,14 @@ private:
 
 	std::vector<ComponentMeshRenderer*> meshes;
 	std::vector<ComponentMeshRenderer*> meshes_to_render;
-
+	typedef std::pair<float, ComponentMeshRenderer*> ipair;
+	std::list <ipair> opaque_mesh_to_render, transparent_mesh_to_render;
 	int num_rendered_tris = 0;
 	int num_rendered_verts = 0;
 	Timer * rendering_measure_timer = new Timer();
 
 	friend class ModuleDebugDraw;
+	friend class ModuleDebug;
 	friend class ModuleSpacePartitioning;
 	friend class PanelConfiguration;
 	friend class PanelScene;

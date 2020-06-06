@@ -1,37 +1,38 @@
 #include "ComponentAABB.h"
 #include "ComponentMeshRenderer.h"
 #include "Main/GameObject.h"
-#include "Brofiler/Brofiler.h"
+#include <Brofiler/Brofiler.h>
 
 ComponentAABB::ComponentAABB() : Component(nullptr, ComponentType::AABB)
 {
 
 }
 
-ComponentAABB::ComponentAABB(GameObject * owner) : Component(owner, ComponentType::AABB)
+ComponentAABB::ComponentAABB(GameObject* owner) : Component(owner, ComponentType::AABB)
 {
 
 }
 
-void ComponentAABB::Copy(Component * component_to_copy) const
+void ComponentAABB::Copy(Component* component_to_copy) const
 { 
 	*static_cast<ComponentAABB*>(component_to_copy) = *this; 
 };
 
-void ComponentAABB::Save(Config& config) const
+void ComponentAABB::SpecializedSave(Config& config) const
 {
 
 }
 
-void ComponentAABB::Load(const Config& config)
+void ComponentAABB::SpecializedLoad(const Config& config)
 {
 
 }
 
 void ComponentAABB::GenerateBoundingBox()
 {
+	BROFILER_CATEGORY("GenerateBoundingBox", Profiler::Color::Lavender);
 	bool has_mesh = false;
-	ComponentMeshRenderer * owner_mesh = static_cast<ComponentMeshRenderer*>(owner->GetComponent(ComponentType::MESH_RENDERER));
+	ComponentMeshRenderer* owner_mesh = static_cast<ComponentMeshRenderer*>(owner->GetComponent(ComponentType::MESH_RENDERER));
 	has_mesh = owner_mesh != nullptr;
 	
 	if (has_mesh)
@@ -55,12 +56,14 @@ void ComponentAABB::GenerateBoundingBox()
 	}
 }
 
-void ComponentAABB::GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex> & vertices)
+void ComponentAABB::GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex>& vertices)
 {
 	bounding_box.SetNegativeInfinity();
+	original_box.SetNegativeInfinity();
 	for (unsigned int i = 0; i < vertices.size(); ++i)
 	{
 		bounding_box.Enclose(vertices[i].position);
+		original_box.Enclose(vertices[i].position);
 	}
 }
 
