@@ -101,6 +101,13 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 			assert(weights_sum_round <= 1.0f && weights_sum_round >= 0.0f);
 			new_vertex.num_joints = vertex_skinning__info[i].second.size();
 		}
+		else
+		{
+			for (size_t j = 0; j < MAX_JOINTS; ++j)
+			{
+				new_vertex.weights[j] = 1;
+			}
+		}
 		vertices.push_back(new_vertex);
 	}
 

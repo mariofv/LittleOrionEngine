@@ -13,12 +13,10 @@ public:
 	~ModelMetafile() = default;
 
 	void Save(Config& config) const override;
-	void SaveExtractedNodes() const;
-	void LoadExtractedNodes();
+	void SaveExtractedNodes(Config& config) const;
+	void LoadExtractedNodes(const Config& config);
 	void Load(const Config& config) override;
 
-
-	Path* GetExtractedNodesPath() const;
 	void GetModelNode(Metafile& model_node_metafile ) const;
 	//Model
 	float scale_factor = 0.01f;
@@ -37,9 +35,5 @@ public:
 
 	//Extracted Nodes
 	std::vector<std::unique_ptr<Metafile>> nodes;
-
-private:
-
-	Path* GetExtractedNodesFolder() const;
 };
 #endif // _MODELMETAFILE_H_

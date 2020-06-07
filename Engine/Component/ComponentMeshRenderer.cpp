@@ -18,6 +18,7 @@ ComponentMeshRenderer::ComponentMeshRenderer(GameObject * owner) : Component(own
 {
 	SetMesh(0);
 	SetMaterial(0);
+	palette.push_back(float4x4::identity);
 	owner->aabb.GenerateBoundingBox();
 }
 
@@ -25,6 +26,7 @@ ComponentMeshRenderer::ComponentMeshRenderer() : Component(nullptr, ComponentTyp
 {
 	SetMesh(0);
 	SetMaterial(0);
+	palette.push_back(float4x4::identity);
 }
 
 
@@ -62,10 +64,9 @@ void ComponentMeshRenderer::Render()
 	GLuint program = App->program->GetShaderProgramId(program_name);
 	glUseProgram(program);
 
-	if (palette.size() > 0)
-	{
-		glUniformMatrix4fv(glGetUniformLocation(program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
-	}
+
+	glUniformMatrix4fv(glGetUniformLocation(program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
+	glUniform1i(glGetUniformLocation(program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());

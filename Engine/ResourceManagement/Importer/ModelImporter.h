@@ -30,8 +30,9 @@ struct CurrentModelData
 	Path* asset_file_folder_path = nullptr;
 	float scale = 1.f;
 	std::map<std::string, uint32_t> skeleton_cache;
- ModelMetafile* model_metafile;
- bool remmaped_changed = false;
+	 ModelMetafile* model_metafile;
+	 bool remmaped_changed = false;
+	 bool any_new_node = false;
 };
 
 public:

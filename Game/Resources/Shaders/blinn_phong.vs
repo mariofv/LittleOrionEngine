@@ -7,6 +7,8 @@ layout(location = 1) in vec2 vertex_uv0;
 layout(location = 7) in vec2 vertex_uv1;
 layout(location = 2) in vec3 vertex_normal;
 layout(location = 3) in vec3 vertex_tangent;
+layout(location = 4) in uvec4 vertex_joints;
+layout(location = 5) in vec4 vertex_weights;
 
 layout (std140) uniform Matrices
 {
@@ -38,6 +40,8 @@ struct Material {
 };
 
 uniform Material material;
+uniform mat4 palette[64];
+uniform int num_joints;
 
 out vec2 texCoord;
 out vec2 texCoordLightmap;
@@ -62,12 +66,20 @@ mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent);
 void main()
 {
 
+//Skinning
+	mat4 skinning_matrix = mat4(0);
+    for(uint i=0; i<num_joints; i++)
+	{
+		skinning_matrix += vertex_weights[i] * palette[vertex_joints[i]];
+	}
+
 // General variables
 	texCoord = vertex_uv0;
 	texCoordLightmap = vertex_uv1;
-	position = (matrices.model*vec4(vertex_position, 1.0)).xyz;
-	normal = (matrices.model*vec4(vertex_normal, 0.0)).xyz;
-	tangent = (matrices.model*vec4(vertex_tangent, 0.0)).xyz;
+
+	position = (matrices.model*skinning_matrix*vec4(vertex_position, 1.0)).xyz;
+	normal = (matrices.model*skinning_matrix*vec4(vertex_normal, 0.0)).xyz;
+	tangent = (matrices.model*skinning_matrix*vec4(vertex_tangent, 0.0)).xyz;
 
 	view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
 	view_dir    = normalize(view_pos - position);
