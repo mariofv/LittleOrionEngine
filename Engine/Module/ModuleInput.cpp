@@ -194,11 +194,10 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_CONTROLLERAXISMOTION:
 		{
-			int which;
 			for (int i = 0; i < total_game_controllers; ++i) {
 				if (event.cbutton.which == SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(controller[i]))) {
 					//controllerInputs[i].axis[event.caxis.axis] = event.caxis.value;
-					which = i;
+					int which = i;
 					left_joystick_raw[which] = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
 					right_joystick_raw[which] = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
 
