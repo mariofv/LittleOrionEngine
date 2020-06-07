@@ -28,6 +28,7 @@ public:
 		EMISSIVE,
 		OCCLUSION,
 		NORMAL,
+		LIGHTMAP,
 		UNKNOWN
 	};
 

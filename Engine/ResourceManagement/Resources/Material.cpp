@@ -40,7 +40,9 @@ void Material::Save(Config& config) const
 		case MaterialTextureType::NORMAL:
 			config.AddUInt(textures_uuid[i],  "Normal");
 			break;
-
+		case MaterialTextureType::LIGHTMAP:
+			config.AddUInt(textures_uuid[i], "Lightmap");
+			break;
 		default:
 			break;
 			
@@ -79,6 +81,7 @@ void Material::Load(const Config& config)
 	SetMaterialTexture(MaterialTextureType::OCCLUSION, config.GetUInt("Occlusion", 0));
 	SetMaterialTexture(MaterialTextureType::EMISSIVE, config.GetUInt("Emissive", 0));
 	SetMaterialTexture(MaterialTextureType::NORMAL, config.GetUInt("Normal", 0));
+	SetMaterialTexture(MaterialTextureType::LIGHTMAP, config.GetUInt("Lightmap", 0));
 
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
 	config.GetString("ShaderProgram", shader_program, "Blinn phong");
