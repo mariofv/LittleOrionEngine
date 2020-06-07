@@ -110,7 +110,7 @@ void PanelStateMachine::RenderStates()
 		ImGui::PushItemWidth(node->Size.x);
 		uint64_t old_hash = node->state->name_hash;
 		
-		ImGui::TextColored(ImVec4(0, 0, 255, 255), "State Name");
+		ImGui::TextColored(ImVec4(255, 255, 255, 255), "State Name");
 		ImGui::SameLine();
 		if(ImGui::InputText("###Node name Input", &node->state->name))
 		{
@@ -208,7 +208,7 @@ void PanelStateMachine::RenderStates()
 			}
 
 			//for each transition currently on progress, animate the corresponding transition link
-			if (anim->active_transition)
+			if (anim->active_transition && anim->apply_transition)
 			{
 				for (auto& link : links)
 				{
@@ -412,7 +412,7 @@ void PanelStateMachine::LeftPanel()
 		{
 			/*ImGui::LabelText(link->source.c_str(),"Transition From:");
 			ImGui::LabelText(link->target.c_str(), "Transition To:");*/
-			ImGui::TextColored(ImVec4{0, 0, 255, 255}, "Transition:");
+			ImGui::TextColored(ImVec4{255, 255, 255, 255}, "Transition:");
 			ImGui::Text(link->source.c_str()); ImGui::SameLine(); ImGui::Text("->"); ImGui::SameLine(); ImGui::Text(link->target.c_str());
 			ImGui::PushID(link->id.AsPointer());
 			ImGui::Separator();

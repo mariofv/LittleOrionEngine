@@ -43,6 +43,8 @@ public:
 	void StartNextState(const std::string& trigger);
 	std::shared_ptr<Transition> active_transition;
 	bool IsOnState(const std::string& state);
+
+	bool apply_transition = false;
 private:
 	void SetActiveState(std::shared_ptr<State> & state);
 	void FinishActiveState();
@@ -52,7 +54,6 @@ public:
 
 private:
 	std::shared_ptr<State> active_state = nullptr;
-	bool apply_transition = false;
 	friend class PanelComponent;
 };
 
