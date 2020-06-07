@@ -488,7 +488,6 @@ public:
 	const int MAX_MOUSE_BUTTONS = 5;
 	const int MAX_CONTROLLER_BUTTONS = 15;
 
-	bool singleplayer_input = true;
 	int total_game_controllers = 0;
 	std::map<std::string, GameInput> game_inputs;
 
