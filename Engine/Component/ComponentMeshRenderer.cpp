@@ -18,6 +18,7 @@ ComponentMeshRenderer::ComponentMeshRenderer(GameObject * owner) : Component(own
 {
 	SetMesh(0);
 	SetMaterial(0);
+	palette.push_back(float4x4::identity);
 	owner->aabb.GenerateBoundingBox();
 }
 
@@ -25,6 +26,7 @@ ComponentMeshRenderer::ComponentMeshRenderer() : Component(nullptr, ComponentTyp
 {
 	SetMesh(0);
 	SetMaterial(0);
+	palette.push_back(float4x4::identity);
 }
 
 
@@ -212,6 +214,7 @@ Component* ComponentMeshRenderer::Clone(bool original_prefab) const
 		created_component = App->renderer->CreateComponentMeshRenderer();
 	}
 	*created_component = *this;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 }
 
@@ -250,7 +253,7 @@ void ComponentMeshRenderer::SetSkeleton(uint32_t skeleton_uuid)
 	if (skeleton_uuid != 0)
 	{
 		skeleton = App->resources->Load<Skeleton>(skeleton_uuid);
-		palette.resize(skeleton->skeleton.size());
+		palette.resize(skeleton ? skeleton->skeleton.size() : 0 );
 		for (auto & matrix : palette)
 		{
 			matrix = float4x4::identity;

@@ -14,6 +14,7 @@
 #include "EditorUI/Panel/PanelNavMesh.h"
 #include "EditorUI/Panel/PanelProjectExplorer.h"
 #include "EditorUI/Panel/PanelScene.h"
+#include "EditorUI/Panel/PanelTags.h"
 #include "EditorUI/Panel/PanelResourceDatabase.h"
 #include "EditorUI/Panel/PopupsPanel/PanelPopupSceneLoader.h"
 #include "EditorUI/Panel/PopupsPanel/PanelPopupSceneSaver.h"
@@ -71,7 +72,14 @@ void PanelMenuBar::ShowFileMenu()
 		ImGui::Separator();
 		if (App->editor->current_scene_path != "" && ImGui::MenuItem(ICON_FA_SAVE " Save Scene"))
 		{
-			App->editor->SaveScene(App->editor->current_scene_path);
+			if (!App->time->isGameRunning())
+			{
+				App->editor->SaveScene(App->editor->current_scene_path);
+			}
+			else
+			{
+				APP_LOG_INFO("You must stop play mode to save scene.");
+			}
 		}
 		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene as"))
 		{
@@ -79,7 +87,10 @@ void PanelMenuBar::ShowFileMenu()
 			{
 				App->editor->popups->scene_saver_popup.popup_shown = true;
 			}
-			APP_LOG_INFO("You must stop play mode to save scene.");
+			else
+			{
+				APP_LOG_INFO("You must stop play mode to save scene.");
+			}
 		}
 		if(ImGui::MenuItem(ICON_FA_BUILDING " Build Options"))
 		{
@@ -229,6 +240,10 @@ void PanelMenuBar::ShowWindowMenu()
 			if (ImGui::MenuItem((ICON_FA_DATABASE " Resource Database"), (const char*)0, App->editor->resource_database->IsOpened()))
 			{
 				App->editor->resource_database->SwitchOpen();
+			}
+			if (ImGui::MenuItem((ICON_FA_TAGS " Tags"), (const char*)0, App->editor->tags_panel->IsOpened()))
+			{
+				App->editor->tags_panel->SwitchOpen();
 			}
 
 			ImGui::EndMenu();

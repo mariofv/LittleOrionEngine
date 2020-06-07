@@ -5,6 +5,7 @@
 #include "Module/ModuleResourceManager.h"
 
 #include "ResourceManagement/Metafile/MetafileManager.h"
+#include "ResourceManagement/Metafile/ModelMetafile.h"
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 #include <pcg_basic.h>
@@ -65,6 +66,7 @@ bool Importer::ImportRequired(const Path& file_path)
 		else if (exported_file_exist)
 		{
 			Path* library_path = App->filesystem->GetPath(metafile->exported_file_path);
+			
 			return  file_path.GetModificationTimestamp() > library_path->GetModificationTimestamp();
 		}
 		else
