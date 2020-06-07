@@ -49,7 +49,7 @@ public:
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
 
 private:
-	AlignmentType alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;;
+	AlignmentType alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
 
     uint32_t texture_uuid = 0;
 	std::shared_ptr<Texture> billboard_texture = nullptr;

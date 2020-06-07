@@ -29,7 +29,7 @@ public:
 		CONE
 	};
 	ComponentParticleSystem();
-	~ComponentParticleSystem() = default;
+	~ComponentParticleSystem();
 
 	ComponentParticleSystem(GameObject* owner);
 	
@@ -40,8 +40,6 @@ public:
 	void Render();
 	void UpdateParticle(Particle & particle);
 	void SetParticleTexture(uint32_t texture_uuid);
-	void UpdateParticle();
-	float3 GetPositionOfParticle();
 
 	void Delete() override;
 

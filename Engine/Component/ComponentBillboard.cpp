@@ -20,7 +20,12 @@ ComponentBillboard::ComponentBillboard(GameObject * _owner) : Component(owner, C
 
 ComponentBillboard::~ComponentBillboard()
 {
-	// TODO: Check if not deleting billboard_quad causes a memory leak.
+	if (vbo != 0)
+	{
+		glDeleteBuffers(1, &vbo);
+		glDeleteBuffers(1, &ebo);
+		glDeleteVertexArrays(1, &vao);
+	}
 }
 
 void ComponentBillboard::InitData()

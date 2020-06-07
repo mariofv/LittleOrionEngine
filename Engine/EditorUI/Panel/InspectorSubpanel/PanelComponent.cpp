@@ -157,9 +157,11 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Particle System", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		
-		if (!ShowCommonComponentWindow(particle_system))
+		ImGui::Checkbox("Active", &particle_system->active);
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
 		{
-			return;
+			App->actions->DeleteComponentUndo(particle_system);
 		}
 		ImGui::Separator();
 
@@ -178,14 +180,12 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
 			if (selected_resource_uuid != 0)
 			{
-				particle_system->billboard->ChangeTexture(selected_resource_uuid);
-				particle_system->texture_uuid = selected_resource_uuid;
+				particle_system->SetParticleTexture(selected_resource_uuid);
 			}
 			selected_resource_uuid = ImGui::ResourceDropper<Texture>();
 			if (selected_resource_uuid != 0)
 			{
-				particle_system->billboard->ChangeTexture(selected_resource_uuid);
-				particle_system->texture_uuid = selected_resource_uuid;
+				particle_system->SetParticleTexture(selected_resource_uuid);
 			}
 			int alignment_type = static_cast<int>(particle_system->billboard->alignment_type);
 			if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) 

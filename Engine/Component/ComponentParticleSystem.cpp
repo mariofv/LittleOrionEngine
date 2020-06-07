@@ -15,7 +15,11 @@ ComponentParticleSystem::ComponentParticleSystem() : Component(nullptr, Componen
 
 ComponentParticleSystem::ComponentParticleSystem(GameObject * owner) : Component(owner, ComponentType::PARTICLE_SYSTEM)
 {
-	
+	Init();
+}
+ComponentParticleSystem::~ComponentParticleSystem()
+{
+	delete billboard;
 }
 
 void ComponentParticleSystem::Init() 

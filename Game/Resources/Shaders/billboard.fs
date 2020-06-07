@@ -33,24 +33,12 @@ uniform Billboard billboard;
 void main()
 {
 	// Change to preprocessor directives
-	if(!billboard.isSpritesheet)
-	{
-		vec4 texture_color = texture(billboard.texture, texCoord)*billboard.color;
+		vec2 coordinates = !billboard.isSpritesheet ? texCoord : frame;
+		vec4 texture_color = texture(billboard.texture, coordinates)*billboard.color;
 		if(texture_color.a <0.1)
 		{
 			discard;
 		}
 		FragColor =  texture_color;
-	}
-
-	else
-	{
-		vec4 texture_color = texture(billboard.texture, frame)*billboard.color;
-		if(texture_color.a <0.1)
-		{
-			discard;
-		}
-		FragColor =  texture_color;
-	}
 
 }
