@@ -79,6 +79,16 @@ void PanelHierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 		flags |= ImGuiTreeNodeFlags_Selected;
 	}
 
+	if (App->editor->selected_game_object == game_object)
+	{
+		flags |= ImGuiTreeNodeFlags_Selected;
+	}
+
+	if(IsOneOfMyChildrens(game_object))
+	{
+		flags |= ImGuiTreeNodeFlags_DefaultOpen;
+	}
+
 	bool expanded = ImGui::TreeNodeEx(game_object_name_label.c_str(), flags);
 	DragAndDrop(game_object);
 	ShowGameObjectActionsMenu(game_object);
@@ -101,7 +111,6 @@ void PanelHierarchy::DragAndDrop(GameObject *game_object) const
 	DragSource(game_object);
 	DropTarget(game_object);
 }
-
 
 void PanelHierarchy::DragSource(GameObject *source_game_object) const
 {
@@ -347,4 +356,21 @@ std::string PanelHierarchy::GetNextGameObjectName()
 int PanelHierarchy::GetNextBranch()
 {
 	return ++branch_counter;
+}
+
+bool PanelHierarchy::IsOneOfMyChildrens(GameObject* game_object)
+{
+	bool found = false;
+	
+	for (auto& go : game_object->children) 
+	{
+		found = std::find(go->children.begin(), go->children.end(), App->editor->selected_game_object) != go->children.end() || go == App->editor->selected_game_object;
+		if (found)
+		{
+			APP_LOG_INFO("HOLAAAAA");
+			break;
+		}
+	}
+
+	return found;
 }

@@ -16,6 +16,8 @@ public:
 
 	std::string GetNextGameObjectName();
 	int GetNextBranch();
+	bool IsOneOfMyChildrens(GameObject * game_object);
+
 
 private:
 	void ShowGameObjectHierarchy(GameObject *game_object);
