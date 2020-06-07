@@ -179,11 +179,13 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			if (selected_resource_uuid != 0)
 			{
 				particle_system->billboard->ChangeTexture(selected_resource_uuid);
+				particle_system->texture_uuid = selected_resource_uuid;
 			}
 			selected_resource_uuid = ImGui::ResourceDropper<Texture>();
 			if (selected_resource_uuid != 0)
 			{
 				particle_system->billboard->ChangeTexture(selected_resource_uuid);
+				particle_system->texture_uuid = selected_resource_uuid;
 			}
 			int alignment_type = static_cast<int>(particle_system->billboard->alignment_type);
 			if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) 

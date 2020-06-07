@@ -203,11 +203,13 @@ void ComponentBillboard::SpecializedSave(Config& config) const
 
 void ComponentBillboard::SpecializedLoad(const Config& config)
 {
+	
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
 	sheet_speed = config.GetFloat("SheetSpeed", 1.f);
 	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::SPRITESHEET)));
 	texture_uuid = config.GetUInt("TextureUUID", 0);
+	
 	ChangeTexture(texture_uuid);
 
 	width = config.GetFloat("Width", 1.f);

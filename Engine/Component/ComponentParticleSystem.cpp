@@ -197,18 +197,17 @@ void ComponentParticleSystem::UpdateParticle(Particle& p)
 	}
 
 	//fade color
-
 	if (fade_between_colors)
 	{
-		float time = (time_spend / 1000) * (color_fade_time / 10);
+		float time = (time_spend / 1000) * (color_fade_time / 100);
 		float temp_color[3] = { p.color.x ,p.color.y ,p.color.z };
-		temp_color[0] = (1 - time) * p.color.x + time * color_to_fade[0];
-		temp_color[1] = (1 - time) * p.color.y + time * color_to_fade[1];
-		temp_color[2] = (1 - time) * p.color.z + time * color_to_fade[2];
-		billboard->color[0] = temp_color[0];
-		billboard->color[1] = temp_color[1];
-		billboard->color[2] = temp_color[2];
+		p.color.x = (1 - time) * p.color.x + time * color_to_fade[0];
+		p.color.y = (1 - time) * p.color.y + time * color_to_fade[1];
+		p.color.z = (1 - time) * p.color.z + time * color_to_fade[2];
 	}
+	billboard->color[0] = p.color.x;
+	billboard->color[1] = p.color.y;
+	billboard->color[2] = p.color.z;
 
 	//size
 	billboard->width = particles_width * p.particle_scale;
@@ -227,11 +226,103 @@ void ComponentParticleSystem::Delete()
 void ComponentParticleSystem::SpecializedSave(Config& config) const
 {
 
+	config.AddInt(static_cast<int>(type_of_particle_system), "Type of particle system");
+	config.AddBool(loop, "Loop");
+	config.AddInt(max_particles, "Max Particles");
+	config.AddInt(last_used_particle, "Last used particle");
+	config.AddInt(nr_new_particles, "Number of new particles");
+	config.AddBool(active, "Active");
+	config.AddInt(min_size_of_particle, "Max Size Particles");
+	config.AddInt(max_size_of_particle, "Min Size Particles");
+	config.AddFloat(particles_width, "Particle Width");
+	config.AddFloat(particles_height, "Particle Height");
+	config.AddBool(size_random, "Size random");
+
+	config.AddFloat(velocity_particles, "Velocity of particles");
+
+	config.AddFloat(time_counter, "Time Counter");
+	config.AddFloat(time_between_particles, "Time Between Particles");
+	config.AddFloat(particles_life_time, "Particles Life Time");
+
+	config.AddBool(follow_owner, "Follow owner");
+
+	config.AddBool(enabled_random_x, "Random X position");
+	config.AddInt(max_range_random_x, "Max range position x");
+	config.AddInt(min_range_random_x, "Min range position x");
+	config.AddInt(position_x, "Position X");
+
+	config.AddBool(enabled_random_z, "Random Z position");
+	config.AddInt(max_range_random_z, "Max range position z");
+	config.AddInt(min_range_random_z, "Min range position z");
+	config.AddInt(position_z, "Position Z");
+
+	config.AddFloat(inner_radius, "Inner Radius");
+	config.AddFloat(outer_radius, "Outer Radius");
+
+	config.AddFloat(color_particle[0], "Color Particle R");
+	config.AddFloat(color_particle[1], "Color Particle G");
+	config.AddFloat(color_particle[2], "Color Particle B");
+	config.AddFloat(color_particle[3], "Color Particle A");
+	config.AddBool(fade, "Fade");
+	config.AddFloat(fade_time, "Fade Time");
+	config.AddFloat(color_fade_time, "Color Fade Time");
+	config.AddBool(fade_between_colors, "Fade between Colors");
+	config.AddFloat(color_to_fade[0], "Color to fade R");
+	config.AddFloat(color_to_fade[1], "Color to fade G");
+	config.AddFloat(color_to_fade[2], "Color to fade B");
+	config.AddFloat(color_to_fade[3], "Color to fade A");
+	billboard->SpecializedSave(config);
 }
 
 void ComponentParticleSystem::SpecializedLoad(const Config& config)
 {
+	UUID = config.GetUInt("UUID", 0);
+	active = config.GetBool("Active", true);
+	type_of_particle_system = static_cast<TypeOfParticleSystem>(config.GetInt("Type of particle system", static_cast<int>(TypeOfParticleSystem::BOX)));
 	
+	loop = config.GetBool("Loop", true);
+	max_particles = config.GetInt("Max Particles", 500);
+	last_used_particle = config.GetInt("Last used particle", 0);
+	nr_new_particles = config.GetInt("Number of new particles",2);
+	min_size_of_particle = config.GetInt("Max Size Particles", 10);
+	max_size_of_particle = config.GetInt("Min Size Particles", 2);
+	particles_width = config.GetFloat("Particle Width", 0.2F);
+	particles_height = config.GetFloat("Particle Height", 0.2F);
+	size_random = config.GetBool("Size random", false);
+
+	velocity_particles = config.GetFloat("Velocity of particles", 1.0F);
+
+	time_counter = config.GetFloat("Time Counter", 0.0F);
+	time_between_particles = config.GetFloat("Time Between Particles", 0.2F);
+	particles_life_time = config.GetFloat("Particles Life Time", 3.0F);
+
+	follow_owner = config.GetBool("Follow owner", false);
+
+	enabled_random_x = config.GetBool("Random X position", true);
+	max_range_random_x = config.GetInt("Max range position x", 100);
+	min_range_random_x = config.GetInt("Min range position x", -100);
+	position_x = config.GetInt("Position X", 0);
+
+	enabled_random_z = config.GetBool("Random Z position", true);
+	max_range_random_z = config.GetInt("Max range position z", 100);
+	min_range_random_z = config.GetInt("Min range position z",-100);
+	position_z = config.GetInt("Position Z", 0);
+
+	inner_radius = config.GetFloat("Inner Radius", 1.0F);
+	outer_radius = config.GetFloat("Outer Radius", 3.0F);
+
+	color_particle[0] = config.GetFloat("Color Particle R", 1.0F);
+	color_particle[1] = config.GetFloat( "Color Particle G", 1.0F);
+	color_particle[2] = config.GetFloat("Color Particle B", 1.0F);
+	color_particle[3] = config.GetFloat("Color Particle A", 1.0F);
+	fade = config.GetBool("Fade", false);
+	fade_time = config.GetFloat("Fade Time", 1.0F);
+	color_fade_time = config.GetFloat("Color Fade Time", 1.0F);
+	fade_between_colors = config.GetBool("Fade between Colors", false);
+	color_to_fade[0] = config.GetFloat("Color to fade R", 1.0F);
+	color_to_fade[1] = config.GetFloat("Color to fade G", 1.0F);
+	color_to_fade[2] = config.GetFloat("Color to fade B", 1.0F);
+	color_to_fade[3] = config.GetFloat("Color to fade A", 1.0F);
 }
 
 Component* ComponentParticleSystem::Clone(bool original_prefab) const
