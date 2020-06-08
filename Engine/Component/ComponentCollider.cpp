@@ -1,7 +1,10 @@
 #include "ComponentCollider.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Helper/Utils.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleDebug.h"
+#include "Module/ModuleDebugDraw.h"
 #include "Module/ModulePhysics.h"
 
 ComponentCollider::ComponentCollider(ColliderType collider_type) : Component(ComponentType::COLLIDER), collider_type(collider_type)
@@ -237,9 +240,9 @@ void ComponentCollider::SetCollisionDetection()
 	body->setCollisionFlags(flags);
 }
 
-bool ComponentCollider::DetectCollision()
+std::vector<CollisionInformation> ComponentCollider::DetectAllCollision() const
 {
-
+	std::vector<CollisionInformation> collisions;
 	int numManifolds = App->physics->world->getDispatcher()->getNumManifolds();
 	for (int i = 0; i < numManifolds; i++)
 	{
@@ -251,64 +254,85 @@ bool ComponentCollider::DetectCollision()
 		for (int j = 0; j < numContacts; j++)
 		{
 			btManifoldPoint pt = contactManifold->getContactPoint(j);
-			if (obA->getWorldArrayIndex() == body->getWorldArrayIndex() || obB->getWorldArrayIndex() == body->getWorldArrayIndex())
+			if (pt.getDistance() < 0.0f
+				&& (obA->getWorldArrayIndex() == body->getWorldArrayIndex()
+					|| obB->getWorldArrayIndex() == body->getWorldArrayIndex()))
 			{
-				if (pt.getDistance() < 0.0f)
+				CollisionInformation info;
+				info.distance = pt.getDistance();
+				info.collider = App->physics->FinColliderByWorldId(obA->getWorldArrayIndex());
+				info.normal = float3(-pt.m_normalWorldOnB);
+				if (obB->getWorldArrayIndex() == body->getWorldArrayIndex())
 				{
-					return true;
+					info.collider = App->physics->FinColliderByWorldId(obB->getWorldArrayIndex());
+					info.normal = float3(pt.m_normalWorldOnB);
+				}
+				collisions.push_back(info);
+			}
+		}
+	}
+	return collisions;
+}
+bool ComponentCollider::IsCollidingWith(ComponentCollider* collider) const {
+	return DetectCollisionWith(collider).collider;
+}
+
+CollisionInformation ComponentCollider::DetectCollisionWith(ComponentCollider* collider) const
+{
+	
+	CollisionInformation collision_info;
+
+	if (detect_collision && collider->detect_collision)
+	{	
+		int numManifolds = App->physics->world->getDispatcher()->getNumManifolds();
+		for (int i = 0; i < numManifolds; i++)
+		{
+			btPersistentManifold* contactManifold = App->physics->world->getDispatcher()->getManifoldByIndexInternal(i);
+			const btCollisionObject* obA = contactManifold->getBody0();
+			const btCollisionObject* obB = contactManifold->getBody1();
+
+			int numContacts = contactManifold->getNumContacts();
+			for (int j = 0; j < numContacts; j++)
+			{
+				btManifoldPoint pt = contactManifold->getContactPoint(j);
+				if (pt.getDistance() < 0.0f
+					&& ((obA->getWorldArrayIndex() == body->getWorldArrayIndex()
+						&& obB->getWorldArrayIndex() == collider->body->getWorldArrayIndex())
+						|| (obB->getWorldArrayIndex() == body->getWorldArrayIndex()
+							&& obA->getWorldArrayIndex() == collider->body->getWorldArrayIndex())))
+				{
+					collision_info.distance = pt.getDistance();
+					collision_info.collider = App->physics->FinColliderByWorldId(obA->getWorldArrayIndex());
+					collision_info.normal = float3(-pt.m_normalWorldOnB);
+					if (obB->getWorldArrayIndex() == collider->body->getWorldArrayIndex())
+					{
+						collision_info.collider = App->physics->FinColliderByWorldId(obB->getWorldArrayIndex());
+						collision_info.normal = float3(pt.m_normalWorldOnB);
+					}
 				}
 			}
 		}
 	}
-	return false;
-}
+	else
+	{
+		btVector3 body_minim;
+		btVector3 body_maxim;
+		btVector3 collider_minim;
+		btVector3 collider_maxim;
 
-bool ComponentCollider::DetectCollisionWith(ComponentCollider* collider)
-{
-	btVector3 body_minim;
-	btVector3 body_maxim;
-	btVector3 collider_minim;
-	btVector3 collider_maxim;
-
-	if (!active_physics && !collider->active_physics) 
-	{	
 		App->physics->world->updateAabbs();
 		body->getAabb(body_minim, body_maxim);
 		collider->body->getAabb(collider_minim, collider_maxim);
-		
-		if (!(body_maxim.getX() < collider_minim.getX() || collider_maxim.getX() < body_minim.getX()))
-		{
-			if (!(body_maxim.getY() < collider_minim.getY() || collider_maxim.getY() < body_minim.getY())) 
-			{
-				if (!(body_maxim.getZ() < collider_minim.getZ() || collider_maxim.getZ() < body_minim.getZ())) 
-				{
-					return true;
-				}
-			}
-		}
-	}
 
-	int numManifolds = App->physics->world->getDispatcher()->getNumManifolds();
-	for (int i = 0; i < numManifolds; i++)
-	{
-		btPersistentManifold* contactManifold = App->physics->world->getDispatcher()->getManifoldByIndexInternal(i);
-		const btCollisionObject* obA = contactManifold->getBody0();
-		const btCollisionObject* obB = contactManifold->getBody1();
 
-		int numContacts = contactManifold->getNumContacts();
-		for (int j = 0; j < numContacts; j++)
+		if (!(body_maxim.getX() < collider_minim.getX() || collider_maxim.getX() < body_minim.getX())
+			&& !(body_maxim.getY() < collider_minim.getY() || collider_maxim.getY() < body_minim.getY())
+			&& !(body_maxim.getZ() < collider_minim.getZ() || collider_maxim.getZ() < body_minim.getZ()))
 		{
-			btManifoldPoint pt = contactManifold->getContactPoint(j);
-			if ((obA->getWorldArrayIndex() == body->getWorldArrayIndex() && obB->getWorldArrayIndex() == collider->body->getWorldArrayIndex()) || (obB->getWorldArrayIndex() == body->getWorldArrayIndex() && obA->getWorldArrayIndex() == collider->body->getWorldArrayIndex()))
-			{
-				if (pt.getDistance() < 0.0f)
-				{
-					return true;
-				}
-			}
+			collision_info.collider = collider;
 		}
-	}
-	return false;
+	}	
+	return collision_info;
 }
 
 void ComponentCollider::SetStatic()
@@ -350,9 +374,24 @@ void ComponentCollider::SwitchPhysics()
 	}
 }
 
-bool ComponentCollider::RaycastHit(float3& origin, float3& end)
+CollisionInformation ComponentCollider::RaycastHit(float3& start, float3& end) const
 {
-	return App->physics->RaycastWorld(origin, end);
+	CollisionInformation info;
+	btVector3 bullet_start = Utils::Float3TobtVector3(start);
+	btVector3 bullet_end = Utils::Float3TobtVector3(end);
+
+	btCollisionWorld::ClosestRayResultCallback RayCallback(bullet_start, bullet_end);
+
+	App->physics->world->rayTest(bullet_start, bullet_end, RayCallback);
+	if (RayCallback.hasHit()/* && RayCallback.m_collisionObject->hasContactResponse()*/)
+	{
+		end = float3(RayCallback.m_hitPointWorld);
+		info.collider = App->physics->FinColliderByWorldId(RayCallback.m_collisionObject->getWorldArrayIndex());
+		info.normal = float3(RayCallback.m_hitNormalWorld);
+		info.distance = (end - start).Length();
+	}
+
+	return info;
 }
 
 void ComponentCollider::UpdateFriction()
@@ -391,7 +430,7 @@ bool ComponentCollider::IsGrounded()
 	float3 origin = GetOrigin();
 	float3 end = origin;
 	end.y -= box_size.getY() * 0.75;
-	return App->physics->RaycastWorld(origin, end, normal);
+	return RaycastHit(origin, end).collider;
 }
 
 std::vector<float4> ComponentCollider::GetCollisions()

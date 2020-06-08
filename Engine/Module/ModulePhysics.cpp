@@ -177,70 +177,6 @@ int DebugDrawer::getDebugMode() const
 	return btIDebugDraw::DBG_DrawWireframe;
 }
 
-bool ModulePhysics::RaycastWorld(const float3& start, float3& end)
-{
-	float3 normal;
-	return RaycastWorld(start, end, normal);
-}
-
-bool ModulePhysics::RaycastWorld(const float3& start, float3& end, float3& normal)
-{
-	btVector3 bullet_start = Utils::Float3TobtVector3(start);
-	btVector3 bullet_end = Utils::Float3TobtVector3(end);
-
-	ShowRay(static_cast<float3>(start), end);
-
-	btCollisionWorld::ClosestRayResultCallback RayCallback(bullet_start, bullet_end);
-	
-	world->rayTest(bullet_start, bullet_end, RayCallback);
-	if (RayCallback.hasHit() && RayCallback.m_collisionObject->hasContactResponse())
-	{
-		end = float3(RayCallback.m_hitPointWorld);
-		normal = float3(RayCallback.m_hitNormalWorld);
-		return true;
-	}
-
-	return false;
-}
-
-int ModulePhysics::GetRaycastWorldId(const float3& start, float3& end, float3& normal)
-{
-	btVector3 bullet_start = Utils::Float3TobtVector3(start);
-	btVector3 bullet_end = Utils::Float3TobtVector3(end);
-
-	ShowRay(static_cast<float3>(start), end);
-	
-	btCollisionWorld::ClosestRayResultCallback RayCallback(bullet_start, bullet_end);
-
-	world->rayTest(bullet_start, bullet_end, RayCallback);
-	if (RayCallback.hasHit())
-	{
-		end = float3(RayCallback.m_hitPointWorld);
-		normal = float3(RayCallback.m_hitNormalWorld);
-		return RayCallback.m_collisionObject->getWorldArrayIndex();
-	}
-
-	return -1;
-}
-
-ComponentCollider* ModulePhysics::GetRaycastWorldTarget(const float3& start, float3& end)
-{
-	btVector3 bullet_start = Utils::Float3TobtVector3(start);
-	btVector3 bullet_end = Utils::Float3TobtVector3(end);
-
-	ShowRay(static_cast<float3>(start), end);
-
-	btCollisionWorld::ClosestRayResultCallback RayCallback(bullet_start, bullet_end);
-
-	world->rayTest(bullet_start, bullet_end, RayCallback);
-	if (RayCallback.hasHit())
-	{
-		end = float3(RayCallback.m_hitPointWorld);
-		return FinColliderByWorldId(RayCallback.m_collisionObject->getWorldArrayIndex());
-	}
-	return nullptr;
-}
-
 ComponentCollider* ModulePhysics::FinColliderByWorldId(int id)
 {
 	for (auto collider : colliders)
@@ -251,12 +187,4 @@ ComponentCollider* ModulePhysics::FinColliderByWorldId(int id)
 		}
 	}
 	return nullptr;
-}
-
-void ModulePhysics::ShowRay(float3& start, float3& end)
-{
-	if (show_rays)
-	{
-		App->debug_draw->RenderLine(static_cast<float3>(start), end);
-	}
 }

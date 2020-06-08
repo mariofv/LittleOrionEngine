@@ -6,6 +6,15 @@
 #include "Component.h"
 #include <bullet3/btBulletDynamicsCommon.h>
 
+class ComponentCollider;
+
+struct CollisionInformation
+{
+	ComponentCollider* collider = nullptr;
+	float distance = 0.0F;
+	float3 normal = float3::zero;
+
+};
 
 class ComponentCollider : public Component
 {
@@ -17,7 +26,6 @@ public:
 		CYLINDER,
 		MESH
 	};
-
 	ComponentCollider(ColliderType collider_type);
 	ComponentCollider(GameObject* owner, ColliderType collider_type);
 	~ComponentCollider() = default;
@@ -39,16 +47,12 @@ public:
 
 	btRigidBody* AddBody();
 
-	ENGINE_API bool RaycastHit(float3& origin, float3& end);
-
 	void MoveBody();
 	void SetMass(float new_mass);
 	void SetVisualization();
 
 	ENGINE_API void SetCollisionDetection();
-	ENGINE_API bool DetectCollision(); //returns true if collides with any object in the world
-	ENGINE_API bool DetectCollisionWith(ComponentCollider* collider); //returns true if collides with a concrete object
-
+	
 	void SetStatic();
 	void SetRotationAxis();
 
@@ -68,8 +72,11 @@ public:
 
 	ENGINE_API float3 GetOrigin() const;
 	ENGINE_API float3 GetBoxSize() const;
-
-
+	ENGINE_API CollisionInformation RaycastHit(float3& start, float3& end) const;
+	ENGINE_API std::vector<CollisionInformation> DetectAllCollision() const; //returns true if collides with any object in the world
+	ENGINE_API bool IsCollidingWith(ComponentCollider* collider) const;
+	ENGINE_API CollisionInformation DetectCollisionWith(ComponentCollider* collider) const; //returns true if collides with a concrete object
+	
 protected:
 	void CommonAssign(const ComponentCollider& component_to_copy);
 	void UpdateCommonDimensions();
