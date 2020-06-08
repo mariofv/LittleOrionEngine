@@ -427,6 +427,26 @@ struct GameInput
 	}
 };
 
+struct Gamepad
+{
+	SDL_GameController* controller;
+	int device;
+	int joystick;
+
+	std::map<ControllerCode, KeyState> controller_bible;
+
+	float2 left_joystick;
+	float2 right_joystick;
+	float2 left_joystick_raw;
+	float2 right_joystick_raw;
+
+	Sint32 left_controller_trigger_raw;
+	Sint32 right_controller_trigger_raw;
+
+	float left_controller_trigger;
+	float right_controller_trigger;
+};
+
 class Path;
 
 class ModuleInput : public Module
@@ -472,6 +492,9 @@ public:
 	ENGINE_API bool DetectedKeyboardInput(const GameInput& button, KeyState state);
 	ENGINE_API bool DetectedGameControllerInput(const GameInput& button, KeyState state, ControllerID controller_id);
 
+	void AddGamepad(int id);
+	void RemoveGamepad(int id);
+
 private:
 	void SaveGameInputs(Config &config);
 	void LoadGameInputs(Config &config);
@@ -490,11 +513,12 @@ public:
 
 	int total_game_controllers = 0;
 	std::map<std::string, GameInput> game_inputs;
+	std::vector<Gamepad*> controller;
 
 private:
 	std::map<KeyCode, KeyState> key_bible;
 	std::map<MouseButton, KeyState> mouse_bible;
-	std::vector<std::map<ControllerCode, KeyState>> controller_bible;
+	//std::vector<std::map<ControllerCode, KeyState>> controller_bible;
 
 	//Predefined buttons
 	Path* game_inputs_file_path = nullptr;
@@ -508,19 +532,19 @@ private:
 	Uint8 mouse_clicks;
 	bool mouse_moving;
 
-	float2 left_joystick[MAX_PLAYERS];
-	float2 right_joystick[MAX_PLAYERS];
+	//float2 left_joystick[MAX_PLAYERS];
+	//float2 right_joystick[MAX_PLAYERS];
 
-	float2 left_joystick_raw[MAX_PLAYERS];
-	float2 right_joystick_raw[MAX_PLAYERS];
+	//float2 left_joystick_raw[MAX_PLAYERS];
+	//float2 right_joystick_raw[MAX_PLAYERS];
 
-	Sint32 left_controller_trigger_raw[MAX_PLAYERS];
-	Sint32 right_controller_trigger_raw[MAX_PLAYERS];
+	//Sint32 left_controller_trigger_raw[MAX_PLAYERS];
+	//Sint32 right_controller_trigger_raw[MAX_PLAYERS];
 
-	float left_controller_trigger[MAX_PLAYERS];
-	float right_controller_trigger[MAX_PLAYERS];
+	//float left_controller_trigger[MAX_PLAYERS];
+	//float right_controller_trigger[MAX_PLAYERS];
 
-	SDL_GameController* controller[MAX_PLAYERS];
+	//Gamepad* controller[MAX_PLAYERS];
 
 	friend PanelConfiguration;
 };
