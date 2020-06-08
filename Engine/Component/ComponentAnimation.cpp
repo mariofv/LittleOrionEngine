@@ -126,6 +126,20 @@ ENGINE_API float ComponentAnimation::GetCurrentClipPercentatge() const
 	}
 }
 
+ENGINE_API int ComponentAnimation::GetTotalAnimationTime() const
+{
+	for (auto& playing_clip : animation_controller->playing_clips)
+	{
+		if (!playing_clip.clip)
+		{
+			break;
+		}
+
+		return playing_clip.clip->animation_time;
+
+	}
+}
+
 void ComponentAnimation::Update()
 {
 	if (!active)
