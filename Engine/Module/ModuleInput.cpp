@@ -257,8 +257,12 @@ bool ModuleInput::CleanUp()
 {
 	APP_LOG_INFO("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
-	SDL_GameControllerClose(controller[0]->controller);
-	SDL_GameControllerClose(controller[1]->controller);
+
+	for(size_t i = 0; i < total_game_controllers; ++i)
+	{
+		SDL_GameControllerClose(controller[i]->controller);
+	}
+
 	controller.clear();
 	return true;
 }
