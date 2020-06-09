@@ -67,7 +67,7 @@ public:
 	void SetColliderCenter(float3& new_center);
 	float3 GetColliderCenter() const;
 
-	ENGINE_API bool IsGrounded();
+	ENGINE_API bool IsGrounded(float length_percentage = 0.75F);
 	ENGINE_API std::vector<float4> GetCollisions();
 
 	ENGINE_API float3 GetOrigin() const;
@@ -76,7 +76,7 @@ public:
 	ENGINE_API std::vector<CollisionInformation> DetectAllCollision() const; //returns true if collides with any object in the world
 	ENGINE_API bool IsCollidingWith(ComponentCollider* collider) const;
 	ENGINE_API CollisionInformation DetectCollisionWith(ComponentCollider* collider) const; //returns true if collides with a concrete object
-	
+	ENGINE_API CollisionInformation DetectCollisionWithGround(float length_percentage = 0.75F) const;
 protected:
 	void CommonAssign(const ComponentCollider& component_to_copy);
 	void UpdateCommonDimensions();

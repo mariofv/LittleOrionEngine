@@ -383,7 +383,7 @@ CollisionInformation ComponentCollider::RaycastHit(float3& start, float3& end) c
 	btCollisionWorld::ClosestRayResultCallback RayCallback(bullet_start, bullet_end);
 
 	App->physics->world->rayTest(bullet_start, bullet_end, RayCallback);
-	if (RayCallback.hasHit()/* && RayCallback.m_collisionObject->hasContactResponse()*/)
+	if (RayCallback.hasHit() && RayCallback.m_collisionObject->hasContactResponse())
 	{
 		end = float3(RayCallback.m_hitPointWorld);
 		info.collider = App->physics->FinColliderByWorldId(RayCallback.m_collisionObject->getWorldArrayIndex());
@@ -425,12 +425,17 @@ float3 ComponentCollider::GetColliderCenter() const
 	return center;
 }
 
-bool ComponentCollider::IsGrounded()
+bool ComponentCollider::IsGrounded(float length_percentage)
+{
+	return DetectCollisionWithGround(length_percentage).collider;
+}
+
+CollisionInformation ComponentCollider::DetectCollisionWithGround(float length_percentage) const
 {
 	float3 origin = GetOrigin();
 	float3 end = origin;
-	end.y -= box_size.getY() * 0.75;
-	return RaycastHit(origin, end).collider;
+	end.y -= box_size.getY() * length_percentage;
+	return RaycastHit(origin, end);
 }
 
 std::vector<float4> ComponentCollider::GetCollisions()
