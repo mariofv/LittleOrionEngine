@@ -49,6 +49,12 @@
       "Selectable": true
     },
     {
+      "Name": "Lightmap",
+      "Vertex": "/Resources/Shaders/blinn_phong.vs",
+      "Fragment": "/Resources/Shaders/lightmap.fs",
+      "Selectable": true
+    },
+    {
       "Name": "Billboard",
       "Vertex": "/Resources/Shaders/billboard.vs",
       "Fragment": "/Resources/Shaders/billboard.fs",
@@ -73,10 +79,10 @@
       "Selectable":false
     },
     {
-      "Name":"UI Text",
-      "Vertex":"/Resources/Shaders/sprite.vs",
-      "Fragment":"/Resources/Shaders/ui_text.fs",
-      "Selectable":false
+      "Name": "UI Text",
+      "Vertex": "/Resources/Shaders/sprite.vs",
+      "Fragment": "/Resources/Shaders/ui_text.fs",
+      "Selectable": false
     }
   ]
 }
