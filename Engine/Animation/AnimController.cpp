@@ -9,7 +9,7 @@
 
 #include <math.h>
 
-void AnimController::GetClipTransform( uint32_t skeleton_uuid, std::vector<math::float4x4>& pose)
+void AnimController::GetClipTransform(uint32_t skeleton_uuid, std::vector<math::float4x4>& pose)
 {
 	for (size_t j = 0; j < playing_clips.size(); j++)
 	{
@@ -22,12 +22,16 @@ void AnimController::GetClipTransform( uint32_t skeleton_uuid, std::vector<math:
 		float current_keyframe = ((playing_clips[j].current_time*(clip->animation->frames - 1)) / clip->animation_time) + 1;
 		size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
 		size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
+		if (second_keyframe_index == clip->animation->frames)
+		{
+			second_keyframe_index = clip->loop ? 0 : clip->animation->frames - 1;
+		}
 
 		float interpolation_lambda = current_keyframe - std::floor(current_keyframe);
-		const std::vector<Animation::Channel> & current_pose = clip->animation->keyframes[first_keyframe_index].channels;
-		const std::vector<Animation::Channel> & next_pose = clip->animation->keyframes[second_keyframe_index].channels;
+		const std::vector<Animation::Channel>& current_pose = clip->animation->keyframes[first_keyframe_index].channels;
+		const std::vector<Animation::Channel>& next_pose = clip->animation->keyframes[second_keyframe_index].channels;
 
-		auto & joint_channels_map = clip->skeleton_channels_joints_map[skeleton_uuid];
+		auto& joint_channels_map = clip->skeleton_channels_joints_map[skeleton_uuid];
 		for (size_t i = 0; i < joint_channels_map.size(); ++i)
 		{
 			size_t joint_index = joint_channels_map[i];
