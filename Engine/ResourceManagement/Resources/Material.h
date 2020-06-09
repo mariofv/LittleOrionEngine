@@ -18,6 +18,7 @@ public:
 	{
 		MATERIAL_OPAQUE,
 		MATERIAL_TRANSPARENT,
+		MATERIAL_LIQUID,
 		UNKNOWN
 	};
 
@@ -47,6 +48,8 @@ public:
 	void ChangeTypeOfMaterial(const MaterialType new_material_type);
 	static std::string GetMaterialTypeName(const MaterialType material_type);
 
+	void UpdateLiquidProperties();
+
 
 public:
 	static const size_t MAX_MATERIAL_TEXTURE_TYPES = static_cast<size_t>(MaterialTextureType::UNKNOWN);
@@ -73,6 +76,14 @@ public:
 
 	float tiling_x = 1.0f;
 	float tiling_y = 1.0f;
+
+	//liquid material
+	float speed_tiling_x = 1.0F;
+	float speed_tiling_y = 1.0F;
+	float tiling_liquid_x_x = 1.F;
+	float tiling_liquid_x_y = 1.F;
+	float tiling_liquid_y_x = -1.F;
+	float tiling_liquid_y_y = -1.F;
 
 	//This variable will allow the shader to use the normal maps if there is any assigned to the model material
 	bool use_normal_map = false;

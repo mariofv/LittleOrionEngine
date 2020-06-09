@@ -13,7 +13,6 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleResourceManager.h"
-
 #include "ResourceManagement/Metafile/ModelMetafile.h"
 
 #include <imgui.h>
@@ -140,7 +139,7 @@ bool PanelMaterial::IsMaterialExtracted(const std::shared_ptr<Material> &materia
 
 bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, Material::MaterialTextureType type)
 {
-
+	
 	ImGui::PushID(static_cast<unsigned int>(type));
 
 	float material_texture_map_size = 20.F;
@@ -210,20 +209,49 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 
 		if (material->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
 		{
-			if (ImGui::SliderFloat("Transparency", &material->transparency, 0.01f, 1.f))
+			if (ImGui::SliderFloat("Transparency", &material->transparency, 0.01f, 1.0f))
 			{
 				modified_by_user = true;
 			}
 		}
+		
+		if (material->material_type == Material::MaterialType::MATERIAL_LIQUID)
+		{
+			if (material->tiling_liquid_x_x >= 1)
+			{
+				material->tiling_liquid_x_x = 0;
+				material->tiling_liquid_x_y = 0;
+			}
+			if (material->tiling_liquid_y_x <= -1)
+			{
+				material->tiling_liquid_y_x = 0;
+				material->tiling_liquid_y_y = 0;
+			}
+			
+			if (ImGui::SliderFloat("Transparency", &material->transparency, 0.01f, 1.0f))
+			{
+				modified_by_user = true;
+			}
+			if (ImGui::SliderFloat("Speed Tiling X", &material->speed_tiling_x, 0.01f, 1.0f))
+			{
+				modified_by_user = true;
+			}
+			if (ImGui::SliderFloat("Speed Tiling Y", &material->speed_tiling_y, 0.01f, 1.0f))
+			{
+				modified_by_user = true;
+			}
+		}
+		
 
-		if (ImGui::DragFloat("Tiling X", &material->tiling_x, 0.f, 10.f))
+		if (ImGui::SliderFloat("Tiling X", &material->tiling_x, 0.f, 10.f))
 		{
 			modified_by_user = true;
 		}
-		if (ImGui::DragFloat("Tiling Y", &material->tiling_y, 0.f, 10.f))
+		if (ImGui::SliderFloat("Tiling Y", &material->tiling_y, 0.f, 10.f))
 		{
 			modified_by_user = true;
 		}
+		
 		ImGui::Unindent();
 
 		break;

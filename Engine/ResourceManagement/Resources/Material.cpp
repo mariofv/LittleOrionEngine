@@ -2,8 +2,11 @@
 
 #include "Helper/Config.h"
 #include "Main/Application.h"
-#include "Module/ModuleTexture.h"
+
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleTexture.h"
+#include "Module/ModuleTime.h"
+
 
 #include "ResourceManagement/Metafile/Metafile.h"
 
@@ -66,6 +69,12 @@ void Material::Save(Config& config) const
 	config.AddFloat(tiling_x, "Tiling X");
 	config.AddFloat(tiling_y, "Tiling Y");
 
+	//liquid properties
+	config.AddFloat(tiling_liquid_x_x, "Tiling Liquid Map 1 x");
+	config.AddFloat(tiling_liquid_x_y, "Tiling Liquid Map 1 y");
+	config.AddFloat(tiling_liquid_y_x, "Tiling Liquid Map 2 x");
+	config.AddFloat(tiling_liquid_y_y, "Tiling Liquid Map 2 y");
+
 	config.AddBool(use_normal_map, "UseNormalMap");
 
 	//colors
@@ -97,6 +106,15 @@ void Material::Load(const Config& config)
 
 	tiling_x = config.GetFloat("Tiling X", 1.0f);
 	tiling_y = config.GetFloat("Tiling Y", 1.0f);
+
+	//liquid properties
+	tiling_liquid_x_x = config.GetFloat("Tiling Liquid Map 1 x", 1.0F);
+	tiling_liquid_x_y = config.GetFloat("Tiling Liquid Map 1 y", 1.0F);
+	tiling_liquid_y_x = config.GetFloat("Tiling Liquid Map 2 x", 1.0F);
+	tiling_liquid_y_y = config.GetFloat("Tiling Liquid Map 2 y", 1.0F);
+
+
+
 
 	//colors
 	float4 diffuse;
@@ -157,5 +175,16 @@ std::string Material::GetMaterialTypeName(const MaterialType material_type)
 
 	case MaterialType::MATERIAL_TRANSPARENT:
 		return "Transparent";
+
+	case MaterialType::MATERIAL_LIQUID:
+		return "Liquid";
 	}
+}
+
+void Material::UpdateLiquidProperties()
+{
+	tiling_liquid_x_x += speed_tiling_x / 1000 * App->time->real_time_delta_time;
+	tiling_liquid_x_y += speed_tiling_x / 1000 * App->time->real_time_delta_time;
+	tiling_liquid_y_x += -speed_tiling_y / 1000 * App->time->real_time_delta_time;
+	tiling_liquid_y_y += -speed_tiling_y / 1000 * App->time->real_time_delta_time;
 }

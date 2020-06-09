@@ -45,6 +45,14 @@ struct Material
 	float transparency;
 	float tiling_x;
 	float tiling_y;
+
+	
+	float tiling_liquid_x_x;
+	float tiling_liquid_x_y;
+
+	float tiling_liquid_y_x;
+	float tiling_liquid_y_y;
+
 	bool use_normal_map;
 };
 uniform Material material;
@@ -117,6 +125,7 @@ float ComputeSpecularLight(vec3 normal, vec3 half_dir);
 
 void main()
 {
+	
 
 	vec3 result = vec3(0);
 
@@ -132,8 +141,13 @@ void main()
 	vec3 fragment_normal = normal;
 	if(material.use_normal_map)
 	{
+		vec2 tiling_nm_x = vec2(material.tiling_liquid_x_x, material.tiling_liquid_x_y)+tiling;
+		vec2 tiling_nm_y = vec2(material.tiling_liquid_y_x, material.tiling_liquid_y_y)+tiling;
+		vec3 normal_texture_x = GetNormalMap(material, tiling_nm_x);
+		vec3 normal_texture_y = GetNormalMap(material, tiling_nm_y);
+		vec3 normal_from_texture_map =  mix(normal_texture_x, normal_texture_y, 0.5);
 		vec3 normal_from_texture = GetNormalMap(material, tiling);
-		fragment_normal= normalize(TBN * normal_from_texture);
+		fragment_normal= normalize(TBN * normal_from_texture_map);
 	}
 	result += CalculateLightmap(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)
@@ -150,7 +164,7 @@ void main()
 	{
 		result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
-
+	 
 	result += emissive_color;
 	//FragColor = vec4(vec3(normalize(tangent)),1.0);
 	FragColor = vec4(result,1.0);

@@ -36,6 +36,13 @@ struct Material {
 	float transparency;
 	float tiling_x;
 	float tiling_y;
+	
+	float tiling_liquid_x_x;
+	float tiling_liquid_x_y;
+
+	float tiling_liquid_y_x;
+	float tiling_liquid_y_y;
+
 	bool use_normal_map;
 };
 

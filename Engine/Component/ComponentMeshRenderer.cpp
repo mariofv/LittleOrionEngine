@@ -12,6 +12,7 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
 
+
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 ComponentMeshRenderer::ComponentMeshRenderer(GameObject * owner) : Component(owner, ComponentType::MESH_RENDERER)
@@ -99,7 +100,10 @@ void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 	AddAmbientOclusionUniforms(shader_program);
 	AddNormalUniforms(shader_program);
 	AddLightMapUniforms(shader_program);
-
+	if (material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
+	{
+		material_to_render->UpdateLiquidProperties();
+	}
 	AddExtraUniforms(shader_program);
 	
 }
@@ -174,6 +178,12 @@ void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
 
 	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_x"), material_to_render->tiling_x);
 	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_y"), material_to_render->tiling_y);
+	//liquid
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_x_x"), material_to_render->tiling_liquid_x_x);
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_x_y"), material_to_render->tiling_liquid_x_y);
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_y_x"), material_to_render->tiling_liquid_y_x);
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_y_y"), material_to_render->tiling_liquid_y_y);
+	
 }
 
 bool ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const
