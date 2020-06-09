@@ -99,7 +99,7 @@ void main()
 	t_view_pos = TBN * view_pos;
 	t_frag_pos = TBN * position;
 
-	gl_Position = matrices.proj*matrices.view*vec4(position, 1.0);
+	gl_Position = matrices.proj * matrices.view * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
 }
 
 mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent)
