@@ -64,10 +64,9 @@ void ComponentMeshRenderer::Render()
 	GLuint program = App->program->GetShaderProgramId(program_name);
 	glUseProgram(program);
 
-	if (palette.size() > 0)
-	{
-		glUniformMatrix4fv(glGetUniformLocation(program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
-	}
+
+	glUniformMatrix4fv(glGetUniformLocation(program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
+	glUniform1i(glGetUniformLocation(program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
@@ -99,6 +98,7 @@ void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 
 	AddAmbientOclusionUniforms(shader_program);
 	AddNormalUniforms(shader_program);
+	AddLightMapUniforms(shader_program);
 
 	AddExtraUniforms(shader_program);
 	
@@ -153,6 +153,14 @@ void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
 	glUniform1i(glGetUniformLocation(shader_program, "material.use_normal_map"), material_to_render->use_normal_map);
 }
 
+void ComponentMeshRenderer::AddLightMapUniforms(unsigned int shader_program) const
+{
+	glActiveTexture(GL_TEXTURE5);
+	bool has_lightmap =  BindTexture(Material::MaterialTextureType::LIGHTMAP);
+	glUniform1i(glGetUniformLocation(shader_program, "material.light_map"), 5);
+	glUniform1i(glGetUniformLocation(shader_program, "use_light_map"), has_lightmap ? 1 : 0);
+}
+
 void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
 {
 	if (material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)
@@ -168,14 +176,15 @@ void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
 	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_y"), material_to_render->tiling_y);
 }
 
-void ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const
+bool ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const
 {
+	bool valid_texture = material_to_render->textures[id] != nullptr;
 	GLuint texture_id;
 	if (material_to_render->show_checkerboard_texture)
 	{
 		texture_id = App->texture->checkerboard_texture_id;
 	}
-	else if (material_to_render->textures[id] != nullptr)
+	else if (valid_texture)
 	{
 		texture_id = material_to_render->textures[id]->opengl_texture;
 	}
@@ -184,6 +193,7 @@ void ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const
 		texture_id = App->texture->whitefall_texture_id;
 	}
 	glBindTexture(GL_TEXTURE_2D, texture_id);
+	return valid_texture;
 }
 
 bool ComponentMeshRenderer::BindTextureNormal(Material::MaterialTextureType id) const
