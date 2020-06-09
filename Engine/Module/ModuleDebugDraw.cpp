@@ -28,6 +28,7 @@
 #include "SpacePartition/OLQuadTree.h"
 #include "SpacePartition/OLOctTree.h"
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
+#include "ResourceManagement/Resources/Skeleton.h"
 
 #define DEBUG_DRAW_IMPLEMENTATION
 #include "EditorUI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
@@ -499,41 +500,34 @@ void ModuleDebugDraw::RenderLightGizmo() const
 	}	
 }	
 
-void ModuleDebugDraw::RenderBones() const
+void ModuleDebugDraw::RenderBones(GameObject* game_object) const
 {
-	for (auto& animation : App->animations->animations)
+	ComponentMeshRenderer* mesh_renderer = static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER));
+	if (mesh_renderer != nullptr)
 	{
-		if (animation->IsEnabled())
+		std::shared_ptr<Skeleton> mesh_skeleton = mesh_renderer->skeleton;
+		if (mesh_skeleton != nullptr)
 		{
-			GameObject* animation_game_object = animation->owner;
-			RenderBone(animation_game_object, nullptr, float3(1.f, 0.f, 0.f));
+			float3 color(1.0f, 0.0f, 0.0f);
+			for (auto& joint : mesh_skeleton->skeleton)
+			{
+				if (joint.parent_index != -1)
+				{
+					dd::line(
+						(mesh_skeleton->skeleton[joint.parent_index].transform_global.Inverted() * float4(0.f, 0.f, 0.f, 1.f)).xyz(),
+						(joint.transform_global.Inverted() * float4(0.f,0.f,0.f,1.f)).xyz(), 
+						color
+					);
+				}
+
+				if (color.x == 1.f)
+					color = float3(0.f, 1.f, 0.f);
+				else if (color.y == 1.f)
+					color = float3(0.f, 0.f, 1.f);
+				else if (color.z == 1.f)
+					color = float3(1.f, 0.f, 0.f);
+			}
 		}
-	}
-	
-}
-
-void ModuleDebugDraw::RenderBone(const GameObject* current_bone, const GameObject* last_bone, const float3& color) const
-{
-	if (current_bone->name.substr(current_bone->name.length() - 2) == "IK" || current_bone->name.substr(current_bone->name.length() - 2) == "FK")
-	{
-		return;
-	}
-
-	if (last_bone != nullptr)
-	{
-		dd::line(last_bone->transform.GetGlobalTranslation(), current_bone->transform.GetGlobalTranslation(), color);
-	}
-
-	for (auto& child_bone : current_bone->children)
-	{
-		float3 next_color;
-		if (color.x == 1.f)
-			next_color = float3(0.f, 1.f, 0.f);
-		if (color.y == 1.f)
-			next_color = float3(0.f, 0.f, 1.f);
-		if (color.z == 1.f)
-			next_color = float3(1.f, 0.f, 0.f);
-		RenderBone(child_bone, current_bone, next_color);
 	}
 }
 
@@ -723,7 +717,7 @@ void ModuleDebugDraw::RenderSelectedGameObjectHelpers() const
 		RenderCameraFrustum();
 		RenderLightGizmo();
 		RenderRectTransform(App->editor->selected_game_object);
-		//RenderBones();
+		RenderBones(App->editor->selected_game_object);
 	}
 }
 
