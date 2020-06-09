@@ -20,7 +20,6 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton> & skeleton
 			continue;
 		}
 		float weight = j != ClipType::ACTIVE ? playing_clips[j].current_time / (active_transition->interpolation_time * 1.0f) : 0.0f;
-		//float current_keyframe = playing_clips[j].current_time*(((clip->animation->frames) - 1.0f) / clip->animation_time) + 1.0f;
 		float current_keyframe = ((playing_clips[j].current_time*(clip->animation->frames - 1)) / clip->animation_time) + 1;
 		size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
 		size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
