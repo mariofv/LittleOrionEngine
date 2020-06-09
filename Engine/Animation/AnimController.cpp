@@ -9,9 +9,8 @@
 
 #include <math.h>
 
-void AnimController::GetClipTransform(const std::shared_ptr<Skeleton> & skeleton, std::vector<math::float4x4>& pose)
+void AnimController::GetClipTransform(uint32_t skeleton_uuid, std::vector<math::float4x4>& pose)
 {
-	uint32_t skeleton_uuid = skeleton->GetUUID();
 	for (size_t j = 0; j < playing_clips.size(); j++)
 	{
 		const std::shared_ptr<Clip> clip = playing_clips[j].clip;
@@ -23,12 +22,16 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton> & skeleton
 		float current_keyframe = ((playing_clips[j].current_time*(clip->animation->frames - 1)) / clip->animation_time) + 1;
 		size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
 		size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
+		if (second_keyframe_index == clip->animation->frames)
+		{
+			second_keyframe_index = clip->loop ? 0 : clip->animation->frames - 1;
+		}
 
 		float interpolation_lambda = current_keyframe - std::floor(current_keyframe);
-		const std::vector<Animation::Channel> & current_pose = clip->animation->keyframes[first_keyframe_index].channels;
-		const std::vector<Animation::Channel> & next_pose = clip->animation->keyframes[second_keyframe_index].channels;
+		const std::vector<Animation::Channel>& current_pose = clip->animation->keyframes[first_keyframe_index].channels;
+		const std::vector<Animation::Channel>& next_pose = clip->animation->keyframes[second_keyframe_index].channels;
 
-		auto & joint_channels_map = clip->skeleton_channels_joints_map[skeleton_uuid];
+		auto& joint_channels_map = clip->skeleton_channels_joints_map[skeleton_uuid];
 		for (size_t i = 0; i < joint_channels_map.size(); ++i)
 		{
 			size_t joint_index = joint_channels_map[i];
@@ -51,22 +54,12 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton> & skeleton
 					pose[joint_index] = float4x4::FromTRS(position, rotation, float3::one);
 
 				}	
-				uint32_t parent_index = skeleton->skeleton[joint_index].parent_index;
-				if (parent_index != -1)
-				{
-					//pose[joint_index] = pose[skeleton->skeleton[joint_index].parent_index] * pose[joint_index];
-				}
 			}
 		}
 		if (weight > 1.0f)
 		{
 			apply_transition = true;
 		}
-	}
-	for (size_t i = 1; i < pose.size(); i++)
-	{
-		uint32_t parent_index = skeleton->skeleton[i].parent_index;
-		pose[i] = pose[parent_index] * pose[i];
 	}
 }
 bool AnimController::Update()

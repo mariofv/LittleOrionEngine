@@ -39,7 +39,7 @@ public:
 
 	bool Update();
 	void SetStateMachine(uint32_t state_machine_uuid);
-	void GetClipTransform(const std::shared_ptr<Skeleton> & skeleton, std::vector<math::float4x4>& pose);
+	void GetClipTransform(uint32_t skeleton_uuid, std::vector<math::float4x4>& pose);
 	void StartNextState(const std::string& trigger);
 	std::shared_ptr<Transition> active_transition;
 	bool IsOnState(const std::string& state);

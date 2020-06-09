@@ -188,38 +188,38 @@ void PanelStateMachine::RenderStates()
 		ImGui::PopID();
 		
 		//get the current running animation controller to verify playing clip and select corresponding node/link
-		if (animation_comp != nullptr)
-		{
-			AnimController* anim = nullptr;
-			if (animation_comp->GetAnimController() != nullptr)
-			{
-				anim = animation_comp->GetAnimController();
-			}
-			if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered() || animation_comp->playing == true)
-			{
-				
-				for (auto & playing_clip : anim->playing_clips)
-				{
-					if (playing_clip.playing == true && playing_clip.clip->name == node->state->clip->name)
-					{
-						ax::NodeEditor::SelectNode(node->id);
-					}
-				}
-			}
+		//if (animation_comp != nullptr)
+		//{
+		//	AnimController* anim = nullptr;
+		//	if (animation_comp->GetAnimController() != nullptr)
+		//	{
+		//		anim = animation_comp->GetAnimController();
+		//	}
+		//	if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered() || animation_comp->playing == true)
+		//	{
+		//		
+		//		for (auto & playing_clip : anim->playing_clips)
+		//		{
+		//			if (playing_clip.playing == true && playing_clip.clip->name == node->state->clip->name)
+		//			{
+		//				ax::NodeEditor::SelectNode(node->id);
+		//			}
+		//		}
+		//	}
 
-			//for each transition currently on progress, animate the corresponding transition link
-			if (anim->active_transition && anim->apply_transition)
-			{
-				for (auto& link : links)
-				{
-					if (anim->active_transition->source_hash == link->transition->source_hash && anim->active_transition->target_hash == link->transition->target_hash)
-					{
-						ax::NodeEditor::Flow(link->id);
-					}
-					
-				}
-			}
-		}
+		//	//for each transition currently on progress, animate the corresponding transition link
+		//	if (anim->active_transition && anim->apply_transition)
+		//	{
+		//		for (auto& link : links)
+		//		{
+		//			if (anim->active_transition->source_hash == link->transition->source_hash && anim->active_transition->target_hash == link->transition->target_hash)
+		//			{
+		//				ax::NodeEditor::Flow(link->id);
+		//			}
+		//			
+		//		}
+		//	}
+		//}
 
 		//for each animation clip that is currently playing, display circle on correspodning node->state
 		for(auto& selected : selected_nodes)

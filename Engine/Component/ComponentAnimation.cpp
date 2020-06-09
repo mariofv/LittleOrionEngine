@@ -146,6 +146,7 @@ void ComponentAnimation::Update()
 
 void ComponentAnimation::UpdateMeshes()
 {
+	BROFILER_CATEGORY("Animation", Profiler::Color::PaleGoldenRod);
 	if (!animation_controller->state_machine)
 	{
 		return;
@@ -153,7 +154,8 @@ void ComponentAnimation::UpdateMeshes()
 	for (auto & mesh : skinned_meshes)
 	{
 		pose.resize(mesh->skeleton->skeleton.size());
-		animation_controller->GetClipTransform(mesh->skeleton, pose);
+		auto & skeleton = mesh->skeleton;
+		animation_controller->GetClipTransform(skeleton->GetUUID(), pose);
 		mesh->UpdatePalette(pose);
 	}
 }
