@@ -4,6 +4,7 @@
 #include "Helper/Config.h"
 #include "Module/ModuleAnimation.h"
 #include "Module/ModuleAudio.h"
+#include "Module/ModuleEffects.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleScriptManager.h"
@@ -466,11 +467,11 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		break;
 
 	case Component::ComponentType::BILLBOARD:
-		created_component = App->renderer->CreateComponentBillboard();
+		created_component = App->effects->CreateComponentBillboard();
 		break;
 
 	case Component::ComponentType::PARTICLE_SYSTEM:
-		created_component = App->renderer->CreateComponentParticleSystem();
+		created_component = App->effects->CreateComponentParticleSystem();
 		break;
 
 	case Component::ComponentType::AUDIO_SOURCE:

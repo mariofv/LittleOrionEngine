@@ -1,9 +1,9 @@
 #include "ComponentBillboard.h"
 
 #include "Main/Application.h"
+#include "Module/ModuleEffects.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
-#include "Module/ModuleRender.h"
 #include "Module/ModuleTime.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
@@ -177,7 +177,7 @@ Component* ComponentBillboard::Clone(bool original_prefab) const
 	}
 	else
 	{
-		created_component = App->renderer->CreateComponentBillboard();
+		created_component = App->effects->CreateComponentBillboard();
 	}
 	*created_component = *this;
 	return created_component;
@@ -192,7 +192,7 @@ void ComponentBillboard::Copy(Component * component_to_copy) const
 
 void ComponentBillboard::Delete()
 {
-	App->renderer->RemoveComponentBillboard(this);
+	App->effects->RemoveComponentBillboard(this);
 }
 
 void ComponentBillboard::SpecializedSave(Config& config) const

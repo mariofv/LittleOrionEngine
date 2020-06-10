@@ -1,7 +1,7 @@
 #include "ComponentParticleSystem.h"
 
 #include "Main/Application.h"
-#include "Module/ModuleRender.h"
+#include "Module/ModuleEffects.h"
 #include "Module/ModuleProgram.h"
 
 #include "Component/ComponentBillboard.h"
@@ -224,7 +224,7 @@ void ComponentParticleSystem::SetParticleTexture(uint32_t texture_uuid)
 }
 void ComponentParticleSystem::Delete()
 {
-	App->renderer->RemoveComponentParticleSystem(this);
+	App->effects->RemoveComponentParticleSystem(this);
 }
 
 void ComponentParticleSystem::SpecializedSave(Config& config) const
