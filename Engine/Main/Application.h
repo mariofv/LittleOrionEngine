@@ -10,6 +10,7 @@
 class ModuleAI;
 class ModuleAnimation;
 class ModuleAudio;
+class ModuleEffects;
 class ModuleRender;
 class ModuleWindow;
 class ModuleTextures;
@@ -48,6 +49,7 @@ public:
 
 public:
 	ModuleAnimation* animations = nullptr;
+	ModuleEffects* effects = nullptr;
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
