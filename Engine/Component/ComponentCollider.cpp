@@ -374,6 +374,26 @@ void ComponentCollider::SwitchPhysics()
 	}
 }
 
+bool ComponentCollider::CollisionTest(bool show_contact_points) const
+{
+	ContactSensorCallback contact_callback;
+	App->physics->world->contactTest(body, contact_callback);
+
+	if (show_contact_points)
+	{
+		for (int i = 0; i < contact_callback.mainfolds.size(); i++)
+		{
+			float3 position_on_A = float3(contact_callback.mainfolds[i].m_positionWorldOnA);
+			App->debug_draw->RenderPoint(position_on_A, 10.f);
+
+			float3 position_on_B = float3(contact_callback.mainfolds[i].m_positionWorldOnB);
+			App->debug_draw->RenderPoint(position_on_B, 10.f);
+		}
+	}
+
+	return contact_callback.mainfolds.size() != 0;
+}
+
 CollisionInformation ComponentCollider::RaycastHit(float3& start, float3& end) const
 {
 	CollisionInformation info;

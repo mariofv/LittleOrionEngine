@@ -950,6 +950,14 @@
             "RemovedComponents": [],
             "Components": [
                 {
+                    "UUID": 1356461020,
+                    "ComponentType": 2,
+                    "Active": false,
+                    "Mesh": 2391310141,
+                    "Material": 4142673985,
+                    "Skeleton": 0
+                },
+                {
                     "UUID": 922538809,
                     "ComponentType": 2,
                     "Active": false,
@@ -1280,8 +1288,8 @@
                     0.5
                 ],
                 "SizeDelta": [
-                    1069.0,
-                    700.0
+                    1058.0,
+                    676.0
                 ],
                 "Pivot": [
                     0.5,
@@ -1991,9 +1999,9 @@
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    194.56015014648438,
-                    -16.83298110961914,
-                    -17.76613998413086
+                    -96.5091552734375,
+                    -1.876200556755066,
+                    -5.828247547149658
                 ],
                 "Rotation": [
                     -0.0,
@@ -2094,7 +2102,7 @@
                         1.0
                     ],
                     "Static": false,
-                    "Collision": true,
+                    "Collision": false,
                     "Visualize": true,
                     "Attached": true,
                     "Freeze_rotation_x": true,
@@ -2120,13 +2128,13 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "Movement",
-                    "HorizontalSpeed": 10.0,
+                    "HorizontalSpeed": 266.0,
                     "FirstJumpSpeed": 10.0,
                     "SecondJumpSpeed": 5.0,
                     "FrontalDistanceDetection": 1.5,
                     "HorizontalAttenuation": 0.25,
                     "VerticalAttenuation": 0.6000000238418579,
-                    "Threshold": 90.0,
+                    "Threshold": 35.0,
                     "Gravity": 25.0
                 }
             ]
@@ -4034,6 +4042,99 @@
                     "SpotLightCutoff": 0.9659258127212524,
                     "SpotLightSoftness": 0.10000000149011612,
                     "SpotLightOuterCutoff": 0.9588197469711304
+                }
+            ]
+        },
+        {
+            "UUID": 81926149,
+            "ParentUUID": 521044214,
+            "Name": "Future Collider",
+            "Tag": "test",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3325745898,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 14345186,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 3194567704,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 1,
+                    "Mass": 10.0,
+                    "Scale": [
+                        0.3700000047683716,
+                        1.6699999570846558,
+                        1.0
+                    ],
+                    "Static": false,
+                    "Collision": true,
+                    "Visualize": true,
+                    "Attached": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0,
+                    "Center": [
+                        0.0,
+                        1.0,
+                        -0.20000000298023225
+                    ]
                 }
             ]
         },

@@ -16,6 +16,22 @@ struct CollisionInformation
 
 };
 
+struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
+{
+	std::vector<btManifoldPoint> mainfolds;
+
+	virtual btScalar addSingleResult(
+		btManifoldPoint& cp,
+		const btCollisionObjectWrapper* colObj0, int partId0, int index0,
+		const btCollisionObjectWrapper* colObj1, int partId1, int index1
+	)
+	{
+		mainfolds.push_back(cp);
+		return 0;
+	}
+};
+
+
 class ComponentCollider : public Component
 {
 public:
@@ -72,17 +88,20 @@ public:
 
 	ENGINE_API float3 GetOrigin() const;
 	ENGINE_API float3 GetBoxSize() const;
+
 	ENGINE_API CollisionInformation RaycastHit(float3& start, float3& end) const;
+	ENGINE_API bool CollisionTest(bool show_contact_points = false) const; // This function returns true if the body of the collider is colliding, even thought outside step
+
 	ENGINE_API std::vector<CollisionInformation> DetectAllCollision() const; //returns true if collides with any object in the world
 	ENGINE_API bool IsCollidingWith(ComponentCollider* collider) const;
 	ENGINE_API CollisionInformation DetectCollisionWith(ComponentCollider* collider) const; //returns true if collides with a concrete object
 	ENGINE_API CollisionInformation DetectCollisionWithGround(float length_percentage = 0.75F) const;
+
 protected:
 	void CommonAssign(const ComponentCollider& component_to_copy);
 	void UpdateCommonDimensions();
 
 public:
-
 	ColliderType collider_type;
 	float mass = 1.0F; // 0.0F would create a static or inmutable body
 
@@ -115,9 +134,9 @@ public:
 
 protected:
 	btRigidBody* body = nullptr;
+
 	friend class ModulePhysics;
 	friend class PanelComponent;
-
 };
 
 #endif 
