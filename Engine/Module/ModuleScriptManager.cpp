@@ -213,7 +213,6 @@ void ModuleScriptManager::ReloadDLL()
 	{
 		dll->ReloadDLL();
 		RemoveScriptPointers();
-		dll->InitDLL();
 	}
 	dll->InitFolderTimestamps();
 	InitResourceScript();
