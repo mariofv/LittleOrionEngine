@@ -37,6 +37,7 @@ public:
 	~Mesh();
 
 	GLuint GetVAO() const;
+	GLuint GetEBO() const;
 	void ChangeTiling();
 	int GetNumTriangles() const;
 	int GetNumVerts() const;
