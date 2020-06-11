@@ -18,6 +18,7 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentParticleSystem.h"
+#include "Component/ComponentTrail.h"
 #include "Component/ComponentLight.h"
 
 #include "EditorUI/DebugDraw.h"
@@ -420,6 +421,23 @@ void ModuleRender::RemoveComponentParticleSystem(ComponentParticleSystem* partic
 	{
 		delete *it;
 		particle_systems.erase(it);
+	}
+}
+
+ComponentTrail* ModuleRender::CreateComponentTrail()
+{
+	ComponentTrail* created_trail = new ComponentTrail();
+	trails.push_back(created_trail);
+	return created_trail;
+}
+
+void ModuleRender::RemoveComponentTrail(ComponentTrail* trail_to_remove)
+{
+	auto it = std::find(trails.begin(), trails.end(), trail_to_remove);
+	if (it != trails.end())
+	{
+		delete *it;
+		trails.erase(it);
 	}
 }
 

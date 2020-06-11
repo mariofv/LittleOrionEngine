@@ -508,6 +508,9 @@
     <ClCompile Include="Engine\EditorUI\Panel\PanelTags.cpp">
       <Filter>Engine\EditorUI\Panel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentTrail.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1001,6 +1004,9 @@
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h">
       <Filter>Engine\EditorUI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentTrail.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

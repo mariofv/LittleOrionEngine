@@ -29,7 +29,8 @@ public:
 		UI_TEXT = 13,
 		AUDIO_SOURCE = 14,
 		BILLBOARD = 16,
-		PARTICLE_SYSTEM = 17
+		PARTICLE_SYSTEM = 17,
+		TRAIL = 18
 	};
 
 	Component();
