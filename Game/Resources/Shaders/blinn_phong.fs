@@ -145,7 +145,7 @@ void main()
 
 	vec3 fragment_normal = normal;
 	
-	if(material.use_liquid_map)
+	if(material.use_liquid_map && !material.use_normal_map )
 	{
 		vec2 tiling_nm_x = vec2(material.tiling_liquid_x_x, material.tiling_liquid_x_y)+tiling;
 		vec2 tiling_nm_y = vec2(material.tiling_liquid_y_x, material.tiling_liquid_y_y)+tiling;
@@ -154,10 +154,21 @@ void main()
 		liquid_normal_from_texture =  mix(normal_texture_x, normal_texture_y, 0.5);
 		fragment_normal = normalize(TBN * liquid_normal_from_texture);
 	}
-	if(material.use_normal_map)
+	else if(material.use_normal_map && !material.use_liquid_map)
 	{
 		normal_from_texture = GetNormalMap(material, tiling);
 		fragment_normal = normalize(TBN * normal_from_texture);
+	}
+	else if(material.use_normal_map && material.use_liquid_map)
+	{
+		vec2 tiling_nm_x = vec2(material.tiling_liquid_x_x, material.tiling_liquid_x_y)+tiling;
+		vec2 tiling_nm_y = vec2(material.tiling_liquid_y_x, material.tiling_liquid_y_y)+tiling;
+		vec3 normal_texture_x = GetLiquidMap(material, tiling_nm_x);
+		vec3 normal_texture_y = GetLiquidMap(material, tiling_nm_y);
+		liquid_normal_from_texture =  mix(normal_texture_x, normal_texture_y, 0.5);
+		normal_from_texture = GetNormalMap(material, tiling);
+		vec3 final_normal_map = mix(liquid_normal_from_texture, normal_from_texture, 0.5);
+		fragment_normal = normalize(TBN * final_normal_map);
 	}
 
 			
