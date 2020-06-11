@@ -76,12 +76,14 @@ void ComponentBillboard::SwitchFrame()
 	{
 		current_sprite_x += 1;
 
-		if ((int)current_sprite_x >= x_tiles) {
+		if ((int)current_sprite_x >= x_tiles) 
+		{
 			current_sprite_y--;
 			current_sprite_x = 0;
 		}
 
-		if ((int)current_sprite_y <= 0) {
+		if ((int)current_sprite_y <= 0) 
+		{
 			current_sprite_y = y_tiles;
 		}
 		time_since_start = 0.f;
@@ -117,7 +119,8 @@ void ComponentBillboard::Render(const float3& position)
 	//Subroutine uniform
 	int selector = glGetSubroutineUniformLocation(shader_program, GL_VERTEX_SHADER, "alignment_selector");
 
-	switch (alignment_type) {
+	switch (alignment_type) 
+	{
 	case VIEW_POINT:
 		glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &viewpoint_subroutine);
 		break;
