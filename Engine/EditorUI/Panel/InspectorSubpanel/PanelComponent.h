@@ -8,6 +8,7 @@
 class Component;
 class ComponentAnimation;
 class ComponentAudioSource;
+class ComponentBillboard;
 class ComponentBoxCollider;
 class ComponentButton;
 class ComponentCamera;
@@ -20,7 +21,9 @@ class ComponentEventSystem;
 class ComponentImage;
 class ComponentMeshCollider;
 class ComponentMeshRenderer;
+class ComponentTransform;
 class ComponentLight;
+class ComponentParticleSystem;
 class ComponentSphereCollider;
 class ComponentText;
 class ComponentTransform;
@@ -34,8 +37,10 @@ public:
 	PanelComponent() = default;
 	~PanelComponent() = default;
 
+	void ShowComponentTransformWindow(ComponentTransform* transform);
 	void ShowComponentMeshRendererWindow(ComponentMeshRenderer* mesh_renderer);
 	void ShowComponentCanvasRendererWindow(ComponentCanvasRenderer* canvas_renderer);
+	void ShowComponentBillboard(ComponentBillboard* billboard);
 
 	void ShowComponentCameraWindow(ComponentCamera* camera);
 	void ShowComponentLightWindow(ComponentLight* light);
@@ -51,6 +56,7 @@ public:
 
 	void ShowComponentColliderWindow(ComponentCollider* collider);
 	void ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source);
+	void ShowComponentParticleSystem(ComponentParticleSystem* particle_system);
 
 	void ShowAddNewComponentButton();
 	bool ShowCommonComponentWindow(Component* component);
