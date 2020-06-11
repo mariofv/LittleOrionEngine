@@ -19,7 +19,6 @@ ComponentMeshRenderer::ComponentMeshRenderer(GameObject * owner) : Component(own
 {
 	SetMesh(0);
 	SetMaterial(0);
-	palette.push_back(float4x4::identity);
 	owner->aabb.GenerateBoundingBox();
 }
 
@@ -27,7 +26,6 @@ ComponentMeshRenderer::ComponentMeshRenderer() : Component(nullptr, ComponentTyp
 {
 	SetMesh(0);
 	SetMaterial(0);
-	palette.push_back(float4x4::identity);
 }
 
 

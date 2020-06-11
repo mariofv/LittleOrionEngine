@@ -6,8 +6,6 @@ layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec2 vertex_uv0;
 layout(location = 2) in vec3 vertex_normal;
 layout(location = 3) in vec3 vertex_tangent;
-layout(location = 4) in uvec4 vertex_joints;
-layout(location = 5) in vec4 vertex_weights;
 
 layout (std140) uniform Matrices
 {
@@ -38,7 +36,6 @@ struct Material {
 };
 
 uniform Material material;
-uniform mat4 palette[64];
 
 out vec2 texCoord;
 out vec3 position;
@@ -96,18 +93,11 @@ void main()
 	mat4 close_cam_space		= close_cam_proj * close_cam_view;
 	mat4 mid_cam_space		= mid_cam_proj * mid_cam_view;
 
-//Skinning
-	mat4 skinning_matrix = mat4(0);
-    for(uint i=0; i<4; i++)
-	{
-		skinning_matrix += vertex_weights[i] * palette[vertex_joints[i]];
-	}
-
 // General variables
 	texCoord = vertex_uv0;
-	position = (matrices.model*skinning_matrix*vec4(vertex_position, 1.0)).xyz;
-	normal = (matrices.model*skinning_matrix*vec4(vertex_normal, 0.0)).xyz;
-	tangent = (matrices.model*skinning_matrix*vec4(vertex_tangent, 0.0)).xyz;
+	position = (matrices.model*vec4(vertex_position, 1.0)).xyz;
+	normal = (matrices.model*vec4(vertex_normal, 0.0)).xyz;
+	tangent = (matrices.model*vec4(vertex_tangent, 0.0)).xyz;
 
 
 //Tangent space matrix
