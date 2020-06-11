@@ -100,6 +100,7 @@ void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 	AddAmbientOclusionUniforms(shader_program);
 	AddNormalUniforms(shader_program);
 	AddLightMapUniforms(shader_program);
+	AddLiquidMaterialUniforms(shader_program);
 	if (material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
 	{
 		material_to_render->UpdateLiquidProperties();
@@ -164,7 +165,17 @@ void ComponentMeshRenderer::AddLightMapUniforms(unsigned int shader_program) con
 	glUniform1i(glGetUniformLocation(shader_program, "material.light_map"), 5);
 	glUniform1i(glGetUniformLocation(shader_program, "use_light_map"), has_lightmap ? 1 : 0);
 }
-
+void ComponentMeshRenderer::AddLiquidMaterialUniforms(unsigned int shader_program) const
+{
+	glActiveTexture(GL_TEXTURE6);
+	BindTexture(Material::MaterialTextureType::LIQUID);
+	glUniform1i(glGetUniformLocation(shader_program, "material.liquid_map"), 6);
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_x_x"), material_to_render->tiling_liquid_x_x);
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_x_y"), material_to_render->tiling_liquid_x_y);
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_y_x"), material_to_render->tiling_liquid_y_x);
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_y_y"), material_to_render->tiling_liquid_y_y);
+	glUniform1i(glGetUniformLocation(shader_program, "material.use_liquid_map"), material_to_render->use_liquid_map);
+}
 void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
 {
 	if (material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)
@@ -178,12 +189,7 @@ void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
 
 	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_x"), material_to_render->tiling_x);
 	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_y"), material_to_render->tiling_y);
-	//liquid
-	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_x_x"), material_to_render->tiling_liquid_x_x);
-	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_x_y"), material_to_render->tiling_liquid_x_y);
-	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_y_x"), material_to_render->tiling_liquid_y_x);
-	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_y_y"), material_to_render->tiling_liquid_y_y);
-	
+
 }
 
 bool ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const

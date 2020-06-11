@@ -117,6 +117,13 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 		ShowMaterialTextureMap(material, Material::MaterialTextureType::LIGHTMAP);
 		ImGui::Spacing();
 
+		if (material->material_type == Material::MaterialType::MATERIAL_LIQUID)
+		{
+			ShowMaterialTextureMap(material, Material::MaterialTextureType::LIQUID);
+			ImGui::Spacing();
+		}
+		
+
 		ImGui::Separator();
 	}
 
@@ -151,6 +158,10 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		if (type == Material::MaterialTextureType::NORMAL)
 		{
 			material->use_normal_map = true;
+		}
+		if (type == Material::MaterialTextureType::LIQUID)
+		{
+			material->use_liquid_map = true;
 		}
 		std::shared_ptr<Texture>& texture = material->textures[type];
 		display_image = (void*)(intptr_t)texture->opengl_texture;
@@ -207,42 +218,6 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 			modified_by_user = true;
 		}
 
-		if (material->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
-		{
-			if (ImGui::SliderFloat("Transparency", &material->transparency, 0.01f, 1.0f))
-			{
-				modified_by_user = true;
-			}
-		}
-		
-		if (material->material_type == Material::MaterialType::MATERIAL_LIQUID)
-		{
-			if (material->tiling_liquid_x_x >= 1)
-			{
-				material->tiling_liquid_x_x = 0;
-				material->tiling_liquid_x_y = 0;
-			}
-			if (material->tiling_liquid_y_x <= -1)
-			{
-				material->tiling_liquid_y_x = 0;
-				material->tiling_liquid_y_y = 0;
-			}
-			
-			if (ImGui::SliderFloat("Transparency", &material->transparency, 0.01f, 1.0f))
-			{
-				modified_by_user = true;
-			}
-			if (ImGui::SliderFloat("Speed Tiling X", &material->speed_tiling_x, 0.01f, 1.0f))
-			{
-				modified_by_user = true;
-			}
-			if (ImGui::SliderFloat("Speed Tiling Y", &material->speed_tiling_y, 0.01f, 1.0f))
-			{
-				modified_by_user = true;
-			}
-		}
-		
-
 		if (ImGui::SliderFloat("Tiling X", &material->tiling_x, 0.f, 10.f))
 		{
 			modified_by_user = true;
@@ -251,6 +226,16 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		{
 			modified_by_user = true;
 		}
+		if (material->material_type == Material::MaterialType::MATERIAL_TRANSPARENT || material->material_type == Material::MaterialType::MATERIAL_LIQUID )
+		{
+			if (ImGui::SliderFloat("Transparency", &material->transparency, 0.01f, 1.0f))
+			{
+				modified_by_user = true;
+			}
+		}
+		
+		
+
 		
 		ImGui::Unindent();
 
@@ -312,6 +297,34 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Text("Lightmap");
 
 		break;
+
+	case Material::MaterialTextureType::LIQUID:
+		ImGui::Text("Liquid");
+
+		if (material->material_type == Material::MaterialType::MATERIAL_LIQUID)
+		{
+
+			if (material->tiling_liquid_x_x >= 1)
+			{
+				material->tiling_liquid_x_x = 0;
+				material->tiling_liquid_x_y = 0;
+			}
+			if (material->tiling_liquid_y_x <= -1)
+			{
+				material->tiling_liquid_y_x = 0;
+				material->tiling_liquid_y_y = 0;
+			}
+
+			if (ImGui::SliderFloat("Speed Tiling X", &material->speed_tiling_x, 0.01f, 1.0f))
+			{
+				modified_by_user = true;
+			}
+			if (ImGui::SliderFloat("Speed Tiling Y", &material->speed_tiling_y, 0.01f, 1.0f))
+			{
+				modified_by_user = true;
+			}
+		}
+	break;
 	}
 
 	if (ImGui::Button(ICON_FA_TIMES))
@@ -320,6 +333,10 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		if (type == Material::MaterialTextureType::NORMAL)
 		{
 			material->use_normal_map = false;
+		}
+		if (type == Material::MaterialTextureType::LIQUID)
+		{
+			material->use_liquid_map = false;
 		}
 		modified_by_user = true;
 	}
@@ -346,6 +363,8 @@ std::string PanelMaterial::GetTypeName(Material::MaterialTextureType type)
 		return "Normal";
 	case  Material::MaterialTextureType::LIGHTMAP:
 		return "Lightmap";
+	case  Material::MaterialTextureType::LIQUID:
+		return "Liquid";
 
 	default:
 		return "";

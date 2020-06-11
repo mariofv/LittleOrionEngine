@@ -30,6 +30,7 @@ public:
 		OCCLUSION,
 		NORMAL,
 		LIGHTMAP,
+		LIQUID,
 		UNKNOWN
 	};
 
@@ -84,7 +85,7 @@ public:
 	float tiling_liquid_x_y = 1.F;
 	float tiling_liquid_y_x = -1.F;
 	float tiling_liquid_y_y = -1.F;
-
+	bool use_liquid_map = false;
 	//This variable will allow the shader to use the normal maps if there is any assigned to the model material
 	bool use_normal_map = false;
 

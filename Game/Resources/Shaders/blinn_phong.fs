@@ -24,6 +24,10 @@ out vec4 FragColor;
 //constants
 const float gamma = 2.2;
 
+
+vec3 normal_from_texture;
+vec3 liquid_normal_from_texture;
+
 struct Material
 {
 	sampler2D diffuse_map;
@@ -46,12 +50,12 @@ struct Material
 	float tiling_x;
 	float tiling_y;
 
-	
+	sampler2D liquid_map;
 	float tiling_liquid_x_x;
 	float tiling_liquid_x_y;
-
 	float tiling_liquid_y_x;
 	float tiling_liquid_y_y;
+	bool use_liquid_map;
 
 	bool use_normal_map;
 };
@@ -112,6 +116,7 @@ vec3 GetEmissiveColor(const Material mat, const vec2 texCoord);
 
 //MAPS
 vec3 GetNormalMap(const Material mat, const vec2 texCoord);
+vec3 GetLiquidMap(const Material mat, const vec2 texCoord);
 
 //TYPE OF LIGHTS
 vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
@@ -139,16 +144,25 @@ void main()
 	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
 	vec3 fragment_normal = normal;
-	if(material.use_normal_map)
+	
+	if(material.use_liquid_map)
 	{
 		vec2 tiling_nm_x = vec2(material.tiling_liquid_x_x, material.tiling_liquid_x_y)+tiling;
 		vec2 tiling_nm_y = vec2(material.tiling_liquid_y_x, material.tiling_liquid_y_y)+tiling;
-		vec3 normal_texture_x = GetNormalMap(material, tiling_nm_x);
-		vec3 normal_texture_y = GetNormalMap(material, tiling_nm_y);
-		vec3 normal_from_texture_map =  mix(normal_texture_x, normal_texture_y, 0.5);
-		vec3 normal_from_texture = GetNormalMap(material, tiling);
-		fragment_normal= normalize(TBN * normal_from_texture_map);
+		vec3 normal_texture_x = GetLiquidMap(material, tiling_nm_x);
+		vec3 normal_texture_y = GetLiquidMap(material, tiling_nm_y);
+		liquid_normal_from_texture =  mix(normal_texture_x, normal_texture_y, 0.5);
+		fragment_normal = normalize(TBN * liquid_normal_from_texture);
 	}
+	if(material.use_normal_map)
+	{
+		normal_from_texture = GetNormalMap(material, tiling);
+		fragment_normal = normalize(TBN * normal_from_texture);
+	}
+
+			
+	
+	
 	result += CalculateLightmap(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)
 	{
@@ -209,6 +223,10 @@ vec3 GetEmissiveColor(const Material mat, const vec2 texCoord)
 vec3 GetNormalMap(const Material mat, const vec2 texCoord)
 {
 	return texture(mat.normal_map, texCoord).rgb*2.0-1.0;
+}
+vec3 GetLiquidMap(const Material mat, const vec2 texCoord)
+{
+	return texture(mat.liquid_map, texCoord).rgb*2.0-1.0;
 }
 
 vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)

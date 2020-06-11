@@ -46,6 +46,9 @@ void Material::Save(Config& config) const
 		case MaterialTextureType::LIGHTMAP:
 			config.AddUInt(textures_uuid[i], "Lightmap");
 			break;
+		case MaterialTextureType::LIQUID:
+			config.AddUInt(textures_uuid[i], "Liquid");
+			break;
 		default:
 			break;
 			
@@ -70,10 +73,15 @@ void Material::Save(Config& config) const
 	config.AddFloat(tiling_y, "Tiling Y");
 
 	//liquid properties
+
+	config.AddFloat(speed_tiling_x, "Speed Liquid Map X");
+	config.AddFloat(speed_tiling_y, "Speed Liquid Map Y");
+
 	config.AddFloat(tiling_liquid_x_x, "Tiling Liquid Map 1 x");
 	config.AddFloat(tiling_liquid_x_y, "Tiling Liquid Map 1 y");
 	config.AddFloat(tiling_liquid_y_x, "Tiling Liquid Map 2 x");
 	config.AddFloat(tiling_liquid_y_y, "Tiling Liquid Map 2 y");
+	config.AddBool(use_liquid_map, "Use Liquid Map");
 
 	config.AddBool(use_normal_map, "UseNormalMap");
 
@@ -91,7 +99,7 @@ void Material::Load(const Config& config)
 	SetMaterialTexture(MaterialTextureType::EMISSIVE, config.GetUInt("Emissive", 0));
 	SetMaterialTexture(MaterialTextureType::NORMAL, config.GetUInt("Normal", 0));
 	SetMaterialTexture(MaterialTextureType::LIGHTMAP, config.GetUInt("Lightmap", 0));
-
+	SetMaterialTexture(MaterialTextureType::LIQUID, config.GetUInt("Liquid", 0));
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
 	config.GetString("ShaderProgram", shader_program, "Blinn phong");
 
@@ -108,11 +116,15 @@ void Material::Load(const Config& config)
 	tiling_y = config.GetFloat("Tiling Y", 1.0f);
 
 	//liquid properties
+
+	speed_tiling_x = config.GetFloat("Speed Liquid Map X", 1.0F);
+	speed_tiling_y = config.GetFloat("Speed Liquid Map Y", 1.0F);
+
 	tiling_liquid_x_x = config.GetFloat("Tiling Liquid Map 1 x", 1.0F);
 	tiling_liquid_x_y = config.GetFloat("Tiling Liquid Map 1 y", 1.0F);
 	tiling_liquid_y_x = config.GetFloat("Tiling Liquid Map 2 x", 1.0F);
 	tiling_liquid_y_y = config.GetFloat("Tiling Liquid Map 2 y", 1.0F);
-
+	use_liquid_map = config.GetBool("Use Liquid Map", false);
 
 
 
@@ -144,6 +156,7 @@ void Material::Load(const Config& config)
 void Material::RemoveMaterialTexture(MaterialTextureType type)
 {
 	textures[type] = nullptr;
+	
 }
 
 void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uuid)
