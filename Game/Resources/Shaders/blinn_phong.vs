@@ -99,6 +99,10 @@ void main()
 	normal = (matrices.model*vec4(vertex_normal, 0.0)).xyz;
 	tangent = (matrices.model*vec4(vertex_tangent, 0.0)).xyz;
 
+	view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
+	view_dir    = normalize(view_pos - position);
+	
+
 
 //Tangent space matrix
 	mat4 modelview = matrices.model * matrices.view;
