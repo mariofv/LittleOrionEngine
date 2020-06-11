@@ -483,10 +483,36 @@ void ModuleDebugDraw::Render()
 		RenderTangentsAndBitangents();
 	}
 
+
+
+
 	
-	//float3 points[8];
-	//App->cameras->directional_light_camera->camera_frustum.GetCornerPoints(points);
-	//dd::box(points, float3(1, 1, 0), false); //Its the same for all three 
+	float3 points[8];
+	App->cameras->directional_light_camera->camera_frustum.GetCornerPoints(points);
+	dd::box(points, float3(1, 1, 0), false); //Its the same for all three 
+
+	////dd::sphere(App->lights->light_position, float3::one, 10, 0, false); // light space
+
+	////dd::sphere(App->lights->new_pos, float3(0, 1, 1), 10, 0, false);
+
+	//
+
+	//float3 points2[8];
+	//float3 points3[8];
+	//float3 points4[8];
+	//float3 points5[8];
+
+
+	//App->lights->object_obb.GetCornerPoints(points3);
+	//dd::box(points3, float3(1, 0, 0), 0, true);
+
+	//App->lights->light_aabb.GetCornerPoints(points4);
+	//dd::box(points4, float3(0, 1, 0), 0, true);
+
+	//App->lights->light_obb.GetCornerPoints(points5);
+	//dd::box(points5, float3(0, 0, 1), 0, true);
+
+
 
 
 	if (App->renderer->toggle_perspective_sub_frustums)

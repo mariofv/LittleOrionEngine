@@ -4,14 +4,12 @@
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
-#include "Module/ModuleLight.h"
-#include "Module/ModulePhysics.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleWindow.h"
 #include "PanelConfiguration.h"
-
+#include "Module/ModulePhysics.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <GL/glew.h>
@@ -304,14 +302,9 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::SameLine();
 		ImGui::TextColored(ImVec4(0.3, 0.3, 0.3, 1), "Shadows");
 
-		ImGui::Separator();
-
-		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Ambient Light");
-
-		ImGui::SliderFloat("Intensity", &App->lights->ambient_light_intensity, 0, 1, "%.2f");
-		ImGui::ColorEdit3("Color", App->lights->ambient_light_color);
-	
-		//ImGui::Checkbox("Toggle directional camera frustum", &App->renderer->toggle_ortho_frustum);
+		ImGui::Checkbox("Toggle directional camera frustum", &App->renderer->toggle_ortho_frustum);
+		ImGui::Checkbox("Toggle directional light AABB", &App->renderer->toggle_directional_light_aabb);
+		ImGui::Checkbox("Toggle sub frustums", &App->renderer->toggle_perspective_sub_frustums);
 		ImGui::Checkbox("Render shadows", &App->renderer->render_shadows);
 
 		//ImGui::SliderFloat("Ortho near plane", &App->cameras->directional_light_camera->camera_frustum.nearPlaneDistance,0, 100);

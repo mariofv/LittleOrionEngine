@@ -44,12 +44,9 @@ public:
 
 	std::vector<ComponentLight*> lights;
 
-	float ambient_light_intensity = 0.3;
-	float ambient_light_color[4] = { 1, 1, 1, 1 };
 	
 	AABB   light_aabb;
 	float3 light_position = float3::zero;
-	float3 frustum_position = float3::zero;
 	
 	OBB light_obb;
 	OBB object_obb;
