@@ -12,6 +12,7 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleSpacePartitioning.h"
+#include "Module/ModuleTime.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleUI.h"
 #include "Module/ModulePhysics.h"
@@ -121,7 +122,7 @@ void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 		prefab_reference->RemoveInstance(this);
 	}
 }
-void GameObject::Duplicate(const GameObject & gameobject_to_copy)
+void GameObject::Duplicate(const GameObject& gameobject_to_copy)
 {
 	if (!is_prefab_parent && gameobject_to_copy.transform.modified_by_user)
 	{
@@ -130,9 +131,11 @@ void GameObject::Duplicate(const GameObject & gameobject_to_copy)
 		//gameobject_to_copy.transform.modified_by_user = false;
 	}
 	transform.SetScale(gameobject_to_copy.transform.GetScale());
+	transform_2d = gameobject_to_copy.transform_2d;
 	CopyComponents(gameobject_to_copy);
 	this->name = gameobject_to_copy.name;
 	this->active = gameobject_to_copy.active;
+	this->transform_2d_enabled = gameobject_to_copy.transform_2d_enabled;
 	this->SetStatic(gameobject_to_copy.is_static);
 	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
@@ -143,6 +146,8 @@ void GameObject::Duplicate(const GameObject & gameobject_to_copy)
 		this->prefab_reference = nullptr;
 	}
 
+
+
 	return;
 }
 
@@ -152,6 +157,7 @@ void GameObject::SetTransform(GameObject* game_object)
 	transform.SetRotation(game_object->transform.GetRotationRadiants());
 	transform.SetScale(game_object->transform.GetScale());
 }
+
 bool GameObject::IsEnabled() const
 {
 	return active;
@@ -279,6 +285,7 @@ void GameObject::Save(Config& config) const
 		config.AddUInt(parent->UUID, "ParentUUID");
 	}
 	config.AddString(name, "Name");
+	config.AddString(tag, "Tag");
 
 	config.AddBool(is_static, "IsStatic");
 	config.AddBool(active, "Active");
@@ -307,6 +314,7 @@ void GameObject::Load(const Config& config)
 	assert(UUID != 0);
 
 	config.GetString("Name", name, "GameObject");
+	config.GetString("Tag", tag, "");
 
 	uint64_t parent_UUID = config.GetUInt("ParentUUID", 0);
 	GameObject* game_object_parent = App->scene->GetGameObject(parent_UUID);
@@ -532,7 +540,6 @@ ENGINE_API ComponentScript* GameObject::GetComponentScript(const char* name) con
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
-
 		if (components[i]->type == Component::ComponentType::SCRIPT)
 		{
 			ComponentScript* script = (ComponentScript* )components[i];
@@ -693,8 +700,8 @@ void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 		if(component->type == Component::ComponentType::SCRIPT)
 		{
 			copy = new ComponentScript(this, static_cast<ComponentScript*>(component)->name);
-			static_cast<ComponentScript*>(copy)->name = static_cast<ComponentScript*>(component)->name;
-
+			ComponentScript* copied_script = static_cast<ComponentScript*>(copy);
+			copied_script->name = static_cast<ComponentScript*>(component)->name;
 		}
 		else if (component->type == Component::ComponentType::COLLIDER)
 		{

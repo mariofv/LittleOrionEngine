@@ -4,11 +4,12 @@
 #define ENGINE_EXPORTS
 
 #include "Module.h"
-#include "bullet3/btBulletDynamicsCommon.h"
-#include "bullet3/LinearMath/btIDebugDraw.h"
 #include "Component/ComponentCollider.h"
 #include "Helper/Timer.h"
-#include "Math/float3.h"
+
+#include <Math/float3.h>
+#include <bullet3/btBulletDynamicsCommon.h>
+#include <bullet3/LinearMath/btIDebugDraw.h>
 
 #define BT_USE_FLOAT_PRECISION
 
@@ -48,7 +49,7 @@ public:
 	ComponentCollider* CreateComponentCollider(const ComponentCollider::ColliderType collider_type, GameObject* owner);
 	void RemoveComponentCollider(ComponentCollider* collider_to_remove);
 
-	bool RaycastWorld(const btVector3 &Start, btVector3 &End, btVector3 &Normal);
+	ENGINE_API bool RaycastWorld(const btVector3 &Start, btVector3 &End, btVector3 &Normal);
 	ENGINE_API int GetRaycastWorldId(const btVector3& start, btVector3& end, btVector3& normal);
 
 	void UpdateAllDimensions();
@@ -60,8 +61,6 @@ public:
 	btBroadphaseInterface* broad_phase = nullptr;
 	btSequentialImpulseConstraintSolver* solver = nullptr;
 	btDiscreteDynamicsWorld* world = nullptr;
-
-	bool show_physics = true;
 
 	Timer* physics_timer = nullptr;
 	float ms = 0;

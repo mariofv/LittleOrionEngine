@@ -14,6 +14,7 @@ public:
 	~PanelMetaFile() = default;
 
 	void Render(Metafile* meta_file);
+	void ApplyMetafileChanges(Metafile * metafile);
 private:
 	void ShowSpecializedMetaFile(Metafile* meta_file);
 

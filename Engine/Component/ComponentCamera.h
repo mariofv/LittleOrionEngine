@@ -6,10 +6,11 @@
 #include "Component.h"
 #include "Component/ComponentAABB.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/PanelGame.h"
 #include "EditorUI/Panel/PanelScene.h"
 #include "ResourceManagement/Resources/Skybox.h"
 
-#include "MathGeoLib.h"
+#include <MathGeoLib.h>
 #include <GL/glew.h>
 
 class GameObject;
@@ -56,7 +57,7 @@ public:
 	float GetHeight() const;
 
 	void RecordFrame(float width, float height, bool scene_mode = false);
-	void RecordDebugDraws(float width, float height) const;
+	ENGINE_API void RecordDebugDraws(bool scene_mode = false);
 	GLuint GetLastRecordedFrame() const;
 
 	void SetFOV(float fov);
@@ -114,9 +115,10 @@ public:
 	ComponentAABB::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
 
 	ENGINE_API bool IsInsideFrustum(const AABB2D& aabb) const;
+	ENGINE_API bool IsCompletlyInsideFrustum(const AABB & aabb) const;
 	ComponentAABB::CollisionState CheckAABB2DCollision(const AABB2D& reference_AABB) const;
 
-	void GetRay(const float2& normalized_position, LineSegment &return_value) const;
+	ENGINE_API void GetRay(const float2 &mouse_position, LineSegment &return_value) const;
 
 	AABB GetMinimalEnclosingAABB() const;
 	void GenerateMatrices();

@@ -4,8 +4,8 @@
 #include "Component.h"
 #include "ResourceManagement/Resources/Mesh.h"
 
-#include "MathGeoLib.h"
-#include "GL/glew.h"
+#include <MathGeoLib.h>
+#include <GL/glew.h>
 
 class ComponentAABB : public Component
 {

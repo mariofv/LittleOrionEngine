@@ -3,7 +3,7 @@
 
 #include "ComponentCollider.h"
 
-#include "bullet3/btBulletDynamicsCommon.h"
+#include <bullet3/btBulletDynamicsCommon.h>
 
 class ComponentBoxCollider : public ComponentCollider
 {

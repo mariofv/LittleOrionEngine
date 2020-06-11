@@ -51,6 +51,7 @@ void PanelGame::Render()
 				App->cameras->directional_light_far->RecordFrame(game_window_content_area_width / 4, game_window_content_area_width / 4);
 			}			
 			App->cameras->main_camera->RecordFrame(game_window_content_area_width, game_window_content_area_height);
+			App->cameras->main_camera->RecordDebugDraws();
 
 
 			ImGui::Image(

@@ -6,6 +6,8 @@ layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec2 vertex_uv0;
 layout(location = 2) in vec3 vertex_normal;
 layout(location = 3) in vec3 vertex_tangent;
+layout(location = 4) in uvec4 vertex_joints;
+layout(location = 5) in vec4 vertex_weights;
 
 layout (std140) uniform Matrices
 {
@@ -13,6 +15,30 @@ layout (std140) uniform Matrices
   mat4 proj;
 	mat4 view;
 } matrices;
+
+struct Material {
+	sampler2D diffuse_map;
+	vec4 diffuse_color;
+	float k_diffuse;
+	sampler2D specular_map;
+	vec4 specular_color;
+	float k_specular;
+	sampler2D occlusion_map;
+	float k_ambient;
+	sampler2D emissive_map;
+	vec4 emissive_color;
+	sampler2D normal_map;
+
+	float roughness;
+	float metalness;
+	float transparency;
+	float tiling_x;
+	float tiling_y;
+	bool use_normal_map;
+};
+
+uniform Material material;
+uniform mat4 palette[64];
 
 out vec2 texCoord;
 out vec3 position;
@@ -63,7 +89,6 @@ uniform float render_depth_from_light;
 
 void main()
 {
-
 	mat4 close_lightSpaceMatrix = close_directional_proj * close_directional_view;
 	mat4 mid_lightSpaceMatrix   = mid_directional_proj * mid_directional_view;
 	mat4 far_lightSpaceMatrix   = far_directional_proj * far_directional_view;
@@ -71,12 +96,18 @@ void main()
 	mat4 close_cam_space		= close_cam_proj * close_cam_view;
 	mat4 mid_cam_space		= mid_cam_proj * mid_cam_view;
 
+//Skinning
+	mat4 skinning_matrix = mat4(0);
+    for(uint i=0; i<4; i++)
+	{
+		skinning_matrix += vertex_weights[i] * palette[vertex_joints[i]];
+	}
 
 // General variables
 	texCoord = vertex_uv0;
-	position = (matrices.model*vec4(vertex_position, 1.0)).xyz;
-	normal = (matrices.model*vec4(vertex_normal, 0.0)).xyz;
-	tangent = (matrices.model*vec4(vertex_tangent, 0.0)).xyz;
+	position = (matrices.model*skinning_matrix*vec4(vertex_position, 1.0)).xyz;
+	normal = (matrices.model*skinning_matrix*vec4(vertex_normal, 0.0)).xyz;
+	tangent = (matrices.model*skinning_matrix*vec4(vertex_tangent, 0.0)).xyz;
 
 
 //Tangent space matrix

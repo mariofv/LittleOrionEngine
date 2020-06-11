@@ -16,9 +16,11 @@
 #include "EditorUI/Panel/PanelStateMachine.h"
 #include "EditorUI/Panel/PanelScene.h"
 #include "EditorUI/Panel/PanelToolBar.h"
+#include "EditorUI/Panel/PanelTags.h"
 
 #include "Filesystem/PathAtlas.h"
 #include "Helper/Config.h"
+#include "Helper/TagManager.h"
 
 #include "Main/Application.h"
 #include "ModuleActions.h"
@@ -66,6 +68,10 @@ bool ModuleEditor::Init()
 	panels.push_back(nav_mesh = new PanelNavMesh());
 	panels.push_back(state_machine = new PanelStateMachine());
 	panels.push_back(build_options = new PanelBuildOptions());
+	panels.push_back(tags_panel = new PanelTags());
+
+	tag_manager = new TagManager();
+	tag_manager->LoadTags();
 
 	return ret;
 }
@@ -100,10 +106,6 @@ bool ModuleEditor::InitImgui()
 
 update_status ModuleEditor::PreUpdate()
 {
-#if GAME
-	return update_status::UPDATE_CONTINUE;
-#endif
-
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
@@ -136,18 +138,16 @@ update_status ModuleEditor::Update()
 
 #endif
 
+	imgui_context = ImGui::GetCurrentContext();
 
 	return update_status::UPDATE_CONTINUE;
 }
 
 void ModuleEditor::Render()
 {
-#if GAME
-	return;
-#endif
-
 	BROFILER_CATEGORY("Render UI", Profiler::Color::BlueViolet);
-
+	
+#if !GAME
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth(), App->window->GetHeight()));
 	if (ImGui::Begin("MainWindow", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBringToFrontOnFocus))
@@ -160,7 +160,7 @@ void ModuleEditor::Render()
 		RenderEditorDockspace();
 	}
 	ImGui::End();
-
+#endif
 	ImGui::Render();
 
 	BROFILER_CATEGORY("Render ImGui Draws", Profiler::Color::BlueViolet);
@@ -254,6 +254,11 @@ ImFont* ModuleEditor::GetFont(const Fonts & font) const
 {
 	ImGuiIO& io = ImGui::GetIO();
 	return io.Fonts->Fonts[static_cast<int>(font)];
+}
+
+ImGuiContext * ModuleEditor::GetImGuiContext() const
+{
+	return imgui_context;
 }
 
 void ModuleEditor::LoadFonts()

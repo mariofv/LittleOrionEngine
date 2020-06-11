@@ -2,6 +2,7 @@
 #define _MODULEDEBUG_H_
 
 #include "Module.h"
+#include "Component/ComponentCamera.h"
 
 #include <GL/glew.h>
 
@@ -23,15 +24,14 @@ public:
 
 	bool Init() override;
 	bool CleanUp() override;
+	void Render(ComponentCamera* cam);
 	
 	void CreateFrustumCullingDebugScene() const;
-	
 public:
 	bool show_imgui_demo = false;
 	bool show_debug_metrics = true;
 	bool show_bounding_boxes = false;
 	bool show_global_bounding_boxes = false;
-	bool show_grid = true;
 	bool show_transform_2d = true;
 	bool show_canvas = true;
 	bool show_camera_frustum = true;
@@ -41,6 +41,7 @@ public:
 	bool show_navmesh = false;
 	bool show_pathfind_points = true;
 	bool show_axis = false;
+	bool show_physics = true;
 
 #if !GAME
 	bool culling_scene_mode = false;

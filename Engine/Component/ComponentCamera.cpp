@@ -6,17 +6,18 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleAI.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleDebug.h"
 #include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
-#include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleTime.h"
 #include "Module/ModuleUI.h"
 #include "Module/ModuleWindow.h"
 
-#include "ResourceManagement/ResourcesDB/CoreResources.h"
 #include "ResourceManagement/Resources/Skybox.h"
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 ComponentCamera::ComponentCamera() : Component(nullptr, ComponentType::CAMERA)
 {
@@ -57,6 +58,7 @@ Component* ComponentCamera::Clone(bool original_prefab) const
 		created_component = App->cameras->CreateComponentCamera();
 	}
 	*created_component = *this;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 };
 void ComponentCamera::Copy(Component* component_to_copy) const
@@ -258,25 +260,40 @@ void ComponentCamera::RecordFrame(float width, float height, bool scene_mode)
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #endif
-	
 }
 
-void ComponentCamera::RecordDebugDraws(float width, float height) const
+void ComponentCamera::RecordDebugDraws(bool scene_mode)
 {
+#if !GAME
 	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+#endif
+	glViewport(0, 0, last_width, last_height);
 
-	glViewport(0, 0, width, height);
+	if (scene_mode)
+	{
+		App->debug_draw->RenderGrid();
+		if (App->debug->show_navmesh)
+		{
+			App->debug_draw->RenderNavMesh(*this);
+		}
+		App->debug_draw->RenderBillboards();
+		if (App->editor->selected_game_object != nullptr)
+		{
+			App->debug_draw->RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
+		}
+	}
 
-	App->debug_draw->Render();
-
+	App->debug_draw->RenderDebugDraws(*this);
+#if !GAME
 	if (App->renderer->anti_aliasing)
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, last_width, last_height, 0, 0, last_width, last_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#endif
 }
 
 GLuint ComponentCamera::GetLastRecordedFrame() const
@@ -740,6 +757,11 @@ ENGINE_API bool ComponentCamera::IsInsideFrustum(const AABB2D& aabb) const
 	return CheckAABB2DCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
 }
 
+ENGINE_API bool ComponentCamera::IsCompletlyInsideFrustum(const AABB& aabb) const
+{
+	return CheckAABBCollision(aabb) == ComponentAABB::CollisionState::INSIDE;
+}
+
 ComponentAABB::CollisionState ComponentCamera::CheckAABBCollision(const AABB& reference_AABB) const
 {
 	static const size_t number_of_corners = 8;
@@ -826,8 +848,28 @@ ComponentAABB::CollisionState ComponentCamera::CheckAABB2DCollision(const AABB2D
 	return ComponentAABB::CollisionState::INTERSECT;
 }
 
-void ComponentCamera::GetRay(const float2& normalized_position, LineSegment &return_value) const
+void ComponentCamera::GetRay(const float2 &mouse_position, LineSegment &return_value) const
 {
+	float2 normalized_position = float2::zero;
+#if GAME
+	float2 window_mouse_position = mouse_position - float2(App->window->GetWidth()/2, App->window->GetHeight()/2);
+	normalized_position = float2(window_mouse_position.x * 2 / App->window->GetWidth(), -window_mouse_position.y * 2 / App->window->GetHeight());
+#else
+	if (App->time->isGameRunning() && App->editor->game_panel->IsHovered())
+	{
+		float2 window_center_pos = App->editor->game_panel->game_window_content_area_pos + float2(App->editor->game_panel->game_window_content_area_width, App->editor->game_panel->game_window_content_area_height) / 2;
+
+		float2 window_mouse_position = mouse_position - window_center_pos;
+		normalized_position = float2(window_mouse_position.x * 2 / App->editor->game_panel->game_window_content_area_width, -window_mouse_position.y * 2 / App->editor->game_panel->game_window_content_area_height);
+	}
+	else
+	{
+		float2 window_center_pos = App->editor->scene_panel->scene_window_content_area_pos + float2(App->editor->scene_panel->scene_window_content_area_width, App->editor->scene_panel->scene_window_content_area_height) / 2;
+
+		float2 window_mouse_position = mouse_position - window_center_pos;
+		normalized_position = float2(window_mouse_position.x * 2 / App->editor->scene_panel->scene_window_content_area_width, -window_mouse_position.y * 2 / App->editor->scene_panel->scene_window_content_area_height);
+	}
+#endif
 	return_value = camera_frustum.UnProjectLineSegment(normalized_position.x, normalized_position.y);
 }
 

@@ -1,5 +1,7 @@
 #include "PanelGameObject.h"
 
+#include "Helper/TagManager.h"
+
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentAudioSource.h"
 #include "Component/ComponentBoxCollider.h"
@@ -17,6 +19,7 @@
 #include "Component/ComponentTransform.h"
 #include "EditorUI/Panel/PanelInspector.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelTransform.h"
+#include "EditorUI/Panel/PanelPopups.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -48,6 +51,7 @@ void PanelGameObject::Render(GameObject* game_object)
 	if (ImGui::Checkbox("###State", &game_object->active))
 	{
 		game_object->SetEnabled(game_object->active);
+		game_object->modified_by_user = true;
 	}
 
 	ImGui::SameLine();
@@ -62,6 +66,28 @@ void PanelGameObject::Render(GameObject* game_object)
 	if (ImGui::Checkbox("Static", &game_object->is_static))
 	{
 		game_object->SetStatic(game_object->is_static);
+		game_object->modified_by_user = true;
+	}
+
+	ImGui::Spacing();
+	std::string tag_name = game_object->tag != "" ? game_object->tag : "Untagged";
+	if (ImGui::BeginCombo("Tag", tag_name.c_str()))
+	{
+		for (auto& tag_name : App->editor->tag_manager->tags) 
+		{
+			if (ImGui::Selectable(tag_name.c_str()))
+			{
+				game_object->tag = tag_name;
+				game_object->modified_by_user = true;
+			}
+		}
+		ImGui::Separator();
+		if (ImGui::Selectable("Add Tag..."))
+		{
+			App->editor->popups->add_tag_popup_shown = true;
+		}
+
+		ImGui::EndCombo();
 	}
 
 	ImGui::Spacing();

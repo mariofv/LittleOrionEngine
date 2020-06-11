@@ -16,7 +16,8 @@ public:
 
 	void Render() override;
 
-	void CreateScript();
+	void RenderCreateScriptPopup();
+	void RenderAddTagPopup();
 
 private:
 	void RenderAssetsLoadingPopup();
@@ -26,7 +27,8 @@ public:
 	PanelPopupSceneLoader scene_loader_popup;
 	PanelPopupSceneSaver scene_saver_popup;
 
-	bool create_script_shown = false;
+	bool create_script_popup_shown = false;
+	bool add_tag_popup_shown = false;
 	bool show_assets_loading_popup = false;
 };
 

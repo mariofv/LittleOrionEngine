@@ -222,6 +222,8 @@ bool Scene::SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_
 	if (gameobject_to_save->modified_by_user)
 	{
 		config.AddString(gameobject_to_save->name, "Name");
+		config.AddBool(gameobject_to_save->IsStatic(), "Static");
+		config.AddBool(gameobject_to_save->IsEnabled(), "Active");
 		modified = true;
 	}
 	std::vector<Config> gameobject_components_config;
@@ -280,10 +282,13 @@ void Scene::LoadPrefabModifiedComponents(const Config& config) const
 		config.GetChildConfig("Transform", transform_config);
 
 		prefab_child->transform.Load(transform_config);
+		prefab_child->transform.modified_by_user = true;
 	}
 	if (config.config_document.HasMember("Name"))
 	{
 		config.GetString("Name", prefab_child->name, prefab_child->name);
+		prefab_child->SetStatic(config.GetBool("Static", false));
+		prefab_child->SetEnabled(config.GetBool("Active", true));
 		prefab_child->modified_by_user = true;
 	}
 

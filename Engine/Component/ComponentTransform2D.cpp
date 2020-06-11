@@ -48,6 +48,7 @@ Component * ComponentTransform2D::Clone(bool create_on_module) const
 	ComponentTransform2D * created_component;
 	created_component = new ComponentTransform2D(nullptr);
 	*created_component = *this;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 }
 
@@ -59,15 +60,12 @@ void ComponentTransform2D::Copy(Component * component_to_copy) const
 
 ComponentTransform2D & ComponentTransform2D::operator=(const ComponentTransform2D & component_to_copy)
 {
-	this->translation = component_to_copy.translation;
-	this->rotation = component_to_copy.rotation;
 	this->rotation_degrees = component_to_copy.rotation_degrees;
-	this->rotation_radians = component_to_copy.rotation_radians;
 	this->scale = component_to_copy.scale;
 
-	this->model_matrix = component_to_copy.model_matrix;
+	this->pivot = component_to_copy.pivot;
 
-	size = component_to_copy.size;
+	size_delta = component_to_copy.size_delta;
 	anchored_position = component_to_copy.anchored_position;
 	min_anchor = component_to_copy.min_anchor;
 	max_anchor = component_to_copy.max_anchor;

@@ -19,6 +19,7 @@
 #include "ModuleDebug.h"
 #include "ModuleEditor.h"
 #include "ModuleProgram.h"
+#include "ModulePhysics.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
 #include "ModuleSpacePartitioning.h"
@@ -497,8 +498,8 @@ void ModuleDebugDraw::Render()
 
 	RenderDebugDraws(*App->cameras->scene_camera);
 
+}	
 	
-}
 
 void ModuleDebugDraw::RenderTangentsAndBitangents() const
 {
@@ -542,6 +543,11 @@ void ModuleDebugDraw::RenderRectTransform(const GameObject* rect_owner) const
 	dd::line(rect_points[2], rect_points[3], float3::one);
 	dd::line(rect_points[3], rect_points[0], float3::one);
 	dd::line(rect_points[0], rect_points[1], float3::one);
+}
+
+void ModuleDebugDraw::RenderLine(float3 & a, float3 & b) const
+{
+	dd::line(a, b, float3::unitY);
 }
 
 void ModuleDebugDraw::RenderCameraFrustum() const
@@ -652,6 +658,10 @@ void ModuleDebugDraw::RenderOutline() const
 		BROFILER_CATEGORY("Render Outline Write Stencil", Profiler::Color::Lavender);
 
 		ComponentMeshRenderer* selected_object_mesh = static_cast<ComponentMeshRenderer*>(selected_object_mesh_component);
+		if (!selected_object_mesh->mesh_to_render)
+		{
+			return;
+		}
 		glEnable(GL_STENCIL_TEST);
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
@@ -766,9 +776,64 @@ void ModuleDebugDraw::RenderPathfinding() const
 	}
 }
 
+void ModuleDebugDraw::RenderGrid() const
+{
+	float scene_camera_height = App->cameras->scene_camera->owner->transform.GetGlobalTranslation().y;
+	grid->ScaleOnDistance(scene_camera_height);
+	grid->Render();
+}
+
 ENGINE_API void ModuleDebugDraw::RenderSingleAABB(AABB& aabb) const
 {
 	dd::aabb(aabb.minPoint, aabb.maxPoint, float3::one);
+}
+
+void ModuleDebugDraw::RenderNavMesh(ComponentCamera & cam) const
+{
+	App->artificial_intelligence->RenderNavMesh(cam);
+}
+
+void ModuleDebugDraw::RenderQuadTree() const
+{
+	for (auto& ol_quadtree_node : App->space_partitioning->ol_quadtree->flattened_tree)
+	{
+		float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
+		float3 quadtree_node_max = float3(ol_quadtree_node->box.maxPoint.x, 0, ol_quadtree_node->box.maxPoint.y);
+		dd::aabb(quadtree_node_min, quadtree_node_max, float3::one);
+	}
+}
+
+void ModuleDebugDraw::RenderOcTree() const
+{
+	for (auto& ol_octtree_node : App->space_partitioning->ol_octtree->flattened_tree)
+	{
+		float3 octtree_node_min = float3(ol_octtree_node->box.minPoint.x, ol_octtree_node->box.minPoint.y, ol_octtree_node->box.minPoint.z);
+		float3 octtree_node_max = float3(ol_octtree_node->box.maxPoint.x, ol_octtree_node->box.maxPoint.y, ol_octtree_node->box.maxPoint.z);
+		dd::aabb(octtree_node_min, octtree_node_max, float3::one);
+	}
+}
+
+void ModuleDebugDraw::RenderAABBTree() const
+{
+	App->space_partitioning->DrawAABBTree();
+}
+
+void ModuleDebugDraw::RenderPhysics() const
+{
+	App->physics->world->debugDrawWorld();
+}
+
+void ModuleDebugDraw::RenderSelectedGameObjectHelpers() const
+{
+	if (App->editor->selected_game_object != nullptr)
+	{
+		BROFILER_CATEGORY("Render Selected GameObject DebugDraws", Profiler::Color::Lavender);
+
+		RenderCameraFrustum();
+		RenderLightGizmo();
+		RenderRectTransform(App->editor->selected_game_object);
+		//RenderBones();
+	}
 }
 
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
@@ -783,7 +848,6 @@ void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 	dd_interface_implementation->mvpMatrix = proj * view;
 
 	dd::flush();
-
 }
 
 // Called before quitting

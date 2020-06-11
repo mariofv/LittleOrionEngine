@@ -6,7 +6,7 @@
 #include "Module/ModuleScriptManager.h"
 #include "Script/Script.h"
 
-#include "imgui.h"
+#include <imgui.h>
 
 ComponentScript::ComponentScript() : Component(nullptr, ComponentType::SCRIPT)
 {
@@ -16,6 +16,12 @@ ComponentScript::ComponentScript(GameObject* owner, std::string& script_name) : 
 {
 	script = App->scripts->CreateResourceScript(script_name, owner);
 	App->scripts->scripts.push_back(this);
+}
+
+ComponentScript & ComponentScript::operator=(const ComponentScript & component_to_copy)
+{
+	LoadName(component_to_copy.name);
+	return *this;
 }
 
 Component* ComponentScript::Clone(bool original_prefab) const
@@ -30,8 +36,9 @@ Component* ComponentScript::Clone(bool original_prefab) const
 		created_component = App->scripts->CreateComponentScript();
 	}
 	*created_component = *this;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
-};
+}
 
 void ComponentScript::Copy(Component * component_to_copy) const
 {
@@ -39,7 +46,17 @@ void ComponentScript::Copy(Component * component_to_copy) const
 	*static_cast<ComponentScript*>(component_to_copy) = *this;
 }
 
-void ComponentScript::LoadName(std::string& script_name) 
+void ComponentScript::Enable()
+{
+	active = true;
+	if(!awaken)
+	{
+		AwakeScript();
+		StartScript();
+	}
+}
+
+void ComponentScript::LoadName(const std::string& script_name) 
 {
 	this->name = script_name;
 	script = App->scripts->CreateResourceScript(script_name, owner);
@@ -47,7 +64,7 @@ void ComponentScript::LoadName(std::string& script_name)
 
 void ComponentScript::Update()
 {
-	if (script && active) 
+	if (script && active && awaken && started)
 	{
 		script->Update();
 	}
@@ -58,13 +75,15 @@ void ComponentScript::AwakeScript()
 	if (script && active)
 	{
 		script->Awake();
+		awaken = true;
 	}
 }
 
 void ComponentScript::StartScript()
 {
-	if (script && active)
+	if (script && awaken && active)
 	{
+		started = true;
 		script->Start();
 	}
 }
