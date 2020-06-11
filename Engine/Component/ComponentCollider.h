@@ -18,7 +18,13 @@ struct CollisionInformation
 
 struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
 {
-	std::vector<btManifoldPoint> mainfolds;
+	struct CustomMainfoldPoint
+	{
+		int object_a_id;
+		int object_b_id;
+		btManifoldPoint point;
+	};
+	std::vector<CustomMainfoldPoint> mainfolds;
 
 	virtual btScalar addSingleResult(
 		btManifoldPoint& cp,
@@ -26,7 +32,8 @@ struct ContactSensorCallback : public btCollisionWorld::ContactResultCallback
 		const btCollisionObjectWrapper* colObj1, int partId1, int index1
 	)
 	{
-		mainfolds.push_back(cp);
+		CustomMainfoldPoint custom_mainfold{ colObj0->getCollisionObject()->getWorldArrayIndex(), colObj1->getCollisionObject()->getWorldArrayIndex(), cp };
+		mainfolds.push_back(custom_mainfold);
 		return 0;
 	}
 };
@@ -84,13 +91,13 @@ public:
 	float3 GetColliderCenter() const;
 
 	ENGINE_API bool IsGrounded(float length_percentage = 0.75F);
-	ENGINE_API std::vector<float4> GetCollisions();
+	ENGINE_API std::vector<CollisionInformation> GetCollisions();
 
 	ENGINE_API float3 GetOrigin() const;
 	ENGINE_API float3 GetBoxSize() const;
 
 	ENGINE_API CollisionInformation RaycastHit(float3& start, float3& end) const;
-	ENGINE_API bool CollisionTest(bool show_contact_points = false) const; // This function returns true if the body of the collider is colliding, even thought outside step
+	ENGINE_API std::vector<CollisionInformation> CollisionTest() const; // This function returns true if the body of the collider is colliding, even thought outside step
 
 	ENGINE_API std::vector<CollisionInformation> DetectAllCollision() const; //returns true if collides with any object in the world
 	ENGINE_API bool IsCollidingWith(ComponentCollider* collider) const;

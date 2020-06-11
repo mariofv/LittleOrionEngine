@@ -374,24 +374,39 @@ void ComponentCollider::SwitchPhysics()
 	}
 }
 
-bool ComponentCollider::CollisionTest(bool show_contact_points) const
+std::vector<CollisionInformation> ComponentCollider::CollisionTest() const
 {
 	ContactSensorCallback contact_callback;
 	App->physics->world->contactTest(body, contact_callback);
+	std::vector<CollisionInformation> collisions;
 
-	if (show_contact_points)
+	for (auto& custom_mainfold : contact_callback.mainfolds)
 	{
-		for (int i = 0; i < contact_callback.mainfolds.size(); i++)
+		CollisionInformation collision;
+		if (custom_mainfold.point.getDistance() < 0.0f)
 		{
-			float3 position_on_A = float3(contact_callback.mainfolds[i].m_positionWorldOnA);
-			App->debug_draw->RenderPoint(position_on_A, 10.f);
+			if (custom_mainfold.object_a_id == body->getWorldArrayIndex())
+			{
+				collision.collider = App->physics->FinColliderByWorldId(custom_mainfold.object_b_id);
+				collision.normal = float3(custom_mainfold.point.m_normalWorldOnB);
+			}
+			else if (custom_mainfold.object_b_id == body->getWorldArrayIndex())
+			{
+				collision.collider = App->physics->FinColliderByWorldId(custom_mainfold.object_a_id);
+				collision.normal = -float3(custom_mainfold.point.m_normalWorldOnB);
+			}
+			else
+			{
+				assert(false); // This should never happen
+			}
+			collision.distance = -custom_mainfold.point.getDistance();
 
-			float3 position_on_B = float3(contact_callback.mainfolds[i].m_positionWorldOnB);
-			App->debug_draw->RenderPoint(position_on_B, 10.f);
+			collisions.push_back(collision);
 		}
+		
 	}
 
-	return contact_callback.mainfolds.size() != 0;
+	return collisions;
 }
 
 CollisionInformation ComponentCollider::RaycastHit(float3& start, float3& end) const
@@ -458,12 +473,14 @@ CollisionInformation ComponentCollider::DetectCollisionWithGround(float length_p
 	return RaycastHit(origin, end);
 }
 
-std::vector<float4> ComponentCollider::GetCollisions()
+std::vector<CollisionInformation> ComponentCollider::GetCollisions()
 {
-	std::vector<float4> collisions;
+	std::vector<CollisionInformation> collisions;
 	int numManifolds = App->physics->world->getDispatcher()->getNumManifolds();
 	for (int i = 0; i < numManifolds; i++)
 	{
+		CollisionInformation collision;
+
 		btPersistentManifold* contactManifold = App->physics->world->getDispatcher()->getManifoldByIndexInternal(i);
 		const btCollisionObject* obA = contactManifold->getBody0();
 		const btCollisionObject* obB = contactManifold->getBody1();
@@ -476,13 +493,17 @@ std::vector<float4> ComponentCollider::GetCollisions()
 			{
 				if (obA->getWorldArrayIndex() == body->getWorldArrayIndex() && obB->hasContactResponse())
 				{
-					float4 normal(pt.m_normalWorldOnB.getX(), pt.m_normalWorldOnB.getY(), pt.m_normalWorldOnB.getZ(), -pt.getDistance());
-					collisions.emplace_back(normal);
+					collision.collider = App->physics->FinColliderByWorldId(obB->getWorldArrayIndex());
+					collision.normal = float3(pt.m_normalWorldOnB.getX(), pt.m_normalWorldOnB.getY(), pt.m_normalWorldOnB.getZ());
+					collision.distance = -pt.getDistance();
+					collisions.emplace_back(collision);
 				}
 				else if (obB->getWorldArrayIndex() == body->getWorldArrayIndex() && obA->hasContactResponse())
 				{
-					float4 normal(-pt.m_normalWorldOnB.getX(), -pt.m_normalWorldOnB.getY(), -pt.m_normalWorldOnB.getZ(), -pt.getDistance());
-					collisions.emplace_back(normal);
+					collision.collider = App->physics->FinColliderByWorldId(obA->getWorldArrayIndex());
+					collision.normal = -float3(pt.m_normalWorldOnB.getX(), pt.m_normalWorldOnB.getY(), pt.m_normalWorldOnB.getZ());
+					collision.distance = -pt.getDistance();
+					collisions.emplace_back(collision);
 				}
 			}
 		}
