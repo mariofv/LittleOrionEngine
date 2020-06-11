@@ -13,6 +13,7 @@
 
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentAudioSource.h"
+#include "Component/ComponentBillboard.h"
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
@@ -26,6 +27,7 @@
 #include "Component/ComponentMeshCollider.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentSphereCollider.h"
 #include "Component/ComponentText.h"
@@ -146,6 +148,240 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		}
 
 		ImGui::Checkbox("Is Raycastable", &mesh_renderer->is_raycastable);
+	}
+}
+
+void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* particle_system)
+{
+	
+	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Particle System", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		
+		ImGui::Checkbox("Active", &particle_system->active);
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			App->actions->DeleteComponentUndo(particle_system);
+		}
+		ImGui::Separator();
+
+		if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::Text("Texture");
+			ImGui::SameLine();
+
+			std::string texture_name = particle_system->billboard->billboard_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(particle_system->billboard->billboard_texture->GetUUID())->resource_name;
+			ImGuiID element_id = ImGui::GetID((std::to_string(particle_system->UUID) + "TextureSelector").c_str());
+			if (ImGui::Button(texture_name.c_str()))
+			{
+				App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+			}
+
+			uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+			if (selected_resource_uuid != 0)
+			{
+				particle_system->SetParticleTexture(selected_resource_uuid);
+				particle_system->modified_by_user = true;
+			}
+			selected_resource_uuid = ImGui::ResourceDropper<Texture>();
+			if (selected_resource_uuid != 0)
+			{
+				particle_system->SetParticleTexture(selected_resource_uuid);
+				particle_system->modified_by_user = true;
+			}
+			int alignment_type = static_cast<int>(particle_system->billboard->alignment_type);
+			if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) 
+			{
+				switch (alignment_type)
+				{
+				case 0:
+					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
+					break;
+				case 1:
+					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
+					break;
+				case 2:
+					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::SPRITESHEET);
+					break;
+				case 3:
+					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
+					break;
+				}
+			}
+			if (particle_system->billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
+				ImGui::InputInt("Rows", &particle_system->billboard->x_tiles, 1);
+				ImGui::InputInt("Columns", &particle_system->billboard->y_tiles, 1);
+				ImGui::InputFloat("Speed", &particle_system->billboard->sheet_speed, 1);
+				ImGui::Checkbox("Oriented to camera", &particle_system->billboard->oriented_to_camera);
+			}
+
+			int particle_shape = static_cast<int>(particle_system->type_of_particle_system);
+			if (ImGui::Combo("Shape", &particle_shape, "Sphere\0Box\0Cone\0"))
+			{
+				switch (particle_shape)
+				{
+				case 0:
+					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::SPHERE;
+					break;
+				case 1:
+					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::BOX;
+					break;
+				case 2:
+					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::CONE;
+					break;
+				}
+			}
+		
+			ImGui::Checkbox("Loop", &particle_system->loop);
+			ImGui::SameLine();
+			ImGui::Checkbox("Follow GO Parent", &particle_system->follow_owner);
+			ImGui::Spacing();
+			
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+			ImGui::DragFloat("Width", &particle_system->particles_width, 0.01f, 0.0f, 100.0F);
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+			ImGui::DragFloat("Height", &particle_system->particles_height, 0.01f, 0.0f, 100.0F);
+			ImGui::SameLine();
+			if (particle_system->size_random)
+			{
+				ImGui::Spacing();
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				ImGui::DragInt("Min size", &particle_system->min_size_of_particle, 10, 0, 999);
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				ImGui::DragInt("Max size", &particle_system->max_size_of_particle, 100, 1, 1000);
+				ImGui::SameLine();
+			}
+			
+			ImGui::Checkbox("Rand size", &particle_system->size_random);
+
+			ImGui::Spacing();
+
+			ImGui::DragFloat("Velocity", &particle_system->velocity_particles, 0.01f, 0.0f, 100.0F);
+			ImGui::Spacing();
+
+			ImGui::DragFloat("Life (in seconds)", &particle_system->particles_life_time, 1.0F, 0.0F, 100.0F);
+			ImGui::Spacing();
+
+			ImGui::DragFloat("Time Between Particles", &particle_system->time_between_particles, 0.1F, 0.0F, 10.0f);
+			ImGui::Spacing();
+			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::BOX)
+			{
+				if (particle_system->enabled_random_x)
+				{
+					ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 1000);
+					ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -1000, 0);
+				}
+				else
+				{
+					ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -100, 1000);
+				}
+				ImGui::SameLine();
+				ImGui::Checkbox("Rand X", &particle_system->enabled_random_x);
+
+				ImGui::Spacing();
+
+				if (particle_system->enabled_random_z)
+				{
+					ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 1000);
+					ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -1000, 0);
+				}
+				else
+				{
+					ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -100, 1000);
+				}
+				ImGui::SameLine();
+				ImGui::Checkbox("Rand Z", &particle_system->enabled_random_z);
+			
+			}
+			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::CONE)
+			{
+				ImGui::DragFloat("Outer radius", &particle_system->outer_radius, 0.1F, 0.1, 10);
+				ImGui::DragFloat("Inner radius", &particle_system->inner_radius, 0.1F, 0.1, 10);
+			}
+		}
+
+		//Color of Particles
+		if (ImGui::CollapsingHeader(ICON_FA_SQUARE "Color Over Time"))
+		{
+			ImGui::Checkbox("Fade", &particle_system->fade);
+			ImGui::Checkbox("Fade Between Colors", &particle_system->fade_between_colors);
+			if (particle_system->fade)
+			{
+				ImGui::DragFloat("Fade time", &particle_system->fade_time, 0.01f, 0.0f, 10.0F);
+			}
+			ImGui::ColorEdit4("Particle Color##2f", (float*)&particle_system->color_particle, ImGuiColorEditFlags_Float );
+			if (particle_system->fade_between_colors)
+			{
+				ImGui::ColorEdit4("Particle Color To Fade##2f", (float*)&particle_system->color_to_fade, ImGuiColorEditFlags_Float);
+				ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
+			}
+		}
+		
+	}
+
+}
+void PanelComponent::ShowComponentBillboard(ComponentBillboard* billboard)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Billboard", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (!ShowCommonComponentWindow(billboard))
+		{
+			return;
+		}
+		ImGui::Separator();
+
+		ImGui::AlignTextToFramePadding();
+		
+
+		ImGui::Text("Texture");
+		ImGui::SameLine();
+
+		std::string texture_name = billboard->billboard_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(billboard->billboard_texture->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(billboard->UUID) + "TextureSelector").c_str());
+		if (ImGui::Button(texture_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+		}
+
+		uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource_uuid != 0)
+		{
+			billboard->ChangeTexture(selected_resource_uuid);
+		}
+		selected_resource_uuid = ImGui::ResourceDropper<Texture>();
+		if (selected_resource_uuid != 0)
+		{
+			billboard->ChangeTexture(selected_resource_uuid);
+		}
+		int alignment_type = static_cast<int>(billboard->alignment_type);
+		if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) {
+			switch (alignment_type)
+			{
+			case 0:
+				billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
+				break;
+			case 1:
+				billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
+				break;
+			case 2:
+				billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::SPRITESHEET);
+				break;
+			case 3:
+				billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
+				break;
+			}
+		}
+
+		if (billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
+			ImGui::InputInt("Rows", &billboard->x_tiles, 1);
+			ImGui::InputInt("Columns", &billboard->y_tiles, 1);
+			ImGui::InputFloat("Speed", &billboard->sheet_speed, 1);
+			ImGui::Checkbox("Oriented to camera", &billboard->oriented_to_camera);
+		}
+		
+
 	}
 }
 
@@ -271,7 +507,7 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
-		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f)) { light->modified_by_user = true; }
+		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 100.f)) { light->modified_by_user = true; }
 
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
@@ -685,12 +921,23 @@ void PanelComponent::ShowAddNewComponentButton()
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
-
 			if (!App->editor->selected_game_object->IsStatic())
 			{
 				App->space_partitioning->InsertAABBTree(App->editor->selected_game_object);
 			}
+		}
+		
+		sprintf_s(tmp_string, "%s Billboard", ICON_FA_SQUARE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::BILLBOARD);
 
+
+		}
+		sprintf_s(tmp_string, "%s Particle System", ICON_FA_SQUARE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::PARTICLE_SYSTEM);
 		}
 
 		sprintf_s(tmp_string, "%s Animation", ICON_FA_PLAY_CIRCLE);

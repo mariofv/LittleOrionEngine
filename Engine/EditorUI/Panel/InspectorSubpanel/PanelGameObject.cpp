@@ -4,6 +4,7 @@
 
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentAudioSource.h"
+#include "Component/ComponentBillboard.h"
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
@@ -14,9 +15,11 @@
 #include "Component/ComponentImage.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
+
 #include "EditorUI/Panel/PanelInspector.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelTransform.h"
 #include "EditorUI/Panel/PanelPopups.h"
@@ -146,6 +149,14 @@ void PanelGameObject::Render(GameObject* game_object)
 
 			case Component::ComponentType::ANIMATION:
 				component_panel.ShowComponentAnimationWindow(static_cast<ComponentAnimation*>(component));
+				break;
+
+			case Component::ComponentType::BILLBOARD:
+				component_panel.ShowComponentBillboard(static_cast<ComponentBillboard*>(component));
+				break;
+
+			case Component::ComponentType::PARTICLE_SYSTEM:
+				component_panel.ShowComponentParticleSystem(static_cast<ComponentParticleSystem*>(component));
 				break;
 
 			case Component::ComponentType::CANVAS:

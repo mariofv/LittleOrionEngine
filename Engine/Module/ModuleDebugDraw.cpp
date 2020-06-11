@@ -5,8 +5,8 @@
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentParticleSystem.h"
 
-#include "EditorUI/Helper/Billboard.h"
 #include "EditorUI/Helper/Grid.h"
 #include "EditorUI/Panel/PanelNavMesh.h"
 
@@ -389,8 +389,6 @@ bool ModuleDebugDraw::Init()
 	dd_interface_implementation = new IDebugDrawOpenGLImplementation();
     dd::initialize(dd_interface_implementation);
 
-	light_billboard = new Billboard(CoreResource::BILLBOARD_LIGHT_TEXTURE, 17.2f, 25.f);	
-	camera_billboard = new Billboard(CoreResource::BILLBOARD_CAMERA_TEXTURE, 25.f, 25.f);
 
 	grid = new Grid();
 
@@ -466,13 +464,74 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 	}	
 }
 
+void ModuleDebugDraw::RenderParticleSystem() const 
+{
+	BROFILER_CATEGORY("Render Selected GameObject Particle System Gizmo", Profiler::Color::Lavender);
+
+	Component* particle_system = App->editor->selected_game_object->GetComponent(Component::ComponentType::PARTICLE_SYSTEM);
+	if (particle_system != nullptr)
+	{
+		ComponentParticleSystem* selected_particle_system = static_cast<ComponentParticleSystem*>(particle_system);
+		float gizmo_radius = 2.5F;
+		switch (selected_particle_system->type_of_particle_system)
+		{
+			case ComponentParticleSystem::TypeOfParticleSystem::SPHERE:
+				dd::point_light(
+					App->editor->selected_game_object->transform.GetGlobalTranslation(), 
+					float3(1.f, 1.f, 0.f),
+					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles
+				);
+			break;
+			case ComponentParticleSystem::TypeOfParticleSystem::BOX:
+			{
+				float min_x = selected_particle_system->min_range_random_x;
+				float max_x = selected_particle_system->max_range_random_x;
+				float min_z = selected_particle_system->min_range_random_z;
+				float max_z = selected_particle_system->max_range_random_z;
+				float height = selected_particle_system->particles_life_time*selected_particle_system->velocity_particles *100;
+				float3 box_points[8] = {
+					float3(min_x,0.0f,min_z) / 100,
+					float3(min_x, 0.0f, max_z) / 100,
+					float3(max_x, 0.0f, max_z) / 100,
+					float3(max_x, 0.0f, min_z) / 100,
+
+					float3(min_x,height,min_z) / 100,
+					float3(min_x, height, max_z) / 100,
+					float3(max_x, height, max_z) / 100,
+					float3(max_x, height, min_z) / 100
+				};
+
+				for (unsigned int i = 0; i < 8; ++i)
+				{
+					box_points[i] = App->editor->selected_game_object->transform.GetGlobalTranslation() + (App->editor->selected_game_object->transform.GetGlobalRotation() *box_points[i]);
+				}
+				dd::box(box_points, ddVec3(1.f, 1.f, 0.f));
+			
+			break;
+			}
+			case ComponentParticleSystem::TypeOfParticleSystem::CONE:
+			
+				dd::cone(
+					App->editor->selected_game_object->transform.GetGlobalTranslation(), 
+					App->editor->selected_game_object->transform.GetGlobalRotation()*float3::unitY * 
+					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles,
+					float3(1.f, 1.f, 0.f), 
+					selected_particle_system->outer_radius, 
+					selected_particle_system->inner_radius
+				);
+				
+			break;
+		}
+	}
+}
+
 void ModuleDebugDraw::RenderLightGizmo() const	
 {	
 	BROFILER_CATEGORY("Render Selected GameObject Light Gizmo", Profiler::Color::Lavender);
 
 	Component* selected_light_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::LIGHT);	
 	if (selected_light_component != nullptr)
-  {	
+	{	
 		ComponentLight* selected_light = static_cast<ComponentLight*>(selected_light_component);	
 		ComponentTransform* selected_light_transform = &selected_light->owner->transform;
 		float gizmo_radius = 2.5F;	
@@ -638,13 +697,12 @@ void ModuleDebugDraw::RenderBillboards() const
 	{
 		Component * light_component = object->GetComponent(Component::ComponentType::LIGHT);
 		if (light_component != nullptr) {
-			light_billboard->Render(object->transform.GetGlobalTranslation());
 		}
 
 		Component * camera_component = object->GetComponent(Component::ComponentType::CAMERA);
 		if (camera_component != nullptr) {
-			camera_billboard->Render(object->transform.GetGlobalTranslation());
 		}
+
 	}
 }
 
@@ -723,6 +781,7 @@ void ModuleDebugDraw::RenderSelectedGameObjectHelpers() const
 		RenderCameraFrustum();
 		RenderLightGizmo();
 		RenderRectTransform(App->editor->selected_game_object);
+		RenderParticleSystem();
 		//RenderBones();
 	}
 }
