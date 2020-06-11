@@ -82,8 +82,6 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 	{
 		own_format_animation.keyframes.push_back({ static_cast<float>(keyframe.first), keyframe.second });
 	}
-
-	//assert(own_format_animation.keyframes.size() == animation_duration);
 }
 
 void AnimationImporter::ApplyNodeTansformationOutSideChannels(std::map<const std::string, std::vector<const aiNode *>> &nodes, float unit_scale_factor, Animation &own_format_animation) const

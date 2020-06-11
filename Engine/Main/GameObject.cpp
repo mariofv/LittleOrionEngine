@@ -29,8 +29,10 @@
 #include "Component/ComponentEventSystem.h"
 #include "Component/ComponentImage.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentBillboard.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 
@@ -463,9 +465,18 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		created_component = App->ui->CreateComponentUI<ComponentText>();
 		break;
 
+	case Component::ComponentType::BILLBOARD:
+		created_component = App->renderer->CreateComponentBillboard();
+		break;
+
+	case Component::ComponentType::PARTICLE_SYSTEM:
+		created_component = App->renderer->CreateComponentParticleSystem();
+		break;
+
 	case Component::ComponentType::AUDIO_SOURCE:
 		created_component = App->audio->CreateComponentAudioSource();
 		break;
+		
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");
 		return nullptr;

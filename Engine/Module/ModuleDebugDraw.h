@@ -51,6 +51,7 @@ public:
 private:
 
 	void RenderCameraFrustum() const;
+	void RenderParticleSystem() const;
 	void RenderLightGizmo() const;
 	void RenderBones(GameObject * game_object) const;
 
