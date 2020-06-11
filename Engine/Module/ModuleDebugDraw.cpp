@@ -514,8 +514,8 @@ void ModuleDebugDraw::RenderBones(GameObject* game_object) const
 				if (joint.parent_index != -1)
 				{
 					dd::line(
-						(mesh_skeleton->skeleton[joint.parent_index].transform_global.Inverted() * float4(0.f, 0.f, 0.f, 1.f)).xyz(),
-						(joint.transform_global.Inverted() * float4(0.f,0.f,0.f,1.f)).xyz(), 
+						(game_object->transform.GetGlobalModelMatrix() * mesh_skeleton->skeleton[joint.parent_index].transform_global.Inverted() * float4(0.f, 0.f, 0.f, 1.f)).xyz(),
+						(game_object->transform.GetGlobalModelMatrix() * joint.transform_global.Inverted() * float4(0.f,0.f,0.f,1.f)).xyz(),
 						color
 					);
 				}
