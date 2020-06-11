@@ -4,6 +4,7 @@
 #include "Actions/EditorActionDeleteGameObject.h"
 
 #include "Component/ComponentCamera.h"
+#include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentLight.h"
 
 #include "Helper/TemplatedGameObjectCreator.h"
@@ -281,6 +282,18 @@ void PanelHierarchy::ShowComponentObjectCreationMenu(GameObject *game_object) co
 			created_game_object->name = "Directional Light";
 			ComponentLight* directional_light_component = static_cast<ComponentLight*>(created_game_object->CreateComponent(Component::ComponentType::LIGHT));
 			directional_light_component->light_type = ComponentLight::LightType::DIRECTIONAL_LIGHT;
+		}
+
+		ImGui::EndMenu();
+	}
+	
+	if (ImGui::BeginMenu("Effects"))
+	{
+		if (ImGui::Selectable("Particle System"))
+		{
+			created_game_object = App->scene->CreateGameObject();
+			created_game_object->name = "Particle System";
+			ComponentParticleSystem* particle_system_component = static_cast<ComponentParticleSystem*>(created_game_object->CreateComponent(Component::ComponentType::PARTICLE_SYSTEM));
 		}
 
 		ImGui::EndMenu();

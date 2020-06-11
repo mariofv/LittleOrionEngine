@@ -12,10 +12,16 @@
 #include "ModuleTime.h"
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
+#include "ModuleLight.h"
+
+#include "Component/ComponentBillboard.h"
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentParticleSystem.h"
+#include "Component/ComponentLight.h"
+
 #include "EditorUI/DebugDraw.h"
+#include "ModuleResourceManager.h"
 
 #include <algorithm>
 #include <assimp/scene.h>
@@ -137,6 +143,10 @@ bool ModuleRender::CleanUp()
 	{
 		mesh->owner->RemoveComponent(mesh);
 	}
+	for (auto& particle : particle_systems)
+	{
+		particle->owner->RemoveComponent(particle);
+	}
 	return true;
 }
 
@@ -207,6 +217,18 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	}
 	glDisable(GL_BLEND);
 	
+	for (auto &billboard : billboards)
+	{
+		billboard->Render(billboard->owner->transform.GetGlobalTranslation());
+	}
+	for (auto &particles : particle_systems)
+	{
+		particles->Render();
+	}
+
+	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
+	App->ui->Render(&camera);
+
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
 	
@@ -352,7 +374,7 @@ std::string ModuleRender::GetDrawMode() const
 
 ComponentMeshRenderer* ModuleRender::CreateComponentMeshRenderer()
 {
-	ComponentMeshRenderer *created_mesh = new ComponentMeshRenderer();
+	ComponentMeshRenderer* created_mesh = new ComponentMeshRenderer();
 	meshes.push_back(created_mesh);
 	return created_mesh;
 }
@@ -367,6 +389,39 @@ void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 	}
 }
 
+ComponentBillboard* ModuleRender::CreateComponentBillboard()
+{
+	ComponentBillboard* created_billboard = new ComponentBillboard();
+	billboards.push_back(created_billboard);
+	return created_billboard;
+}
+
+void ModuleRender::RemoveComponentBillboard(ComponentBillboard* billboard_to_remove)
+{
+	auto it = std::find(billboards.begin(), billboards.end(), billboard_to_remove);
+	if (it != billboards.end())
+	{
+		delete *it;
+		billboards.erase(it);
+	}
+}
+
+ComponentParticleSystem* ModuleRender::CreateComponentParticleSystem()
+{
+	ComponentParticleSystem* created_particle_system = new ComponentParticleSystem();
+	particle_systems.push_back(created_particle_system);
+	return created_particle_system;
+}
+
+void ModuleRender::RemoveComponentParticleSystem(ComponentParticleSystem* particle_system_to_remove)
+{
+	auto it = std::find(particle_systems.begin(), particle_systems.end(), particle_system_to_remove);
+	if (it != particle_systems.end())
+	{
+		delete *it;
+		particle_systems.erase(it);
+	}
+}
 
 RaycastHit* ModuleRender::GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* cam)
 {
