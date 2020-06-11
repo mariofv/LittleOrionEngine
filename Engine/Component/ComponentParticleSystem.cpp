@@ -13,7 +13,7 @@ ComponentParticleSystem::ComponentParticleSystem() : Component(nullptr, Componen
 	Init();
 }
 
-ComponentParticleSystem::ComponentParticleSystem(GameObject * owner) : Component(owner, ComponentType::PARTICLE_SYSTEM)
+ComponentParticleSystem::ComponentParticleSystem(GameObject* owner) : Component(owner, ComponentType::PARTICLE_SYSTEM)
 {
 	Init();
 }
@@ -26,7 +26,7 @@ void ComponentParticleSystem::Init()
 {
 	particles.reserve(max_particles);
 
-	billboard = new ComponentBillboard(owner);
+	billboard = new ComponentBillboard(this->owner);
 	billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
 
 	for (unsigned int i = 0; i < max_particles; ++i)
@@ -130,10 +130,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	aux_velocity = particle.rotation * aux_velocity;
 	particle.velocity = aux_velocity.xyz();
 
-	if (follow_owner)
-	{
-	}
-	else
+	if (!follow_owner)
 	{
 		particle.position = owner->transform.GetGlobalTranslation() + (particle.rotation *particle.position);
 	}
@@ -181,19 +178,19 @@ void ComponentParticleSystem::Render()
 	
 	glDisable(GL_BLEND);
 }
-void ComponentParticleSystem::UpdateParticle(Particle& p)
+void ComponentParticleSystem::UpdateParticle(Particle& particle)
 {
-	float time_spend = p.time_passed;
-	p.life -= App->time->real_time_delta_time; // reduce life
-	time_spend -= p.life;
-	p.position += p.velocity * App->time->real_time_delta_time;
+	float time_spend = particle.time_passed;
+	particle.life -= App->time->real_time_delta_time; // reduce life
+	time_spend -= particle.life;
+	particle.position += particle.velocity * App->time->real_time_delta_time;
 
 	//alpha fade
 
 	if (fade)
 	{
-		p.color.w -= App->time->real_time_delta_time * (fade_time / 1000);
-		billboard->color[3] = p.color.w;
+		particle.color.w -= App->time->real_time_delta_time * (fade_time / 1000);
+		billboard->color[3] = particle.color.w;
 	}
 	else
 	{
@@ -204,18 +201,18 @@ void ComponentParticleSystem::UpdateParticle(Particle& p)
 	if (fade_between_colors)
 	{
 		float time = (time_spend / 1000) * (color_fade_time / 100);
-		float temp_color[3] = { p.color.x ,p.color.y ,p.color.z };
-		p.color.x = (1 - time) * p.color.x + time * color_to_fade[0];
-		p.color.y = (1 - time) * p.color.y + time * color_to_fade[1];
-		p.color.z = (1 - time) * p.color.z + time * color_to_fade[2];
+		float temp_color[3] = { particle.color.x ,particle.color.y ,particle.color.z };
+		particle.color.x = (1 - time) * particle.color.x + time * color_to_fade[0];
+		particle.color.y = (1 - time) * particle.color.y + time * color_to_fade[1];
+		particle.color.z = (1 - time) * particle.color.z + time * color_to_fade[2];
 	}
-	billboard->color[0] = p.color.x;
-	billboard->color[1] = p.color.y;
-	billboard->color[2] = p.color.z;
+	billboard->color[0] = particle.color.x;
+	billboard->color[1] = particle.color.y;
+	billboard->color[2] = particle.color.z;
 
 	//size
-	billboard->width = particles_width * p.particle_scale;
-	billboard->height = particles_height * p.particle_scale;
+	billboard->width = particles_width * particle.particle_scale;
+	billboard->height = particles_height * particle.particle_scale;
 }
 void ComponentParticleSystem::SetParticleTexture(uint32_t texture_uuid)
 {
@@ -331,8 +328,7 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 
 Component* ComponentParticleSystem::Clone(bool original_prefab) const
 {
-	ComponentLight * created_component;
-	
+	ComponentParticleSystem* created_component;
 	return created_component;
 };
 

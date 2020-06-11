@@ -23,15 +23,15 @@ public:
 	};
 	
 	ComponentBillboard();
-	ComponentBillboard(GameObject * owner);
+	ComponentBillboard(GameObject* owner);
 	~ComponentBillboard();
 
 	//Copy and move
 	ComponentBillboard(const ComponentBillboard& component_to_copy) = default;
 	ComponentBillboard(ComponentBillboard&& component_to_move) = default;
 
-	ComponentBillboard & operator=(const ComponentBillboard & component_to_copy) = default;
-	ComponentBillboard & operator=(ComponentBillboard && component_to_move) = default;
+	ComponentBillboard& operator=(const ComponentBillboard & component_to_copy) = default;
+	ComponentBillboard& operator=(ComponentBillboard && component_to_move) = default;
 	void Delete() override;
 
 	void SpecializedSave(Config& config) const override;

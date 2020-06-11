@@ -1,6 +1,7 @@
 #include "ComponentBillboard.h"
 
 #include "Main/Application.h"
+
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
@@ -12,8 +13,7 @@ ComponentBillboard::ComponentBillboard() : Component(nullptr, ComponentType::BIL
 {
 	InitData();
 }
-
-ComponentBillboard::ComponentBillboard(GameObject * _owner) : Component(owner, ComponentType::BILLBOARD)
+ComponentBillboard::ComponentBillboard(GameObject* owner) : Component(owner, ComponentType::BILLBOARD)
 {
 	InitData();
 }
@@ -76,12 +76,14 @@ void ComponentBillboard::SwitchFrame()
 	{
 		current_sprite_x += 1;
 
-		if ((int)current_sprite_x >= x_tiles) {
+		if ((int)current_sprite_x >= x_tiles) 
+		{
 			current_sprite_y--;
 			current_sprite_x = 0;
 		}
 
-		if ((int)current_sprite_y <= 0) {
+		if ((int)current_sprite_y <= 0) 
+		{
 			current_sprite_y = y_tiles;
 		}
 		time_since_start = 0.f;
@@ -117,7 +119,8 @@ void ComponentBillboard::Render(const float3& position)
 	//Subroutine uniform
 	int selector = glGetSubroutineUniformLocation(shader_program, GL_VERTEX_SHADER, "alignment_selector");
 
-	switch (alignment_type) {
+	switch (alignment_type) 
+	{
 	case VIEW_POINT:
 		glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &viewpoint_subroutine);
 		break;
@@ -170,7 +173,7 @@ void ComponentBillboard::Render(const float3& position)
 
 Component* ComponentBillboard::Clone(bool original_prefab) const
 {
-	ComponentBillboard * created_component;
+	ComponentBillboard* created_component;
 	if (original_prefab)
 	{
 		created_component = new ComponentBillboard();
@@ -183,7 +186,7 @@ Component* ComponentBillboard::Clone(bool original_prefab) const
 	return created_component;
 };
 
-void ComponentBillboard::Copy(Component * component_to_copy) const
+void ComponentBillboard::Copy(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentBillboard*>(component_to_copy) = *this;
