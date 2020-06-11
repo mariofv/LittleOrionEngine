@@ -518,7 +518,6 @@ public:
 private:
 	std::map<KeyCode, KeyState> key_bible;
 	std::map<MouseButton, KeyState> mouse_bible;
-	//std::vector<std::map<ControllerCode, KeyState>> controller_bible;
 
 	//Predefined buttons
 	Path* game_inputs_file_path = nullptr;
@@ -531,20 +530,6 @@ private:
 
 	Uint8 mouse_clicks;
 	bool mouse_moving;
-
-	//float2 left_joystick[MAX_PLAYERS];
-	//float2 right_joystick[MAX_PLAYERS];
-
-	//float2 left_joystick_raw[MAX_PLAYERS];
-	//float2 right_joystick_raw[MAX_PLAYERS];
-
-	//Sint32 left_controller_trigger_raw[MAX_PLAYERS];
-	//Sint32 right_controller_trigger_raw[MAX_PLAYERS];
-
-	//float left_controller_trigger[MAX_PLAYERS];
-	//float right_controller_trigger[MAX_PLAYERS];
-
-	//Gamepad* controller[MAX_PLAYERS];
 
 	friend PanelConfiguration;
 };
