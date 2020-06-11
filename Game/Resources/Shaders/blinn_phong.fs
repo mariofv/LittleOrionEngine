@@ -152,7 +152,10 @@ void main()
 		fragment_normal= normalize(TBN * normal_from_texture);
 	}
 	result += CalculateLightmap(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
-
+	for (int i = 0; i < directional_light.num_directional_lights; ++i)
+	{
+		result += CalculateDirectionalLight(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
+	}
 
 	for (int i = 0; i < num_spot_lights; ++i)
 	{
@@ -164,8 +167,8 @@ void main()
 		result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
 
-	result += diffuse_color.rgb * (ambient_light_color.xyz*ambient_light_intensity); //Ambient light
-	//result += FrustumsCheck();
+	result += emissive_color;
+	//FragColor = vec4(vec3(normalize(tangent)),1.0);
 	FragColor = vec4(result,1.0);
 	FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
 	FragColor.a=material.transparency;	

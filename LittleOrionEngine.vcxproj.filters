@@ -238,9 +238,6 @@
     <ClCompile Include="Engine\EditorUI\EngineLog.cpp">
       <Filter>Engine\EditorUI</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Helper\Billboard.cpp">
-      <Filter>Engine\EditorUI\Helper</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp">
       <Filter>Engine\EditorUI\Helper</Filter>
     </ClCompile>
@@ -502,7 +499,15 @@
     <ClCompile Include="Engine\Helper\TagManager.cpp">
       <Filter>Engine\Helper</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PanelTags.cpp" />
+    <ClCompile Include="Engine\Component\ComponentBillboard.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentParticleSystem.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelTags.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -738,9 +743,6 @@
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\EngineLog.h">
       <Filter>Engine\EditorUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Helper\Billboard.h">
-      <Filter>Engine\EditorUI\Helper</Filter>
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Helper\Grid.h">
       <Filter>Engine\EditorUI\Helper</Filter>
@@ -991,7 +993,15 @@
     <ClInclude Include="Engine\Helper\TagManager.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h" />
+    <ClInclude Include="Engine\Component\ComponentBillboard.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentParticleSystem.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

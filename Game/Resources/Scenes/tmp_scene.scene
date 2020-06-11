@@ -2,9 +2,9 @@
     "Prefabs": [
         {
             "ParentUUID": 3958752399,
-            "Prefab": 2863862644,
+            "Prefab": 4290991357,
             "Transform": {
-                "UUID": 587097852,
+                "UUID": 840725406,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -25,32 +25,32 @@
             },
             "UUIDS": [
                 {
-                    "UUID": 672577794,
-                    "OriginalUUID": 2863862644
+                    "UUID": 2860115843,
+                    "OriginalUUID": 4290991357
                 },
                 {
-                    "UUID": 3639717408,
-                    "OriginalUUID": 2863862650
+                    "UUID": 3394681310,
+                    "OriginalUUID": 4290991363
                 },
                 {
-                    "UUID": 2381792159,
-                    "OriginalUUID": 2863862649
+                    "UUID": 4121381544,
+                    "OriginalUUID": 4290991362
                 },
                 {
-                    "UUID": 475846106,
-                    "OriginalUUID": 2863862648
+                    "UUID": 3657463851,
+                    "OriginalUUID": 4290991361
                 },
                 {
-                    "UUID": 2789512131,
-                    "OriginalUUID": 2863862647
+                    "UUID": 3545812322,
+                    "OriginalUUID": 4290991360
                 },
                 {
-                    "UUID": 3078304907,
-                    "OriginalUUID": 2863862646
+                    "UUID": 3106732887,
+                    "OriginalUUID": 4290991359
                 },
                 {
-                    "UUID": 2109943256,
-                    "OriginalUUID": 2863862645
+                    "UUID": 3985249798,
+                    "OriginalUUID": 4290991358
                 }
             ]
         },
@@ -522,31 +522,6 @@
     "PrefabsComponents": [
         {
             "Transform": {
-                "UUID": 587097852,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "RemovedComponents": [],
-            "Components": [],
-            "UUID": 672577794
-        },
-        {
-            "Transform": {
                 "UUID": 2450969706,
                 "ComponentType": 3,
                 "Active": true,
@@ -868,15 +843,7 @@
             "RemovedComponents": [],
             "Components": [
                 {
-                    "UUID": 364334655,
-                    "ComponentType": 2,
-                    "Active": false,
-                    "Mesh": 3094628837,
-                    "Material": 3404511031,
-                    "Skeleton": 0
-                },
-                {
-                    "UUID": 1475701209,
+                    "UUID": 3441489081,
                     "ComponentType": 2,
                     "Active": false,
                     "Mesh": 3094628837,
@@ -950,7 +917,7 @@
             "RemovedComponents": [],
             "Components": [
                 {
-                    "UUID": 922538809,
+                    "UUID": 4132243368,
                     "ComponentType": 2,
                     "Active": false,
                     "Mesh": 2391310141,
@@ -958,11 +925,19 @@
                     "Skeleton": 0
                 },
                 {
-                    "UUID": 3870239893,
+                    "UUID": 1814997796,
                     "ComponentType": 2,
                     "Active": false,
                     "Mesh": 2391310141,
                     "Material": 4142673985,
+                    "Skeleton": 0
+                },
+                {
+                    "UUID": 35071300,
+                    "ComponentType": 2,
+                    "Active": false,
+                    "Mesh": 40916008,
+                    "Material": 2483162031,
                     "Skeleton": 0
                 },
                 {
@@ -978,7 +953,7 @@
                     ],
                     "Static": false,
                     "Collision": true,
-                    "Visualize": true,
+                    "Visualize": false,
                     "Attached": false,
                     "Freeze_rotation_x": true,
                     "Freeze_rotation_y": true,
@@ -999,7 +974,7 @@
             "RemovedComponents": [],
             "Components": [
                 {
-                    "UUID": 3438222420,
+                    "UUID": 41498715,
                     "ComponentType": 2,
                     "Active": true,
                     "Mesh": 2374312001,
@@ -1008,40 +983,6 @@
                 }
             ],
             "UUID": 4106992703
-        },
-        {
-            "Transform": {
-                "UUID": 3210680362,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "RemovedComponents": [],
-            "Components": [
-                {
-                    "UUID": 4256239808,
-                    "ComponentType": 2,
-                    "Active": false,
-                    "Mesh": 2187377182,
-                    "Material": 865246665,
-                    "Skeleton": 0
-                }
-            ],
-            "UUID": 1694954155
         }
     ],
     "GameObjects": [
@@ -1063,7 +1004,7 @@
                 ],
                 "Rotation": [
                     0.0,
-                    -159.8000030517578,
+                    0.0,
                     0.0
                 ],
                 "Scale": [
@@ -1112,11 +1053,11 @@
                 {
                     "UUID": 2143224420,
                     "ComponentType": 4,
-                    "Active": true,
+                    "Active": false,
                     "LightColor": [
-                        0.4803921580314636,
-                        0.4803921580314636,
-                        0.2684544324874878,
+                        1.0,
+                        1.0,
+                        1.0,
                         1.0
                     ],
                     "Intensity": 1.0,
@@ -1280,8 +1221,8 @@
                     0.5
                 ],
                 "SizeDelta": [
-                    1069.0,
-                    700.0
+                    1094.0,
+                    552.0
                 ],
                 "Pivot": [
                     0.5,
@@ -1991,9 +1932,9 @@
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    194.56015014648438,
-                    -16.83298110961914,
-                    -17.76613998413086
+                    -91.92992401123047,
+                    0.38957250118255618,
+                    -3.4969983100891115
                 ],
                 "Rotation": [
                     -0.0,
@@ -2090,7 +2031,7 @@
                     "Mass": 10.0,
                     "Scale": [
                         0.3700000047683716,
-                        1.6699999570846558,
+                        1.6100000143051148,
                         1.0
                     ],
                     "Static": false,
@@ -2100,12 +2041,12 @@
                     "Freeze_rotation_x": true,
                     "Freeze_rotation_y": true,
                     "Freeze_rotation_z": true,
-                    "Active_Physics": false,
+                    "Active_Physics": true,
                     "Friction": 1.0,
                     "Rolling_friction": 1.0,
                     "Center": [
                         0.0,
-                        1.0099999904632569,
+                        0.9599999785423279,
                         -0.23000000417232514
                     ]
                 },
@@ -2114,20 +2055,6 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "LightTeleportManager"
-                },
-                {
-                    "UUID": 4187165884,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "Movement",
-                    "HorizontalSpeed": 10.0,
-                    "FirstJumpSpeed": 10.0,
-                    "SecondJumpSpeed": 5.0,
-                    "FrontalDistanceDetection": 1.5,
-                    "HorizontalAttenuation": 0.25,
-                    "VerticalAttenuation": 0.6000000238418579,
-                    "Threshold": 90.0,
-                    "Gravity": 25.0
                 }
             ]
         },
@@ -2813,6 +2740,78 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "LightBall"
+                }
+            ]
+        },
+        {
+            "UUID": 2437361298,
+            "ParentUUID": 0,
+            "Name": "Input Manager",
+            "Tag": "",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 167582922,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2823903229,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 2074520602,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "InputManager"
                 }
             ]
         },
@@ -3879,7 +3878,35 @@
                 ]
             },
             "Transform2DEnabled": false,
-            "Components": []
+            "Components": [
+                {
+                    "UUID": 2351523979,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 0,
+                    "Mass": 1.0,
+                    "Scale": [
+                        0.5099999904632568,
+                        0.8799999952316284,
+                        0.44999998807907107
+                    ],
+                    "Static": false,
+                    "Collision": false,
+                    "Visualize": true,
+                    "Attached": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0,
+                    "Center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ]
         },
         {
             "UUID": 724839040,
@@ -5762,7 +5789,7 @@
                     "UUID": 1869842603,
                     "ComponentType": 2,
                     "Active": true,
-                    "Mesh": 2187377182,
+                    "Mesh": 3733248849,
                     "Material": 2145933755,
                     "Skeleton": 0
                 }

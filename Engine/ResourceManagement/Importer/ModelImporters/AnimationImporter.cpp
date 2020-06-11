@@ -36,7 +36,8 @@ FileData AnimationImporter::ExtractAnimationFromAssimp(const aiScene* scene, con
 
 void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float unit_scale_factor) const
 {
-	std::map<std::string, std::vector<aiNodeAnim *>> aiNode_by_channel;
+	float animation_duration = animation->mDuration;
+	std::map<std::string, std::vector<aiNodeAnim*>> aiNode_by_channel;
 
 	//Organize channels
 	for (size_t i = 0; i < animation->mNumChannels; i++)
@@ -58,24 +59,21 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 	for (auto& channel_set : aiNode_by_channel)
 	{
 		std::map<size_t, float4x4> channel_transform;
-		float animation_duration = animation->mDuration;
 		for (auto channel : channel_set.second)
 		{
 			float4x4 pre_transform;
-			GetAcumulatedAssimpTransformations(channel, channel_set.second,root_node, pre_transform);
-			GetChannelTransform(pre_transform, channel, animation_duration,channel_transform);
+			GetAcumulatedAssimpTransformations(channel, channel_set.second, root_node, pre_transform);
+			GetChannelTransform(pre_transform, channel, animation_duration, channel_transform);
 		}
 
-		for (size_t i = 0; i <= animation_duration; ++i)
+		for (size_t i = 0; i < animation_duration; ++i)
 		{
-			float3 euler_rotation = channel_transform[i].ToEulerXYX();
-			Quat rotation = Quat::FromEulerXYX(euler_rotation.x, euler_rotation.y, euler_rotation.z);
+			float3 euler_rotation = channel_transform[i].ToEulerXYZ();
+			Quat rotation = Quat::FromEulerXYZ(euler_rotation.x, euler_rotation.y, euler_rotation.z);
 			float3 translation = channel_transform[i].Col3(3) * unit_scale_factor;
 
 			Animation::Channel imported_channel{ channel_set.first, translation, rotation };
 			keyframes[i].push_back(imported_channel);
-
-
 		}
 	}
 
@@ -84,7 +82,6 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 	{
 		own_format_animation.keyframes.push_back({ static_cast<float>(keyframe.first), keyframe.second });
 	}
-
 }
 
 void AnimationImporter::ApplyNodeTansformationOutSideChannels(std::map<const std::string, std::vector<const aiNode *>> &nodes, float unit_scale_factor, Animation &own_format_animation) const
@@ -201,13 +198,14 @@ FileData AnimationImporter::CreateBinary(const Animation& animation) const
 	return animation_data;
 }
 
-void AnimationImporter::GetAcumulatedAssimpTransformations(const aiNodeAnim * animation_channel, const std::vector<aiNodeAnim *> & channel_vector, const aiNode* root_node, float4x4 & pre_transform) const
+void AnimationImporter::GetAcumulatedAssimpTransformations(const aiNodeAnim* animation_channel, const std::vector<aiNodeAnim*> & channel_vector, const aiNode* root_node, float4x4& pre_transform) const
 {
 	const aiNode* node_parent = root_node->FindNode(animation_channel->mNodeName)->mParent;
 	auto it = std::find_if(channel_vector.begin(), channel_vector.end(), [node_parent](const aiNodeAnim * node)
 	{
 		return node->mNodeName == node_parent->mName;
 	});
+
 	bool assimp_node = std::string(node_parent->mName.C_Str()).find("$Assimp") != std::string::npos;
 	bool not_added = it == channel_vector.end();
 	pre_transform = float4x4::identity;

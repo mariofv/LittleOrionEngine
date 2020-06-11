@@ -5,8 +5,8 @@
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentParticleSystem.h"
 
-#include "EditorUI/Helper/Billboard.h"
 #include "EditorUI/Helper/Grid.h"
 #include "EditorUI/Panel/PanelNavMesh.h"
 
@@ -28,6 +28,7 @@
 #include "SpacePartition/OLQuadTree.h"
 #include "SpacePartition/OLOctTree.h"
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
+#include "ResourceManagement/Resources/Skeleton.h"
 
 #define DEBUG_DRAW_IMPLEMENTATION
 #include "EditorUI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
@@ -389,8 +390,6 @@ bool ModuleDebugDraw::Init()
 	dd_interface_implementation = new IDebugDrawOpenGLImplementation();
     dd::initialize(dd_interface_implementation);
 
-	light_billboard = new Billboard(CoreResource::BILLBOARD_LIGHT_TEXTURE, 17.2f, 25.f);	
-	camera_billboard = new Billboard(CoreResource::BILLBOARD_CAMERA_TEXTURE, 25.f, 25.f);
 
 	grid = new Grid();
 
@@ -601,13 +600,74 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 	}	
 }
 
+void ModuleDebugDraw::RenderParticleSystem() const 
+{
+	BROFILER_CATEGORY("Render Selected GameObject Particle System Gizmo", Profiler::Color::Lavender);
+
+	Component* particle_system = App->editor->selected_game_object->GetComponent(Component::ComponentType::PARTICLE_SYSTEM);
+	if (particle_system != nullptr)
+	{
+		ComponentParticleSystem* selected_particle_system = static_cast<ComponentParticleSystem*>(particle_system);
+		float gizmo_radius = 2.5F;
+		switch (selected_particle_system->type_of_particle_system)
+		{
+			case ComponentParticleSystem::TypeOfParticleSystem::SPHERE:
+				dd::point_light(
+					App->editor->selected_game_object->transform.GetGlobalTranslation(), 
+					float3(1.f, 1.f, 0.f),
+					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles
+				);
+			break;
+			case ComponentParticleSystem::TypeOfParticleSystem::BOX:
+			{
+				float min_x = selected_particle_system->min_range_random_x;
+				float max_x = selected_particle_system->max_range_random_x;
+				float min_z = selected_particle_system->min_range_random_z;
+				float max_z = selected_particle_system->max_range_random_z;
+				float height = selected_particle_system->particles_life_time*selected_particle_system->velocity_particles *100;
+				float3 box_points[8] = {
+					float3(min_x,0.0f,min_z) / 100,
+					float3(min_x, 0.0f, max_z) / 100,
+					float3(max_x, 0.0f, max_z) / 100,
+					float3(max_x, 0.0f, min_z) / 100,
+
+					float3(min_x,height,min_z) / 100,
+					float3(min_x, height, max_z) / 100,
+					float3(max_x, height, max_z) / 100,
+					float3(max_x, height, min_z) / 100
+				};
+
+				for (unsigned int i = 0; i < 8; ++i)
+				{
+					box_points[i] = App->editor->selected_game_object->transform.GetGlobalTranslation() + (App->editor->selected_game_object->transform.GetGlobalRotation() *box_points[i]);
+				}
+				dd::box(box_points, ddVec3(1.f, 1.f, 0.f));
+			
+			break;
+			}
+			case ComponentParticleSystem::TypeOfParticleSystem::CONE:
+			
+				dd::cone(
+					App->editor->selected_game_object->transform.GetGlobalTranslation(), 
+					App->editor->selected_game_object->transform.GetGlobalRotation()*float3::unitY * 
+					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles,
+					float3(1.f, 1.f, 0.f), 
+					selected_particle_system->outer_radius, 
+					selected_particle_system->inner_radius
+				);
+				
+			break;
+		}
+	}
+}
+
 void ModuleDebugDraw::RenderLightGizmo() const	
 {	
 	BROFILER_CATEGORY("Render Selected GameObject Light Gizmo", Profiler::Color::Lavender);
 
 	Component* selected_light_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::LIGHT);	
 	if (selected_light_component != nullptr)
-  {	
+	{	
 		ComponentLight* selected_light = static_cast<ComponentLight*>(selected_light_component);	
 		ComponentTransform* selected_light_transform = &selected_light->owner->transform;
 		float gizmo_radius = 2.5F;	
@@ -634,41 +694,34 @@ void ModuleDebugDraw::RenderLightGizmo() const
 	}	
 }	
 
-void ModuleDebugDraw::RenderBones() const
+void ModuleDebugDraw::RenderBones(GameObject* game_object) const
 {
-	for (auto& animation : App->animations->animations)
+	ComponentMeshRenderer* mesh_renderer = static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER));
+	if (mesh_renderer != nullptr)
 	{
-		if (animation->IsEnabled())
+		std::shared_ptr<Skeleton> mesh_skeleton = mesh_renderer->skeleton;
+		if (mesh_skeleton != nullptr)
 		{
-			GameObject* animation_game_object = animation->owner;
-			RenderBone(animation_game_object, nullptr, float3(1.f, 0.f, 0.f));
+			float3 color(1.0f, 0.0f, 0.0f);
+			for (auto& joint : mesh_skeleton->skeleton)
+			{
+				if (joint.parent_index != -1)
+				{
+					dd::line(
+						(game_object->transform.GetGlobalModelMatrix() * mesh_skeleton->skeleton[joint.parent_index].transform_global.Inverted() * float4(0.f, 0.f, 0.f, 1.f)).xyz(),
+						(game_object->transform.GetGlobalModelMatrix() * joint.transform_global.Inverted() * float4(0.f,0.f,0.f,1.f)).xyz(),
+						color
+					);
+				}
+
+				if (color.x == 1.f)
+					color = float3(0.f, 1.f, 0.f);
+				else if (color.y == 1.f)
+					color = float3(0.f, 0.f, 1.f);
+				else if (color.z == 1.f)
+					color = float3(1.f, 0.f, 0.f);
+			}
 		}
-	}
-	
-}
-
-void ModuleDebugDraw::RenderBone(const GameObject* current_bone, const GameObject* last_bone, const float3& color) const
-{
-	if (current_bone->name.substr(current_bone->name.length() - 2) == "IK" || current_bone->name.substr(current_bone->name.length() - 2) == "FK")
-	{
-		return;
-	}
-
-	if (last_bone != nullptr)
-	{
-		dd::line(last_bone->transform.GetGlobalTranslation(), current_bone->transform.GetGlobalTranslation(), color);
-	}
-
-	for (auto& child_bone : current_bone->children)
-	{
-		float3 next_color;
-		if (color.x == 1.f)
-			next_color = float3(0.f, 1.f, 0.f);
-		if (color.y == 1.f)
-			next_color = float3(0.f, 0.f, 1.f);
-		if (color.z == 1.f)
-			next_color = float3(1.f, 0.f, 0.f);
-		RenderBone(child_bone, current_bone, next_color);
 	}
 }
 
@@ -773,13 +826,12 @@ void ModuleDebugDraw::RenderBillboards() const
 	{
 		Component * light_component = object->GetComponent(Component::ComponentType::LIGHT);
 		if (light_component != nullptr) {
-			light_billboard->Render(object->transform.GetGlobalTranslation());
 		}
 
 		Component * camera_component = object->GetComponent(Component::ComponentType::CAMERA);
 		if (camera_component != nullptr) {
-			camera_billboard->Render(object->transform.GetGlobalTranslation());
 		}
+
 	}
 }
 
@@ -858,7 +910,8 @@ void ModuleDebugDraw::RenderSelectedGameObjectHelpers() const
 		RenderCameraFrustum();
 		RenderLightGizmo();
 		RenderRectTransform(App->editor->selected_game_object);
-		//RenderBones();
+		RenderBones(App->editor->selected_game_object);
+		RenderParticleSystem();
 	}
 }
 
