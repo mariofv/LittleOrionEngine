@@ -38,7 +38,7 @@ public:
 	unsigned int FirstUnusedParticle();
 	void RespawnParticle(Particle& particle);
 	void Render();
-	void UpdateParticle(Particle & particle);
+	void UpdateParticle(Particle& particle);
 	void SetParticleTexture(uint32_t texture_uuid);
 
 	void Delete() override;

@@ -1,6 +1,7 @@
 #include "ComponentBillboard.h"
 
 #include "Main/Application.h"
+
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleRender.h"
@@ -13,10 +14,6 @@ ComponentBillboard::ComponentBillboard() : Component(nullptr, ComponentType::BIL
 	InitData();
 }
 
-ComponentBillboard::ComponentBillboard(GameObject * _owner) : Component(owner, ComponentType::BILLBOARD)
-{
-	InitData();
-}
 
 ComponentBillboard::~ComponentBillboard()
 {
@@ -170,7 +167,7 @@ void ComponentBillboard::Render(const float3& position)
 
 Component* ComponentBillboard::Clone(bool original_prefab) const
 {
-	ComponentBillboard * created_component;
+	ComponentBillboard* created_component;
 	if (original_prefab)
 	{
 		created_component = new ComponentBillboard();
@@ -183,7 +180,7 @@ Component* ComponentBillboard::Clone(bool original_prefab) const
 	return created_component;
 };
 
-void ComponentBillboard::Copy(Component * component_to_copy) const
+void ComponentBillboard::Copy(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentBillboard*>(component_to_copy) = *this;
