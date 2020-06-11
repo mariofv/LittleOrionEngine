@@ -23,6 +23,7 @@ public:
 	};
 	
 	ComponentBillboard();
+	ComponentBillboard(GameObject* owner);
 	~ComponentBillboard();
 
 	//Copy and move

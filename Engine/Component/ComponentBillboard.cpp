@@ -13,7 +13,10 @@ ComponentBillboard::ComponentBillboard() : Component(nullptr, ComponentType::BIL
 {
 	InitData();
 }
-
+ComponentBillboard::ComponentBillboard(GameObject* owner) : Component(owner, ComponentType::BILLBOARD)
+{
+	InitData();
+}
 
 ComponentBillboard::~ComponentBillboard()
 {

@@ -26,7 +26,7 @@ void ComponentParticleSystem::Init()
 {
 	particles.reserve(max_particles);
 
-	billboard = new ComponentBillboard();
+	billboard = new ComponentBillboard(this->owner);
 	billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
 
 	for (unsigned int i = 0; i < max_particles; ++i)
