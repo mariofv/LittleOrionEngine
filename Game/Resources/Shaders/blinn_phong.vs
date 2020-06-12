@@ -7,8 +7,10 @@ layout(location = 1) in vec2 vertex_uv0;
 layout(location = 7) in vec2 vertex_uv1;
 layout(location = 2) in vec3 vertex_normal;
 layout(location = 3) in vec3 vertex_tangent;
-layout(location = 4) in vec3 vertex_weights;
-layout(location = 5) in vec3 vertex_joints;
+layout(location = 4) in uvec4 vertex_joints;
+layout(location = 5) in vec3 vertex_weights;
+layout(location = 6) in uint vertex_num_joints;
+
 
 layout (std140) uniform Matrices
 {
@@ -44,7 +46,7 @@ struct Material
 
 uniform Material material;
 uniform mat4 palette[128]; // REMEMBER MAXIMUM NUMBER OF BONES NOT MORE PLEASE DON'T LOSE YOUR TIME LIKE ME
-uniform int num_joints;
+uniform int has_skinning_value;
  
 out vec2 texCoord;
 out vec2 texCoordLightmap;
@@ -104,8 +106,8 @@ void main()
 	mat4 mid_cam_space		= mid_cam_proj * mid_cam_view;
 
 //Skinning
-	mat4 skinning_matrix = mat4(0);
-    for(uint i=0; i<num_joints; i++)
+	mat4 skinning_matrix = mat4(has_skinning_value);
+   for(uint i=0; i<vertex_num_joints; i++)
 	{
 		skinning_matrix += vertex_weights[i] * palette[vertex_joints[i]];
 	}

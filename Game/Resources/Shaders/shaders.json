@@ -73,12 +73,6 @@
       "Selectable": false
     },
     {
-      "Name": "Skinning",
-      "Vertex": "/Resources/Shaders/skinning.vs",
-      "Fragment": "/Resources/Shaders/blinn_phong.fs",
-      "Selectable": true
-    },
-    {
       "Name":"Sprite",
       "Vertex":"/Resources/Shaders/sprite.vs",
       "Fragment":"/Resources/Shaders/sprite.fs",
