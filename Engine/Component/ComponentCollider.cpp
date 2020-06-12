@@ -260,11 +260,11 @@ std::vector<CollisionInformation> ComponentCollider::DetectAllCollision() const
 			{
 				CollisionInformation info;
 				info.distance = pt.getDistance();
-				info.collider = App->physics->FinColliderByWorldId(obA->getWorldArrayIndex());
+				info.collider = App->physics->FindColliderByWorldId(obA->getWorldArrayIndex());
 				info.normal = float3(-pt.m_normalWorldOnB);
 				if (obB->getWorldArrayIndex() == body->getWorldArrayIndex())
 				{
-					info.collider = App->physics->FinColliderByWorldId(obB->getWorldArrayIndex());
+					info.collider = App->physics->FindColliderByWorldId(obB->getWorldArrayIndex());
 					info.normal = float3(pt.m_normalWorldOnB);
 				}
 				collisions.push_back(info);
@@ -302,11 +302,11 @@ CollisionInformation ComponentCollider::DetectCollisionWith(ComponentCollider* c
 							&& obA->getWorldArrayIndex() == collider->body->getWorldArrayIndex())))
 				{
 					collision_info.distance = pt.getDistance();
-					collision_info.collider = App->physics->FinColliderByWorldId(obA->getWorldArrayIndex());
+					collision_info.collider = App->physics->FindColliderByWorldId(obA->getWorldArrayIndex());
 					collision_info.normal = float3(-pt.m_normalWorldOnB);
 					if (obB->getWorldArrayIndex() == collider->body->getWorldArrayIndex())
 					{
-						collision_info.collider = App->physics->FinColliderByWorldId(obB->getWorldArrayIndex());
+						collision_info.collider = App->physics->FindColliderByWorldId(obB->getWorldArrayIndex());
 						collision_info.normal = float3(pt.m_normalWorldOnB);
 					}
 				}
@@ -387,12 +387,12 @@ std::vector<CollisionInformation> ComponentCollider::CollisionTest() const
 		{
 			if (custom_mainfold.object_a_id == body->getWorldArrayIndex())
 			{
-				collision.collider = App->physics->FinColliderByWorldId(custom_mainfold.object_b_id);
+				collision.collider = App->physics->FindColliderByWorldId(custom_mainfold.object_b_id);
 				collision.normal = float3(custom_mainfold.point.m_normalWorldOnB);
 			}
 			else if (custom_mainfold.object_b_id == body->getWorldArrayIndex())
 			{
-				collision.collider = App->physics->FinColliderByWorldId(custom_mainfold.object_a_id);
+				collision.collider = App->physics->FindColliderByWorldId(custom_mainfold.object_a_id);
 				collision.normal = -float3(custom_mainfold.point.m_normalWorldOnB);
 			}
 			else
@@ -421,7 +421,7 @@ CollisionInformation ComponentCollider::RaycastHit(float3& start, float3& end) c
 	if (RayCallback.hasHit() && RayCallback.m_collisionObject->hasContactResponse())
 	{
 		end = float3(RayCallback.m_hitPointWorld);
-		info.collider = App->physics->FinColliderByWorldId(RayCallback.m_collisionObject->getWorldArrayIndex());
+		info.collider = App->physics->FindColliderByWorldId(RayCallback.m_collisionObject->getWorldArrayIndex());
 		info.normal = float3(RayCallback.m_hitNormalWorld);
 		info.distance = (end - start).Length();
 	}
@@ -493,14 +493,14 @@ std::vector<CollisionInformation> ComponentCollider::GetCollisions()
 			{
 				if (obA->getWorldArrayIndex() == body->getWorldArrayIndex() && obB->hasContactResponse())
 				{
-					collision.collider = App->physics->FinColliderByWorldId(obB->getWorldArrayIndex());
+					collision.collider = App->physics->FindColliderByWorldId(obB->getWorldArrayIndex());
 					collision.normal = float3(pt.m_normalWorldOnB.getX(), pt.m_normalWorldOnB.getY(), pt.m_normalWorldOnB.getZ());
 					collision.distance = -pt.getDistance();
 					collisions.emplace_back(collision);
 				}
 				else if (obB->getWorldArrayIndex() == body->getWorldArrayIndex() && obA->hasContactResponse())
 				{
-					collision.collider = App->physics->FinColliderByWorldId(obA->getWorldArrayIndex());
+					collision.collider = App->physics->FindColliderByWorldId(obA->getWorldArrayIndex());
 					collision.normal = -float3(pt.m_normalWorldOnB.getX(), pt.m_normalWorldOnB.getY(), pt.m_normalWorldOnB.getZ());
 					collision.distance = -pt.getDistance();
 					collisions.emplace_back(collision);
