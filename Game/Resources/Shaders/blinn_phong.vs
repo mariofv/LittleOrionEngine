@@ -50,6 +50,7 @@ struct Material {
 uniform Material material;
 uniform mat4 palette[64];
 uniform int num_joints;
+uniform int time;
 
 out vec2 texCoord;
 out vec2 texCoordLightmap;
