@@ -8,6 +8,7 @@
 #include "Module/ModuleResourceManager.h"
 #include "GL/glew.h"
 
+namespace { const int total_points = 2; }
 ComponentTrail::ComponentTrail() : Component(nullptr, ComponentType::TRAIL)
 {
 	Init();
@@ -22,6 +23,12 @@ ComponentTrail::~ComponentTrail()
 }
 
 void ComponentTrail::Init()
+{
+	trail_points.reserve(total_points + 2);
+
+}
+
+void ComponentTrail::Update()
 {
 
 }
