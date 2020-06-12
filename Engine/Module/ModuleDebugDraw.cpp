@@ -915,6 +915,11 @@ void ModuleDebugDraw::RenderSelectedGameObjectHelpers() const
 	}
 }
 
+void ModuleDebugDraw::RenderPoint(const float3& point, float size) const
+{
+	dd::point(point, float3(0.f, 1.f, 0.f), size);
+}
+
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 {
 	BROFILER_CATEGORY("Flush Debug Draw", Profiler::Color::Lavender);
