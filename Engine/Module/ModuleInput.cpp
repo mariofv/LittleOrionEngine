@@ -329,13 +329,15 @@ ENGINE_API bool ModuleInput::GetAnyKeyPressedDown() const
 			return true;
 		}
 	}
-
-	for (auto& contr : controller[0]->controller_bible)
+	if(controller.size() > 0)
 	{
-		if (contr.second == KeyState::DOWN)
+		for (auto& contr : controller[0]->controller_bible)
 		{
-			return true;
-		}
+			if (contr.second == KeyState::DOWN)
+			{
+				return true;
+			}
+		}	
 	}
 
 	return false;
