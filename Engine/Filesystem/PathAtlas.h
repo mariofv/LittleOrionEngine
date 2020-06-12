@@ -17,15 +17,15 @@
 #define RESOURCES_SCRIPT_PATH "Resources/Scripts"
 #if DEBUG
 #define RESOURCES_SCRIPT_DLL_PATH "Resources/Scripts/GameplaySystemDebug.dll"
-#define COMPILED_FOLDER_DLL_PATH "/Assets/Scripts/Debug"
-#define COMPILED_SCRIPT_DLL_PATH "/Assets/Scripts/Debug/GameplaySystemDebug.dll"
+#define COMPILED_FOLDER_DLL_PATH "/Assets/Scripts/Binaries/Debug"
+#define COMPILED_SCRIPT_DLL_PATH "/Assets/Scripts/Binaries/Debug/GameplaySystemDebug.dll"
 #define COMMAND_FOR_COMPILING "\\MSBuild.exe\" Assets\\Scripts\\GameplaySystem.vcxproj /t:Build /p:Configuration=Debug /p:Platform=x86"
 #elif GAME
 #define RESOURCES_SCRIPT_DLL_PATH "Resources/Scripts/GameplaySystem.dll"
 #else
 #define RESOURCES_SCRIPT_DLL_PATH "Resources/Scripts/GameplaySystemRelease.dll"
-#define COMPILED_FOLDER_DLL_PATH "/Assets/Scripts/Release"
-#define COMPILED_SCRIPT_DLL_PATH "/Assets/Scripts/Release/GameplaySystemRelease.dll"
+#define COMPILED_FOLDER_DLL_PATH "/Assets/Scripts/Binaries/Release"
+#define COMPILED_SCRIPT_DLL_PATH "/Assets/Scripts/Binaries/Release/GameplaySystemRelease.dll"
 #define COMMAND_FOR_COMPILING "\\MSBuild.exe\" Assets\\Scripts\\GameplaySystem.vcxproj /t:Build /p:Configuration=Release /p:Platform=x86"
 #endif
 

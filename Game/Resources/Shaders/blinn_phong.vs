@@ -48,7 +48,7 @@ struct Material {
 };
 
 uniform Material material;
-uniform mat4 palette[64];
+uniform mat4 palette[128]; // REMEMBER MAXIMUM NUMBER OF BONES NOT MORE PLEASE DON'T LOSE YOUR TIME LIKE ME
 uniform int num_joints;
 uniform int time;
 
