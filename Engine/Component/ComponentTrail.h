@@ -18,6 +18,7 @@ struct TrailPoint {
 	float width;
 	float remaining_time_counter;
 	float time_passed;
+	bool is_rendered = false;
 };
 
 class ComponentTrail : public Component
@@ -48,9 +49,10 @@ public:
 	uint32_t texture_uuid = 0;
 	ComponentBillboard* billboard = nullptr;
 	std::vector<TrailPoint> trail_points;
+	int total_points = 1;
 
 	//Trail Generation properties
-	float width = 100.f;
+	float width = 10.0f;
 	float duration = 0.5f;
 	float min_distance = 1.0f;
 
@@ -63,6 +65,9 @@ public:
 	float color_to_fade[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	//Render properties
+	int blend_mode; //0 for aplha blend, 1 for addition
+	//Standard parameters
+	bool active = true;
 };
 
 #endif

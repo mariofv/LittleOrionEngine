@@ -133,6 +133,6 @@ private:
 	friend class PanelScene;
 	friend class NavMesh;
 	friend class ComponentParticleSystem;
-};
+	friend class ComponentTrail; };
 
 #endif //_MODULERENDER_H_
