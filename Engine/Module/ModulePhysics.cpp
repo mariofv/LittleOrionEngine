@@ -1,3 +1,4 @@
+#include "ModulePhysics.h"
 
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentCapsuleCollider.h"
@@ -9,7 +10,6 @@
 #include "Helper/Utils.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
-#include "ModulePhysics.h"
 #include "ModuleTime.h"
 #include "ModuleDebugDraw.h"
 
@@ -177,7 +177,7 @@ int DebugDrawer::getDebugMode() const
 	return btIDebugDraw::DBG_DrawWireframe;
 }
 
-ComponentCollider* ModulePhysics::FinColliderByWorldId(int id)
+ComponentCollider* ModulePhysics::FindColliderByWorldId(int id)
 {
 	for (auto collider : colliders)
 	{

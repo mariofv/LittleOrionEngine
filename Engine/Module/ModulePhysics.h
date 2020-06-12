@@ -48,11 +48,8 @@ public:
 
 	ComponentCollider* CreateComponentCollider(const ComponentCollider::ColliderType collider_type, GameObject* owner);
 	void RemoveComponentCollider(ComponentCollider* collider_to_remove);
-	ComponentCollider* FinColliderByWorldId(int id);
+	ComponentCollider* FindColliderByWorldId(int id);
 	void UpdateAllDimensions();
-
-private:
-	void ShowRay(float3& start, float3& end);
 
 public:
 
