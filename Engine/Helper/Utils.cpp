@@ -277,3 +277,8 @@ size_t Utils::GetImageType(const std::string& file_extension)
 
 	return image_type;
 }
+
+btVector3 Utils::Float3TobtVector3(const float3& vector)
+{
+	return btVector3(vector.x, vector.y, vector.z);
+}
