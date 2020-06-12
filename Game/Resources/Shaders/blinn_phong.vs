@@ -7,6 +7,8 @@ layout(location = 1) in vec2 vertex_uv0;
 layout(location = 7) in vec2 vertex_uv1;
 layout(location = 2) in vec3 vertex_normal;
 layout(location = 3) in vec3 vertex_tangent;
+layout(location = 4) in vec3 vertex_weights;
+layout(location = 5) in vec3 vertex_joints;
 
 layout (std140) uniform Matrices
 {
@@ -15,13 +17,15 @@ layout (std140) uniform Matrices
 	mat4 view;
 } matrices;
 
-struct Material {
+struct Material
+{
 	sampler2D diffuse_map;
 	vec4 diffuse_color;
 	float k_diffuse;
 	sampler2D specular_map;
 	vec4 specular_color;
 	float k_specular;
+
 	sampler2D occlusion_map;
 	float k_ambient;
 	sampler2D emissive_map;
@@ -35,6 +39,7 @@ struct Material {
 	float tiling_x;
 	float tiling_y;
 	bool use_normal_map;
+	bool use_specular_map;
 };
 
 uniform Material material;

@@ -8,6 +8,9 @@ in vec2 texCoord;
 in vec2 texCoordLightmap;
 in vec3 tangent;
 
+in vec3 view_dir;
+in vec3 view_pos;
+
 //Tangent - Normal mapping variables
 in mat3 TBN;
 
@@ -322,7 +325,7 @@ float NormalizedSpecular(vec3 normal, vec3 half_dir) // Old refference: http://w
 
 float ShadowCalculation()
 {
-//Light frustums
+	//Light frustums
 	vec3 normalized_close_depth = close_pos_from_light.xyz / close_pos_from_light.w;
 	normalized_close_depth = normalized_close_depth * 0.5 + 0.5;
 
@@ -332,7 +335,7 @@ float ShadowCalculation()
 	vec3 normalized_far_depth = far_pos_from_light.xyz / far_pos_from_light.w;
 	normalized_far_depth = normalized_far_depth * 0.5 + 0.5;
 
-//Perspective camera
+	//Perspective camera
 	vec3 normalized_close_cam_pos = pos_from_close_camera.xyz/pos_from_close_camera.w;
 	normalized_close_cam_pos = normalized_close_cam_pos * 0.5 + 0.5;
 
@@ -404,7 +407,7 @@ vec3 FrustumsCheck()
 	{
 		result = vec3(0, 100, 0);
 	}
-//
+	
 	if(normalized_mid_cam_pos.z >= 1 && normalized_main_cam_pos.z < 1) 
 	{
 		result = vec3(0, 0, 100);
@@ -425,13 +428,13 @@ vec3 CalculateLightmap(const vec3 normalized_normal, vec4 diffuse_color, vec4 sp
 
 	if(diffuse > 0.0 && material.k_specular > 0.0 && material.specular_color.w > 0.0)
 	{
-		specular = ComputeSpecularLight(normalized_normal, half_dir);
+		specular = NormalizedSpecular(normalized_normal, half_dir);
 	}
 
 	return use_light_map * lightmap_color  * (
 
 		+ diffuse_color.rgb * (occlusion_color*material.k_ambient)
-		+ ComputeDiffuseColor(diffuse_color.rgb, specular_color.rgb) * 1/PI * diffuse
+		+ NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb) * 1/PI * diffuse
 		+ specular_color.rgb * specular
 	);
 }
