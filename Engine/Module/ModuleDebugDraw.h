@@ -52,9 +52,9 @@ public:
 private:
 
 	void RenderCameraFrustum() const;
+	void RenderParticleSystem() const;
 	void RenderLightGizmo() const;
-	void RenderBones() const;
-	void RenderBone(const GameObject* current_bone, const GameObject* last_bone, const float3& color) const;
+	void RenderBones(GameObject * game_object) const;
 
 private:
 	static IDebugDrawOpenGLImplementation* dd_interface_implementation;
