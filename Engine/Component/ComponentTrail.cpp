@@ -61,7 +61,7 @@ void ComponentTrail::Render()
 			if (p.life > 0.0f)
 			{
 				UpdateTrail();
-				billboard->Render(p.position);
+				billboard->Render(owner->transform.GetGlobalTranslation() + p.position);
 			
 				trail_vertices = trail_points.size();
 				if (p.is_rendered)
