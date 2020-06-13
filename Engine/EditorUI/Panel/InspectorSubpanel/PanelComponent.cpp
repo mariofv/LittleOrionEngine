@@ -168,52 +168,7 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 
 		if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			ImGui::Text("Texture");
-			ImGui::SameLine();
-
-			std::string texture_name = particle_system->billboard->billboard_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(particle_system->billboard->billboard_texture->GetUUID())->resource_name;
-			ImGuiID element_id = ImGui::GetID((std::to_string(particle_system->UUID) + "TextureSelector").c_str());
-			if (ImGui::Button(texture_name.c_str()))
-			{
-				App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
-			}
-
-			uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
-			if (selected_resource_uuid != 0)
-			{
-				particle_system->SetParticleTexture(selected_resource_uuid);
-			}
-			selected_resource_uuid = ImGui::ResourceDropper<Texture>();
-			if (selected_resource_uuid != 0)
-			{
-				particle_system->SetParticleTexture(selected_resource_uuid);
-			}
-			int alignment_type = static_cast<int>(particle_system->billboard->alignment_type);
-			if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) 
-			{
-				switch (alignment_type)
-				{
-				case 0:
-					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
-					break;
-				case 1:
-					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
-					break;
-				case 2:
-					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::SPRITESHEET);
-					break;
-				case 3:
-					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
-					break;
-				}
-			}
-			if (particle_system->billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
-				ImGui::InputInt("Rows", &particle_system->billboard->x_tiles, 1);
-				ImGui::InputInt("Columns", &particle_system->billboard->y_tiles, 1);
-				ImGui::InputFloat("Speed", &particle_system->billboard->sheet_speed, 1);
-				ImGui::Checkbox("Oriented to camera", &particle_system->billboard->oriented_to_camera);
-			}
-
+			ShowBillBoardOptions(particle_system->billboard);
 			int particle_shape = static_cast<int>(particle_system->type_of_particle_system);
 			if (ImGui::Combo("Shape", &particle_shape, "Sphere\0Box\0Cone\0"))
 			{
@@ -376,54 +331,61 @@ void PanelComponent::ShowComponentBillboard(ComponentBillboard *billboard)
 		}
 		ImGui::Separator();
 
-		ImGui::AlignTextToFramePadding();
-		
+		ShowBillBoardOptions(billboard);
+	}
+}
 
-		ImGui::Text("Texture");
-		ImGui::SameLine();
+void PanelComponent::ShowBillBoardOptions(ComponentBillboard * billboard)
+{
+	ImGui::AlignTextToFramePadding();
 
-		std::string texture_name = billboard->billboard_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(billboard->billboard_texture->GetUUID())->resource_name;
-		ImGuiID element_id = ImGui::GetID((std::to_string(billboard->UUID) + "TextureSelector").c_str());
-		if (ImGui::Button(texture_name.c_str()))
+
+	ImGui::Text("Texture");
+	ImGui::SameLine();
+
+	std::string texture_name = billboard->billboard_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(billboard->billboard_texture->GetUUID())->resource_name;
+	ImGuiID element_id = ImGui::GetID((std::to_string(billboard->UUID) + "TextureSelector").c_str());
+	if (ImGui::Button(texture_name.c_str()))
+	{
+		App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+	}
+
+	uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+	if (selected_resource_uuid != 0)
+	{
+		billboard->ChangeTexture(selected_resource_uuid);
+	}
+	selected_resource_uuid = ImGui::ResourceDropper<Texture>();
+	if (selected_resource_uuid != 0)
+	{
+		billboard->ChangeTexture(selected_resource_uuid);
+	}
+	int alignment_type = static_cast<int>(billboard->alignment_type);
+	if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) {
+		switch (alignment_type)
 		{
-			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+		case 0:
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
+			break;
+		case 1:
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
+			break;
+		case 2:
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::SPRITESHEET);
+			break;
+		case 3:
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
+			break;
 		}
+	}
 
-		uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
-		if (selected_resource_uuid != 0)
-		{
-			billboard->ChangeTexture(selected_resource_uuid);
-		}
-		selected_resource_uuid = ImGui::ResourceDropper<Texture>();
-		if (selected_resource_uuid != 0)
-		{
-			billboard->ChangeTexture(selected_resource_uuid);
-		}
-		int alignment_type = static_cast<int>(billboard->alignment_type);
-		if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) {
-			switch (alignment_type)
-			{
-			case 0:
-				billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
-				break;
-			case 1:
-				billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
-				break;
-			case 2:
-				billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::SPRITESHEET);
-				break;
-			case 3:
-				billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
-				break;
-			}
-		}
-
-		if (billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
-			ImGui::InputInt("Rows", &billboard->x_tiles, 1);
-			ImGui::InputInt("Columns", &billboard->y_tiles, 1);
-			ImGui::InputFloat("Speed", &billboard->sheet_speed, 1);
-			ImGui::Checkbox("Oriented to camera", &billboard->oriented_to_camera);
-		}
+	if (billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
+		ImGui::PushItemWidth((ImGui::GetWindowSize().x - 100) / 2);
+		ImGui::InputInt("X", &billboard->x_tiles, 1); ImGui::SameLine(); ImGui::InputInt("Y", &billboard->y_tiles, 1);
+		ImGui::InputScalar("R1", ImGuiDataType_U64, &billboard->const_value_1); ImGui::SameLine(); ImGui::InputScalar("R1", ImGuiDataType_U64, &billboard->const_value_1);
+		ImGui::PopItemWidth();
+		ImGui::InputFloat("Speed", &billboard->sheet_speed, 1);
+		ImGui::Checkbox("Oriented to camera", &billboard->oriented_to_camera);
 	}
 }
 

@@ -43,6 +43,8 @@ public:
 	void ShowComponentCanvasRendererWindow(ComponentCanvasRenderer* canvas_renderer);
 	void ShowComponentBillboard(ComponentBillboard* billboard);
 
+	void ShowBillBoardOptions(ComponentBillboard * billboard);
+
 	void ShowComponentCameraWindow(ComponentCamera* camera);
 	void ShowComponentLightWindow(ComponentLight* light);
 	void ShowComponentAnimationWindow(ComponentAnimation* animation);
