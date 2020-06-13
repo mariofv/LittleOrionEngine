@@ -409,21 +409,51 @@ std::vector<CollisionInformation> ComponentCollider::CollisionTest() const
 	return collisions;
 }
 
-CollisionInformation ComponentCollider::RaycastHit(float3& start, float3& end) const
+CollisionInformation ComponentCollider::RaycastClosestHit(float3& start, float3& end) const
 {
 	CollisionInformation info;
 	btVector3 bullet_start = Utils::Float3TobtVector3(start);
 	btVector3 bullet_end = Utils::Float3TobtVector3(end);
 
-	btCollisionWorld::ClosestRayResultCallback RayCallback(bullet_start, bullet_end);
+	btCollisionWorld::AllHitsRayResultCallback raycallback(bullet_start, bullet_end);
 
-	App->physics->world->rayTest(bullet_start, bullet_end, RayCallback);
-	if (RayCallback.hasHit() && RayCallback.m_collisionObject->hasContactResponse())
+	App->physics->world->rayTest(bullet_start, bullet_end, raycallback);
+	size_t num_hits = raycallback.m_hitPointWorld.size();
+	for (size_t i = 0; i < num_hits; ++i)
 	{
-		end = float3(RayCallback.m_hitPointWorld);
-		info.collider = App->physics->FindColliderByWorldId(RayCallback.m_collisionObject->getWorldArrayIndex());
-		info.normal = float3(RayCallback.m_hitNormalWorld);
-		info.distance = (end - start).Length();
+		if (raycallback.m_collisionObjects[i]->hasContactResponse())
+		{
+			end = float3(raycallback.m_hitPointWorld[i]);
+			info.collider = App->physics->FindColliderByWorldId(raycallback.m_collisionObjects[i]->getWorldArrayIndex());
+			info.normal = float3(raycallback.m_hitNormalWorld[i]);
+			info.distance = (end - start).Length();
+			break;
+		}
+	}
+
+	return info;
+}
+
+std::vector<CollisionInformation> ComponentCollider::RaycastAllHits(float3& start, float3& end) const
+{
+	std::vector<CollisionInformation> info;
+	btVector3 bullet_start = Utils::Float3TobtVector3(start);
+	btVector3 bullet_end = Utils::Float3TobtVector3(end);
+
+	btCollisionWorld::AllHitsRayResultCallback raycallback(bullet_start, bullet_end);
+
+	App->physics->world->rayTest(bullet_start, bullet_end, raycallback);
+	size_t num_hits = raycallback.m_hitPointWorld.size();
+	for (size_t i = 0; i < num_hits; ++i)
+	{
+		CollisionInformation collision;
+		if (raycallback.m_collisionObjects[i]->hasContactResponse())
+		{
+			
+			collision.collider = App->physics->FindColliderByWorldId(raycallback.m_collisionObjects[i]->getWorldArrayIndex());
+			collision.normal = float3(raycallback.m_hitNormalWorld[i]);
+			collision.distance = (end - start).Length();
+		}
 	}
 
 	return info;
@@ -470,7 +500,7 @@ CollisionInformation ComponentCollider::DetectCollisionWithGround(float length_p
 	float3 origin = GetOrigin();
 	float3 end = origin;
 	end.y -= box_size.getY() * length_percentage;
-	return RaycastHit(origin, end);
+	return RaycastClosestHit(origin, end);
 }
 
 std::vector<CollisionInformation> ComponentCollider::GetCollisions()
