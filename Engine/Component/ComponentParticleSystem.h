@@ -21,6 +21,7 @@ public:
 		float time_counter;
 		float  life;
 		float time_passed;
+		float current_sprite_x = 0, current_sprite_y = 0;
 	};
 	enum TypeOfParticleSystem
 	{
@@ -66,7 +67,9 @@ public:
 
 	std::vector<Particle> particles;
 
-
+	//Spritesheet
+	float max_tile_value = 0;
+	float min_tile_value = 4;
 	//standard values
 	bool loop = true;
 	unsigned int last_used_particle = 0;
@@ -79,6 +82,7 @@ public:
 	float particles_width = 0.2F;
 	float particles_height = 0.2F;
 	bool size_random = false;
+	bool tile_random = false;
 
 	float velocity_particles = 1.0F;
 

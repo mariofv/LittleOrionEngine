@@ -66,15 +66,19 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	particle.position = float3(0.0f, 0.0f, 0.0f);
 	particle.rotation = owner->transform.GetGlobalRotation();
 
-	float scale = (rand() % ((max_size_of_particle - min_size_of_particle) + 1) + min_size_of_particle) / 100.f;
-
 	if (size_random)
 	{
+		float scale = (rand() % ((max_size_of_particle - min_size_of_particle) + 1) + min_size_of_particle) / 100.f;
 		particle.particle_scale = scale;
 	}
 	else 
 	{
 		particle.particle_scale = 1.0f;
+	}
+	if (tile_random)
+	{
+		particle.current_sprite_x = (rand() % (int)((max_tile_value - min_tile_value) + 1) + min_tile_value);
+		particle.current_sprite_y = (rand() % (int)((max_tile_value - min_tile_value) + 1) + min_tile_value);
 	}
 
 	switch (type_of_particle_system)
@@ -163,6 +167,11 @@ void ComponentParticleSystem::Render()
 			if (p.life > 0.0f)
 			{
 				UpdateParticle(p);
+				if (tile_random)
+				{
+					billboard->current_sprite_x = p.current_sprite_x;
+					billboard->current_sprite_y = p.current_sprite_y;
+				}
 				if (follow_owner)
 				{
 					billboard->Render(owner->transform.GetGlobalTranslation() + (p.rotation *p.position));
@@ -236,6 +245,9 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(particles_width, "Particle Width");
 	config.AddFloat(particles_height, "Particle Height");
 	config.AddBool(size_random, "Size random");
+	config.AddBool(tile_random, "Tile random");
+	config.AddFloat(max_tile_value, "Max Tile");
+	config.AddFloat(min_tile_value, "Min Tile");
 
 	config.AddFloat(velocity_particles, "Velocity of particles");
 
@@ -286,6 +298,9 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	particles_width = config.GetFloat("Particle Width", 0.2F);
 	particles_height = config.GetFloat("Particle Height", 0.2F);
 	size_random = config.GetBool("Size random", false);
+	tile_random = config.GetBool("Tile random", false);
+	max_tile_value = config.GetFloat("Max Tile", 0);
+	min_tile_value = config.GetFloat("Min Tile", 4);
 
 	velocity_particles = config.GetFloat("Velocity of particles", 1.0F);
 

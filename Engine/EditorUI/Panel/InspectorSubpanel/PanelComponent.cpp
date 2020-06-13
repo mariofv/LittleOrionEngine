@@ -186,6 +186,12 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 		{
 
 			ShowBillboardOptions(particle_system->billboard);
+			if (particle_system->billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET)
+			{
+				ImGui::Checkbox("Tile random", &particle_system->tile_random);
+				ImGui::InputFloat("Max", &particle_system->max_tile_value);
+				ImGui::InputFloat("Min", &particle_system->min_tile_value);
+			}
 
 			int particle_shape = static_cast<int>(particle_system->type_of_particle_system);
 			if (ImGui::Combo("Shape", &particle_shape, "Sphere\0Box\0Cone\0"))
@@ -353,8 +359,8 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard * billboard)
 	}
 
 	if (billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
-		ImGui::InputInt("Rows", &billboard->x_tiles, 1);
-		ImGui::InputInt("Columns", &billboard->y_tiles, 1);
+		ImGui::InputInt("Columns", &billboard->x_tiles, 1);
+		ImGui::InputInt("Rows", &billboard->y_tiles, 1);
 		ImGui::InputFloat("Speed", &billboard->sheet_speed, 1);
 		ImGui::Checkbox("Oriented to camera", &billboard->oriented_to_camera);
 	}
