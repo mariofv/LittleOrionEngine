@@ -4,6 +4,7 @@
 
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentAudioSource.h"
+#include "Component/ComponentBillboard.h"
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
@@ -14,9 +15,11 @@
 #include "Component/ComponentImage.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
+
 #include "EditorUI/Panel/PanelInspector.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelTransform.h"
 #include "EditorUI/Panel/PanelPopups.h"
@@ -41,9 +44,16 @@ PanelGameObject::PanelGameObject()
 
 void PanelGameObject::Render(GameObject* game_object)
 {
+	
 	if (game_object == nullptr)
 	{
 		return;
+	}
+	focused = ImGui::IsWindowFocused();
+	App->actions->active_macros = true;
+	if (focused)
+	{
+		App->actions->active_macros = false;
 	}
 
 	ImGui::PushID(game_object->UUID);
@@ -59,7 +69,9 @@ void PanelGameObject::Render(GameObject* game_object)
 
 	ImGui::SameLine();
 	if (ImGui::InputText("###GameObject name Input", &game_object->name))
-	{		game_object->modified_by_user = true;
+	{
+		App->actions->active_macros = false;
+		game_object->modified_by_user = true;
 	}
 
 	ImGui::SameLine();
@@ -146,6 +158,14 @@ void PanelGameObject::Render(GameObject* game_object)
 
 			case Component::ComponentType::ANIMATION:
 				component_panel.ShowComponentAnimationWindow(static_cast<ComponentAnimation*>(component));
+				break;
+
+			case Component::ComponentType::BILLBOARD:
+				component_panel.ShowComponentBillboard(static_cast<ComponentBillboard*>(component));
+				break;
+
+			case Component::ComponentType::PARTICLE_SYSTEM:
+				component_panel.ShowComponentParticleSystem(static_cast<ComponentParticleSystem*>(component));
 				break;
 
 			case Component::ComponentType::CANVAS:

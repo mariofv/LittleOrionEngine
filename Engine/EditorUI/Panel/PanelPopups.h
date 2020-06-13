@@ -23,6 +23,7 @@ private:
 	void RenderAssetsLoadingPopup();
 
 public:
+
 	PanelPopupResourceSelector resource_selector_popup;
 	PanelPopupSceneLoader scene_loader_popup;
 	PanelPopupSceneSaver scene_saver_popup;

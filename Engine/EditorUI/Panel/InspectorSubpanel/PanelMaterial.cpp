@@ -115,6 +115,9 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 		ShowMaterialTextureMap(material, Material::MaterialTextureType::NORMAL);
 		ImGui::Spacing();
 
+		ShowMaterialTextureMap(material, Material::MaterialTextureType::LIGHTMAP);
+		ImGui::Spacing();
+
 		ImGui::Separator();
 	}
 
@@ -276,6 +279,11 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Text("Normal");
 
 		break;
+
+	case Material::MaterialTextureType::LIGHTMAP:
+		ImGui::Text("Lightmap");
+
+		break;
 	}
 
 	if (ImGui::Button(ICON_FA_TIMES))
@@ -308,6 +316,8 @@ std::string PanelMaterial::GetTypeName(Material::MaterialTextureType type)
 		return "Oclusion";
 	case  Material::MaterialTextureType::NORMAL:
 		return "Normal";
+	case  Material::MaterialTextureType::LIGHTMAP:
+		return "Lightmap";
 
 	default:
 		return "";

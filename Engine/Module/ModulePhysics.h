@@ -48,10 +48,7 @@ public:
 
 	ComponentCollider* CreateComponentCollider(const ComponentCollider::ColliderType collider_type, GameObject* owner);
 	void RemoveComponentCollider(ComponentCollider* collider_to_remove);
-
-	bool RaycastWorld(const btVector3 &Start, btVector3 &End, btVector3 &Normal);
-	ENGINE_API int GetRaycastWorldId(const btVector3& start, btVector3& end, btVector3& normal);
-
+	ComponentCollider* FindColliderByWorldId(int id);
 	void UpdateAllDimensions();
 
 public:

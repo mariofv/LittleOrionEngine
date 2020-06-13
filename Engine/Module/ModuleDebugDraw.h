@@ -44,16 +44,17 @@ public:
 	void RenderTangentsAndBitangents() const;
 	
 	void RenderRectTransform(const GameObject* rect_owner) const;
-	void RenderLine(float3& a, float3& b) const;
+	ENGINE_API void RenderLine(float3& a, float3& b) const;
+	ENGINE_API void RenderPoint(const float3& point, float size= 1.f) const;
 
 	ENGINE_API void RenderPhysics() const;
 
 private:
 
 	void RenderCameraFrustum() const;
+	void RenderParticleSystem() const;
 	void RenderLightGizmo() const;
-	void RenderBones() const;
-	void RenderBone(const GameObject* current_bone, const GameObject* last_bone, const float3& color) const;
+	void RenderBones(GameObject * game_object) const;
 
 private:
 	static IDebugDrawOpenGLImplementation* dd_interface_implementation;
