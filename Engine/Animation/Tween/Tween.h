@@ -29,7 +29,10 @@ private:
 	float current_time = 0.0f;
 	EaseType ease_type = EaseType::LINEAR;
 
-	void Update(float);
+	float Update(float);
+
+	float NormalizedElapsedTime();
+	float UpdateLinear();
 
 	friend class TweenSequence;
 };
