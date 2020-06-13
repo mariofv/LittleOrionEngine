@@ -346,6 +346,51 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 				break;
 			}
 		}
+		ImGui::Text("Texture");
+		ImGui::SameLine();
+
+		std::string texture_name = trail->billboard->billboard_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(trail->billboard->billboard_texture->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(trail->UUID) + "TextureSelector").c_str());
+		if (ImGui::Button(texture_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+		}
+
+		uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource_uuid != 0)
+		{
+			trail->SetTrailTexture(selected_resource_uuid);
+		}
+		selected_resource_uuid = ImGui::ResourceDropper<Texture>();
+		if (selected_resource_uuid != 0)
+		{
+			trail->SetTrailTexture(selected_resource_uuid);
+		}
+		int alignment_type = static_cast<int>(trail->billboard->alignment_type);
+		if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned"))
+		{
+			switch (alignment_type)
+			{
+			case 0:
+				trail->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
+				break;
+			case 1:
+				trail->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
+				break;
+			case 2:
+				trail->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::SPRITESHEET);
+				break;
+			case 3:
+				trail->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
+				break;
+			}
+		}
+		if (trail->billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
+			ImGui::InputInt("Rows", &trail->billboard->x_tiles, 1);
+			ImGui::InputInt("Columns", &trail->billboard->y_tiles, 1);
+			ImGui::InputFloat("Speed", &trail->billboard->sheet_speed, 1);
+			ImGui::Checkbox("Oriented to camera", &trail->billboard->oriented_to_camera);
+		}
 
 		//Color of Particles
 		if (ImGui::CollapsingHeader(ICON_FA_PAINT_BRUSH "Color Over Time"))

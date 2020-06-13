@@ -29,7 +29,7 @@ void ComponentTrail::Init()
 	trail_points.reserve(total_points + 2);
 
 	billboard = new ComponentBillboard(owner);
-	billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
+	billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
 
 	for (unsigned int i = 0; i < total_points; ++i)
 	{
@@ -61,14 +61,16 @@ void ComponentTrail::Render()
 			if (p.life > 0.0f)
 			{
 				UpdateTrail();
-				billboard->Render(owner->transform.GetGlobalTranslation() + p.position);
 			
 				trail_vertices = trail_points.size();
+				billboard->Render(owner->transform.GetGlobalTranslation() + p.position);
 				if (p.is_rendered)
 				{
 					float width = p.width;
 					outline_left = p.position + p.position_adjacent_point * width;
 					outline_right = p.position - p.position_adjacent_point * width;
+
+					
 				}
 				
 			}
@@ -76,6 +78,12 @@ void ComponentTrail::Render()
 	}
 	glEnable(GL_CULL_FACE);
 }
+void ComponentTrail::SetTrailTexture(uint32_t texture_uuid)
+{
+	this->texture_uuid = texture_uuid;
+	billboard->ChangeTexture(texture_uuid);
+}
+
 
 ComponentTrail& ComponentTrail::operator=(const ComponentTrail& component_to_copy)
 {

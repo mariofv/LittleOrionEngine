@@ -40,6 +40,7 @@ public:
 
 	void UpdateTrail();
 	void Render();
+	void SetTrailTexture(uint32_t texture_uuid);
 
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
