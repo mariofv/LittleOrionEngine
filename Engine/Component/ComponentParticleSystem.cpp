@@ -338,7 +338,6 @@ void ComponentParticleSystem::Emit(size_t count)
 {
 	if (count < MAX_PARTICLES)
 	{
-		loop = false;
 		particles_number = count;
 		for (size_t i = 0; i < particles_number; i++)
 		{
@@ -351,6 +350,7 @@ void ComponentParticleSystem::Emit(size_t count)
 void ComponentParticleSystem::Play()
 {
 	time_counter = 0.0F;
+	particles_number = MAX_PARTICLES;
 	for (unsigned int i = 0; i < MAX_PARTICLES; ++i)
 	{
 
