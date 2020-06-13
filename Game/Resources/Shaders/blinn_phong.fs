@@ -122,9 +122,9 @@ in vec4 mid_pos_from_light;
 in vec4 far_pos_from_light;
 
 //perspective cams
-in vec4 pos_from_main_camera;
-in vec4 pos_from_close_camera;
-in vec4 pos_from_mid_camera;
+//in vec4 pos_from_main_camera;
+//in vec4 pos_from_close_camera;
+//in vec4 pos_from_mid_camera;
 
 uniform float main_cam_far_plane;
 
@@ -133,6 +133,10 @@ vec3 FrustumsCheck();
 uniform sampler2DShadow close_depth_map;
 uniform sampler2DShadow mid_depth_map;
 uniform sampler2DShadow far_depth_map;
+
+in float distance_to_camera;
+uniform float far_plane;
+
 
 void main()
 {
@@ -172,6 +176,7 @@ void main()
 
 	result += emissive_color;
 	result += diffuse_color.rgb * (ambient_light_color.xyz*ambient_light_intensity); //Ambient light
+	//result += FrustumsCheck();
 	//FragColor = vec4(vec3(normalize(tangent)),1.0);
 	FragColor = vec4(result,1.0);
 	FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
@@ -337,14 +342,14 @@ float ShadowCalculation()
 	normalized_far_depth = normalized_far_depth * 0.5 + 0.5;
 
 	//Perspective camera
-	vec3 normalized_close_cam_pos = pos_from_close_camera.xyz/pos_from_close_camera.w;
-	normalized_close_cam_pos = normalized_close_cam_pos * 0.5 + 0.5;
+	//vec3 normalized_close_cam_pos = pos_from_close_camera.xyz/pos_from_close_camera.w;
+	//normalized_close_cam_pos = normalized_close_cam_pos * 0.5 + 0.5;
 
-	vec3 normalized_mid_cam_pos = pos_from_mid_camera.xyz/pos_from_mid_camera.w;
-	normalized_mid_cam_pos = normalized_mid_cam_pos * 0.5 + 0.5;
+	//vec3 normalized_mid_cam_pos = pos_from_mid_camera.xyz/pos_from_mid_camera.w;
+	//normalized_mid_cam_pos = normalized_mid_cam_pos * 0.5 + 0.5;
 
-	vec3 normalized_main_cam_pos = pos_from_main_camera.xyz/pos_from_main_camera.w;
-	normalized_main_cam_pos = normalized_main_cam_pos * 0.5 + 0.5;
+	//vec3 normalized_main_cam_pos = pos_from_main_camera.xyz/pos_from_main_camera.w;
+	//normalized_main_cam_pos = normalized_main_cam_pos * 0.5 + 0.5;
 	
 	float bias = 0.005;  
 	float factor = 0.0;
@@ -361,19 +366,19 @@ float ShadowCalculation()
 			//We sample the texture given from the light camera
 			//A few times at different texture coordinates
 
-			if(normalized_close_cam_pos.z > 0 && normalized_close_cam_pos.z < 1)
+			if(distance_to_camera > 0 && distance_to_camera < far_plane/3)
 			{
 				close_coords.xy = normalized_close_depth.xy + vec2(x, y)* (1.0 / textureSize(close_depth_map, 0));
 				factor += texture(close_depth_map, close_coords);
 			}
 
-			if(normalized_close_cam_pos.z >= 1 && normalized_mid_cam_pos.z < 1) // Until depth detection is fixed (stops calculating at 50% depth)
+			if(distance_to_camera >= far_plane/3 &&distance_to_camera < 2*far_plane/3) // Until depth detection is fixed (stops calculating at 50% depth)
 			{
 				mid_coords.xy = normalized_mid_depth.xy + vec2(x, y)*(1.0 / textureSize(mid_depth_map, 0));
 				factor += texture(mid_depth_map, mid_coords);
 			}
 
-			if(normalized_mid_cam_pos.z >= 1 && normalized_main_cam_pos.z < 1) // Looks weird, but works
+			if(distance_to_camera >=  2*far_plane/3 && distance_to_camera < far_plane) // Looks weird, but works
 			{
 				far_coords.xy = normalized_far_depth.xy + vec2(x, y)*(1.0 / textureSize(far_depth_map, 0));
 				factor += texture(far_depth_map, far_coords);
@@ -390,26 +395,18 @@ float ShadowCalculation()
 vec3 FrustumsCheck()
 {
 	vec3 result = vec3(0, 0, 0);
-	vec3 normalized_close_cam_pos = pos_from_close_camera.xyz/pos_from_close_camera.w;
-	normalized_close_cam_pos = normalized_close_cam_pos * 0.5 + 0.5;
-
-	vec3 normalized_mid_cam_pos = pos_from_mid_camera.xyz/pos_from_mid_camera.w;
-	normalized_mid_cam_pos = normalized_mid_cam_pos * 0.5 + 0.5;
-
-	vec3 normalized_main_cam_pos = pos_from_main_camera.xyz/pos_from_main_camera.w;
-	normalized_main_cam_pos = normalized_main_cam_pos * 0.5 + 0.5;
-
-	if(normalized_close_cam_pos.z > 0 && normalized_close_cam_pos.z < 1)
+	
+	if(distance_to_camera > 0 && distance_to_camera  < far_plane/3)
 	{
 		result = vec3(100, 0, 0);
 	}
 
-	if(normalized_close_cam_pos.z >= 1 && normalized_mid_cam_pos.z < 1) 
+	if(distance_to_camera  >= far_plane/3 && distance_to_camera  < 2*far_plane/3) 
 	{
 		result = vec3(0, 100, 0);
 	}
 	
-	if(normalized_mid_cam_pos.z >= 1 && normalized_main_cam_pos.z < 1) 
+	if(distance_to_camera  >= 2*far_plane/3 && distance_to_camera  < far_plane) 
 	{
 		result = vec3(0, 0, 100);
 	}

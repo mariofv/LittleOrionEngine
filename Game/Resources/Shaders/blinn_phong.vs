@@ -19,32 +19,7 @@ layout (std140) uniform Matrices
 	mat4 view;
 } matrices;
 
-struct Material
-{
-	sampler2D diffuse_map;
-	vec4 diffuse_color;
-	float k_diffuse;
-	sampler2D specular_map;
-	vec4 specular_color;
-	float k_specular;
 
-	sampler2D occlusion_map;
-	float k_ambient;
-	sampler2D emissive_map;
-	vec4 emissive_color;
-	sampler2D normal_map;
-	sampler2D light_map;
-
-	float roughness;
-	float metalness;
-	float transparency;
-	float tiling_x;
-	float tiling_y;
-	bool use_normal_map;
-	bool use_specular_map;
-};
-
-uniform Material material;
 uniform mat4 palette[128]; // REMEMBER MAXIMUM NUMBER OF BONES NOT MORE PLEASE DON'T LOSE YOUR TIME LIKE ME
 uniform int has_skinning_value;
  
@@ -77,17 +52,17 @@ uniform mat4 far_directional_view;
 uniform mat4 far_directional_proj;
 
 //Perspective cams
-uniform mat4 main_cam_proj;
-uniform mat4 main_cam_view;
-out vec4 pos_from_main_camera;
+//uniform mat4 main_cam_proj;
+//uniform mat4 main_cam_view;
+//out vec4 pos_from_main_camera;
 
-uniform mat4 close_cam_proj;
-uniform mat4 close_cam_view;
-out vec4 pos_from_close_camera;
+//uniform mat4 close_cam_proj;
+//uniform mat4 close_cam_view;
+//out vec4 pos_from_close_camera;
 
-uniform mat4 mid_cam_proj;
-uniform mat4 mid_cam_view;
-out vec4 pos_from_mid_camera;
+//uniform mat4 mid_cam_proj;
+//uniform mat4 mid_cam_view;
+//out vec4 pos_from_mid_camera;
 
 
 out vec4 close_pos_from_light;
@@ -95,15 +70,17 @@ out vec4 mid_pos_from_light;
 out vec4 far_pos_from_light;
 uniform float render_depth_from_light;
 
+out float distance_to_camera;
 
 void main()
 {
 	mat4 close_lightSpaceMatrix = close_directional_proj * close_directional_view;
 	mat4 mid_lightSpaceMatrix   = mid_directional_proj * mid_directional_view;
 	mat4 far_lightSpaceMatrix   = far_directional_proj * far_directional_view;
-	mat4 main_cam_space			= main_cam_proj * main_cam_view;
-	mat4 close_cam_space		= close_cam_proj * close_cam_view;
-	mat4 mid_cam_space		= mid_cam_proj * mid_cam_view;
+
+//	mat4 main_cam_space			= main_cam_proj * main_cam_view;
+//	mat4 close_cam_space		= close_cam_proj * close_cam_view;
+//	mat4 mid_cam_space		= mid_cam_proj * mid_cam_view;
 
 //Skinning
 	mat4 skinning_matrix = mat4(has_skinning_value);
@@ -125,7 +102,7 @@ void main()
 	
 
 
-//Tangent space matrix
+	//Tangent space matrix
 	mat4 modelview = matrices.model * matrices.view;
 	mat3 normalMatrix = mat3(matrices.model);
     vec3 T = normalize(normalMatrix * vertex_tangent);
@@ -135,16 +112,20 @@ void main()
 
 	TBN = transpose(mat3(T, B, N));  
 
-//Light space
+	//Light space
 	close_pos_from_light = close_lightSpaceMatrix*vec4(position, 1.0);
 	mid_pos_from_light = mid_lightSpaceMatrix*vec4(position, 1.0);
 	far_pos_from_light = far_lightSpaceMatrix*vec4(position, 1.0);
 
-	pos_from_main_camera = main_cam_space*vec4(position, 1.0);
-	pos_from_close_camera = close_cam_space*vec4(position, 1.0);
-	pos_from_mid_camera = mid_cam_space*vec4(position, 1.0);
+	//pos_from_main_camera = main_cam_space*vec4(position, 1.0);
+	//pos_from_close_camera = close_cam_space*vec4(position, 1.0);
+	//pos_from_mid_camera = mid_cam_space*vec4(position, 1.0);
 
-	gl_Position = matrices.proj * matrices.view * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
+	vec4 eye_coordinate_pos = matrices.view * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
+	distance_to_camera = -eye_coordinate_pos.z;
+
+	gl_Position = matrices.proj * eye_coordinate_pos;
+
 }
 
 mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent)
