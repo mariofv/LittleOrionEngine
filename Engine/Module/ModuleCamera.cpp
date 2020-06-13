@@ -118,7 +118,6 @@ void ModuleCamera::UpdateDirectionalLightFrustums(float3 max, float3 min)
 
 	App->cameras->directional_light_far->camera_frustum.orthographicWidth = max.x - min.x;
 	App->cameras->directional_light_far->camera_frustum.orthographicHeight = max.y - min.y;
-
 	
 	directional_light_camera->Update();
 	directional_light_mid->Update();
@@ -154,7 +153,6 @@ void ModuleCamera::SetMainCameraFrustums()
 	camera_far->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
 	camera_far->owner = main_close;
 	camera_far->camera_frustum.type = FrustumType::PerspectiveFrustum;
-
 
 	camera_close->SetNearDistance(1);
 	camera_mid->SetNearDistance(1);

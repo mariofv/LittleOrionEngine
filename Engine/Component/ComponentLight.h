@@ -16,22 +16,6 @@ public:
 		DIRECTIONAL_LIGHT
 	};
 
-	class DirectionalLight {
-	public:
-		Frustum directional_light_camera; //From where we'll record the depth buffer
-		GLuint rbo = 0;					  //Direc_light buffers
-		GLuint fbo = 0;
-		GLuint depth_rbo = 0;
-		GLuint depth_map = 0;
-		GLuint last_recorded_frame_texture = 0;
-
-		float4x4 proj;
-		float4x4 view;
-
-		int SHADOW_WIDTH = 1024;
-		int SHADOW_HEIGHT = 1024;
-	};
-
 	class PointLight
 	{
 		public:

@@ -3,7 +3,6 @@
 
 #include "Module.h"
 #include "Component/ComponentLight.h"
-#include "Component/ComponentAABB.h"
 
 #include <vector>
 #include <MathGeoLib.h>

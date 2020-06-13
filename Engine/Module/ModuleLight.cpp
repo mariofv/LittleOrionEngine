@@ -17,7 +17,7 @@ ModuleLight::~ModuleLight()
 bool ModuleLight::Init()
 {
 	APP_LOG_SECTION("************ Module Light Init ************");
-	directional_light_rotation = Quat::identity;
+	//directional_light_rotation = Quat::identity;
 
 
 	return true;

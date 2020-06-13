@@ -79,15 +79,12 @@ ComponentCamera::~ComponentCamera()
 
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteFramebuffers(1, &msfbo);
-	glDeleteFramebuffers(1, &depthfbo);
-
 }
 
 void ComponentCamera::InitCamera()
 {
 	glGenFramebuffers(1, &fbo);
 	glGenFramebuffers(1, &msfbo);
-	glGenFramebuffers(1, &depthfbo);
 
 
 	aspect_ratio = 1.F;
@@ -131,11 +128,6 @@ void ComponentCamera::Update()
 void ComponentCamera::Delete()
 {
 	App->cameras->RemoveComponentCamera(this);
-}
-
-void ComponentCamera::SetProj(const float4x4& proj_matrix)
-{
-	proj = proj_matrix;
 }
 
 void ComponentCamera::SpecializedSave(Config& config) const
