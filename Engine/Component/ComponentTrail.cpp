@@ -4,9 +4,12 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleProgram.h"
 
+
 #include "Component/ComponentBillboard.h"
 #include "Module/ModuleResourceManager.h"
 #include "GL/glew.h"
+
+namespace { const float MAX_TRAIL_VERTICES = 5000; } //arbitrary number 
 
 ComponentTrail::ComponentTrail() : Component(nullptr, ComponentType::TRAIL)
 {
@@ -24,11 +27,54 @@ ComponentTrail::~ComponentTrail()
 void ComponentTrail::Init()
 {
 	trail_points.reserve(total_points + 2);
+
+	billboard = new ComponentBillboard(owner);
+	billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
+
+	for (unsigned int i = 0; i < total_points; ++i)
+	{
+		trail_points.emplace_back(TrailPoint());
+		trail_points[i].position = { 0.0f, 0.0f, 0.0f };
+		trail_points[i].width = 10.0F;
+		trail_points[i].life = 0.5f;
+		trail_points[i].time_passed = 0.0f;
+	}
 }
 
-void ComponentTrail::Update()
+void ComponentTrail::UpdateTrail()
 {
 
+}
+
+void ComponentTrail::Render()
+{
+	glDisable(GL_CULL_FACE);
+	if (active)
+	{
+		time_counter += App->time->real_time_delta_time;
+
+		for (unsigned int i = 0; i < total_points; ++i)
+		{
+			TrailPoint& p = trail_points[i];
+			float3 outline_left, outline_right;
+
+			if (p.life > 0.0f)
+			{
+				UpdateTrail();
+				billboard->Render(p.position);
+			
+				trail_vertices = trail_points.size();
+				if (p.is_rendered)
+				{
+					float width = p.width;
+					outline_left = p.position + p.position_adjacent_point * width;
+					outline_right = p.position - p.position_adjacent_point * width;
+				}
+				
+			}
+		}
+	}
+	glEnable(GL_CULL_FACE);
 }
 
 ComponentTrail& ComponentTrail::operator=(const ComponentTrail& component_to_copy)
@@ -64,10 +110,7 @@ void ComponentTrail::Delete()
 	App->renderer->RemoveComponentTrail(this);
 }
 
-void ComponentTrail::Render()
-{
 
-}
 void ComponentTrail::SpecializedSave(Config& config) const
 {
 

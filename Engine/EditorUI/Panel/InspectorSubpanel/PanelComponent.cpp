@@ -335,7 +335,7 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 	{
 		ImGui::InputInt("Number of Trail Points", &trail->total_points, 1);
 		ImGui::InputFloat("Width", &trail->width, 0.5f);
-
+		ImGui::InputFloat("Trail Duration", &trail->duration, 0.5f);
 
 		if (ImGui::Combo("Blend Mode", &trail->blend_mode, "Alpha Blend\0Additive")) {
 			switch (trail->blend_mode)

@@ -12,11 +12,10 @@ class ComponentBillboard;
 
 struct TrailPoint {
 	float3 position;
-	float3 velocity;
+	float3 position_adjacent_point;
 	float4 color;
-	Quat rotation;
 	float width;
-	float remaining_time_counter;
+	float life;
 	float time_passed;
 	bool is_rendered = false;
 };
@@ -39,7 +38,7 @@ public:
 	void Copy(Component* component_to_copy) const override;
 	void Delete() override;
 
-	void Update();
+	void UpdateTrail();
 	void Render();
 
 	void SpecializedSave(Config& config) const override;
@@ -66,8 +65,13 @@ public:
 
 	//Render properties
 	int blend_mode; //0 for aplha blend, 1 for addition
+	unsigned int trail_vertices;
+	
 	//Standard parameters
 	bool active = true;
+
+	//time
+	float time_counter = 0.0f;
 };
 
 #endif

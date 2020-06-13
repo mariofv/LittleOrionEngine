@@ -226,7 +226,10 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	{
 		particles->Render();
 	}
-
+	for (auto &trail : trails)
+	{
+		trail->Render();
+	}
 	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
 	App->ui->Render(&camera);
 
