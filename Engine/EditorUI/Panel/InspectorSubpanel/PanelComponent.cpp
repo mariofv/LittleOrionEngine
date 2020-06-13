@@ -489,13 +489,6 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 
 		//UndoRedo
 		CheckClickedCamera(camera);
-
-		if (ImGui::Button("test"))
-		{
-
-			APP_LOG_INFO("%s", camera->camera_frustum.ToString().c_str());
-		}
-
 	}
 }
 

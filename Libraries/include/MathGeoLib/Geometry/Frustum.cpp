@@ -203,7 +203,7 @@ float3 Frustum::FarPlanePos(float x, float y) const
 	else
 	{
 		float3 right = WorldRight();
-		return pos + front * farPlaneDistance/2
+		return pos + front * farPlaneDistance
 				   + x * orthographicWidth * 0.5f * right
 				   + y * orthographicHeight * 0.5f * up;
 	}

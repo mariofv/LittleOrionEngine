@@ -102,7 +102,6 @@ public:
 	void SetSpeedUp(bool is_speeding_up);
 
 	void SetViewMatrix(const float4x4& view_matrix);
-	void SetProj(const float4x4& proj_matrix);
 
 	float4x4 GetViewMatrix() const;
 	float4x4 GetProjectionMatrix() const;
@@ -162,14 +161,9 @@ private:
 	GLuint fbo = 0;
 	GLuint depth_rbo = 0;
 
-
-
-
 private:
 	GLuint msfbo = 0;
 	GLuint msfb_color = 0;
-
-	GLuint depthfbo = 0;
 
 	float last_height = 0;
 	float last_width = 0;

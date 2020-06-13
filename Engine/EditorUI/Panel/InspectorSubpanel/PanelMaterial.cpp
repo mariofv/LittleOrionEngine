@@ -279,14 +279,6 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		{
 			modified_by_user = true;
 		}
-		/* if (ImGui::SliderFloat("Roughness", &material->roughness, 0.f, 1.f))
-		{
-			modified_by_user = true;
-		}
-		if (ImGui::SliderFloat("Metalness", &material->metalness, 0.f, 10.f))
-		{
-			modified_by_user = true;
-		}*/
 
 		ImGui::Unindent();
 

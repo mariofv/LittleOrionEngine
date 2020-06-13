@@ -79,15 +79,12 @@ ComponentCamera::~ComponentCamera()
 
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteFramebuffers(1, &msfbo);
-	glDeleteFramebuffers(1, &depthfbo);
-
 }
 
 void ComponentCamera::InitCamera()
 {
 	glGenFramebuffers(1, &fbo);
 	glGenFramebuffers(1, &msfbo);
-	glGenFramebuffers(1, &depthfbo);
 
 
 	aspect_ratio = 1.F;
@@ -131,11 +128,6 @@ void ComponentCamera::Update()
 void ComponentCamera::Delete()
 {
 	App->cameras->RemoveComponentCamera(this);
-}
-
-void ComponentCamera::SetProj(const float4x4& proj_matrix)
-{
-	proj = proj_matrix;
 }
 
 void ComponentCamera::SpecializedSave(Config& config) const
@@ -367,7 +359,7 @@ void ComponentCamera::CreateOrthographicFramebuffer(float width, float height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -375,8 +367,8 @@ void ComponentCamera::CreateOrthographicFramebuffer(float width, float height)
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rbo);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
+	//glDrawBuffer(GL_NONE);
+	//glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
