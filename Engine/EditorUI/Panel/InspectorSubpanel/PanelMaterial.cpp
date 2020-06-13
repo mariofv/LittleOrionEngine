@@ -3,6 +3,7 @@
 #include "EditorUI/Helper/ImGuiHelper.h"
 #include "EditorUI/Panel/PanelPopups.h"
 #include "EditorUI/Panel/PopupsPanel/PanelPopupResourceSelector.h"
+#include "EditorUI/Panel/PanelProjectExplorer.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -12,6 +13,8 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleResourceManager.h"
+
+#include "ResourceManagement/Metafile/ModelMetafile.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -27,7 +30,13 @@ PanelMaterial::PanelMaterial()
 
 void PanelMaterial::Render(std::shared_ptr<Material> material)
 {
-	if (material->IsCoreResource())
+	
+	Metafile * metafile = App->resources->resource_DB->GetEntry(material->GetUUID());
+	bool extracted = IsMaterialExtracted(material);
+
+	bool is_core = material->IsCoreResource();
+
+	if (is_core || extracted)
 	{
 		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
@@ -40,7 +49,7 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(50, 50)); // TODO: Substitute this with resouce thumbnail
 		ImGui::SameLine();
 		ImGui::AlignTextToFramePadding();
-		ImGui::Text(App->resources->resource_DB->GetEntry(material->GetUUID())->resource_name.c_str());
+		ImGui::Text(metafile->resource_name.c_str());
 		ImGui::Spacing();
 
 		if (ImGui::BeginCombo("Shader", material->shader_program.c_str()))
@@ -106,6 +115,9 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 		ShowMaterialTextureMap(material, Material::MaterialTextureType::NORMAL);
 		ImGui::Spacing();
 
+		ShowMaterialTextureMap(material, Material::MaterialTextureType::LIGHTMAP);
+		ImGui::Spacing();
+
 		ImGui::Separator();
 	}
 
@@ -113,11 +125,17 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 	{
 		App->resources->Save<Material>(material);
 	}
-	if (material->IsCoreResource())
+	if (is_core || extracted)
 	{
 		ImGui::PopItemFlag();
 		ImGui::PopStyleVar();
 	}
+}
+
+bool PanelMaterial::IsMaterialExtracted(const std::shared_ptr<Material> &material)
+{
+	Metafile * meta = App->resources->resource_DB->GetEntry(material->GetUUID());
+	return meta->version == 0;
 }
 
 bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, Material::MaterialTextureType type)
@@ -261,6 +279,11 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Text("Normal");
 
 		break;
+
+	case Material::MaterialTextureType::LIGHTMAP:
+		ImGui::Text("Lightmap");
+
+		break;
 	}
 
 	if (ImGui::Button(ICON_FA_TIMES))
@@ -293,6 +316,8 @@ std::string PanelMaterial::GetTypeName(Material::MaterialTextureType type)
 		return "Oclusion";
 	case  Material::MaterialTextureType::NORMAL:
 		return "Normal";
+	case  Material::MaterialTextureType::LIGHTMAP:
+		return "Lightmap";
 
 	default:
 		return "";

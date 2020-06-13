@@ -10,7 +10,7 @@
 #include "EditorUI/Panel/PanelScene.h"
 #include "ResourceManagement/Resources/Skybox.h"
 
-#include "MathGeoLib.h"
+#include <MathGeoLib.h>
 #include <GL/glew.h>
 
 class GameObject;

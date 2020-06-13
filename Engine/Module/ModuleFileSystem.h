@@ -23,6 +23,7 @@ public:
 	Path* GetPath(const std::string& path);
 	Path* GetRootPath() const;
 
+	FileData LoadFromSystem(const std::string& load_path);
 	Path* Save(const std::string& save_path, FileData data_to_save);
 	Path* Save(const std::string& save_path, const std::string& serialized_data);
 

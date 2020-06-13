@@ -238,9 +238,6 @@
     <ClCompile Include="Engine\EditorUI\EngineLog.cpp">
       <Filter>Engine\EditorUI</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Helper\Billboard.cpp">
-      <Filter>Engine\EditorUI\Helper</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp">
       <Filter>Engine\EditorUI\Helper</Filter>
     </ClCompile>
@@ -499,14 +496,17 @@
     <ClCompile Include="Engine\Component\ComponentEventSystem.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Animation\Tween\Tween.cpp">
-      <Filter>Engine\Animation\Tween</Filter>
+    <ClCompile Include="Engine\Helper\TagManager.cpp">
+      <Filter>Engine\Helper</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp">
-      <Filter>Engine\Animation\Tween</Filter>
+    <ClCompile Include="Engine\Component\ComponentBillboard.cpp">
+      <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="LOTween.cpp">
-      <Filter>Engine\Animation\Tween</Filter>
+    <ClCompile Include="Engine\Component\ComponentParticleSystem.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelTags.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -743,9 +743,6 @@
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\EngineLog.h">
       <Filter>Engine\EditorUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Helper\Billboard.h">
-      <Filter>Engine\EditorUI\Helper</Filter>
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Helper\Grid.h">
       <Filter>Engine\EditorUI\Helper</Filter>
@@ -993,14 +990,17 @@
     <ClInclude Include="Engine\Component\ComponentImage.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Animation\Tween\Tween.h">
-      <Filter>Engine\Animation\Tween</Filter>
+    <ClInclude Include="Engine\Helper\TagManager.h">
+      <Filter>Engine\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Animation\Tween\TweenSequence.h">
-      <Filter>Engine\Animation\Tween</Filter>
+    <ClInclude Include="Engine\Component\ComponentBillboard.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="LOTween.h">
-      <Filter>Engine\Animation\Tween</Filter>
+    <ClInclude Include="Engine\Component\ComponentParticleSystem.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1093,9 +1093,6 @@
     </Filter>
     <Filter Include="Engine\Component\Collider">
       <UniqueIdentifier>{2234ff4f-964f-49d9-9553-0f966006fc99}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Animation\Tween">
-      <UniqueIdentifier>{d714a5b0-1c52-4676-bc5f-b7cc4bc5b962}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

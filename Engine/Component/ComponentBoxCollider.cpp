@@ -30,6 +30,7 @@ Component* ComponentBoxCollider::Clone(GameObject* owner, bool original_prefab) 
 	*created_component = *this;
 	created_component->SetConfiguration();
 	created_component->center = center;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 }
 

@@ -1,11 +1,19 @@
 #include "Config.h"
 
+#include "Filesystem/File.h"
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/prettywriter.h>
-
 Config::Config()
 {
 	config_document.SetObject();
+	allocator = &config_document.GetAllocator();
+}
+
+Config::Config(FileData & data)
+{
+	std::string serialized_string((char*)data.buffer, data.size);
+	free((char*)data.buffer);
+	config_document.Parse(serialized_string.c_str());
 	allocator = &config_document.GetAllocator();
 }
 

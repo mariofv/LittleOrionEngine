@@ -1,5 +1,8 @@
 #include "PanelProjectExplorer.h"
 
+#include "EditorUI/Panel/PanelInspector.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelMetaFile.h"
+
 #include "Filesystem/PathAtlas.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -7,9 +10,10 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
-#include "ResourceManagement/Manager/PrefabManager.h"
+
 #include "ResourceManagement/Manager/SkyboxManager.h"
 #include "ResourceManagement/Metafile/Metafile.h"
+#include "ResourceManagement/Metafile/ModelMetafile.h"
 #include "ResourceManagement/Metafile/MetafileManager.h"
 #include "ResourceManagement/Resources/Prefab.h"
 #include "ResourceManagement/Resources/StateMachine.h"
@@ -22,6 +26,7 @@
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
 #include <algorithm>
+
 
 static std::string new_name_file;
 PanelProjectExplorer::PanelProjectExplorer()
@@ -150,30 +155,46 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 		if (child_path != nullptr && child_path->IsMeta())
 		{
 			ImGui::PushID(current_line * files_per_line + current_file_in_line);
-			ShowMetafile(child_path);
+			Metafile* metafile = App->resources->metafile_manager->GetMetafile(*child_path);
+			std::string filename = child_path->GetFilenameWithoutExtension();
+			ShowMetafile(child_path,metafile,filename);
 			ImGui::PopID();
-
-			++current_file_in_line;
-			if (current_file_in_line == files_per_line)
+			CalculateNextLinePosition(current_file_in_line, files_per_line, current_line);
+			if (opened_model && metafile->uuid == opened_model->uuid)
 			{
-				current_file_in_line = 0;
-				++current_line;
-			}
-			else
-			{
-				ImGui::SameLine();
+				for (auto & meta : opened_model->nodes)
+				{
+					ImGui::PushID(meta->resource_name.c_str());
+					ShowMetafile(App->filesystem->GetPath(meta->exported_file_path), meta.get(), meta->resource_name);
+					ImGui::PopID();
+					CalculateNextLinePosition(current_file_in_line, files_per_line, current_line);
+				}
 			}
 		}
 	}
 }
 
-void PanelProjectExplorer::ShowMetafile(Path* metafile_path)
+void PanelProjectExplorer::CalculateNextLinePosition(int &current_file_in_line, int files_per_line, int &current_line)
 {
-	Metafile* metafile = App->resources->metafile_manager->GetMetafile(*metafile_path);
 
-	std::string filename = metafile_path->GetFilenameWithoutExtension();
+	++current_file_in_line;
+	if (current_file_in_line == files_per_line)
+	{
+		current_file_in_line = 0;
+		++current_line;
+	}
+	else
+	{
+		ImGui::SameLine();
+	}
+}
 
-	if (ImGui::BeginChild(filename.c_str(), ImVec2(file_size_width, file_size_height), selected_file == metafile_path, ImGuiWindowFlags_NoDecoration))
+void PanelProjectExplorer::ShowMetafile(Path* metafile_path, Metafile* metafile,const std::string& filename)
+{
+	bool is_model = metafile->resource_type == ResourceType::MODEL;
+
+	float size_plus = is_model ? 30.f : 0.f;
+	if (ImGui::BeginChild(filename.c_str(), ImVec2(file_size_width + size_plus, file_size_height), selected_file == metafile_path, ImGuiWindowFlags_NoDecoration))
 	{
 		hovered = ImGui::IsWindowHovered() ? true : hovered;
 
@@ -182,6 +203,14 @@ void PanelProjectExplorer::ShowMetafile(Path* metafile_path)
 
 		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75 * file_size_width) * 0.5f);
 		ShowMetafileIcon(metafile);
+		if (is_model)
+		{
+			ImGui::SameLine();
+			if (ImGui::Button(ICON_FA_PLAY))
+			{
+				opened_model = opened_model && opened_model->uuid == metafile->uuid ? nullptr :static_cast<ModelMetafile*>(metafile);
+			}
+		}
 		ImGui::Spacing();
 
 		if (renaming_file && metafile_path == renaming_file)
@@ -205,8 +234,10 @@ void PanelProjectExplorer::ShowMetafile(Path* metafile_path)
 				ImGui::Text(wrapped_filename.c_str());
 			}
 		}
+		
 	}
 	ImGui::EndChild();
+
 }
 
 void PanelProjectExplorer::ShowMetafileIcon(Metafile * metafile)
@@ -271,6 +302,7 @@ void PanelProjectExplorer::ShowMetafileIcon(Metafile * metafile)
 
 		ImGui::Button(icon.c_str(),ImVec2(0.75*file_size_width, 0.75*file_size_width));
 		ImGui::PopStyleColor(1);
+		ImGui::PopItemFlag();
 	}
 	
 	ImGui::SetWindowFontScale(1);
@@ -300,12 +332,12 @@ void PanelProjectExplorer::ApplyRename()
 	}
 }
 
-void PanelProjectExplorer::ResourceDragSource(Metafile* metafile) const
+void PanelProjectExplorer::ResourceDragSource(const Metafile* metafile) const
 {
 	if (ImGui::BeginDragDropSource())
 	{
 		ImGui::SetDragDropPayload("DND_Resource", &metafile, sizeof(Metafile*));
-		ImGui::Text("Dragging %s", metafile->imported_file_path.c_str());
+		ImGui::Text("Dragging %s", metafile->resource_name.c_str());
 		ImGui::EndDragDropSource();
 	}
 }
@@ -322,6 +354,24 @@ void PanelProjectExplorer::ResourceDropTarget(Path * folder_path) const
 			App->resources->metafile_manager->RefreshMetafile(*new_metafile);
 		}
 		ImGui::EndDragDropTarget();
+	}
+}
+void PanelProjectExplorer::ResourceDropFromOutside(const std::string& dropped_filedir)
+{
+	if (!selected_folder)
+	{
+		return;
+	}
+	FileData data = App->filesystem->LoadFromSystem(dropped_filedir);
+	if (data.buffer)
+	{
+		std::string full_path = selected_folder->GetFullPath() + "/"+dropped_filedir.substr(dropped_filedir.find_last_of("\\") +1 );
+		Path* new_file = App->filesystem->Save(full_path, data);
+
+		if (new_file && new_file->IsImportable())
+		{
+			App->resources->Import(*new_file);
+		}
 	}
 }
 void PanelProjectExplorer::ProcessResourceMouseInput(Path* metafile_path, Metafile* metafile)
@@ -398,6 +448,51 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 			}
 			ImGui::EndMenu();
 		}
+
+		if (selected_file != nullptr )
+		{
+			std::string filename_no_extension = selected_file->GetFilenameWithoutExtension();
+			bool has_uuid = std::all_of(filename_no_extension.begin(), filename_no_extension.end(), ::isdigit);
+			if (!has_uuid && ImGui::Selectable("Delete"))
+			{
+				bool success = App->filesystem->Remove(selected_file);
+				if (success)
+				{
+					selected_file = nullptr;
+					renaming_file = nullptr;
+					opened_model = nullptr;
+				}
+			}
+			if (has_uuid && ImGui::Selectable("Rename"))
+			{
+				renaming_file = selected_file;
+				new_name_file = selected_file->GetFilename();
+			}
+			ImGui::Separator();
+			Metafile * selected_metafile = App->editor->selected_meta_file;
+			if (selected_metafile && selected_metafile->resource_type == ResourceType::MODEL && ImGui::Selectable("Extract Prefab"))
+			{
+				std::string new_prefab_name = filename_no_extension.substr(0, filename_no_extension.find_last_of(".")) + ".prefab";
+				Path * new_prefab = App->filesystem->Copy(selected_metafile->exported_file_path.c_str(), selected_folder->GetFullPath(),new_prefab_name.c_str());
+				App->resources->Import(*new_prefab);
+				ImGui::Separator();
+			}
+
+			if (has_uuid && selected_metafile->resource_type == ResourceType::MATERIAL && ImGui::Selectable("Extract from prefab"))
+			{
+				auto& remapped_materials = opened_model->remapped_materials;
+				std::string material_key = selected_metafile->resource_name.substr(0,selected_metafile->resource_name.find_last_of('.'));
+				assert(opened_model);
+				assert(remapped_materials.find(material_key) != remapped_materials.end());
+
+				Path* new_extracted_material = App->filesystem->Copy(selected_metafile->exported_file_path, selected_folder->GetFullPath(), selected_metafile->resource_name);
+				assert(new_extracted_material);
+				remapped_materials[material_key]  = App->resources->Import(*new_extracted_material);
+
+				App->editor->inspector->metafile_panel.ApplyMetafileChanges(opened_model);
+				ImGui::Separator();
+			}
+		}
 		if (ImGui::Selectable("Reimport"))
 		{
 			App->resources->ImportAssetsInDirectory(*selected_folder, true);
@@ -407,30 +502,6 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 		{
 			App->resources->ImportAssetsInDirectory(*App->filesystem->GetRootPath(), true);
 			App->resources->CleanResourceCache();
-		}
-		if (selected_file != nullptr)
-		{
-			if (ImGui::Selectable("Delete"))
-			{
-				bool success = App->filesystem->Remove(selected_file);
-				if (success)
-				{
-					selected_file = nullptr;
-					renaming_file = nullptr;
-				}
-			}
-			if (App->editor->selected_meta_file && App->editor->selected_meta_file->resource_type == ResourceType::MODEL && ImGui::Selectable("Extract Prefab"))
-			{
-				std::string original_model_name = selected_file->GetFilenameWithoutExtension();
-				std::string new_prefab_name = original_model_name.substr(0, original_model_name.find_last_of(".")) + ".prefab";
-				Path * new_prefab = App->filesystem->Copy(App->editor->selected_meta_file->exported_file_path.c_str(), selected_folder->GetFullPath(),new_prefab_name.c_str());
-				App->resources->Import(*new_prefab);
-			}
-			if (ImGui::Selectable("Rename"))
-			{
-				renaming_file = selected_file;
-				new_name_file = selected_file->GetFilename();
-			}
 		}
 		ImGui::EndPopup();
 	}

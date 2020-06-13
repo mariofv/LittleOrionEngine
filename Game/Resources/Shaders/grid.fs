@@ -84,4 +84,5 @@ void main()
   c.a *= (lod2_a > 0 ? lod2_a : lod1_a > 0 ? lod1_a : (lod0_a * (1-lod_fade))) * op;
 
 	FragColor =  c;
+	FragColor.a *= 0.5;
 }

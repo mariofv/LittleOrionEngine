@@ -1,7 +1,10 @@
 #include "ComponentCollider.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Helper/Utils.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleDebug.h"
+#include "Module/ModuleDebugDraw.h"
 #include "Module/ModulePhysics.h"
 
 ComponentCollider::ComponentCollider(ColliderType collider_type) : Component(ComponentType::COLLIDER), collider_type(collider_type)
@@ -237,9 +240,9 @@ void ComponentCollider::SetCollisionDetection()
 	body->setCollisionFlags(flags);
 }
 
-bool ComponentCollider::DetectCollision()
+std::vector<CollisionInformation> ComponentCollider::DetectAllCollision() const
 {
-
+	std::vector<CollisionInformation> collisions;
 	int numManifolds = App->physics->world->getDispatcher()->getNumManifolds();
 	for (int i = 0; i < numManifolds; i++)
 	{
@@ -251,69 +254,85 @@ bool ComponentCollider::DetectCollision()
 		for (int j = 0; j < numContacts; j++)
 		{
 			btManifoldPoint pt = contactManifold->getContactPoint(j);
-			if (obA->getWorldArrayIndex() == body->getWorldArrayIndex() || obB->getWorldArrayIndex() == body->getWorldArrayIndex())
+			if (pt.getDistance() < 0.0f
+				&& (obA->getWorldArrayIndex() == body->getWorldArrayIndex()
+					|| obB->getWorldArrayIndex() == body->getWorldArrayIndex()))
 			{
-				if (pt.getDistance() < 0.0f)
+				CollisionInformation info;
+				info.distance = pt.getDistance();
+				info.collider = App->physics->FindColliderByWorldId(obA->getWorldArrayIndex());
+				info.normal = float3(-pt.m_normalWorldOnB);
+				if (obB->getWorldArrayIndex() == body->getWorldArrayIndex())
 				{
-					return true;
+					info.collider = App->physics->FindColliderByWorldId(obB->getWorldArrayIndex());
+					info.normal = float3(pt.m_normalWorldOnB);
+				}
+				collisions.push_back(info);
+			}
+		}
+	}
+	return collisions;
+}
+bool ComponentCollider::IsCollidingWith(ComponentCollider* collider) const {
+	return DetectCollisionWith(collider).collider;
+}
+
+CollisionInformation ComponentCollider::DetectCollisionWith(ComponentCollider* collider) const
+{
+	
+	CollisionInformation collision_info;
+
+	if (detect_collision && collider->detect_collision)
+	{	
+		int numManifolds = App->physics->world->getDispatcher()->getNumManifolds();
+		for (int i = 0; i < numManifolds; i++)
+		{
+			btPersistentManifold* contactManifold = App->physics->world->getDispatcher()->getManifoldByIndexInternal(i);
+			const btCollisionObject* obA = contactManifold->getBody0();
+			const btCollisionObject* obB = contactManifold->getBody1();
+
+			int numContacts = contactManifold->getNumContacts();
+			for (int j = 0; j < numContacts; j++)
+			{
+				btManifoldPoint pt = contactManifold->getContactPoint(j);
+				if (pt.getDistance() < 0.0f
+					&& ((obA->getWorldArrayIndex() == body->getWorldArrayIndex()
+						&& obB->getWorldArrayIndex() == collider->body->getWorldArrayIndex())
+						|| (obB->getWorldArrayIndex() == body->getWorldArrayIndex()
+							&& obA->getWorldArrayIndex() == collider->body->getWorldArrayIndex())))
+				{
+					collision_info.distance = pt.getDistance();
+					collision_info.collider = App->physics->FindColliderByWorldId(obA->getWorldArrayIndex());
+					collision_info.normal = float3(-pt.m_normalWorldOnB);
+					if (obB->getWorldArrayIndex() == collider->body->getWorldArrayIndex())
+					{
+						collision_info.collider = App->physics->FindColliderByWorldId(obB->getWorldArrayIndex());
+						collision_info.normal = float3(pt.m_normalWorldOnB);
+					}
 				}
 			}
 		}
 	}
-	return false;
-}
+	else
+	{
+		btVector3 body_minim;
+		btVector3 body_maxim;
+		btVector3 collider_minim;
+		btVector3 collider_maxim;
 
-bool ComponentCollider::DetectCollisionWith(ComponentCollider * collider)
-{
-	btVector3 body_minim;
-	btVector3 body_maxim;
-	btVector3 collider_minim;
-	btVector3 collider_maxim;
-
-	if (!active_physics && !collider->active_physics) 
-	{	
 		App->physics->world->updateAabbs();
 		body->getAabb(body_minim, body_maxim);
 		collider->body->getAabb(collider_minim, collider_maxim);
-		
-		if (!(body_maxim.getX() < collider_minim.getX() || collider_maxim.getX() < body_minim.getX()))
+
+
+		if (!(body_maxim.getX() < collider_minim.getX() || collider_maxim.getX() < body_minim.getX())
+			&& !(body_maxim.getY() < collider_minim.getY() || collider_maxim.getY() < body_minim.getY())
+			&& !(body_maxim.getZ() < collider_minim.getZ() || collider_maxim.getZ() < body_minim.getZ()))
 		{
-			if (!(body_maxim.getY() < collider_minim.getY() || collider_maxim.getY() < body_minim.getY())) 
-			{
-				if (!(body_maxim.getZ() < collider_minim.getZ() || collider_maxim.getZ() < body_minim.getZ())) 
-				{
-					return true;
-				}
-			}
+			collision_info.collider = collider;
 		}
-	}
-
-	int numManifolds = App->physics->world->getDispatcher()->getNumManifolds();
-	for (int i = 0; i < numManifolds; i++)
-	{
-		btPersistentManifold* contactManifold = App->physics->world->getDispatcher()->getManifoldByIndexInternal(i);
-		const btCollisionObject* obA = contactManifold->getBody0();
-		const btCollisionObject* obB = contactManifold->getBody1();
-
-		int numContacts = contactManifold->getNumContacts();
-		for (int j = 0; j < numContacts; j++)
-		{
-			btManifoldPoint pt = contactManifold->getContactPoint(j);
-			if ((obA->getWorldArrayIndex() == body->getWorldArrayIndex() && obB->getWorldArrayIndex() == collider->body->getWorldArrayIndex()) || (obB->getWorldArrayIndex() == body->getWorldArrayIndex() && obA->getWorldArrayIndex() == collider->body->getWorldArrayIndex()))
-			{
-				if (pt.getDistance() < 0.0f)
-				{
-					return true;
-				}
-			}
-		}
-	}
-	return false;
-}
-
-ENGINE_API void ComponentCollider::ClearForces() const
-{
-	body->clearForces();
+	}	
+	return collision_info;
 }
 
 void ComponentCollider::SetStatic()
@@ -336,38 +355,11 @@ void ComponentCollider::SetRotationAxis()
 	body->setAngularFactor(btVector3(int(!freeze_rotation_x), int(!freeze_rotation_y), int(!freeze_rotation_z)));
 }
 
-void ComponentCollider::AddForce(float3& force)
-{
-	body->applyCentralForce(btVector3(force.x, force.y, force.z));
-
-	
-	if (abs(force.x) > 0 || abs(force.z) > 0) {
-
-		float3 direction = float3(force.x, 0, force.z);
-		Quat new_rotation = owner->transform.GetRotation().LookAt(float3::unitZ, direction.Normalized(), float3::unitY, float3::unitY);
-
-		btTransform trans = body->getWorldTransform();
-		btQuaternion transrot = trans.getRotation();
-
-		transrot = btQuaternion(new_rotation.x, new_rotation.y, new_rotation.z, new_rotation.w);
-		trans.setRotation(transrot);
-		body->setWorldTransform(trans);
-	}
-}
-
 void ComponentCollider::SwitchPhysics(bool active)
 {
 	active_physics = active;
 	SwitchPhysics();
 }
-
-ENGINE_API bool ComponentCollider::RaycastHit(btVector3& origin, btVector3& end)
-{
-	//Vector normal to the surface
-	btVector3 normal;
-	return App->physics->RaycastWorld(origin, end, normal);
-}
-
 
 void ComponentCollider::SwitchPhysics()
 {
@@ -380,6 +372,61 @@ void ComponentCollider::SwitchPhysics()
 	{
 		body->forceActivationState(DISABLE_SIMULATION);
 	}
+}
+
+std::vector<CollisionInformation> ComponentCollider::CollisionTest() const
+{
+	ContactSensorCallback contact_callback;
+	App->physics->world->contactTest(body, contact_callback);
+	std::vector<CollisionInformation> collisions;
+
+	for (auto& custom_mainfold : contact_callback.mainfolds)
+	{
+		CollisionInformation collision;
+		if (custom_mainfold.point.getDistance() < 0.0f)
+		{
+			if (custom_mainfold.object_a_id == body->getWorldArrayIndex())
+			{
+				collision.collider = App->physics->FindColliderByWorldId(custom_mainfold.object_b_id);
+				collision.normal = float3(custom_mainfold.point.m_normalWorldOnB);
+			}
+			else if (custom_mainfold.object_b_id == body->getWorldArrayIndex())
+			{
+				collision.collider = App->physics->FindColliderByWorldId(custom_mainfold.object_a_id);
+				collision.normal = -float3(custom_mainfold.point.m_normalWorldOnB);
+			}
+			else
+			{
+				assert(false); // This should never happen
+			}
+			collision.distance = -custom_mainfold.point.getDistance();
+
+			collisions.push_back(collision);
+		}
+		
+	}
+
+	return collisions;
+}
+
+CollisionInformation ComponentCollider::RaycastHit(float3& start, float3& end) const
+{
+	CollisionInformation info;
+	btVector3 bullet_start = Utils::Float3TobtVector3(start);
+	btVector3 bullet_end = Utils::Float3TobtVector3(end);
+
+	btCollisionWorld::ClosestRayResultCallback RayCallback(bullet_start, bullet_end);
+
+	App->physics->world->rayTest(bullet_start, bullet_end, RayCallback);
+	if (RayCallback.hasHit() && RayCallback.m_collisionObject->hasContactResponse())
+	{
+		end = float3(RayCallback.m_hitPointWorld);
+		info.collider = App->physics->FindColliderByWorldId(RayCallback.m_collisionObject->getWorldArrayIndex());
+		info.normal = float3(RayCallback.m_hitNormalWorld);
+		info.distance = (end - start).Length();
+	}
+
+	return info;
 }
 
 void ComponentCollider::UpdateFriction()
@@ -413,116 +460,63 @@ float3 ComponentCollider::GetColliderCenter() const
 	return center;
 }
 
-void ComponentCollider::SetVelocity(float3& velocity, float speed)
+bool ComponentCollider::IsGrounded(float length_percentage)
 {
-	//bottom of the model
-	btVector3 bottom = body->getWorldTransform().getOrigin();
-	bottom.setY(bottom.getY() - (5 * box_size.getY()));
-
-	//Vector normal to the surface
-	btVector3 Normal; 
-	App->physics->RaycastWorld(body->getWorldTransform().getOrigin(), bottom, Normal);
-	float3 normal = float3(Normal);
-	normal.Normalize();
-
-	float2 normal_2D = float2(normal.x, normal.y);
-	float2 vector_vel = normal_2D.Perp();
-	
-	if (velocity.Length() > 0) 
-	{
-		velocity.Normalize();
-		body->setLinearVelocity(speed * btVector3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z));
-		
-		
-		//rotate collider
-		float3 direction = velocity.Normalized();
-		Quat new_rotation = Quat::LookAt(owner->transform.GetFrontVector(), direction, owner->transform.GetUpVector(), float3::unitY);
-		
-		btTransform trans = body->getWorldTransform();
-
-		btQuaternion quat = trans.getRotation();
-		btQuaternion transrot = btQuaternion(new_rotation.x, new_rotation.y, new_rotation.z, new_rotation.w);
-		quat *= transrot;
-		trans.setRotation(quat);
-		body->setWorldTransform(trans);
-		
-	}
-	
+	return DetectCollisionWithGround(length_percentage).collider;
 }
 
-void ComponentCollider::SetVelocityEnemy(float3 & velocity, float speed)
+CollisionInformation ComponentCollider::DetectCollisionWithGround(float length_percentage) const
 {
-	//bottom of the model
-	btVector3 bottom = body->getWorldTransform().getOrigin();
-	bottom.setY(bottom.getY() - 200 * box_size.getY());
-
-	//Vector normal to the surface
-	btVector3 Normal;
-	App->physics->RaycastWorld(body->getWorldTransform().getOrigin(), bottom, Normal);
-	float3 normal = float3(Normal);
-	normal.Normalize();
-
-	float2 normal_2D = float2(normal.x, normal.y);
-	float2 vector_vel = normal_2D.Perp();
-
-	if (abs(velocity.x) > 0 || abs(velocity.z) > 0)
-	{
-		velocity.Normalize();
-		body->setLinearVelocity(speed*btVector3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z));
-
-		//rotate collider
-
-		/*float3 direction = float3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z);*/
-		float3 direction = float3(velocity.x, 0, velocity.z);
-		Quat new_rotation = owner->transform.GetRotation().LookAt(float3::unitZ, direction.Normalized(), float3::unitY, float3::unitY);
-
-		btTransform trans = body->getWorldTransform();
-		btQuaternion transrot = trans.getRotation();
-
-		transrot = btQuaternion(new_rotation.x, new_rotation.y, new_rotation.z, new_rotation.w);
-		//trans.setRotation(transrot);
-		body->setWorldTransform(trans);
-	}
+	float3 origin = GetOrigin();
+	float3 end = origin;
+	end.y -= box_size.getY() * length_percentage;
+	return RaycastHit(origin, end);
 }
 
-void ComponentCollider::LookAt(float3& velocity, float speed)
+std::vector<CollisionInformation> ComponentCollider::GetCollisions()
 {
-	//bottom of the model
-	btVector3 bottom = body->getWorldTransform().getOrigin();
-	bottom.setY(bottom.getY() - 200 * box_size.getY());
-
-	//Vector normal to the surface
-	btVector3 Normal;
-	App->physics->RaycastWorld(body->getWorldTransform().getOrigin(), bottom, Normal);
-	float3 normal = float3(Normal);
-	normal.Normalize();
-
-	float2 normal_2D = float2(normal.x, normal.y);
-	float2 vector_vel = normal_2D.Perp();
-
-	if (abs(velocity.x) > 0 || abs(velocity.z) > 0)
+	std::vector<CollisionInformation> collisions;
+	int numManifolds = App->physics->world->getDispatcher()->getNumManifolds();
+	for (int i = 0; i < numManifolds; i++)
 	{
-		velocity.Normalize();
-		//body->setLinearVelocity(speed*btVector3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z));
+		CollisionInformation collision;
 
-		//rotate collider
+		btPersistentManifold* contactManifold = App->physics->world->getDispatcher()->getManifoldByIndexInternal(i);
+		const btCollisionObject* obA = contactManifold->getBody0();
+		const btCollisionObject* obB = contactManifold->getBody1();
 
-		/*float3 direction = float3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z);*/
-		float3 direction = float3(velocity.x, 0, velocity.z);
-		Quat new_rotation = owner->transform.GetRotation().LookAt(float3::unitZ, direction.Normalized(), float3::unitY, float3::unitY);
-
-		btTransform trans = body->getWorldTransform();
-		btQuaternion transrot = trans.getRotation();
-
-		transrot = btQuaternion(new_rotation.x, new_rotation.y, new_rotation.z, new_rotation.w);
-		trans.setRotation(transrot);
-		body->setWorldTransform(trans);
+		int numContacts = contactManifold->getNumContacts();
+		for (int j = 0; j < numContacts; j++)
+		{
+			btManifoldPoint pt = contactManifold->getContactPoint(j);
+			if (pt.getDistance() < 0.0f)
+			{
+				if (obA->getWorldArrayIndex() == body->getWorldArrayIndex() && obB->hasContactResponse())
+				{
+					collision.collider = App->physics->FindColliderByWorldId(obB->getWorldArrayIndex());
+					collision.normal = float3(pt.m_normalWorldOnB.getX(), pt.m_normalWorldOnB.getY(), pt.m_normalWorldOnB.getZ());
+					collision.distance = -pt.getDistance();
+					collisions.emplace_back(collision);
+				}
+				else if (obB->getWorldArrayIndex() == body->getWorldArrayIndex() && obA->hasContactResponse())
+				{
+					collision.collider = App->physics->FindColliderByWorldId(obA->getWorldArrayIndex());
+					collision.normal = -float3(pt.m_normalWorldOnB.getX(), pt.m_normalWorldOnB.getY(), pt.m_normalWorldOnB.getZ());
+					collision.distance = -pt.getDistance();
+					collisions.emplace_back(collision);
+				}
+			}
+		}
 	}
+	return collisions;
 }
 
-float3 ComponentCollider::GetCurrentVelocity() const
+float3 ComponentCollider::GetOrigin() const
 {
-	btVector3 velocity = body->getLinearVelocity();
+	return float3(body->getWorldTransform().getOrigin());
+}
 
-	return float3(velocity.getX(), velocity.getY(), velocity.getZ());
+float3 ComponentCollider::GetBoxSize() const
+{
+	return float3(box_size);
 }

@@ -1,5 +1,7 @@
 #include "PanelPopups.h"
 
+#include "Helper/TagManager.h"
+
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleResourceManager.h"
@@ -19,7 +21,9 @@ PanelPopups::PanelPopups()
 void PanelPopups::Render()
 {
 	RenderAssetsLoadingPopup();
-	CreateScript();
+	RenderCreateScriptPopup();
+	RenderAddTagPopup();
+
 	resource_selector_popup.Render();
 	scene_loader_popup.Render();
 	scene_saver_popup.Render();
@@ -47,11 +51,42 @@ void PanelPopups::RenderAssetsLoadingPopup()
 	}
 }
 
-void PanelPopups::CreateScript()
+void PanelPopups::RenderAddTagPopup()
 {
-	if (create_script_shown)
+	if (add_tag_popup_shown)
 	{
-		create_script_shown = false;
+		add_tag_popup_shown = false;
+		ImGui::OpenPopup("Add Tag");
+	}
+
+	if (ImGui::BeginPopupModal("Add Tag", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("Tag Name: \n");
+		ImGui::Separator();
+
+		static char tag_name[128] = "";
+		ImGui::InputTextWithHint("", "Enter tag name", tag_name, IM_ARRAYSIZE(tag_name));
+
+		if (ImGui::Button("OK", ImVec2(120, 0)))
+		{
+			std::string name = tag_name;
+			if (name.size() > 0)
+			{
+				App->editor->tag_manager->AddTag(name);
+				ImGui::CloseCurrentPopup();
+			}
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+		ImGui::EndPopup();
+	}
+}
+
+void PanelPopups::RenderCreateScriptPopup()
+{
+	if (create_script_popup_shown)
+	{
+		create_script_popup_shown = false;
 		ImGui::OpenPopup("Create Script");
 	}
 

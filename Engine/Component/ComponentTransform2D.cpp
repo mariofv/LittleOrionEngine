@@ -48,6 +48,7 @@ Component * ComponentTransform2D::Clone(bool create_on_module) const
 	ComponentTransform2D * created_component;
 	created_component = new ComponentTransform2D(nullptr);
 	*created_component = *this;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 }
 

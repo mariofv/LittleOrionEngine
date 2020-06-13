@@ -6,6 +6,9 @@
 #include "Module.h"
 #include "Main/Globals.h"
 
+#include "EditorUI/Panel/PanelToolBar.h"
+#include "EditorUI/Panel/PanelConfiguration.h"
+
 class Timer;
 
 class ModuleTime : public Module
@@ -29,7 +32,6 @@ public:
 	void StepFrame();
 
 	void EndFrame();
-
 
 public:
 	long frame_count = 0;

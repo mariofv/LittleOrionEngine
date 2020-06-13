@@ -5,7 +5,7 @@
 
 #include "Component.h"
 
-#include "MathGeoLib.h"
+#include <MathGeoLib.h>
 #include <GL/glew.h>
 
 class PanelTransform;

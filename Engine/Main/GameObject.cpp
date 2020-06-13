@@ -29,8 +29,10 @@
 #include "Component/ComponentEventSystem.h"
 #include "Component/ComponentImage.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentBillboard.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 
@@ -122,7 +124,7 @@ void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 		prefab_reference->RemoveInstance(this);
 	}
 }
-void GameObject::Duplicate(const GameObject & gameobject_to_copy)
+void GameObject::Duplicate(const GameObject& gameobject_to_copy)
 {
 	if (!is_prefab_parent && gameobject_to_copy.transform.modified_by_user)
 	{
@@ -146,21 +148,7 @@ void GameObject::Duplicate(const GameObject & gameobject_to_copy)
 		this->prefab_reference = nullptr;
 	}
 
-	if (App->time->isGameRunning())
-	{
-		for (unsigned int i = 0; i < components.size(); ++i)
-		{
-			if (components[i]->type == Component::ComponentType::SCRIPT)
-			{
-				ComponentScript* script = (ComponentScript*)components[i];
-				if (!script->awaken)
-				{
-					script->AwakeScript();
-					script->StartScript();
-				}
-			}
-		}
-	}
+
 
 	return;
 }
@@ -299,6 +287,7 @@ void GameObject::Save(Config& config) const
 		config.AddUInt(parent->UUID, "ParentUUID");
 	}
 	config.AddString(name, "Name");
+	config.AddString(tag, "Tag");
 
 	config.AddBool(is_static, "IsStatic");
 	config.AddBool(active, "Active");
@@ -327,6 +316,7 @@ void GameObject::Load(const Config& config)
 	assert(UUID != 0);
 
 	config.GetString("Name", name, "GameObject");
+	config.GetString("Tag", tag, "");
 
 	uint64_t parent_UUID = config.GetUInt("ParentUUID", 0);
 	GameObject* game_object_parent = App->scene->GetGameObject(parent_UUID);
@@ -475,9 +465,18 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		created_component = App->ui->CreateComponentUI<ComponentText>();
 		break;
 
+	case Component::ComponentType::BILLBOARD:
+		created_component = App->renderer->CreateComponentBillboard();
+		break;
+
+	case Component::ComponentType::PARTICLE_SYSTEM:
+		created_component = App->renderer->CreateComponentParticleSystem();
+		break;
+
 	case Component::ComponentType::AUDIO_SOURCE:
 		created_component = App->audio->CreateComponentAudioSource();
 		break;
+		
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");
 		return nullptr;
