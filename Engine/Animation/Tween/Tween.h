@@ -10,7 +10,15 @@ public:
 
 	enum EaseType
 	{
-		LINEAR
+		LINEAR,
+		SMOOTH_STEP,
+		EASE_IN_SINE,
+		SINE,
+		EASE_OUT_SINE,
+		EASE_IN_OUT_SINE,
+		EASE_IN_BACK,
+		EASE_OUT_BACK,
+		EASE_IN_OUT_BACK
 	};
 
 	TweenState state;
@@ -32,7 +40,17 @@ private:
 	float Update(float);
 
 	float NormalizedElapsedTime();
-	float UpdateLinear();
+	float EasedTime();
+
+	float Linear(float);
+	float SmoothStep(float);
+	float EaseInSine(float);
+	float Sine(float);
+	float EaseOutSine(float);
+	float EaseInOutSine(float);
+	float EaseInBack(float);
+	float EaseOutBack(float);
+	float EaseInOutBack(float);
 
 	friend class TweenSequence;
 };
