@@ -167,11 +167,6 @@ void ComponentParticleSystem::Render()
 			if (p.life > 0.0f)
 			{
 				UpdateParticle(p);
-				if (tile_random)
-				{
-					billboard->current_sprite_x = p.current_sprite_x;
-					billboard->current_sprite_y = p.current_sprite_y;
-				}
 				if (follow_owner)
 				{
 					billboard->Render(owner->transform.GetGlobalTranslation() + (p.rotation *p.position));
@@ -194,8 +189,14 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	time_spend -= particle.life;
 	particle.position += particle.velocity * App->time->real_time_delta_time;
 
-	//alpha fade
+	//random tile
+	if (tile_random)
+	{
+		billboard->current_sprite_x = particle.current_sprite_x;
+		billboard->current_sprite_y = particle.current_sprite_y;
+	}
 
+	//alpha fade
 	if (fade)
 	{
 		particle.color.w -= App->time->real_time_delta_time * (fade_time / 1000);
@@ -222,6 +223,14 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	//size
 	billboard->width = particles_width * particle.particle_scale;
 	billboard->height = particles_height * particle.particle_scale;
+	//size fade
+	if (change_size)
+	{
+		particle.current_height += App->time->real_time_delta_time * (size_change_speed / 1000);
+		particle.current_width += App->time->real_time_delta_time * (size_change_speed / 1000);
+		billboard->width = particle.current_width;
+		billboard->height = particle.current_height;
+	}
 }
 void ComponentParticleSystem::SetParticleTexture(uint32_t texture_uuid)
 {
@@ -245,6 +254,7 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(particles_width, "Particle Width");
 	config.AddFloat(particles_height, "Particle Height");
 	config.AddBool(size_random, "Size random");
+	config.AddBool(change_size, "Change size");
 	config.AddBool(tile_random, "Tile random");
 	config.AddFloat(max_tile_value, "Max Tile");
 	config.AddFloat(min_tile_value, "Min Tile");
@@ -276,6 +286,7 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(color_particle[3], "Color Particle A");
 	config.AddBool(fade, "Fade");
 	config.AddFloat(fade_time, "Fade Time");
+	config.AddFloat(size_change_speed, "Size Fade Time");
 	config.AddFloat(color_fade_time, "Color Fade Time");
 	config.AddBool(fade_between_colors, "Fade between Colors");
 	config.AddFloat(color_to_fade[0], "Color to fade R");
@@ -299,6 +310,7 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	particles_height = config.GetFloat("Particle Height", 0.2F);
 	size_random = config.GetBool("Size random", false);
 	tile_random = config.GetBool("Tile random", false);
+	change_size = config.GetBool("Change size", false);
 	max_tile_value = config.GetFloat("Max Tile", 0);
 	min_tile_value = config.GetFloat("Min Tile", 4);
 
@@ -329,6 +341,7 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	color_particle[3] = config.GetFloat("Color Particle A", 1.0F);
 	fade = config.GetBool("Fade", false);
 	fade_time = config.GetFloat("Fade Time", 1.0F);
+	size_change_speed = config.GetFloat("Fade Time", 1.0F);
 	color_fade_time = config.GetFloat("Color Fade Time", 1.0F);
 	fade_between_colors = config.GetBool("Fade between Colors", false);
 	color_to_fade[0] = config.GetFloat("Color to fade R", 1.0F);
@@ -346,7 +359,8 @@ Component* ComponentParticleSystem::Clone(bool original_prefab) const
 
 void ComponentParticleSystem::Copy(Component * component_to_copy) const
 {
-	
+	*component_to_copy = *this;
+	*static_cast<ComponentParticleSystem*>(component_to_copy) = *this;
 }
 
 void ComponentParticleSystem::Emit(size_t count)

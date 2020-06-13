@@ -9,6 +9,8 @@
 class GameObject;
 class ComponentBillboard;
 
+const int MAX_PARTICLES = 500;
+
 class ComponentParticleSystem : public Component
 {
 public:
@@ -22,6 +24,7 @@ public:
 		float  life;
 		float time_passed;
 		float current_sprite_x = 0, current_sprite_y = 0;
+		float current_width = 0, current_height = 0;
 	};
 	enum TypeOfParticleSystem
 	{
@@ -51,13 +54,17 @@ public:
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
+	ComponentParticleSystem(const ComponentParticleSystem& component_to_copy) = default;
+	ComponentParticleSystem(ComponentParticleSystem&& component_to_move) = default;
+
+	ComponentParticleSystem& operator=(const ComponentParticleSystem & component_to_copy) = default;
+	ComponentParticleSystem& operator=(ComponentParticleSystem && component_to_move) = default;
+
 	//Script methods
 	ENGINE_API void Emit(size_t count);
 	ENGINE_API void Play();
 	ENGINE_API void Stop();
 
-private:
-	const int MAX_PARTICLES = 500;
 public:
 
 	uint32_t texture_uuid;
@@ -70,11 +77,13 @@ public:
 	//Spritesheet
 	float max_tile_value = 0;
 	float min_tile_value = 4;
+
 	//standard values
 	bool loop = true;
 	unsigned int last_used_particle = 0;
 	unsigned int nr_new_particles = 2;
 	bool active = true;
+
 
 	//size
 	int min_size_of_particle = 2;
@@ -83,6 +92,8 @@ public:
 	float particles_height = 0.2F;
 	bool size_random = false;
 	bool tile_random = false;
+	bool change_size = false;
+	float size_change_speed = 1.0F;
 
 	float velocity_particles = 1.0F;
 

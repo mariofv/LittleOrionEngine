@@ -214,14 +214,18 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			ImGui::SameLine();
 			ImGui::Checkbox("Follow GO Parent", &particle_system->follow_owner);
 			ImGui::Spacing();
-			
+			ImGui::Separator();
+
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
 			ImGui::DragFloat("Width", &particle_system->particles_width, 0.01f, 0.0f, 100.0F);
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
 			ImGui::DragFloat("Height", &particle_system->particles_height, 0.01f, 0.0f, 100.0F);
-			ImGui::SameLine();
-			if (particle_system->size_random)
+
+
+			ImGui::Checkbox("Rand size", &particle_system->size_random);ImGui::SameLine();
+			ImGui::Checkbox("Size change over time", &particle_system->change_size);
+			if (particle_system->size_random || particle_system->change_size)
 			{
 				ImGui::Spacing();
 				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
@@ -229,11 +233,14 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 				ImGui::SameLine();
 				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
 				ImGui::DragInt("Max size", &particle_system->max_size_of_particle, 100, 1, 1000);
-				ImGui::SameLine();
 			}
 			
-			ImGui::Checkbox("Rand size", &particle_system->size_random);
 
+			if (particle_system->change_size)
+			{
+				ImGui::DragFloat("Speed", &particle_system->size_change_speed, 0.01f, 0.0f, 10.0F);
+			}
+			ImGui::Separator();
 			ImGui::Spacing();
 
 			ImGui::DragFloat("Velocity", &particle_system->velocity_particles, 0.01f, 0.0f, 100.0F);
