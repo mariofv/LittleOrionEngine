@@ -508,6 +508,9 @@
     <ClCompile Include="Engine\EditorUI\Panel\PanelTags.cpp">
       <Filter>Engine\EditorUI\Panel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Animation\Tween\LOTween.cpp" />
+    <ClCompile Include="Engine\Animation\Tween\Tween.cpp" />
+    <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1002,6 +1005,9 @@
     <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h">
       <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Animation\Tween\LOTween.h" />
+    <ClInclude Include="Engine\Animation\Tween\Tween.h" />
+    <ClInclude Include="Engine\Animation\Tween\TweenSequence.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

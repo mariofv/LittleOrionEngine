@@ -24,6 +24,7 @@
 bool ModuleUI::Init()
 {
 	APP_LOG_SECTION("************ Module UI Init ************");
+	tweener = new LOTween();
 
 	return true;
 }
@@ -31,7 +32,7 @@ bool ModuleUI::Init()
 // Called every draw update
 update_status ModuleUI::Update()
 {
-	LOTween::Update(App->time->delta_time);
+	tweener->Update(App->time->delta_time);
 
 	SelectMainCanvas();
 	return update_status::UPDATE_CONTINUE;
@@ -40,6 +41,7 @@ update_status ModuleUI::Update()
 // Called before quitting
 bool ModuleUI::CleanUp()
 {
+	delete(tweener);
 	return true;
 }
 

@@ -1,4 +1,6 @@
 #include "LOTween.h"
+#include "TweenSequence.h"
+#include <vector>
 
 TweenSequence* LOTween::CreateSequence()
 {

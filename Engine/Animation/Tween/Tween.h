@@ -33,4 +33,4 @@ private:
 
 	friend class TweenSequence;
 };
-#endif // !_TWEEN_H_
+#endif _TWEEN_H_

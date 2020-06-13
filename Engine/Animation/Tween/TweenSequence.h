@@ -1,9 +1,7 @@
-
 #ifndef _TWEENSEQUENCE_H_
 #define _TWEENSEQUENCE_H_
 
 #include "Animation/Tween/Tween.h"
-
 #include <vector>
 
 class TweenSequence
@@ -32,5 +30,5 @@ private:
 
 	friend class LOTween;
 };
-#endif // !_TWEENSEQUENCE_H_
+#endif _TWEENSEQUENCE_H_
 
