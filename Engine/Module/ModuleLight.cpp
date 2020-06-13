@@ -30,7 +30,7 @@ bool ModuleLight::Init()
 update_status ModuleLight::PostUpdate()
 {
 
-	light_position = float3((light_aabb.maxPoint.x + light_aabb.minPoint.x) * 0.5, (light_aabb.maxPoint.y + light_aabb.minPoint.y) * 0.5, light_aabb.minPoint.z);
+	light_position = float3((light_aabb.maxPoint.x + light_aabb.minPoint.x) * 0.5, (light_aabb.maxPoint.y + light_aabb.minPoint.y) * 0.5, light_aabb.maxPoint.z);
 	
 	float3 new_pos;
 	new_pos = directional_light_rotation * light_position;
@@ -160,8 +160,6 @@ void ModuleLight::SendShadowMatricesToShader(GLuint program)
 
 void ModuleLight::UpdateLightAABB(GameObject& object)
 {
-
-
 	//Light aabb will enclose every object in the scene
 	AABB temp;
 	temp = object.aabb.bounding_box;
@@ -169,13 +167,10 @@ void ModuleLight::UpdateLightAABB(GameObject& object)
 	object_obb = object.aabb.bounding_box.Transform(directional_light_rotation.Inverted());
 
 	AABB object_aabb = object_obb.MinimalEnclosingAABB();
-	
+
 	light_aabb.Enclose(object_aabb);
 
 	light_obb = light_aabb.Transform(directional_light_rotation);
-
-
-
 }
 
 void ModuleLight::RenderPointLights(const float3& mesh_position, GLuint program)

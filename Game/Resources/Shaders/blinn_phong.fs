@@ -148,7 +148,7 @@ void main()
 	vec3 occlusion_color = GetOcclusionColor(material, tiling);
 	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
-	vec3 fragment_normal = normal;
+	vec3 fragment_normal = normalize(normal);
 	if(material.use_normal_map)
 	{
 		vec3 normal_from_texture = GetNormalMap(material, tiling);
@@ -171,6 +171,7 @@ void main()
 	}
 
 	result += emissive_color;
+	result += diffuse_color.rgb * (ambient_light_color.xyz*ambient_light_intensity); //Ambient light
 	//FragColor = vec4(vec3(normalize(tangent)),1.0);
 	FragColor = vec4(result,1.0);
 	FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
@@ -228,7 +229,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	if(render_shadows)
 		shadow = ShadowCalculation();
 	else
-		shadow = 1;
+		shadow = 0;
 
 	float specular = NormalizedSpecular(normalized_normal, half_dir);
 
