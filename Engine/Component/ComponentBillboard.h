@@ -21,13 +21,6 @@ public:
 		SPRITESHEET,
 		CROSSED			
 	};
-
-	enum TileFrameOverTime {
-		CONSTANT,
-		CURVE,
-		RANDOM_TWO_CONSTANTS,
-		RANDOM_TWO_CURVES
-	};
 	
 	ComponentBillboard();
 	ComponentBillboard(GameObject * owner);
@@ -51,7 +44,6 @@ public:
 
 	void Render(const float3& position);
 	void SwitchFrame();
-	void TilesAnimation();
 
 	void ChangeTexture(uint32_t texture_uuid);
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
@@ -65,10 +57,6 @@ private:
 	//Spritesheet params
 	int x_tiles = 1;
 	int y_tiles = 1;
-	TileFrameOverTime frame_over_time;
-	size_t const_value_1 = 1;
-	size_t const_value_2 = 2;
-
 
 	//color
 	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };

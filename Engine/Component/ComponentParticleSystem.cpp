@@ -327,7 +327,6 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	color_to_fade[1] = config.GetFloat("Color to fade G", 1.0F);
 	color_to_fade[2] = config.GetFloat("Color to fade B", 1.0F);
 	color_to_fade[3] = config.GetFloat("Color to fade A", 1.0F);
-	billboard->SpecializedLoad(config);
 }
 
 Component* ComponentParticleSystem::Clone(bool original_prefab) const

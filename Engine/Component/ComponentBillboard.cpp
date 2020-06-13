@@ -90,21 +90,6 @@ void ComponentBillboard::SwitchFrame()
 
 }
 
-void ComponentBillboard::TilesAnimation()
-{
-
-	switch (frame_over_time)
-	{
-	case RANDOM_TWO_CONSTANTS:
-		x_tiles = (rand() % ((const_value_1 - const_value_2) + 1) + const_value_2);
-		y_tiles = (rand() % ((const_value_1 - const_value_2) + 1) + const_value_2);
-		break;
-
-	default:
-		break;
-	}
-}
-
 void ComponentBillboard::ChangeBillboardType(ComponentBillboard::AlignmentType _alignment_type)
 {
 	alignment_type = _alignment_type;
@@ -157,7 +142,6 @@ void ComponentBillboard::Render(const float3& position)
 		glUniform1f(glGetUniformLocation(shader_program, "Y"), current_sprite_y);
 
 		glUniform1f(glGetUniformLocation(shader_program, "billboard.speed"), sheet_speed);
-		TilesAnimation();
 		SwitchFrame();
 		break;
 
