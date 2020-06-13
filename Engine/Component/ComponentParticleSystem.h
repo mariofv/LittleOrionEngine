@@ -50,7 +50,13 @@ public:
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
-	
+	//Script methods
+	ENGINE_API void Emit(size_t count);
+	ENGINE_API void Play();
+	ENGINE_API void Stop();
+
+private:
+	const int MAX_PARTICLES = 500;
 public:
 
 	uint32_t texture_uuid;
@@ -59,10 +65,10 @@ public:
 	TypeOfParticleSystem type_of_particle_system = BOX;
 
 	std::vector<Particle> particles;
-	
+
+
 	//standard values
 	bool loop = true;
-	int max_particles = 500;
 	unsigned int last_used_particle = 0;
 	unsigned int nr_new_particles = 2;
 	bool active = true;
@@ -107,6 +113,9 @@ public:
 	bool fade_between_colors = false;
 	float color_to_fade[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
+	//Runtime values
+	int particles_number = MAX_PARTICLES;
+	bool playing = true;
 };
 
 #endif

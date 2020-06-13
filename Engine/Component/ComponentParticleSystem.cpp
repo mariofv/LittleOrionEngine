@@ -24,12 +24,12 @@ ComponentParticleSystem::~ComponentParticleSystem()
 
 void ComponentParticleSystem::Init() 
 {
-	particles.reserve(max_particles);
+	particles.reserve(MAX_PARTICLES);
 
 	billboard = new ComponentBillboard(this->owner);
 	billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
 
-	for (unsigned int i = 0; i < max_particles; ++i)
+	for (unsigned int i = 0; i < MAX_PARTICLES; ++i)
 	{
 		particles.emplace_back(Particle());
 		particles[i].life = 0.0F;
@@ -41,7 +41,7 @@ void ComponentParticleSystem::Init()
 
 unsigned int ComponentParticleSystem::FirstUnusedParticle()
 {
-	for (unsigned int i =last_used_particle; i < max_particles; ++i)
+	for (unsigned int i =last_used_particle; i < MAX_PARTICLES; ++i)
 	{
 		if (particles[i].life <= 0.0f) 
 		{
@@ -141,7 +141,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 void ComponentParticleSystem::Render()
 {
 	glEnable(GL_BLEND);
-	if (active) 
+	if (active && playing ) 
 	{
 		time_counter += App->time->real_time_delta_time;
 
@@ -156,7 +156,7 @@ void ComponentParticleSystem::Render()
 		}
 
 		// update all particles
-		for (unsigned int i = 0; i < max_particles; ++i)
+		for (unsigned int i = 0; i < particles_number; ++i)
 		{
 			Particle& p = particles[i];
 		
@@ -229,8 +229,6 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 
 	config.AddInt(static_cast<int>(type_of_particle_system), "Type of particle system");
 	config.AddBool(loop, "Loop");
-	config.AddInt(max_particles, "Max Particles");
-	config.AddInt(last_used_particle, "Last used particle");
 	config.AddInt(nr_new_particles, "Number of new particles");
 	config.AddBool(active, "Active");
 	config.AddInt(min_size_of_particle, "Max Size Particles");
@@ -282,8 +280,6 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	type_of_particle_system = static_cast<TypeOfParticleSystem>(config.GetInt("Type of particle system", static_cast<int>(TypeOfParticleSystem::BOX)));
 	
 	loop = config.GetBool("Loop", true);
-	max_particles = config.GetInt("Max Particles", 500);
-	last_used_particle = config.GetInt("Last used particle", 0);
 	nr_new_particles = config.GetInt("Number of new particles",2);
 	min_size_of_particle = config.GetInt("Max Size Particles", 10);
 	max_size_of_particle = config.GetInt("Min Size Particles", 2);
@@ -337,3 +333,36 @@ void ComponentParticleSystem::Copy(Component * component_to_copy) const
 {
 	
 }
+
+void ComponentParticleSystem::Emit(size_t count)
+{
+	if (count < MAX_PARTICLES)
+	{
+		loop = false;
+		particles_number = count;
+		for (size_t i = 0; i < particles_number; i++)
+		{
+			RespawnParticle(particles[i]);
+		}
+	}
+
+}
+
+void ComponentParticleSystem::Play()
+{
+	time_counter = 0.0F;
+	for (unsigned int i = 0; i < MAX_PARTICLES; ++i)
+	{
+
+		particles[i].life = 0.0F;
+		particles[i].particle_scale = 1.0F;
+		particles[i].time_passed = particles[i].life;
+	}
+	playing = true;
+}
+
+void ComponentParticleSystem::Stop()
+{
+	playing = false;
+}
+

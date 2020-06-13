@@ -164,7 +164,24 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			App->actions->DeleteComponentUndo(particle_system);
 		}
 		ImGui::Separator();
-
+		if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			static int emit_count = 0;
+			ImGui::InputInt("##Emit_amount", &emit_count);
+			if (ImGui::Button("Emit"))
+			{
+				particle_system->Emit(emit_count);
+			}
+			if (ImGui::Button("Start"))
+			{
+				particle_system->Play();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Stop"))
+			{
+				particle_system->Stop();
+			}
+		}
 		if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 
@@ -272,8 +289,7 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 				ImGui::ColorEdit4("Particle Color To Fade##2f", (float*)&particle_system->color_to_fade, ImGuiColorEditFlags_Float);
 				ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
 			}
-		}
-		
+		}		
 	}
 
 }
