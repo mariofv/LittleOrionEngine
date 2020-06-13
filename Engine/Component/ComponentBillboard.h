@@ -78,6 +78,7 @@ private:
 
 	friend class PanelComponent;
 	friend class ComponentParticleSystem;
+	friend class ComponentTrail;
 };
 
 #endif //_COMPONENTBILLBOARD_H_

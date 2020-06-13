@@ -337,7 +337,7 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 		ImGui::InputFloat("Width", &trail->width, 0.5f);
 		ImGui::InputFloat("Trail Duration", &trail->duration, 0.5f);
 
-		if (ImGui::Combo("Blend Mode", &trail->blend_mode, "Alpha Blend\0Additive")) {
+		/*if (ImGui::Combo("Blend Mode", &trail->blend_mode, "Alpha Blend\0Additive")) {
 			switch (trail->blend_mode)
 			{
 			case 0:
@@ -345,7 +345,7 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 			case 1:
 				break;
 			}
-		}
+		}*/
 		ImGui::Text("Texture");
 		ImGui::SameLine();
 
