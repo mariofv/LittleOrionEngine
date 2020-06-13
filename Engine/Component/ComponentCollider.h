@@ -96,7 +96,9 @@ public:
 	ENGINE_API float3 GetOrigin() const;
 	ENGINE_API float3 GetBoxSize() const;
 
-	ENGINE_API CollisionInformation RaycastHit(float3& start, float3& end) const;
+	ENGINE_API CollisionInformation RaycastClosestHit(float3& start, float3& end) const;
+	ENGINE_API std::vector<CollisionInformation> RaycastAllHits(float3& start, float3& end) const;
+
 	ENGINE_API std::vector<CollisionInformation> CollisionTest() const; // This function returns true if the body of the collider is colliding, even thought outside step
 
 	ENGINE_API std::vector<CollisionInformation> DetectAllCollision() const; //returns true if collides with any object in the world
