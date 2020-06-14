@@ -60,24 +60,7 @@ void ComponentSpriteMask::Render(float4x4* projection)
 
 	if (texture_to_render != nullptr)
 	{
-		ScaleOp aspect_ratio_scaling;
-
-		if (preserve_aspect_ratio)
-		{
-			if (owner->transform_2d.size.x / texture_aspect_ratio > owner->transform_2d.size.y)
-			{
-				aspect_ratio_scaling = float4x4::Scale(float3(owner->transform_2d.size.y * texture_aspect_ratio, owner->transform_2d.size.y, 1.f));
-			}
-			else
-			{
-				aspect_ratio_scaling = float4x4::Scale(float3(owner->transform_2d.size.x, owner->transform_2d.size.x / texture_aspect_ratio, 1.f));
-			}
-		}
-		else
-		{
-			aspect_ratio_scaling = float4x4::Scale(float3(owner->transform_2d.size, 1.f));
-		}
-		float4x4 model = owner->transform_2d.GetGlobalModelMatrix()  * aspect_ratio_scaling;
+		float4x4 model = owner->transform_2d.GetGlobalModelMatrix()  *  float4x4::Scale(float3(size, 1.f));
 
 		glUseProgram(program);
 		glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
@@ -126,14 +109,18 @@ void ComponentSpriteMask::Delete()
 
 void ComponentSpriteMask::SpecializedSave(Config& config) const
 {
+	config.AddBool(render_mask, "RenderMask");
+	config.AddBool(inverted_mask, "InvertedMask");
+	config.AddFloat2(size, "Size");
 	config.AddUInt(texture_uuid, "TextureUUID");
-	config.AddBool(preserve_aspect_ratio, "PreserveAspectRatio");
 }
 
 void ComponentSpriteMask::SpecializedLoad(const Config& config)
 {
+	render_mask = config.GetBool("RenderMask", false);
+	inverted_mask = config.GetBool("InvertedMask", false);
+	config.GetFloat2("Size", size, float2(100.f, 100.f));
 	texture_uuid = config.GetUInt("TextureUUID", 0);
-	preserve_aspect_ratio = config.GetBool("PreserveAspectRatio", false);
 	if (texture_uuid != 0)
 	{
 		SetTextureToRender(texture_uuid);
@@ -147,7 +134,7 @@ void ComponentSpriteMask::SetTextureToRender(uint32_t texture_uuid)
 	texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
 }
 
-void ComponentSpriteMask::SetNativeSize() const
+void ComponentSpriteMask::SetNativeSize()
 {
-	owner->transform_2d.SetSize(float2(texture_to_render->width, texture_to_render->height));
+	size = float2(texture_to_render->width, texture_to_render->height);
 }

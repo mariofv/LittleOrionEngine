@@ -25,7 +25,7 @@ public:
 
 	void Render(float4x4* projection);
 
-	void SetNativeSize() const;
+	void SetNativeSize();
 
 private:
 	virtual void InitData();
@@ -33,8 +33,9 @@ private:
 public:
 	uint32_t texture_uuid = 0;
 	std::shared_ptr<Texture> texture_to_render;
-	bool preserve_aspect_ratio = false;
-
+	float2 size;
+	bool render_mask = false;
+	bool inverted_mask = false;
 
 private:
 	GLuint program, vao, vbo;

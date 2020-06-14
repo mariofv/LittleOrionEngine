@@ -787,9 +787,14 @@ void PanelComponent::ShowComponentSpriteMaskWindow(ComponentSpriteMask* componen
 			component_mask->SetTextureToRender(selected_resource);
 		}
 
+		ImGui::Separator();
 
-		ImGui::Checkbox("Preserve Aspect Ratio", &component_mask->preserve_aspect_ratio);
+		ImGui::Checkbox("Invert mask", &component_mask->inverted_mask);
+		ImGui::Checkbox("Show sprite mask", &component_mask->render_mask);
 
+		ImGui::Separator();
+
+		ImGui::DragFloat2("Size", component_mask->size.ptr());
 		if (ImGui::Button("Set Native Size"))
 		{
 			component_mask->SetNativeSize();
