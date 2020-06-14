@@ -24,7 +24,6 @@ private:
 	void Update(float);
 
 	float current_time = 0.0f;
-	int last_tween_index = 0;
 	TweenSequenceState state = TweenSequenceState::DISABLED;
 	std::vector<Tween*> tweens;
 	std::vector<Tween*> current_played_tweens;

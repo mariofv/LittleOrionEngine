@@ -69,22 +69,27 @@ void TweenSequence::Update(float dt)
 
 	current_time += dt / 1000.0f;
 
-	for (unsigned int i = last_tween_index; i < tweens.size(); i++)
+	int pos = 0;
+	for (std::vector<Tween*>::reverse_iterator it = tweens.rbegin(); it != tweens.rend(); ++it)
 	{
-		Tween* this_tween = tweens.at(i);
+		Tween* this_tween = (*it);
 		
 		if (this_tween->start_time < current_time)
 		{
 			//Is not the tween on the played tweens?
 			if (std::find(current_played_tweens.begin(), current_played_tweens.end(), this_tween) == current_played_tweens.end()) 
 			{
-				last_tween_index = i;
+				this_tween->Play();
+				tweens.erase(tweens.begin() + pos);
 				current_played_tweens.push_back(this_tween);
+				pos -= 1;
 			}
 		}
+
+		pos+= 1;
 	}
 
-	int pos = 0;
+	pos = 0;
 	for (std::vector<Tween*>::reverse_iterator it = current_played_tweens.rbegin(); it != current_played_tweens.rend(); ++it)
 	{
 		Tween* the_tween = (*it);

@@ -5,6 +5,7 @@ void Tween::Play()
 {
 	if (state == TweenState::COMPLETED) return;
 
+	current_time = start_time;
 	state = TweenState::PLAYING;
 }
 

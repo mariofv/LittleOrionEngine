@@ -81,3 +81,8 @@ TweenSequence * ModuleAnimation::CreateTweenSequence()
 	TweenSequence* sequence = tweener->CreateSequence();
 	return sequence;
 }
+
+void ModuleAnimation::CleanTweens()
+{
+	tweener->Reset();
+}

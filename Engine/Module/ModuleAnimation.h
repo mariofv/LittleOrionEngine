@@ -29,6 +29,7 @@ public:
 	void PlayAnimations() const;
 
 	ENGINE_API TweenSequence* CreateTweenSequence();
+	void CleanTweens();
 
 private:
 	std::vector<ComponentAnimation*> animations;

@@ -10,6 +10,7 @@ class LOTween
 public:
 	ENGINE_API TweenSequence* CreateSequence();
 	void Update(float);
+	void Reset();
 
 private:
 	std::vector<TweenSequence*> sequences;

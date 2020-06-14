@@ -31,3 +31,14 @@ void LOTween::Update(float dt)
 		pos += 1;
 	}
 }
+
+void LOTween::Reset()
+{
+	for (std::vector<TweenSequence*>::reverse_iterator it = sequences.rbegin(); it != sequences.rend(); ++it)
+	{
+		TweenSequence* sequence = (*it);
+		delete(sequence);
+	}
+
+	sequences.clear();
+}
