@@ -177,6 +177,11 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 				particle_system->Play();
 			}
 			ImGui::SameLine();
+			if (ImGui::Button("Pause"))
+			{
+				particle_system->Pause();
+			}
+			ImGui::SameLine();
 			if (ImGui::Button("Stop"))
 			{
 				particle_system->Stop();
@@ -184,13 +189,19 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 		}
 		if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-
+			if (ImGui::InputInt("Max particles", &particle_system->max_particles_number) && particle_system->max_particles_number > MAX_PARTICLES)
+			{
+				particle_system->max_particles_number = MAX_PARTICLES;
+			}
 			ShowBillboardOptions(particle_system->billboard);
 			if (particle_system->billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET)
 			{
 				ImGui::Checkbox("Tile random", &particle_system->tile_random);
-				ImGui::InputFloat("Max", &particle_system->max_tile_value);
-				ImGui::InputFloat("Min", &particle_system->min_tile_value);
+				if (particle_system->tile_random)
+				{
+					ImGui::InputFloat("Max", &particle_system->max_tile_value);
+					ImGui::InputFloat("Min", &particle_system->min_tile_value);
+				}
 			}
 
 			int particle_shape = static_cast<int>(particle_system->type_of_particle_system);

@@ -64,6 +64,7 @@ public:
 	ENGINE_API void Emit(size_t count);
 	ENGINE_API void Play();
 	ENGINE_API void Stop();
+	ENGINE_API void Pause();
 
 public:
 
@@ -129,7 +130,8 @@ public:
 	float color_to_fade[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	//Runtime values
-	int particles_number = MAX_PARTICLES;
+	int playing_particles_number = MAX_PARTICLES;
+	int max_particles_number = MAX_PARTICLES;
 	bool playing = true;
 };
 

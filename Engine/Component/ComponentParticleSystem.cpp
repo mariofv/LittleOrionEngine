@@ -41,7 +41,7 @@ void ComponentParticleSystem::Init()
 
 unsigned int ComponentParticleSystem::FirstUnusedParticle()
 {
-	for (unsigned int i =last_used_particle; i < MAX_PARTICLES; ++i)
+	for (unsigned int i =last_used_particle; i < max_particles_number; ++i)
 	{
 		if (particles[i].life <= 0.0f) 
 		{
@@ -81,6 +81,11 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 		particle.current_sprite_y = (rand() % (int)((max_tile_value - min_tile_value) + 1) + min_tile_value);
 	}
 
+	if (change_size)
+	{
+		particle.current_height = min_size_of_particle;
+		particle.current_width = min_size_of_particle;
+	}
 	switch (type_of_particle_system)
 	{
 		case SPHERE:
@@ -160,7 +165,7 @@ void ComponentParticleSystem::Render()
 		}
 
 		// update all particles
-		for (unsigned int i = 0; i < particles_number; ++i)
+		for (unsigned int i = 0; i < playing_particles_number; ++i)
 		{
 			Particle& p = particles[i];
 		
@@ -245,6 +250,7 @@ void ComponentParticleSystem::Delete()
 void ComponentParticleSystem::SpecializedSave(Config& config) const
 {
 
+	billboard->SpecializedSave(config);
 	config.AddInt(static_cast<int>(type_of_particle_system), "Type of particle system");
 	config.AddBool(loop, "Loop");
 	config.AddInt(nr_new_particles, "Number of new particles");
@@ -277,6 +283,8 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddInt(min_range_random_z, "Min range position z");
 	config.AddInt(position_z, "Position Z");
 
+	config.AddInt(max_particles_number, "Max particles");
+
 	config.AddFloat(inner_radius, "Inner Radius");
 	config.AddFloat(outer_radius, "Outer Radius");
 
@@ -293,13 +301,12 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(color_to_fade[1], "Color to fade G");
 	config.AddFloat(color_to_fade[2], "Color to fade B");
 	config.AddFloat(color_to_fade[3], "Color to fade A");
-	billboard->SpecializedSave(config);
 }
 
 void ComponentParticleSystem::SpecializedLoad(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
+
+	billboard->SpecializedLoad(config);
 	type_of_particle_system = static_cast<TypeOfParticleSystem>(config.GetInt("Type of particle system", static_cast<int>(TypeOfParticleSystem::BOX)));
 	
 	loop = config.GetBool("Loop", true);
@@ -332,6 +339,8 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	min_range_random_z = config.GetInt("Min range position z",-100);
 	position_z = config.GetInt("Position Z", 0);
 
+	max_particles_number = config.GetInt("Max particles", MAX_PARTICLES);
+	playing_particles_number = max_particles_number;
 	inner_radius = config.GetFloat("Inner Radius", 1.0F);
 	outer_radius = config.GetFloat("Outer Radius", 3.0F);
 
@@ -348,7 +357,6 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	color_to_fade[1] = config.GetFloat("Color to fade G", 1.0F);
 	color_to_fade[2] = config.GetFloat("Color to fade B", 1.0F);
 	color_to_fade[3] = config.GetFloat("Color to fade A", 1.0F);
-	billboard->SpecializedLoad(config);
 }
 
 Component* ComponentParticleSystem::Clone(bool original_prefab) const
@@ -365,10 +373,10 @@ void ComponentParticleSystem::Copy(Component * component_to_copy) const
 
 void ComponentParticleSystem::Emit(size_t count)
 {
-	if (count < MAX_PARTICLES)
+	if (count < max_particles_number)
 	{
-		particles_number = count;
-		for (size_t i = 0; i < particles_number; i++)
+		playing_particles_number = count;
+		for (size_t i = 0; i < playing_particles_number; i++)
 		{
 			RespawnParticle(particles[i]);
 		}
@@ -378,19 +386,24 @@ void ComponentParticleSystem::Emit(size_t count)
 
 void ComponentParticleSystem::Play()
 {
+	playing = true;
+}
+
+void ComponentParticleSystem::Stop()
+{
 	time_counter = 0.0F;
-	particles_number = MAX_PARTICLES;
-	for (unsigned int i = 0; i < MAX_PARTICLES; ++i)
+	playing_particles_number = max_particles_number;
+	for (unsigned int i = 0; i < max_particles_number; i++)
 	{
 
 		particles[i].life = 0.0F;
 		particles[i].particle_scale = 1.0F;
 		particles[i].time_passed = particles[i].life;
 	}
-	playing = true;
+	playing = false;
 }
 
-void ComponentParticleSystem::Stop()
+ENGINE_API void ComponentParticleSystem::Pause()
 {
 	playing = false;
 }
