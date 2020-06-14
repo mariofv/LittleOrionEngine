@@ -2,11 +2,11 @@
 
 #include "Main/Globals.h"
 #include "Main/Application.h"
-#include "ModuleEffects.h"
 #include "ModuleCamera.h"
 #include "ModuleDebug.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleEditor.h"
+#include "ModuleEffects.h"
 #include "ModuleProgram.h"
 #include "ModuleSpacePartitioning.h"
 #include "ModuleUI.h"

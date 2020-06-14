@@ -30,14 +30,14 @@ void ModuleEffects::Render()
 	}
 }
 
-ComponentBillboard * ModuleEffects::CreateComponentBillboard()
+ComponentBillboard* ModuleEffects::CreateComponentBillboard()
 {
 	ComponentBillboard* created_billboard = new ComponentBillboard();
 	billboards.push_back(created_billboard);
 	return created_billboard;
 }
 
-void ModuleEffects::RemoveComponentBillboard(ComponentBillboard * billboard_to_remove)
+void ModuleEffects::RemoveComponentBillboard(ComponentBillboard* billboard_to_remove)
 {
 	auto it = std::find(billboards.begin(), billboards.end(), billboard_to_remove);
 	if (it != billboards.end())
@@ -47,14 +47,14 @@ void ModuleEffects::RemoveComponentBillboard(ComponentBillboard * billboard_to_r
 	}
 }
 
-ComponentParticleSystem * ModuleEffects::CreateComponentParticleSystem()
+ComponentParticleSystem* ModuleEffects::CreateComponentParticleSystem()
 {
 	ComponentParticleSystem* created_particle_system = new ComponentParticleSystem();
 	particle_systems.push_back(created_particle_system);
 	return created_particle_system;
 }
 
-void ModuleEffects::RemoveComponentParticleSystem(ComponentParticleSystem * particle_system_to_remove)
+void ModuleEffects::RemoveComponentParticleSystem(ComponentParticleSystem* particle_system_to_remove)
 {
 	auto it = std::find(particle_systems.begin(), particle_systems.end(), particle_system_to_remove);
 	if (it != particle_systems.end())
