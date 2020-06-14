@@ -1,6 +1,7 @@
 #include "ComponentCanvasRenderer.h"
 
 #include "ComponentImage.h"
+#include "ComponentSpriteMask.h"
 #include "ComponentText.h"
 
 #include "Main/Application.h"
@@ -53,10 +54,47 @@ void ComponentCanvasRenderer::Delete()
 
 void ComponentCanvasRenderer::Render(float4x4* projection)
 {
-	Component* component_image = owner->GetComponent(Component::ComponentType::UI_IMAGE);
+	ComponentImage* component_image = static_cast<ComponentImage*>(owner->GetComponent(Component::ComponentType::UI_IMAGE));
 	if (component_image != nullptr)
 	{
-		static_cast<ComponentImage*>(component_image)->Render(projection);
+		ComponentSpriteMask* sprite_mask = static_cast<ComponentSpriteMask*>(owner->GetComponent(Component::ComponentType::UI_SPRITE_MASK));
+		if (sprite_mask != nullptr)
+		{
+			glEnable(GL_STENCIL_TEST);
+			glEnable(GL_ALPHA_TEST);
+			glAlphaFunc(GL_GREATER, 0.05);
+			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+			glStencilFunc(GL_ALWAYS, 1, 0xFF);
+			glStencilMask(0xFF); // each bit is written to the stencil buffer as is
+
+			glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+			sprite_mask->Render(projection);
+			glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+			if (sprite_mask->inverted_mask)
+			{
+				glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+			}
+			else
+			{
+				glStencilFunc(GL_EQUAL, 1, 0xFF);
+			}
+			glStencilMask(0x00); // disable writing to the stencil buffer
+			component_image->Render(projection);
+
+			glDisable(GL_ALPHA_TEST);
+			glDisable(GL_STENCIL_TEST);
+
+
+			if (sprite_mask->render_mask)
+			{
+				sprite_mask->Render(projection);
+			}
+		}
+		else
+		{
+			component_image->Render(projection);
+		}
 	}
 
 	Component* component_text = owner->GetComponent(Component::ComponentType::UI_TEXT);
