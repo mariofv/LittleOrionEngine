@@ -2,9 +2,9 @@
 
 #include "Main/Application.h"
 
+#include "Module/ModuleEffects.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
-#include "Module/ModuleRender.h"
 #include "Module/ModuleTime.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
@@ -72,7 +72,7 @@ void ComponentBillboard::SwitchFrame()
 	time_since_start += App->time->delta_time;
 	APP_LOG_INFO("%.1f", time_since_start);
 
-	if (time_since_start * sheet_speed >= 1)
+	if (time_since_start * sheet_speed >= 1000)
 	{
 		current_sprite_x += 1;
 
@@ -180,7 +180,7 @@ Component* ComponentBillboard::Clone(bool original_prefab) const
 	}
 	else
 	{
-		created_component = App->renderer->CreateComponentBillboard();
+		created_component = App->effects->CreateComponentBillboard();
 	}
 	*created_component = *this;
 	return created_component;
@@ -195,7 +195,7 @@ void ComponentBillboard::Copy(Component* component_to_copy) const
 
 void ComponentBillboard::Delete()
 {
-	App->renderer->RemoveComponentBillboard(this);
+	App->effects->RemoveComponentBillboard(this);
 }
 
 void ComponentBillboard::SpecializedSave(Config& config) const
@@ -212,10 +212,9 @@ void ComponentBillboard::SpecializedSave(Config& config) const
 void ComponentBillboard::SpecializedLoad(const Config& config)
 {
 	
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
 	sheet_speed = config.GetFloat("SheetSpeed", 1.f);
 	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::SPRITESHEET)));
+	ChangeBillboardType(alignment_type);
 	texture_uuid = config.GetUInt("TextureUUID", 0);
 	
 	ChangeTexture(texture_uuid);
