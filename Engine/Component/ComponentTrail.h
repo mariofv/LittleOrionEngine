@@ -14,7 +14,7 @@ class ComponentBillboard;
 
 struct TrailPoint {
 	float3 position;
-	float3 position_adjacent_point;
+	float3 position_perpendicular_point;
 	float4 color;
 	float width;
 	float life;//tolal life of trail point
@@ -26,7 +26,7 @@ struct TrailPoint {
 	TrailPoint(float3 position, float3 previous_point, float width, float life) :position(position), width(width), life(life), time_left(life)
 	{
 		float3 cross = (previous_point - position).Normalized(); //perpendicular vector point calculated between Previous Point & Current Point -> Normalized to get vector with magnitutde = 1 but same direction
-		position_adjacent_point = cross;
+		position_perpendicular_point = cross;
 		is_rendered = true;
 	}
 };

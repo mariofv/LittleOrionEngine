@@ -8,8 +8,6 @@
 #include "Module/ModuleResourceManager.h"
 #include "GL/glew.h"
 
-namespace { const float MAX_TRAIL_VERTICES = 5000; } //arbitrary number 
-
 ComponentTrail::ComponentTrail() : Component(nullptr, ComponentType::TRAIL)
 {
 	Init();
@@ -101,17 +99,17 @@ void ComponentTrail::Render()
 				if (point.is_rendered)
 				{
 					float width = point.width; //Distance between each pair of vertices generated for a given point.
-					outline_left = point.position + point.position_adjacent_point * width;
-					outline_right = point.position - point.position_adjacent_point * width;
+					outline_left = point.position + point.position_perpendicular_point * width;
+					outline_right = point.position - point.position_perpendicular_point * width;
 					billboard->Render(owner->transform.GetGlobalTranslation() + point.position + outline_left);//Move perpendicular vector over points and multiply by desired width
 					billboard->Render(owner->transform.GetGlobalTranslation() + point.position + outline_left);
 					billboard->Render(owner->transform.GetGlobalTranslation() + point.position);
 				}
 				//testing this here as flag is not functional
 				float width = point.width; //Distance between each pair of vertices generated for a given point.
-				outline_left = point.position + point.position_adjacent_point * width;
-				outline_right = point.position - point.position_adjacent_point * width;
-				billboard->Render(owner->transform.GetGlobalTranslation() + point.position + outline_left);//Move perpendicular vector over points and multiply by desired width
+				outline_left = point.position + point.position_perpendicular_point * width;
+				outline_right = point.position - point.position_perpendicular_point * width;//Move perpendicular vector over points and multiply by desired width
+				billboard->Render(owner->transform.GetGlobalTranslation() + point.position + outline_left);
 				billboard->Render(owner->transform.GetGlobalTranslation() + point.position + outline_left);
 				billboard->Render(owner->transform.GetGlobalTranslation() + point.position);
 			}

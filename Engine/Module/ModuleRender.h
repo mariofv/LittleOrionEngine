@@ -16,6 +16,7 @@ class ComponentCamera;
 class ComponentMeshRenderer;
 class ComponentParticleSystem;
 class ComponentTrail;
+class ComponentTrailRenderer;
 
 class GameObject;
 
@@ -61,6 +62,9 @@ public:
 
 	ComponentTrail* CreateComponentTrail();
 	void RemoveComponentTrail(ComponentTrail* trail_to_remove);
+
+	ComponentTrailRenderer* CreateComponentTrailRenderer();
+	void RemoveComponentTrailRenderer(ComponentTrailRenderer* trail_renderer_to_remove);
 
 	ENGINE_API int GetRenderedTris() const;
 	ENGINE_API int GetRenderedVerts() const;
@@ -118,6 +122,7 @@ private:
 	std::vector<ComponentParticleSystem*> particle_systems_to_render;
 
 	std::vector<ComponentTrail*> trails;
+	std::vector<ComponentTrailRenderer*> trail_renderers;
 
 	typedef std::pair<float, ComponentMeshRenderer*> ipair;
 	std::list <ipair> opaque_mesh_to_render, transparent_mesh_to_render;

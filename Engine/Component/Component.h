@@ -30,7 +30,8 @@ public:
 		AUDIO_SOURCE = 14,
 		BILLBOARD = 16,
 		PARTICLE_SYSTEM = 17,
-		TRAIL = 18
+		TRAIL = 18,
+		TRAILRENDERER = 19
 	};
 
 	Component();

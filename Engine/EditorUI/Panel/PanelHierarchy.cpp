@@ -301,6 +301,7 @@ void PanelHierarchy::ShowComponentObjectCreationMenu(GameObject *game_object) co
 			GameObject* created_game_object = App->scene->CreateGameObject();
 			created_game_object->name = "Trail";
 			created_game_object->CreateComponent(Component::ComponentType::TRAIL);
+			created_game_object->CreateComponent(Component::ComponentType::TRAILRENDERER);
 		}
 
 		ImGui::EndMenu();

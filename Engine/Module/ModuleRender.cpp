@@ -19,6 +19,7 @@
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentTrail.h"
+#include "Component/ComponentTrailRenderer.h"
 #include "Component/ComponentLight.h"
 
 #include "EditorUI/DebugDraw.h"
@@ -441,6 +442,23 @@ void ModuleRender::RemoveComponentTrail(ComponentTrail* trail_to_remove)
 	{
 		delete *it;
 		trails.erase(it);
+	}
+}
+
+ComponentTrailRenderer* ModuleRender::CreateComponentTrailRenderer()
+{
+	ComponentTrailRenderer* created_trail_renderer = new ComponentTrailRenderer();
+	trail_renderers.push_back(created_trail_renderer);
+	return created_trail_renderer;
+}
+
+void ModuleRender::RemoveComponentTrailRenderer(ComponentTrailRenderer* trail_renderer_to_remove)
+{
+	auto it = std::find(trail_renderers.begin(), trail_renderers.end(), trail_renderer_to_remove);
+	if (it != trail_renderers.end())
+	{
+		delete *it;
+		trail_renderers.erase(it);
 	}
 }
 
