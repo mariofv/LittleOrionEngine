@@ -22,6 +22,7 @@ Tween * Tween::LOTranslate(ComponentTransform2D* transform, float2 end_value, fl
 	tween->initial_vector = transform->anchored_position;
 	tween->desired_vector = end_value;
 	tween->duration = desired_time;
+	tween->tween_type = TweenType::TRANSLATE;
 
 	return tween;
 }
@@ -33,6 +34,7 @@ Tween * Tween::LORotate(ComponentTransform2D* transform, float end_value, float 
 	tween->initial_value = transform->GetGlobalRotation().z;
 	tween->desired_value = end_value;
 	tween->duration = desired_time;
+	tween->tween_type = TweenType::ROTATE;
 
 	return tween;
 }
@@ -44,6 +46,7 @@ Tween * Tween::LOScale(ComponentTransform2D* transform, float end_scale, float d
 	tween->initial_value = 1.0f;
 	tween->desired_value = end_scale;
 	tween->duration = desired_time;
+	tween->tween_type = TweenType::SCALE;
 
 	return tween;
 }
@@ -55,6 +58,7 @@ Tween * Tween::LOColor(ComponentImage* image, float4 end_color, float desired_ti
 	tween->initial_color = image->color;
 	tween->desired_color = end_color;
 	tween->duration = desired_time;
+	tween->tween_type = TweenType::COLOR;
 
 	return tween;
 }
@@ -62,13 +66,15 @@ Tween * Tween::LOColor(ComponentImage* image, float4 end_color, float desired_ti
 Tween * Tween::SetEase(EaseType ease)
 {
 	ease_type = ease;
+
+	return this;
 }
 
 void Tween::Update(float dt)
 {
 	if (state == TweenState::COMPLETED || state == TweenState::PAUSED) return;
 
-	current_time = start_time + dt;
+	current_time += dt / 1000.0f;
 
 	float progress = UpdateTweenByType();
 
@@ -114,7 +120,10 @@ float Tween::NormalizedElapsedTime()
 
 	//C = current_time / y
 
-	return (current_time - start_time) * (1.0f / duration);
+	float normalized_time =  (current_time - start_time) * (1.0f / duration);
+	APP_LOG_INFO("Tween: Start Time = %f, Current Time = %f, Duration = %f, Normailized Time = %f", start_time, current_time, duration, normalized_time);
+
+	return normalized_time;
 }
 
 float Tween::EasedTime()

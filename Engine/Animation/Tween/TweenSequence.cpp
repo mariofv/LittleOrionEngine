@@ -51,7 +51,8 @@ TweenSequence* TweenSequence::Play()
 TweenSequence* TweenSequence::Stop()
 {
 	state = TweenSequenceState::STOPPED;
-
+	tweens.clear();
+	current_played_tweens.clear();
 	return this;
 }
 
@@ -66,17 +67,18 @@ void TweenSequence::Update(float dt)
 {
 	if (state != TweenSequenceState::PLAYING) return;
 
-	current_time += dt;
+	current_time += dt / 1000.0f;
 
 	for (unsigned int i = last_tween_index; i < tweens.size(); i++)
 	{
 		Tween* this_tween = tweens.at(i);
 		
-		if (this_tween->start_time >= current_time)
+		if (this_tween->start_time < current_time)
 		{
 			//Is not the tween on the played tweens?
-			if (std::find(tweens.begin(), tweens.end(), this_tween) == tweens.end()) 
+			if (std::find(current_played_tweens.begin(), current_played_tweens.end(), this_tween) == current_played_tweens.end()) 
 			{
+				last_tween_index = i;
 				current_played_tweens.push_back(this_tween);
 			}
 		}
@@ -98,5 +100,8 @@ void TweenSequence::Update(float dt)
 		pos += 1;
 	}
 
-	if (current_played_tweens.size() <= 0) state = TweenSequenceState::STOPPED;
+	if (current_played_tweens.size() <= 0)
+	{
+		Stop();
+	}
 }

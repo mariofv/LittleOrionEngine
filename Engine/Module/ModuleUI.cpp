@@ -24,7 +24,6 @@
 bool ModuleUI::Init()
 {
 	APP_LOG_SECTION("************ Module UI Init ************");
-	tweener = new LOTween();
 
 	return true;
 }
@@ -32,8 +31,6 @@ bool ModuleUI::Init()
 // Called every draw update
 update_status ModuleUI::Update()
 {
-	tweener->Update(App->time->delta_time);
-
 	SelectMainCanvas();
 	return update_status::UPDATE_CONTINUE;
 }
@@ -41,7 +38,6 @@ update_status ModuleUI::Update()
 // Called before quitting
 bool ModuleUI::CleanUp()
 {
-	delete(tweener);
 	return true;
 }
 
@@ -132,12 +128,6 @@ void ModuleUI::RemoveComponentCanvasRenderer(ComponentCanvasRenderer* component_
 		delete *it;
 		canvas_renderers.erase(it);
 	}
-}
-
-TweenSequence * ModuleUI::CreateTweenSequence()
-{
-	TweenSequence* sequence = tweener->CreateSequence();
-	return sequence;
 }
 
 void ModuleUI::SelectMainCanvas()

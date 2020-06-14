@@ -1,8 +1,6 @@
 #ifndef _MODULEUI_H_
 #define _MODULEUI_H_
-#define ENGINE_EXPORTS
 
-#include "Animation/Tween/LOTween.h"
 #include "Module.h"
 #include "Main/Globals.h"
 
@@ -52,8 +50,6 @@ public:
 	ComponentCanvasRenderer* CreateComponentCanvasRenderer();
 	void RemoveComponentCanvasRenderer(ComponentCanvasRenderer* component_canvas_renderer);
 
-	ENGINE_API TweenSequence* CreateTweenSequence();
-
 public:
 	ComponentCanvas* main_canvas = nullptr;
 
@@ -63,8 +59,6 @@ private:
 
 	std::vector<Component*> ui_elements;
 	std::vector<ComponentCanvasRenderer*> canvas_renderers;
-
-	LOTween* tweener = nullptr;
 };
 
 #endif //_MODULEUI_H_

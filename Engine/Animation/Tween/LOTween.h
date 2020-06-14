@@ -9,12 +9,9 @@ class LOTween
 {
 public:
 	ENGINE_API TweenSequence* CreateSequence();
-
-private:
 	void Update(float);
 
+private:
 	std::vector<TweenSequence*> sequences;
-
-	friend class ModuleUI;
 };
 #endif _LOTWEEN_H_
