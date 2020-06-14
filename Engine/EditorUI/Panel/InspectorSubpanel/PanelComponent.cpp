@@ -29,6 +29,7 @@
 #include "Component/ComponentLight.h"
 #include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentSpriteMask.h"
 #include "Component/ComponentSphereCollider.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
@@ -751,6 +752,56 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image)
 	}
 }
 
+void PanelComponent::ShowComponentSpriteMaskWindow(ComponentSpriteMask* component_mask)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_THEATER_MASKS " Sprite Mask", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (!ShowCommonComponentWindow(component_mask))
+		{
+			return;
+		}
+
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Texture");
+		ImGui::SameLine();
+
+		std::string texture_name = component_mask->texture_to_render == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(component_mask->texture_to_render->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(component_mask->UUID) + "MeshSelector").c_str());
+		if (ImGui::Button(texture_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+		}
+
+		uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource != 0)
+		{
+			component_mask->SetTextureToRender(selected_resource);
+		}
+		selected_resource = ImGui::ResourceDropper<Texture>();
+		if (selected_resource != 0)
+		{
+			component_mask->SetTextureToRender(selected_resource);
+		}
+
+		ImGui::Separator();
+
+		ImGui::Checkbox("Invert mask", &component_mask->inverted_mask);
+		ImGui::Checkbox("Show sprite mask", &component_mask->render_mask);
+
+		ImGui::Separator();
+
+		ImGui::DragFloat2("Size", component_mask->size.ptr());
+		if (ImGui::Button("Set Native Size"))
+		{
+			component_mask->SetNativeSize();
+		}
+	}
+}
+
 void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Text", ImGuiTreeNodeFlags_DefaultOpen))
@@ -1002,6 +1053,12 @@ void PanelComponent::ShowAddNewComponentButton()
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_IMAGE);
+		}
+
+		sprintf_s(tmp_string, "%s Sprite Mask", ICON_FA_THEATER_MASKS);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_SPRITE_MASK);
 		}
 
 		sprintf_s(tmp_string, "%s UI Button", ICON_FA_TOGGLE_ON);

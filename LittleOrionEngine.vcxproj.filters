@@ -511,6 +511,9 @@
     <ClCompile Include="Engine\Module\ModuleEffects.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentSpriteMask.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1007,6 +1010,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleEffects.h">
       <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentSpriteMask.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
