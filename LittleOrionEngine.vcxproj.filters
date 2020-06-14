@@ -508,6 +508,9 @@
     <ClCompile Include="Engine\EditorUI\Panel\PanelTags.cpp">
       <Filter>Engine\EditorUI\Panel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleEffects.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1002,13 +1005,16 @@
     <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h">
       <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Event\Event.h">
-      <Filter>Engine\Event</Filter>
+    <ClInclude Include="Engine\Module\ModuleEffects.h">
+      <Filter>Engine\Module</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Event\EventManager.h">
       <Filter>Engine\Event</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Event\FunctionHandler.h">
+      <Filter>Engine\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Event\Event.h">
       <Filter>Engine\Event</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1104,7 +1110,7 @@
       <UniqueIdentifier>{2234ff4f-964f-49d9-9553-0f966006fc99}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Event">
-      <UniqueIdentifier>{ac9c5012-5777-4562-8d6f-20ce727a49d1}</UniqueIdentifier>
+      <UniqueIdentifier>{6b319fe9-7080-4c8b-92eb-153e80683af4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

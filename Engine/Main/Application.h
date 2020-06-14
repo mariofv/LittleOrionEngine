@@ -19,6 +19,7 @@ class ModuleCamera;
 class ModuleDebug;
 class ModuleDebugDraw;
 class ModuleEditor;
+class ModuleEffects;
 class ModuleFileSystem;
 class ModuleInput;
 class ModuleLight;
@@ -49,9 +50,6 @@ public:
 
 public:
 
-	std::unique_ptr<EngineLog> engine_log = nullptr;
-	std::unique_ptr<EventManager> event_manager = nullptr;
-
 	ModuleActions* actions = nullptr;
 	ModuleAI* artificial_intelligence = nullptr;
 	ModuleAnimation* animations = nullptr;
@@ -60,6 +58,7 @@ public:
 	ModuleDebug* debug = nullptr;
 	ModuleDebugDraw* debug_draw = nullptr;
 	ModuleEditor* editor = nullptr;
+	ModuleEffects* effects = nullptr;
 	ModuleFileSystem* filesystem = nullptr;
 	ModuleInput* input = nullptr;
 	ModuleLight* lights = nullptr;
@@ -74,6 +73,9 @@ public:
 	ModuleTime* time = nullptr;
 	ModuleUI* ui = nullptr;
 	ModuleWindow* window = nullptr;
+
+	std::unique_ptr<EngineLog> engine_log = nullptr;
+	std::unique_ptr<EventManager> event_manager = nullptr;
 
 private:
 	std::vector<Module*> modules;

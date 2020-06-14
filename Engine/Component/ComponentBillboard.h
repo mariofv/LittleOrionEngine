@@ -22,6 +22,10 @@ public:
 		CROSSED			
 	};
 	
+	enum AnimationType {
+		CONSTANT,
+		RANDOM_BETWEEN_VALUES
+	};
 	ComponentBillboard();
 	ComponentBillboard(GameObject* owner);
 	~ComponentBillboard();
@@ -66,6 +70,7 @@ private:
 	float current_sprite_x = 0, current_sprite_y = 0;
 	float sheet_speed = 1;
 	bool oriented_to_camera;
+	AnimationType animation_type = AnimationType::CONSTANT;
 
 	bool is_spritesheet = false;
 	float width = 5.f;
