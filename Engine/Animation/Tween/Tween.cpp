@@ -71,15 +71,26 @@ Tween * Tween::SetEase(EaseType ease)
 	return this;
 }
 
+Tween* Tween::SetLoops(int loops, TweenLoop loop_type)
+{
+	this->loops = loops;
+	this->loop_type = loop_type;
+
+	return this;
+}
+
 void Tween::Update(float dt)
 {
 	if (state == TweenState::COMPLETED || state == TweenState::PAUSED) return;
 
 	current_time += dt / 1000.0f;
 
-	float progress = UpdateTweenByType();
+	float progress = NormalizedElapsedTime();
+	APP_LOG_INFO("Tween progress: %f", progress);
 
-	if (progress >= 1.0f) state = TweenState::COMPLETED;
+	UpdateTweenByType();
+
+	CheckFinishTween(progress);
 }
 
 float Tween::UpdateTweenByType()
@@ -114,6 +125,24 @@ float Tween::UpdateTweenByType()
 	return eased_time;
 }
 
+void Tween::CheckFinishTween(float progress)
+{
+	if (progress >= 1.0f)
+	{
+		played_times += 1;
+		current_time = start_time;
+
+		if (loops != -1 && played_times >= loops)
+		{
+			state = TweenState::COMPLETED;
+		}
+		else if (loop_type == TweenLoop::RESTART)
+		{
+			ResetTween();
+		}
+	}
+}
+
 float Tween::NormalizedElapsedTime()
 {
 	//A = start_time / 0
@@ -122,7 +151,6 @@ float Tween::NormalizedElapsedTime()
 	//C = current_time / y
 
 	float normalized_time =  (current_time - start_time) * (1.0f / duration);
-	//APP_LOG_INFO("Tween type: %s, Start Time = %f, Current Time = %f, Duration = %f, Normailized Time = %f", tween_type, start_time, current_time, duration, normalized_time);
 
 	return normalized_time;
 }
@@ -170,7 +198,31 @@ float Tween::EasedTime()
 		break;
 	}
 
+	if (loop_type == TweenLoop::YOYO && played_times % 2 == 1) t = 1 - t;
+
 	return t;
+}
+
+void Tween::ResetTween()
+{
+	if (transform != nullptr)
+	{
+		switch (tween_type)
+		{
+		case Tween::TRANSLATE:
+			transform->SetTranslation(float3(initial_vector, 0.0f));
+			break;
+		case Tween::ROTATE:
+			transform->SetRotation(Quat(0, 0, initial_value, 1));
+			break;
+		case Tween::SCALE:
+			transform->SetScale(float3::one);
+			break;
+		case Tween::COLOR:
+			image->SetColor(initial_color);
+			break;
+		}
+	}
 }
 
 float Tween::Linear(float t) {

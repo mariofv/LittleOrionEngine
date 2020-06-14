@@ -36,6 +36,12 @@ public:
 		COLOR
 	};
 
+	enum TweenLoop
+	{
+		RESTART,
+		YOYO
+	};
+
 	TweenState state;
 
 	void Play();
@@ -49,6 +55,7 @@ public:
 	ENGINE_API static Tween* LOScale(ComponentTransform2D*, float, float);
 	ENGINE_API static Tween* LOColor(ComponentImage*, float4, float);
 	ENGINE_API Tween* SetEase(EaseType);
+	ENGINE_API Tween* SetLoops(int, TweenLoop);
 
 private:
 	float start_time = 0.0f;
@@ -73,11 +80,19 @@ private:
 	EaseType ease_type = EaseType::LINEAR;
 	TweenType tween_type = TweenType::NONE;
 
+	TweenLoop loop_type = TweenLoop::RESTART;
+	int loops = 0;
+	int played_times = 0;
+
 	void Update(float);
 	float UpdateTweenByType();
+	void CheckFinishTween(float);
 
 	float NormalizedElapsedTime();
 	float EasedTime();
+
+	void ResetTween();
+	void IncrementTween();
 
 	float Linear(float);
 	float SmoothStep(float);
