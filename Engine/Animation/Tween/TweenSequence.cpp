@@ -27,6 +27,7 @@ TweenSequence * TweenSequence::Join(Tween* new_tween)
 	}
 	
 	new_tween->start_time = start_time;
+	new_tween->duration += start_time;
 	tweens.push_back(new_tween);
 
 	return this;
@@ -63,6 +64,8 @@ TweenSequence * TweenSequence::Pause()
 
 void TweenSequence::Update(float dt)
 {
+	if (state != TweenSequenceState::PLAYING) return;
+
 	current_time += dt;
 
 	for (unsigned int i = last_tween_index; i < tweens.size(); i++)
@@ -89,7 +92,11 @@ void TweenSequence::Update(float dt)
 		{
 			current_played_tweens.erase(current_played_tweens.begin() + pos);
 			pos -= 1;
+
+			delete(the_tween);
 		}
 		pos += 1;
 	}
+
+	if (current_played_tweens.size() <= 0) state = TweenSequenceState::STOPPED;
 }

@@ -52,6 +52,8 @@ public:
 	ComponentCanvasRenderer* CreateComponentCanvasRenderer();
 	void RemoveComponentCanvasRenderer(ComponentCanvasRenderer* component_canvas_renderer);
 
+	ENGINE_API TweenSequence* CreateTweenSequence();
+
 public:
 	ComponentCanvas* main_canvas = nullptr;
 

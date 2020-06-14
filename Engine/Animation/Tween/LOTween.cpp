@@ -13,8 +13,19 @@ TweenSequence* LOTween::CreateSequence()
 
 void LOTween::Update(float dt)
 {
+	int pos = 0;
 	for (std::vector<TweenSequence*>::reverse_iterator it = sequences.rbegin(); it != sequences.rend(); ++it)
 	{
-		(*it)->Update(dt);
+		TweenSequence* sequence = (*it);
+		sequence->Update(dt);
+
+		if (sequence->state == TweenSequence::TweenSequenceState::STOPPED)
+		{
+			sequences.erase(sequences.begin() + pos);
+			pos -= 1;
+
+			delete(sequence);
+		}
+		pos += 1;
 	}
 }

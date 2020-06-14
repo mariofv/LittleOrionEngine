@@ -134,6 +134,12 @@ void ModuleUI::RemoveComponentCanvasRenderer(ComponentCanvasRenderer* component_
 	}
 }
 
+TweenSequence * ModuleUI::CreateTweenSequence()
+{
+	TweenSequence* sequence = tweener->CreateSequence();
+	return sequence;
+}
+
 void ModuleUI::SelectMainCanvas()
 {
 	main_canvas = nullptr;

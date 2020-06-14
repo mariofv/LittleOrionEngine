@@ -15,15 +15,96 @@ void Tween::Pause()
 	state = TweenState::PAUSED;
 }
 
-float Tween::Update(float dt)
+Tween * Tween::LOTranslate(ComponentTransform2D* transform, float2 end_value, float desired_time)
+{
+	Tween* tween = new Tween();
+	tween->transform = transform;
+	tween->initial_vector = transform->anchored_position;
+	tween->desired_vector = end_value;
+	tween->duration = desired_time;
+
+	return tween;
+}
+
+Tween * Tween::LORotate(ComponentTransform2D* transform, float end_value, float desired_time)
+{
+	Tween* tween = new Tween();
+	tween->transform = transform;
+	tween->initial_value = transform->GetGlobalRotation().z;
+	tween->desired_value = end_value;
+	tween->duration = desired_time;
+
+	return tween;
+}
+
+Tween * Tween::LOScale(ComponentTransform2D* transform, float end_scale, float desired_time)
+{
+	Tween* tween = new Tween();
+	tween->transform = transform;
+	tween->initial_value = 1.0f;
+	tween->desired_value = end_scale;
+	tween->duration = desired_time;
+
+	return tween;
+}
+
+Tween * Tween::LOColor(ComponentImage* image, float4 end_color, float desired_time)
+{
+	Tween* tween = new Tween();
+	tween->image = image;
+	tween->initial_color = image->color;
+	tween->desired_color = end_color;
+	tween->duration = desired_time;
+
+	return tween;
+}
+
+Tween * Tween::SetEase(EaseType ease)
+{
+	ease_type = ease;
+}
+
+void Tween::Update(float dt)
 {
 	if (state == TweenState::COMPLETED || state == TweenState::PAUSED) return;
 
 	current_time = start_time + dt;
 
-	if (current_time >= duration) state == TweenState::COMPLETED;
+	float progress = UpdateTweenByType();
 
-	return (end_value - initial_value) * EasedTime();
+	if (progress >= 1.0f) state == TweenState::COMPLETED;
+}
+
+float Tween::UpdateTweenByType()
+{
+	if (tween_type == Tween::NONE) return 0.0f;
+
+	float eased_time = EasedTime();
+
+	switch (tween_type)
+	{
+	case Tween::TRANSLATE:
+		tweened_vector = float2::Lerp(initial_vector, desired_vector, eased_time);
+		transform->SetTranslation(float3(tweened_vector, 0));
+		break;
+
+	case Tween::ROTATE:
+		tweened_value = math::Lerp(initial_value, desired_value, eased_time);
+		transform->SetRotation(float3(0, 0, tweened_value));
+		break;
+
+	case Tween::SCALE:
+		tweened_value = math::Lerp(initial_value, desired_value, eased_time);
+		transform->SetScale(float3::one * tweened_value);
+		break;
+
+	case Tween::COLOR:
+		tweened_color = float4::Lerp(initial_color, desired_color, eased_time);
+		image->SetColor(tweened_color);
+		break;
+	}
+
+	return eased_time;
 }
 
 float Tween::NormalizedElapsedTime()
