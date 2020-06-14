@@ -229,8 +229,9 @@ void ComponentCamera::RecordFrame(float width, float height, bool scene_mode)
 	}
 
 	App->renderer->RenderFrame(*this);
-	App->ui->Render(scene_mode);
 
+	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
+	App->ui->Render(scene_mode);
 
 #if !GAME
 	if (App->renderer->anti_aliasing)
