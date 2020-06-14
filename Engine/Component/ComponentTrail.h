@@ -60,6 +60,7 @@ public:
 	uint32_t texture_uuid = 0;
 	ComponentBillboard* billboard = nullptr;
 	std::queue<TrailPoint> trail_points;
+	float3 gameobject_init_position = { 0.0f, 0.0f, 0.0f};
 
 	int total_points = 1;
 	float3 last_point_added;
@@ -82,7 +83,7 @@ public:
 	
 	//Standard parameters
 	bool active = true;
-
+	bool on_transform_change = false;
 	//time
 	float time_counter = 0.0f;
 };
