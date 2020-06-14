@@ -33,6 +33,7 @@
 #include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentSpriteMask.h"
 #include "Component/ComponentBillboard.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
@@ -460,6 +461,10 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 
 	case Component::ComponentType::UI_IMAGE:
 		created_component = App->ui->CreateComponentUI<ComponentImage>();
+		break;
+
+	case Component::ComponentType::UI_SPRITE_MASK:
+		created_component = App->ui->CreateComponentUI<ComponentSpriteMask>();
 		break;
 
 	case Component::ComponentType::UI_TEXT:
