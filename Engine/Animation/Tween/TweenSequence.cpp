@@ -69,10 +69,9 @@ void TweenSequence::Update(float dt)
 
 	current_time += dt / 1000.0f;
 
-	int pos = 0;
-	for (std::vector<Tween*>::reverse_iterator it = tweens.rbegin(); it != tweens.rend(); ++it)
+	for (size_t i = 0; i < tweens.size(); i++)
 	{
-		Tween* this_tween = (*it);
+		Tween* this_tween = tweens.at(i);
 		
 		if (this_tween->start_time < current_time)
 		{
@@ -80,29 +79,25 @@ void TweenSequence::Update(float dt)
 			if (std::find(current_played_tweens.begin(), current_played_tweens.end(), this_tween) == current_played_tweens.end()) 
 			{
 				this_tween->Play();
-				tweens.erase(tweens.begin() + pos);
+				tweens.erase(tweens.begin() + i);
 				current_played_tweens.push_back(this_tween);
-				pos -= 1;
+				i -= 1;
 			}
 		}
-
-		pos+= 1;
 	}
 
-	pos = 0;
-	for (std::vector<Tween*>::reverse_iterator it = current_played_tweens.rbegin(); it != current_played_tweens.rend(); ++it)
+	for (size_t i = 0; i < current_played_tweens.size(); i++)
 	{
-		Tween* the_tween = (*it);
+		Tween* the_tween = current_played_tweens.at(i);
 		the_tween->Update(dt);
 
 		if (the_tween->state == Tween::TweenState::COMPLETED)
 		{
-			current_played_tweens.erase(current_played_tweens.begin() + pos);
-			pos -= 1;
+			current_played_tweens.erase(current_played_tweens.begin() + i);
+			i -= 1;
 
 			delete(the_tween);
 		}
-		pos += 1;
 	}
 
 	if (current_played_tweens.size() <= 0)

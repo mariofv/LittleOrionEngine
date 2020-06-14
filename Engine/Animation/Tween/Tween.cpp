@@ -79,7 +79,7 @@ void Tween::Update(float dt)
 
 	float progress = UpdateTweenByType();
 
-	if (progress >= 1.0f) state == TweenState::COMPLETED;
+	if (progress >= 1.0f) state = TweenState::COMPLETED;
 }
 
 float Tween::UpdateTweenByType()
@@ -122,7 +122,7 @@ float Tween::NormalizedElapsedTime()
 	//C = current_time / y
 
 	float normalized_time =  (current_time - start_time) * (1.0f / duration);
-	APP_LOG_INFO("Tween: Start Time = %f, Current Time = %f, Duration = %f, Normailized Time = %f", start_time, current_time, duration, normalized_time);
+	//APP_LOG_INFO("Tween type: %s, Start Time = %f, Current Time = %f, Duration = %f, Normailized Time = %f", tween_type, start_time, current_time, duration, normalized_time);
 
 	return normalized_time;
 }
