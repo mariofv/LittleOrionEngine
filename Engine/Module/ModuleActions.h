@@ -64,7 +64,7 @@ public:
 	float previous_light_intensity;
 
 	Material::MaterialTextureType type_texture;
-	const int MAXIMUM_SIZE_STACK_UNDO = 5;
+	const size_t MAXIMUM_SIZE_STACK_UNDO = 5;
 
 };
 

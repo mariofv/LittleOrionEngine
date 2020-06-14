@@ -463,7 +463,7 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 					opened_model = nullptr;
 				}
 			}
-			if (has_uuid && ImGui::Selectable("Rename"))
+			if (!has_uuid && ImGui::Selectable("Rename"))
 			{
 				renaming_file = selected_file;
 				new_name_file = selected_file->GetFilename();

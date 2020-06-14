@@ -39,12 +39,12 @@ bool ModuleInput::Init()
 		ret = false;
 	}
 
-	for (int i = 0; i < MAX_KEYS; ++i)
+	for (size_t i = 0; i < MAX_KEYS; ++i)
 	{
 		key_bible[(KeyCode)i] = KeyState::IDLE;
 	}
 
-	for (int i = 0; i < MAX_MOUSE_BUTTONS; ++i)
+	for (size_t i = 0; i < MAX_MOUSE_BUTTONS; ++i)
 	{
 		mouse_bible[(MouseButton)i] = KeyState::IDLE;
 	}
@@ -92,7 +92,7 @@ update_status ModuleInput::PreUpdate()
 			mouse.second = KeyState::IDLE;
 		}
 	}
-	for(int x = 0; x < controller.size(); ++x)
+	for(size_t x = 0; x < controller.size(); ++x)
 	{
 		for (auto& controller : controller[x]->controller_bible)
 		{
@@ -152,7 +152,7 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_CONTROLLERBUTTONDOWN:
-			for (int i = 0; i < controller.size(); ++i) 
+			for (size_t i = 0; i < controller.size(); ++i)
 			{
 				if (event.cbutton.which == controller[i]->joystick)
 				{
@@ -162,7 +162,7 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_CONTROLLERBUTTONUP:
-			for (int i = 0; i < controller.size(); ++i) 
+			for (size_t i = 0; i < controller.size(); ++i)
 			{
 				if (event.cbutton.which == controller[i]->joystick)
 				{
@@ -173,7 +173,7 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_CONTROLLERAXISMOTION:
 		{
-			for (int i = 0; i < controller.size(); ++i) 
+			for (size_t i = 0; i < controller.size(); ++i) 
 			{
 				if (event.caxis.which == controller[i]->joystick)
 				{
@@ -223,7 +223,7 @@ update_status ModuleInput::PreUpdate()
 
 	keys = SDL_GetKeyboardState(nullptr);
 
-	for (int i = 0; i < MAX_KEYS; ++i)
+	for (size_t i = 0; i < MAX_KEYS; ++i)
 	{
 		if (keys[i] == 1)
 		{
@@ -655,7 +655,7 @@ void ModuleInput::AddGamepad(int device)
 	gamepad->controller = SDL_GameControllerOpen(device);
 	gamepad->device = device;
 	gamepad->joystick = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(gamepad->controller));
-	for (int i = 0; i < MAX_CONTROLLER_BUTTONS; ++i)
+	for (size_t i = 0; i < MAX_CONTROLLER_BUTTONS; ++i)
 	{
 		gamepad->controller_bible[(ControllerCode)i] = KeyState::IDLE;
 	}

@@ -254,7 +254,7 @@ void ComponentText::SpecializedLoad(const Config& config)
 {
 	config.GetString("Text", text, "");
 
-	font_uuid = config.GetUInt("FontUUID", 0);
+	font_uuid = config.GetUInt32("FontUUID", 0);
 	if (font_uuid != 0)
 	{
 		SetFont(font_uuid);
@@ -265,7 +265,7 @@ void ComponentText::SpecializedLoad(const Config& config)
 
 	config.GetColor("FontColor", font_color, float4::one);
 
-	uint32_t horizontal_alignment_uint32 = config.GetUInt("HorizontalAlignment", 0);
+	uint32_t horizontal_alignment_uint32 = config.GetUInt32("HorizontalAlignment", 0);
 	horizontal_alignment = static_cast<HorizontalAlignment>(horizontal_alignment_uint32);
 }
 

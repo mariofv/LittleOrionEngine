@@ -179,7 +179,7 @@ void ComponentAnimation::SpecializedSave(Config& config) const
 
 void ComponentAnimation::SpecializedLoad(const Config& config)
 {
-	uint32_t state_machine_uuid = config.GetUInt("StateMachineResource", 0);
+	uint32_t state_machine_uuid = config.GetUInt32("StateMachineResource", 0);
 	if (state_machine_uuid != 0)
 	{
 		SetStateMachine(state_machine_uuid);

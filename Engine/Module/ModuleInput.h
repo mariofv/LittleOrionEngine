@@ -507,11 +507,11 @@ public:
 	const float MIN_SDL_CONTROLLER_RANGE = -32768.0f;
 	const float MAX_RAW_RANGE = 1.f;
 
-	const int MAX_KEYS = 286;
-	const int MAX_MOUSE_BUTTONS = 5;
-	const int MAX_CONTROLLER_BUTTONS = 15;
+	const size_t MAX_KEYS = 286;
+	const size_t MAX_MOUSE_BUTTONS = 5;
+	const size_t MAX_CONTROLLER_BUTTONS = 15;
 
-	int total_game_controllers = 0;
+	size_t total_game_controllers = 0;
 	std::map<std::string, GameInput> game_inputs;
 	std::vector<Gamepad*> controller;
 

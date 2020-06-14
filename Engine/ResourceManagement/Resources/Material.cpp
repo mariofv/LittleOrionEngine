@@ -76,12 +76,12 @@ void Material::Save(Config& config) const
 
 void Material::Load(const Config& config)
 {
-	SetMaterialTexture(MaterialTextureType::DIFFUSE, config.GetUInt("Diffuse", 0));
-	SetMaterialTexture(MaterialTextureType::SPECULAR, config.GetUInt("Specular", 0));
-	SetMaterialTexture(MaterialTextureType::OCCLUSION, config.GetUInt("Occlusion", 0));
-	SetMaterialTexture(MaterialTextureType::EMISSIVE, config.GetUInt("Emissive", 0));
-	SetMaterialTexture(MaterialTextureType::NORMAL, config.GetUInt("Normal", 0));
-	SetMaterialTexture(MaterialTextureType::LIGHTMAP, config.GetUInt("Lightmap", 0));
+	SetMaterialTexture(MaterialTextureType::DIFFUSE, config.GetUInt32("Diffuse", 0));
+	SetMaterialTexture(MaterialTextureType::SPECULAR, config.GetUInt32("Specular", 0));
+	SetMaterialTexture(MaterialTextureType::OCCLUSION, config.GetUInt32("Occlusion", 0));
+	SetMaterialTexture(MaterialTextureType::EMISSIVE, config.GetUInt32("Emissive", 0));
+	SetMaterialTexture(MaterialTextureType::NORMAL, config.GetUInt32("Normal", 0));
+	SetMaterialTexture(MaterialTextureType::LIGHTMAP, config.GetUInt32("Lightmap", 0));
 
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
 	config.GetString("ShaderProgram", shader_program, "Blinn phong");
@@ -157,5 +157,7 @@ std::string Material::GetMaterialTypeName(const MaterialType material_type)
 
 	case MaterialType::MATERIAL_TRANSPARENT:
 		return "Transparent";
+	default:
+		return "";
 	}
 }

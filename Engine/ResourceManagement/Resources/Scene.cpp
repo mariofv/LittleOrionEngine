@@ -181,7 +181,7 @@ void Scene::SavePrefabUUIDS(std::vector<Config>& original_UUIDS, GameObject* gam
 GameObject* Scene::LoadPrefab(const Config & config) const
 {
 	uint32_t prefab_uuid;
-	prefab_uuid = config.GetUInt("Prefab", 0);
+	prefab_uuid = config.GetUInt32("Prefab", 0);
 
 	std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(prefab_uuid);
 	std::unordered_map<int64_t, int64_t> UUIDS_pairs;

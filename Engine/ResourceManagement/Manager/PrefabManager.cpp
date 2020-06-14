@@ -10,6 +10,13 @@
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentCanvasRenderer.h"
 #include "Component/ComponentAudioSource.h"
+#include "Component/ComponentCollider.h"
+#include "Component/ComponentBoxCollider.h"
+#include "Component/ComponentCapsuleCollider.h"
+#include "Component/ComponentCollider.h"
+#include "Component/ComponentCylinderCollider.h"
+#include "Component/ComponentMeshCollider.h"
+#include "Component/ComponentSphereCollider.h"
 
 #include "Helper/Config.h"
 
@@ -145,6 +152,27 @@ void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameO
 			break;
 		case Component::ComponentType::AUDIO_SOURCE:
 			created_component = new ComponentAudioSource();
+			break;
+		case Component::ComponentType::COLLIDER:
+			ComponentCollider::ColliderType collider_type = static_cast<ComponentCollider::ColliderType>(gameobject_components_config[i].GetUInt("ColliderType", 0));
+			switch (collider_type)
+			{
+			case ComponentCollider::ColliderType::BOX:
+				created_component = new ComponentBoxCollider(loaded_gameObject.get());
+				break;
+			case ComponentCollider::ColliderType::CAPSULE:
+				created_component = new ComponentCapsuleCollider(loaded_gameObject.get());
+				break;
+			case ComponentCollider::ColliderType::SPHERE:
+				created_component = new ComponentSphereCollider(loaded_gameObject.get());
+				break;
+			case ComponentCollider::ColliderType::CYLINDER:
+				created_component = new ComponentCylinderCollider(loaded_gameObject.get());
+				break;
+			case ComponentCollider::ColliderType::MESH:
+				created_component = new ComponentMeshCollider(loaded_gameObject.get());
+				break;
+			}
 			break;
 		}
 		created_component->owner = loaded_gameObject.get();
