@@ -86,7 +86,7 @@ void Tween::Update(float dt)
 	current_time += dt / 1000.0f;
 
 	float progress = NormalizedElapsedTime();
-	APP_LOG_INFO("Tween progress: %f", progress);
+	//APP_LOG_INFO("Tween progress: %f", progress);
 
 	UpdateTweenByType();
 
