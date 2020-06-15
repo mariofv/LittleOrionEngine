@@ -55,6 +55,7 @@ public:
 public:
 	float width = 5.f;
 	float height = 5.f;
+	float transparency = 1.f;
 
 private:
 	AlignmentType alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;

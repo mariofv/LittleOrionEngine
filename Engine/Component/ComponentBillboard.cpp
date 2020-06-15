@@ -104,7 +104,7 @@ void ComponentBillboard::ChangeBillboardType(ComponentBillboard::AlignmentType _
 
 void ComponentBillboard::Render(const float3& position)
 {
-	if(!this->active)
+	if(!active)
 	{
 		return;
 	}

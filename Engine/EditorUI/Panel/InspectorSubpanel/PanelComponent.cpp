@@ -382,10 +382,12 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard * billboard)
 		ImGui::InputFloat("Speed", &billboard->sheet_speed, 1);
 		ImGui::Checkbox("Oriented to camera", &billboard->oriented_to_camera);
 	}
-	ImGui::Text("Size");
-	ImGui::SameLine();
+
+	ImGui::Separator();
+	ImGui::Text("Custom");
 	ImGui::DragFloat("Width:", &billboard->width, 0.2f, 0.f, 10.f);
 	ImGui::DragFloat("Height:", &billboard->height, 0.2f, 0.f, 10.f);
+	ImGui::DragFloat("Transparency:", &billboard->transparency, 0.1f, 0.f, 1.f);
 }
 
 void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
