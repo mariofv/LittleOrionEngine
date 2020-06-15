@@ -209,10 +209,12 @@ void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode
 	{
 		case ComponentCamera::ClearMode::COLOR:
 			glClearColor(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f);
+			glStencilMask(0xFF);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 			glClearColor(0.f, 0.f, 0.f, 1.f);
 			break;
 		case ComponentCamera::ClearMode::SKYBOX:
+			glStencilMask(0xFF);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 			if (skybox_uuid != 0)
 			{
@@ -228,8 +230,9 @@ void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode
 	}
 
 	App->renderer->RenderFrame(*this);
-	App->ui->Render(scene_mode);
 
+	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
+	App->ui->Render(scene_mode);
 
 #if !GAME
 	if (App->renderer->anti_aliasing)

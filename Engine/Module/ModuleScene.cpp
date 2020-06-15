@@ -315,6 +315,7 @@ inline void ModuleScene::GetSceneResource()
 	if (load_tmp_scene)
 	{
 		tmp_scene.get()->Load();
+		App->animations->CleanTweens();
 		return;
 	}
 	else if (build_options_position != -1)

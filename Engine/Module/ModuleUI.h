@@ -1,6 +1,5 @@
 #ifndef _MODULEUI_H_
 #define _MODULEUI_H_
-#define ENGINE_EXPORTS
 
 #include "Module.h"
 #include "Main/Globals.h"
