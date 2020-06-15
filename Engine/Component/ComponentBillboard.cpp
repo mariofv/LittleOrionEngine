@@ -104,6 +104,11 @@ void ComponentBillboard::ChangeBillboardType(ComponentBillboard::AlignmentType _
 
 void ComponentBillboard::Render(const float3& position)
 {
+	if(!active)
+	{
+		return;
+	}
+
 	GLuint shader_program = App->program->GetShaderProgramId("Billboard");
 	glUseProgram(shader_program);
 

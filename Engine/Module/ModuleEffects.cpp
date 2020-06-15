@@ -20,10 +20,14 @@ bool ModuleEffects::CleanUp()
 
 void ModuleEffects::Render()
 {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation(GL_FUNC_ADD);
 	for (auto &billboard : billboards)
 	{
 		billboard->Render(billboard->owner->transform.GetGlobalTranslation());
 	}
+	glDisable(GL_BLEND);
 	for (auto &particles : particle_systems)
 	{
 		particles->Render();

@@ -337,7 +337,6 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard * billboard)
 {
 	ImGui::AlignTextToFramePadding();
 
-
 	ImGui::Text("Texture");
 	ImGui::SameLine();
 
@@ -384,6 +383,11 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard * billboard)
 		ImGui::Checkbox("Oriented to camera", &billboard->oriented_to_camera);
 	}
 
+	ImGui::Separator();
+	ImGui::Text("Custom");
+	ImGui::DragFloat("Width:", &billboard->width, 0.2f, 0.f, 10.f);
+	ImGui::DragFloat("Height:", &billboard->height, 0.2f, 0.f, 10.f);
+	ImGui::DragFloat("Transparency:", &billboard->transparency, 0.1f, 0.f, 1.f);
 }
 
 void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
