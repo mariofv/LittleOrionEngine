@@ -56,10 +56,10 @@ void ComponentTrailRenderer::InitData()
 	glBindVertexArray(vao);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);//dynamically draw vertices due to trail changes mesh over time
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -96,12 +96,15 @@ void ComponentTrailRenderer::SwitchFrame()
 
 void ComponentTrailRenderer::Render(const float3& position)
 {
-	GLuint shader_program = App->program->GetShaderProgramId("TrailRenderer");
+	GLuint shader_program = App->program->GetShaderProgramId("Billboard");
 	glUseProgram(shader_program);
 
 	int n;
 	glGetProgramStageiv(shader_program, GL_VERTEX_SHADER, GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS, &n);
 	unsigned* subroutines_indices = new unsigned[n];
+
+	//use glBufferMap to obtain a pointer to buffer data
+	trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(float) * MAX_TRAIL_VERTICES * 6, GL_MAP_WRITE_BIT); 
 
 	//Subroutine functions
 	GLuint viewpoint_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "view_point_alignment");
@@ -110,6 +113,8 @@ void ComponentTrailRenderer::Render(const float3& position)
 
 	//Subroutine uniform
 	int selector = glGetSubroutineUniformLocation(shader_program, GL_VERTEX_SHADER, "alignment_selector");
+
+	glUnmapBuffer(GL_ARRAY_BUFFER);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, trail_texture->opengl_texture);
@@ -120,9 +125,9 @@ void ComponentTrailRenderer::Render(const float3& position)
 	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color"), 1, (float*)color);
 	glUniform3fv(glGetUniformLocation(shader_program, "billboard.center_pos"), 1, position.ptr());
 
-
 	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	 
+	glDrawElements(GL_TRIANGLES, rendered_vertices, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
 	glUseProgram(0);
@@ -137,7 +142,7 @@ Component* ComponentTrailRenderer::Clone(bool original_prefab) const
 	}
 	else
 	{
-		created_component = App->renderer->CreateComponentTrailRenderer();
+		created_component = App->renderer->CreateComponentTrailRenderer(owner);
 	}
 	*created_component = *this;
 	return created_component;

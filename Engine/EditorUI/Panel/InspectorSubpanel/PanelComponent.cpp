@@ -34,6 +34,7 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
 #include "Component/ComponentTrail.h"
+#include "Component/ComponentTrailRenderer.h"
 
 #include "Helper/Utils.h"
 
@@ -349,7 +350,7 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 		ImGui::Text("Texture");
 		ImGui::SameLine();
 
-		std::string texture_name = trail->billboard->billboard_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(trail->billboard->billboard_texture->GetUUID())->resource_name;
+		std::string texture_name = trail->trail_renderer->trail_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(trail->trail_renderer->trail_texture->GetUUID())->resource_name;
 		ImGuiID element_id = ImGui::GetID((std::to_string(trail->UUID) + "TextureSelector").c_str());
 		if (ImGui::Button(texture_name.c_str()))
 		{
@@ -366,31 +367,7 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 		{
 			trail->SetTrailTexture(selected_resource_uuid);
 		}
-		int alignment_type = static_cast<int>(trail->billboard->alignment_type);
-		if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned"))
-		{
-			switch (alignment_type)
-			{
-			case 0:
-				trail->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
-				break;
-			case 1:
-				trail->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
-				break;
-			case 2:
-				trail->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::SPRITESHEET);
-				break;
-			case 3:
-				trail->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
-				break;
-			}
-		}
-		if (trail->billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
-			ImGui::InputInt("Rows", &trail->billboard->x_tiles, 1);
-			ImGui::InputInt("Columns", &trail->billboard->y_tiles, 1);
-			ImGui::InputFloat("Speed", &trail->billboard->sheet_speed, 1);
-			ImGui::Checkbox("Oriented to camera", &trail->billboard->oriented_to_camera);
-		}
+		
 
 		//Color of Particles
 		if (ImGui::CollapsingHeader(ICON_FA_PAINT_BRUSH "Color Over Time"))
@@ -401,10 +378,10 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 			{
 				ImGui::DragFloat("Fade time", &trail->fade_time, 0.01f, 0.0f, 10.0F);
 			}
-			ImGui::ColorEdit4("Particle Color##2f", (float*)&trail->color_trail, ImGuiColorEditFlags_Float);
+			ImGui::ColorEdit4("Trail Color##2f", (float*)&trail->color_trail, ImGuiColorEditFlags_Float);
 			if (trail->fade_between_colors)
 			{
-				ImGui::ColorEdit4("Particle Color To Fade##2f", (float*)&trail->color_to_fade, ImGuiColorEditFlags_Float);
+				ImGui::ColorEdit4("Trail Color To Fade##2f", (float*)&trail->color_to_fade, ImGuiColorEditFlags_Float);
 				ImGui::DragFloat("Color Fade time", &trail->color_fade_time, 0.01f, 0.0f, 10.0F);
 			}
 		}

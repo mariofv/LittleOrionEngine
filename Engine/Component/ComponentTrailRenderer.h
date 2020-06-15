@@ -40,6 +40,10 @@ public:
 
 	void ChangeTexture(uint32_t texture_uuid);
 
+public:
+	float* trail_renderer_vertices = nullptr;
+	int rendered_vertices;
+
 private:
 	uint32_t texture_uuid = 0;
 	std::shared_ptr<Texture> trail_texture = nullptr;

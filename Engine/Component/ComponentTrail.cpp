@@ -3,8 +3,9 @@
 #include "Main/Application.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleDebugDraw.h"
 
-#include "Component/ComponentBillboard.h"
+#include "Component/ComponentTrailRenderer.h"
 #include "Module/ModuleResourceManager.h"
 #include "GL/glew.h"
 
@@ -25,15 +26,15 @@ ComponentTrail::~ComponentTrail()
 
 void ComponentTrail::Init()
 {
-	billboard = new ComponentBillboard(owner);
-	billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
+	trail_renderer = new ComponentTrailRenderer(owner);
 	trail_points.emplace(float3{ 0.0f, 0.0f, 0.0f }, width, duration*10000);//initialize 1st trail_point in queue
+	gameobject_init_position = owner->transform.GetGlobalTranslation();//initial GO position
 }
 
 void ComponentTrail::UpdateTrail()
 {
 	float3 gameobject_position = owner->transform.GetGlobalTranslation();//current GO position
-	if (gameobject_position.x != 0.0f || gameobject_position.y != 0.0f || gameobject_position.z != 0.0f)//if user moves Trail GO
+	if (gameobject_init_position.x != gameobject_position.x || gameobject_init_position.y != gameobject_position.y || gameobject_init_position.z != gameobject_position.z)//if user moves Trail GO
 	{
 		on_transform_change = true;
 	}
@@ -45,20 +46,10 @@ void ComponentTrail::UpdateTrail()
 		{
 			//update front of trail
 			TrailPoint& point = trail_points.front();
-			point.time_left -= App->time->delta_time; //reduce life of 1st point
-			//size
-			point.width = width;
-			billboard->width = point.width;
-
-			//if point's life is enough push it further
-			if (point.time_left > 0)
-			{
-				trail_points.push(point);
-			}
-			trail_points.pop();//Older trail points should progressively disappear 
+			RespawnTrailPoint(point);
+			
 		}
 	}
-
 	//update back of trail
 	TrailPoint& last_point = trail_points.back();
 	float distance_previous_point = last_point.position.Distance(gameobject_position);
@@ -72,10 +63,27 @@ void ComponentTrail::UpdateTrail()
 		}
 		else
 		{
-			TrailPoint new_point(gameobject_position, trail_points.back().position, width, duration*10000);
+			TrailPoint new_point(static_cast<ComponentTransform>(owner->transform), trail_points.back().position, width, duration*10000);
 			new_point.is_rendered = true;
 		}
 	}
+}
+
+void  ComponentTrail::RespawnTrailPoint(TrailPoint& point)
+{
+	point.time_left -= App->time->real_time_delta_time; //reduce life of 1st point
+	
+	//size
+	point.width = width;
+	trail_renderer->width = point.width;
+	
+	//if point's life is enough push it further
+	if (point.time_left > 0)
+	{
+		trail_points.push(point);
+		point.is_rendered = true;
+	}
+	//trail_points.pop();//Older trail points should progressively disappear 
 }
 
 void ComponentTrail::Render()
@@ -84,12 +92,11 @@ void ComponentTrail::Render()
 	unsigned int destroy_point_vertice = 0;
 	if (active)
 	{
-		time_counter += App->time->real_time_delta_time;
 		for (unsigned int i = 0; i < total_points; ++i)
 		{
 			TrailPoint& point = trail_points.front();
 			float3 outline_left, outline_right;
-
+			
 			if (point.life > 0.0f)
 			{
 				UpdateTrail();
@@ -101,30 +108,24 @@ void ComponentTrail::Render()
 					float width = point.width; //Distance between each pair of vertices generated for a given point.
 					outline_left = point.position + point.position_perpendicular_point * width;
 					outline_right = point.position - point.position_perpendicular_point * width;
-					billboard->Render(owner->transform.GetGlobalTranslation() + point.position + outline_left);//Move perpendicular vector over points and multiply by desired width
-					billboard->Render(owner->transform.GetGlobalTranslation() + point.position + outline_left);
-					billboard->Render(owner->transform.GetGlobalTranslation() + point.position);
+					trail_renderer->Render(owner->transform.GetGlobalTranslation() + outline_left);//Move perpendicular vector over points and multiply by desired width
+					trail_renderer->Render(owner->transform.GetGlobalTranslation() + outline_left);
+					trail_renderer->Render(owner->transform.GetGlobalTranslation() + point.position);
 				}
-				//testing this here as flag is not functional
-				float width = point.width; //Distance between each pair of vertices generated for a given point.
-				outline_left = point.position + point.position_perpendicular_point * width;
-				outline_right = point.position - point.position_perpendicular_point * width;//Move perpendicular vector over points and multiply by desired width
-				billboard->Render(owner->transform.GetGlobalTranslation() + point.position + outline_left);
-				billboard->Render(owner->transform.GetGlobalTranslation() + point.position + outline_left);
-				billboard->Render(owner->transform.GetGlobalTranslation() + point.position);
 			}
 			else
 			{
-				//here we need to subtract verices from mesh
+				++destroy_point_vertice;
 			}
 		}
+		trail_renderer->rendered_vertices = trail_vertices;
 	}
 	glEnable(GL_CULL_FACE);
 }
 void ComponentTrail::SetTrailTexture(uint32_t texture_uuid)
 {
 	this->texture_uuid = texture_uuid;
-	billboard->ChangeTexture(texture_uuid);
+	trail_renderer->ChangeTexture(texture_uuid);
 }
 
 
@@ -143,7 +144,7 @@ Component* ComponentTrail::Clone(bool original_prefab) const
 	}
 	else
 	{
-		created_component = App->renderer->CreateComponentTrail();
+		created_component = App->renderer->CreateComponentTrail(owner);
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));

@@ -476,11 +476,11 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		break;
 
 	case Component::ComponentType::TRAIL:
-		created_component = App->renderer->CreateComponentTrail();
+		created_component = App->renderer->CreateComponentTrail(this);
 		break;
 
 	case Component::ComponentType::TRAILRENDERER:
-		created_component = App->renderer->CreateComponentTrailRenderer();
+		created_component = App->renderer->CreateComponentTrailRenderer(this);
 		break;
 
 	case Component::ComponentType::AUDIO_SOURCE:

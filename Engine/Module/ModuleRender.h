@@ -60,10 +60,10 @@ public:
 	ComponentParticleSystem* CreateComponentParticleSystem();
 	void RemoveComponentParticleSystem(ComponentParticleSystem* particle_system_to_remove);
 
-	ComponentTrail* CreateComponentTrail();
+	ComponentTrail* CreateComponentTrail(GameObject* owner);
 	void RemoveComponentTrail(ComponentTrail* trail_to_remove);
 
-	ComponentTrailRenderer* CreateComponentTrailRenderer();
+	ComponentTrailRenderer* CreateComponentTrailRenderer(GameObject* owner);
 	void RemoveComponentTrailRenderer(ComponentTrailRenderer* trail_renderer_to_remove);
 
 	ENGINE_API int GetRenderedTris() const;

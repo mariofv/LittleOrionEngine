@@ -230,7 +230,12 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	for (auto &trail : trails)
 	{
 		trail->Render();
+		for (auto &trail_renderer : trail_renderers)
+		{
+			trail_renderer->Render(trail->owner->transform.GetGlobalTranslation());
+		}
 	}
+	
 	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
 	App->ui->Render(&camera);
 
@@ -428,9 +433,9 @@ void ModuleRender::RemoveComponentParticleSystem(ComponentParticleSystem* partic
 	}
 }
 
-ComponentTrail* ModuleRender::CreateComponentTrail()
+ComponentTrail* ModuleRender::CreateComponentTrail(GameObject* owner)
 {
-	ComponentTrail* created_trail = new ComponentTrail();
+	ComponentTrail* created_trail = new ComponentTrail(owner);
 	trails.push_back(created_trail);
 	return created_trail;
 }
@@ -445,9 +450,9 @@ void ModuleRender::RemoveComponentTrail(ComponentTrail* trail_to_remove)
 	}
 }
 
-ComponentTrailRenderer* ModuleRender::CreateComponentTrailRenderer()
+ComponentTrailRenderer* ModuleRender::CreateComponentTrailRenderer(GameObject* owner)
 {
-	ComponentTrailRenderer* created_trail_renderer = new ComponentTrailRenderer();
+	ComponentTrailRenderer* created_trail_renderer = new ComponentTrailRenderer(owner);
 	trail_renderers.push_back(created_trail_renderer);
 	return created_trail_renderer;
 }

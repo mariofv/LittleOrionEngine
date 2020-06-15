@@ -6,11 +6,14 @@
 #include "MathGeoLib.h"
 #include "Main/Application.h"
 #include "Module/ModuleTime.h"
+#include "Component/ComponentTransform.h"
 
 #include <queue>
 
 class GameObject;
 class ComponentBillboard;
+class ComponentTrailRenderer;
+class ComponentTransform;
 
 struct TrailPoint {
 	float3 position;
@@ -23,10 +26,10 @@ struct TrailPoint {
 
 	TrailPoint(float3 position, float width, float life) : position(position), width(width), life(life), time_left(life) {}
 
-	TrailPoint(float3 position, float3 previous_point, float width, float life) :position(position), width(width), life(life), time_left(life)
+	TrailPoint(ComponentTransform transform, float3 previous_point, float width, float life) :position(position), width(width), life(life), time_left(life)
 	{
-		float3 cross = (previous_point - position).Normalized(); //perpendicular vector point calculated between Previous Point & Current Point -> Normalized to get vector with magnitutde = 1 but same direction
-		position_perpendicular_point = cross;
+		float3 vector_adjacent = (previous_point - transform.GetGlobalTranslation()).Normalized();//vector between each pair -> Normalized to get vector with magnitutde = 1 but same direction
+		position_perpendicular_point = vector_adjacent.Cross(transform.GetFrontVector());
 		is_rendered = true;
 	}
 };
@@ -52,13 +55,14 @@ public:
 	void UpdateTrail();
 	void Render();
 	void SetTrailTexture(uint32_t texture_uuid);
+	void RespawnTrailPoint(TrailPoint& point);
 
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
 public:
 	uint32_t texture_uuid = 0;
-	ComponentBillboard* billboard = nullptr;
+	ComponentTrailRenderer* trail_renderer = nullptr;
 	std::queue<TrailPoint> trail_points;
 	float3 gameobject_init_position = { 0.0f, 0.0f, 0.0f};
 
