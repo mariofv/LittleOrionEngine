@@ -4,6 +4,7 @@
 #include "Helper/Config.h"
 #include "Module/ModuleAnimation.h"
 #include "Module/ModuleAudio.h"
+#include "Module/ModuleEffects.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleScriptManager.h"
@@ -32,6 +33,7 @@
 #include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentSpriteMask.h"
 #include "Component/ComponentBillboard.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
@@ -461,16 +463,20 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		created_component = App->ui->CreateComponentUI<ComponentImage>();
 		break;
 
+	case Component::ComponentType::UI_SPRITE_MASK:
+		created_component = App->ui->CreateComponentUI<ComponentSpriteMask>();
+		break;
+
 	case Component::ComponentType::UI_TEXT:
 		created_component = App->ui->CreateComponentUI<ComponentText>();
 		break;
 
 	case Component::ComponentType::BILLBOARD:
-		created_component = App->renderer->CreateComponentBillboard();
+		created_component = App->effects->CreateComponentBillboard();
 		break;
 
 	case Component::ComponentType::PARTICLE_SYSTEM:
-		created_component = App->renderer->CreateComponentParticleSystem();
+		created_component = App->effects->CreateComponentParticleSystem();
 		break;
 
 	case Component::ComponentType::AUDIO_SOURCE:

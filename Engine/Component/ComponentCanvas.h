@@ -24,6 +24,7 @@ public:
 	void Delete() override;
 
 	void Render(bool scene_mode = false);
+	void RenderGameObject(GameObject* owner, float4x4* projection) const;
 
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;

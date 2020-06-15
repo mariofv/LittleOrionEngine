@@ -508,6 +508,12 @@
     <ClCompile Include="Engine\EditorUI\Panel\PanelTags.cpp">
       <Filter>Engine\EditorUI\Panel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleEffects.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentSpriteMask.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Animation\Tween\LOTween.cpp" />
     <ClCompile Include="Engine\Animation\Tween\Tween.cpp" />
     <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp" />
@@ -1004,6 +1010,12 @@
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h">
       <Filter>Engine\EditorUI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleEffects.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentSpriteMask.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Animation\Tween\LOTween.h" />
     <ClInclude Include="Engine\Animation\Tween\Tween.h" />

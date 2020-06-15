@@ -59,12 +59,13 @@ void AnimController::GetClipTransform(uint32_t skeleton_uuid, std::vector<math::
 				}	
 			}
 		}
-		if (weight > 1.0f)
+		if (weight >= 1.0f)
 		{
 			apply_transition = true;
 		}
 	}
 }
+
 bool AnimController::Update()
 {
 	for (auto & playing_clip : playing_clips)
