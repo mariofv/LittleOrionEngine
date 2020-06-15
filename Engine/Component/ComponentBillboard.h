@@ -52,6 +52,10 @@ public:
 	void ChangeTexture(uint32_t texture_uuid);
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
 
+public:
+	float width = 5.f;
+	float height = 5.f;
+
 private:
 	AlignmentType alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
 
@@ -73,8 +77,6 @@ private:
 	AnimationType animation_type = AnimationType::CONSTANT;
 
 	bool is_spritesheet = false;
-	float width = 5.f;
-	float height = 5.f;
 
 	unsigned int vbo, vao, ebo;
 
