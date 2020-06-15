@@ -13,7 +13,7 @@ class EventManager
 {
 public:
 	template<typename EventType>
-	void publish(EventType* evnt)
+	void publish(EventType* event)
 	{
 		HandlerList* handlers = subscribers[typeid(EventType)];
 
@@ -24,15 +24,15 @@ public:
 
 		for (auto& handler : *handlers)
 		{
-			if (handler != nullptr)
+			if (handler != nullptr && event->emitter == handler->suscriber)
 			{
-				handler->exec(evnt);
+				handler->exec(event);
 			}
 		}
 	}
 
 	template<class T, class EventType>
-	void subscribe(T* instance, void (T::*memberFunction)(EventType *))
+	void subscribe(T* instance, GameObject* suscriber, void (T::*memberFunction)(EventType *))
 	{
 		HandlerList* handlers = subscribers[typeid(EventType)];
 
@@ -43,7 +43,7 @@ public:
 			subscribers[typeid(EventType)] = handlers;
 		}
 
-		handlers->push_back(new FunctionHandler<T, EventType>(instance, memberFunction));
+		handlers->push_back(new FunctionHandler<T, EventType>(instance, suscriber, memberFunction));
 	}
 private:
 	std::map<std::type_index, HandlerList*> subscribers;

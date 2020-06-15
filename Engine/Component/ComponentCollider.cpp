@@ -1,5 +1,7 @@
 #include "ComponentCollider.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Event/Event.h"
+#include "Event/EventManager.h"
 #include "Helper/Utils.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -538,6 +540,7 @@ std::vector<CollisionInformation> ComponentCollider::GetCollisions()
 			}
 		}
 	}
+	App->event_manager->publish(new CollisionEvent(this->owner, collisions));
 	return collisions;
 }
 

@@ -74,6 +74,7 @@ update_status ModulePhysics::Update()
 		{
 			world->synchronizeSingleMotionState(collider->body);
 		}
+		collider->GetCollisions();
 	}
 	
 	float ms2;
