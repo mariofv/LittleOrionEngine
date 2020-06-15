@@ -32,12 +32,6 @@ bool ModuleDebug::Init()
 	return true;
 }
 
-// Called before quitting
-bool ModuleDebug::CleanUp()
-{
-	APP_LOG_INFO("Destroying Debug");	
-	return true;
-}
 
 void ModuleDebug::Render(ComponentCamera* cam)
 {

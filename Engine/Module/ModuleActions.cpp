@@ -43,10 +43,6 @@ update_status ModuleActions::Update()
 	return update_status::UPDATE_CONTINUE;
 }
 
-bool ModuleActions::CleanUp()
-{
-	return true ;
-}
 
 void ModuleActions::ClearRedoStack()
 {

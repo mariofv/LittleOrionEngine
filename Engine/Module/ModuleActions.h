@@ -36,7 +36,6 @@ public:
 	bool Init() override;
 	update_status PreUpdate() override;
 	update_status Update() override;
-	bool CleanUp() override;
 
 	void ClearRedoStack();
 	void ClearUndoStack();
