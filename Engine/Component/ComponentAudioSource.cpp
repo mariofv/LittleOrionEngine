@@ -116,7 +116,7 @@ void ComponentAudioSource::SpecializedLoad(const Config& config)
 {
 	volume = config.GetFloat("Volume", 1);
 	sound_3d = config.GetBool("3DSound", false);
-	uint32_t soundbank_uuid = config.GetUInt("SoundBank", 0);
+	uint32_t soundbank_uuid = config.GetUInt32("SoundBank", 0);
 	if (soundbank_uuid != 0)
 	{
 		SetSoundBank(soundbank_uuid);

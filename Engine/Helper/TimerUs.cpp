@@ -1,6 +1,6 @@
 #include "TimerUs.h"
 
-const unsigned int TimerUs::frequency = SDL_GetPerformanceFrequency();
+const unsigned int TimerUs::frequency = static_cast<size_t>(SDL_GetPerformanceFrequency());
 
 void TimerUs::Start()
 {

@@ -27,7 +27,7 @@ void AnimController::GetClipTransform(uint32_t skeleton_uuid, std::vector<math::
 		size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
 		if (second_keyframe_index == clip->animation->frames)
 		{
-			second_keyframe_index = clip->loop ? 0 : clip->animation->frames - 1;
+			second_keyframe_index = clip->loop ? 0 : static_cast<size_t>(clip->animation->frames) - 1;
 		}
 
 		float interpolation_lambda = current_keyframe - std::floor(current_keyframe);
@@ -73,7 +73,7 @@ bool AnimController::Update()
 	}
 	if (active_transition && active_transition->automatic)
 	{
-		float animation_time_with_interpolation = playing_clips[ClipType::ACTIVE].current_time + active_transition->interpolation_time + 100;
+		float animation_time_with_interpolation = playing_clips[ClipType::ACTIVE].current_time + active_transition->interpolation_time + 100.0f;
 		if (animation_time_with_interpolation >= playing_clips[ClipType::ACTIVE].clip->animation_time)
 		{
 			playing_clips[ClipType::NEXT].clip = state_machine->GetState(active_transition->target_hash)->clip;

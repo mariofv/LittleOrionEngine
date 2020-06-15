@@ -312,7 +312,7 @@ private:
 
 	const size_t FIRST_OFFSET_COND = 164;
 	const size_t SECOND_OFFSET_COND = 221;
-	const size_t THIRD_OFFSET_COND = 231;	
+	const size_t THIRD_OFFSET_COND = 231;
 	const size_t FIRST_OFFSET = 15;
 	const size_t SECOND_OFFSET = 17;
 	const size_t THIRD_OFFSET = 42;

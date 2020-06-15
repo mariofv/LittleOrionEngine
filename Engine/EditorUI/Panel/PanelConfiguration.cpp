@@ -662,7 +662,7 @@ void PanelConfiguration::ShowInputOptions()
 						continue;
 					}
 
-					int aux = static_cast<int>(key);
+					size_t aux = static_cast<size_t>(key);
 					if (aux > FIRST_OFFSET_COND)
 						aux -= FIRST_OFFSET;
 					else if (aux > SECOND_OFFSET_COND)

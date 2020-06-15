@@ -187,8 +187,9 @@ float ComponentCamera::GetHeight() const
 	return last_height;
 }
 
-void ComponentCamera::RecordFrame(float width, float height, bool scene_mode)
+void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode)
 {
+
 	if (last_width != width || last_height != height || toggle_msaa)
 	{
 		last_width = width;

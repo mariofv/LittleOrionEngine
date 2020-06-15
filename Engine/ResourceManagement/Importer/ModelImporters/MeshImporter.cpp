@@ -90,7 +90,7 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 				weights_sum += vertex_skinning__info[i].second[j];
 			}
 			
-			auto normalize_factor = 1.0 / weights_sum;
+			float normalize_factor = 1.0f / weights_sum;
 			weights_sum = 0;
 			for (size_t j = 0; j < vertex_skinning__info[i].second.size(); ++j)
 			{

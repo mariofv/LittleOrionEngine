@@ -49,7 +49,7 @@ void PanelGameObject::Render(GameObject* game_object)
 		return;
 	}
 
-	ImGui::PushID(game_object->UUID);
+	ImGui::PushID((int)game_object->UUID);
 
 	if (ImGui::Checkbox("###State", &game_object->active))
 	{

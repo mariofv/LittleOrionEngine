@@ -44,7 +44,7 @@ void PanelGame::Render()
 			game_window_content_area_width = game_window_content_area_max_point.x - game_window_content_area_pos.x;
 			game_window_content_area_height = game_window_content_area_max_point.y - game_window_content_area_pos.y;
 
-			App->cameras->main_camera->RecordFrame(game_window_content_area_width, game_window_content_area_height);
+			App->cameras->main_camera->RecordFrame((GLsizei)game_window_content_area_width, (GLsizei)game_window_content_area_height);
 			App->cameras->main_camera->RecordDebugDraws();
 
 			ImGui::Image(

@@ -207,6 +207,8 @@ float ComponentText::GetLineStartPosition(float line_size) const
 
 	case HorizontalAlignment::RIGHT:
 		return owner->transform_2d.size.x * 0.5f - line_size;
+	default:
+		return 0.0f;
 	}
 }
 
@@ -287,7 +289,7 @@ void ComponentText::SetFont(uint32_t font_uuid)
 	ComputeTextLines();
 }
 
-void ComponentText::SetFontSize(int font_size)
+void ComponentText::SetFontSize(float font_size)
 {
 	this->font_size = font_size;
 	scale_factor = font_size / 64.f;

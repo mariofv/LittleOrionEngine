@@ -134,6 +134,7 @@ ENGINE_API int ComponentAnimation::GetTotalAnimationTime() const
 		return playing_clip.clip->animation_time;
 
 	}
+	return 0;
 }
 
 void ComponentAnimation::Update()

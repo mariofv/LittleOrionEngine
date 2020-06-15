@@ -111,9 +111,9 @@ void PrefabImporter::ExtractGameObjectFromNode
 	auto& remapped_material = metafile.remapped_materials;
 	assert(remapped_material.find(node_game_object->name) != remapped_material.end());
 	uint32_t remapped_material_uuid =  remapped_material.at(node_game_object->name);
-	uint32_t material_uuid = remapped_material_uuid == 0 ? node_config.GetUInt("Material", 0) : remapped_material_uuid;
-	uint32_t mesh_uuid = node_config.GetUInt("Mesh", 0);
-	uint32_t skeleton_uuid = node_config.GetUInt("Skeleton", 0);
+	uint32_t material_uuid = remapped_material_uuid == 0 ? node_config.GetUInt32("Material", 0) : remapped_material_uuid;
+	uint32_t mesh_uuid = node_config.GetUInt32("Mesh", 0);
+	uint32_t skeleton_uuid = node_config.GetUInt32("Skeleton", 0);
 
 	if (mesh_uuid != 0)
 	{

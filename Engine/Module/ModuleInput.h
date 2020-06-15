@@ -401,30 +401,7 @@ struct GameInput
 		config.AddUInt(real_size_controller, "SizeController");
 	}
 
-	void Load(Config &config)
-	{
-		config.GetString("Name", name, "DefaultName");
-		uint64_t size_keys = config.GetUInt("SizeKeys", 0);
-		for(uint64_t i = 0; i < size_keys; ++i)
-		{
-			std::string name_k("k" + std::to_string(i));
-			keys[i] = ((KeyCode)config.GetUInt(name_k, 0));
-		}
-
-		uint64_t size_mouse = config.GetUInt("SizeMouse", 0);
-		for (uint64_t j = 0; j < size_mouse; ++j)
-		{
-			std::string name_m("m" + std::to_string(j));
-			mouse_buttons[j] = ((MouseButton)config.GetUInt(name_m, 0));
-		}
-
-		uint64_t size_controller = config.GetUInt("SizeController", 0);
-		for (uint64_t k = 0; k < size_controller; ++k)
-		{
-			std::string name_c("c" + std::to_string(k));
-			controller_buttons[k] = ((ControllerCode)config.GetUInt(name_c, 0));
-		}
-	}
+	void Load(Config &config);
 };
 
 struct Gamepad

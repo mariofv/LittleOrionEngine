@@ -49,7 +49,7 @@ public:
 	float GetWidth() const;
 	float GetHeight() const;
 
-	void RecordFrame(float width, float height, bool scene_mode = false);
+	void RecordFrame(GLsizei width, GLsizei height, bool scene_mode = false);
 	ENGINE_API void RecordDebugDraws(bool scene_mode = false);
 	GLuint GetLastRecordedFrame() const;
 

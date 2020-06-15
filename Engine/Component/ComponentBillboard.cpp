@@ -220,10 +220,10 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 	
 	ChangeTexture(texture_uuid);
 
-	width = config.GetFloat("Width", 1.f);
-	height = config.GetFloat("Height", 1.f);
-	x_tiles = config.GetInt("Rows", 1.f);
-	y_tiles = config.GetInt("Columns", 1.f);
+	width = config.GetFloat("Width", 1);
+	height = config.GetFloat("Height", 1);
+	x_tiles = config.GetInt("Rows", 1);
+	y_tiles = config.GetInt("Columns", 1);
 }
 
 void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)
