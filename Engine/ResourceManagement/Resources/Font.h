@@ -37,7 +37,7 @@ private:
 	std::map<GLchar, Character> characters;
 
 	int max_height = 0;
-	int max_advance = 0;
+	size_t max_advance = 0;
 };
 
 namespace ResourceManagement

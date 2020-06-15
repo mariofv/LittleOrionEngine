@@ -1,21 +1,21 @@
 #include "PrefabManager.h"
 
-#include "Component/ComponentCamera.h"
-#include "Component/ComponentMeshRenderer.h"
-#include "Component/ComponentLight.h"
 #include "Component/ComponentAnimation.h"
-#include "Component/ComponentScript.h"
+#include "Component/ComponentAudioSource.h"
+#include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
-#include "Component/ComponentImage.h"
+#include "Component/ComponentCapsuleCollider.h"
+#include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentCanvasRenderer.h"
-#include "Component/ComponentAudioSource.h"
-#include "Component/ComponentCollider.h"
-#include "Component/ComponentBoxCollider.h"
-#include "Component/ComponentCapsuleCollider.h"
 #include "Component/ComponentCollider.h"
 #include "Component/ComponentCylinderCollider.h"
+#include "Component/ComponentImage.h"
+#include "Component/ComponentLight.h"
 #include "Component/ComponentMeshCollider.h"
+#include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentParticleSystem.h"
+#include "Component/ComponentScript.h"
 #include "Component/ComponentSphereCollider.h"
 
 #include "Helper/Config.h"
@@ -152,6 +152,9 @@ void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameO
 			break;
 		case Component::ComponentType::AUDIO_SOURCE:
 			created_component = new ComponentAudioSource();
+			break;
+		case Component::ComponentType::PARTICLE_SYSTEM:
+			created_component = new ComponentParticleSystem();
 			break;
 		case Component::ComponentType::COLLIDER:
 			ComponentCollider::ColliderType collider_type = static_cast<ComponentCollider::ColliderType>(gameobject_components_config[i].GetUInt("ColliderType", 0));

@@ -84,7 +84,7 @@ void ComponentBillboard::SwitchFrame()
 
 		if ((int)current_sprite_y <= 0) 
 		{
-			current_sprite_y = y_tiles;
+			current_sprite_y = static_cast<float>(y_tiles);
 		}
 		time_since_start = 0.f;
 	}
@@ -220,7 +220,7 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 	sheet_speed = config.GetFloat("SheetSpeed", 1.f);
 	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::SPRITESHEET)));
 	ChangeBillboardType(alignment_type);
-	texture_uuid = config.GetUInt("TextureUUID", 0);
+	texture_uuid = config.GetUInt32("TextureUUID", 0);
 	
 	ChangeTexture(texture_uuid);
 

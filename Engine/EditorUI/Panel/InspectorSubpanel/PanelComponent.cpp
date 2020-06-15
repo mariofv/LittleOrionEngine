@@ -190,7 +190,7 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 		}
 		if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			if (ImGui::InputInt("Max particles", &particle_system->max_particles_number) && particle_system->max_particles_number > MAX_PARTICLES)
+			if (ImGui::InputScalar("Max particles", ImGuiDataType_U32,&particle_system->max_particles_number) && particle_system->max_particles_number > MAX_PARTICLES)
 			{
 				particle_system->max_particles_number = MAX_PARTICLES;
 			}
