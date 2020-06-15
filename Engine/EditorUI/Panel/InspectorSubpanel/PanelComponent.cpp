@@ -767,40 +767,8 @@ void PanelComponent::ShowComponentSpriteMaskWindow(ComponentSpriteMask* componen
 		ImGui::Separator();
 		ImGui::Spacing();
 
-		ImGui::AlignTextToFramePadding();
-		ImGui::Text("Texture");
-		ImGui::SameLine();
-
-		std::string texture_name = component_mask->texture_to_render == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(component_mask->texture_to_render->GetUUID())->resource_name;
-		ImGuiID element_id = ImGui::GetID((std::to_string(component_mask->UUID) + "MeshSelector").c_str());
-		if (ImGui::Button(texture_name.c_str()))
-		{
-			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
-		}
-
-		uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
-		if (selected_resource != 0)
-		{
-			component_mask->SetTextureToRender(selected_resource);
-		}
-		selected_resource = ImGui::ResourceDropper<Texture>();
-		if (selected_resource != 0)
-		{
-			component_mask->SetTextureToRender(selected_resource);
-		}
-
-		ImGui::Separator();
-
 		ImGui::Checkbox("Invert mask", &component_mask->inverted_mask);
 		ImGui::Checkbox("Show sprite mask", &component_mask->render_mask);
-
-		ImGui::Separator();
-
-		ImGui::DragFloat2("Size", component_mask->size.ptr());
-		if (ImGui::Button("Set Native Size"))
-		{
-			component_mask->SetNativeSize();
-		}
 	}
 }
 
