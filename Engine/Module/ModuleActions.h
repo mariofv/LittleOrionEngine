@@ -22,6 +22,7 @@ public:
 		DELETE_GAMEOBJECT,
 		ADD_COMPONENT,
 		DELETE_COMPONENT,
+		PASTE_COMPONENT,
 		ENABLE_DISABLE_COMPONENT,
 		EDIT_COMPONENTLIGHT,
 		//EDIT_COMPONENTMATERIAL,
@@ -45,6 +46,9 @@ public:
 
 	void AddUndoAction(UndoActionType type);
 	void DeleteComponentUndo(Component* component);
+	void PasteComponent(Component* component);
+	void PasteComponentValues(Component* component);
+	void SetCopyComponent(Component* component);
 	void ClearUndoRedoStacks();
 
 private:
@@ -59,6 +63,9 @@ public:
 	float3 previous_transform = float3::zero;
 	GameObject* action_game_object = nullptr;
 	Component* action_component = nullptr;
+	Component* copied_component = nullptr;
+	Config transform_config;
+	Config transform_2D_config;
 
 	float previous_light_color[3];
 	float previous_light_intensity;

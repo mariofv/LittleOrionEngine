@@ -22,6 +22,8 @@
 #include "Main/GameObject.h"
 
 
+
+
 bool ModuleActions::Init()
 {
 	//Delete all actions (go are deleted here)
@@ -193,6 +195,73 @@ void ModuleActions::DeleteComponentUndo(Component * component)
 	AddUndoAction(UndoActionType::DELETE_COMPONENT);
 	component->owner->RemoveComponent(component);
 }
+
+void ModuleActions::PasteComponent(Component* component)
+{
+	if (copied_component != nullptr && component->type != Component::ComponentType::TRANSFORM && component->type != Component::ComponentType::TRANSFORM2D)
+	{
+		SetCopyComponent(copied_component);
+		copied_component->owner = component->owner;
+		component->owner->components.push_back(copied_component);		
+	}
+}
+
+void ModuleActions::PasteComponentValues(Component * component)
+{
+	if (copied_component != nullptr && component->type == copied_component->type) 
+	{
+		if (component->type == Component::ComponentType::TRANSFORM) 
+		{	
+			component->Load(transform_config);		
+		}
+		else if (component->type == Component::ComponentType::TRANSFORM2D)
+		{
+			component->Load(transform_2D_config);
+		}
+		else 
+		{
+			Config configuration;
+			copied_component->Save(configuration);
+			component->Load(configuration);
+		}
+	}
+}
+
+void ModuleActions::SetCopyComponent(Component * component)
+{
+	if (component->type == Component::ComponentType::SCRIPT)
+	{
+		copied_component = new ComponentScript(component->owner, static_cast<ComponentScript*>(component)->name);
+		ComponentScript* copied_script = static_cast<ComponentScript*>(copied_component);
+		copied_script->name = static_cast<ComponentScript*>(component)->name;
+	}
+	else if (component->type == Component::ComponentType::COLLIDER)
+	{
+		copied_component = component->Clone(component->owner, component->owner->original_prefab);
+	}
+	else
+	{
+		if (component->type == Component::ComponentType::TRANSFORM)
+		{
+			Config conf;
+			component->Save(conf);
+			transform_config = conf;
+			copied_component = component;
+			
+		}
+		else if(component->type == Component::ComponentType::TRANSFORM2D)
+		{
+			Config conf;
+			component->Save(conf);
+			transform_2D_config = conf;
+			copied_component = component;
+		}
+		else {
+			copied_component = component->Clone(component->owner->original_prefab);
+		}
+	}
+}
+
 
 void ModuleActions::ClearUndoRedoStacks()
 {

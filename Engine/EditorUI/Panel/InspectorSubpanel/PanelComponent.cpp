@@ -163,6 +163,18 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 		{
 			App->actions->DeleteComponentUndo(particle_system);
 		}
+		if (ImGui::Button("Copy")) 
+		{
+			App->actions->SetCopyComponent(particle_system);
+		}
+		if (ImGui::Button("Paste component as new")) 
+		{
+			App->actions->PasteComponent(particle_system);
+		}
+		if (ImGui::Button("Paste component values")) 
+		{
+			App->actions->PasteComponentValues(particle_system);
+		}
 		ImGui::Separator();
 
 		if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
@@ -1095,6 +1107,18 @@ bool PanelComponent::ShowCommonComponentWindow(Component* component)
 		App->actions->DeleteComponentUndo(component);
 		return false;
 	}
+	if (ImGui::Button("Copy"))
+	{
+		App->actions->SetCopyComponent(component);
+	}
+	if (ImGui::Button("Paste component as new"))
+	{
+		App->actions->PasteComponent(component);
+	}
+	if (ImGui::Button("Paste component values"))
+	{
+		App->actions->PasteComponentValues(component);
+	}
 
 	return true;
 }
@@ -1113,6 +1137,18 @@ bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
 	{
 		App->actions->DeleteComponentUndo(collider);
 		return false;
+	}
+	if (ImGui::Button("Copy")) 
+	{
+		App->actions->SetCopyComponent(collider);
+	}
+	if (ImGui::Button("Paste component as new"))
+	{
+		App->actions->PasteComponent(collider);
+	}
+	if (ImGui::Button("Paste component values"))
+	{
+		App->actions->PasteComponentValues(collider);
 	}
 	ImGui::Separator();
 
