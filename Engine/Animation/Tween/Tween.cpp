@@ -150,9 +150,7 @@ float Tween::NormalizedElapsedTime()
 
 	//C = current_time / y
 
-	float normalized_time =  (current_time - start_time) * (1.0f / duration);
-
-	return normalized_time;
+	return  (current_time - start_time) * (1.0f / duration);
 }
 
 float Tween::EasedTime()
@@ -225,42 +223,42 @@ void Tween::ResetTween()
 	}
 }
 
-float Tween::Linear(float t) {
+float Tween::Linear(float t) const {
 	return t;
 }
 
-float Tween::SmoothStep(float t) {
+float Tween::SmoothStep(float t) const {
 	return (t*t *(3 - 2 * t));
 }
 
-float Tween::EaseInSine(float t) {
+float Tween::EaseInSine(float t) const {
 	return 1 - cos(t * (3.1416 / 2));
 }
 
-float Tween::Sine(float t) {
+float Tween::Sine(float t) const {
 	return (sin(t * (3.1416 * 2) - 3.1416 / 2) + 1.0) / 2.0;
 }
 
-float Tween::EaseOutSine(float t) {
+float Tween::EaseOutSine(float t) const {
 	return sin(t * (3.1416 / 2));
 }
 
-float Tween::EaseInOutSine(float t) {
+float Tween::EaseInOutSine(float t) const {
 	return -0.5 * (cos(3.1416 * t) - 1);
 }
 
-float Tween::EaseInBack(float t) {
+float Tween::EaseInBack(float t) const {
 	float s = 1.70158f;
 	return t * t*((s + 1)*t - s);
 }
 
-float Tween::EaseOutBack(float t) {
+float Tween::EaseOutBack(float t) const {
 	float s = 1.70158f;
 	t--;
 	return (t*t*((s + 1)*t + s) + 1);
 }
 
-float Tween::EaseInOutBack(float t) {
+float Tween::EaseInOutBack(float t) const {
 	float s = 1.70158f * 1.525f;
 	//float s2 = s * 1.525f;
 	t *= 2;

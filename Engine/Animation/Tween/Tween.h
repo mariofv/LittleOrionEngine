@@ -94,15 +94,15 @@ private:
 	void ResetTween();
 	void IncrementTween();
 
-	float Linear(float);
-	float SmoothStep(float);
-	float EaseInSine(float);
-	float Sine(float);
-	float EaseOutSine(float);
-	float EaseInOutSine(float);
-	float EaseInBack(float);
-	float EaseOutBack(float);
-	float EaseInOutBack(float);
+	float Linear(float) const;
+	float SmoothStep(float) const;
+	float EaseInSine(float) const;
+	float Sine(float) const;
+	float EaseOutSine(float) const;
+	float EaseInOutSine(float) const;
+	float EaseInBack(float) const;
+	float EaseOutBack(float) const;
+	float EaseInOutBack(float) const;
 
 	friend class TweenSequence;
 };

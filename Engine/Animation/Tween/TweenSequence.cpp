@@ -38,7 +38,7 @@ TweenSequence * TweenSequence::Insert(float insert_time, Tween* new_tween)
 	new_tween->start_time = insert_time;
 	tweens.push_back(new_tween);
 
-	return nullptr;
+	return this;
 }
 
 TweenSequence* TweenSequence::Play()
@@ -67,7 +67,7 @@ void TweenSequence::Update(float dt)
 {
 	if (state != TweenSequenceState::PLAYING) return;
 
-	current_time += dt / 1000.0f;
+	current_time += dt * 0.001f;
 
 	for (size_t i = 0; i < tweens.size(); i++)
 	{
