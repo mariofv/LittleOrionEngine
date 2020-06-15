@@ -514,6 +514,15 @@
     <ClCompile Include="Engine\Component\ComponentSpriteMask.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Animation\Tween\LOTween.cpp">
+      <Filter>Engine\Animation\Tween</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Animation\Tween\Tween.cpp">
+      <Filter>Engine\Animation\Tween</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp">
+      <Filter>Engine\Animation\Tween</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1014,6 +1023,15 @@
     <ClInclude Include="Engine\Component\ComponentSpriteMask.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Animation\Tween\LOTween.h">
+      <Filter>Engine\Animation\Tween</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Animation\Tween\Tween.h">
+      <Filter>Engine\Animation\Tween</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Animation\Tween\TweenSequence.h">
+      <Filter>Engine\Animation\Tween</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -1105,6 +1123,9 @@
     </Filter>
     <Filter Include="Engine\Component\Collider">
       <UniqueIdentifier>{2234ff4f-964f-49d9-9553-0f966006fc99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Animation\Tween">
+      <UniqueIdentifier>{e7d08611-64ed-4f00-9fef-3df8aa3fcb03}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

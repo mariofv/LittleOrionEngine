@@ -152,6 +152,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Animation\Tween\LOTween.h" />
+    <ClInclude Include="Engine\Animation\Tween\Tween.h" />
+    <ClInclude Include="Engine\Animation\Tween\TweenSequence.h" />
     <ClInclude Include="Engine\Component\ComponentCanvasRenderer.h" />
     <ClInclude Include="Engine\Component\ComponentBoxCollider.h" />
     <ClInclude Include="Engine\Component\ComponentCapsuleCollider.h" />
@@ -308,6 +311,9 @@
     <ClInclude Include="Engine\Module\ModuleEffects.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Animation\Tween\LOTween.cpp" />
+    <ClCompile Include="Engine\Animation\Tween\Tween.cpp" />
+    <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp" />
     <ClCompile Include="Engine\Component\ComponentCanvasRenderer.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddGameObject.cpp" />
