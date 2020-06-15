@@ -171,7 +171,7 @@ void ComponentCamera::SpecializedLoad(const Config& config)
 
 	depth = config.GetInt("Depth", 0);
 
-	skybox_uuid = config.GetUInt("Skybox", 0);
+	skybox_uuid = config.GetUInt32("Skybox", 0);
 	SetSkybox(skybox_uuid);
 
 	GenerateMatrices();
@@ -192,9 +192,9 @@ void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode
 
 	if (last_width != width || last_height != height || toggle_msaa)
 	{
-		last_width = width;
-		last_height = height;
-		SetAspectRatio(width/height);
+		last_width = static_cast<float>(width);
+		last_height = static_cast<float>(height);
+		SetAspectRatio(last_width / last_height);
 		GenerateFrameBuffers(width, height);
 		toggle_msaa = false;
 	}
@@ -285,7 +285,7 @@ GLuint ComponentCamera::GetLastRecordedFrame() const
 	return last_recorded_frame_texture;
 }
 
-void ComponentCamera::GenerateFrameBuffers(float width, float height)
+void ComponentCamera::GenerateFrameBuffers(GLsizei width, GLsizei height)
 {
 	if (last_recorded_frame_texture != 0)
 	{
@@ -302,7 +302,7 @@ void ComponentCamera::GenerateFrameBuffers(float width, float height)
 	App->renderer->anti_aliasing ? CreateMssaFramebuffer(width, height) : CreateFramebuffer(width, height);
 }
 
-void ComponentCamera::CreateFramebuffer(float width, float height)
+void ComponentCamera::CreateFramebuffer(GLsizei width, GLsizei height)
 {
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
@@ -321,7 +321,7 @@ void ComponentCamera::CreateFramebuffer(float width, float height)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void ComponentCamera::CreateMssaFramebuffer(float width, float height)
+void ComponentCamera::CreateMssaFramebuffer(GLsizei width, GLsizei height)
 {
 	glGenTextures(1, &msfb_color);
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msfb_color);

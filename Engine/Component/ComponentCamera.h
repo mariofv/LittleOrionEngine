@@ -115,11 +115,11 @@ public:
 	AABB GetMinimalEnclosingAABB() const;
 
 private:
-	void GenerateFrameBuffers(float width, float height);
+	void GenerateFrameBuffers(GLsizei width, GLsizei height);
 	void GenerateMatrices();
 	void InitCamera();
-	void CreateFramebuffer(float width, float height);
-	void CreateMssaFramebuffer(float width, float height);
+	void CreateFramebuffer(GLsizei width, GLsizei height);
+	void CreateMssaFramebuffer(GLsizei width, GLsizei height);
 
 public:
 	const float SPEED_UP_FACTOR = 2.f;

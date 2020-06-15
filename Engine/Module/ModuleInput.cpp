@@ -493,7 +493,7 @@ ENGINE_API Sint16 ModuleInput::GetTriggerControllerRaw(ControllerAxis type, Cont
 			return controller[(int)controller_id]->right_controller_trigger_raw;
 
 		default:
-			0.0f;
+			return 0.0f;
 	}
 }
 
