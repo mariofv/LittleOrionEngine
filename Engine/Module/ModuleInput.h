@@ -427,6 +427,26 @@ struct GameInput
 	}
 };
 
+struct Gamepad
+{
+	SDL_GameController* controller;
+	int device;
+	int joystick;
+
+	std::map<ControllerCode, KeyState> controller_bible;
+
+	float2 left_joystick;
+	float2 right_joystick;
+	float2 left_joystick_raw;
+	float2 right_joystick_raw;
+
+	Sint32 left_controller_trigger_raw;
+	Sint32 right_controller_trigger_raw;
+
+	float left_controller_trigger;
+	float right_controller_trigger;
+};
+
 class Path;
 
 class ModuleInput : public Module
@@ -451,10 +471,6 @@ public:
 	ENGINE_API bool GetControllerButtonDown(ControllerCode code, ControllerID controller_id);
 	ENGINE_API bool GetControllerButtonUp(ControllerCode code, ControllerID controller_id);
 
-	ENGINE_API bool GetGameInput(const char* name, PlayerID player_id);
-	ENGINE_API bool GetGameInputDown(const char* name, PlayerID player_id);
-	ENGINE_API bool GetGameInputUp(const char* name, PlayerID player_id);
-
 	ENGINE_API bool GetAnyKeyPressedDown() const;
 
 	void CreateGameInput(const GameInput& game_input);
@@ -468,16 +484,16 @@ public:
 	bool IsMouseMoving() const;
 
 	ENGINE_API float2 GetAxisController(ControllerAxis type, ControllerID controller_id) const;
-	ENGINE_API Sint16 GetTriggerController(ControllerAxis type, ControllerID controller_id) const;
+	ENGINE_API float GetTriggerController(ControllerAxis type, ControllerID controller_id) const;
 
 	ENGINE_API float2 GetAxisControllerRaw(ControllerAxis type, ControllerID controller_id) const;
-	ENGINE_API float GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const;
+	ENGINE_API Sint16 GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const;
 
-	ENGINE_API float GetVerticalRaw(PlayerID player_id);
-	ENGINE_API float GetHorizontalRaw(PlayerID player_id);
+	ENGINE_API bool DetectedKeyboardInput(const GameInput& button, KeyState state);
+	ENGINE_API bool DetectedGameControllerInput(const GameInput& button, KeyState state, ControllerID controller_id);
 
-	ENGINE_API float GetVertical(PlayerID player_id);
-	ENGINE_API float GetHorizontal(PlayerID player_id);
+	void AddGamepad(int id);
+	void RemoveGamepad(int id);
 
 private:
 	void SaveGameInputs(Config &config);
@@ -485,8 +501,6 @@ private:
 
 	float2 Filter2D(Sint16 input_x, Sint16 input_y) const;
 
-	bool DetectedKeyboardInput(const GameInput& button, KeyState state);
-	bool DetectedGameControllerInput(const GameInput& button, KeyState state, ControllerID controller_id);
 
 public:
 	const float MAX_SDL_CONTROLLER_RANGE = 32767.0f;
@@ -497,17 +511,16 @@ public:
 	const int MAX_MOUSE_BUTTONS = 5;
 	const int MAX_CONTROLLER_BUTTONS = 15;
 
-	bool singleplayer_input = true;
 	int total_game_controllers = 0;
+	std::map<std::string, GameInput> game_inputs;
+	std::vector<Gamepad*> controller;
 
 private:
 	std::map<KeyCode, KeyState> key_bible;
 	std::map<MouseButton, KeyState> mouse_bible;
-	std::vector<std::map<ControllerCode, KeyState>> controller_bible;
 
 	//Predefined buttons
 	Path* game_inputs_file_path = nullptr;
-	std::map<std::string, GameInput> game_inputs;
 
 	const Uint8 *keys = nullptr;
 
@@ -517,20 +530,6 @@ private:
 
 	Uint8 mouse_clicks;
 	bool mouse_moving;
-
-	float2 left_joystick[MAX_PLAYERS];
-	float2 right_joystick[MAX_PLAYERS];
-
-	float2 left_joystick_raw[MAX_PLAYERS];
-	float2 right_joystick_raw[MAX_PLAYERS];
-
-	Sint32 left_controller_trigger[MAX_PLAYERS];
-	Sint32 right_controller_trigger[MAX_PLAYERS];
-
-	float left_controller_trigger_raw[MAX_PLAYERS];
-	float right_controller_trigger_raw[MAX_PLAYERS];
-
-	SDL_GameController* controller[MAX_PLAYERS];
 
 	friend PanelConfiguration;
 };

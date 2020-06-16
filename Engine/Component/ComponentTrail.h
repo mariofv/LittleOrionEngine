@@ -26,7 +26,7 @@ struct TrailPoint {
 
 	TrailPoint(float3 position, float width, float life) : position(position), width(width), life(life), time_left(life) {}
 
-	TrailPoint(ComponentTransform transform, float3 previous_point, float width, float life) :position(position), width(width), life(life), time_left(life)
+	TrailPoint(const ComponentTransform& transform, float3 previous_point, float width, float life) :position(position), width(width), life(life), time_left(life)
 	{
 		float3 vector_adjacent = (previous_point - transform.GetGlobalTranslation()).Normalized();//vector between each pair -> Normalized to get vector with magnitutde = 1 but same direction
 		position_perpendicular_point = vector_adjacent.Cross(transform.GetFrontVector());
