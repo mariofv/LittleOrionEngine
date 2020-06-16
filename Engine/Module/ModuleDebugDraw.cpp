@@ -3,6 +3,8 @@
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
+#include "Component/ComponentTrail.h"
+
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentParticleSystem.h"
@@ -446,6 +448,11 @@ void ModuleDebugDraw::RenderRectTransform(const GameObject* rect_owner) const
 void ModuleDebugDraw::RenderLine(float3 & a, float3 & b) const
 {
 	dd::line(a, b, float3::unitY);
+}
+
+void ModuleDebugDraw::RenderSphere(float3 & position, float radius) const
+{
+	dd::sphere(position, float3(1, 0, 1), radius);
 }
 
 void ModuleDebugDraw::RenderCameraFrustum() const

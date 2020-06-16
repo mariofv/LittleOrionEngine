@@ -11,6 +11,7 @@
 #include <GL/glew.h>
 #include <list>
 
+class ComponentBillboard;
 class ComponentMeshRenderer;
 class ComponentParticleSystem;
 class ComponentTrail;

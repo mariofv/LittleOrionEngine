@@ -9,6 +9,7 @@
 #include "Component/ComponentTransform.h"
 
 #include <queue>
+#include <list>
 
 class GameObject;
 class ComponentBillboard;
@@ -23,6 +24,8 @@ struct TrailPoint {
 	float life;//tolal life of trail point
 	float time_left;//remaining time of rendered trail point
 	bool is_rendered = false;
+
+	TrailPoint() {};
 
 	TrailPoint(float3 position, float width, float life) : position(position), width(width), life(life), time_left(life) {}
 
@@ -69,8 +72,8 @@ public:
 	int total_points = 1;
 	float3 last_point_added;
 	//Trail Generation properties
-	float width = 10.0f;
-	float duration = 0.5f;
+	float width = 1.0f;
+	float duration = 1000.0f; // in millis
 	float min_distance = 1.0f;
 
 	//Color properties
@@ -90,6 +93,14 @@ public:
 	bool on_transform_change = false;
 	//time
 	float time_counter = 0.0f;
+
+	//Toni tests stuff
+	std::vector<TrailPoint> test_points; // These are individual points that define the path
+	TrailPoint head_point;
+	std::vector <TrailPoint> points_to_delete;
+	TrailPoint last_point;
+	std::vector <std::pair <float3, float3>> mesh_points; // These are from which we're gonna build the mesh
+
 };
 
 #endif

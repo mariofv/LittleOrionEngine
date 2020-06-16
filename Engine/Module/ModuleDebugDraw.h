@@ -42,6 +42,7 @@ public:
 	void RenderGrid() const;
 	void RenderBillboards() const;
 	void RenderTangentsAndBitangents() const;
+	void RenderSphere(float3& position, float radius) const;
 	
 	void RenderRectTransform(const GameObject* rect_owner) const;
 	ENGINE_API void RenderLine(float3& a, float3& b) const;

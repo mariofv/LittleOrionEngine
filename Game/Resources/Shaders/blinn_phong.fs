@@ -129,7 +129,7 @@ void main()
 	vec3 occlusion_color = GetOcclusionColor(material, tiling);
 	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
-	vec3 fragment_normal = normal;
+	vec3 fragment_normal = normalize(normal);
 	if(material.use_normal_map)
 	{
 		vec3 normal_from_texture = GetNormalMap(material, tiling);
