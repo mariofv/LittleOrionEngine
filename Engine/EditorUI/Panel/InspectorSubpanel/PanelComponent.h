@@ -29,6 +29,7 @@ class ComponentText;
 class ComponentTransform;
 class ComponentTrail;
 class ComponentScript;
+class ComponentSpriteMask;
 class GameObject;
 
 
@@ -38,10 +39,11 @@ public:
 	PanelComponent() = default;
 	~PanelComponent() = default;
 
-	void ShowComponentTransformWindow(ComponentTransform* transform);
 	void ShowComponentMeshRendererWindow(ComponentMeshRenderer* mesh_renderer);
 	void ShowComponentCanvasRendererWindow(ComponentCanvasRenderer* canvas_renderer);
 	void ShowComponentBillboard(ComponentBillboard* billboard);
+
+	void ShowBillboardOptions(ComponentBillboard * billboard);
 
 	void ShowComponentCameraWindow(ComponentCamera* camera);
 	void ShowComponentLightWindow(ComponentLight* light);
@@ -50,6 +52,7 @@ public:
 
 	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
 	void ShowComponentImageWindow(ComponentImage* image);
+	void ShowComponentSpriteMaskWindow(ComponentSpriteMask* component_mask);
 	void ShowComponentTextWindow(ComponentText* text);
 	void ShowComponentButtonWindow(ComponentButton* button);
 

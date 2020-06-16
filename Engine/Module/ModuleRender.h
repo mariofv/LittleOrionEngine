@@ -11,12 +11,11 @@
 #include <GL/glew.h>
 #include <list>
 
-class ComponentBillboard;
-class ComponentCamera;
 class ComponentMeshRenderer;
 class ComponentParticleSystem;
 class ComponentTrail;
 class ComponentTrailRenderer;
+class ComponentCamera;
 
 class GameObject;
 

@@ -2,14 +2,25 @@
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleTime.h"
 #include "Component/ComponentAnimation.h"
 
 bool ModuleAnimation::Init()
 {
 	APP_LOG_SECTION("************ Module Animation Init ************");
-	
+	tweener = new LOTween();
 
 	return true;
+}
+
+update_status ModuleAnimation::Update()
+{
+	if (App->time->isGameRunning())
+	{
+		tweener->Update(App->time->delta_time);
+	}
+
+	return update_status::UPDATE_CONTINUE;
 }
 
 bool ModuleAnimation::CleanUp()
@@ -19,6 +30,8 @@ bool ModuleAnimation::CleanUp()
 		animation->owner->RemoveComponent(animation);
 	}
 	animations.clear();
+
+	delete(tweener);
 
 	return true;
 }
@@ -61,4 +74,15 @@ void ModuleAnimation::PlayAnimations() const
 	{
 		anim->Play();
 	}
+}
+
+TweenSequence * ModuleAnimation::CreateTweenSequence()
+{
+	TweenSequence* sequence = tweener->CreateSequence();
+	return sequence;
+}
+
+void ModuleAnimation::CleanTweens()
+{
+	tweener->Reset();
 }

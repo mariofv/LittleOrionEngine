@@ -22,16 +22,20 @@ public:
 		CROSSED			
 	};
 	
+	enum AnimationType {
+		CONSTANT,
+		RANDOM_BETWEEN_VALUES
+	};
 	ComponentBillboard();
-	ComponentBillboard(GameObject * owner);
+	ComponentBillboard(GameObject* owner);
 	~ComponentBillboard();
 
 	//Copy and move
 	ComponentBillboard(const ComponentBillboard& component_to_copy) = default;
 	ComponentBillboard(ComponentBillboard&& component_to_move) = default;
 
-	ComponentBillboard & operator=(const ComponentBillboard & component_to_copy) = default;
-	ComponentBillboard & operator=(ComponentBillboard && component_to_move) = default;
+	ComponentBillboard& operator=(const ComponentBillboard & component_to_copy) = default;
+	ComponentBillboard& operator=(ComponentBillboard && component_to_move) = default;
 	void Delete() override;
 
 	void SpecializedSave(Config& config) const override;
@@ -47,6 +51,11 @@ public:
 
 	void ChangeTexture(uint32_t texture_uuid);
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
+
+public:
+	float width = 5.f;
+	float height = 5.f;
+	float transparency = 1.f;
 
 private:
 	AlignmentType alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
@@ -66,10 +75,9 @@ private:
 	float current_sprite_x = 0, current_sprite_y = 0;
 	float sheet_speed = 1;
 	bool oriented_to_camera;
+	AnimationType animation_type = AnimationType::CONSTANT;
 
 	bool is_spritesheet = false;
-	float width = 5.f;
-	float height = 5.f;
 
 	unsigned int vbo, vao, ebo;
 

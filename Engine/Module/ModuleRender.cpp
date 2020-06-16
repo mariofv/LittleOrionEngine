@@ -6,15 +6,13 @@
 #include "ModuleDebug.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleEditor.h"
+#include "ModuleEffects.h"
 #include "ModuleProgram.h"
-#include "ModuleScene.h"
 #include "ModuleSpacePartitioning.h"
-#include "ModuleTime.h"
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
 #include "ModuleLight.h"
 
-#include "Component/ComponentBillboard.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentParticleSystem.h"
@@ -145,10 +143,7 @@ bool ModuleRender::CleanUp()
 	{
 		mesh->owner->RemoveComponent(mesh);
 	}
-	for (auto& particle : particle_systems)
-	{
-		particle->owner->RemoveComponent(particle);
-	}
+
 	return true;
 }
 
@@ -238,7 +233,9 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	
 	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
 	App->ui->Render(&camera);
+	App->effects->Render();
 
+	
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
 	
