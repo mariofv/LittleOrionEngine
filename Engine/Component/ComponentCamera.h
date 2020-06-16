@@ -160,8 +160,6 @@ private:
 	GLuint rbo = 0;
 	GLuint fbo = 0;
 	GLuint depth_rbo = 0;
-
-private:
 	GLuint msfbo = 0;
 	GLuint msfb_color = 0;
 

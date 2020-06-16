@@ -144,12 +144,12 @@ void GameObject::Duplicate(const GameObject& gameobject_to_copy)
 	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
 	this->original_UUID = gameobject_to_copy.original_UUID;
+	this->tag = gameobject_to_copy.tag;
 	if(gameobject_to_copy.prefab_reference != nullptr && !gameobject_to_copy.is_prefab_parent)
 	{
 		this->original_UUID = 0;
 		this->prefab_reference = nullptr;
 	}
-
 
 
 	return;
