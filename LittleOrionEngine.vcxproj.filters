@@ -523,6 +523,12 @@
     <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp">
       <Filter>Engine\Animation\Tween</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Actions\EdirorActionAddMultipleGO.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionDeleteMultipleGO.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1031,6 +1037,12 @@
     </ClInclude>
     <ClInclude Include="Engine\Animation\Tween\TweenSequence.h">
       <Filter>Engine\Animation\Tween</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionAddMultipleGO.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionDeleteMultipleGO.h">
+      <Filter>Engine\Actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

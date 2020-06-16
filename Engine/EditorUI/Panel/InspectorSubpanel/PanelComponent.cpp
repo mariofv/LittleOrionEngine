@@ -1140,9 +1140,12 @@ bool PanelComponent::ShowCommonComponentWindow(Component* component)
 	{
 		App->actions->SetCopyComponent(component);
 	}
-	if (ImGui::Button("Paste component as new"))
+	if (component->type != Component::ComponentType::MESH_RENDERER) 
 	{
-		App->actions->PasteComponent(component);
+		if (ImGui::Button("Paste component as new"))
+		{
+			App->actions->PasteComponent(component);
+		}
 	}
 	if (ImGui::Button("Paste component values"))
 	{

@@ -75,12 +75,16 @@ void PanelHierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 	{
 		flags |= ImGuiTreeNodeFlags_Leaf;
 	}
-	if (App->editor->selected_game_object == game_object)
+	
+	auto it = std::find(App->editor->selected_game_objects.begin(), App->editor->selected_game_objects.end(), game_object);
+	if (it != App->editor->selected_game_objects.end())
 	{
 		flags |= ImGuiTreeNodeFlags_Selected;
 	}
 
+
 	bool expanded = ImGui::TreeNodeEx(game_object_name_label.c_str(), flags);
+	
 	DragAndDrop(game_object);
 	ShowGameObjectActionsMenu(game_object);
 	ProcessMouseInput(game_object);
@@ -122,9 +126,37 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 		{
 			assert(payload->DataSize == sizeof(GameObject*));
 			GameObject *incoming_game_object = *(GameObject**)payload->Data;
-			if (!incoming_game_object->IsAboveInHierarchy(*target_game_object) && (incoming_game_object->original_UUID == 0 || incoming_game_object->is_prefab_parent))
+			bool move = true;
+			bool belongs_to_list = false;
+			for (auto go : App->editor->selected_game_objects) 
 			{
-				incoming_game_object->SetParent(target_game_object);
+				if (go->UUID == incoming_game_object->UUID) {
+					belongs_to_list = true;
+				}
+			}
+			if (belongs_to_list) {
+				for (auto go : App->editor->selected_game_objects)
+				{
+					if (!(!go->IsAboveInHierarchy(*target_game_object) && (go->original_UUID == 0 || go->is_prefab_parent)))
+					{
+						move = false;
+					}
+				}
+				if (move)
+				{
+					for (auto go : App->editor->selected_game_objects)
+					{
+						if (!App->scene->HasParentInList(go, App->editor->selected_game_objects)) {
+							go->SetParent(target_game_object);
+						}
+					}
+				}
+			}
+			else {
+				if ((!incoming_game_object->IsAboveInHierarchy(*target_game_object) && (incoming_game_object->original_UUID == 0 || incoming_game_object->is_prefab_parent)))
+				{
+					incoming_game_object->SetParent(target_game_object);
+				}
 			}
 		}
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_Resource"))
@@ -171,21 +203,50 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 		{
 			if (ImGui::Selectable("Delete GameObject"))
 			{
-				//UndoRedo
-				App->actions->action_game_object = game_object;
-				App->actions->AddUndoAction(ModuleActions::UndoActionType::DELETE_GAMEOBJECT);
-				
-				App->scene->RemoveGameObject(game_object);
+				bool belongs_to_list = false;
+				for (auto go : App->editor->selected_game_objects)
+				{
+					if (go->UUID == game_object->UUID) {
+						belongs_to_list = true;
+					}
+				}
+				if (belongs_to_list) {
+					App->actions->AddUndoAction(ModuleActions::UndoActionType::DELETE_MULTIPLE_GO);
+					for (auto go : App->editor->selected_game_objects)
+					{
+						App->scene->RemoveGameObject(go);
+					}
+					App->editor->selected_game_object = nullptr;
+					App->editor->selected_game_objects.erase(App->editor->selected_game_objects.begin(), App->editor->selected_game_objects.end());
 
-				App->editor->selected_game_object = nullptr;
+				}
+				else {
+					App->actions->action_game_object = game_object;
+					App->actions->AddUndoAction(ModuleActions::UndoActionType::DELETE_GAMEOBJECT);
+					App->scene->RemoveGameObject(game_object);
+					App->editor->selected_game_object = nullptr;
+				}
 			}
-
 			if(ImGui::Selectable("Duplicate"))
 			{
-				GameObject* duplicated_go = App->scene->DuplicateGameObject(game_object, game_object->parent);
-				App->actions->action_game_object = duplicated_go;
-				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
+				bool belongs_to_list = false;
+				for (auto go : App->editor->selected_game_objects)
+				{
+					if (go->UUID == game_object->UUID) {
+						belongs_to_list = true;
+					}
+				}
+				if (belongs_to_list) {
+					App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_MULTIPLE_GO);
+					App->scene->DuplicateGameObjectList(App->editor->selected_game_objects);
+				}
+				else {
+					GameObject* duplicated_go = App->scene->DuplicateGameObject(game_object, game_object->parent);
+					App->actions->action_game_object = duplicated_go;
+					App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
+				}
 			}
+			
 
 			if (ImGui::Selectable("Move Up"))
 			{
@@ -338,9 +399,43 @@ void PanelHierarchy::ProcessMouseInput(GameObject *game_object)
 	{
 		if (App->input->GetMouseButtonUp(MouseButton::Left))
 		{
-			App->editor->selected_game_object = game_object;
-			App->editor->show_game_object_inspector = true;
+			control_key_down = true;
 		}
+		if (App->input->GetKeyUp(KeyCode::LeftControl))
+		{
+			control_key_down = false;
+		}
+		if (control_key_down && App->input->GetKey(KeyCode::LeftControl))
+		{
+			App->editor->selected_game_object = game_object;
+			bool already_selected = false;
+			for (auto go : App->editor->selected_game_objects)
+			{
+				if ((go->UUID == game_object->UUID))
+				{
+					already_selected = true;
+				}
+			}
+			if (!already_selected)
+			{
+				App->editor->selected_game_objects.push_back(game_object);
+			}
+
+			App->editor->show_game_object_inspector = true;
+			control_key_down = false;
+		}
+		else 
+		{
+			if (control_key_down)
+			{
+				App->editor->selected_game_object = game_object;
+				App->editor->selected_game_objects.erase(App->editor->selected_game_objects.begin(), App->editor->selected_game_objects.end());
+				App->editor->selected_game_objects.push_back(game_object);
+				App->editor->show_game_object_inspector = true;
+				control_key_down = false;
+			}
+		}
+		
 
 		if (ImGui::IsMouseDoubleClicked(0))
 		{

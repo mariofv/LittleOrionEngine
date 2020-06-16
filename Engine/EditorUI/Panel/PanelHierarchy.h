@@ -33,6 +33,7 @@ private:
 private:
 	int num_game_objects = 0;
 	int branch_counter = 0;
+	bool control_key_down = false;
 };
 
 #endif //_PANELHIERARCHY_H_

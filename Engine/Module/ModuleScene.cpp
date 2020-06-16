@@ -160,6 +160,35 @@ GameObject* ModuleScene::DuplicateGameObject(GameObject* game_object, GameObject
 	return clone_GO;
 }
 
+void ModuleScene::DuplicateGameObjectList(std::vector<GameObject*> game_objects)
+{
+	for (auto go : game_objects) {
+
+		if (!HasParentInList(go, game_objects)) {
+			DuplicateGameObject(go, go->parent);
+		}
+	}
+}
+
+bool ModuleScene::HasParentInList(GameObject * go, std::vector<GameObject*> game_objects)
+{
+	if (go->GetHierarchyDepth() == 1) {
+		return false;
+	}
+
+	int depth = go->GetHierarchyDepth();
+
+	while (depth >= 2) {
+		if (BelongsToList(go->parent, game_objects)) {
+			return true;
+
+		}
+		go = go->parent;
+		depth = depth - 1;
+	}
+	return false;
+}
+
 GameObject* ModuleScene::DuplicateGO(GameObject* game_object, GameObject* parent_go)
 {
 	std::unique_ptr<GameObject> aux_copy_pointer = std::make_unique<GameObject>();
@@ -180,6 +209,17 @@ GameObject* ModuleScene::DuplicateGO(GameObject* game_object, GameObject* parent
 	}
 
 	return duplicated_go;
+}
+
+bool ModuleScene::BelongsToList(GameObject * game_object, std::vector<GameObject*> game_objects)
+{
+	for (auto go : game_objects)
+	{
+		if (go->UUID == game_object->UUID) {
+			return true;
+		}
+	}
+	return false;
 }
 
 void ModuleScene::InitDuplicatedScripts(GameObject* clone_go)

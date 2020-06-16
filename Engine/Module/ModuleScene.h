@@ -26,6 +26,9 @@ public:
 	void RemoveGameObject(GameObject* game_object_to_remove);
 	GameObject* AddGameObject(std::unique_ptr<GameObject> & game_object_to_add);
 	ENGINE_API GameObject* DuplicateGameObject(GameObject* game_object, GameObject* parent_go);
+	void DuplicateGameObjectList(std::vector<GameObject*> game_objects);
+	bool HasParentInList(GameObject* go, std::vector<GameObject*>);
+	bool BelongsToList(GameObject* go, std::vector<GameObject*>);
 	void InitDuplicatedScripts(GameObject* clone_go);
 
 	ENGINE_API GameObject* GetRoot() const;

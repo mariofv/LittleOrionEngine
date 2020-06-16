@@ -6,6 +6,8 @@
 #include "Actions/EditorActionAddComponent.h"
 #include "Actions/EditorActionDeleteComponent.h"
 #include "Actions/EditorActionAddGameObject.h"
+#include "Actions/EditorActionAddMultipleGO.h"
+#include "Actions/EditorActionDeleteMultipleGO.h"
 #include "Actions/EditorActionDeleteGameObject.h"
 #include "Actions/EditorActionTranslate.h"
 #include "Actions/EditorActionRotation.h"
@@ -137,6 +139,14 @@ void ModuleActions::AddUndoAction(UndoActionType type)
 		new_action = new EditorActionAddGameObject(
 			action_game_object
 		);
+		break;
+
+	case UndoActionType::ADD_MULTIPLE_GO:
+		new_action = new EditorActionAddMultipleGO();
+		break;
+
+	case UndoActionType::DELETE_MULTIPLE_GO:
+		new_action = new EditorActionDeleteMultipleGO();
 		break;
 
 	case UndoActionType::DELETE_GAMEOBJECT:
