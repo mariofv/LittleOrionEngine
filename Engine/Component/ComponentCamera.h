@@ -144,7 +144,6 @@ public:
 	Frustum camera_frustum;
 
 private:
-	Frustum camera_frustum;
 	GLuint rbo = 0;
 	GLuint fbo = 0;
 	
