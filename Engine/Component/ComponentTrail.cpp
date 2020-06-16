@@ -158,6 +158,8 @@ void ComponentTrail::Render()
 					trail_renderer->Render(owner->transform.GetGlobalTranslation() + outline_left);//Move perpendicular vector over points and multiply by desired width
 					trail_renderer->Render(owner->transform.GetGlobalTranslation() + outline_left);
 					trail_renderer->Render(owner->transform.GetGlobalTranslation() + point.position);
+					App->debug_draw->RenderPoint(outline_left);
+					App->debug_draw->RenderPoint(outline_right);
 				}
 			}
 			else
