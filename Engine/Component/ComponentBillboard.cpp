@@ -81,6 +81,7 @@ void ComponentBillboard::SwitchFrame()
 				{
 					play = false;
 					play_once = false;
+					Disable();
 					return;
 				}
 			}
@@ -110,6 +111,15 @@ void ComponentBillboard::ChangeBillboardType(ComponentBillboard::AlignmentType _
 		is_spritesheet = true;
 	else
 		is_spritesheet = false;
+}
+
+void ComponentBillboard::EmitOnce()
+{
+	Enable();
+	play_once = true;
+	play = true;
+	current_sprite_x = 0;
+	current_sprite_y = y_tiles - 1;
 }
 
 void ComponentBillboard::Render(const float3& position)

@@ -385,10 +385,7 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 		ImGui::Checkbox("Oriented to camera", &billboard->oriented_to_camera);
 		if (ImGui::Button("Play once"))
 		{
-			billboard->play_once = true;
-			billboard->play = true;
-			billboard->current_sprite_x = 0;
-			billboard->current_sprite_y = billboard->y_tiles-1;
+			billboard->EmitOnce();
 		}
 		if (ImGui::Button("Reset"))
 		{

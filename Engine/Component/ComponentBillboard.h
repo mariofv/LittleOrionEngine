@@ -1,6 +1,8 @@
 #ifndef _COMPONENTBILLBOARD_H_
 #define _COMPONENTBILLBOARD_H_
 
+#define ENGINE_EXPORTS
+
 #include "Component.h"
 #include "Component/ComponentAABB.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
@@ -51,6 +53,8 @@ public:
 
 	void ChangeTexture(uint32_t texture_uuid);
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
+
+	ENGINE_API void EmitOnce();
 
 public:
 	float width = 5.f;
