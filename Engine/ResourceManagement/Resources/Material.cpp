@@ -196,8 +196,8 @@ std::string Material::GetMaterialTypeName(const MaterialType material_type)
 
 void Material::UpdateLiquidProperties()
 {
-	tiling_liquid_x_x += speed_tiling_x / 1000 * App->time->real_time_delta_time;
-	tiling_liquid_x_y += speed_tiling_x / 1000 * App->time->real_time_delta_time;
-	tiling_liquid_y_x -= speed_tiling_y / 1000 * App->time->real_time_delta_time;
-	tiling_liquid_y_y -= speed_tiling_y / 1000 * App->time->real_time_delta_time;
+	tiling_liquid_x_x += speed_tiling_x / 1000 * App->time->delta_time;
+	tiling_liquid_x_y += speed_tiling_x / 1000 * App->time->delta_time;
+	tiling_liquid_y_x -= speed_tiling_y / 1000 * App->time->delta_time;
+	tiling_liquid_y_y -= speed_tiling_y / 1000 * App->time->delta_time;
 }
