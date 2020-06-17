@@ -26,6 +26,7 @@
 
 #include <Brofiler/Brofiler.h>
 #include <imgui.h>
+#include <imgui_stdlib.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
 PanelHierarchy::PanelHierarchy()
@@ -44,13 +45,30 @@ void PanelHierarchy::Render()
 		hovered = ImGui::IsWindowHovered();
 		focused = ImGui::IsWindowFocused();
 
-		for (unsigned int i = 0; i < App->scene->GetRoot()->children.size(); ++i)
-		{
-			ImGui::PushID(i);
-			ShowGameObjectHierarchy(App->scene->GetRoot()->children[i]);
-			ImGui::PopID();
-		}
+		ImGui::SameLine();
+		ImGui::Text(ICON_FA_SEARCH);
 
+		ImGui::SameLine();
+		ImGui::InputText("###GameObject Searching Input", &searching_name);
+		
+		if (searching_name != "")
+		{
+			for (unsigned int i = 0; i < App->scene->GetRoot()->children.size(); ++i)
+			{
+				ImGui::PushID(i);
+				ShowGameObjectSearch(App->scene->GetRoot()->children[i]);
+				ImGui::PopID();
+			}
+		}
+		else {
+
+			for (unsigned int i = 0; i < App->scene->GetRoot()->children.size(); ++i)
+			{
+				ImGui::PushID(i);
+				ShowGameObjectHierarchy(App->scene->GetRoot()->children[i]);
+				ImGui::PopID();
+			}
+		}
 		ImGui::BeginChild("Hierarchy###"); // This children window is used to create a clickable area for creating and dropping game objects in the root node
 		ImGui::EndChild();
 		DropTarget(App->scene->GetRoot());
@@ -99,6 +117,44 @@ void PanelHierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 		}
 		ImGui::TreePop();
 	}
+}
+
+void PanelHierarchy::ShowGameObjectSearch(GameObject *game_object)
+{
+	std::string game_object_name_label;
+	if (game_object->original_UUID != 0)
+	{
+		game_object_name_label = (std::string(ICON_FA_BOX_OPEN) + " " + game_object->name);
+	}
+	else
+	{
+		game_object_name_label = (std::string(ICON_FA_CUBE) + " " + game_object->name);
+	}
+
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Leaf;
+
+	auto it = std::find(App->editor->selected_game_objects.begin(), App->editor->selected_game_objects.end(), game_object);
+	if (it != App->editor->selected_game_objects.end())
+	{
+		flags |= ImGuiTreeNodeFlags_Selected;
+	}
+
+	std::string name = game_object->name;
+	if (searching_name != "" && name.find(searching_name) != std::string::npos) {
+		ImGui::TreeNodeEx(game_object_name_label.c_str(), flags);
+		ShowGameObjectActionsMenu(game_object);
+		ProcessMouseInput(game_object);
+		ImGui::TreePop();
+	}
+	
+	for (size_t i = 0; i < game_object->children.size(); i++)
+	{
+		ImGui::PushID(i);
+		ShowGameObjectSearch(game_object->children.at(i));	
+		ImGui::PopID();
+	}
+	
+	
 }
 
 void PanelHierarchy::DragAndDrop(GameObject *game_object) const
