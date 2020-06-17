@@ -132,7 +132,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 	}
 	
-	particle.color = { color_particle[0], color_particle[1], color_particle[2], 1.0f };
+	particle.color = { color_particle[0], color_particle[1], color_particle[2], color_particle[3]};
 	particle.life = particles_life_time*1000;
 	particle.time_passed = particle.life;
 	float4 aux_velocity(particle.velocity, 1.0F);
@@ -224,6 +224,7 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	billboard->color[0] = particle.color.x;
 	billboard->color[1] = particle.color.y;
 	billboard->color[2] = particle.color.z;
+	billboard->color[3] = particle.color.w;
 
 	//size
 	billboard->width = particles_width * particle.particle_scale;
