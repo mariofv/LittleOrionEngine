@@ -298,7 +298,6 @@ void ModuleScene::DeleteCurrentScene()
 	App->space_partitioning->ResetAABBTree();
 	App->scripts->scripts.clear();
 	App->editor->selected_game_object = nullptr;
-	App->resources->CleanResourceCache();
 }
 
 void ModuleScene::OpenScene()
