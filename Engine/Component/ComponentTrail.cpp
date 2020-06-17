@@ -58,12 +58,14 @@ void ComponentTrail::UpdateTrail()
 	GetPerpendiculars();
 
 
+	trail_renderer->rendered_vertices = test_points.size();
+
+
 	for (auto it = test_points.begin(); it < test_points.end(); ++it)
 	{
 		if (it->life >= 0) // If life is positive, all good
 		{
 			it->is_rendered = true;
-			//App->debug_draw->RenderSphere(it->position, float3(1,0, 1), 0.5);
 			it->life -= App->time->real_time_delta_time; // Update time left
 		}
 
@@ -107,7 +109,9 @@ void ComponentTrail::UpdateTrail()
 
 void  ComponentTrail::GetPerpendiculars()
 {
-
+	//											p + width		 p			p - width
+	// Calculate the points defined by the width	·  --------- · ---------  ·
+	//												<-- width --->
 
 	for (int i = 0; i < test_points.size(); ++i)
 	{
@@ -120,33 +124,23 @@ void  ComponentTrail::GetPerpendiculars()
 
 		mesh_points.push_back(std::make_pair(outline_right, outline_left));
 
-		//Get the middle point between each 2 points
-		//float3 middle_point = (test_points[i].position + test_points[i + 1].position) / 2;
-
 	}
 
 	for (auto it = mesh_points.begin(); it < mesh_points.end(); ++it)
 	{
 		if (it->first.life >= 0 && it->second.life >= 0) // If life is positive, all good
 		{
-			//it->is_rendered = true;
-			//->debug_draw->RenderSphere(it->first.position, float3(1, 0, 0), 0.5);
-			it->first.life -= App->time->real_time_delta_time; // Update time left
-
-			App->debug_draw->RenderLine(it->first.position, it->second.position);
-			it->second.life -= App->time->real_time_delta_time; // Update time left
+			it->first.life -= App->time->real_time_delta_time;
+			it->second.life -= App->time->real_time_delta_time;
+			App->debug_draw->RenderLine(it->first.position, it->second.position); // Draw the perpendicular vector
 		}
-
-		
-		else // But if not, we delete these points
+	
+		else// But if not, we delete these points
+			
 		{
-			it = mesh_points.erase(it);
+			it = mesh_points.erase(it);	
 		}
 	}
-
-	
-
-
 }
 
 void  ComponentTrail::RespawnTrailPoint(TrailPoint& point)
@@ -174,17 +168,7 @@ void ComponentTrail::Render()
 	unsigned int destroy_point_vertice = 0;
 	if (active)
 	{
-		//												p + width	 p		p - width
-		// Calculate the points defined by the width	·	  ------ · ------	·
-		//												<-- width --->
-
-		
-
-		/*for (int i = 0; i < mesh_points.size(); ++i)
-		{
-			App->debug_draw->RenderSphere(mesh_points[i].first, float3(1, 0, 0), 1);
-			App->debug_draw->RenderSphere(mesh_points[i].second, float3(1, 0, 0), 1);
-		}*/
+											
 
 		UpdateTrail(); // Do this last 
 
