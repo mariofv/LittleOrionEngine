@@ -311,8 +311,8 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 
 		if (material->material_type == Material::MaterialType::MATERIAL_LIQUID)
 		{
-
-			if (material->tiling_liquid_x_x >= 1)
+			//TODO->change it to liquid maps and not hardcoded
+			/*if (material->tiling_liquid_x_x >= 1)
 			{
 				material->tiling_liquid_x_x = 0;
 				material->tiling_liquid_x_y = 0;
@@ -321,7 +321,7 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 			{
 				material->tiling_liquid_y_x = 0;
 				material->tiling_liquid_y_y = 0;
-			}
+			}*/
 
 			if (ImGui::SliderFloat("Speed Tiling X", &material->speed_tiling_x, 0.01f, 1.0f))
 			{

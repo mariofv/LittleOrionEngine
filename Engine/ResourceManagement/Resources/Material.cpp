@@ -170,6 +170,7 @@ void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uui
 	}
 	use_normal_map = type == MaterialTextureType::NORMAL && texture_uuid !=0;
 	use_specular_map = type == MaterialTextureType::SPECULAR && texture_uuid != 0;
+	use_liquid_map = type == MaterialTextureType::LIQUID && texture_uuid != 0;
 }
 
 const std::shared_ptr<Texture>& Material::GetMaterialTexture(MaterialTextureType type) const
@@ -199,8 +200,11 @@ std::string Material::GetMaterialTypeName(const MaterialType material_type)
 
 void Material::UpdateLiquidProperties()
 {
-	tiling_liquid_x_x += speed_tiling_x / 1000 * App->time->delta_time;
-	tiling_liquid_x_y += speed_tiling_x / 1000 * App->time->delta_time;
+	//TODO->change it to liquid maps and not hardcoded
+	//tiling_liquid_x_x += speed_tiling_x / 1000 * App->time->delta_time;
+	//tiling_liquid_x_y += speed_tiling_x / 1000 * App->time->delta_time;
 	tiling_liquid_y_x -= speed_tiling_y / 1000 * App->time->delta_time;
 	tiling_liquid_y_y -= speed_tiling_y / 1000 * App->time->delta_time;
+	tiling_liquid_x_x += speed_tiling_x / 1000 * App->time->delta_time;
+	tiling_liquid_x_y += speed_tiling_y / 1000 * App->time->delta_time;
 }
