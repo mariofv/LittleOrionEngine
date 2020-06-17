@@ -2,9 +2,9 @@
 
 #include "Main/Application.h"
 
+#include "Module/ModuleEffects.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
-#include "Module/ModuleRender.h"
 #include "Module/ModuleTime.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
@@ -70,25 +70,36 @@ void ComponentBillboard::InitData()
 void ComponentBillboard::SwitchFrame()
 {
 	time_since_start += App->time->delta_time;
-	APP_LOG_INFO("%.1f", time_since_start);
-
-	if (time_since_start * sheet_speed >= 1)
+	if (play)
 	{
-		current_sprite_x += 1;
-
-		if ((int)current_sprite_x >= x_tiles) 
+		if (time_since_start * sheet_speed >= 1000)
 		{
-			current_sprite_y--;
-			current_sprite_x = 0;
-		}
+			current_sprite_x++;
+			if (play_once)
+			{
+				if (current_sprite_y == y_tiles && current_sprite_x == x_tiles-1)
+				{
+					play = false;
+					play_once = false;
+					Disable();
+					return;
+				}
+			}
+			
+			if ((int)current_sprite_x >= x_tiles)
+			{
+				current_sprite_y--;
+				current_sprite_x = 0;
+			}
 
-		if ((int)current_sprite_y <= 0) 
-		{
-			current_sprite_y = y_tiles;
+			if ((int)current_sprite_y <= 0)
+			{
+				current_sprite_y = y_tiles;
+			}
+			
+			time_since_start = 0.f;
 		}
-		time_since_start = 0.f;
 	}
-
 
 }
 
@@ -102,8 +113,22 @@ void ComponentBillboard::ChangeBillboardType(ComponentBillboard::AlignmentType _
 		is_spritesheet = false;
 }
 
+void ComponentBillboard::EmitOnce()
+{
+	Enable();
+	play_once = true;
+	play = true;
+	current_sprite_x = 0;
+	current_sprite_y = y_tiles - 1;
+}
+
 void ComponentBillboard::Render(const float3& position)
 {
+	if(!active)
+	{
+		return;
+	}
+
 	GLuint shader_program = App->program->GetShaderProgramId("Billboard");
 	glUseProgram(shader_program);
 
@@ -180,7 +205,7 @@ Component* ComponentBillboard::Clone(bool original_prefab) const
 	}
 	else
 	{
-		created_component = App->renderer->CreateComponentBillboard();
+		created_component = App->effects->CreateComponentBillboard();
 	}
 	*created_component = *this;
 	return created_component;
@@ -195,7 +220,7 @@ void ComponentBillboard::Copy(Component* component_to_copy) const
 
 void ComponentBillboard::Delete()
 {
-	App->renderer->RemoveComponentBillboard(this);
+	App->effects->RemoveComponentBillboard(this);
 }
 
 void ComponentBillboard::SpecializedSave(Config& config) const
@@ -212,10 +237,9 @@ void ComponentBillboard::SpecializedSave(Config& config) const
 void ComponentBillboard::SpecializedLoad(const Config& config)
 {
 	
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
 	sheet_speed = config.GetFloat("SheetSpeed", 1.f);
 	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::SPRITESHEET)));
+	ChangeBillboardType(alignment_type);
 	texture_uuid = config.GetUInt("TextureUUID", 0);
 	
 	ChangeTexture(texture_uuid);

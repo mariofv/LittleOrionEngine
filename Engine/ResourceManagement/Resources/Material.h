@@ -64,7 +64,7 @@ public:
 	std::vector<std::shared_ptr<Texture>> textures;
 
 	float diffuse_color[4] = { 1.0f, 1.0f,1.0f,1.0f };
-	float emissive_color[4] = { 0.0f, 0.0f, 0.0f , 1.0f };
+	float emissive_color[4] = { 1.0f, 1.0f, 1.0f , 1.0f };
 	float specular_color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float k_diffuse = 1.0f;
 	float k_specular = 1.0f;

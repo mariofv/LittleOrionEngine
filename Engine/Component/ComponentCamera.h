@@ -141,13 +141,11 @@ public:
 	bool toggle_msaa = false;
 	bool is_focusing = false;
 
-private:
 	Frustum camera_frustum;
+
+private:
 	GLuint rbo = 0;
 	GLuint fbo = 0;
-private:
-	
-	
 	
 	GLuint msfbo = 0;
 	GLuint msfb_color = 0;

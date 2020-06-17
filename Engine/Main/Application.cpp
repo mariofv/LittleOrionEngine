@@ -8,6 +8,7 @@
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleEffects.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleLight.h"
@@ -38,6 +39,7 @@ Application::Application()
 	modules.emplace_back(time = new ModuleTime());
 	modules.emplace_back(texture = new ModuleTexture());
 	modules.emplace_back(renderer = new ModuleRender());
+	modules.emplace_back(effects = new ModuleEffects());
 	modules.emplace_back(animations = new ModuleAnimation());
 	modules.emplace_back(editor = new ModuleEditor());
 	modules.emplace_back(actions = new ModuleActions());

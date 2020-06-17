@@ -12,6 +12,9 @@ public:
 	~PanelBuildOptions() = default;
 
 	void Render() override;
+
+private:
+	bool build_options_modified = false;
 };
 
 #endif //_PANELBUILDOPTIONS_H_

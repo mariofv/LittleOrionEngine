@@ -9,9 +9,24 @@ enum TextureType
 	NORMAL,
 	TOTAL
 };
+enum WrapMode
+{
+	REPEAT,
+	CLAMP,
+	MIRROR,
+	MIRROR_ONCE
+};
+
+enum FilterMode
+{
+	NEAREST,
+	LINEAR
+};
 struct TextureOptions
 {
 	TextureType texture_type = TextureType::DEFAULT;
+	WrapMode wrap_mode = WrapMode::REPEAT;
+	FilterMode filter_mode = FilterMode::LINEAR;
 	bool generate_mipmaps = true;
 
 };

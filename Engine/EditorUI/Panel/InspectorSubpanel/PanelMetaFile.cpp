@@ -55,7 +55,7 @@ void PanelMetaFile::ApplyMetafileChanges(Metafile * metafile)
 	if (found)
 	{
 		App->scene->SaveTmpScene();
-		App->scene->LoadScene();
+		App->scene->LoadTmpScene();
 	}
 }
 
@@ -128,6 +128,37 @@ void PanelMetaFile::ShowTextureMetaFile(TextureMetafile * metafile)
 		ImGui::EndCombo();
 	}
 
+	static std::vector<const char*> texture_wrap_mode = { "Repeat","Clamp", "Mirror","Mirror once"};
+	if (ImGui::BeginCombo("Wrap mode", GetTextureWrapModeName(metafile->texture_options.wrap_mode).c_str()))
+	{
+		size_t i = 0;
+		for (auto& wrap_mode : texture_wrap_mode)
+		{
+			bool is_selected = (i == metafile->texture_options.wrap_mode);
+			if (ImGui::Selectable(wrap_mode, is_selected))
+			{
+				metafile->texture_options.wrap_mode = static_cast<WrapMode>(i);
+			}
+			++i;
+		}
+		ImGui::EndCombo();
+	}
+
+	static std::vector<const char*> texture_filter_modes = { "Nearest", "Linear" };
+	if (ImGui::BeginCombo("Filter mode", GetTextureFilterModeName(metafile->texture_options.filter_mode).c_str()))
+	{
+		size_t i = 0;
+		for (auto& filter_mode : texture_filter_modes)
+		{
+			bool is_selected = (i == metafile->texture_options.filter_mode);
+			if (ImGui::Selectable(filter_mode, is_selected))
+			{
+				metafile->texture_options.filter_mode = static_cast<FilterMode>(i);
+			}
+			++i;
+		}
+		ImGui::EndCombo();
+	}
 	ImGui::Checkbox("Generate Mip Maps", &metafile->texture_options.generate_mipmaps);
 }
 
@@ -146,4 +177,41 @@ std::string PanelMetaFile::GetTextureTypeName(TextureType texture_type_id) const
 		break;
 	}
 	return "";
+}
+
+std::string PanelMetaFile::GetTextureFilterModeName(FilterMode filter_mode) const
+{
+	switch (filter_mode)
+	{
+	case NEAREST:
+		return "Nearest";
+		break;
+	case LINEAR:
+		return "Linear";
+	default:
+		break;
+	}
+
+}
+
+std::string PanelMetaFile::GetTextureWrapModeName(WrapMode wrap_mode) const
+{
+	switch (wrap_mode)
+	{
+	case REPEAT:
+		return "Repeat";
+		break;
+	case CLAMP:
+		return "Clamp";
+		break;
+	case MIRROR:
+		return "Mirror";
+		break;
+	case MIRROR_ONCE:
+		return "Mirror once";
+		break;
+	default:
+		return "Repeat";
+		break;
+	}
 }

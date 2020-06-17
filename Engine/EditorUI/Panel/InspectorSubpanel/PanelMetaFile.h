@@ -7,6 +7,9 @@ class Metafile;
 class ModelMetafile;
 class TextureMetafile;
 enum TextureType;
+enum WrapMode;
+enum FilterMode;
+
 class PanelMetaFile : public Panel
 {
 public:
@@ -22,6 +25,10 @@ private:
 	void ShowTextureMetaFile(TextureMetafile * metafile);
 
 	std::string GetTextureTypeName(TextureType texture_type_id) const;
+
+	std::string GetTextureFilterModeName(FilterMode filter_mode) const;
+
+	std::string GetTextureWrapModeName(WrapMode wrap_mode) const;
 
 };
 
