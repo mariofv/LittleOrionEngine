@@ -122,6 +122,11 @@ void ComponentBillboard::EmitOnce()
 	current_sprite_y = y_tiles - 1;
 }
 
+bool ComponentBillboard::IsPlaying()
+{
+	return play;
+}
+
 void ComponentBillboard::Render(const float3& position)
 {
 	if(!active)
