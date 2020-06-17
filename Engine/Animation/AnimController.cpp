@@ -19,7 +19,6 @@ void AnimController::GetClipTransform(uint32_t skeleton_uuid, std::vector<math::
 			continue;
 		}
 		float weight = j != ClipType::ACTIVE ? playing_clips[j].current_time / (playing_clips[j].time * 1.0f) : 0.0f;
-		playing_clips[j].weight = weight;
 		float current_percentage = static_cast<float>(playing_clips[j].current_time) / clip->animation_time;
 		float current_keyframe = current_percentage * (clip->animation->frames - 1);
 
@@ -125,7 +124,6 @@ void AnimController::StartNextState(const std::string& trigger)
 		float time_left = playing_clips[ClipType::ACTIVE].clip->animation_time - playing_clips[ClipType::ACTIVE].current_time;
 		if (time_left <= active_transition->interpolation_time)
 		{
- 			playing_clips[ClipType::ACTIVE].stuck = true;
 			playing_clips[ClipType::NEXT].time = time_left * 0.5f;
 		}
 	}
