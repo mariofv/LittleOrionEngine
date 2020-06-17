@@ -350,7 +350,18 @@ ENGINE_API void ModuleScene::LoadScene(const std::string &path)
 
 ENGINE_API void ModuleScene::LoadScene(unsigned position)
 {
-	pending_scene_uuid = build_options->GetSceneUUID(position);
+	if (build_options->is_imported)
+	{
+		pending_scene_uuid = build_options->GetSceneUUID(position);
+		if (pending_scene_uuid == 0)
+		{
+			OpenNewScene();
+		}
+	}
+	else
+	{
+		OpenNewScene();
+	}
 }
 
 void ModuleScene::SaveScene(uint32_t scene_uuid)
