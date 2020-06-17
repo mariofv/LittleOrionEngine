@@ -36,6 +36,7 @@ void ComponentAudioSource::Update()
 void ComponentAudioSource::Delete()
 {
 	StopAll();
+	StopEvent("menu_select");
 	AK::SoundEngine::UnregisterGameObj(gameobject_source);
 	App->audio->RemoveComponentAudioSource(this);
 }
