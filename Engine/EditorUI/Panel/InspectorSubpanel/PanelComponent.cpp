@@ -267,12 +267,12 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			{
 				if (particle_system->enabled_random_x)
 				{
-					ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 1000);
-					ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -1000, 0);
+					ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 10000);
+					ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -10000, 0);
 				}
 				else
 				{
-					ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -100, 1000);
+					ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -100, 10000);
 				}
 				ImGui::SameLine();
 				ImGui::Checkbox("Rand X", &particle_system->enabled_random_x);
@@ -281,12 +281,12 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 
 				if (particle_system->enabled_random_z)
 				{
-					ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 1000);
-					ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -1000, 0);
+					ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 10000);
+					ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -10000, 0);
 				}
 				else
 				{
-					ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -100, 1000);
+					ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -100, 10000);
 				}
 				ImGui::SameLine();
 				ImGui::Checkbox("Rand Z", &particle_system->enabled_random_z);
