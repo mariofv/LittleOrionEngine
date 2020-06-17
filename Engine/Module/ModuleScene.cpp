@@ -321,6 +321,7 @@ inline void ModuleScene::LoadSceneResource()
 	if (pending_scene_uuid == tmp_scene->GetUUID())
 	{
 		tmp_scene.get()->Load();
+		current_scene = last_scene;
 	}
 	else if (pending_scene_uuid == GetSceneUUIDFromPath(DEFAULT_SCENE_PATH))
 	{
@@ -380,6 +381,7 @@ void ModuleScene::OpenNewScene()
 void ModuleScene::SaveTmpScene()
 {
 	App->resources->Save<Scene>(tmp_scene);
+	last_scene = current_scene;
 }
 
 void ModuleScene::LoadTmpScene()
