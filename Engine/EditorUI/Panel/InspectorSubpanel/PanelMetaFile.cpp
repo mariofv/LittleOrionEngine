@@ -55,7 +55,7 @@ void PanelMetaFile::ApplyMetafileChanges(Metafile * metafile)
 	if (found)
 	{
 		App->scene->SaveTmpScene();
-		App->scene->LoadScene();
+		App->scene->LoadTmpScene();
 	}
 }
 

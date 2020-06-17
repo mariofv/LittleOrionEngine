@@ -126,7 +126,7 @@ void ModuleTime::Play()
 	else
 	{
 		game_time_clock->Stop();
-		App->scene->LoadScene();
+		App->scene->LoadTmpScene();
 	}
 }
 
@@ -164,6 +164,11 @@ void ModuleTime::StepFrame()
 void ModuleTime::SetTimeScale(float time_scale)
 {
 	this->time_scale = time_scale;
+}
+
+void ModuleTime::ResetInitFrame()
+{
+	frame_start_time = game_time_clock->Read();
 }
 
 bool ModuleTime::isGameRunning()
