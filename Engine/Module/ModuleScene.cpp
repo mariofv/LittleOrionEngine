@@ -39,6 +39,8 @@ bool ModuleScene::Init()
 	assert(scene_metafile != nullptr);
 	tmp_scene = App->resources->Load<Scene>(scene_metafile->uuid);
 
+
+
 	return true;
 }
 
@@ -302,7 +304,7 @@ void ModuleScene::DeleteCurrentScene()
 
 void ModuleScene::OpenScene()
 {
-	App->scene->DeleteCurrentScene();
+	DeleteCurrentScene();
 	root = new GameObject(0);
 
 	LoadSceneResource();

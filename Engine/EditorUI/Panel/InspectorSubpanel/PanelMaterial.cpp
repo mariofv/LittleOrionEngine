@@ -163,6 +163,10 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		{
 			material->use_liquid_map = true;
 		}
+		if (type == Material::MaterialTextureType::SPECULAR)
+		{
+			material->use_specular_map = true;
+		}
 		std::shared_ptr<Texture>& texture = material->textures[type];
 		display_image = (void*)(intptr_t)texture->opengl_texture;
 	}
@@ -274,12 +278,16 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 
 		ImGui::Spacing();
 		ImGui::Indent();
-
+		
 		if (ImGui::ColorEdit3("Color", material->specular_color))
 		{
 			modified_by_user = true;
 		}
 		if (ImGui::SliderFloat("k specular", &material->k_specular, 0.f, 1.f))
+		{
+			modified_by_user = true;
+		}
+		if (ImGui::SliderFloat("Shininess", &material->specular_color[3], 0.f, 1.f))
 		{
 			modified_by_user = true;
 		}
@@ -337,6 +345,10 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		if (type == Material::MaterialTextureType::LIQUID)
 		{
 			material->use_liquid_map = false;
+		}
+		if (type == Material::MaterialTextureType::SPECULAR)
+		{
+			material->use_specular_map = false;
 		}
 		modified_by_user = true;
 	}

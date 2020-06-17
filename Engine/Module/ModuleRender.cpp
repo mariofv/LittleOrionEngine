@@ -118,7 +118,7 @@ bool ModuleRender::Init()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	APP_LOG_SUCCESS("Glew initialized correctly.")
+	APP_LOG_SUCCESS("Glew initialized correctly.");
 
 	return true;
 }
@@ -151,7 +151,11 @@ void ModuleRender::Render() const
 #if GAME
 	if (App->cameras->main_camera != nullptr) 
 	{
+		App->cameras->directional_light_camera->RecordFrame(App->window->GetWidth() * 4, App->window->GetHeight() * 4);
+		App->cameras->directional_light_mid->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
+		App->cameras->directional_light_far->RecordFrame(App->window->GetWidth() / 4, App->window->GetHeight() / 4);
 		App->cameras->main_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
+
 		App->cameras->main_camera->RecordDebugDraws();
 	}
 #endif
@@ -189,6 +193,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			mesh.second->Render();
 			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
 			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
+			App->lights->UpdateLightAABB(*mesh.second->owner);
 			glUseProgram(0);
 
 		}
@@ -205,6 +210,8 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			mesh.second->Render();
 			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
 			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
+			App->lights->UpdateLightAABB(*mesh.second->owner);
+
 			glUseProgram(0);
 			
 		}
@@ -296,6 +303,7 @@ void ModuleRender::SetBlending(bool gl_blend)
 	this->gl_blend = gl_blend;
 
 }
+
 
 void ModuleRender::SetFaceCulling(bool gl_cull_face)
 {

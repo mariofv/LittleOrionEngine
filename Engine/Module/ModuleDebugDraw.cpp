@@ -396,8 +396,8 @@ bool ModuleDebugDraw::Init()
     APP_LOG_SUCCESS("Module Debug Draw initialized correctly.")
 
 	return true;
-}	
-	
+}
+
 
 void ModuleDebugDraw::RenderTangentsAndBitangents() const
 {
@@ -461,7 +461,15 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 	if (selected_camera_component != nullptr) {
 		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
 
-		dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
+		if(selected_camera->camera_frustum.type == FrustumType::PerspectiveFrustum)
+			dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
+
+		if (selected_camera->camera_frustum.type == FrustumType::OrthographicFrustum)
+		{
+			float3 points[8];
+			selected_camera->camera_frustum.GetCornerPoints(points);
+			dd::box(points, float3(1, 1, 1), 0, true);
+		}
 	}	
 }
 
