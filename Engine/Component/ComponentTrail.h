@@ -99,7 +99,8 @@ public:
 	TrailPoint head_point;
 	std::vector <TrailPoint> points_to_delete;
 	TrailPoint last_point;
-	std::vector <std::pair <float3, float3>> mesh_points; // These are from which we're gonna build the mesh
+	std::vector <std::pair <TrailPoint, TrailPoint>> mesh_points; // These are from which we're gonna build the mesh
+	void GetPerpendiculars();
 
 };
 

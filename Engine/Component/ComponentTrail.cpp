@@ -55,12 +55,15 @@ void ComponentTrail::UpdateTrail()
 		}
 	}
 
+	GetPerpendiculars();
+
+
 	for (auto it = test_points.begin(); it < test_points.end(); ++it)
 	{
 		if (it->life >= 0) // If life is positive, all good
 		{
 			it->is_rendered = true;
-			App->debug_draw->RenderSphere(it->position, 1);
+			//App->debug_draw->RenderSphere(it->position, float3(1,0, 1), 0.5);
 			it->life -= App->time->real_time_delta_time; // Update time left
 		}
 
@@ -69,6 +72,8 @@ void ComponentTrail::UpdateTrail()
 			it = test_points.erase(it);
 		}
 	}
+
+
 	
 	/*total_points = trail_points.size();
 	for (unsigned int i = 0; i < total_points; ++i)
@@ -100,6 +105,50 @@ void ComponentTrail::UpdateTrail()
 	}*/
 }
 
+void  ComponentTrail::GetPerpendiculars()
+{
+
+
+	for (int i = 0; i < test_points.size(); ++i)
+	{
+		//Get the vector that links every two points
+		float3 vector_adjacent = (test_points[i + 1].position - test_points[i].position).Normalized();//vector between each pair -> Normalized to get vector with magnitutde = 1 but same direction
+		float3 perpendicular = vector_adjacent.Cross(owner->transform.GetFrontVector());
+
+		TrailPoint outline_left(test_points[i].position + perpendicular * width, 0, duration);
+		TrailPoint outline_right(test_points[i].position - perpendicular * width, 0, duration);
+
+		mesh_points.push_back(std::make_pair(outline_right, outline_left));
+
+		//Get the middle point between each 2 points
+		//float3 middle_point = (test_points[i].position + test_points[i + 1].position) / 2;
+
+	}
+
+	for (auto it = mesh_points.begin(); it < mesh_points.end(); ++it)
+	{
+		if (it->first.life >= 0 && it->second.life >= 0) // If life is positive, all good
+		{
+			//it->is_rendered = true;
+			//->debug_draw->RenderSphere(it->first.position, float3(1, 0, 0), 0.5);
+			it->first.life -= App->time->real_time_delta_time; // Update time left
+
+			App->debug_draw->RenderLine(it->first.position, it->second.position);
+			it->second.life -= App->time->real_time_delta_time; // Update time left
+		}
+
+		
+		else // But if not, we delete these points
+		{
+			it = mesh_points.erase(it);
+		}
+	}
+
+	
+
+
+}
+
 void  ComponentTrail::RespawnTrailPoint(TrailPoint& point)
 {
 	point.time_left -= App->time->real_time_delta_time; //reduce life of 1st point
@@ -129,14 +178,15 @@ void ComponentTrail::Render()
 		// Calculate the points defined by the width	·	  ------ · ------	·
 		//												<-- width --->
 
-		for (int i = 0; i < test_points.size(); ++i) 
+		
+
+		/*for (int i = 0; i < mesh_points.size(); ++i)
 		{
-			//Create 2 extra points with the width 
-			// They must be perpendicular
+			App->debug_draw->RenderSphere(mesh_points[i].first, float3(1, 0, 0), 1);
+			App->debug_draw->RenderSphere(mesh_points[i].second, float3(1, 0, 0), 1);
+		}*/
 
-		}
-
-		UpdateTrail();
+		UpdateTrail(); // Do this last 
 
 		/*for (unsigned int i = 0; i < total_points; ++i)
 		{

@@ -450,9 +450,9 @@ void ModuleDebugDraw::RenderLine(float3 & a, float3 & b) const
 	dd::line(a, b, float3::unitY);
 }
 
-void ModuleDebugDraw::RenderSphere(float3 & position, float radius) const
+void ModuleDebugDraw::RenderSphere(float3& position, float3& color, float radius) const
 {
-	dd::sphere(position, float3(1, 0, 1), radius);
+	dd::sphere(position, color, radius);
 }
 
 void ModuleDebugDraw::RenderCameraFrustum() const
