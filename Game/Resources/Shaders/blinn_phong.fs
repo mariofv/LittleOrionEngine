@@ -173,7 +173,7 @@ void main()
 	vec3 occlusion_color = GetOcclusionColor(material, tiling);
 	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
-	vec3 fragment_normal = normal;
+	vec3 fragment_normal = normalize(normal);
 	//fragment_normal = CalculateNormalMapAndLiquid(material, tiling); TODO change it to liquid maps
 	if(material.use_normal_map)	
 	{	
