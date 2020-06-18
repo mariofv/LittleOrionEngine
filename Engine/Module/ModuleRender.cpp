@@ -151,9 +151,18 @@ void ModuleRender::Render() const
 #if GAME
 	if (App->cameras->main_camera != nullptr) 
 	{
+		glBindFramebuffer(GL_FRAMEBUFFER, App->cameras->directional_light_camera->fbo);
 		App->cameras->directional_light_camera->RecordFrame(App->window->GetWidth() * 4, App->window->GetHeight() * 4);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, App->cameras->directional_light_mid->fbo);
 		App->cameras->directional_light_mid->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, App->cameras->directional_light_far->fbo);
 		App->cameras->directional_light_far->RecordFrame(App->window->GetWidth() / 4, App->window->GetHeight() / 4);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 		App->cameras->main_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
 
 		App->cameras->main_camera->RecordDebugDraws();
