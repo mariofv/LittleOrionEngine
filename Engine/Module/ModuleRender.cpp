@@ -71,7 +71,7 @@ static void APIENTRY openglCallbackFunction(
 		OPENGL_LOG_ERROR(error_message);
 		break;
 	case GL_DEBUG_SEVERITY_MEDIUM:
-		OPENGL_LOG_INIT(error_message); // Actually not an itialization entry, I use this type of entry because the yellow color
+		//OPENGL_LOG_INIT(error_message); // Actually not an itialization entry, I use this type of entry because the yellow color
 		break;
 	case GL_DEBUG_SEVERITY_LOW:
 		//OPENGL_LOG_INFO(error_message); Too many messages in update
