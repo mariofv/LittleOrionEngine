@@ -55,6 +55,7 @@ public:
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
 
 	ENGINE_API void EmitOnce();
+	ENGINE_API bool IsPlaying();
 
 public:
 	float width = 5.f;

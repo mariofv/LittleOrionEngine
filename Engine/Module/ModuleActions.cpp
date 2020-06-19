@@ -247,10 +247,10 @@ void ModuleActions::HandleInput()
 	if(App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::S) && !App->input->GetKey(KeyCode::LeftShift))
 	{
 		//Differenciate when we have to save as or save normally
-		if(App->editor->current_scene_path != "")
+		if(App->scene->CurrentSceneIsSaved())
 		{
 			//Save Scene normally
-			App->editor->SaveScene(App->editor->current_scene_path);
+			App->scene->SaveScene();
 		}
 		else
 		{
@@ -280,8 +280,7 @@ void ModuleActions::HandleInput()
 
 	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::N))
 	{
-		App->editor->current_scene_path = "";
-		App->editor->OpenScene(DEFAULT_SCENE_PATH);
+		App->scene->OpenNewScene();
 	}
 
 	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::O))

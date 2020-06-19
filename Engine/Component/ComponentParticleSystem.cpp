@@ -374,6 +374,7 @@ void ComponentParticleSystem::Copy(Component * component_to_copy) const
 
 void ComponentParticleSystem::Emit(size_t count)
 {
+	playing = true;
 	if (count < max_particles_number)
 	{
 		playing_particles_number = count;
@@ -388,6 +389,7 @@ void ComponentParticleSystem::Emit(size_t count)
 void ComponentParticleSystem::Play()
 {
 	playing = true;
+	playing_particles_number = MAX_PARTICLES;
 }
 
 void ComponentParticleSystem::Stop()

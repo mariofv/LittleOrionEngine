@@ -240,16 +240,6 @@ bool ModuleEditor::CleanUp()
 	return true;
 }
 
-ENGINE_API void ModuleEditor::OpenScene(const std::string &path) const
-{
-	App->scene->LoadScene(path);
-}
-
-void ModuleEditor::SaveScene(const std::string& path) const
-{
-	App->scene->SaveScene();
-}
-
 ImFont* ModuleEditor::GetFont(const Fonts & font) const
 {
 	ImGuiIO& io = ImGui::GetIO();

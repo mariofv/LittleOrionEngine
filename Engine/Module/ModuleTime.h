@@ -24,6 +24,7 @@ public:
 	ENGINE_API float GetFPS() const;
 	void SetMaxFPS(int fps);
 	void SetTimeScale(float time_scale);
+	void ResetInitFrame();
 
 	bool isGameRunning();
 
