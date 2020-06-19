@@ -18,7 +18,7 @@ out vec4 FragColor;
 
 //constants
 const float gamma = 2.2;
-
+const float ambient_light_strength = 0.1;
 
 vec3 normal_from_texture;
 vec3 liquid_normal_from_texture;
@@ -158,7 +158,7 @@ void main()
 	
 
 	vec3 result = vec3(0);
-
+	vec3 ambient = ambient_light_color.xyz* ambient_light_strength*ambient_light_intensity;
 	//tiling
 	vec2 tiling = vec2(material.tiling_x, material.tiling_y)*texCoord;
 	//TODO->change it to liquid maps and not hardcoded
@@ -197,7 +197,7 @@ void main()
 	}
 	 
 	result += emissive_color;
-	result += diffuse_color.rgb * (ambient_light_color.xyz*ambient_light_intensity); //Ambient light
+	result += diffuse_color.rgb * ambient; //Ambient light
 	//result += FrustumsCheck();
 	//FragColor = vec4(vec3(normalize(tangent)),1.0);
 	FragColor = vec4(result,1.0);
