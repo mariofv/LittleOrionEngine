@@ -20,6 +20,7 @@ bool ModuleTexture::Init()
 	APP_LOG_SECTION("************ Module Texture Init ************");
 	GenerateTexture(checkerboard_texture_id, PATRON::CHECKBOARD);
 	GenerateTexture(whitefall_texture_id, PATRON::WHITE);
+	GenerateTexture(blackfall_texture_id, PATRON::BLACK);
 	return true;
 }
 
@@ -28,6 +29,7 @@ bool ModuleTexture::CleanUp()
 {
 	glDeleteTextures(1, &checkerboard_texture_id);
 	glDeleteTextures(1, &whitefall_texture_id);
+	glDeleteTextures(1, &blackfall_texture_id);
 	return true;
 }
 
@@ -40,6 +42,9 @@ GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const
 		break;
 	case PATRON::WHITE:
 		return 255;
+		break;
+	case PATRON::BLACK:
+		return 0;
 		break;
 	default:
 		return 0;
@@ -71,7 +76,8 @@ void ModuleTexture::GenerateTexture(GLuint &texture_id_to_store, PATRON color_id
 	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, generate_texture_width, generate_texture_height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	//glBindTexture(GL_TEXTURE_2D, 0);
 
-	GLubyte texData[] = { 255, 255, 255, 255 };
+	GLubyte color = GetColor(0, 0, color_id);
+	GLubyte texData[] = { color, color, color, color };
 
 	glGenTextures(1, &texture_id_to_store);
 	glBindTexture(GL_TEXTURE_2D, texture_id_to_store);

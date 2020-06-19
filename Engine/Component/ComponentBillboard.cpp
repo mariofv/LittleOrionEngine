@@ -70,25 +70,37 @@ void ComponentBillboard::InitData()
 void ComponentBillboard::SwitchFrame()
 {
 	time_since_start += App->time->delta_time;
-	APP_LOG_INFO("%.1f", time_since_start);
-
-	if (time_since_start * sheet_speed >= 1000)
+	if (play)
 	{
-		current_sprite_x += 1;
-
-		if ((int)current_sprite_x >= x_tiles) 
+		if (time_since_start * sheet_speed >= 1000)
 		{
-			current_sprite_y--;
-			current_sprite_x = 0;
-		}
 
-		if ((int)current_sprite_y <= 0) 
-		{
-			current_sprite_y = static_cast<float>(y_tiles);
+			current_sprite_x++;
+			if (play_once)
+			{
+				if (current_sprite_y == y_tiles && current_sprite_x == x_tiles-1)
+				{
+					play = false;
+					play_once = false;
+					Disable();
+					return;
+				}
+			}
+			
+			if ((int)current_sprite_x >= x_tiles)
+			{
+				current_sprite_y--;
+				current_sprite_x = 0;
+			}
+
+			if ((int)current_sprite_y <= 0)
+			{
+				current_sprite_y = y_tiles;
+			}
+			
+			time_since_start = 0.f;
 		}
-		time_since_start = 0.f;
 	}
-
 
 }
 
@@ -100,6 +112,20 @@ void ComponentBillboard::ChangeBillboardType(ComponentBillboard::AlignmentType _
 		is_spritesheet = true;
 	else
 		is_spritesheet = false;
+}
+
+void ComponentBillboard::EmitOnce()
+{
+	Enable();
+	play_once = true;
+	play = true;
+	current_sprite_x = 0;
+	current_sprite_y = y_tiles - 1;
+}
+
+bool ComponentBillboard::IsPlaying()
+{
+	return play;
 }
 
 void ComponentBillboard::Render(const float3& position)
