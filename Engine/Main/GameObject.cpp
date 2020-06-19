@@ -4,6 +4,7 @@
 #include "Helper/Config.h"
 #include "Module/ModuleAnimation.h"
 #include "Module/ModuleAudio.h"
+#include "Module/ModuleEffects.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleScriptManager.h"
@@ -29,8 +30,11 @@
 #include "Component/ComponentEventSystem.h"
 #include "Component/ComponentImage.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentSpriteMask.h"
+#include "Component/ComponentBillboard.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 
@@ -140,12 +144,12 @@ void GameObject::Duplicate(const GameObject& gameobject_to_copy)
 	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
 	this->original_UUID = gameobject_to_copy.original_UUID;
+	this->tag = gameobject_to_copy.tag;
 	if(gameobject_to_copy.prefab_reference != nullptr && !gameobject_to_copy.is_prefab_parent)
 	{
 		this->original_UUID = 0;
 		this->prefab_reference = nullptr;
 	}
-
 
 
 	return;
@@ -459,13 +463,26 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		created_component = App->ui->CreateComponentUI<ComponentImage>();
 		break;
 
+	case Component::ComponentType::UI_SPRITE_MASK:
+		created_component = App->ui->CreateComponentUI<ComponentSpriteMask>();
+		break;
+
 	case Component::ComponentType::UI_TEXT:
 		created_component = App->ui->CreateComponentUI<ComponentText>();
+		break;
+
+	case Component::ComponentType::BILLBOARD:
+		created_component = App->effects->CreateComponentBillboard();
+		break;
+
+	case Component::ComponentType::PARTICLE_SYSTEM:
+		created_component = App->effects->CreateComponentParticleSystem();
 		break;
 
 	case Component::ComponentType::AUDIO_SOURCE:
 		created_component = App->audio->CreateComponentAudioSource();
 		break;
+		
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");
 		return nullptr;

@@ -6,16 +6,19 @@
 #include "ModuleDebug.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleEditor.h"
+#include "ModuleEffects.h"
 #include "ModuleProgram.h"
-#include "ModuleScene.h"
 #include "ModuleSpacePartitioning.h"
-#include "ModuleTime.h"
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
+#include "ModuleLight.h"
+
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentLight.h"
+
 #include "EditorUI/DebugDraw.h"
+#include "ModuleResourceManager.h"
 
 #include <algorithm>
 #include <assimp/scene.h>
@@ -137,6 +140,7 @@ bool ModuleRender::CleanUp()
 	{
 		mesh->owner->RemoveComponent(mesh);
 	}
+
 	return true;
 }
 
@@ -206,6 +210,9 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		}
 	}
 	glDisable(GL_BLEND);
+	
+	App->effects->Render();
+
 	
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
@@ -352,7 +359,7 @@ std::string ModuleRender::GetDrawMode() const
 
 ComponentMeshRenderer* ModuleRender::CreateComponentMeshRenderer()
 {
-	ComponentMeshRenderer *created_mesh = new ComponentMeshRenderer();
+	ComponentMeshRenderer* created_mesh = new ComponentMeshRenderer();
 	meshes.push_back(created_mesh);
 	return created_mesh;
 }
@@ -366,7 +373,6 @@ void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 		meshes.erase(it);
 	}
 }
-
 
 RaycastHit* ModuleRender::GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* cam)
 {

@@ -51,38 +51,6 @@ bool ModuleInput::Init()
 
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
 
-	for (int i = 0; i < SDL_NumJoysticks() && i < MAX_PLAYERS; ++i)
-	{
-		if (SDL_IsGameController(i))
-		{
-			controller[i] = SDL_GameControllerOpen(i);
-		}
-	}
-
-	std::map<ControllerCode, KeyState> temp1;
-	std::map<ControllerCode, KeyState> temp2;
-
-	for (int i = 0; i < MAX_CONTROLLER_BUTTONS; ++i)
-	{
-		temp1[(ControllerCode)i] = KeyState::IDLE;
-		temp2[(ControllerCode)i] = KeyState::IDLE;
-	}
-
-	controller_bible.push_back(std::move(temp1));
-	controller_bible.push_back(std::move(temp2));
-
-	for (int i = 0; i < MAX_PLAYERS; ++i)
-	{
-		left_joystick[i] = float2(0, 0);
-		right_joystick[i] = float2(0, 0);
-		left_controller_trigger[i] = 0;
-		right_controller_trigger[i] = 0;
-		left_joystick_raw[i] = float2(0, 0);
-		right_joystick_raw[i] = float2(0, 0);
-		left_controller_trigger_raw[i] = 0;
-		right_controller_trigger_raw[i] = 0;
-	}
-
 	APP_LOG_SUCCESS("SDL input event system initialized correctly.");
 
 	//Load Game Inputs
@@ -124,10 +92,9 @@ update_status ModuleInput::PreUpdate()
 			mouse.second = KeyState::IDLE;
 		}
 	}
-
-	for (int i = 0; i < controller_bible.size(); ++i)
+	for(int x = 0; x < controller.size(); ++x)
 	{
-		for (auto& controller : controller_bible[i])
+		for (auto& controller : controller[x]->controller_bible)
 		{
 			if (controller.second == KeyState::DOWN)
 			{
@@ -185,28 +152,45 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_CONTROLLERBUTTONDOWN:
-			controller_bible[event.cbutton.which][(ControllerCode)event.cbutton.button] = KeyState::DOWN;
+			for (int i = 0; i < controller.size(); ++i) 
+			{
+				if (event.cbutton.which == controller[i]->joystick)
+				{
+					controller[i]->controller_bible[(ControllerCode)event.cbutton.button] = KeyState::DOWN;
+				}
+			}
 			break;
 
 		case SDL_CONTROLLERBUTTONUP:
-			controller_bible[event.cbutton.which][(ControllerCode)event.cbutton.button] = KeyState::UP;
+			for (int i = 0; i < controller.size(); ++i) 
+			{
+				if (event.cbutton.which == controller[i]->joystick)
+				{
+					controller[i]->controller_bible[(ControllerCode)event.cbutton.button] = KeyState::UP;
+				}
+			}
 			break;
 
 		case SDL_CONTROLLERAXISMOTION:
 		{
-			int which = event.caxis.which;
+			for (int i = 0; i < controller.size(); ++i) 
+			{
+				if (event.caxis.which == controller[i]->joystick)
+				{
+					controller[i]->left_joystick_raw = float2(SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_LEFTY));
+					controller[i]->right_joystick_raw = float2(SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_RIGHTY));
 
-			left_joystick_raw[which] = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
-			right_joystick_raw[which] = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
+					controller[i]->left_joystick= Filter2D(SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_LEFTY));
+					controller[i]->right_joystick = Filter2D(SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_RIGHTY));
 
-			left_joystick[which] = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
-			right_joystick[which] = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
+					controller[i]->left_controller_trigger_raw = SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+					controller[i]->right_controller_trigger_raw= SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
 
-			left_controller_trigger[which] = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERLEFT);
-			right_controller_trigger[which] = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+					controller[i]->left_controller_trigger = controller[i]->left_controller_trigger_raw / MAX_SDL_CONTROLLER_RANGE;
+					controller[i]->right_controller_trigger = controller[i]->right_controller_trigger_raw / MAX_SDL_CONTROLLER_RANGE;
+				}
+			}
 
-			left_controller_trigger_raw[which] = left_controller_trigger[which] / MAX_SDL_CONTROLLER_RANGE;
-			right_controller_trigger_raw[which] = right_controller_trigger[which] / MAX_SDL_CONTROLLER_RANGE;
 		}
 		break;
 
@@ -221,9 +205,9 @@ update_status ModuleInput::PreUpdate()
 		{
 			int which = event.cdevice.which;
 
-			if (SDL_IsGameController(which) && which < MAX_PLAYERS)
+			if (SDL_IsGameController(which))
 			{
-				controller[which] = SDL_GameControllerOpen(which);
+				AddGamepad(which);
 			}
 		}
 		break;
@@ -231,7 +215,7 @@ update_status ModuleInput::PreUpdate()
 		case SDL_CONTROLLERDEVICEREMOVED:
 		{
 			int which = event.cdevice.which;
-			SDL_GameControllerClose(controller[which]);
+			RemoveGamepad(which);
 		}
 		break;
 		}
@@ -273,8 +257,13 @@ bool ModuleInput::CleanUp()
 {
 	APP_LOG_INFO("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
-	SDL_GameControllerClose(controller[0]);
-	SDL_GameControllerClose(controller[1]);
+
+	for(size_t i = 0; i < total_game_controllers; ++i)
+	{
+		SDL_GameControllerClose(controller[i]->controller);
+	}
+
+	controller.clear();
 	return true;
 }
 
@@ -318,281 +307,17 @@ ENGINE_API bool ModuleInput::GetMouseButtonUp(MouseButton button)
 
 ENGINE_API bool ModuleInput::GetControllerButton(ControllerCode code, ControllerID controller_id)
 {
-	return controller_bible[(int)controller_id][code] == KeyState::REPEAT;
+	return controller[(int)controller_id]->controller_bible[code] == KeyState::REPEAT;
 }
 
 ENGINE_API bool ModuleInput::GetControllerButtonDown(ControllerCode code, ControllerID controller_id)
 {
-	return controller_bible[(int)controller_id][code] == KeyState::DOWN;
+	return controller[(int)controller_id]->controller_bible[code] == KeyState::DOWN;
 }
 
 ENGINE_API bool ModuleInput::GetControllerButtonUp(ControllerCode code, ControllerID controller_id)
 {
-	return controller_bible[(int)controller_id][code] == KeyState::UP;
-}
-
-ENGINE_API bool ModuleInput::GetGameInput(const char* name, PlayerID player_id)
-{
-	GameInput button = game_inputs[name];
-
-	// No game controllers connected
-	// Player 1 -> Keyboard
-	if (total_game_controllers == 0)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (DetectedKeyboardInput(button, KeyState::REPEAT))
-			{
-				return true;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return false;
-		}
-	}
-
-	// 1 game controller connected && singleplayer
-	// Player 1 -> Keyboard || Game Controller
-	else if (total_game_controllers == 1 && singleplayer_input)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (DetectedKeyboardInput(button, KeyState::REPEAT))
-			{
-				return true;
-			}
-
-			if (DetectedGameControllerInput(button, KeyState::REPEAT, ControllerID::ONE))
-			{
-				return true;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return false;
-		}
-	}
-
-	// 1 game controller connected && multiplayer
-	// Player 1 -> Keyboard
-	// Player 2 -> Game Controller
-	else if (total_game_controllers == 1 && !singleplayer_input)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (DetectedKeyboardInput(button, KeyState::REPEAT))
-			{
-				return true;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			if (DetectedGameControllerInput(button, KeyState::REPEAT, ControllerID::ONE))
-			{
-				return true;
-			}
-		}
-	}
-
-	// 2 game controllers connected
-	// Player 1 -> Game Controller 1
-	// Player 2 -> Game Controller 2
-	else if (total_game_controllers == 2)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (DetectedGameControllerInput(button, KeyState::REPEAT, ControllerID::ONE))
-			{
-				return true;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			if (DetectedGameControllerInput(button, KeyState::REPEAT, ControllerID::TWO))
-			{
-				return true;
-			}
-		}
-	}
-
-	return false;
-}
-
-ENGINE_API bool ModuleInput::GetGameInputDown(const char* name, PlayerID player_id)
-{
-	GameInput button = game_inputs[name];
-
-	// No game controllers connected
-	// Player 1 -> Keyboard
-	if (total_game_controllers == 0)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (DetectedKeyboardInput(button, KeyState::DOWN))
-			{
-				return true;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return false;
-		}
-	}
-
-	// 1 game controller connected && singleplayer
-	// Player 1 -> Keyboard || Game Controller
-	else if (total_game_controllers == 1 && singleplayer_input)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (DetectedKeyboardInput(button, KeyState::DOWN))
-			{
-				return true;
-			}
-
-			if (DetectedGameControllerInput(button, KeyState::DOWN, ControllerID::ONE))
-			{
-				return true;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return false;
-		}
-	}
-
-	// 1 game controller connected && multiplayer
-	// Player 1 -> Keyboard
-	// Player 2 -> Game Controller
-	else if (total_game_controllers == 1 && !singleplayer_input)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (DetectedKeyboardInput(button, KeyState::DOWN))
-			{
-				return true;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			if (DetectedGameControllerInput(button, KeyState::DOWN, ControllerID::ONE))
-			{
-				return true;
-			}
-		}
-	}
-
-	// 2 game controllers connected
-	// Player 1 -> Game Controller 1
-	// Player 2 -> Game Controller 2
-	else if (total_game_controllers == 2)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (DetectedGameControllerInput(button, KeyState::DOWN, ControllerID::ONE))
-			{
-				return true;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			if (DetectedGameControllerInput(button, KeyState::DOWN, ControllerID::TWO))
-			{
-				return true;
-			}
-		}
-	}
-
-	return false;
-}
-
-ENGINE_API bool ModuleInput::GetGameInputUp(const char* name, PlayerID player_id)
-{
-	GameInput button = game_inputs[name];
-
-	// No game controllers connected
-	// Player 1 -> Keyboard
-	if (total_game_controllers == 0)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (DetectedKeyboardInput(button, KeyState::UP))
-			{
-				return true;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return false;
-		}
-	}
-
-	// 1 game controller connected && singleplayer
-	// Player 1 -> Keyboard || Game Controller
-	else if (total_game_controllers == 1 && singleplayer_input)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (DetectedKeyboardInput(button, KeyState::UP))
-			{
-				return true;
-			}
-
-			if (DetectedGameControllerInput(button, KeyState::UP, ControllerID::ONE))
-			{
-				return true;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return false;
-		}
-	}
-
-	// 1 game controller connected && multiplayer
-	// Player 1 -> Keyboard
-	// Player 2 -> Game Controller
-	else if (total_game_controllers == 1 && !singleplayer_input)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (DetectedKeyboardInput(button, KeyState::UP))
-			{
-				return true;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			if (DetectedGameControllerInput(button, KeyState::UP, ControllerID::ONE))
-			{
-				return true;
-			}
-		}
-	}
-
-	// 2 game controllers connected
-	// Player 1 -> Game Controller 1
-	// Player 2 -> Game Controller 2
-	else if (total_game_controllers == 2)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (DetectedGameControllerInput(button, KeyState::UP, ControllerID::ONE))
-			{
-				return true;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			if (DetectedGameControllerInput(button, KeyState::UP, ControllerID::TWO))
-			{
-				return true;
-			}
-		}
-	}
-
-	return false;
+	return controller[(int)controller_id]->controller_bible[code] == KeyState::UP;
 }
 
 ENGINE_API bool ModuleInput::GetAnyKeyPressedDown() const
@@ -604,13 +329,15 @@ ENGINE_API bool ModuleInput::GetAnyKeyPressedDown() const
 			return true;
 		}
 	}
-
-	for (auto& contr : controller_bible[0])
+	if(controller.size() > 0)
 	{
-		if (contr.second == KeyState::DOWN)
+		for (auto& contr : controller[0]->controller_bible)
 		{
-			return true;
-		}
+			if (contr.second == KeyState::DOWN)
+			{
+				return true;
+			}
+		}	
 	}
 
 	return false;
@@ -677,41 +404,41 @@ ENGINE_API float2 ModuleInput::GetAxisController(ControllerAxis type, Controller
 {
 	switch (type)
 	{
-	case ControllerAxis::LEFT_JOYSTICK:
-		return left_joystick[(int)controller_id];
+		case ControllerAxis::LEFT_JOYSTICK:
+			return controller[(int)controller_id]->left_joystick;
 
-	case ControllerAxis::RIGHT_JOYSTICK:
-		return right_joystick[(int)controller_id];
+		case ControllerAxis::RIGHT_JOYSTICK:
+			return controller[(int)controller_id]->right_joystick;
 
-	case ControllerAxis::LEFT_JOYSTICK_RAW:
-		return left_joystick_raw[(int)controller_id];
+		case ControllerAxis::LEFT_JOYSTICK_RAW:
+			return controller[(int)controller_id]->left_joystick_raw;
 
-	case ControllerAxis::RIGHT_JOYSTICK_RAW:
-		return right_joystick_raw[(int)controller_id];
+		case ControllerAxis::RIGHT_JOYSTICK_RAW:
+			return controller[(int)controller_id]->right_joystick_raw;
 
-	default:
-		return float2(0.0f, 0.0f);
+		default:
+			return float2(0.0f, 0.0f);
 	}
 }
 
-ENGINE_API Sint16 ModuleInput::GetTriggerController(ControllerAxis type, ControllerID controller_id) const
+ENGINE_API float ModuleInput::GetTriggerController(ControllerAxis type, ControllerID controller_id) const
 {
 	switch (type)
 	{
-	case ControllerAxis::LEFT_TRIGGER:
-		return left_controller_trigger[(int)controller_id];
+		case ControllerAxis::LEFT_TRIGGER:
+			return controller[(int)controller_id]->left_controller_trigger;
 
-	case ControllerAxis::RIGHT_TRIGGER:
-		return right_controller_trigger[(int)controller_id];
+		case ControllerAxis::RIGHT_TRIGGER:
+			return controller[(int)controller_id]->right_controller_trigger;
 
-	case ControllerAxis::LEFT_TRIGGER_RAW:
-		return left_controller_trigger_raw[(int)controller_id];
+		case ControllerAxis::LEFT_TRIGGER_RAW:
+			return controller[(int)controller_id]->left_controller_trigger_raw;
 
-	case ControllerAxis::RIGHT_TRIGGER_RAW:
-		return right_controller_trigger_raw[(int)controller_id];
+		case ControllerAxis::RIGHT_TRIGGER_RAW:
+			return controller[(int)controller_id]->right_controller_trigger_raw;
 
-	default:
-		return 0;
+		default:
+			return 0;
 	}
 }
 
@@ -719,373 +446,30 @@ ENGINE_API float2 ModuleInput::GetAxisControllerRaw(ControllerAxis type, Control
 {
 	switch (type)
 	{
-	case ControllerAxis::LEFT_JOYSTICK_RAW:
-		return left_joystick_raw[(int)controller_id];
+		case ControllerAxis::LEFT_JOYSTICK_RAW:
+			return controller[(int)controller_id]->left_joystick_raw;
 
-	case ControllerAxis::RIGHT_JOYSTICK_RAW:
-		return right_joystick_raw[(int)controller_id];
+		case ControllerAxis::RIGHT_JOYSTICK_RAW:
+			return controller[(int)controller_id]->right_joystick_raw;
 
-	default:
-		return float2(0.0f, 0.0f);
+		default:
+			return float2(0.0f, 0.0f);
 	}
 }
 
-ENGINE_API float ModuleInput::GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const
+ENGINE_API Sint16 ModuleInput::GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const
 {
 	switch (type)
 	{
-	case ControllerAxis::LEFT_TRIGGER_RAW:
-		return left_controller_trigger_raw[(int)controller_id];
+		case ControllerAxis::LEFT_TRIGGER_RAW:
+			return controller[(int)controller_id]->left_controller_trigger_raw;
 
-	case ControllerAxis::RIGHT_TRIGGER_RAW:
-		return right_controller_trigger_raw[(int)controller_id];
+		case ControllerAxis::RIGHT_TRIGGER_RAW:
+			return controller[(int)controller_id]->right_controller_trigger_raw;
 
-	default:
-		0.0f;
+		default:
+			0.0f;
 	}
-}
-
-ENGINE_API float ModuleInput::GetVerticalRaw(PlayerID player_id)
-{
-	// No game controllers connected
-	// Player 1 -> Keyboard
-	if (total_game_controllers == 0)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (GetKey(KeyCode::W))
-			{
-				return -1;
-			}
-			else if (GetKey(KeyCode::S))
-			{
-				return 1;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return 0.f;
-		}
-	}
-
-	// 1 game controller connected && singleplayer
-	// Player 1 -> Keyboard || Game Controller
-	else if (total_game_controllers == 1 && singleplayer_input)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (GetKey(KeyCode::W))
-			{
-				return -1;
-			}
-			else if (GetKey(KeyCode::S))
-			{
-				return 1;
-			}
-
-			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).y;
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return 0.f;
-		}
-	}
-
-	// 1 game controller connected && multiplayer
-	// Player 1 -> Keyboard
-	// Player 2 -> Game Controller
-	else if (total_game_controllers == 1 && !singleplayer_input)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (GetKey(KeyCode::W))
-			{
-				return -1;
-			}
-			else if (GetKey(KeyCode::S))
-			{
-				return 1;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).y;
-		}
-	}
-
-	// 2 game controllers connected
-	// Player 1 -> Game Controller 1
-	// Player 2 -> Game Controller 2
-	else if (total_game_controllers == 2)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).y;
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::TWO).y;
-		}
-	}
-
-	return 0.f;
-}
-
-ENGINE_API float ModuleInput::GetHorizontalRaw(PlayerID player_id)
-{
-	// No game controllers connected
-	// Player 1 -> Keyboard
-	if (total_game_controllers == 0)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (GetKey(KeyCode::A))
-			{
-				return -1;
-			}
-			else if (GetKey(KeyCode::D))
-			{
-				return 1;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return 0.f;
-		}
-	}
-
-	// 1 game controller connected && singleplayer
-	// Player 1 -> Keyboard || Game Controller
-	else if (total_game_controllers == 1 && singleplayer_input)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (GetKey(KeyCode::A))
-			{
-				return -1;
-			}
-			else if (GetKey(KeyCode::D))
-			{
-				return 1;
-			}
-
-			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).x;
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return 0.f;
-		}
-	}
-
-	// 1 game controller connected && multiplayer
-	// Player 1 -> Keyboard
-	// Player 2 -> Game Controller
-	else if (total_game_controllers == 1 && !singleplayer_input)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (GetKey(KeyCode::A))
-			{
-				return -1;
-			}
-			else if (GetKey(KeyCode::D))
-			{
-				return 1;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).x;
-		}
-	}
-
-	// 2 game controllers connected
-	// Player 1 -> Game Controller 1
-	// Player 2 -> Game Controller 2
-	else if (total_game_controllers == 2)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).x;
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::TWO).x;
-		}
-	}
-
-	return 0.f;
-}
-
-ENGINE_API float ModuleInput::GetVertical(PlayerID player_id)
-{
-	// No game controllers connected
-	// Player 1 -> Keyboard
-	if (total_game_controllers == 0)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (GetKey(KeyCode::W))
-			{
-				return -MAX_RAW_RANGE;
-			}
-			else if (GetKey(KeyCode::S))
-			{
-				return MAX_RAW_RANGE;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return 0.f;
-		}
-	}
-
-	// 1 game controller connected && singleplayer
-	// Player 1 -> Keyboard || Game Controller
-	else if (total_game_controllers == 1 && singleplayer_input)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (GetKey(KeyCode::W))
-			{
-				return -MAX_RAW_RANGE;
-			}
-			else if (GetKey(KeyCode::S))
-			{
-				return MAX_RAW_RANGE;
-			}
-
-			return GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::ONE).y;
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return 0.f;
-		}
-	}
-
-	// 1 game controller connected && multiplayer
-	// Player 1 -> Keyboard
-	// Player 2 -> Game Controller
-	else if (total_game_controllers == 1 && !singleplayer_input)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (GetKey(KeyCode::W))
-			{
-				return -MAX_RAW_RANGE;
-			}
-			else if (GetKey(KeyCode::S))
-			{
-				return MAX_RAW_RANGE;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::ONE).y;
-		}
-	}
-
-	// 2 game controllers connected
-	// Player 1 -> Game Controller 1
-	// Player 2 -> Game Controller 2
-	else if (total_game_controllers == 2)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			return GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::ONE).y;
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::TWO).y;
-		}
-	}
-
-	return 0.f;
-}
-
-ENGINE_API float ModuleInput::GetHorizontal(PlayerID player_id)
-{
-	// No game controllers connected
-	// Player 1 -> Keyboard
-	if (total_game_controllers == 0)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (GetKey(KeyCode::A))
-			{
-				return -MAX_RAW_RANGE;
-			}
-			else if (GetKey(KeyCode::D))
-			{
-				return MAX_RAW_RANGE;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return 0.f;
-		}
-	}
-	// 1 game controller connected && singleplayer
-	// Player 1 -> Keyboard || Game Controller
-	else if (total_game_controllers == 1 && singleplayer_input)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (GetKey(KeyCode::A))
-			{
-				return -MAX_RAW_RANGE;
-			}
-			else if (GetKey(KeyCode::D))
-			{
-				return MAX_RAW_RANGE;
-			}
-
-			return GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::ONE).x;
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return 0.f;
-		}
-	}
-
-	// 1 game controller connected && multiplayer
-	// Player 1 -> Keyboard
-	// Player 2 -> Game Controller
-	else if (total_game_controllers == 1 && !singleplayer_input)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			if (GetKey(KeyCode::A))
-			{
-				return -MAX_RAW_RANGE;
-			}
-			else if (GetKey(KeyCode::D))
-			{
-				return MAX_RAW_RANGE;
-			}
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::ONE).x;
-		}
-	}
-
-	// 2 game controllers connected
-	// Player 1 -> Game Controller 1
-	// Player 2 -> Game Controller 2
-	else if (total_game_controllers == 2)
-	{
-		if (player_id == PlayerID::ONE)
-		{
-			return GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::ONE).x;
-		}
-		else if (player_id == PlayerID::TWO)
-		{
-			return GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::TWO).x;
-		}
-	}
-
-	return 0.f;
 }
 
 void ModuleInput::SaveGameInputs(Config& config)
@@ -1263,4 +647,41 @@ bool ModuleInput::DetectedGameControllerInput(const GameInput& button, KeyState 
 	}
 
 	return false;
+}
+
+void ModuleInput::AddGamepad(int device)
+{
+	Gamepad* gamepad = new Gamepad();
+	gamepad->controller = SDL_GameControllerOpen(device);
+	gamepad->device = device;
+	gamepad->joystick = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(gamepad->controller));
+	for (int i = 0; i < MAX_CONTROLLER_BUTTONS; ++i)
+	{
+		gamepad->controller_bible[(ControllerCode)i] = KeyState::IDLE;
+	}
+	gamepad->left_joystick = float2(0, 0);
+	gamepad->right_joystick = float2(0, 0);
+	gamepad->left_controller_trigger = 0;
+	gamepad->right_controller_trigger = 0;
+	gamepad->left_joystick_raw = float2(0, 0);
+	gamepad->right_joystick_raw = float2(0, 0);
+	gamepad->left_controller_trigger_raw = 0;
+	gamepad->right_controller_trigger_raw = 0;
+
+	controller.emplace_back(gamepad);
+	++total_game_controllers;
+}
+
+void ModuleInput::RemoveGamepad(int device)
+{
+	auto it = std::find_if(controller.begin(), controller.end(), [&device](Gamepad* pad)
+	{
+		return pad->device == device; 
+	});
+	if (it != controller.end())
+	{
+		--total_game_controllers;
+		SDL_GameControllerClose(controller[device]->controller);
+		controller.erase(it);
+	}
 }

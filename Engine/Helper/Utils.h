@@ -1,6 +1,7 @@
 #ifndef _UTILS_H_
 #define _UTILS_H_
 
+#include <bullet3/btBulletDynamicsCommon.h>
 #include <MathGeoLib.h>
 #include <assimp/mesh.h>
 #include <vector>
@@ -31,6 +32,8 @@ public:
 
 	static float4x4 GetTransform(const aiMatrix4x4& current_transform, float scale_factor = 1.0);
 	static size_t GetImageType(const std::string& file_extension);
+
+	static btVector3 Float3TobtVector3(const float3& vector);
 };
 
 #endif //_UTILS_H_

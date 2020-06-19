@@ -190,7 +190,14 @@ bool ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const
 	}
 	else
 	{
-		texture_id = App->texture->whitefall_texture_id;
+		if (id == Material::MaterialTextureType::EMISSIVE)
+		{
+			texture_id = App->texture->blackfall_texture_id;
+		}
+		else
+		{
+			texture_id = App->texture->whitefall_texture_id;
+		}
 	}
 	glBindTexture(GL_TEXTURE_2D, texture_id);
 	return valid_texture;

@@ -118,6 +118,16 @@ ENGINE_API bool ComponentAnimation::IsOnState(const std::string& trigger)
 
 ENGINE_API float ComponentAnimation::GetCurrentClipPercentatge() const
 {
+	if (animation_controller->playing_clips[ClipType::ACTIVE].clip)
+	{
+		return math::Clamp01(float(animation_controller->playing_clips[ClipType::ACTIVE].current_time) / float(animation_controller->playing_clips[ClipType::ACTIVE].clip->animation_time));
+	}
+
+	return 0.0f;
+}
+
+ENGINE_API int ComponentAnimation::GetTotalAnimationTime() const
+{
 	for (auto& playing_clip : animation_controller->playing_clips)
 	{
 		if (!playing_clip.clip)
@@ -125,7 +135,7 @@ ENGINE_API float ComponentAnimation::GetCurrentClipPercentatge() const
 			break;
 		}
 
-		return float(playing_clip.current_time) / float(playing_clip.clip->animation_time);
+		return playing_clip.clip->animation_time;
 
 	}
 }
