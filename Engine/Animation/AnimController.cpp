@@ -24,7 +24,7 @@ void AnimController::GetClipTransform(uint32_t skeleton_uuid, std::vector<math::
 
 		size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
 		size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
-		if (second_keyframe_index == clip->animation->frames)
+		if (second_keyframe_index >= clip->animation->frames)
 		{
 			second_keyframe_index = clip->loop ? 0 : clip->animation->frames - 1;
 		}
@@ -114,6 +114,10 @@ void AnimController::SetActiveState(std::shared_ptr<State> & state)
 
 void AnimController::StartNextState(const std::string& trigger)
 {
+	if (!active_state)
+	{
+		return;
+	}
 	std::shared_ptr<Transition> next_transition = state_machine->GetTriggerTransition(trigger, active_state->name_hash);
 	if (!next_transition || next_transition == active_transition)
 	{
@@ -132,6 +136,10 @@ void AnimController::StartNextState(const std::string& trigger)
 
 bool AnimController::IsOnState(const std::string& state)
 {
+	if (!active_state)
+	{
+		return false;
+	}
 	uint64_t state_hash = std::hash<std::string>{}(state);
 	return active_state.get()->name_hash == state_hash;
 }

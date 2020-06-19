@@ -18,7 +18,7 @@ struct PlayingClip
 	float current_time = 0;
 	bool playing = false;
 	float time = 0;
-	void Update();
+	void Update(float speed);
 };
 
 enum ClipType

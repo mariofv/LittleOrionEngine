@@ -67,7 +67,7 @@ std::shared_ptr<State> StateMachine::GetDefaultState() const
 			return state;
 		}
 	}
-	return nullptr;
+	 return states[0];
 }
 
 std::shared_ptr<State> StateMachine::GetState(uint64_t state_hash) const
