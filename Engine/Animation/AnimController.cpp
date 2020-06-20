@@ -18,7 +18,7 @@ void AnimController::GetClipTransform(uint32_t skeleton_uuid, std::vector<math::
 		{
 			continue;
 		}
-		float weight = j != ClipType::ACTIVE ? playing_clips[j].current_time / (active_transition->interpolation_time * 1.0f) : 0.0f;
+		float weight = j != ClipType::ACTIVE ? playing_clips[j].current_time / (playing_clips[j].interpolation_time) : 0.0f;
 		float current_percentage = static_cast<float>(playing_clips[j].current_time) / clip->animation_time;
 		float current_keyframe = current_percentage * (clip->animation->frames - 1);
 
@@ -27,10 +27,6 @@ void AnimController::GetClipTransform(uint32_t skeleton_uuid, std::vector<math::
 		if (second_keyframe_index >= clip->animation->frames)
 		{
 			second_keyframe_index = clip->loop ? 0 : clip->animation->frames - 1;
-		}
-		if (first_keyframe_index >= clip->animation->frames)
-		{
-			first_keyframe_index = clip->loop ? 0 : clip->animation->frames - 1;
 		}
 		float interpolation_lambda = current_keyframe - std::floor(current_keyframe);
 		const std::vector<Animation::Channel>& current_pose = clip->animation->keyframes[first_keyframe_index].channels;
@@ -72,24 +68,19 @@ bool AnimController::Update()
 {
 	for (auto & playing_clip : playing_clips)
 	{
-		//playing_clip.Update(1.0f);
-		if (active_state)
-		{
-			playing_clip.Update(active_state->speed);
-		}
-		if (apply_transition) 
-		{
-			playing_clip.Update(1.0f);
-		}
-		 
+		playing_clip.Update();	 
 	}
 	if (active_transition && active_transition->automatic)
 	{
 		float animation_time_with_interpolation = playing_clips[ClipType::ACTIVE].current_time + active_transition->interpolation_time + 100;
 		if (animation_time_with_interpolation >= playing_clips[ClipType::ACTIVE].clip->animation_time)
 		{
-			playing_clips[ClipType::NEXT].clip = state_machine->GetState(active_transition->target_hash)->clip;
+			auto& next_state = state_machine->GetState(active_transition->target_hash);
+			playing_clips[ClipType::NEXT].clip = next_state->clip;
 			playing_clips[ClipType::NEXT].playing = true;
+			playing_clips[ClipType::NEXT].interpolation_time;
+			playing_clips[ClipType::NEXT].speed = next_state->speed;
+			AsjustInterpolationTimes();
 		}
 	}
 	if (apply_transition && active_transition)
@@ -97,6 +88,15 @@ bool AnimController::Update()
 		FinishActiveState();
 	}
 	return playing_clips[ClipType::ACTIVE].playing;
+}
+
+void AnimController::AsjustInterpolationTimes()
+{
+	if (!playing_clips[ClipType::ACTIVE].clip->loop)
+	{
+		float time_left = playing_clips[ClipType::ACTIVE].clip->animation_time - playing_clips[ClipType::ACTIVE].current_time* playing_clips[ClipType::ACTIVE].speed;
+		playing_clips[ClipType::NEXT].interpolation_time = time_left <= active_transition->interpolation_time ? time_left : active_transition->interpolation_time;
+	}
 }
 
 void AnimController::SetStateMachine(uint32_t state_machine_uuid)
@@ -110,7 +110,7 @@ void AnimController::SetActiveState(std::shared_ptr<State> & state)
 	if (state != nullptr && state->clip != nullptr)
 	{
 		active_state = state;
-		playing_clips[ClipType::ACTIVE] = { active_state->clip };
+		playing_clips[ClipType::ACTIVE] = { active_state->clip, active_state->speed };
 		active_transition = state_machine->GetAutomaticTransition(active_state->name_hash);
 	}
 }
@@ -129,11 +129,15 @@ void AnimController::StartNextState(const std::string& trigger)
 	std::shared_ptr<State> next_state;
 	active_transition = next_transition;
 	next_state = state_machine->GetState(active_transition->target_hash);
-	playing_clips[ClipType::NEXT] = { next_state->clip, 0, true };
+	playing_clips[ClipType::NEXT] = { next_state->clip, next_state->speed, 0.0f, true,  static_cast<float>(active_transition ->interpolation_time)};
 
 	if (!playing_clips[ClipType::ACTIVE].playing)
 	{
 		FinishActiveState();
+	}
+	else
+	{
+		AsjustInterpolationTimes();
 	}
 }
 
@@ -156,7 +160,7 @@ void AnimController::FinishActiveState()
 	apply_transition = false;
 }
 
-void PlayingClip::Update(float speed)
+void PlayingClip::Update()
 {
 	if (!playing || !clip || clip->animation == nullptr)
 	{

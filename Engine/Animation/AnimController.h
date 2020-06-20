@@ -15,10 +15,11 @@ struct Transition;
 struct PlayingClip
 {
 	std::shared_ptr<Clip> clip;
-	float current_time = 0;
+	float speed = 0.0f;
+	float current_time = 0.0f;
 	bool playing = false;
-	float time = 0;
-	void Update(float speed);
+	float interpolation_time = 0.0f;
+	void Update();
 };
 
 enum ClipType
@@ -39,6 +40,7 @@ public:
 	AnimController & operator=(AnimController&& controller_to_move) = default;
 
 	bool Update();
+	void AsjustInterpolationTimes();
 	void SetStateMachine(uint32_t state_machine_uuid);
 	void GetClipTransform(uint32_t skeleton_uuid, std::vector<math::float4x4>& pose);
 	void StartNextState(const std::string& trigger);

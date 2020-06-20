@@ -179,7 +179,7 @@ void PanelStateMachine::RenderStates()
 		Widgets::Icon(node->Size / 5, ax::Drawing::IconType::Flow, true, ImVec4(0, 0, 255, 255), ImVec4(0, 0, 255, 255));
 		ax::NodeEditor::EndPin();
 		ImGui::EndGroup();
-
+	
 		ax::NodeEditor::EndNode();
 		if (is_active)
 		{
@@ -210,7 +210,7 @@ void PanelStateMachine::RenderStates()
 
 	for (auto& link : links)
 	{
-		ax::NodeEditor::Link(link->id, link->input_id, link->output_id);
+		ax::NodeEditor::Link(link->id,  link->output_id, link->input_id);
 		if (ImGui::IsMouseClicked(1) && ImGui::IsItemHovered())
 		{
 			ax::NodeEditor::Suspend();

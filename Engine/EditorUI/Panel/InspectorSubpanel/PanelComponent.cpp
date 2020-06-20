@@ -619,7 +619,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		if (animation->animation_controller->state_machine && animation->animation_controller->active_state)
 		{
 			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(animation->animation_controller->active_state->name_hash), nullptr, nullptr, nullptr, ImGuiInputTextFlags_ReadOnly);
-			ImGui::InputText("Active State", &animation->animation_controller->active_state->name);
+			ImGui::InputText("Active State", &animation->animation_controller->active_state->name, ImGuiInputTextFlags_ReadOnly);
 			static std::string trigger;
 			ImGui::InputText("Trigger ", &trigger);
 			if (ImGui::Button("Activate"))
@@ -647,6 +647,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 			{
 				break;
 			}
+			ImGui::InputText("Playing clip:", &playing_clip.clip->name, ImGuiInputTextFlags_ReadOnly);
 			ImGui::Checkbox("Loop", &(playing_clip.clip->loop));
 			ImGui::SliderFloat("Animation time", &playing_clip.current_time, 0, playing_clip.clip->animation_time);
 		}
