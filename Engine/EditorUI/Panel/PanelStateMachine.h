@@ -69,7 +69,7 @@ public:
 	const float NODE_SLOT_RADIUS = 6.2f;
 
 	//debug playing animation
-	ComponentAnimation* animation_comp = nullptr;
+	AnimController* animation_controller = nullptr;
 
 private:
 	std::vector<NodeInfo*> GetSelectedNodes();

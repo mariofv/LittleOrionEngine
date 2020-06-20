@@ -49,7 +49,8 @@ void PanelStateMachine::Render()
 		{
 			if (component->GetType() == Component::ComponentType::ANIMATION)
 			{
-				animation_comp = (ComponentAnimation*)App->editor->selected_game_object->GetComponent(Component::ComponentType::ANIMATION);
+				ComponentAnimation* animation_component = (ComponentAnimation*)App->editor->selected_game_object->GetComponent(Component::ComponentType::ANIMATION);
+				animation_controller = animation_component ? animation_component->GetAnimController() : nullptr;
 			}
 		}
 	}
@@ -59,7 +60,7 @@ void PanelStateMachine::Render()
 			{
 				LeftPanel();
 				ax::NodeEditor::Begin("My Editor");
-				if (ImGui::IsMouseClicked(1))
+				if (ax::NodeEditor::IsBackgroundClicked())
 				{
 					ax::NodeEditor::Suspend();
 					ImGui::OpenPopup("Editor Menu");
@@ -180,45 +181,22 @@ void PanelStateMachine::RenderStates()
 		}
 		ImVec2 position = ax::NodeEditor::GetNodePosition(node->id);
 		node->state->position = float2(position.x, position.y);
+
+		//get the current running animation controller to verify playing clip and select corresponding node/link
+		if (animation_controller)
+		{
+			for (auto & playing_clip : animation_controller->playing_clips)
+			{
+				if (playing_clip.playing == true && playing_clip.clip->name_hash == node->state->clip->name_hash)
+				{
+					ax::NodeEditor::SelectNode(node->id);
+				}
+			}
+		}
 		ImGui::PopItemWidth();
 		ImGui::PopID();
 		
-		//get the current running animation controller to verify playing clip and select corresponding node/link
-		//if (animation_comp != nullptr)
-		//{
-		//	AnimController* anim = nullptr;
-		//	if (animation_comp->GetAnimController() != nullptr)
-		//	{
-		//		anim = animation_comp->GetAnimController();
-		//	}
-		//	if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered() || animation_comp->playing == true)
-		//	{
-		//		
-		//		for (auto & playing_clip : anim->playing_clips)
-		//		{
-		//			if (playing_clip.playing == true && playing_clip.clip->name == node->state->clip->name)
-		//			{
-		//				ax::NodeEditor::SelectNode(node->id);
-		//			}
-		//		}
-		//	}
-
-		//	//for each transition currently on progress, animate the corresponding transition link
-		//	if (anim->active_transition && anim->apply_transition)
-		//	{
-		//		for (auto& link : links)
-		//		{
-		//			if (anim->active_transition->source_hash == link->transition->source_hash && anim->active_transition->target_hash == link->transition->target_hash)
-		//			{
-		//				ax::NodeEditor::Flow(link->id);
-		//			}
-		//			
-		//		}
-		//	}
-		//}
-
-		//for each animation clip that is currently playing, display circle on correspodning node->state
-		for(auto& selected : selected_nodes)
+		for (auto& selected : selected_nodes)
 		{
 			if (node == selected)
 			{
@@ -236,7 +214,17 @@ void PanelStateMachine::RenderStates()
 			ImGui::OpenPopup("Link Menu");
 			ax::NodeEditor::Resume();
 		}
-		ax::NodeEditor::Flow(link->id);
+		if (animation_controller && animation_controller->active_transition)
+		{
+			bool same_source = animation_controller->active_transition->source_hash == link->transition->source_hash;
+			bool same_target = animation_controller->active_transition->target_hash == link->transition->target_hash;
+			//for each animation clip that is currently playing, display circle on correspodning node->state
+			if (same_source && same_target)
+			{
+				//for each transition currently on progress, animate the corresponding transition link
+				ax::NodeEditor::Flow(link->id);
+			}
+		}
 	}
 }
 
