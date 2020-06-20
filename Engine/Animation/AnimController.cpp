@@ -28,7 +28,10 @@ void AnimController::GetClipTransform(uint32_t skeleton_uuid, std::vector<math::
 		{
 			second_keyframe_index = clip->loop ? 0 : clip->animation->frames - 1;
 		}
-
+		if (first_keyframe_index >= clip->animation->frames)
+		{
+			first_keyframe_index = clip->loop ? 0 : clip->animation->frames - 1;
+		}
 		float interpolation_lambda = current_keyframe - std::floor(current_keyframe);
 		const std::vector<Animation::Channel>& current_pose = clip->animation->keyframes[first_keyframe_index].channels;
 		const std::vector<Animation::Channel>& next_pose = clip->animation->keyframes[second_keyframe_index].channels;
@@ -164,8 +167,7 @@ void PlayingClip::Update(float speed)
 	{
 		if (clip->loop)
 		{
-
-			current_time = current_time / clip->animation_time;//before it was %
+			current_time = static_cast<int>(current_time) % static_cast<int>(clip->animation_time);
 		}
 		else
 		{

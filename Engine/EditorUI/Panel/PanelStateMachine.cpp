@@ -45,14 +45,8 @@ void PanelStateMachine::Render()
 	//initialize GO to get corresponding animation controller
 	if (App->editor->selected_game_object != nullptr)
 	{
-		for (auto & component : App->editor->selected_game_object->components)
-		{
-			if (component->GetType() == Component::ComponentType::ANIMATION)
-			{
-				ComponentAnimation* animation_component = (ComponentAnimation*)App->editor->selected_game_object->GetComponent(Component::ComponentType::ANIMATION);
-				animation_controller = animation_component ? animation_component->GetAnimController() : nullptr;
-			}
-		}
+		ComponentAnimation* animation_component = (ComponentAnimation*)App->editor->selected_game_object->GetComponent(Component::ComponentType::ANIMATION);
+		animation_controller = animation_component ? animation_component->GetAnimController() : nullptr;
 	}
 	if (ImGui::Begin(window_name.c_str(), &opened, ImGuiWindowFlags_MenuBar))
 	{
@@ -138,8 +132,7 @@ void PanelStateMachine::RenderStates()
 		}
 		if (node->state->clip)
 		{
-			ImGui::Checkbox("Loop", &node->state->clip->loop);
-			modified_by_user = true;
+			modified_by_user |= ImGui::Checkbox("Loop", &node->state->clip->loop);
 			ImGui::SameLine(node->Size.x/2 + 20);
 		}
 		bool is_default_state = node->state->name_hash == state_machine->default_state;
