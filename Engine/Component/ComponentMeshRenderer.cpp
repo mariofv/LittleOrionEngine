@@ -281,10 +281,9 @@ void ComponentMeshRenderer::SetSkeleton(uint32_t skeleton_uuid)
 void ComponentMeshRenderer::UpdatePalette(const std::vector<float4x4>& pose)
 {
 	assert(pose.size() == palette.size());
-	auto &  joints = skeleton->skeleton;
+	const auto &  joints = skeleton->skeleton;
 	for (size_t i = 0; i < pose.size(); ++i)
 	{
-		auto &  joints = skeleton->skeleton;
 		size_t joint_index = i;
 		float4x4 global_transform = float4x4::identity;
 		while (joints[joint_index].parent_index != -1)
