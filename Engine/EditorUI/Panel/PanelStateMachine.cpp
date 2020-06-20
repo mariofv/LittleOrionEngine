@@ -86,7 +86,6 @@ void PanelStateMachine::Render()
 void PanelStateMachine::RenderStates()
 {
 	ImGuiIO& io = ImGui::GetIO();
-	ImVec2 position(10,10);
 
 	draw_list = ImGui::GetWindowDrawList();
 	if (modified_by_user)
@@ -100,10 +99,10 @@ void PanelStateMachine::RenderStates()
 		// Start drawing nodes.
 		if (firstFrame)
 		{
-			ax::NodeEditor::SetNodePosition(node->id, position);
+			ax::NodeEditor::SetNodePosition(node->id, node->position);
 			if (ImGui::IsMouseDragging(ImGuiMouseButton_Left))
 			{
-				node->Pos = node->Pos + io.MouseDelta;
+				node->position = node->position + io.MouseDelta;
 			}
 		}
 		ax::NodeEditor::BeginNode(node->id);
@@ -179,11 +178,8 @@ void PanelStateMachine::RenderStates()
 			ImGui::OpenPopup("Create State");
 			ax::NodeEditor::Resume();
 		}
-		//update node->position
-		position = ax::NodeEditor::GetNodePosition(node->id);
-		position.x+= ax::NodeEditor::GetNodeSize(node->id).x;
-		node->Pos = position;
-
+		ImVec2 position = ax::NodeEditor::GetNodePosition(node->id);
+		node->state->position = float2(position.x, position.y);
 		ImGui::PopItemWidth();
 		ImGui::PopID();
 		
@@ -226,7 +222,7 @@ void PanelStateMachine::RenderStates()
 		{
 			if (node == selected)
 			{
-				draw_list->AddCircleFilled(node->Pos, NODE_SLOT_RADIUS, IM_COL32(0, 0, 255, 255), 12);
+				draw_list->AddCircleFilled(node->position, NODE_SLOT_RADIUS, IM_COL32(0, 0, 255, 255), 12);
 			}
 		}
 	}
@@ -469,6 +465,7 @@ void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 		node->state = state;
 		node->output = uniqueid++;
 		node->input = uniqueid++;
+		node->position = ImVec2(state->position.x, state->position.y);
 		nodes.push_back(node);
 	}
 
@@ -494,6 +491,7 @@ void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 		links.push_back(new LinkInfo{ ax::NodeEditor::LinkId(uniqueid++) , target, source, target_name, source_name, link });
 	}
 	delete[] state_machine_data.buffer;
+	firstFrame = true;
 }
 
 

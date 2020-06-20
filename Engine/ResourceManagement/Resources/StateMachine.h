@@ -32,12 +32,14 @@ struct State
 	State() = default;
 	State(std::string name, std::shared_ptr<Clip> clip);
 	State(std::string name, std::shared_ptr<Clip> clip, float speed);
+	State(std::string name, std::shared_ptr<Clip> clip, float speed, float2& position);
 	std::string name;
 	uint64_t name_hash = 0;
 	std::shared_ptr<Clip> clip = nullptr;
 	//Adding speed parameter for accelerate/decelerate clip
 	float speed = 1.0f;
 	
+	float2 position = { 10.0f, 10.0f };
 };
 
 template <typename T>

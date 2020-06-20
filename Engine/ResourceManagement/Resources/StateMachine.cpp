@@ -30,6 +30,9 @@ State::State(std::string name, std::shared_ptr<Clip> clip, float speed) :
 	name(name), name_hash(std::hash<std::string>{}(name)), clip(clip), speed(speed) {
 }
 
+State::State(std::string name, std::shared_ptr<Clip> clip, float speed, float2& position) :
+	name(name), name_hash(std::hash<std::string>{}(name)), clip(clip), speed(speed), position(position){
+}
 Transition::Transition(uint64_t source, uint64_t target, std::string & trigger, long interpolation) :
 	source_hash(source), 
 	trigger(trigger),
@@ -184,6 +187,8 @@ void StateMachine::Save(Config& config) const
 			state_config.AddString(state->clip->name, "ClipName");
 		}
 		state_config.AddInt64(state->speed, "Speed");//Saving speed
+		state_config.AddFloat(state->position.x, "XPosition");
+		state_config.AddFloat(state->position.y, "YPosition");
 		states_config.push_back(state_config);
 	}
 	config.AddChildrenConfig(states_config, "States");
@@ -245,7 +250,10 @@ void StateMachine::Load(const Config& config)
 				state_clip = clip;
 			}
 		}
-		this->states.push_back(std::make_shared<State>(name, state_clip, clip_speed));
+		float2 position(10.0f, 10.0f);
+		position.x = state_config.GetFloat("XPosition", 10.0f);
+		position.y = state_config.GetFloat("YPosition", 10.0f);
+		this->states.push_back(std::make_shared<State>(name, state_clip, clip_speed, position));
 	}
 
 	std::vector<Config> transitions_config;
