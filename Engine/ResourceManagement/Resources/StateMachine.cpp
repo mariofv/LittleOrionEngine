@@ -186,7 +186,7 @@ void StateMachine::Save(Config& config) const
 		{
 			state_config.AddString(state->clip->name, "ClipName");
 		}
-		state_config.AddInt64(state->speed, "Speed");//Saving speed
+		state_config.AddFloat(state->speed, "Speed");//Saving speed
 		state_config.AddFloat(state->position.x, "XPosition");
 		state_config.AddFloat(state->position.y, "YPosition");
 		states_config.push_back(state_config);
@@ -241,7 +241,7 @@ void StateMachine::Load(const Config& config)
 		std::string name;
 		state_config.GetString("Name", name, "");
 		state_config.GetString("ClipName", clip_name, "");
-		int64_t clip_speed = state_config.GetInt64("Speed", 1.0f);
+		float clip_speed = state_config.GetFloat("Speed", 1.0f);
 		std::shared_ptr<Clip> state_clip;
 		for (auto& clip : clips)
 		{
