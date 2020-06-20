@@ -84,6 +84,7 @@ public:
 
 	void Save(Config& config) const;
 	void Load(const Config& config);
+	void LoadNames(const Config& config);
 
 private:
 	void RemoveState(const std::shared_ptr<State> & state);

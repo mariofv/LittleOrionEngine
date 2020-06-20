@@ -43,10 +43,14 @@ void PanelStateMachine::Render()
 {
 	modified_by_user = false;
 	//initialize GO to get corresponding animation controller
-	if (App->editor->selected_game_object != nullptr)
+	if (App->editor->selected_game_object)
 	{
 		ComponentAnimation* animation_component = (ComponentAnimation*)App->editor->selected_game_object->GetComponent(Component::ComponentType::ANIMATION);
 		animation_controller = animation_component ? animation_component->GetAnimController() : nullptr;
+	}
+	else
+	{
+		animation_controller = nullptr;
 	}
 	if (ImGui::Begin(window_name.c_str(), &opened, ImGuiWindowFlags_MenuBar))
 	{
@@ -99,6 +103,20 @@ void PanelStateMachine::RenderStates()
 			{
 				node->position = node->position + io.MouseDelta;
 			}
+		}
+		bool is_active = false;
+		//get the current running animation controller to verify playing clip and select corresponding node/link
+		if (animation_controller)
+		{
+			for (auto & playing_clip : animation_controller->playing_clips)
+			{
+				is_active |= playing_clip.playing == true && playing_clip.clip->name_hash == node->state->clip->name_hash;
+			}
+		}
+		if (is_active)
+		{
+			ax::NodeEditor::PushStyleColor(ax::NodeEditor::StyleColor_NodeBg, ImColor(128, 128, 128, 200));
+			draw_list->AddCircleFilled(node->position, NODE_SLOT_RADIUS, IM_COL32(255, 0, 0, 255), 12);
 		}
 		ax::NodeEditor::BeginNode(node->id);
 		ImGui::PushItemWidth(node->Size.x);
@@ -163,7 +181,11 @@ void PanelStateMachine::RenderStates()
 		ImGui::EndGroup();
 
 		ax::NodeEditor::EndNode();
-		
+		if (is_active)
+		{
+			ax::NodeEditor::PopStyleColor(1);
+		}
+
 		selected_nodes = GetSelectedNodes();
 
 		if (ImGui::IsMouseClicked(1) && ImGui::IsItemHovered())
@@ -174,18 +196,6 @@ void PanelStateMachine::RenderStates()
 		}
 		ImVec2 position = ax::NodeEditor::GetNodePosition(node->id);
 		node->state->position = float2(position.x, position.y);
-
-		//get the current running animation controller to verify playing clip and select corresponding node/link
-		if (animation_controller)
-		{
-			for (auto & playing_clip : animation_controller->playing_clips)
-			{
-				if (playing_clip.playing == true && playing_clip.clip->name_hash == node->state->clip->name_hash)
-				{
-					ax::NodeEditor::SelectNode(node->id);
-				}
-			}
-		}
 		ImGui::PopItemWidth();
 		ImGui::PopID();
 		
@@ -438,7 +448,7 @@ void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 	char* state_machine_data_buffer = (char*)state_machine_data.buffer;
 	std::string serialized_state_machine_string = std::string(state_machine_data_buffer, state_machine_data.size);
 
-	state_machine->Load(serialized_state_machine_string);
+	state_machine->LoadNames(serialized_state_machine_string);
 	//Tranform form state machine to ui
 	for (auto & state : state_machine->states)
 	{

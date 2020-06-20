@@ -272,3 +272,62 @@ void StateMachine::Load(const Config& config)
 
 	default_state = config.GetUInt("Default", 0);
 }
+
+void StateMachine::LoadNames(const Config & config)
+{
+
+	std::vector<Config> clips_config;
+	config.GetChildrenConfig("Clips", clips_config);
+	for (auto& clip_config : clips_config)
+	{
+		std::string name;
+		clip_config.GetString("Name", name, "");
+
+		uint64_t name_hash = (std::hash<std::string>{}(name));
+		for (auto & clip : clips)
+		{
+			if (clip->name_hash == name_hash)
+			{
+				clip->name = name;
+			}
+		}
+	}
+
+	std::vector<Config> states_config;
+	config.GetChildrenConfig("States", states_config);
+	for (auto& state_config : states_config)
+	{
+		std::string name;
+		state_config.GetString("Name", name, "");
+		uint64_t name_hash = (std::hash<std::string>{}(name));
+
+		float2 position(10.0f, 10.0f);
+		position.x = state_config.GetFloat("XPosition", 10.0f);
+		position.y = state_config.GetFloat("YPosition", 10.0f);
+		for (auto & state : states)
+		{
+			if (state->name_hash == name_hash)
+			{
+				state->name = name;
+				state->position = position;
+			}
+		}
+	}
+
+	std::vector<Config> transitions_config;
+	config.GetChildrenConfig("Transitions", transitions_config);
+	for (auto& transition_config : transitions_config)
+	{
+		std::string trigger;
+		transition_config.GetString("Trigger", trigger, "");
+		uint64_t trigger_hash = (std::hash<std::string>{}(trigger));
+		for (auto & transition : transitions)
+		{
+			if (transition->trigger_hash == trigger_hash)
+			{
+				transition->trigger = trigger;
+			}
+		}
+	}
+
+}
