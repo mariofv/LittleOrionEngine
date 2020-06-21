@@ -99,6 +99,8 @@ void Scene::Load(bool from_file)
 		Config scene_config(serialized_scene_string);
 	}
 
+	timer.Start();
+
 	std::unordered_map<int64_t, std::vector<GameObject*>> prefab_parents;
 	std::vector<Config> prefabs_config;
 	scene_config.GetChildrenConfig("Prefabs", prefabs_config);
@@ -142,6 +144,9 @@ void Scene::Load(bool from_file)
 
 		}
 	}
+
+	float time_loading = timer.Stop();
+	APP_LOG_SUCCESS("Time loading scene: %.3f ms", time_loading);
 
 	App->lights->ambient_light_intensity = scene_config.GetFloat("Ambiental Light Intensity", 1.f);
 	float4 ambiental_light_color;

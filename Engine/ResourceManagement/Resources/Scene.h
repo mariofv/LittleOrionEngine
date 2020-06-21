@@ -3,6 +3,7 @@
 
 #include "Resource.h"
 #include "Helper/Config.h"
+#include "Helper/Timer.h"
 #include "ResourceManagement/Manager/SceneManager.h"
 #include <array>
 #include <vector>
@@ -37,6 +38,7 @@ private:
 	mutable Config scene_config;
 	std::string exported_file_path;
 	std::string name;
+	Timer timer;
 
 };
 
