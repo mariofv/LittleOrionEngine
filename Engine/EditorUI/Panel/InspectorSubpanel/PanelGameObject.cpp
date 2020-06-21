@@ -1,17 +1,30 @@
 #include "PanelGameObject.h"
 
+#include "Helper/TagManager.h"
+
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioSource.h"
+#include "Component/ComponentBillboard.h"
+#include "Component/ComponentBoxCollider.h"
+#include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
-#include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentCanvasRenderer.h"
+#include "Component/ComponentCapsuleCollider.h"
+#include "Component/ComponentEventSystem.h"
+#include "Component/ComponentImage.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentSpriteMask.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
-#include "Component/ComponentUI.h"
-#include "Component/ComponentButton.h"
 
 #include "EditorUI/Panel/PanelInspector.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelTransform.h"
+#include "EditorUI/Panel/PanelPopups.h"
+
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
@@ -36,10 +49,13 @@ void PanelGameObject::Render(GameObject* game_object)
 	{
 		return;
 	}
-	
-	if (ImGui::Checkbox("###State", &game_object->active)) 
+
+	ImGui::PushID(game_object->UUID);
+
+	if (ImGui::Checkbox("###State", &game_object->active))
 	{
 		game_object->SetEnabled(game_object->active);
+		game_object->modified_by_user = true;
 	}
 
 	ImGui::SameLine();
@@ -54,6 +70,28 @@ void PanelGameObject::Render(GameObject* game_object)
 	if (ImGui::Checkbox("Static", &game_object->is_static))
 	{
 		game_object->SetStatic(game_object->is_static);
+		game_object->modified_by_user = true;
+	}
+
+	ImGui::Spacing();
+	std::string tag_name = game_object->tag != "" ? game_object->tag : "Untagged";
+	if (ImGui::BeginCombo("Tag", tag_name.c_str()))
+	{
+		for (auto& tag_name : App->editor->tag_manager->tags) 
+		{
+			if (ImGui::Selectable(tag_name.c_str()))
+			{
+				game_object->tag = tag_name;
+				game_object->modified_by_user = true;
+			}
+		}
+		ImGui::Separator();
+		if (ImGui::Selectable("Add Tag..."))
+		{
+			App->editor->popups->add_tag_popup_shown = true;
+		}
+
+		ImGui::EndCombo();
 	}
 
 	ImGui::Spacing();
@@ -64,7 +102,14 @@ void PanelGameObject::Render(GameObject* game_object)
 	ImGui::Separator();
 	ImGui::Spacing();
 
-	component_panel.ShowComponentTransformWindow(&game_object->transform);
+	if (game_object->GetTransformType() == Component::ComponentType::TRANSFORM)
+	{
+		PanelTransform::ShowComponentTransformWindow(&game_object->transform);
+	}
+	else
+	{
+		PanelTransform::ShowComponentTransform2DWindow(&game_object->transform_2d);
+	}
 
 	ImGui::Spacing();
 	ImGui::Separator();
@@ -86,21 +131,67 @@ void PanelGameObject::Render(GameObject* game_object)
 			case Component::ComponentType::CAMERA:
 				component_panel.ShowComponentCameraWindow(static_cast<ComponentCamera*>(component));
 				break;
+
+			case Component::ComponentType::CANVAS_RENDERER:
+				component_panel.ShowComponentCanvasRendererWindow(static_cast<ComponentCanvasRenderer*>(component));
+				break;
+
 			case Component::ComponentType::MESH_RENDERER:
 				component_panel.ShowComponentMeshRendererWindow(static_cast<ComponentMeshRenderer*>(component));
 				break;
+
 			case Component::ComponentType::LIGHT:
 				component_panel.ShowComponentLightWindow(static_cast<ComponentLight*>(component));
 				break;
+
 			case Component::ComponentType::SCRIPT:
 				component_panel.ShowComponentScriptWindow(static_cast<ComponentScript*>(component));
 				break;
-			case Component::ComponentType::UI:
-				component_panel.ShowComponentUIWindow(static_cast<ComponentUI*>(component));
-				break;
+
 			case Component::ComponentType::ANIMATION:
 				component_panel.ShowComponentAnimationWindow(static_cast<ComponentAnimation*>(component));
 				break;
+
+			case Component::ComponentType::BILLBOARD:
+				component_panel.ShowComponentBillboard(static_cast<ComponentBillboard*>(component));
+				break;
+
+			case Component::ComponentType::PARTICLE_SYSTEM:
+				component_panel.ShowComponentParticleSystem(static_cast<ComponentParticleSystem*>(component));
+				break;
+
+			case Component::ComponentType::CANVAS:
+				component_panel.ShowComponentCanvasWindow(static_cast<ComponentCanvas*>(component));
+				break;
+
+			case Component::ComponentType::UI_IMAGE:
+				component_panel.ShowComponentImageWindow(static_cast<ComponentImage*>(component));
+				break;
+
+			case Component::ComponentType::UI_SPRITE_MASK:
+				component_panel.ShowComponentSpriteMaskWindow(static_cast<ComponentSpriteMask*>(component));
+				break;
+
+			case Component::ComponentType::UI_TEXT:
+				component_panel.ShowComponentTextWindow(static_cast<ComponentText*>(component));
+				break;
+
+			case Component::ComponentType::UI_BUTTON:
+				component_panel.ShowComponentButtonWindow(static_cast<ComponentButton*>(component));
+				break;
+
+			case Component::ComponentType::EVENT_SYSTEM:
+				component_panel.ShowComponentEventSystem(static_cast<ComponentEventSystem*>(component));
+				break;
+
+			case Component::ComponentType::COLLIDER:
+				component_panel.ShowComponentColliderWindow(static_cast<ComponentCollider*>(component));
+				break;
+
+			case Component::ComponentType::AUDIO_SOURCE:
+				component_panel.ShowComponentAudioSourceWindow(static_cast<ComponentAudioSource*>(component));
+				break;
+
 			default:
 				break;
 		}
@@ -119,6 +210,8 @@ void PanelGameObject::Render(GameObject* game_object)
 	ImGui::Spacing();
 
 	component_panel.ShowAddNewComponentButton();
+
+	ImGui::PopID();
 }
 
 void PanelGameObject::ShowPrefabMenu(GameObject* game_object)

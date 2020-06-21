@@ -1,6 +1,7 @@
 #include "ComponentLight.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleCamera.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 
@@ -25,6 +26,7 @@ Component* ComponentLight::Clone(bool original_prefab) const
 		created_component = App->lights->CreateComponentLight();
 	}
 	*created_component = *this;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 };
 
@@ -38,13 +40,11 @@ void ComponentLight::Copy(Component * component_to_copy) const
 void ComponentLight::Delete()
 {
 	App->lights->RemoveComponentLight(this);
+
 }
 
-void ComponentLight::Save(Config& config) const
+void ComponentLight::SpecializedSave(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddInt((unsigned int)type, "ComponentType");
-	config.AddBool(active, "Active");
 	config.AddColor(float4(light_color[0], light_color[1], light_color[2], 1.f), "LightColor");
 	config.AddFloat(light_intensity, "Intensity");
 	config.AddInt(static_cast<int>(light_type), "LightType");
@@ -64,11 +64,8 @@ void ComponentLight::Save(Config& config) const
 	config.AddFloat(spot_light_parameters.outer_cutoff, "SpotLightOuterCutoff");
 }
 
-void ComponentLight::Load(const Config& config)
+void ComponentLight::SpecializedLoad(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
-
 	float4 color;
 	config.GetColor("LightColor", color, float4(0.f, 0.f, 0.f, 1.f));
 	light_color[0] = color.x;

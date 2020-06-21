@@ -80,4 +80,3 @@ void TemplateScript::InitPublicGameObjects()
 // 	exampleUUID = config.GetUInt("ExampleNameforSave", 0);
 // 	Script::Load(config);
 // }
-

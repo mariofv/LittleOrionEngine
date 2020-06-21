@@ -12,30 +12,40 @@
 #include "Helper/Utils.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioSource.h"
+#include "Component/ComponentBillboard.h"
+#include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
+#include "Component/ComponentCanvasRenderer.h"
+#include "Component/ComponentCapsuleCollider.h"
+#include "Component/ComponentCollider.h"
+#include "Component/ComponentCylinderCollider.h"
+#include "Component/ComponentEventSystem.h"
 #include "Component/ComponentImage.h"
+#include "Component/ComponentMeshCollider.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
-#include "Component/ComponentProgressBar.h"
+#include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentSpriteMask.h"
+#include "Component/ComponentSphereCollider.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
-#include "Component/ComponentUI.h"
 
 #include "Helper/Utils.h"
-#include "Math/Rect.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleActions.h"
-#include "Module/ModuleFileSystem.h"
-#include "Module/ModuleScriptManager.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleFileSystem.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleScriptManager.h"
+#include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleUI.h"
 
 #include "ResourceManagement/Importer/Importer.h"
@@ -45,99 +55,12 @@
 #include <imgui_stdlib.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
-void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
-{
-	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		if ((transform->owner->GetComponent(Component::ComponentType::UI) != nullptr)) //Render transform 2d
-		{
-			ComponentTransform2D* transform_2d = &transform->owner->transform_2d;
-
-			if (ImGui::DragFloat2("Position", transform_2d->position.ptr(), 1.0f))
-			{
-				transform_2d->OnTransformChange();
-				transform_2d->modified_by_user = true;
-			}
-
-			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
-			if (ImGui::DragFloat("Width", &transform_2d->width, 1))
-			{
-				transform_2d->OnTransformChange();
-				transform_2d->modified_by_user = true;
-			}
-
-			ImGui::SameLine();
-			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
-			ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2);
-
-			if (ImGui::DragFloat("Height", &transform_2d->height, 1))
-			{
-				transform_2d->OnTransformChange();
-				transform_2d->modified_by_user = true;
-			}
-			//UndoRedo
-			CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D, transform_2d);
-
-			if (ImGui::DragFloat("Rotation", &transform_2d->rotation, 0.1f, -180.f, 180.f))
-			{
-				transform_2d->OnTransformChange();
-				transform_2d->modified_by_user = true;
-			}
-			//UndoRedo
-			CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D_ROTATION, transform_2d);
-
-			if (ImGui::DragFloat2("Scale", transform_2d->scale.ptr(), 0.1f))
-			{
-				transform_2d->OnTransformChange();
-				transform_2d->modified_by_user = true;
-			}
-		}
-		else //Render transform 3d
-		{
-			if (ImGui::DragFloat3("Translation", transform->translation.ptr(), 0.01f))
-			{
-				transform->OnTransformChange();
-				transform->modified_by_user = true;
-			}
-			//UndoRedo
-			CheckClickForUndo(ModuleActions::UndoActionType::TRANSLATION, transform);
-			
-			if (ImGui::DragFloat3("Rotation", transform->rotation_degrees.ptr(), 0.1f, -180.f, 180.f))
-			{
-				transform->rotation = Utils::GenerateQuatFromDegFloat3(transform->rotation_degrees);
-				transform->rotation_radians = Utils::Float3DegToRad(transform->rotation_degrees);
-				transform->OnTransformChange();
-				transform->modified_by_user = true;
-			}
-			//UndoRedo
-			CheckClickForUndo(ModuleActions::UndoActionType::ROTATION, transform);
-			
-			if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
-			{
-				transform->OnTransformChange();
-				transform->modified_by_user = true;
-			}
-			//UndoRedo
-			CheckClickForUndo(ModuleActions::UndoActionType::SCALE, transform);
-		}
-	}
-}
-
 void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh_renderer)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh Renderer", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_DRAW_POLYGON " Mesh Renderer", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::Checkbox("Active", &mesh_renderer->active))
+		if (!ShowCommonComponentWindow(mesh_renderer))
 		{
-			//UndoRedo
-			App->actions->action_component = mesh_renderer;
-			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
-			mesh_renderer->modified_by_user = true;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
-		{
-			App->actions->DeleteComponentUndo(mesh_renderer);
 			return;
 		}
 		ImGui::Separator();
@@ -168,7 +91,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Material");
 		ImGui::SameLine();
-		
+
 		std::string material_name = mesh_renderer->material_to_render == nullptr ? "None (Material)" : App->resources->resource_DB->GetEntry(mesh_renderer->material_to_render->GetUUID())->resource_name;
 		element_id = ImGui::GetID((std::to_string(mesh_renderer->UUID) + "MaterialSelector").c_str());
 		if (ImGui::Button(material_name.c_str()))
@@ -191,7 +114,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		ImGui::Text("Skeleton");
 		ImGui::SameLine();
 
-		std::string skeleton_name = mesh_renderer->skeleton == nullptr ? "None (Skeleton)" : App->resources->resource_DB->GetEntry(mesh_renderer->material_to_render->GetUUID())->resource_name;;
+		std::string skeleton_name = mesh_renderer->skeleton == nullptr ? "None (Skeleton)" : App->resources->resource_DB->GetEntry(mesh_renderer->skeleton->GetUUID())->resource_name;;
 		element_id = ImGui::GetID((std::to_string(mesh_renderer->UUID) + "SkeletonSelector").c_str());
 		if (ImGui::Button(skeleton_name.c_str()))
 		{
@@ -215,7 +138,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 			ImGui::AlignTextToFramePadding();
 			ImGui::Text("Triangles");
 			ImGui::SameLine();
-			sprintf_s(tmp_string, "%d", mesh_renderer->mesh_to_render->vertices.size() / 3);
+			sprintf_s(tmp_string, "%d", mesh_renderer->mesh_to_render->indices.size() / 3);
 			ImGui::Button(tmp_string);
 
 			ImGui::AlignTextToFramePadding();
@@ -224,34 +147,276 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 			sprintf_s(tmp_string, "%d", mesh_renderer->mesh_to_render->vertices.size());
 			ImGui::Button(tmp_string);
 		}
+
+		ImGui::Checkbox("Is Raycastable", &mesh_renderer->is_raycastable);
 	}
+}
+
+void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* particle_system)
+{
+	
+	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Particle System", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		
+		ImGui::Checkbox("Active", &particle_system->active);
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			App->actions->DeleteComponentUndo(particle_system);
+		}
+		ImGui::Separator();
+		if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			static int emit_count = 0;
+			ImGui::InputInt("##Emit_amount", &emit_count);
+			if (ImGui::Button("Emit"))
+			{
+				particle_system->Emit(emit_count);
+			}
+			if (ImGui::Button("Start"))
+			{
+				particle_system->Play();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Pause"))
+			{
+				particle_system->Pause();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Stop"))
+			{
+				particle_system->Stop();
+			}
+		}
+		if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			if (ImGui::InputInt("Max particles", &particle_system->max_particles_number) && particle_system->max_particles_number > MAX_PARTICLES)
+			{
+				particle_system->max_particles_number = MAX_PARTICLES;
+			}
+			ShowBillboardOptions(particle_system->billboard);
+			if (particle_system->billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET)
+			{
+				ImGui::Checkbox("Tile random", &particle_system->tile_random);
+				if (particle_system->tile_random)
+				{
+					ImGui::InputFloat("Max", &particle_system->max_tile_value);
+					ImGui::InputFloat("Min", &particle_system->min_tile_value);
+				}
+			}
+
+			int particle_shape = static_cast<int>(particle_system->type_of_particle_system);
+			if (ImGui::Combo("Shape", &particle_shape, "Sphere\0Box\0Cone\0"))
+			{
+				switch (particle_shape)
+				{
+				case 0:
+					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::SPHERE;
+					break;
+				case 1:
+					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::BOX;
+					break;
+				case 2:
+					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::CONE;
+					break;
+				}
+			}
+		
+			ImGui::Checkbox("Loop", &particle_system->loop);
+			ImGui::SameLine();
+			ImGui::Checkbox("Follow GO Parent", &particle_system->follow_owner);
+			ImGui::Spacing();
+			ImGui::Separator();
+
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+			ImGui::DragFloat("Width", &particle_system->particles_width, 0.01f, 0.0f, 100.0F);
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+			ImGui::DragFloat("Height", &particle_system->particles_height, 0.01f, 0.0f, 100.0F);
+
+
+			ImGui::Checkbox("Rand size", &particle_system->size_random);ImGui::SameLine();
+			ImGui::Checkbox("Size change over time", &particle_system->change_size);
+			if (particle_system->size_random || particle_system->change_size)
+			{
+				ImGui::Spacing();
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				ImGui::DragInt("Min size", &particle_system->min_size_of_particle, 10, 0, 999);
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				ImGui::DragInt("Max size", &particle_system->max_size_of_particle, 100, 1, 1000);
+			}
+			
+
+			if (particle_system->change_size)
+			{
+				ImGui::DragFloat("Speed", &particle_system->size_change_speed, 0.01f, 0.0f, 10.0F);
+			}
+			ImGui::Separator();
+			ImGui::Spacing();
+
+			ImGui::DragFloat("Velocity", &particle_system->velocity_particles, 0.01f, 0.0f, 100.0F);
+			ImGui::Spacing();
+
+			ImGui::DragFloat("Life (in seconds)", &particle_system->particles_life_time, 1.0F, 0.0F, 100.0F);
+			ImGui::Spacing();
+
+			ImGui::DragFloat("Time Between Particles", &particle_system->time_between_particles, 0.1F, 0.0F, 10.0f);
+			ImGui::Spacing();
+			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::BOX)
+			{
+				if (particle_system->enabled_random_x)
+				{
+					ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 10000);
+					ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -10000, 0);
+				}
+				else
+				{
+					ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -100, 10000);
+				}
+				ImGui::SameLine();
+				ImGui::Checkbox("Rand X", &particle_system->enabled_random_x);
+
+				ImGui::Spacing();
+
+				if (particle_system->enabled_random_z)
+				{
+					ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 10000);
+					ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -10000, 0);
+				}
+				else
+				{
+					ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -100, 10000);
+				}
+				ImGui::SameLine();
+				ImGui::Checkbox("Rand Z", &particle_system->enabled_random_z);
+			
+			}
+			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::CONE)
+			{
+				ImGui::DragFloat("Outer radius", &particle_system->outer_radius, 0.1F, 0.1, 10);
+				ImGui::DragFloat("Inner radius", &particle_system->inner_radius, 0.1F, 0.1, 10);
+			}
+		}
+
+		//Color of Particles
+		if (ImGui::CollapsingHeader(ICON_FA_SQUARE "Color Over Time"))
+		{
+			ImGui::Checkbox("Fade", &particle_system->fade);
+			ImGui::Checkbox("Fade Between Colors", &particle_system->fade_between_colors);
+			if (particle_system->fade)
+			{
+				ImGui::DragFloat("Fade time", &particle_system->fade_time, 0.01f, 0.0f, 10.0F);
+			}
+			ImGui::ColorEdit4("Particle Color##2f", (float*)&particle_system->color_particle, ImGuiColorEditFlags_Float );
+			if (particle_system->fade_between_colors)
+			{
+				ImGui::ColorEdit4("Particle Color To Fade##2f", (float*)&particle_system->color_to_fade, ImGuiColorEditFlags_Float);
+				ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
+			}
+		}		
+	}
+
+}
+void PanelComponent::ShowComponentBillboard(ComponentBillboard* billboard)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Billboard", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (!ShowCommonComponentWindow(billboard))
+		{
+			return;
+		}
+		ImGui::Separator();
+
+		ShowBillboardOptions(billboard);
+
+	}
+}
+
+void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
+{
+	ImGui::AlignTextToFramePadding();
+
+	ImGui::Text("Texture");
+	ImGui::SameLine();
+
+	std::string texture_name = billboard->billboard_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(billboard->billboard_texture->GetUUID())->resource_name;
+	ImGuiID element_id = ImGui::GetID((std::to_string(billboard->UUID) + "TextureSelector").c_str());
+	if (ImGui::Button(texture_name.c_str()))
+	{
+		App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+	}
+
+	uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+	if (selected_resource_uuid != 0)
+	{
+		billboard->ChangeTexture(selected_resource_uuid);
+	}
+	selected_resource_uuid = ImGui::ResourceDropper<Texture>();
+	if (selected_resource_uuid != 0)
+	{
+		billboard->ChangeTexture(selected_resource_uuid);
+	}
+	int alignment_type = static_cast<int>(billboard->alignment_type);
+	if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) {
+		switch (alignment_type)
+		{
+		case 0:
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
+			break;
+		case 1:
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
+			break;
+		case 2:
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::SPRITESHEET);
+			break;
+		case 3:
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
+			break;
+		}
+	}
+
+	if (billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
+		ImGui::InputInt("Columns", &billboard->x_tiles, 1);
+		ImGui::InputInt("Rows", &billboard->y_tiles, 1);
+		ImGui::InputFloat("current x", &billboard->current_sprite_x, 1);
+		ImGui::InputFloat("current y", &billboard->current_sprite_y, 1);
+		ImGui::InputFloat("Speed", &billboard->sheet_speed, 1);
+		ImGui::Checkbox("Oriented to camera", &billboard->oriented_to_camera);
+		if (ImGui::Button("Play once"))
+		{
+			billboard->EmitOnce();
+		}
+		if (ImGui::Button("Reset"))
+		{
+			billboard->play = true;
+		}
+
+	}
+
+	ImGui::Separator();
+	ImGui::Text("Custom");
+	ImGui::DragFloat("Width:", &billboard->width, 0.2f, 0.f, 10.f);
+	ImGui::DragFloat("Height:", &billboard->height, 0.2f, 0.f, 10.f);
+	ImGui::DragFloat("Transparency:", &billboard->transparency, 0.1f, 0.f, 1.f);
 }
 
 void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_VIDEO " Camera", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::Checkbox("Active", &camera->active))
+		if (!ShowCommonComponentWindow(camera))
 		{
-			//UndoRedo
-			App->actions->action_component = camera;
-			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
-			camera->modified_by_user = true;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
-		{
-			App->actions->DeleteComponentUndo(camera);
 			return;
 		}
 		ImGui::Separator();
 
-		if (ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; };
-		if (ImGui::InputFloat3("Up", &camera->camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; };
+		if (ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; }
+		if (ImGui::InputFloat3("Up", &camera->camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; }
 
 		ImGui::Separator();
 
-		if (ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED)) { camera->modified_by_user = true; };
+		if (ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED)) { camera->modified_by_user = true; }
 
 		//UndoRedo
 		CheckClickedCamera(camera);
@@ -306,9 +471,11 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 				camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
 				camera->modified_by_user = true;
 				break;
+			default:
+				break;
 			}
 		}
-		if (ImGui::ColorEdit3("Clear Color", camera->camera_clear_color)) { camera->modified_by_user = true; };
+		if (ImGui::ColorEdit3("Clear Color", camera->camera_clear_color)) { camera->modified_by_user = true; }
 		ImGui::Separator();
 
 		if (ImGui::DragFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0.01f, 0, 100))
@@ -334,11 +501,10 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		}
 		ImGui::Separator();
 
-		if (ImGui::DragInt("Depth", &camera->depth, 0.05f)) { camera->modified_by_user = true; };
+		if (ImGui::DragInt("Depth", &camera->depth, 0.05f)) { camera->modified_by_user = true; }
 
 		//UndoRedo
 		CheckClickedCamera(camera);
-
 	}
 }
 
@@ -346,27 +512,17 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_LIGHTBULB " Light", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::Checkbox("Active", &light->active))
+		if (!ShowCommonComponentWindow(light))
 		{
-			//UndoRedo
-			App->actions->action_component = light;
-			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
-			light->modified_by_user = true;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
-		{
-			App->actions->DeleteComponentUndo(light);
-
 			return;
 		}
 		ImGui::Separator();
 
-		if (ImGui::ColorEdit3("Color", light->light_color)) { light->modified_by_user = true; };
+		if (ImGui::ColorEdit3("Color", light->light_color)) { light->modified_by_user = true; }
 
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
-		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f)) { light->modified_by_user = true; };
+		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 100.f)) { light->modified_by_user = true; }
 
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
@@ -384,6 +540,8 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 				break;
 			case 2:
 				light->light_type = ComponentLight::LightType::DIRECTIONAL_LIGHT;
+				break;
+			default:
 				break;
 			}
 		}
@@ -421,17 +579,8 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PLAY_CIRCLE " Animation", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::Checkbox("Active", &animation->active))
+		if (!ShowCommonComponentWindow(animation))
 		{
-			//UndoRedo
-			App->actions->action_component = animation;
-			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
-		{
-			App->actions->DeleteComponentUndo(animation);
-
 			return;
 		}
 		ImGui::SameLine();
@@ -465,7 +614,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 			animation->SetStateMachine(selected_resource);
 			animation->modified_by_user = true;
 		}
-		
+
 		if (animation->animation_controller->state_machine && animation->animation_controller->active_state)
 		{
 			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(animation->animation_controller->active_state->name_hash), nullptr, nullptr, nullptr, ImGuiInputTextFlags_ReadOnly);
@@ -478,7 +627,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		}
 		ImGui::AlignTextToFramePadding();
 		ImGui::Separator();
-		if (ImGui::Checkbox("Playing", &animation->playing));
+		if (ImGui::Checkbox("Playing", &animation->playing))
 		ImGui::SameLine();
 		if (ImGui::Button("Play"))
 		{
@@ -506,20 +655,11 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 {
 	if (ImGui::CollapsingHeader(ICON_FA_EDIT " Script", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::Checkbox("Active", &component_script->active))
+		if (!ShowCommonComponentWindow(component_script))
 		{
-			//UndoRedo TODO
-			//App->editor->action_component = component_script;
-			//App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
-		}
-
-
-		if (ImGui::Button("Delete"))
-		{
-			component_script->owner->RemoveComponent(component_script);
-			App->scripts->RemoveComponentScript(component_script);
 			return;
 		}
+
 		ImGui::SameLine();
 		if (ImGui::Button("Refresh"))
 		{
@@ -536,52 +676,111 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 	}
 }
 
-void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
-{
-	switch (ui->ui_type) 
-	{
-		case ComponentUI::UIType::CANVAS :
-			ShowComponentCanvasWindow(static_cast<ComponentCanvas*>(ui));
-			break;
-		case ComponentUI::UIType::IMAGE:
-			ShowComponentImageWindow(static_cast<ComponentImage*>(ui));
-			break;
-		case ComponentUI::UIType::TEXT:
-			ShowComponentTextWindow(static_cast<ComponentText*>(ui));
-			break;
-		case ComponentUI::UIType::BUTTON:
-			ShowComponentButtonWindow(static_cast<ComponentButton*>(ui));
-			break;
-		case ComponentUI::UIType::PROGRESSBAR:
-			ShowComponentProgressBarWindow(static_cast<ComponentProgressBar*>(ui));
-			break;
-	}
-}
-
 void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Canvas", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Canvas", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ShowCommonUIWindow(canvas);
+		if (!ShowCommonComponentWindow(canvas))
+		{
+			return;
+		}
 	}
 }
 
-void PanelComponent::ShowComponentImageWindow(ComponentImage* image) {
-	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Image", ImGuiTreeNodeFlags_DefaultOpen))
+void PanelComponent::ShowComponentColliderWindow(ComponentCollider* collider)
+{
+	switch (collider->collider_type)
 	{
-		ShowCommonUIWindow(image);
+	case ComponentCollider::ColliderType::BOX:
+		ShowComponentBoxColliderWindow(static_cast<ComponentBoxCollider*>(collider));
+		break;
+	case ComponentCollider::ColliderType::CAPSULE:
+		ShowComponentCapsuleColliderWindow(static_cast<ComponentCapsuleCollider*>(collider));
+		break;
+	case ComponentCollider::ColliderType::SPHERE:
+		ShowComponentSphereColliderWindow(static_cast<ComponentSphereCollider*>(collider));
+		break;
+	case ComponentCollider::ColliderType::CYLINDER:
+		ShowComponentCylinderColliderWindow(static_cast<ComponentCylinderCollider*>(collider));
+		break;
+	case ComponentCollider::ColliderType::MESH:
+		ShowComponentMeshColliderWindow(static_cast<ComponentMeshCollider*>(collider));
+		break;
 	}
 }
 
-
-void PanelComponent::ShowComponentProgressBarWindow(ComponentProgressBar* progress_bar) {
-	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Progress Bar", ImGuiTreeNodeFlags_DefaultOpen))
+void PanelComponent::ShowComponentCanvasRendererWindow(ComponentCanvasRenderer* canvas_renderer)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_DOT_CIRCLE " Canvas Renderer", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ShowCommonUIWindow(progress_bar);
+		if (!ShowCommonComponentWindow(canvas_renderer))
+		{
+			return;
+		}
+	}
+}
+
+void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Image", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (!ShowCommonComponentWindow(component_image))
+		{
+			return;
+		}
+
+		ImGui::Spacing();
 		ImGui::Separator();
-		ImGui::DragFloat("Bar Value", &progress_bar->percentage, 0.1F, 0.0F, 100.0F);
-		ImGui::InputInt("Bar Image", (int*)(&progress_bar->bar_texture));
-		ImGui::ColorPicker3("Bar Color", progress_bar->bar_color.ptr());
+		ImGui::Spacing();
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Texture");
+		ImGui::SameLine();
+
+		std::string texture_name = component_image->texture_to_render == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(component_image->texture_to_render->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(component_image->UUID) + "MeshSelector").c_str());
+		if (ImGui::Button(texture_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+		}
+
+		uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource != 0)
+		{
+			component_image->SetTextureToRender(selected_resource);
+		}
+		selected_resource = ImGui::ResourceDropper<Texture>();
+		if (selected_resource != 0)
+		{
+			component_image->SetTextureToRender(selected_resource);
+		}
+
+		ImGui::ColorEdit3("Color", component_image->color.ptr());
+
+		ImGui::Checkbox("Preserve Aspect Ratio", &component_image->preserve_aspect_ratio);
+
+		if (ImGui::Button("Set Native Size"))
+		{
+			component_image->SetNativeSize();
+		}
+	}
+}
+
+void PanelComponent::ShowComponentSpriteMaskWindow(ComponentSpriteMask* component_mask)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_THEATER_MASKS " Sprite Mask", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (!ShowCommonComponentWindow(component_mask))
+		{
+			return;
+		}
+
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		ImGui::Checkbox("Invert mask", &component_mask->inverted_mask);
+		ImGui::Checkbox("Show sprite mask", &component_mask->render_mask);
 	}
 }
 
@@ -589,22 +788,77 @@ void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Text", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ShowCommonUIWindow(text);
-		ImGui::Separator();		
-		ImGui::InputText("Text", &text->text);
-		ImGui::Separator();
-		if (ImGui::DragFloat("Font Size", (float*)(&text->scale)))
+		if (!ShowCommonComponentWindow(text))
 		{
+			return;
+		}
+		ImGui::Separator();
+		if (ImGui::InputText("Text", &text->text))
+		{
+			text->SetText(text->text);
+		}
+
+		ImGui::Separator();
+		ImGui::Text("Font");
+		ImGui::SameLine();
+		std::string font_name = text->font == nullptr ? "None (Font)" : App->resources->resource_DB->GetEntry(text->font->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(text->UUID) + "FontSelector").c_str());
+		if (ImGui::Button(font_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::FONT);
+		}
+		uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource != 0)
+		{
+			text->SetFont(selected_resource);
 			text->modified_by_user = true;
 		}
-		
+		selected_resource = ImGui::ResourceDropper<Font>();
+		if (selected_resource != 0)
+		{
+			text->SetFont(selected_resource);
+		}
+
+		if (ImGui::DragFloat("Font Size", (float*)(&text->font_size)))
+		{
+			text->SetFontSize(text->font_size);
+			text->modified_by_user = true;
+		}
+
+		int horizontal_alignment = static_cast<int>(text->horizontal_alignment);
+		if (ImGui::Combo("Horizontal Alignment", &horizontal_alignment, "Left\0Center\0Right"))
+		{
+			switch (horizontal_alignment)
+			{
+			case 0:
+				text->SetHorizontalAlignment(ComponentText::HorizontalAlignment::LEFT);
+				break;
+			case 1:
+				text->SetHorizontalAlignment(ComponentText::HorizontalAlignment::CENTER);
+				break;
+			case 2:
+				text->SetHorizontalAlignment(ComponentText::HorizontalAlignment::RIGHT);
+				break;
+			}
+		}
+
 	}
 }
 void PanelComponent::ShowComponentButtonWindow(ComponentButton *button)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Button", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_TOGGLE_ON " Button", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ShowCommonUIWindow(button);
+		ShowCommonComponentWindow(button);
+		bool clicked = button->IsClicked();
+		ImGui::Checkbox("Clicked", &clicked);
+	}
+}
+
+void PanelComponent::ShowComponentEventSystem(ComponentEventSystem* event_system)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_BULLHORN " Event System", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonComponentWindow(event_system);
 	}
 }
 
@@ -664,7 +918,7 @@ void PanelComponent::CheckClickForUndo(ModuleActions::UndoActionType  type, Comp
 void PanelComponent::ShowAddNewComponentButton()
 {
 	float window_width = ImGui::GetWindowWidth();
-	float button_width = 0.5f * window_width;
+	float button_width = 0.5F * window_width;
 	ImGui::SetCursorPosX((window_width - button_width) / 2.f);
 	ImGui::Button("Add Component", ImVec2(button_width, 25));
 
@@ -688,6 +942,7 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
 
 		}
+
 		sprintf_s(tmp_string, "%s Script", ICON_FA_EDIT);
 		if (ImGui::Selectable(tmp_string))
 		{
@@ -699,19 +954,115 @@ void PanelComponent::ShowAddNewComponentButton()
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
-
 			if (!App->editor->selected_game_object->IsStatic())
 			{
-				App->renderer->InsertAABBTree(App->editor->selected_game_object);
+				App->space_partitioning->InsertAABBTree(App->editor->selected_game_object);
 			}
+		}
+		
+		sprintf_s(tmp_string, "%s Billboard", ICON_FA_SQUARE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::BILLBOARD);
+
 
 		}
+		sprintf_s(tmp_string, "%s Particle System", ICON_FA_SQUARE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::PARTICLE_SYSTEM);
+		}
+
 		sprintf_s(tmp_string, "%s Animation", ICON_FA_PLAY_CIRCLE);
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::ANIMATION);
 
 		}
+
+		ImGui::Separator();
+
+		sprintf_s(tmp_string, "%s Box Collider", ICON_FA_BOX);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::BOX);
+
+		}
+		sprintf_s(tmp_string, "%s Capsule Collider", ICON_FA_CAPSULES);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::CAPSULE);
+		}
+		sprintf_s(tmp_string, "%s Cylinder Collider", ICON_FA_COLUMNS);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::CYLINDER);
+		}
+		sprintf_s(tmp_string, "%s Sphere Collider", ICON_FA_BASKETBALL_BALL);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::SPHERE);
+		}
+		sprintf_s(tmp_string, "%s Mesh Collider", ICON_FA_BORDER_NONE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::MESH);
+		}
+
+		ImGui::Separator();
+
+		sprintf_s(tmp_string, "%s Transform 2D", ICON_FA_RULER_COMBINED);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->SetTransform2DStatus(true);
+		}
+
+		sprintf_s(tmp_string, "%s Canvas", ICON_FA_SQUARE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::CANVAS);
+
+		}
+
+		sprintf_s(tmp_string, "%s Canvas Renderer", ICON_FA_DOT_CIRCLE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::CANVAS_RENDERER);
+
+		}
+
+		sprintf_s(tmp_string, "%s UI Image", ICON_FA_IMAGE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_IMAGE);
+		}
+
+		sprintf_s(tmp_string, "%s Sprite Mask", ICON_FA_THEATER_MASKS);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_SPRITE_MASK);
+		}
+
+		sprintf_s(tmp_string, "%s UI Button", ICON_FA_TOGGLE_ON);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_BUTTON);
+		}
+
+		sprintf_s(tmp_string, "%s Event System", ICON_FA_BULLHORN);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::EVENT_SYSTEM);
+		}
+		ImGui::Separator();
+
+		sprintf_s(tmp_string, "%s Audio Source", ICON_FA_AUDIO_DESCRIPTION);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::AUDIO_SOURCE);
+
+		}
+
 		ImGui::EndPopup();
 	}
 
@@ -725,7 +1076,6 @@ void PanelComponent::ShowAddNewComponentButton()
 
 void PanelComponent::ShowScriptsCreated(ComponentScript* component_script)
 {
-
 	if (ImGui::BeginCombo("Add Script", component_script->name.c_str()))
 	{
 		for (auto& script_name : App->scripts->scripts_list) {
@@ -738,12 +1088,12 @@ void PanelComponent::ShowScriptsCreated(ComponentScript* component_script)
 		ImGui::Separator();
 		if (ImGui::Selectable("Create new Script"))
 		{
-			App->editor->popups->create_script_shown = true;
+			App->editor->popups->create_script_popup_shown = true;
 		}
 
 		ImGui::EndCombo();
 	}
-}	
+}
 
 ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go)
 {
@@ -759,33 +1109,219 @@ ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go)
 	}
 }
 
-void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
+bool PanelComponent::ShowCommonComponentWindow(Component* component)
 {
-	if (ImGui::Checkbox("Active", &ui->active))
+	if (ImGui::Checkbox("Active", &component->active))
+	{
+		component->modified_by_user = true;
+		if (component->active)
+		{
+			component->Enable();
+		}
+		else
+		{
+			component->Disable();
+		}
+
+		//UndoRedo
+		App->actions->action_component = component;
+		App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Delete"))
+	{
+		App->actions->DeleteComponentUndo(component);
+		return false;
+	}
+
+	return true;
+}
+
+bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
+{
+	if (ImGui::Checkbox("Active", &collider->active))
 	{
 		//UndoRedo
-		App->actions->action_component = ui;
+		collider->SwitchPhysics();
+		App->actions->action_component = collider;
 		App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Delete"))
 	{
-		App->actions->DeleteComponentUndo(ui);
-		return;
+		App->actions->DeleteComponentUndo(collider);
+		return false;
 	}
 	ImGui::Separator();
-	if (ImGui::DragInt("Layer", &ui->layer, 1.0F, -MAX_NUM_LAYERS, MAX_NUM_LAYERS))
-	{
-		//ui->owner->transform_2d.OnTransformChange();
-		App->ui->SortComponentsUI();
-	}
-	ImGui::Separator();
-	ImGui::InputInt("Texture", (int*)(&ui->ui_texture));
-	uint32_t selected_resource = ImGui::ResourceDropper<Texture>();
-	if (selected_resource != 0)
-	{
-		ui->SetTextureToRender(selected_resource);
-	}
 
-	ImGui::ColorPicker3("Color", ui->color.ptr());
+	if (ImGui::DragFloat("Mass", &collider->mass, 1.0F, 0.1F, 1000.F))
+	{
+		collider->SetMass(collider->mass);
+	}
+	if (ImGui::DragFloat("Friction", &collider->friction, 0.1F, 0.1F, 1.F)) {
+		collider->UpdateFriction();
+	}
+	if (ImGui::DragFloat("Rolling friction", &collider->rolling_friction, 1.0F, 0.1F, 2000.F))
+	{
+		collider->SetRollingFriction();
+	}
+	if (ImGui::Checkbox("Visualize", &collider->visualize))
+	{
+		collider->SetVisualization();
+	}
+	if (ImGui::Checkbox("Static", &collider->is_static))
+	{
+		collider->SetStatic();
+	}
+	if (ImGui::Checkbox("Collision Detection", &collider->detect_collision))
+	{
+		collider->SetCollisionDetection();
+	}
+	if (ImGui::Checkbox("Active Physics", &collider->active_physics))
+	{
+		collider->SwitchPhysics();
+	}
+	ImGui::Text("Freeze Axis Rotation");
+	if (ImGui::Checkbox("X Axis", &collider->freeze_rotation_x))
+	{
+		collider->SetRotationAxis();
+	}
+	if (ImGui::Checkbox("Y Axis", &collider->freeze_rotation_y))
+	{
+		collider->SetRotationAxis();
+	}
+	if (ImGui::Checkbox("Z Axis", &collider->freeze_rotation_z))
+	{
+		collider->SetRotationAxis();
+	}
+	if (ImGui::DragFloat3("Center", collider->center.ptr(), 0.01F))
+	{
+		collider->SetColliderCenter(collider->center);
+	}
+	return true;
+}
+
+
+void PanelComponent::ShowComponentBoxColliderWindow(ComponentBoxCollider* box_collider)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_BOX " Box Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ShowCommonColliderWindow(box_collider))
+		{
+			if (ImGui::DragFloat3("Scale", box_collider->scale.ptr(), 0.01F, 0.1F, 10.0F))
+			{
+				box_collider->Scale();
+			}
+		}
+	}
+}
+
+void PanelComponent::ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider* capsule_collider)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_CAPSULES " Capsule Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if(ShowCommonColliderWindow(capsule_collider))
+		{
+			if (ImGui::DragFloat("Radius", &capsule_collider->scale.x, 0.01F, 0.1F, 10.0F))
+			{
+				capsule_collider->Scale();
+			}
+			if (ImGui::DragFloat("Height", &capsule_collider->scale.y, 0.01F, 0.1F, 10.0F))
+			{
+				capsule_collider->Scale();
+			}
+		}
+	}
+}
+
+void PanelComponent::ShowComponentSphereColliderWindow(ComponentSphereCollider* sphere_collider)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_BASKETBALL_BALL " Sphere Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ShowCommonColliderWindow(sphere_collider))
+		{
+			if (ImGui::DragFloat("Radius", &sphere_collider->scale.x, 0.01F, 0.01F, 10.0F))
+			{
+				sphere_collider->Scale();
+			}
+		}
+	}
+}
+
+void PanelComponent::ShowComponentCylinderColliderWindow(ComponentCylinderCollider* cylinder_collider)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_COLUMNS " Cylinder Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if(ShowCommonColliderWindow(cylinder_collider))
+		{
+			if (ImGui::DragFloat("Radius", &cylinder_collider->scale.x, 0.01F, 0.1F, 10.0F))
+			{
+				cylinder_collider->Scale();
+			}
+			if (ImGui::DragFloat("Height", &cylinder_collider->scale.y, 0.01F, 0.1F, 10.0F))
+			{
+				cylinder_collider->Scale();
+			}
+		}
+	}
+}
+
+void PanelComponent::ShowComponentMeshColliderWindow(ComponentMeshCollider* mesh_collider)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_BORDER_NONE " Mesh Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ShowCommonColliderWindow(mesh_collider))
+		{
+			if (ImGui::DragFloat3("Scale", mesh_collider->scale.ptr(), 0.01F))
+			{
+				mesh_collider->Scale();
+			}
+		}
+	}
+}
+void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_AUDIO_DESCRIPTION " Audio Source", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (!ShowCommonComponentWindow(component_audio_source))
+		{
+			return;
+		}
+		ImGui::Separator();
+
+		//ImGui::AlignTextToFramePadding();
+		ImGui::Checkbox("3D Sound", &component_audio_source->sound_3d);
+		std::string soundbank_name = component_audio_source->soundbank == nullptr ? "None (Sound Bank)" : App->resources->resource_DB->GetEntry(component_audio_source->soundbank->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(component_audio_source->UUID) + "SoundBankSelector").c_str());
+		if (ImGui::Button(soundbank_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::SOUND);
+		}
+		uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource != 0)
+		{
+			component_audio_source->SetSoundBank(selected_resource);
+			component_audio_source->modified_by_user = true;
+		}
+		selected_resource = ImGui::ResourceDropper<SoundBank>();
+		if (selected_resource != 0)
+		{
+			component_audio_source->SetSoundBank(selected_resource);
+			component_audio_source->modified_by_user = true;
+		}
+		if (component_audio_source->soundbank)
+		{
+			static std::string soundbank;
+			ImGui::InputText("SoundBank ", &soundbank);
+			if (ImGui::Button("Play"))
+			{
+				component_audio_source->PlayEvent(soundbank);
+			}
+		}
+		if (ImGui::SliderFloat("Volume", &component_audio_source->volume, 0, 30))
+		{
+			component_audio_source->SetVolume(component_audio_source->volume);
+		}
+	}
 }

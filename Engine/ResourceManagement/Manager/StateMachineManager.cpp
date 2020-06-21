@@ -47,7 +47,11 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(uint32_t uuid, const Fil
 		cursor += bytes;
 		if (animation_uuid != 0)
 		{
-			clip->SetAnimation(App->resources->Load<Animation>(animation_uuid));
+			auto & animation_resource = App->resources->Load<Animation>(animation_uuid);
+			if (animation_resource)
+			{
+				clip->SetAnimation(App->resources->Load<Animation>(animation_uuid));
+			}
 		}
 
 		bytes = sizeof(bool);
@@ -98,6 +102,14 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(uint32_t uuid, const Fil
 
 		bytes = sizeof(uint64_t);
 		memcpy(&transition->interpolation_time, cursor, bytes);
+		cursor += bytes;
+
+		bytes = sizeof(uint64_t);
+		memcpy(&transition->priority, cursor, bytes);
+		cursor += bytes;
+
+		bytes = sizeof(bool);
+		memcpy(&transition->automatic, cursor, bytes);
 		cursor += bytes;
 	}
 	std::shared_ptr<StateMachine> new_state_machine = std::make_shared<StateMachine>(uuid, std::move(clips), std::move(states), std::move(transitions));

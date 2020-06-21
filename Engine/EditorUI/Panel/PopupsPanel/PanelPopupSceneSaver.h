@@ -48,6 +48,7 @@ private:
 
 	bool pending_to_be_closed = false;
 	bool has_selected = false;
+	bool is_overwriting = false;
 };
 
 #endif //_PANELPOPUPSCENESAVER_H_

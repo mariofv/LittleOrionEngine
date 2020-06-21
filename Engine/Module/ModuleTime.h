@@ -6,6 +6,9 @@
 #include "Module.h"
 #include "Main/Globals.h"
 
+#include "EditorUI/Panel/PanelToolBar.h"
+#include "EditorUI/Panel/PanelConfiguration.h"
+
 class Timer;
 
 class ModuleTime : public Module
@@ -21,6 +24,7 @@ public:
 	ENGINE_API float GetFPS() const;
 	void SetMaxFPS(int fps);
 	void SetTimeScale(float time_scale);
+	void ResetInitFrame();
 
 	bool isGameRunning();
 
@@ -29,7 +33,6 @@ public:
 	void StepFrame();
 
 	void EndFrame();
-
 
 public:
 	long frame_count = 0;
@@ -49,7 +52,7 @@ private:
 	float frame_start_time = 0.f;
 	float real_frame_start_time = 0.f;
 
-	bool limit_fps = false;
+	bool limit_fps = true;
 	float last_frame_delay = 0.f;
 
 	int max_fps = 60;

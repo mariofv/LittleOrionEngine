@@ -14,12 +14,23 @@
 class Material : public Resource
 {
 public:
+	enum class MaterialType
+	{
+		MATERIAL_OPAQUE,
+		MATERIAL_TRANSPARENT,
+		MATERIAL_LIQUID,
+		UNKNOWN
+	};
+
 	enum MaterialTextureType
 	{
 		DIFFUSE,
 		SPECULAR,
 		EMISSIVE,
 		OCCLUSION,
+		NORMAL,
+		LIGHTMAP,
+		LIQUID,
 		UNKNOWN
 	};
 
@@ -35,20 +46,52 @@ public:
 
 	void RemoveMaterialTexture(MaterialTextureType type);
 
+	void ChangeTypeOfMaterial(const MaterialType new_material_type);
+	static std::string GetMaterialTypeName(const MaterialType material_type);
+
+	void UpdateLiquidProperties();
+
+
 public:
 	static const size_t MAX_MATERIAL_TEXTURE_TYPES = static_cast<size_t>(MaterialTextureType::UNKNOWN);
+	static const size_t MAX_MATERIAL_TYPES = static_cast<size_t>(MaterialType::UNKNOWN);
+
+	MaterialType material_type = MaterialType::MATERIAL_OPAQUE;
+
 	std::string shader_program = "Blinn phong";
 	
 	std::vector<uint32_t> textures_uuid;
 	std::vector<std::shared_ptr<Texture>> textures;
 
 	float diffuse_color[4] = { 1.0f, 1.0f,1.0f,1.0f };
-	float emissive_color[4] = { 0.0f, 0.0f, 0.0f , 1.0f };
+	float emissive_color[4] = { 1.0f, 1.0f, 1.0f , 1.0f };
 	float specular_color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float k_diffuse = 1.0f;
 	float k_specular = 1.0f;
-	float k_ambient = 0.5f;
-	float shininess = 1.0f;
+	float k_ambient = 1.0f;
+
+	float2 coords = float2(1.0f, 1.0f);
+
+	float transparency = 0.5F;
+//	float roughness = 0.5f;
+//	float metalness = 0.04f;
+
+	float tiling_x = 1.0f;
+	float tiling_y = 1.0f;
+
+	//liquid material
+	float speed_tiling_x = 1.0F;
+	float speed_tiling_y = 1.0F;
+	float tiling_liquid_x_x = 1.F;
+	float tiling_liquid_x_y = 1.F;
+	float tiling_liquid_y_x = -1.F;
+	float tiling_liquid_y_y = -1.F;
+	bool use_liquid_map = false;
+	//This variable will allow the shader to use the normal maps if there is any assigned to the model material
+	bool use_normal_map = false;
+
+	//We also will detect if using specular map
+	bool use_specular_map = false;
 
 	bool show_checkerboard_texture = false;
 };
@@ -74,5 +117,5 @@ namespace ResourceManagement
 	};
 }
 
-#endif // !_MESH_H_
+#endif // !_MATERIAL_H_
 

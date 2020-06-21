@@ -6,9 +6,11 @@
 #include "Component.h"
 #include "Component/ComponentAABB.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/PanelGame.h"
 #include "EditorUI/Panel/PanelScene.h"
+#include "ResourceManagement/Resources/Skybox.h"
 
-#include "MathGeoLib.h"
+#include <MathGeoLib.h>
 #include <GL/glew.h>
 
 class GameObject;
@@ -22,6 +24,13 @@ public:
 		COLOR = 0,
 		SKYBOX = 1,
 		ORTHO = 2
+	};
+
+	enum OrthoIndex
+	{
+		CLOSE = 0,
+		MID = 1,
+		AWAY = 2
 	};
 
 	ComponentCamera();
@@ -39,16 +48,16 @@ public:
 	void Update() override;
 	void Delete() override;
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
 	float GetWidth() const;
 	float GetHeight() const;
 
-	void RecordFrame(float width, float height);
-	void RecordDebugDraws(float width, float height) const;
+	void RecordFrame(float width, float height, bool scene_mode = false);
+	ENGINE_API void RecordDebugDraws(bool scene_mode = false);
 	GLuint GetLastRecordedFrame() const;
 
 	void SetFOV(float fov);
@@ -90,31 +99,34 @@ public:
 
 	void SetClearMode(ComponentCamera::ClearMode clear_mode);
 	void SetSkybox(uint32_t skybox_uuid);
-
 	void SetSpeedUp(bool is_speeding_up);
 
 	void SetViewMatrix(const float4x4& view_matrix);
+
 	float4x4 GetViewMatrix() const;
 	float4x4 GetProjectionMatrix() const;
+	ENGINE_API float4x4 GetClipMatrix() const;
 	float4x4 GetInverseClipMatrix() const;
 
 	std::vector<float> GetFrustumVertices() const;
 	
-	bool IsInsideFrustum(const AABB& aabb) const;
+	ENGINE_API bool IsInsideFrustum(const AABB& aabb) const;
 	ComponentAABB::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
 
 	ENGINE_API bool IsInsideFrustum(const AABB2D& aabb) const;
+	ENGINE_API bool IsCompletlyInsideFrustum(const AABB & aabb) const;
 	ComponentAABB::CollisionState CheckAABB2DCollision(const AABB2D& reference_AABB) const;
 
-	void GetRay(const float2& normalized_position, LineSegment &return_value) const;
+	ENGINE_API void GetRay(const float2 &mouse_position, LineSegment &return_value) const;
 
 	AABB GetMinimalEnclosingAABB() const;
+	void GenerateMatrices();
 
 private:
 	void GenerateFrameBuffers(float width, float height);
-	void GenerateMatrices();
 	void InitCamera();
 	void CreateFramebuffer(float width, float height);
+	void CreateOrthographicFramebuffer(float width, float height);
 	void CreateMssaFramebuffer(float width, float height);
 
 public:
@@ -134,20 +146,22 @@ public:
 	float4x4 proj;
 	float4x4 view;
 
+	GLuint depth_map = 0;
+	GLuint last_recorded_frame_texture = 0;
+
+	OrthoIndex ortho_index; //Only for orthographic cameras
+
+
 	bool toggle_msaa = false;
 	bool is_focusing = false;
+	Frustum camera_frustum;
 
 private:
-	Frustum camera_frustum;
 	GLuint rbo = 0;
 	GLuint fbo = 0;
-private:
-	
-	
-	
+	GLuint depth_rbo = 0;
 	GLuint msfbo = 0;
 	GLuint msfb_color = 0;
-	GLuint last_recorded_frame_texture = 0;
 
 	float last_height = 0;
 	float last_width = 0;
@@ -172,6 +186,7 @@ private:
 	friend class ModuleDebugDraw;
 	friend class PanelComponent;
 	friend class PanelScene;
+	friend class ModuleRender;
 };
 
 #endif //_COMPONENTCAMERA_H_

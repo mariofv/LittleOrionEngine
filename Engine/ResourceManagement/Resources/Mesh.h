@@ -10,6 +10,14 @@
 
 class Metafile;
 
+static const size_t MAX_JOINTS = 4;
+
+enum UVChannel
+{
+	TEXTURE,
+	LIGHTMAP,
+	TOTALUVS
+};
 class Mesh : public Resource
 {
 public:
@@ -18,9 +26,10 @@ public:
 		float3 position;
 		float3 normals;
 		float3 tangent;
-		float2 tex_coords;
-		uint32_t joints[4] = {0,0,0,0};
-		float weights[4] = {0,0,0,0};
+		float3 bitangent;
+		float2 tex_coords[UVChannel::TOTALUVS];
+		uint32_t joints[MAX_JOINTS] = {0,0,0,0};
+		float weights[MAX_JOINTS] = {0,0,0,0};
 		uint32_t num_joints = 0;
 	};
 
@@ -28,13 +37,16 @@ public:
 	~Mesh();
 
 	GLuint GetVAO() const;
-
+	GLuint GetEBO() const;
+	void ChangeTiling();
 	int GetNumTriangles() const;
 	int GetNumVerts() const;
 	std::vector<Triangle> GetTriangles() const;
 
 private:
 	void LoadInMemory();
+
+
 
 public:
 	std::vector<Vertex> vertices;

@@ -23,6 +23,14 @@ ComponentAnimation::ComponentAnimation(GameObject* owner) : Component(owner, Com
 	Init();
 }
 
+ComponentAnimation::~ComponentAnimation()
+{
+	if (animation_controller)
+	{
+		delete animation_controller;
+	}
+}
+
 void ComponentAnimation::Init()
 {
 	skinned_meshes.clear();
@@ -53,6 +61,7 @@ Component* ComponentAnimation::Clone(bool original_prefab) const
 		created_component = App->animations->CreateComponentAnimation();
 	}
 	*created_component = *this;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 };
 
@@ -62,10 +71,15 @@ void ComponentAnimation::Copy(Component* component_to_copy) const
 	*static_cast<ComponentAnimation*>(component_to_copy) = *this;
 }
 
+void ComponentAnimation::Disable()
+{
+	active = false;
+	Stop();
+}
+
 void ComponentAnimation::SetStateMachine(uint32_t state_machine_uuid)
 {
-	animation_controller->state_machine = App->resources->Load<StateMachine>(state_machine_uuid);
-	animation_controller->SetActiveAnimation();
+	animation_controller->SetStateMachine(state_machine_uuid);
 	GenerateJointChannelMaps();
 }
 
@@ -84,7 +98,7 @@ void ComponentAnimation::Play()
 void ComponentAnimation::Stop()
 {
 	auto & playing_clip = animation_controller->playing_clips[0];
-	playing_clip.playing = false;
+ 	playing_clip.playing = false;
 	playing = false;
 }
 
@@ -93,9 +107,43 @@ void ComponentAnimation::ActiveAnimation(const std::string & trigger)
 	animation_controller->StartNextState(trigger);
 }
 
+ENGINE_API bool ComponentAnimation::IsOnState(const std::string& trigger)
+{
+	return animation_controller->IsOnState(trigger);
+}
+
+ENGINE_API float ComponentAnimation::GetCurrentClipPercentatge() const
+{
+	if (animation_controller->playing_clips[ClipType::ACTIVE].clip)
+	{
+		return math::Clamp01(float(animation_controller->playing_clips[ClipType::ACTIVE].current_time) / float(animation_controller->playing_clips[ClipType::ACTIVE].clip->animation_time));
+	}
+
+	return 0.0f;
+}
+
+ENGINE_API int ComponentAnimation::GetTotalAnimationTime() const
+{
+	for (auto& playing_clip : animation_controller->playing_clips)
+	{
+		if (!playing_clip.clip)
+		{
+			break;
+		}
+
+		return playing_clip.clip->animation_time;
+
+	}
+}
+
 
 void ComponentAnimation::Update()
 {
+	if (!active)
+	{
+		return;
+	}
+
 	playing = animation_controller->Update();
 	if (playing)
 	{
@@ -114,7 +162,7 @@ void ComponentAnimation::UpdateMeshes()
 	{
 		pose.resize(mesh->skeleton->skeleton.size());
 		auto & skeleton = mesh->skeleton;
-		animation_controller->GetPose(skeleton->GetUUID(), pose);
+		animation_controller->GetClipTransform(skeleton->GetUUID(), pose);
 		mesh->UpdatePalette(pose);
 	}
 }
@@ -124,20 +172,14 @@ void ComponentAnimation::Delete()
 	App->animations->RemoveComponentAnimation(this);
 }
 
-void ComponentAnimation::Save(Config& config) const
+void ComponentAnimation::SpecializedSave(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddUInt((uint64_t)type, "ComponentType");
-	config.AddBool(active, "Active");
-
 	uint32_t state_machine_uuid = animation_controller->state_machine ? animation_controller->state_machine->GetUUID() : 0;
 	config.AddUInt(state_machine_uuid, "StateMachineResource");
 }
 
-void ComponentAnimation::Load(const Config& config)
+void ComponentAnimation::SpecializedLoad(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
 	uint32_t state_machine_uuid = config.GetUInt("StateMachineResource", 0);
 	if (state_machine_uuid != 0)
 	{
@@ -148,7 +190,7 @@ void ComponentAnimation::Load(const Config& config)
 void ComponentAnimation::GetChildrenMeshes(GameObject* current_mesh_gameobject)
 {
 	ComponentMeshRenderer* mesh_renderer = static_cast<ComponentMeshRenderer*>(current_mesh_gameobject->GetComponent(ComponentType::MESH_RENDERER));
-	if (mesh_renderer)
+	if (mesh_renderer && mesh_renderer->skeleton)
 	{
 		skinned_meshes.push_back(mesh_renderer);
 	}
@@ -166,7 +208,7 @@ void ComponentAnimation::GenerateJointChannelMaps()
 		for (auto& mesh : skinned_meshes)
 		{
 			auto & skeleton = mesh->skeleton;
-			if (clip->animation && clip->skeleton_channels_joints_map.find(skeleton->GetUUID()) != clip->skeleton_channels_joints_map.end())
+			if (clip->animation == nullptr || clip->skeleton_channels_joints_map.find(skeleton->GetUUID()) != clip->skeleton_channels_joints_map.end())
 			{
 				break;
 			}

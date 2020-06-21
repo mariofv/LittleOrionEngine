@@ -29,7 +29,7 @@ private:
 	int bucket_size = 3;
 	int max_depth = 3;
 
-	friend class PanelDebug;
+	friend class PanelConfiguration;
 };
 
 #endif //_OLQUADTREE_H_

@@ -55,9 +55,17 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Game|Win32'">
-    <OutDir>$(SolutionDir)TwinlightSouls\</OutDir>
-    <IntDir>$(SolutionDir)TwinlightSouls\</IntDir>
+    <OutDir>$(SolutionDir)Binaries\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Binaries\$(ProjectName)\$(Configuration)\</IntDir>
     <TargetName>TwinlightSouls</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)Binaries\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Binaries\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)Binaries\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Binaries\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -65,16 +73,17 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./GameplaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Engine/;./Libraries/include/cr;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/recast;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PreprocessorDefinitions>_MBCS;WINDOWS_IGNORE_PACKING_MISMATCH;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;WINDOWS_IGNORE_PACKING_MISMATCH;DEBUG;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiDebug.lib;MathGeoLibDebug.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiDebug.lib;MathGeoLibDebug.lib;recastDebug.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -91,10 +100,11 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./GameplaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/recast;./Libraries/include/imgui;./Libraries/include/cr;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -102,11 +112,14 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;recastRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(OutDir)$(ProjectName).lib" "./Libraries/lib/x86"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Game|Win32'">
     <ClCompile>
@@ -116,10 +129,11 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./GameplaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/recast;./Libraries/include/cr;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>_MBCS;GAME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;GAME;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -127,18 +141,44 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;recastRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(OutDir)TwinlightSouls.lib" "./Libraries/lib/x86"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Animation\Tween\LOTween.h" />
+    <ClInclude Include="Engine\Animation\Tween\Tween.h" />
+    <ClInclude Include="Engine\Animation\Tween\TweenSequence.h" />
+    <ClInclude Include="Engine\Component\ComponentCanvasRenderer.h" />
+    <ClInclude Include="Engine\Component\ComponentBoxCollider.h" />
+    <ClInclude Include="Engine\Component\ComponentCapsuleCollider.h" />
+    <ClInclude Include="Engine\Component\ComponentCollider.h" />
+    <ClInclude Include="Engine\Component\ComponentCylinderCollider.h" />
+    <ClInclude Include="Engine\Component\ComponentEventSystem.h" />
+    <ClInclude Include="Engine\Component\ComponentMeshCollider.h" />
+    <ClInclude Include="Engine\Component\ComponentSphereCollider.h" />
+    <ClInclude Include="Engine\Component\ComponentAudioSource.h" />
+    <ClInclude Include="Engine\Component\ComponentSpriteMask.h" />
+    <ClInclude Include="Engine\DLL\DLLManager.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h" />
+    <ClInclude Include="Engine\Helper\BuildOptions.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\FontImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Manager\FontManager.h" />
+    <ClInclude Include="Engine\Module\ModulePhysics.h" />
+    <ClInclude Include="Engine\Module\ModuleAudio.h" />
+    <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\SceneImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Metafile\ModelMetafile.h" />
+    <ClInclude Include="Engine\ResourceManagement\Metafile\TextureMetafile.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h" />
     <ClInclude Include="Engine\Actions\EditorAction.h" />
     <ClInclude Include="Engine\Actions\EditorActionAddComponent.h" />
@@ -148,23 +188,21 @@
     <ClInclude Include="Engine\Actions\EditorActionEnableDisableComponent.h" />
     <ClInclude Include="Engine\Actions\EditorActionModifyCamera.h" />
     <ClInclude Include="Engine\Actions\EditorActionModifyLight.h" />
-    <ClInclude Include="Engine\Actions\EditorActionRect2D.h" />
     <ClInclude Include="Engine\Actions\EditorActionRotation.h" />
-    <ClInclude Include="Engine\Actions\EditorActionRotation2D.h" />
     <ClInclude Include="Engine\Actions\EditorActionScale.h" />
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h" />
     <ClInclude Include="Engine\AI\DebugDrawGL.h" />
     <ClInclude Include="Engine\AI\SampleDebugDraw.h" />
     <ClInclude Include="Engine\Animation\AnimController.h" />
     <ClInclude Include="Engine\Component\ComponentAnimation.h" />
+    <ClInclude Include="Engine\Component\ComponentBillboard.h" />
+    <ClInclude Include="Engine\Component\ComponentParticleSystem.h" />
     <ClInclude Include="Engine\Component\ComponentButton.h" />
     <ClInclude Include="Engine\Component\ComponentCanvas.h" />
     <ClInclude Include="Engine\Component\ComponentImage.h" />
-    <ClInclude Include="Engine\Component\ComponentProgressBar.h" />
     <ClInclude Include="Engine\Component\ComponentScript.h" />
     <ClInclude Include="Engine\Component\ComponentText.h" />
     <ClInclude Include="Engine\Component\ComponentTransform2D.h" />
-    <ClInclude Include="Engine\Component\ComponentUI.h" />
     <ClInclude Include="Engine\EditorUI\Helper\Grid.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelStateMachine.h" />
@@ -198,10 +236,12 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\StateMachineImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\StateMachineManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Animation.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Font.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Material.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Mesh.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Prefab.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Resource.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Scene.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Skeleton.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\StateMachine.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Texture.h" />
@@ -210,7 +250,6 @@
     <ClInclude Include="Engine\SpacePartition\OLOctTreeNode.h" />
     <ClInclude Include="Engine\SpacePartition\OLQuadTree.h" />
     <ClInclude Include="Engine\SpacePartition\OLQuadTreeNode.h" />
-    <ClInclude Include="Engine\EditorUI\Helper\Billboard.h" />
     <ClInclude Include="Engine\Component\ComponentLight.h" />
     <ClInclude Include="Engine\Filesystem\Path.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\Importer.h" />
@@ -260,41 +299,22 @@
     <ClInclude Include="Engine\Module\ModuleActions.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.h" />
     <ClInclude Include="Engine\EditorUI\Helper\ImGuiHelper.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\crude_json.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_bezier_math.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_canvas.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_extra_math.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor_internal.h" />
-    <ClInclude Include="Libraries\include\recast\DebugUtils\DebugDraw.h" />
-    <ClInclude Include="Libraries\include\recast\DebugUtils\DetourDebugDraw.h" />
-    <ClInclude Include="Libraries\include\recast\DebugUtils\RecastDebugDraw.h" />
-    <ClInclude Include="Libraries\include\recast\DebugUtils\RecastDump.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourCrowd.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourLocalBoundary.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourObstacleAvoidance.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourPathCorridor.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourPathQueue.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourProximityGrid.h" />
-    <ClInclude Include="Libraries\include\recast\DetourTileCache\DetourTileCache.h" />
-    <ClInclude Include="Libraries\include\recast\DetourTileCache\DetourTileCacheBuilder.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourAlloc.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourAssert.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourCommon.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourMath.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMesh.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMeshBuilder.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMeshQuery.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNode.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourStatus.h" />
-    <ClInclude Include="Libraries\include\recast\Recast\Recast.h" />
-    <ClInclude Include="Libraries\include\recast\Recast\RecastAlloc.h" />
-    <ClInclude Include="Libraries\include\recast\Recast\RecastAssert.h" />
     <ClInclude Include="Engine\AI\NavMesh.h" />
     <ClInclude Include="Engine\Module\ModuleAI.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelNavMesh.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\PanelBuildOptions.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTransform.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\SoundBank.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\SoundImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h" />
+    <ClInclude Include="Engine\Helper\TagManager.h" />
+    <ClInclude Include="Engine\Module\ModuleEffects.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Animation\Tween\LOTween.cpp" />
+    <ClCompile Include="Engine\Animation\Tween\Tween.cpp" />
+    <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp" />
+    <ClCompile Include="Engine\Component\ComponentCanvasRenderer.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddGameObject.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionDeleteComponent.cpp" />
@@ -302,29 +322,41 @@
     <ClCompile Include="Engine\Actions\EditorActionEnableDisableComponent.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionModifyCamera.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionModifyLight.cpp" />
-    <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionRotation.cpp" />
-    <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionScale.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp" />
     <ClCompile Include="Engine\AI\DebugDrawGL.cpp" />
     <ClCompile Include="Engine\AI\SampleDebugDraw.cpp" />
     <ClCompile Include="Engine\Animation\AnimController.cpp" />
+    <ClCompile Include="Engine\Component\Component.cpp" />
     <ClCompile Include="Engine\Component\ComponentAnimation.cpp" />
+    <ClCompile Include="Engine\Component\ComponentBillboard.cpp" />
+    <ClCompile Include="Engine\Component\ComponentParticleSystem.cpp" />
+    <ClCompile Include="Engine\Component\ComponentAudioSource.cpp" />
+    <ClCompile Include="Engine\Component\ComponentBoxCollider.cpp" />
     <ClCompile Include="Engine\Component\ComponentButton.cpp" />
     <ClCompile Include="Engine\Component\ComponentCanvas.cpp" />
+    <ClCompile Include="Engine\Component\ComponentCapsuleCollider.cpp" />
+    <ClCompile Include="Engine\Component\ComponentCollider.cpp" />
+    <ClCompile Include="Engine\Component\ComponentCylinderCollider.cpp" />
+    <ClCompile Include="Engine\Component\ComponentEventSystem.cpp" />
     <ClCompile Include="Engine\Component\ComponentImage.cpp" />
-    <ClCompile Include="Engine\Component\ComponentProgressBar.cpp" />
+    <ClCompile Include="Engine\Component\ComponentMeshCollider.cpp" />
     <ClCompile Include="Engine\Component\ComponentScript.cpp" />
+    <ClCompile Include="Engine\Component\ComponentSphereCollider.cpp" />
+    <ClCompile Include="Engine\Component\ComponentSpriteMask.cpp" />
     <ClCompile Include="Engine\Component\ComponentText.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform2D.cpp" />
-    <ClCompile Include="Engine\Component\ComponentUI.cpp" />
+    <ClCompile Include="Engine\DLL\DLLManager.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\PanelTags.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelStateMachine.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp" />
     <ClCompile Include="Engine\Filesystem\File.cpp" />
+    <ClCompile Include="Engine\Helper\BuildOptions.cpp" />
     <ClCompile Include="Engine\Helper\Config.cpp" />
     <ClCompile Include="Engine\Helper\TemplatedGameObjectCreator.cpp" />
     <ClCompile Include="Engine\Helper\Timer.cpp" />
@@ -335,16 +367,23 @@
     <ClCompile Include="Engine\Main\Log.cpp" />
     <ClCompile Include="Engine\Main\Main.cpp" />
     <ClCompile Include="Engine\Module\ModuleAnimation.cpp" />
+    <ClCompile Include="Engine\Module\ModulePhysics.cpp" />
+    <ClCompile Include="Engine\Module\ModuleAudio.cpp" />
     <ClCompile Include="Engine\Module\ModuleResourceManager.cpp" />
     <ClCompile Include="Engine\Module\ModuleScriptManager.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\FontImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\PrefabImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\SceneImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\SkyboxImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Manager\FontManager.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\SoundImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\SceneManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\SkyboxManager.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Manager\SoundManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Metafile\Metafile.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\AnimationManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\MaterialManager.cpp" />
@@ -353,12 +392,17 @@
     <ClCompile Include="Engine\ResourceManagement\Metafile\MetafileManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\StateMachineImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\StateMachineManager.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Metafile\ModelMetafile.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Metafile\TextureMetafile.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Animation.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Font.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Material.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Mesh.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Prefab.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Resource.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Scene.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Skeleton.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\SoundBank.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\StateMachine.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Texture.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLAABBTree.cpp" />
@@ -366,7 +410,6 @@
     <ClCompile Include="Engine\SpacePartition\OLOctTreeNode.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLQuadTree.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLQuadTreeNode.cpp" />
-    <ClCompile Include="Engine\EditorUI\Helper\Billboard.cpp" />
     <ClCompile Include="Engine\Component\ComponentLight.cpp" />
     <ClCompile Include="Engine\Filesystem\Path.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\Importer.cpp" />
@@ -422,44 +465,19 @@
     <ClCompile Include="Engine\ResourceManagement\Manager\TextureManager.cpp" />
     <ClCompile Include="Engine\Module\ModuleActions.cpp" />
     <ClCompile Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.cpp" />
-    <ClCompile Include="Libraries\include\recast\DebugUtils\DebugDraw.cpp" />
-    <ClCompile Include="Libraries\include\recast\DebugUtils\DetourDebugDraw.cpp" />
-    <ClCompile Include="Libraries\include\recast\DebugUtils\RecastDebugDraw.cpp" />
-    <ClCompile Include="Libraries\include\recast\DebugUtils\RecastDump.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourCrowd.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourLocalBoundary.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourObstacleAvoidance.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourPathCorridor.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourPathQueue.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourProximityGrid.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourTileCache\DetourTileCache.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourTileCache\DetourTileCacheBuilder.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourAlloc.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourAssert.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourCommon.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMesh.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMeshBuilder.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMeshQuery.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNode.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\Recast.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastAlloc.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastArea.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastAssert.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastContour.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastFilter.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastLayers.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastMesh.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastMeshDetail.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastRasterization.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastRegion.cpp" />
     <ClCompile Include="Engine\AI\NavMesh.cpp" />
     <ClCompile Include="Engine\Module\ModuleAI.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelNavMesh.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Libraries\include\NodeEditor\imgui_bezier_math.inl" />
-    <None Include="Libraries\include\NodeEditor\imgui_extra_math.inl" />
-    <None Include="Libraries\include\NodeEditor\imgui_node_editor_internal.inl" />
+    <ClCompile Include="Engine\EditorUI\Panel\PanelBuildOptions.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTransform.cpp" />
+    <ClCompile Include="Engine\Module\ModuleSpacePartitioning.cpp" />
+    <ClCompile Include="Libraries\include\SoundEngine\AkDefaultIOHookBlocking.cpp" />
+    <ClCompile Include="Libraries\include\SoundEngine\AkFilePackage.cpp" />
+    <ClCompile Include="Libraries\include\SoundEngine\AkFilePackageLUT.cpp" />
+    <ClCompile Include="Libraries\include\SoundEngine\AkMultipleFileLocation.cpp" />
+    <ClCompile Include="Libraries\include\SoundEngine\stdafx.cpp" />
+    <ClCompile Include="Engine\Helper\TagManager.cpp" />
+    <ClCompile Include="Engine\Module\ModuleEffects.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

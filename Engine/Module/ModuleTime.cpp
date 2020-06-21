@@ -5,10 +5,13 @@
 #include "Helper/Timer.h"
 #include "Main/Application.h"
 #include "ModuleEditor.h"
+#include "ModuleAnimation.h"
+#include "ModuleScene.h"
 #include "ModuleScriptManager.h"
 #include "ModuleWindow.h"
 
 #include <SDL/SDL.h>
+#include <Brofiler/Brofiler.h>
 
 ModuleTime::~ModuleTime()
 {
@@ -38,14 +41,13 @@ bool ModuleTime::Init()
 
 update_status ModuleTime::PreUpdate()
 {
-	
-
 	return update_status::UPDATE_CONTINUE;
 }
 
 
 void ModuleTime::EndFrame()
 {
+	BROFILER_CATEGORY("End Frame", Profiler::Color::Lavender);
 	++frame_count;
 
 	float real_time = real_time_clock->Read();
@@ -116,15 +118,16 @@ void ModuleTime::Play()
 {
 	if (!game_time_clock->Started())
 	{
-		App->editor->SaveScene(TMP_SCENE_PATH);
+		App->scene->SaveTmpScene();
 		game_time_clock->Start();
+		SetTimeScale(1.f);
 		frame_start_time = game_time_clock->Read();
-		App->scripts->InitScripts();
+		App->animations->PlayAnimations();
 	}
 	else
 	{
 		game_time_clock->Stop();
-		App->editor->OpenScene(TMP_SCENE_PATH);
+		App->scene->LoadTmpScene();
 	}
 }
 
@@ -162,6 +165,11 @@ void ModuleTime::StepFrame()
 void ModuleTime::SetTimeScale(float time_scale)
 {
 	this->time_scale = time_scale;
+}
+
+void ModuleTime::ResetInitFrame()
+{
+	frame_start_time = game_time_clock->Read();
 }
 
 bool ModuleTime::isGameRunning()

@@ -110,6 +110,10 @@ FileType File::CalculateFileType(const PHYSFS_FileType& file_type) const
 	{
 		return FileType::META;
 	}
+	if (file_extension == "scene")
+	{
+		return FileType::SCENE;
+	}
 	if (file_extension == "sk")
 	{
 		return FileType::SKELETON;
@@ -125,6 +129,14 @@ FileType File::CalculateFileType(const PHYSFS_FileType& file_type) const
 	if (file_extension == "stm")
 	{
 		return FileType::STATE_MACHINE;
+	}
+	if (file_extension == "ttf")
+	{
+		return FileType::FONT;
+	}
+	if (file_extension == "bnk")
+	{
+		return FileType::SOUND;
 	}
 	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
 	{

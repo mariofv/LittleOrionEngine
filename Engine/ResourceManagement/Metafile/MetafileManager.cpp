@@ -6,6 +6,8 @@
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 #include "Metafile.h"
+#include "ModelMetafile.h"
+#include "TextureMetafile.h"
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Resources/Resource.h"
 
@@ -28,18 +30,20 @@ Metafile* MetafileManager::GetMetafile(const Path& metafile_path)
 		return metafiles[metafile_path.GetFullPath()];
 	}
 
-	FileData meta_file_data = metafile_path.GetFile()->Load();
-	std::string serialized_string ((char*)meta_file_data.buffer, meta_file_data.size);
-	free((char*)meta_file_data.buffer);
+	File* metafile_file = metafile_path.GetFile();
+	FileData meta_file_data = metafile_file->Load();
+	Config meta_config(meta_file_data);
 
-	Metafile* created_metafile = new Metafile();
-	created_metafile->metafile_path = metafile_path.GetFullPath();
-	Config meta_config(serialized_string);
+	Metafile* created_metafile = CreateSpecializedMetafile(ResourceType::UNKNOWN);
 	created_metafile->Load(meta_config);
+	Metafile* specialized_metafile = CreateSpecializedMetafile(created_metafile->resource_type);
+	delete created_metafile;
 
-	metafiles[created_metafile->metafile_path] = created_metafile;
+	specialized_metafile->Load(meta_config);
 
-	return created_metafile;
+	metafiles[specialized_metafile->metafile_path] = specialized_metafile;
+
+	return specialized_metafile;
 }
 
 
@@ -51,7 +55,7 @@ Metafile* MetafileManager::CreateMetafile(const std::string& asset_file_path_str
 Metafile* MetafileManager::CreateMetafile(Path& asset_file_path, ResourceType resource_type, uint32_t uuid)
 {
 
-	Metafile* created_metafile = new Metafile();
+	Metafile* created_metafile = CreateSpecializedMetafile(resource_type);
 
 	std::string metafile_path_string = GetMetafilePath(asset_file_path);
 	assert(metafiles.find(metafile_path_string) == metafiles.end());
@@ -66,36 +70,38 @@ Metafile* MetafileManager::CreateMetafile(Path& asset_file_path, ResourceType re
 
 	created_metafile->version = Importer::IMPORTER_VERSION;
 
-	Config metafile_config;
-	created_metafile->Save(metafile_config);
-
-	std::string metafile_config_string;
-	metafile_config.GetSerializedString(metafile_config_string);
-
-	std::string metfile_name_string = GetMetafilePath(asset_file_path.GetFilename());
-	asset_file_path.GetParent()->Save(metfile_name_string.c_str(), metafile_config_string);
+	SaveMetafile(created_metafile, asset_file_path);
 
 	metafiles[created_metafile->metafile_path] = created_metafile;
 
 	return created_metafile;
 }
 
-std::string MetafileManager::GetMetafilePath(const Path& file_path)
+void MetafileManager::SaveMetafile(Metafile* created_metafile, Path& asset_file_path) const
+{
+	Config metafile_config;
+	created_metafile->Save(metafile_config);
+
+	std::string metafile_config_string;
+	metafile_config.GetSerializedString(metafile_config_string);
+
+	std::string metafile_name_string = GetMetafilePath(asset_file_path.GetFilename());
+	asset_file_path.GetParent()->Save(metafile_name_string.c_str(), metafile_config_string);
+}
+
+std::string MetafileManager::GetMetafilePath(const Path& file_path) const
 {
 	return GetMetafilePath(file_path.GetFullPath());
 }
 
-std::string MetafileManager::GetMetafilePath(const std::string& file_path_string)
+std::string MetafileManager::GetMetafilePath(const std::string& file_path_string) const
 {
 	return file_path_string + ".meta";
 }
 
-void MetafileManager::TouchMetafileTimestamp(Metafile& metafile)
+void MetafileManager::UpdateMetafile(Metafile& metafile)
 {
-	using namespace std::chrono;
-	seconds current_timestamp = duration_cast<seconds>(system_clock::now().time_since_epoch());
-	long long timestamp = current_timestamp.count();
-	metafile.timestamp = timestamp;
+	metafile.version = Importer::IMPORTER_VERSION;
 
 	Config metafile_config;
 	metafile.Save(metafile_config);
@@ -115,23 +121,42 @@ bool MetafileManager::IsMetafileConsistent(const Path& metafile_path)
 
 bool MetafileManager::IsMetafileConsistent(const Metafile& metafile)
 {
-	return App->filesystem->Exists(metafile.imported_file_path);
-}
-
-void MetafileManager::DeleteMetafileInconsistencies(const Path& metafile_path)
-{
-	Metafile* metafile = GetMetafile(metafile_path);
-	DeleteMetafileInconsistencies(*metafile);
-}
-
-void MetafileManager::DeleteMetafileInconsistencies(const Metafile& metafile)
-{
-	if (App->filesystem->Exists(metafile.exported_file_path))
+	if (!App->filesystem->Exists(metafile.imported_file_path))
 	{
-		App->filesystem->Remove(metafile.exported_file_path);
+		return false;
 	}
 
-	App->filesystem->Remove(metafile.metafile_path);
+	Path* imported_file_path = App->filesystem->GetPath(metafile.imported_file_path);
+
+	std::string metafile_directory = Path::GetParentPathString(metafile.metafile_path);
+	std::string imported_file_directory = Path::GetParentPathString(metafile.imported_file_path);
+	if (metafile_directory != imported_file_directory)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool MetafileManager::IsMetafileMoved(const Path& metafile_path)
+{
+	Metafile* metafile = GetMetafile(metafile_path);
+	return metafile->metafile_path != metafile_path.GetFullPath();
+}
+
+void MetafileManager::RefreshMetafile(const Path& metafile_path)
+{
+	std::string assets_file = metafile_path.GetFullPathWithoutExtension();
+	if (!App->filesystem->Exists(assets_file)) 
+	{
+		return;
+	}
+	Metafile* metafile = GetMetafile(metafile_path);
+	metafile->metafile_path = metafile_path.GetFullPath();
+	Path* new_imported_file_path = App->filesystem->GetPath(assets_file);
+	assert(new_imported_file_path);
+	metafile->imported_file_path = new_imported_file_path->GetFullPath();
+	SaveMetafile(metafile, *new_imported_file_path);
 }
 
 std::string MetafileManager::GetMetafileExportedFolder(const Metafile& metafile)
@@ -154,4 +179,22 @@ std::string MetafileManager::GetUUIDExportedFile(uint32_t uuid)
 {
 	std::string uuid_string = std::to_string(uuid);
 	return std::string(LIBRARY_METADATA_PATH) + "/" + uuid_string.substr(0, 2) + "/" + uuid_string;
+}
+
+Metafile * MetafileManager::CreateSpecializedMetafile(ResourceType resource_type) const
+{
+	Metafile* metafile;
+	switch (resource_type)
+	{
+		case ResourceType::MODEL:
+			metafile = new ModelMetafile();
+			break;
+		case ResourceType::TEXTURE:
+			metafile = new TextureMetafile();
+			break;
+		default:
+			metafile = new Metafile();
+			break;
+	}
+	return metafile;
 }

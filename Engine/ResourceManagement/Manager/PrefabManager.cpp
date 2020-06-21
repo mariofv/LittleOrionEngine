@@ -5,6 +5,11 @@
 #include "Component/ComponentLight.h"
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentButton.h"
+#include "Component/ComponentImage.h"
+#include "Component/ComponentCanvas.h"
+#include "Component/ComponentCanvasRenderer.h"
+#include "Component/ComponentAudioSource.h"
 
 #include "Helper/Config.h"
 
@@ -35,7 +40,13 @@ std::shared_ptr<Prefab> PrefabManager::Load(uint32_t uuid, const FileData& resou
 	scene_config.GetChildrenConfig("GameObjects", game_objects_config);
 
 	std::vector<std::unique_ptr<GameObject>> gameObjects;
-	gameObjects.reserve(game_objects_config.size());
+	gameObjects.reserve(game_objects_config.size());	
+	
+	bool overwritable = true;
+	if (scene_config.config_document.HasMember("Overwritable"))
+	{
+		overwritable = scene_config.GetBool("Overwritable", true);
+	}
 
 	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
 	{
@@ -55,7 +66,8 @@ std::shared_ptr<Prefab> PrefabManager::Load(uint32_t uuid, const FileData& resou
 		gameObjects.emplace_back(std::move(created_game_object));
 	}
 
-	std::shared_ptr<Prefab> new_prefab = std::make_shared<Prefab>(uuid, std::move(gameObjects));
+
+	std::shared_ptr<Prefab> new_prefab = std::make_shared<Prefab>(uuid, std::move(gameObjects), overwritable);
 	return new_prefab;
 }
 
@@ -118,6 +130,21 @@ void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameO
 
 		case Component::ComponentType::SCRIPT:
 			created_component = new ComponentScript();
+			break;
+		case Component::ComponentType::UI_IMAGE:
+			created_component = new ComponentImage();
+			break;
+		case Component::ComponentType::CANVAS:
+			created_component = new ComponentCanvas();
+			break;
+		case Component::ComponentType::CANVAS_RENDERER:
+			created_component = new ComponentCanvasRenderer();
+			break;
+		case Component::ComponentType::UI_BUTTON:
+			created_component = new ComponentButton();
+			break;
+		case Component::ComponentType::AUDIO_SOURCE:
+			created_component = new ComponentAudioSource();
 			break;
 		}
 		created_component->owner = loaded_gameObject.get();

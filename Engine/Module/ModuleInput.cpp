@@ -9,13 +9,14 @@
 #include "Filesystem/PathAtlas.h"
 
 #include "Main/Application.h"
-#include "ModuleWindow.h"
-#include "ModuleCamera.h"
-#include "ModuleEditor.h"
-#include "ModuleFileSystem.h"
-#include "ModuleRender.h"
-#include "ModuleScene.h"
-#include "ModuleUI.h"
+#include "Module/ModuleWindow.h"
+#include "Module/ModuleCamera.h"
+#include "Module/ModuleEditor.h"
+#include "Module/ModuleFileSystem.h"
+#include "Module/ModuleRender.h"
+#include "Module/ModuleScene.h"
+#include "Module/ModuleScriptManager.h"
+#include "Module/ModuleUI.h"
 
 #include <Brofiler/Brofiler.h>
 #include <GL/glew.h>
@@ -48,39 +49,7 @@ bool ModuleInput::Init()
 		mouse_bible[(MouseButton)i] = KeyState::IDLE;
 	}
 
-	SDL_Init(SDL_INIT_GAMECONTROLLER);
-
-	for (int i = 0; i < SDL_NumJoysticks(); ++i)
-	{
-		if (SDL_IsGameController(i) && i < MAX_PLAYERS)
-		{
-			controller[i] = SDL_GameControllerOpen(i);
-		}
-	}
-
-	std::map<ControllerCode, KeyState> temp1;
-	std::map<ControllerCode, KeyState> temp2;
-
-	for (int i = 0; i < MAX_CONTROLLER_BUTTONS; ++i)
-	{
-		temp1[(ControllerCode)i] = KeyState::IDLE;
-		temp2[(ControllerCode)i] = KeyState::IDLE;
-	}
-
-	controller_bible.push_back(std::move(temp1));
-	controller_bible.push_back(std::move(temp2));
-
-	for (int i = 0; i < MAX_PLAYERS; ++i)
-	{
-		left_joystick[i] = float2(0, 0);
-		right_joystick[i] = float2(0, 0);
-		left_controller_trigger[i] = 0;
-		right_controller_trigger[i] = 0;
-		left_joystick_raw[i] = float2(0, 0);
-		right_joystick_raw[i] = float2(0, 0);
-		left_controller_trigger_raw[i] = 0;
-		right_controller_trigger_raw[i] = 0;
-	}
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
 
 	APP_LOG_SUCCESS("SDL input event system initialized correctly.");
 
@@ -91,10 +60,10 @@ bool ModuleInput::Init()
 	size_t readed_bytes = game_inputs_data.size;
 	char* scene_file_data = (char*)game_inputs_data.buffer;
 
-	if(scene_file_data != nullptr)
+	if (scene_file_data != nullptr)
 	{
 		std::string serialized_scene_string = scene_file_data;
-		free(scene_file_data);
+		delete[] scene_file_data;
 
 		Config input_config(serialized_scene_string);
 		LoadGameInputs(input_config);
@@ -110,18 +79,7 @@ update_status ModuleInput::PreUpdate()
 
 	mouse_motion = { 0, 0 };
 	mouse_wheel_motion = 0;
-
-	for (int i = 0; i < MAX_PLAYERS; ++i)
-	{
-		left_joystick[i] = float2(0, 0);
-		right_joystick[i] = float2(0, 0);
-		left_controller_trigger[i] = 0;
-		right_controller_trigger[i] = 0;
-		left_joystick_raw[i] = float2(0, 0);
-		right_joystick_raw[i] = float2(0, 0);
-		left_controller_trigger_raw[i] = 0;
-		right_controller_trigger_raw[i] = 0;
-	}
+	total_game_controllers = SDL_NumJoysticks();
 
 	for (auto& mouse : mouse_bible)
 	{
@@ -134,10 +92,9 @@ update_status ModuleInput::PreUpdate()
 			mouse.second = KeyState::IDLE;
 		}
 	}
-
-	for (int i = 0; i < controller_bible.size(); ++i)
+	for(int x = 0; x < controller.size(); ++x)
 	{
-		for (auto& controller : controller_bible[i])
+		for (auto& controller : controller[x]->controller_bible)
 		{
 			if (controller.second == KeyState::DOWN)
 			{
@@ -164,7 +121,15 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_WINDOWEVENT:
 			if (event.window.event == SDL_WINDOWEVENT_RESIZED || event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+			{
 				App->window->WindowResized(event.window.data1, event.window.data2);
+			}
+#if !GAME
+			if (event.window.event == SDL_WINDOWEVENT_EXPOSED)
+			{
+				App->scripts->CheckGameplayFolderStatus();
+			}
+#endif
 			break;
 
 		case SDL_MOUSEMOTION:
@@ -187,39 +152,72 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_CONTROLLERBUTTONDOWN:
-			controller_bible[event.cbutton.which][(ControllerCode)event.cbutton.button] = KeyState::DOWN;
+			for (int i = 0; i < controller.size(); ++i) 
+			{
+				if (event.cbutton.which == controller[i]->joystick)
+				{
+					controller[i]->controller_bible[(ControllerCode)event.cbutton.button] = KeyState::DOWN;
+				}
+			}
 			break;
 
 		case SDL_CONTROLLERBUTTONUP:
-			controller_bible[event.cbutton.which][(ControllerCode)event.cbutton.button] = KeyState::UP;
+			for (int i = 0; i < controller.size(); ++i) 
+			{
+				if (event.cbutton.which == controller[i]->joystick)
+				{
+					controller[i]->controller_bible[(ControllerCode)event.cbutton.button] = KeyState::UP;
+				}
+			}
 			break;
 
 		case SDL_CONTROLLERAXISMOTION:
 		{
-			int which = event.caxis.which;
+			for (int i = 0; i < controller.size(); ++i) 
+			{
+				if (event.caxis.which == controller[i]->joystick)
+				{
+					controller[i]->left_joystick_raw = float2(SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_LEFTY));
+					controller[i]->right_joystick_raw = float2(SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_RIGHTY));
 
-			left_joystick[which] = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
-			right_joystick[which] = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
+					controller[i]->left_joystick= Filter2D(SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_LEFTY));
+					controller[i]->right_joystick = Filter2D(SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_RIGHTY));
 
-			left_joystick_raw[which] = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
-			right_joystick_raw[which] = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
+					controller[i]->left_controller_trigger_raw = SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+					controller[i]->right_controller_trigger_raw= SDL_GameControllerGetAxis(controller[i]->controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
 
-			left_controller_trigger[which] = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERLEFT);
-			right_controller_trigger[which] = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+					controller[i]->left_controller_trigger = controller[i]->left_controller_trigger_raw / MAX_SDL_CONTROLLER_RANGE;
+					controller[i]->right_controller_trigger = controller[i]->right_controller_trigger_raw / MAX_SDL_CONTROLLER_RANGE;
+				}
+			}
 
-			left_controller_trigger_raw[which] = left_controller_trigger[which] / MAX_SDL_CONTROLLER_RANGE;
-			right_controller_trigger_raw[which] = right_controller_trigger[which] / MAX_SDL_CONTROLLER_RANGE;
 		}
 		break;
 
 		case SDL_DROPFILE:
-			/* TODO: This
+		{
 			char* dropped_filedir = event.drop.file;
-			App->editor->project_explorer->CopyFileToSelectedFolder(dropped_filedir);
+			App->editor->project_explorer->ResourceDropFromOutside(dropped_filedir);
 			SDL_free(dropped_filedir);
-			*/
-
 			break;
+		}
+		case SDL_CONTROLLERDEVICEADDED:
+		{
+			int which = event.cdevice.which;
+
+			if (SDL_IsGameController(which))
+			{
+				AddGamepad(which);
+			}
+		}
+		break;
+
+		case SDL_CONTROLLERDEVICEREMOVED:
+		{
+			int which = event.cdevice.which;
+			RemoveGamepad(which);
+		}
+		break;
 		}
 	}
 
@@ -259,14 +257,20 @@ bool ModuleInput::CleanUp()
 {
 	APP_LOG_INFO("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
-	SDL_GameControllerClose(controller[0]);
-	SDL_GameControllerClose(controller[1]);
+
+	for(size_t i = 0; i < total_game_controllers; ++i)
+	{
+		SDL_GameControllerClose(controller[i]->controller);
+	}
+
+	controller.clear();
 	return true;
 }
 
 // Returns true while the user holds down the key identified by name
 ENGINE_API bool ModuleInput::GetKey(KeyCode key)
 {
+	BROFILER_CATEGORY("Get Key", Profiler::Color::Lavender);
 	//If map[x] does not find x it will add the default value
 	return key_bible[key] == KeyState::REPEAT;
 }
@@ -301,94 +305,19 @@ ENGINE_API bool ModuleInput::GetMouseButtonUp(MouseButton button)
 	return mouse_bible[button] == KeyState::UP;
 }
 
-ENGINE_API bool ModuleInput::GetControllerButton(ControllerCode code, PlayerID player_id)
+ENGINE_API bool ModuleInput::GetControllerButton(ControllerCode code, ControllerID controller_id)
 {
-	return controller_bible[(int)player_id][code] == KeyState::REPEAT;
+	return controller[(int)controller_id]->controller_bible[code] == KeyState::REPEAT;
 }
 
-ENGINE_API bool ModuleInput::GetControllerButtonDown(ControllerCode code, PlayerID player_id)
+ENGINE_API bool ModuleInput::GetControllerButtonDown(ControllerCode code, ControllerID controller_id)
 {
-	return controller_bible[(int)player_id][code] == KeyState::DOWN;
+	return controller[(int)controller_id]->controller_bible[code] == KeyState::DOWN;
 }
 
-ENGINE_API bool ModuleInput::GetControllerButtonUp(ControllerCode code, PlayerID player_id)
+ENGINE_API bool ModuleInput::GetControllerButtonUp(ControllerCode code, ControllerID controller_id)
 {
-	return controller_bible[(int)player_id][code] == KeyState::UP;
-}
-
-ENGINE_API bool ModuleInput::GetGameInput(const char* name, PlayerID player_id)
-{
-	GameInput button = game_inputs[name];
-
-	for (auto& key : button.keys)
-	{
-		if (GetKey(key))
-			return true;
-	}
-
-	for (auto& mouse : button.mouse_buttons)
-	{
-		if (GetMouseButton(mouse))
-			return true;
-	}
-
-	for (auto& controller : button.controller_buttons)
-	{
-		if (GetControllerButton(controller, player_id))
-			return true;
-	}
-
-	return false;
-}
-
-ENGINE_API bool ModuleInput::GetGameInputDown(const char* name, PlayerID player_id)
-{
-	GameInput button = game_inputs[name];
-
-	for (auto& key : button.keys)
-	{
-		if (GetKeyDown(key))
-			return true;
-	}
-
-	for (auto& mouse : button.mouse_buttons)
-	{
-		if (GetMouseButtonDown(mouse))
-			return true;
-	}
-
-	for (auto& controller : button.controller_buttons)
-	{
-		if (GetControllerButtonDown(controller, player_id))
-			return true;
-	}
-
-	return false;
-}
-
-ENGINE_API bool ModuleInput::GetGameInputUp(const char* name, PlayerID player_id)
-{
-	GameInput button = game_inputs[name];
-
-	for (auto& key : button.keys)
-	{
-		if (GetKeyUp(key))
-			return true;
-	}
-
-	for (auto& mouse : button.mouse_buttons)
-	{
-		if (GetMouseButtonUp(mouse))
-			return true;
-	}
-
-	for (auto& controller : button.controller_buttons)
-	{
-		if (GetControllerButtonUp(controller, player_id))
-			return true;
-	}
-
-	return false;
+	return controller[(int)controller_id]->controller_bible[code] == KeyState::UP;
 }
 
 ENGINE_API bool ModuleInput::GetAnyKeyPressedDown() const
@@ -400,13 +329,15 @@ ENGINE_API bool ModuleInput::GetAnyKeyPressedDown() const
 			return true;
 		}
 	}
-
-	for (auto& contr : controller_bible[0])
+	if(controller.size() > 0)
 	{
-		if (contr.second == KeyState::DOWN)
+		for (auto& contr : controller[0]->controller_bible)
 		{
-			return true;
-		}
+			if (contr.second == KeyState::DOWN)
+			{
+				return true;
+			}
+		}	
 	}
 
 	return false;
@@ -469,75 +400,75 @@ bool ModuleInput::IsMouseMoving() const
 	return mouse_moving;
 }
 
-ENGINE_API float2 ModuleInput::GetAxisController(ControllerAxis type, PlayerID player_id) const
+ENGINE_API float2 ModuleInput::GetAxisController(ControllerAxis type, ControllerID controller_id) const
 {
 	switch (type)
 	{
-	case ControllerAxis::LEFT_JOYSTICK:
-		return left_joystick[(int)player_id];
+		case ControllerAxis::LEFT_JOYSTICK:
+			return controller[(int)controller_id]->left_joystick;
 
-	case ControllerAxis::RIGHT_JOYSTICK:
-		return right_joystick[(int)player_id];
+		case ControllerAxis::RIGHT_JOYSTICK:
+			return controller[(int)controller_id]->right_joystick;
 
-	case ControllerAxis::LEFT_JOYSTICK_RAW:
-		return left_joystick_raw[(int)player_id];
+		case ControllerAxis::LEFT_JOYSTICK_RAW:
+			return controller[(int)controller_id]->left_joystick_raw;
 
-	case ControllerAxis::RIGHT_JOYSTICK_RAW:
-		return right_joystick_raw[(int)player_id];
+		case ControllerAxis::RIGHT_JOYSTICK_RAW:
+			return controller[(int)controller_id]->right_joystick_raw;
 
-	default:
-		return float2(0.0f, 0.0f);
+		default:
+			return float2(0.0f, 0.0f);
 	}
 }
 
-ENGINE_API Sint16 ModuleInput::GetTriggerController(ControllerAxis type, PlayerID player_id) const
+ENGINE_API float ModuleInput::GetTriggerController(ControllerAxis type, ControllerID controller_id) const
 {
 	switch (type)
 	{
-	case ControllerAxis::LEFT_TRIGGER:
-		return left_controller_trigger[(int)player_id];
+		case ControllerAxis::LEFT_TRIGGER:
+			return controller[(int)controller_id]->left_controller_trigger;
 
-	case ControllerAxis::RIGHT_TRIGGER:
-		return right_controller_trigger[(int)player_id];
+		case ControllerAxis::RIGHT_TRIGGER:
+			return controller[(int)controller_id]->right_controller_trigger;
 
-	case ControllerAxis::LEFT_TRIGGER_RAW:
-		return left_controller_trigger_raw[(int)player_id];
+		case ControllerAxis::LEFT_TRIGGER_RAW:
+			return controller[(int)controller_id]->left_controller_trigger_raw;
 
-	case ControllerAxis::RIGHT_TRIGGER_RAW:
-		return right_controller_trigger_raw[(int)player_id];
+		case ControllerAxis::RIGHT_TRIGGER_RAW:
+			return controller[(int)controller_id]->right_controller_trigger_raw;
 
-	default:
-		return 0;
+		default:
+			return 0;
 	}
 }
 
-ENGINE_API float2 ModuleInput::GetAxisControllerRaw(ControllerAxis type, PlayerID player_id) const
+ENGINE_API float2 ModuleInput::GetAxisControllerRaw(ControllerAxis type, ControllerID controller_id) const
 {
 	switch (type)
 	{
-	case ControllerAxis::LEFT_JOYSTICK_RAW:
-		return left_joystick_raw[(int)player_id];
+		case ControllerAxis::LEFT_JOYSTICK_RAW:
+			return controller[(int)controller_id]->left_joystick_raw;
 
-	case ControllerAxis::RIGHT_JOYSTICK_RAW:
-		return right_joystick_raw[(int)player_id];
+		case ControllerAxis::RIGHT_JOYSTICK_RAW:
+			return controller[(int)controller_id]->right_joystick_raw;
 
-	default:
-		return float2(0.0f, 0.0f);
+		default:
+			return float2(0.0f, 0.0f);
 	}
 }
 
-ENGINE_API float ModuleInput::GetTriggerControllerRaw(ControllerAxis type, PlayerID player_id) const
+ENGINE_API Sint16 ModuleInput::GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const
 {
 	switch (type)
 	{
-	case ControllerAxis::LEFT_TRIGGER_RAW:
-		return left_controller_trigger_raw[(int)player_id];
+		case ControllerAxis::LEFT_TRIGGER_RAW:
+			return controller[(int)controller_id]->left_controller_trigger_raw;
 
-	case ControllerAxis::RIGHT_TRIGGER_RAW:
-		return right_controller_trigger_raw[(int)player_id];
+		case ControllerAxis::RIGHT_TRIGGER_RAW:
+			return controller[(int)controller_id]->right_controller_trigger_raw;
 
-	default:
-		0.0f;
+		default:
+			0.0f;
 	}
 }
 
@@ -598,4 +529,159 @@ float2 ModuleInput::Filter2D(Sint16 input_x, Sint16 input_y) const
 
 
 	return dir;
+}
+
+bool ModuleInput::DetectedKeyboardInput(const GameInput& button, KeyState state)
+{
+	switch (state)
+	{
+	case KeyState::REPEAT:
+	{
+		for (auto& key : button.keys)
+		{
+			if (GetKey(key))
+			{
+				return true;
+			}
+		}
+
+		for (auto& mouse : button.mouse_buttons)
+		{
+			if (GetMouseButton(mouse))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	case KeyState::DOWN:
+	{
+		for (auto& key : button.keys)
+		{
+			if (GetKeyDown(key))
+			{
+				return true;
+			}
+		}
+
+		for (auto& mouse : button.mouse_buttons)
+		{
+			if (GetMouseButtonDown(mouse))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	case KeyState::UP:
+	{
+		for (auto& key : button.keys)
+		{
+			if (GetKeyUp(key))
+			{
+				return true;
+			}
+		}
+
+		for (auto& mouse : button.mouse_buttons)
+		{
+			if (GetMouseButtonUp(mouse))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	default:
+		return false;
+	}
+
+	return false;
+}
+
+bool ModuleInput::DetectedGameControllerInput(const GameInput& button, KeyState state, ControllerID controller_id)
+{
+	switch (state)
+	{
+	case KeyState::REPEAT:
+	{
+		for (auto& controller : button.controller_buttons)
+		{
+			if (GetControllerButton(controller, controller_id))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	case KeyState::DOWN:
+	{
+		for (auto& controller : button.controller_buttons)
+		{
+			if (GetControllerButtonDown(controller, controller_id))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	case KeyState::UP:
+	{
+		for (auto& controller : button.controller_buttons)
+		{
+			if (GetControllerButtonUp(controller, controller_id))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	default:
+		return false;
+	}
+
+	return false;
+}
+
+void ModuleInput::AddGamepad(int device)
+{
+	Gamepad* gamepad = new Gamepad();
+	gamepad->controller = SDL_GameControllerOpen(device);
+	gamepad->device = device;
+	gamepad->joystick = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(gamepad->controller));
+	for (int i = 0; i < MAX_CONTROLLER_BUTTONS; ++i)
+	{
+		gamepad->controller_bible[(ControllerCode)i] = KeyState::IDLE;
+	}
+	gamepad->left_joystick = float2(0, 0);
+	gamepad->right_joystick = float2(0, 0);
+	gamepad->left_controller_trigger = 0;
+	gamepad->right_controller_trigger = 0;
+	gamepad->left_joystick_raw = float2(0, 0);
+	gamepad->right_joystick_raw = float2(0, 0);
+	gamepad->left_controller_trigger_raw = 0;
+	gamepad->right_controller_trigger_raw = 0;
+
+	controller.emplace_back(gamepad);
+	++total_game_controllers;
+}
+
+void ModuleInput::RemoveGamepad(int device)
+{
+	auto it = std::find_if(controller.begin(), controller.end(), [&device](Gamepad* pad)
+	{
+		return pad->device == device; 
+	});
+	if (it != controller.end())
+	{
+		--total_game_controllers;
+		SDL_GameControllerClose(controller[device]->controller);
+		controller.erase(it);
+	}
 }

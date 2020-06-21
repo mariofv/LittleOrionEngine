@@ -4,6 +4,7 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleScene.h"
+#include "ResourceManagement/Manager/SceneManager.h"
 
 #include <algorithm>    // std::find
 #include <Brofiler/Brofiler.h>
@@ -80,8 +81,17 @@ void PanelPopupSceneSaver::Render()
 	if (HasSelected())
 	{
 		APP_LOG_INFO("Saving %s scene.", GetSelected())
-		App->editor->SaveScene(GetSelected());
-		App->editor->current_scene_path = GetSelected();
+		if (is_overwriting)
+		{
+			uint32_t uuid_scene = App->scene->GetSceneUUIDFromPath(GetSelected());
+			App->scene->SaveScene(uuid_scene);
+			is_overwriting = false;
+		}
+		else
+		{
+			uint32_t uuid_scene = SceneManager::Create(GetSelected());
+			App->scene->SaveScene(uuid_scene);
+		}
 	}
 }
 
@@ -195,6 +205,7 @@ void PanelPopupSceneSaver::ConfirmationPopup()
 		if (ImGui::Button("ok"))
 		{
 			SetPopupSelection();
+			is_overwriting = true;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("cancel"))

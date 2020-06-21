@@ -5,14 +5,27 @@
 #include "Module/ModuleAnimation.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleScriptManager.h"
 
 #include "ResourceManagement/Manager/PrefabManager.h"
 #include "ResourceManagement/Metafile/Metafile.h"
 
 #include <algorithm>
 
-Prefab::Prefab(uint32_t uuid, std::vector<std::unique_ptr<GameObject>> && gameObjects) : Resource(uuid), prefab(std::move(gameObjects))
+Prefab::Prefab(uint32_t uuid, std::vector<std::unique_ptr<GameObject>> && gameObjects, bool overwritable) : Resource(uuid), prefab(std::move(gameObjects)), overwritable(overwritable)
 {
+}
+
+Prefab::~Prefab()
+{
+	for (auto & gameobject : prefab)
+	{
+		for (auto & component : gameobject->components)
+		{
+			delete component;
+		}
+		gameobject->components.clear();
+	}
 }
 
 GameObject* Prefab::Instantiate(GameObject* prefab_parent, std::unordered_map<int64_t, int64_t>* UUIDS_pairs)
@@ -45,11 +58,20 @@ GameObject* Prefab::Instantiate(GameObject* prefab_parent, std::unordered_map<in
 			parent_prefab = copy_in_scene;
 		}
 		copy_in_scene->prefab_reference = App->resources->Load<Prefab>(GetUUID());
-		copy_in_scene->transform.Translate(float3::zero); //:D
+		copy_in_scene->transform = gameObject->transform;
 	}
 	parent_prefab->SetParent(prefab_parent);
 	App->animations->UpdateAnimationMeshes();
+	App->scripts->ReLink();
 	return parent_prefab;
+}
+
+void Prefab::Duplicate(GameObject* duplicated_instance)
+{
+	instances.push_back(duplicated_instance);
+	duplicated_instance->prefab_reference = App->resources->Load<Prefab>(GetUUID());
+	duplicated_instance->is_prefab_parent = true;
+	App->animations->UpdateAnimationMeshes();
 }
 
 /*
@@ -206,6 +228,20 @@ void Prefab::RemoveInstance(GameObject * instance)
 GameObject* Prefab::GetRootGameObject() const
 {
 	return prefab.front().get();
+}
+
+GameObject * Prefab::GetOriginalGameObject(int64_t UUID) const
+{
+	auto it = std::find_if(prefab.begin(), prefab.end(), [UUID](const auto & prefab_gameobject) 
+	{
+		return UUID == prefab_gameobject->UUID;
+	});
+
+	if (it != prefab.end())
+	{
+		return (*it).get();
+	}
+	return nullptr;
 }
 
 bool Prefab::IsOverwritable() const

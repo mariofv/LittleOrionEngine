@@ -2,8 +2,11 @@
 
 #include "Helper/Config.h"
 #include "Main/Application.h"
-#include "Module/ModuleTexture.h"
+
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleTexture.h"
+#include "Module/ModuleTime.h"
+
 
 #include "ResourceManagement/Metafile/Metafile.h"
 
@@ -37,10 +40,22 @@ void Material::Save(Config& config) const
 			config.AddUInt(textures_uuid[i], "Emissive");
 			break;
 
+		case MaterialTextureType::NORMAL:
+			config.AddUInt(textures_uuid[i],  "Normal");
+			break;
+		case MaterialTextureType::LIGHTMAP:
+			config.AddUInt(textures_uuid[i], "Lightmap");
+			break;
+		case MaterialTextureType::LIQUID:
+			config.AddUInt(textures_uuid[i], "Liquid");
+			break;
 		default:
 			break;
+			
 		}
 	}
+
+	config.AddInt((int)material_type, "MaterialType");
 
 	config.AddBool(show_checkerboard_texture, "Checkboard");
 	config.AddString(shader_program, "ShaderProgram");
@@ -49,7 +64,28 @@ void Material::Save(Config& config) const
 	config.AddFloat(k_ambient, "kAmbient");
 	config.AddFloat(k_specular, "kSpecular");
 	config.AddFloat(k_diffuse, "kDiffuse");
-	config.AddFloat(shininess, "shininess");
+
+	config.AddFloat(transparency, "Transparency");
+//	config.AddFloat(roughness, "Roughness");
+//	config.AddFloat(metalness, "Metalness");
+
+	config.AddFloat(tiling_x, "Tiling X");
+	config.AddFloat(tiling_y, "Tiling Y");
+
+	//liquid properties
+
+	config.AddFloat(speed_tiling_x, "Speed Liquid Map X");
+	config.AddFloat(speed_tiling_y, "Speed Liquid Map Y");
+
+	config.AddFloat(tiling_liquid_x_x, "Tiling Liquid Map 1 x");
+	config.AddFloat(tiling_liquid_x_y, "Tiling Liquid Map 1 y");
+	config.AddFloat(tiling_liquid_y_x, "Tiling Liquid Map 2 x");
+	config.AddFloat(tiling_liquid_y_y, "Tiling Liquid Map 2 y");
+	config.AddBool(use_liquid_map, "Use Liquid Map");
+
+	config.AddBool(use_normal_map, "UseNormalMap");
+	config.AddBool(use_specular_map, "UseSpecularMap");
+
 
 	//colors
 	config.AddColor(float4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]), "difusseColor");
@@ -63,15 +99,36 @@ void Material::Load(const Config& config)
 	SetMaterialTexture(MaterialTextureType::SPECULAR, config.GetUInt("Specular", 0));
 	SetMaterialTexture(MaterialTextureType::OCCLUSION, config.GetUInt("Occlusion", 0));
 	SetMaterialTexture(MaterialTextureType::EMISSIVE, config.GetUInt("Emissive", 0));
-
+	SetMaterialTexture(MaterialTextureType::NORMAL, config.GetUInt("Normal", 0));
+	SetMaterialTexture(MaterialTextureType::LIGHTMAP, config.GetUInt("Lightmap", 0));
+	SetMaterialTexture(MaterialTextureType::LIQUID, config.GetUInt("Liquid", 0));
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
 	config.GetString("ShaderProgram", shader_program, "Blinn phong");
+
+	material_type = static_cast<MaterialType>(config.GetInt("MaterialType", 0));
 
 	//k
 	k_ambient = config.GetFloat("kAmbient", 1.0f);
 	k_specular = config.GetFloat("kSpecular", 1.0f);
 	k_diffuse = config.GetFloat("kDiffuse", 1.0f);
-	shininess = config.GetFloat("shininess", 1.0f);
+
+	transparency = config.GetFloat("Transparency", 1.f);
+
+	tiling_x = config.GetFloat("Tiling X", 1.0f);
+	tiling_y = config.GetFloat("Tiling Y", 1.0f);
+
+	//liquid properties
+
+	speed_tiling_x = config.GetFloat("Speed Liquid Map X", 1.0F);
+	speed_tiling_y = config.GetFloat("Speed Liquid Map Y", 1.0F);
+
+	tiling_liquid_x_x = config.GetFloat("Tiling Liquid Map 1 x", 1.0F);
+	tiling_liquid_x_y = config.GetFloat("Tiling Liquid Map 1 y", 1.0F);
+	tiling_liquid_y_x = config.GetFloat("Tiling Liquid Map 2 x", 1.0F);
+	tiling_liquid_y_y = config.GetFloat("Tiling Liquid Map 2 y", 1.0F);
+	use_liquid_map = config.GetBool("Use Liquid Map", false);
+
+
 
 	//colors
 	float4 diffuse;
@@ -101,6 +158,7 @@ void Material::Load(const Config& config)
 void Material::RemoveMaterialTexture(MaterialTextureType type)
 {
 	textures[type] = nullptr;
+	
 }
 
 void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uuid)
@@ -110,9 +168,43 @@ void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uui
 	{
 		textures[type] = App->resources->Load<Texture>(texture_uuid);
 	}
+	use_normal_map = type == MaterialTextureType::NORMAL && texture_uuid !=0;
+	use_specular_map = type == MaterialTextureType::SPECULAR && texture_uuid != 0;
+	use_liquid_map = type == MaterialTextureType::LIQUID && texture_uuid != 0;
 }
 
 const std::shared_ptr<Texture>& Material::GetMaterialTexture(MaterialTextureType type) const
 {
 	return textures[type];
+}
+
+void Material::ChangeTypeOfMaterial(const MaterialType new_material_type)
+{
+	material_type = new_material_type;
+}
+
+std::string Material::GetMaterialTypeName(const MaterialType material_type)
+{
+	switch (material_type)
+	{
+	case MaterialType::MATERIAL_OPAQUE:
+		return "Opaque";
+
+	case MaterialType::MATERIAL_TRANSPARENT:
+		return "Transparent";
+
+	case MaterialType::MATERIAL_LIQUID:
+		return "Liquid";
+	}
+}
+
+void Material::UpdateLiquidProperties()
+{
+	//TODO->change it to liquid maps and not hardcoded
+	//tiling_liquid_x_x += speed_tiling_x / 1000 * App->time->delta_time;
+	//tiling_liquid_x_y += speed_tiling_x / 1000 * App->time->delta_time;
+	tiling_liquid_y_x -= speed_tiling_y / 1000 * App->time->delta_time;
+	tiling_liquid_y_y -= speed_tiling_y / 1000 * App->time->delta_time;
+	tiling_liquid_x_x += speed_tiling_x / 1000 * App->time->delta_time;
+	tiling_liquid_x_y += speed_tiling_y / 1000 * App->time->delta_time;
 }

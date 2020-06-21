@@ -39,12 +39,20 @@ void PanelGame::Render()
 			float2 game_window_content_area_max_point = float2(game_window_content_area_max_point_ImVec2.x, game_window_content_area_max_point_ImVec2.y);
 
 			ImVec2 game_window_content_area_pos_ImVec2 = ImGui::GetCursorScreenPos();
-			float2 game_window_content_area_pos = float2(game_window_content_area_pos_ImVec2.x, game_window_content_area_pos_ImVec2.y);
+			game_window_content_area_pos = float2(game_window_content_area_pos_ImVec2.x, game_window_content_area_pos_ImVec2.y);
 
-			float game_window_content_area_width = game_window_content_area_max_point.x - game_window_content_area_pos.x;
-			float game_window_content_area_height = game_window_content_area_max_point.y - game_window_content_area_pos.y;
+			game_window_content_area_width = game_window_content_area_max_point.x - game_window_content_area_pos.x;
+			game_window_content_area_height = game_window_content_area_max_point.y - game_window_content_area_pos.y;
 
+			if (App->renderer->render_shadows)
+			{
+				App->cameras->directional_light_camera->RecordFrame(game_window_content_area_width * 4, game_window_content_area_width * 4);
+				App->cameras->directional_light_mid->RecordFrame(game_window_content_area_width, game_window_content_area_width);
+				App->cameras->directional_light_far->RecordFrame(game_window_content_area_width / 4, game_window_content_area_width / 4);
+			}			
 			App->cameras->main_camera->RecordFrame(game_window_content_area_width, game_window_content_area_height);
+			App->cameras->main_camera->RecordDebugDraws();
+
 
 			ImGui::Image(
 				(void *)App->cameras->main_camera->GetLastRecordedFrame(),

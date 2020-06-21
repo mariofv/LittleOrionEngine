@@ -10,7 +10,7 @@
 
 class Application;
 class Script;
-class ComponentScript :public Component
+class ComponentScript : public Component
 {
 public:
 	ComponentScript();
@@ -21,13 +21,15 @@ public:
 	ComponentScript(const ComponentScript& component_to_copy) = default;
 	ComponentScript(ComponentScript&& component_to_move) = default;
 
-	ComponentScript & operator=(const ComponentScript & component_to_copy) = default;
+	ComponentScript & operator=(const ComponentScript & component_to_copy);
 	ComponentScript & operator=(ComponentScript && component_to_move) = default;
 
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
-	void LoadName(std::string& script_name);
+	void Enable() override;
+
+	void LoadName(const std::string& script_name);
 
 	void Update();
 	void AwakeScript();
@@ -36,12 +38,14 @@ public:
 
 	void ShowComponentWindow();
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
 
 public:
 	std::string name;
 	Script* script = nullptr;
+	bool awaken = false;
+	bool started = false;
 
 private:
 	friend class PanelComponent;

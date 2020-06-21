@@ -53,7 +53,7 @@ Grid::~Grid()
 void Grid::Render() const
 {
 	BROFILER_CATEGORY("Render Grid", Profiler::Color::BlueViolet);
-
+	glEnable(GL_BLEND);
 	GLuint grid_program = App->program->GetShaderProgramId("Grid");
 	glUseProgram(grid_program);
 
@@ -76,7 +76,7 @@ void Grid::Render() const
 	glBindVertexArray(grid_vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0); // no need to unbind it every time 
-
+	glDisable(GL_BLEND);
 	glUseProgram(0);
 }
 

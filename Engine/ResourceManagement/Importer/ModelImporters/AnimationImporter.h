@@ -27,10 +27,9 @@ private:
 	FileData CreateBinary(const Animation& own_format_animation) const;
 
 	void GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float scale_factor) const;
-	void GetChannelTranslations(const aiNodeAnim* sample, std::map<size_t, float3>& sample_translations) const;
-	void GetChannelRotations(const aiNodeAnim* sample, std::map<size_t, Quat>& sample_rotations) const;
+	void GetChannelTransform(const float4x4 &pre_transform, const aiNodeAnim* sample, size_t animation_duration,std::map<size_t, float4x4>& sample_transform) const;
 
-	void GetAcumulatedAssimpTransformations(const std::pair<std::string, std::vector<aiNodeAnim *>> & channel_pair, const aiNode* root_node, float4x4 & accumulated_transformation) const;
+	void GetAcumulatedAssimpTransformations(const aiNodeAnim * animation_channel, const std::vector<aiNodeAnim *> & channel_vector, const aiNode* root_node, float4x4 & pre_transform) const;
 	void GetAssimpNodeTansformationOutSideChannels(const aiNode* root_node, const Animation& animation, std::map<const std::string, std::vector<const aiNode *>>  & nodes) const;
 	void ApplyNodeTansformationOutSideChannels(std::map<const std::string, std::vector<const aiNode *>> &nodes, float unit_scale_factor, Animation &own_format_animation) const;
 };

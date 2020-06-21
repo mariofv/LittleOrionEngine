@@ -7,7 +7,10 @@
 #include <vector>
 #include <memory>
 
+class ModuleAI;
 class ModuleAnimation;
+class ModuleAudio;
+class ModuleEffects;
 class ModuleRender;
 class ModuleWindow;
 class ModuleTextures;
@@ -25,8 +28,9 @@ class ModuleUI;
 class ModuleLight;
 class ModuleResourceManager;
 class ModuleScriptManager;
+class ModuleSpacePartitioning;
 class ModuleActions;
-class ModuleAI;
+class ModulePhysics;
 
 class EngineLog;
 
@@ -45,6 +49,7 @@ public:
 
 public:
 	ModuleAnimation* animations = nullptr;
+	ModuleEffects* effects = nullptr;
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
@@ -61,8 +66,11 @@ public:
 	ModuleLight* lights = nullptr;
 	ModuleResourceManager* resources = nullptr;
 	ModuleScriptManager* scripts = nullptr;
+	ModuleSpacePartitioning* space_partitioning = nullptr;
 	ModuleActions* actions = nullptr;
 	ModuleAI* artificial_intelligence = nullptr;
+	ModulePhysics* physics = nullptr;
+	ModuleAudio* audio = nullptr;
 
 	std::unique_ptr<EngineLog> engine_log = nullptr;
 

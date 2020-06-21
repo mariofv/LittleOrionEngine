@@ -5,11 +5,11 @@
 #include "Helper/Utils.h"
 #include <Brofiler/Brofiler.h>
 
-ComponentTransform::ComponentTransform() : Component(ComponentType::TRANSFORM)
+ComponentTransform::ComponentTransform(ComponentType transform_type) : Component(transform_type)
 {
 }
 
-ComponentTransform::ComponentTransform(GameObject * owner) : Component(owner, ComponentType::TRANSFORM)
+ComponentTransform::ComponentTransform(GameObject* owner, ComponentType transform_type) : Component(owner, transform_type)
 {
 	OnTransformChange();
 }
@@ -43,19 +43,15 @@ ComponentTransform & ComponentTransform::operator=(const ComponentTransform & co
 	return *this;
 }
 
-void ComponentTransform::Save(Config& config) const
+void ComponentTransform::SpecializedSave(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddBool(active, "Active");
 	config.AddFloat3(translation, "Translation");
 	config.AddFloat3(rotation_degrees, "Rotation");
 	config.AddFloat3(scale, "Scale");
 }
 
-void ComponentTransform::Load(const Config& config)
+void ComponentTransform::SpecializedLoad(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
 	config.GetFloat3("Translation", translation, float3::zero);
 	config.GetFloat3("Rotation", rotation_degrees, float3::zero);
 	rotation = Utils::GenerateQuatFromDegFloat3(rotation_degrees);
@@ -70,7 +66,6 @@ ENGINE_API float3 ComponentTransform::GetGlobalTranslation() const
 	return global_model_matrix.TranslatePart();
 }
 
-
 ENGINE_API float3 ComponentTransform::GetTranslation() const
 {
 	return translation;
@@ -78,6 +73,7 @@ ENGINE_API float3 ComponentTransform::GetTranslation() const
 
 ENGINE_API void ComponentTransform::SetTranslation(const float3& translation)
 {
+	BROFILER_CATEGORY("SetTranslation", Profiler::Color::Lavender);
 	this->translation = translation;
 	OnTransformChange();
 }
@@ -86,6 +82,12 @@ ENGINE_API void ComponentTransform::Translate(const float3& translation)
 {
 	this->translation += translation;
 	OnTransformChange();
+}
+
+ENGINE_API void ComponentTransform::SetGlobalMatrixTranslation(const float3& translation)
+{
+	global_model_matrix.SetTranslatePart(translation);
+	SetGlobalModelMatrix(global_model_matrix);
 }
 
 ENGINE_API Quat ComponentTransform::GetGlobalRotation() const
@@ -111,11 +113,14 @@ ENGINE_API void ComponentTransform::SetRotation(const float3x3& rotation)
 	OnTransformChange();
 }
 
+/*
+	@param new_rotation The rotation in degrees
+*/
 ENGINE_API void ComponentTransform::SetRotation(const float3& new_rotation)
 {
-	rotation = math::Quat::FromEulerXYZ(new_rotation.x, new_rotation.y, new_rotation.z);
-	rotation_radians = new_rotation;
-	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
+	rotation_radians = Utils::Float3DegToRad(new_rotation);
+	rotation = math::Quat::FromEulerXYZ(rotation_radians.x, rotation_radians.y, rotation_radians.z);
+	rotation_degrees = new_rotation;
 	OnTransformChange();
 }
 
@@ -127,6 +132,18 @@ ENGINE_API void ComponentTransform::SetRotation(const Quat& new_rotation)
 	OnTransformChange();
 }
 
+ENGINE_API void ComponentTransform::SetGlobalMatrixRotation(const float3x3& rotation)
+{
+	global_model_matrix.SetRotatePart(rotation);
+	SetGlobalModelMatrix(global_model_matrix);
+}
+
+ENGINE_API void ComponentTransform::SetGlobalMatrixRotation(const Quat& rotation)
+{
+	global_model_matrix.SetRotatePart(rotation);
+	SetGlobalModelMatrix(global_model_matrix);
+}
+
 void ComponentTransform::Rotate(const Quat& rotation)
 {
 	this->rotation = rotation * this->rotation;
@@ -135,8 +152,6 @@ void ComponentTransform::Rotate(const Quat& rotation)
 
 	OnTransformChange();
 }
-
-
 
 void ComponentTransform::Rotate(const float3x3& rotation)
 {
@@ -154,17 +169,21 @@ ENGINE_API void ComponentTransform::LookAt(const float3& target)
 	SetRotation(new_rotation);
 }
 
-float3 ComponentTransform::ComponentTransform::GetScale() const
+ENGINE_API float3 ComponentTransform::ComponentTransform::GetScale() const
 {
 	return scale;
 }
 
-
-void ComponentTransform::SetScale(const float3& scale)
+ENGINE_API void ComponentTransform::SetScale(const float3& scale)
 {
 	this->scale = scale;
 	
 	OnTransformChange();
+}
+
+float3 ComponentTransform::GetGlobalScale() const
+{
+	return global_model_matrix.GetScale();
 }
 
 ENGINE_API float3 ComponentTransform::GetUpVector() const
@@ -185,13 +204,14 @@ ENGINE_API float3 ComponentTransform::GetRightVector() const
 
 void ComponentTransform::OnTransformChange()
 {
+	BROFILER_CATEGORY("OnTransformChange", Profiler::Color::Lavender);
 	model_matrix = float4x4::FromTRS(translation, rotation, scale);
 	GenerateGlobalModelMatrix();
-	owner->aabb.GenerateBoundingBox();
 	for (const auto& child : owner->children)
 	{
 		child->transform.OnTransformChange();
 	}
+	owner->aabb.GenerateBoundingBox();
 }
 
 float4x4 ComponentTransform::GetModelMatrix() const
@@ -201,6 +221,7 @@ float4x4 ComponentTransform::GetModelMatrix() const
 
 void ComponentTransform::GenerateGlobalModelMatrix()
 {
+	BROFILER_CATEGORY("GenerateGlobalMatrix", Profiler::Color::Lavender);
 	if (owner->parent == nullptr)
 	{
 		global_model_matrix = model_matrix;
@@ -235,14 +256,13 @@ void ComponentTransform::SetGlobalModelMatrix(const float4x4& new_global_matrix)
 	SetTranslation(translation);
 	SetRotation(rotation);
 	SetScale(scale);
-	
 }
 
 void ComponentTransform::ChangeLocalSpace(const float4x4& new_local_space)
 {
 	model_matrix = new_local_space.Inverted() * global_model_matrix;
 	model_matrix.Decompose(translation, rotation, scale);
-	
+	OnTransformChange();
 }
 
 Component* ComponentTransform::Clone(bool original_prefab) const
@@ -250,5 +270,6 @@ Component* ComponentTransform::Clone(bool original_prefab) const
 	ComponentTransform * created_component;
 	created_component = new ComponentTransform(nullptr);
 	*created_component = *this;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 }

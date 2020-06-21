@@ -13,7 +13,10 @@
 
 class Component;
 
+class GameObject;
+
 class Panel;
+class PanelBuildOptions;
 class PanelMenuBar;
 class PanelToolBar;
 class PanelScene;
@@ -29,8 +32,9 @@ class PanelAbout;
 class PanelResourceDatabase;
 class PanelPopups;
 class PanelNavMesh;
+class PanelTags;
 
-class GameObject;
+class TagManager;
 
 struct ImFont;
 
@@ -46,13 +50,10 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
-	ENGINE_API void OpenScene(const std::string &path) const;
-	void SaveScene(const std::string &path) const;
-
 	void Render();
 
 	ImFont* GetFont(const Fonts & font) const;
-
+	ENGINE_API ImGuiContext* GetImGuiContext() const;
 private:
 	void InitEditorDockspace();
 	void RenderEditorDockspace();
@@ -64,10 +65,16 @@ private:
 
 public:
 	GameObject *selected_game_object = nullptr;
+	bool show_game_object_inspector = true;
+
 	float3 selected_position = float3(0.0f, 0.0f, 0.0f);
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
-	std::string current_scene_path = "";
+	
+	Metafile *selected_meta_file = nullptr;
 
+	TagManager* tag_manager = nullptr;
+
+	PanelBuildOptions* build_options = nullptr;
 	PanelMenuBar* menu_bar = nullptr;
 	PanelToolBar* toolbar = nullptr;
 	PanelScene* scene_panel = nullptr;
@@ -83,10 +90,12 @@ public:
 	PanelPopups* popups = nullptr;
 	PanelNavMesh* nav_mesh = nullptr;
 	PanelStateMachine* state_machine = nullptr;
+	PanelTags* tags_panel = nullptr;
 
 private:
 	std::vector<Panel*> panels;
 	ImGuiID editor_dockspace_id;
+	ImGuiContext* imgui_context = nullptr;	
 };
 
 #endif //_MODULEEDITOR_H_

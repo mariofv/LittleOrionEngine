@@ -16,6 +16,7 @@
 #include "ResourceManagement/Importer/PrefabImporter.h"
 #include "ResourceManagement/Resources/Mesh.h"
 #include "ResourceManagement/Resources/Material.h"
+#include "ResourceManagement/Metafile/ModelMetafile.h"
 
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
@@ -41,6 +42,7 @@ ModelImporter::~ModelImporter()
 
 FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
+	ModelMetafile& model_metafile = static_cast<ModelMetafile&>(const_cast<Metafile&>(metafile));
 	FileData model_data{NULL, 0};
 
 	// LOAD ASSIMP SCENE
@@ -66,15 +68,18 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 
 	// LOAD NATIVE SCALE
 	float unit_scale_factor = 1.f;
-	for (unsigned int i = 0; i < scene->mMetaData->mNumProperties; ++i)
+	if (model_metafile.convert_units)
 	{
-		if (scene->mMetaData->mKeys[i] == aiString("UnitScaleFactor"))
+		for (unsigned int i = 0; i < scene->mMetaData->mNumProperties; ++i)
 		{
-			aiMetadataEntry unit_scale_entry = scene->mMetaData->mValues[i];
-			unit_scale_factor = *(double*)unit_scale_entry.mData;
-		};
+			if (scene->mMetaData->mKeys[i] == aiString("UnitScaleFactor"))
+			{
+				aiMetadataEntry unit_scale_entry = scene->mMetaData->mValues[i];
+				unit_scale_factor = *(double*)unit_scale_entry.mData;
+			};
+		}
+		unit_scale_factor *= model_metafile.scale_factor;
 	}
-	unit_scale_factor *= 0.01f;
 
 
 	// INIT SKELETON CACHE
@@ -83,31 +88,39 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 
 	// STORE ALL MODEL GLOBAL DATA
 	current_model_data = {scene, asset_file_folder_path, unit_scale_factor, skeleton_cache};
-
+	current_model_data.model_metafile = &model_metafile;
 
 	aiNode* root_node = scene->mRootNode;
 	aiMatrix4x4 identity_transformation = aiMatrix4x4();
 	std::vector<Config> node_config = ExtractDataFromNode(root_node, identity_transformation);
+	Config model;
+	model.AddString(assets_file_path.GetFilenameWithoutExtension(), "Name");
 
-	std::vector<Config> animations_config;
-	for (size_t i = 0; i < scene->mNumAnimations; i++)
-	{
-		//Import animation
-		Config animation_config;
-		std::string animation_name = scene->mAnimations[i]->mName.C_Str();
-		uint32_t extracted_animation_uuid = ExtractAnimationFromNode(scene->mAnimations[i], animation_name);
+	if (model_metafile.import_animation) {
+		std::vector<Config> animations_config;
+		for (size_t i = 0; i < scene->mNumAnimations; i++)
+		{
+			//Import animation
+			Config animation_config;
+			std::string animation_name = assets_file_path.GetFilenameWithoutExtension() + "_" + scene->mAnimations[i]->mName.C_Str();
+			uint32_t extracted_animation_uuid = ExtractAnimationFromNode(scene->mAnimations[i], animation_name);
 
-		animation_config.AddUInt(extracted_animation_uuid, "Animation");
-		animations_config.push_back(animation_config);
+			animation_config.AddUInt(extracted_animation_uuid, "Animation");
+			animations_config.push_back(animation_config);
+		}
+
+		model.AddChildrenConfig(node_config, "Node");
+		model.AddChildrenConfig(animations_config, "Animations");
 	}
 	aiReleaseImport(scene);
 
-	Config model;
-	model.AddString(assets_file_path.GetFilenameWithoutExtension(), "Name");
-	model.AddChildrenConfig(node_config, "Node");
-	model.AddChildrenConfig(animations_config, "Animations");
 
-	model_data = App->resources->prefab_importer->ExtractFromModel(model, metafile);
+	model_data = App->resources->prefab_importer->ExtractFromModel(model, model_metafile);
+	if (current_model_data.remmaped_changed || current_model_data.any_new_node)
+	{
+		App->resources->metafile_manager->SaveMetafile(static_cast<Metafile*>(&model_metafile), assets_file_path);
+	}
+
 	return model_data;
 }
 
@@ -126,12 +139,20 @@ std::vector<Config> ModelImporter::ExtractDataFromNode(const aiNode* root_node, 
 		aiMesh* node_mesh = current_model_data.scene->mMeshes[mesh_index];
 		std::string mesh_name = std::string(node_mesh->mName.data) + "_" + std::to_string(i);
 		node.AddString(mesh_name, "Name");
-
-		uint32_t extracted_material_uuid = ExtractMaterialFromNode(mesh_index, mesh_name);
-		node.AddUInt(extracted_material_uuid, "Material");
+		if (current_model_data.model_metafile->import_material)
+		{
+			uint32_t extracted_material_uuid = ExtractMaterialFromNode(mesh_index, mesh_name);
+			auto & remapped_materials = current_model_data.model_metafile->remapped_materials;
+			current_model_data.remmaped_changed = remapped_materials[mesh_name] == extracted_material_uuid;
+			if (remapped_materials.find(mesh_name) == remapped_materials.end() || current_model_data.remmaped_changed)
+			{
+				remapped_materials[mesh_name] = 0;
+			}
+			node.AddUInt(extracted_material_uuid, "Material");
+		}
 		
 		uint32_t extracted_skeleton_uuid = 0;
-		if (node_mesh->HasBones())
+		if (node_mesh->HasBones() && current_model_data.model_metafile->import_rig)
 		{
 			extracted_skeleton_uuid = ExtractSkeletonFromNode(node_mesh, mesh_name);
 			if (extracted_skeleton_uuid != 0)
@@ -140,12 +161,14 @@ std::vector<Config> ModelImporter::ExtractDataFromNode(const aiNode* root_node, 
 			}
 		}
 
-		uint32_t extracted_mesh_uuid = ExtractMeshFromNode(node_mesh, mesh_name, parent_transformation, extracted_skeleton_uuid);
-		if (extracted_mesh_uuid != 0)
+		if (current_model_data.model_metafile->import_mesh)
 		{
-			node.AddUInt(extracted_mesh_uuid, "Mesh");
+			uint32_t extracted_mesh_uuid = ExtractMeshFromNode(node_mesh, mesh_name, parent_transformation, extracted_skeleton_uuid);
+			if (extracted_mesh_uuid != 0)
+			{
+				node.AddUInt(extracted_mesh_uuid, "Mesh");
+			}
 		}
-
 		node_config.push_back(node);
 	}
 
@@ -163,8 +186,34 @@ uint32_t ModelImporter::ExtractMaterialFromNode(size_t mesh_index, const std::st
 	int mesh_material_index = current_model_data.scene->mMeshes[mesh_index]->mMaterialIndex;
 	aiMaterial* assimp_mesh_material = current_model_data.scene->mMaterials[mesh_material_index];
 	FileData mesh_material_data = App->resources->material_importer->ExtractMaterialFromAssimp(assimp_mesh_material, *current_model_data.asset_file_folder_path);
-	uint32_t extracted_material_uuid = App->resources->CreateFromData(mesh_material_data, *current_model_data.asset_file_folder_path, mesh_name + ".mat");
-	return extracted_material_uuid;
+
+	Metafile node;
+	node.resource_type = ResourceType::MATERIAL;
+	node.resource_name = mesh_name + ".mat";
+	return SaveDataInLibrary( node, mesh_material_data);
+}
+
+uint32_t ModelImporter::SaveDataInLibrary( Metafile &node_metafile, FileData & file_data) const
+{
+	node_metafile.metafile_path = current_model_data.model_metafile->metafile_path;
+	node_metafile.imported_file_path = current_model_data.model_metafile->imported_file_path;
+	current_model_data.model_metafile->GetModelNode(node_metafile);
+	bool is_new_node = node_metafile.uuid == 0;
+	node_metafile.uuid = is_new_node ? pcg32_random() : node_metafile.uuid;
+	node_metafile.exported_file_path = App->resources->metafile_manager->GetUUIDExportedFolder(node_metafile.uuid);
+	if (!App->filesystem->Exists(node_metafile.exported_file_path))
+	{
+		App->filesystem->MakeDirectory(node_metafile.exported_file_path);
+	}
+	Path* metafile_exported_folder_path = App->filesystem->GetPath(node_metafile.exported_file_path);
+	
+	node_metafile.exported_file_path = metafile_exported_folder_path->Save(std::to_string(node_metafile.uuid).c_str(), file_data)->GetFullPath();
+	if (is_new_node)
+	{
+		current_model_data.any_new_node = true;
+		current_model_data.model_metafile->nodes.push_back(std::make_unique<Metafile>(node_metafile));
+	}
+	return node_metafile.uuid;
 }
 
 uint32_t ModelImporter::ExtractMeshFromNode(const aiMesh* asssimp_mesh, std::string mesh_name, const aiMatrix4x4& mesh_transformation, uint32_t mesh_skeleton_uuid) const
@@ -175,8 +224,10 @@ uint32_t ModelImporter::ExtractMeshFromNode(const aiMesh* asssimp_mesh, std::str
 		return 0;
 	}
 
-	uint32_t extracted_mesh_uuid = App->resources->CreateFromData(mesh_data, *current_model_data.asset_file_folder_path, mesh_name + ".mesh");
-	return extracted_mesh_uuid;
+	Metafile node;
+	node.resource_type = ResourceType::MESH;
+	node.resource_name = mesh_name + ".mesh";
+	return SaveDataInLibrary(node, mesh_data);
 }
 
 uint32_t ModelImporter::ExtractSkeletonFromNode(const aiMesh* asssimp_mesh, std::string mesh_name) const
@@ -189,9 +240,12 @@ uint32_t ModelImporter::ExtractSkeletonFromNode(const aiMesh* asssimp_mesh, std:
 	}
 	else
 	{
-		FileData skeleton_data = App->resources->skeleton_importer->ExtractSkeletonFromAssimp(current_model_data.scene, asssimp_mesh, current_model_data.scale);
-		skeleton_uuid = App->resources->CreateFromData(skeleton_data, *current_model_data.asset_file_folder_path, mesh_name + "_skeleton.sk");
+		FileData skeleton_data = App->resources->skeleton_importer->ExtractSkeletonFromAssimp(current_model_data.scene, asssimp_mesh, current_model_data.scale, current_model_data.model_metafile->complex_skeleton);
 
+		Metafile node;
+		node.resource_type = ResourceType::SKELETON;
+		node.resource_name = mesh_name + ".sk";
+		skeleton_uuid =  SaveDataInLibrary(node, skeleton_data);
 		if (skeleton_uuid != 0)
 		{
 			current_model_data.skeleton_cache[main_bone_name] = skeleton_uuid;
@@ -204,6 +258,9 @@ uint32_t ModelImporter::ExtractSkeletonFromNode(const aiMesh* asssimp_mesh, std:
 uint32_t ModelImporter::ExtractAnimationFromNode(const aiAnimation* assimp_animation, std::string animation_name) const
 {
 	FileData animation_data = App->resources->animation_importer->ExtractAnimationFromAssimp(current_model_data.scene, assimp_animation, current_model_data.scale);
-	uint32_t extracted_animation_uuid = App->resources->CreateFromData(animation_data, *current_model_data.asset_file_folder_path, animation_name + ".anim");
-	return extracted_animation_uuid;
+
+	Metafile node;
+	node.resource_type = ResourceType::ANIMATION;
+	node.resource_name = animation_name + ".anim";
+	return SaveDataInLibrary(node, animation_data);
 }

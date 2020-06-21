@@ -4,6 +4,7 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleTime.h"
 
 #include <algorithm>    // std::find
 #include <Brofiler/Brofiler.h>
@@ -70,10 +71,17 @@ void PanelPopupSceneLoader::Render()
 
 	if (HasSelected())
 	{
-		APP_LOG_INFO("Loading %s scene.", GetSelected())
+		if(!App->time->isGameRunning())
+		{
+			APP_LOG_INFO("Loading %s scene.", GetSelected())
 		
-		App->editor->OpenScene(GetSelected());
-		App->editor->current_scene_path = GetSelected();
+			App->scene->LoadScene(GetSelected());
+		}
+		else
+		{
+			APP_LOG_INFO("You must stop running the game before loading a scene.");
+			has_selected = false;
+		}
 	}
 }
 

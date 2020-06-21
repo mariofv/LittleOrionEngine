@@ -42,7 +42,7 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 	}
 
 	std::vector<std::pair<std::vector<uint32_t>, std::vector<float>>> vertex_skinning__info;
-	if (mesh->HasBones())
+	if (mesh->HasBones() && mesh_skeleton_uuid != 0)
 	{
 		vertex_skinning__info = GetSkinning(mesh, mesh_skeleton_uuid);
 	}
@@ -54,26 +54,35 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		Mesh::Vertex new_vertex;
 		aiVector3D transformed_position = node_transformation * mesh->mVertices[i];
 		new_vertex.position = float3(transformed_position.x, transformed_position.y, transformed_position.z);
-		if (mesh->mTextureCoords[0]) 
+		for (size_t j = 0; j < UVChannel::TOTALUVS; j++)
 		{
-			new_vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+			float2 text_coordinate(float2::zero);
+			if (mesh->mTextureCoords[j])
+			{
+				text_coordinate = float2(mesh->mTextureCoords[j][i].x, mesh->mTextureCoords[j][i].y);
+			}
+			new_vertex.tex_coords[j] = text_coordinate;
 		}
 		if (mesh->mNormals)
 		{
-			new_vertex.normals = float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+			new_vertex.normals = float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z).Normalized();
 		}
 		if (mesh->mTangents)
 		{
-			new_vertex.tangent = float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
+			new_vertex.tangent = float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z).Normalized();
+		}
+		if (mesh->mBitangents)
+		{
+			new_vertex.bitangent = float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z).Normalized();
 		}
 		if (vertex_skinning__info.size() > 0)
 		{
-			assert(vertex_skinning__info[i].first.size() <= 4);
+			assert(vertex_skinning__info[i].first.size() <= MAX_JOINTS);
 			for (size_t j = 0; j < vertex_skinning__info[i].first.size(); ++j)
 			{
 				new_vertex.joints[j] = vertex_skinning__info[i].first[j];
 			}
-			assert(vertex_skinning__info[i].second.size() <= 4);
+			assert(vertex_skinning__info[i].second.size() <= MAX_JOINTS);
 
 			float weights_sum = 0;
 			for (size_t j = 0; j < vertex_skinning__info[i].second.size(); ++j)
@@ -88,8 +97,8 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 				new_vertex.weights[j] = vertex_skinning__info[i].second[j] * normalize_factor;
 				weights_sum += new_vertex.weights[j];
 			}
-			int weights_sum_round = std::round(weights_sum);
-			assert(weights_sum_round <= 1 && weights_sum_round >= 0);
+			float weights_sum_round = std::round(weights_sum);
+			assert(weights_sum_round <= 1.0f && weights_sum_round >= 0.0f);
 			new_vertex.num_joints = vertex_skinning__info[i].second.size();
 		}
 		vertices.push_back(new_vertex);
@@ -110,7 +119,7 @@ std::vector<std::pair<std::vector<uint32_t>, std::vector<float>>> MeshImporter::
 		{
 			return joint.name == mesh_bone_name;
 		});
-		assert(it != skeleton->skeleton.end());
+		assert(it != skeleton->skeleton.end()); //If you are here, probably you are loading a fbx where some bone is holding a mesh
 		for (size_t k = 0; k < mesh_bone->mNumWeights; ++k)
 		{
 			aiVertexWeight vertex_weight = mesh_bone->mWeights[k];

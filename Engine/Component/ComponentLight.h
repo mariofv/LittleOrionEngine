@@ -28,8 +28,8 @@ public:
 			void ChangePointLightAttenuationValues(float range)
 			{
 				float augmented_range = 10 * range;
-				linear = 4.5f / (10 * augmented_range);
-				quadratic = 75.0f / (augmented_range*augmented_range);
+				linear = 4.5F / (10 * augmented_range);
+				quadratic = 75.0F / (augmented_range*augmented_range);
 			}
 	};
 
@@ -52,8 +52,8 @@ public:
 			void ChangeSpotLightAttenuationValues(float range)
 			{
 				float augmented_range = 10 * range;
-				linear = 4.5f / augmented_range;
-				quadratic = 75.f / (augmented_range*augmented_range);
+				linear = 4.5F / augmented_range;
+				quadratic = 75.F / (augmented_range*augmented_range);
 			}
 
 		public: 
@@ -85,8 +85,8 @@ public:
 	void Copy(Component* component_to_copy) const override;
 
 	void Delete() override;
-	void Save(Config& config) const override;
-	void Load(const Config &config) override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config &config) override;
 
 public:
 	float light_color[3] = {1.0f, 1.0f, 1.0f};

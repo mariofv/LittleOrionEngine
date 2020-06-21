@@ -6,20 +6,26 @@
 #include "Module.h"
 #include "Helper/Timer.h"
 #include "Main/Globals.h"
-#include "SpacePartition/OLAABBTree.h"
-#include "SpacePartition/OLOctTree.h"
-#include "SpacePartition/OLQuadTree.h"
 
+#include <MathGeoLib/Geometry/LineSegment.h>
 #include <GL/glew.h>
+#include <list>
 
-const unsigned INITIAL_SIZE_AABBTREE = 10;
-
-class ComponentCamera;
 class ComponentMeshRenderer;
+class ComponentCamera;
+
+class GameObject;
 
 struct SDL_Texture;
 struct SDL_Renderer;
 struct SDL_Rect;
+
+struct RaycastHit
+{
+	GameObject* game_object = nullptr;
+	float hit_distance = 0.0f;
+	float3 hit_point = float3::zero;
+};
 
 class ModuleRender : public Module
 {
@@ -47,17 +53,8 @@ public:
 	ENGINE_API int GetRenderedTris() const;
 	ENGINE_API int GetRenderedVerts() const;
 
-	void GenerateQuadTree();
-	void GenerateOctTree();
-	void InsertAABBTree(GameObject* game_object);
-	void RemoveAABBTree(GameObject* game_object);
-	void UpdateAABBTree(GameObject* game_object);
-	void DeleteAABBTree();
-	void CreateAABBTree();
-	void DrawAABBTree() const;
-
-	GameObject* GetRaycastIntertectedObject(const LineSegment& ray);
-	bool GetRaycastIntertectedObject(const LineSegment& ray, float3& position);
+	ENGINE_API RaycastHit* GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* cam);
+	ENGINE_API void SetDrawMode(DrawMode draw_mode);
 
 private:
 	void SetVSync(bool vsync);
@@ -72,21 +69,20 @@ private:
 	void SetDithering(bool gl_dither);
 	void SetMinMaxing(bool gl_minmax);
 
-	void SetDrawMode(DrawMode draw_mode);
 	std::string GetDrawMode() const;
 
 	void GetMeshesToRender(const ComponentCamera* camera);
-	void GetCullingMeshes(const ComponentCamera* camera);
+	void SetListOfMeshesToRender(const ComponentCamera* camera);
 
 public:
 	bool anti_aliasing = false;
+	bool toggle_ortho_frustum = false;
+	bool toggle_directional_light_aabb = true;
+	bool toggle_perspective_sub_frustums = false;
+	bool render_shadows = true;
 
 private:
 	void* context = nullptr;
-
-	OLQuadTree ol_quadtree;
-	OLOctTree ol_octtree;
-	OLAABBTree* ol_abbtree = new OLAABBTree(INITIAL_SIZE_AABBTREE);
 
 
 	bool vsync = false;
@@ -94,7 +90,7 @@ private:
 	bool gl_depth_test = false;
 	bool gl_scissor_test = false;
 	bool gl_stencil_test = false;
-	bool gl_blend = false;
+	bool gl_blend = true;
 	bool gl_cull_face = false;
 	int culled_faces = 0;
 	int front_faces = 0;
@@ -107,15 +103,20 @@ private:
 	std::vector<ComponentMeshRenderer*> meshes;
 	std::vector<ComponentMeshRenderer*> meshes_to_render;
 
+	typedef std::pair<float, ComponentMeshRenderer*> ipair;
+	std::list <ipair> opaque_mesh_to_render, transparent_mesh_to_render;
+
 	int num_rendered_tris = 0;
 	int num_rendered_verts = 0;
 	Timer * rendering_measure_timer = new Timer();
 
 	friend class ModuleDebugDraw;
+	friend class ModuleDebug;
+	friend class ModuleSpacePartitioning;
 	friend class PanelConfiguration;
-	friend class PanelDebug;
 	friend class PanelScene;
 	friend class NavMesh;
+	friend class ComponentParticleSystem;
 };
 
 #endif //_MODULERENDER_H_
