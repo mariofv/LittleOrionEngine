@@ -136,6 +136,7 @@ ENGINE_API int ComponentAnimation::GetTotalAnimationTime() const
 	}
 }
 
+
 void ComponentAnimation::Update()
 {
 	if (!active)

@@ -31,9 +31,7 @@ bool ModuleWindow::Init()
 		
 		width = static_cast<int>(screen_width * 0.9f);
 		height = static_cast<int>(screen_height * 0.9f);
-		
-		//width = 1280;
-		//height = 720;
+
 		uint32_t flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_MAXIMIZED;
 
 		if(FULLSCREEN)

@@ -65,15 +65,15 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		}
 		if (mesh->mNormals)
 		{
-			new_vertex.normals = float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+			new_vertex.normals = float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z).Normalized();
 		}
 		if (mesh->mTangents)
 		{
-			new_vertex.tangent = float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
+			new_vertex.tangent = float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z).Normalized();
 		}
 		if (mesh->mBitangents)
 		{
-			new_vertex.bitangent = float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z);
+			new_vertex.bitangent = float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z).Normalized();
 		}
 		if (vertex_skinning__info.size() > 0)
 		{
@@ -100,13 +100,6 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 			float weights_sum_round = std::round(weights_sum);
 			assert(weights_sum_round <= 1.0f && weights_sum_round >= 0.0f);
 			new_vertex.num_joints = vertex_skinning__info[i].second.size();
-		}
-		else
-		{
-			for (size_t j = 0; j < MAX_JOINTS; ++j)
-			{
-				new_vertex.weights[j] = 1;
-			}
 		}
 		vertices.push_back(new_vertex);
 	}

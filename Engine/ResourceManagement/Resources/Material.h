@@ -18,6 +18,7 @@ public:
 	{
 		MATERIAL_OPAQUE,
 		MATERIAL_TRANSPARENT,
+		MATERIAL_LIQUID,
 		UNKNOWN
 	};
 
@@ -29,6 +30,7 @@ public:
 		OCCLUSION,
 		NORMAL,
 		LIGHTMAP,
+		LIQUID,
 		UNKNOWN
 	};
 
@@ -46,6 +48,8 @@ public:
 
 	void ChangeTypeOfMaterial(const MaterialType new_material_type);
 	static std::string GetMaterialTypeName(const MaterialType material_type);
+
+	void UpdateLiquidProperties();
 
 
 public:
@@ -75,8 +79,19 @@ public:
 	float tiling_x = 1.0f;
 	float tiling_y = 1.0f;
 
+	//liquid material
+	float speed_tiling_x = 1.0F;
+	float speed_tiling_y = 1.0F;
+	float tiling_liquid_x_x = 1.F;
+	float tiling_liquid_x_y = 1.F;
+	float tiling_liquid_y_x = -1.F;
+	float tiling_liquid_y_y = -1.F;
+	bool use_liquid_map = false;
 	//This variable will allow the shader to use the normal maps if there is any assigned to the model material
 	bool use_normal_map = false;
+
+	//We also will detect if using specular map
+	bool use_specular_map = false;
 
 	bool show_checkerboard_texture = false;
 };
