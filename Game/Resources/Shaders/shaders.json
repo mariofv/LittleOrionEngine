@@ -55,6 +55,12 @@
       "Selectable": true
     },
     {
+      "Name": "Dissolving",
+      "Vertex": "/Resources/Shaders/dissolving.vs",
+      "Fragment": "/Resources/Shaders/dissolving.fs",
+      "Selectable": true
+    },
+    {
       "Name": "Billboard",
       "Vertex": "/Resources/Shaders/billboard.vs",
       "Fragment": "/Resources/Shaders/billboard.fs",
