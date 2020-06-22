@@ -19,6 +19,8 @@ layout (std140) uniform Matrices
 	mat4 view;
 } matrices;
 
+uniform int num_joints;
+uniform int time;
 
 uniform mat4 palette[128]; // REMEMBER MAXIMUM NUMBER OF BONES NOT MORE PLEASE DON'T LOSE YOUR TIME LIKE ME
 uniform int has_skinning_value;

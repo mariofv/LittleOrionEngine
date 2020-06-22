@@ -18,6 +18,10 @@ out vec4 FragColor;
 
 //constants
 const float gamma = 2.2;
+const float ambient_light_strength = 0.1;
+
+vec3 normal_from_texture;
+vec3 liquid_normal_from_texture;
 
 struct Material
 {
@@ -40,6 +44,14 @@ struct Material
 	float transparency;
 	float tiling_x;
 	float tiling_y;
+
+	sampler2D liquid_map;
+	float tiling_liquid_x_x;
+	float tiling_liquid_x_y;
+	float tiling_liquid_y_x;
+	float tiling_liquid_y_y;
+	bool use_liquid_map;
+
 	bool use_normal_map;
 	bool use_specular_map;
 };
@@ -100,13 +112,16 @@ vec3 GetEmissiveColor(const Material mat, const vec2 texCoord);
 
 //MAPS
 vec3 GetNormalMap(const Material mat, const vec2 texCoord);
+vec3 GetLiquidMap(const Material mat, const vec2 texCoord);
 
 //TYPE OF LIGHTS
 vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
 vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
 vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
 vec3 CalculateLightmap(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
-//COMPUTE NORMALIZED LIGHTS
+
+vec3 CalculateNormalMapAndLiquid(const Material material, const vec2 texCoord);
+
 vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 specular_color);
 float NormalizedSpecular(vec3 normal, vec3 half_dir);
 
@@ -140,11 +155,17 @@ uniform float far_plane;
 
 void main()
 {
+	
 
 	vec3 result = vec3(0);
-
+	vec3 ambient = ambient_light_color.xyz* ambient_light_strength*ambient_light_intensity;
 	//tiling
 	vec2 tiling = vec2(material.tiling_x, material.tiling_y)*texCoord;
+	//TODO->change it to liquid maps and not hardcoded
+	if(material.use_liquid_map)
+	{
+		tiling += vec2(material.tiling_liquid_x_x, material.tiling_liquid_x_y);
+	}
 
 	//computation of colors
 	vec4 diffuse_color  = GetDiffuseColor(material, tiling);
@@ -153,10 +174,11 @@ void main()
 	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
 	vec3 fragment_normal = normalize(normal);
-	if(material.use_normal_map)
-	{
-		vec3 normal_from_texture = GetNormalMap(material, tiling);
-		fragment_normal= normalize(TBN * normal_from_texture);
+	//fragment_normal = CalculateNormalMapAndLiquid(material, tiling); TODO change it to liquid maps
+	if(material.use_normal_map)	
+	{	
+		vec3 normal_from_texture = GetNormalMap(material, tiling);	
+		fragment_normal= normalize(TBN * normal_from_texture);	
 	}
 	result += CalculateLightmap(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)
@@ -173,9 +195,9 @@ void main()
 	{
 		result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
-
+	 
 	result += emissive_color;
-	result += diffuse_color.rgb * (ambient_light_color.xyz*ambient_light_intensity); //Ambient light
+	result += diffuse_color.rgb * ambient; //Ambient light
 	//result += FrustumsCheck();
 	//FragColor = vec4(vec3(normalize(tangent)),1.0);
 	FragColor = vec4(result,1.0);
@@ -219,7 +241,41 @@ vec3 GetNormalMap(const Material mat, const vec2 texCoord)
 {
 	return normalize(texture(mat.normal_map, texCoord).rgb*2.0-1.0);
 }
+vec3 GetLiquidMap(const Material mat, const vec2 texCoord)
+{
+	return texture(mat.liquid_map, texCoord).rgb*2.0-1.0;
+}
+vec3 CalculateNormalMapAndLiquid(const Material material, const vec2 tiling)
+{
+	vec3 result;
+	//if(material.use_liquid_map && !material.use_normal_map )
+	//{
+	//	vec2 tiling_nm_x = vec2(material.tiling_liquid_x_x, material.tiling_liquid_x_y)+tiling;
+	//	vec2 tiling_nm_y = vec2(material.tiling_liquid_y_x, material.tiling_liquid_y_y)+tiling;
+	//	vec3 normal_texture_x = GetLiquidMap(material, tiling_nm_x);
+	//	vec3 normal_texture_y = GetLiquidMap(material, tiling_nm_y);
+	//	liquid_normal_from_texture =  mix(normal_texture_x, normal_texture_y, 0.5);
+	//	result = normalize(TBN * liquid_normal_from_texture);
+	//}
+	//else if(material.use_normal_map && !material.use_liquid_map)
+	//{
+	//	normal_from_texture = GetNormalMap(material, tiling);
+	//	result = normalize(TBN * normal_from_texture);
+	//}
+	//else if(material.use_normal_map && material.use_liquid_map)
+	//{
+	//	vec2 tiling_nm_x = vec2(material.tiling_liquid_x_x, material.tiling_liquid_x_y)+tiling;
+	//	vec2 tiling_nm_y = vec2(material.tiling_liquid_y_x, material.tiling_liquid_y_y)+tiling;
+	//	vec3 normal_texture_x = GetLiquidMap(material, tiling_nm_x);
+	//	vec3 normal_texture_y = GetLiquidMap(material, tiling_nm_y);
+	//	liquid_normal_from_texture =  mix(normal_texture_x, normal_texture_y, 0.5);
+	//	normal_from_texture = GetNormalMap(material, tiling);
+	//	vec3 final_normal_map = mix(liquid_normal_from_texture, normal_from_texture, 0.5);
+	//	result=normalize(TBN * final_normal_map);
+	//}
+	return result;
 
+}
 vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
 	
