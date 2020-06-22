@@ -104,6 +104,7 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 		{
 			ShowMaterialTextureMap(material, Material::MaterialTextureType::DISSOLVED_DIFFUSE);
 			ShowMaterialTextureMap(material, Material::MaterialTextureType::NOISE);
+			ImGui::DragFloat("Dissolve Progress", &material->dissolve_progress, 0.1f, 0.f, 1.f);
 		}
 		ImGui::Spacing();
 

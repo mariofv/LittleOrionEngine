@@ -97,6 +97,7 @@ public:
 	//We also will detect if using specular map
 	bool use_specular_map = false;
 
+	float dissolve_progress = 0.f;
 	bool use_noise_map = false;
 
 	bool show_checkerboard_texture = false;

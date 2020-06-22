@@ -52,6 +52,11 @@ struct Material
 	float tiling_liquid_y_y;
 	bool use_liquid_map;
 
+	sampler2D dissolved_diffuse;
+	sampler2D dissolve_progress;
+	float progress;
+	bool use_noise_map;
+
 	bool use_normal_map;
 	bool use_specular_map;
 };
