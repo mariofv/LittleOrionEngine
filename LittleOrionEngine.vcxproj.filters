@@ -1032,6 +1032,15 @@
     <ClInclude Include="Engine\Animation\Tween\TweenSequence.h">
       <Filter>Engine\Animation\Tween</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Event\Event.h">
+      <Filter>Engine\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Event\EventManager.h">
+      <Filter>Engine\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Event\FunctionHandler.h">
+      <Filter>Engine\Event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -1126,6 +1135,9 @@
     </Filter>
     <Filter Include="Engine\Animation\Tween">
       <UniqueIdentifier>{e7d08611-64ed-4f00-9fef-3df8aa3fcb03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Event">
+      <UniqueIdentifier>{13e7c55e-6aa3-4a17-924d-f5bb4fc0ce62}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
