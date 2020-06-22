@@ -75,8 +75,7 @@ void PanelPopupSceneLoader::Render()
 		{
 			APP_LOG_INFO("Loading %s scene.", GetSelected())
 		
-			App->editor->OpenScene(GetSelected());
-			App->editor->current_scene_path = GetSelected();
+			App->scene->LoadScene(GetSelected());
 		}
 		else
 		{

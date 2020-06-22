@@ -19,7 +19,6 @@ void AnimController::GetClipTransform(uint32_t skeleton_uuid, std::vector<math::
 			continue;
 		}
 		float weight = j != ClipType::ACTIVE ? playing_clips[j].current_time / (active_transition->interpolation_time * 1.0f) : 0.0f;
-
 		float current_percentage = static_cast<float>(playing_clips[j].current_time) / clip->animation_time;
 		float current_keyframe = current_percentage * (clip->animation->frames - 1);
 
@@ -59,12 +58,13 @@ void AnimController::GetClipTransform(uint32_t skeleton_uuid, std::vector<math::
 				}	
 			}
 		}
-		if (weight > 1.0f)
+		if (weight >= 1.0f)
 		{
 			apply_transition = true;
 		}
 	}
 }
+
 bool AnimController::Update()
 {
 	for (auto & playing_clip : playing_clips)
@@ -114,6 +114,7 @@ void AnimController::StartNextState(const std::string& trigger)
 	active_transition = next_transition;
 	next_state = state_machine->GetState(active_transition->target_hash);
 	playing_clips[ClipType::NEXT] = { next_state->clip, 0, true };
+
 	if (!playing_clips[ClipType::ACTIVE].playing)
 	{
 		FinishActiveState();

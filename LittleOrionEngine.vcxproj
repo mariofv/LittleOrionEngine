@@ -152,6 +152,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Animation\Tween\LOTween.h" />
+    <ClInclude Include="Engine\Animation\Tween\Tween.h" />
+    <ClInclude Include="Engine\Animation\Tween\TweenSequence.h" />
     <ClInclude Include="Engine\Component\ComponentCanvasRenderer.h" />
     <ClInclude Include="Engine\Component\ComponentBoxCollider.h" />
     <ClInclude Include="Engine\Component\ComponentCapsuleCollider.h" />
@@ -161,6 +164,7 @@
     <ClInclude Include="Engine\Component\ComponentMeshCollider.h" />
     <ClInclude Include="Engine\Component\ComponentSphereCollider.h" />
     <ClInclude Include="Engine\Component\ComponentAudioSource.h" />
+    <ClInclude Include="Engine\Component\ComponentSpriteMask.h" />
     <ClInclude Include="Engine\DLL\DLLManager.h" />
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h" />
@@ -307,6 +311,9 @@
     <ClInclude Include="Engine\Module\ModuleEffects.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Animation\Tween\LOTween.cpp" />
+    <ClCompile Include="Engine\Animation\Tween\Tween.cpp" />
+    <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp" />
     <ClCompile Include="Engine\Component\ComponentCanvasRenderer.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddGameObject.cpp" />
@@ -337,6 +344,7 @@
     <ClCompile Include="Engine\Component\ComponentMeshCollider.cpp" />
     <ClCompile Include="Engine\Component\ComponentScript.cpp" />
     <ClCompile Include="Engine\Component\ComponentSphereCollider.cpp" />
+    <ClCompile Include="Engine\Component\ComponentSpriteMask.cpp" />
     <ClCompile Include="Engine\Component\ComponentText.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform2D.cpp" />
     <ClCompile Include="Engine\DLL\DLLManager.cpp" />

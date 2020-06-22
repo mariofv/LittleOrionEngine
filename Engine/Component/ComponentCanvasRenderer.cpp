@@ -1,6 +1,7 @@
 #include "ComponentCanvasRenderer.h"
 
 #include "ComponentImage.h"
+#include "ComponentSpriteMask.h"
 #include "ComponentText.h"
 
 #include "Main/Application.h"
@@ -53,10 +54,10 @@ void ComponentCanvasRenderer::Delete()
 
 void ComponentCanvasRenderer::Render(float4x4* projection)
 {
-	Component* component_image = owner->GetComponent(Component::ComponentType::UI_IMAGE);
+	ComponentImage* component_image = static_cast<ComponentImage*>(owner->GetComponent(Component::ComponentType::UI_IMAGE));
 	if (component_image != nullptr)
 	{
-		static_cast<ComponentImage*>(component_image)->Render(projection);
+		component_image->Render(projection);
 	}
 
 	Component* component_text = owner->GetComponent(Component::ComponentType::UI_TEXT);
