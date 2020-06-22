@@ -177,8 +177,7 @@ void main()
 	//fragment_normal = CalculateNormalMapAndLiquid(material, tiling); TODO change it to liquid maps
 	if(material.use_normal_map)	
 	{	
-		vec3 normal_from_texture = GetNormalMap(material, tiling);	
-		fragment_normal= normalize(TBN * normal_from_texture);	
+		fragment_normal = GetNormalMap(material, tiling);	
 	}
 	result += CalculateLightmap(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)
@@ -277,11 +276,10 @@ vec3 CalculateNormalMapAndLiquid(const Material material, const vec2 tiling)
 
 }
 vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
-{
-	
+{   
 	vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
-	vec3 view_dir    = normalize(view_pos - position);
-	vec3 light_dir   = normalize(-directional_light.direction );
+	vec3 view_dir    = 	TBN* normalize(view_pos - position);
+	vec3 light_dir   = 	TBN* normalize(-directional_light.direction );
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
 
 
