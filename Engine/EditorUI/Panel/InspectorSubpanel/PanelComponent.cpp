@@ -29,6 +29,7 @@
 #include "Component/ComponentLight.h"
 #include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentSpriteMask.h"
 #include "Component/ComponentSphereCollider.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
@@ -266,12 +267,12 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			{
 				if (particle_system->enabled_random_x)
 				{
-					ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 1000);
-					ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -1000, 0);
+					ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 10000);
+					ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -10000, 0);
 				}
 				else
 				{
-					ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -100, 1000);
+					ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -100, 10000);
 				}
 				ImGui::SameLine();
 				ImGui::Checkbox("Rand X", &particle_system->enabled_random_x);
@@ -280,12 +281,12 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 
 				if (particle_system->enabled_random_z)
 				{
-					ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 1000);
-					ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -1000, 0);
+					ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 10000);
+					ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -10000, 0);
 				}
 				else
 				{
-					ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -100, 1000);
+					ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -100, 10000);
 				}
 				ImGui::SameLine();
 				ImGui::Checkbox("Rand Z", &particle_system->enabled_random_z);
@@ -332,10 +333,9 @@ void PanelComponent::ShowComponentBillboard(ComponentBillboard* billboard)
 	}
 }
 
-void PanelComponent::ShowBillboardOptions(ComponentBillboard * billboard)
+void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 {
 	ImGui::AlignTextToFramePadding();
-
 
 	ImGui::Text("Texture");
 	ImGui::SameLine();
@@ -379,10 +379,26 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard * billboard)
 	if (billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
 		ImGui::InputInt("Columns", &billboard->x_tiles, 1);
 		ImGui::InputInt("Rows", &billboard->y_tiles, 1);
+		ImGui::InputFloat("current x", &billboard->current_sprite_x, 1);
+		ImGui::InputFloat("current y", &billboard->current_sprite_y, 1);
 		ImGui::InputFloat("Speed", &billboard->sheet_speed, 1);
 		ImGui::Checkbox("Oriented to camera", &billboard->oriented_to_camera);
+		if (ImGui::Button("Play once"))
+		{
+			billboard->EmitOnce();
+		}
+		if (ImGui::Button("Reset"))
+		{
+			billboard->play = true;
+		}
+
 	}
 
+	ImGui::Separator();
+	ImGui::Text("Custom");
+	ImGui::DragFloat("Width:", &billboard->width, 0.2f, 0.f, 10.f);
+	ImGui::DragFloat("Height:", &billboard->height, 0.2f, 0.f, 10.f);
+	ImGui::DragFloat("Transparency:", &billboard->transparency, 0.1f, 0.f, 1.f);
 }
 
 void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
@@ -489,7 +505,6 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 
 		//UndoRedo
 		CheckClickedCamera(camera);
-
 	}
 }
 
@@ -751,6 +766,24 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image)
 	}
 }
 
+void PanelComponent::ShowComponentSpriteMaskWindow(ComponentSpriteMask* component_mask)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_THEATER_MASKS " Sprite Mask", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (!ShowCommonComponentWindow(component_mask))
+		{
+			return;
+		}
+
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		ImGui::Checkbox("Invert mask", &component_mask->inverted_mask);
+		ImGui::Checkbox("Show sprite mask", &component_mask->render_mask);
+	}
+}
+
 void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Text", ImGuiTreeNodeFlags_DefaultOpen))
@@ -1002,6 +1035,12 @@ void PanelComponent::ShowAddNewComponentButton()
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_IMAGE);
+		}
+
+		sprintf_s(tmp_string, "%s Sprite Mask", ICON_FA_THEATER_MASKS);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_SPRITE_MASK);
 		}
 
 		sprintf_s(tmp_string, "%s UI Button", ICON_FA_TOGGLE_ON);

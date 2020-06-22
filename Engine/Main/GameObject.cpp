@@ -33,6 +33,7 @@
 #include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentSpriteMask.h"
 #include "Component/ComponentBillboard.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
@@ -143,12 +144,12 @@ void GameObject::Duplicate(const GameObject& gameobject_to_copy)
 	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
 	this->original_UUID = gameobject_to_copy.original_UUID;
+	this->tag = gameobject_to_copy.tag;
 	if(gameobject_to_copy.prefab_reference != nullptr && !gameobject_to_copy.is_prefab_parent)
 	{
 		this->original_UUID = 0;
 		this->prefab_reference = nullptr;
 	}
-
 
 
 	return;
@@ -422,6 +423,9 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	Component* created_component;
 	switch (type)
 	{
+	case Component::ComponentType::AABB:
+		created_component = new ComponentAABB(this);
+		break;
 	case Component::ComponentType::ANIMATION:
 		created_component = App->animations->CreateComponentAnimation(this);
 		break;
@@ -460,6 +464,10 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 
 	case Component::ComponentType::UI_IMAGE:
 		created_component = App->ui->CreateComponentUI<ComponentImage>();
+		break;
+
+	case Component::ComponentType::UI_SPRITE_MASK:
+		created_component = App->ui->CreateComponentUI<ComponentSpriteMask>();
 		break;
 
 	case Component::ComponentType::UI_TEXT:

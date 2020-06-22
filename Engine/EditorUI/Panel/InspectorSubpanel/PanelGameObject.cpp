@@ -17,6 +17,7 @@
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentSpriteMask.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 
@@ -174,6 +175,10 @@ void PanelGameObject::Render(GameObject* game_object)
 
 			case Component::ComponentType::UI_IMAGE:
 				component_panel.ShowComponentImageWindow(static_cast<ComponentImage*>(component));
+				break;
+
+			case Component::ComponentType::UI_SPRITE_MASK:
+				component_panel.ShowComponentSpriteMaskWindow(static_cast<ComponentSpriteMask*>(component));
 				break;
 
 			case Component::ComponentType::UI_TEXT:

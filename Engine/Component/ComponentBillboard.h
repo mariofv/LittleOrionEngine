@@ -1,6 +1,8 @@
 #ifndef _COMPONENTBILLBOARD_H_
 #define _COMPONENTBILLBOARD_H_
 
+#define ENGINE_EXPORTS
+
 #include "Component.h"
 #include "Component/ComponentAABB.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
@@ -52,6 +54,15 @@ public:
 	void ChangeTexture(uint32_t texture_uuid);
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
 
+	ENGINE_API void EmitOnce();
+	ENGINE_API bool IsPlaying();
+
+public:
+	float width = 5.f;
+	float height = 5.f;
+	float transparency = 1.f;
+	bool play_once = false;
+	float current_sprite_x = 0, current_sprite_y = 0;
 private:
 	AlignmentType alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
 
@@ -67,15 +78,16 @@ private:
 
 	//Current sprite position
 	float time_since_start = 0.f;
-	float current_sprite_x = 0, current_sprite_y = 0;
+
 	float sheet_speed = 1;
 	bool oriented_to_camera;
 	AnimationType animation_type = AnimationType::CONSTANT;
-
+	int num_of_tiles = 0;
 	bool is_spritesheet = false;
-	float width = 5.f;
-	float height = 5.f;
 
+	int total_frame = 0;
+	int current_frame = 0;
+	bool play = true;
 	unsigned int vbo, vao, ebo;
 
 	//Determines when the sprite is changed

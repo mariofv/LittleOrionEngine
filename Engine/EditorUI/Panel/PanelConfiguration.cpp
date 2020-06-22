@@ -4,6 +4,7 @@
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleLight.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTime.h"
@@ -205,6 +206,7 @@ void PanelConfiguration::ShowRenderOptions()
 		if (ImGui::Checkbox("Depth test", &App->renderer->gl_depth_test))
 		{
 			App->renderer->SetDepthTest(App->renderer->gl_depth_test);
+
 		}
 
 		ImGui::SameLine();
@@ -215,6 +217,7 @@ void PanelConfiguration::ShowRenderOptions()
 		}
 
 		ImGui::Separator();
+
 		if (ImGui::Checkbox("Face culling", &App->renderer->gl_cull_face))
 		{
 			App->renderer->SetFaceCulling(App->renderer->gl_cull_face);
@@ -291,6 +294,26 @@ void PanelConfiguration::ShowRenderOptions()
 			}
 			ImGui::TreePop();
 		}
+
+		ImGui::Separator();
+
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Lighting");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1, 1, 1, 1), "and");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.3, 0.3, 0.3, 1), "Shadows");
+
+		ImGui::Separator();
+
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Ambient Light");
+
+		ImGui::SliderFloat("Intensity", &App->lights->ambient_light_intensity, 0, 1, "%.2f");
+		ImGui::ColorEdit3("Color", App->lights->ambient_light_color);
+
+		//ImGui::Checkbox("Toggle directional camera frustum", &App->renderer->toggle_ortho_frustum);
+		ImGui::Checkbox("Render shadows", &App->renderer->render_shadows);
+
+
 	}
 }
 
