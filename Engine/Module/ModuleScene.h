@@ -6,6 +6,9 @@
 #include "Helper/BuildOptions.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
+#include <thread>
+#include <atomic>
+#include <mutex>
 
 class Scene;
 
@@ -54,6 +57,8 @@ public:
 	bool HasPendingSceneToLoad() const;
 	bool CurrentSceneIsSaved() const;
 
+	void LoadSceneWithThread(Scene* scene);
+
 private:
 	void OpenScene();
 	inline void LoadSceneResource();
@@ -61,6 +66,14 @@ private:
 
 	//Don't use this function use the public one
 	GameObject* DuplicateGO(GameObject* game_object, GameObject* parent_go);
+
+	struct LoadingThreadCommunication
+	{
+		mutable std::mutex loading_mutex;
+		std::atomic_bool loading = false;
+		std::atomic_uint32_t loaded_go = 0;
+		std::atomic_uint32_t total_go = 0;
+	}loading_thread_communication;
 
 
 private:

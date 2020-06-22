@@ -17,7 +17,9 @@
 #include "ResourceManagement/Resources/Prefab.h"
 #include "ResourceManagement/Resources/Scene.h"
 
+#include <functional> 
 #include <queue>
+#include <thread>
 #include <unordered_map>
 
 Scene::Scene() : Resource(0)
@@ -101,25 +103,25 @@ void Scene::Load(bool from_file)
 
 	timer.Start();
 
-	std::unordered_map<int64_t, std::vector<GameObject*>> prefab_parents;
-	std::vector<Config> prefabs_config;
-	scene_config.GetChildrenConfig("Prefabs", prefabs_config);
-	for (unsigned int i = 0; i < prefabs_config.size(); ++i)
-	{
-		uint64_t parent_UUID = prefabs_config[i].GetUInt("ParentUUID", 0);
-		GameObject * loaded_gameobject = LoadPrefab(prefabs_config[i]);
-		if (parent_UUID != 0)
-		{
-			prefab_parents[parent_UUID].push_back(loaded_gameobject);
-		}
-	}
+	//std::unordered_map<int64_t, std::vector<GameObject*>> prefab_parents;
+	//std::vector<Config> prefabs_config;
+	//scene_config.GetChildrenConfig("Prefabs", prefabs_config);
+	//for (unsigned int i = 0; i < prefabs_config.size(); ++i)
+	//{
+	//	uint64_t parent_UUID = prefabs_config[i].GetUInt("ParentUUID", 0);
+	//	GameObject * loaded_gameobject = LoadPrefab(prefabs_config[i]);
+	//	if (parent_UUID != 0)
+	//	{
+	//		prefab_parents[parent_UUID].push_back(loaded_gameobject);
+	//	}
+	//}
 
-	std::vector<Config> prefabs_modified_components;
-	scene_config.GetChildrenConfig("PrefabsComponents", prefabs_modified_components);
-	for (unsigned int i = 0; i < prefabs_modified_components.size(); ++i)
-	{
-		LoadPrefabModifiedComponents(prefabs_modified_components[i]);
-	}
+	//std::vector<Config> prefabs_modified_components;
+	//scene_config.GetChildrenConfig("PrefabsComponents", prefabs_modified_components);
+	//for (unsigned int i = 0; i < prefabs_modified_components.size(); ++i)
+	//{
+	//	LoadPrefabModifiedComponents(prefabs_modified_components[i]);
+	//}
 
 
 	std::vector<Config> game_objects_config;
@@ -133,16 +135,16 @@ void Scene::Load(bool from_file)
 		{
 			App->space_partitioning->InsertAABBTree(created_game_object);
 		}
-		if (prefab_parents.find(created_game_object->UUID) != prefab_parents.end())
-		{
-			for (auto & prefab_child : prefab_parents[created_game_object->UUID])
-			{
-				ComponentTransform previous_transform = prefab_child->transform;
-				prefab_child->SetParent(created_game_object);
-				prefab_child->transform = previous_transform;
-			}
+		//if (prefab_parents.find(created_game_object->UUID) != prefab_parents.end())
+		//{
+		//	for (auto & prefab_child : prefab_parents[created_game_object->UUID])
+		//	{
+		//		ComponentTransform previous_transform = prefab_child->transform;
+		//		prefab_child->SetParent(created_game_object);
+		//		prefab_child->transform = previous_transform;
+		//	}
 
-		}
+		//}
 	}
 
 	float time_loading = timer.Stop();
@@ -288,7 +290,7 @@ bool Scene::SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_
 
 void Scene::LoadPrefabModifiedComponents(const Config& config) const
 {
-	GameObject * prefab_child = App->scene->GetGameObject(config.GetUInt("UUID", 0));
+	GameObject* prefab_child = App->scene->GetGameObject(config.GetUInt("UUID", 0));
 	if (!prefab_child)
 	{
 		APP_LOG_ERROR("Missing prefab");

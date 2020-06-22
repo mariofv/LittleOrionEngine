@@ -23,8 +23,11 @@
 #include "ResourceManagement/Resources/Scene.h"
 
 #include <algorithm>
-#include <stack>
 #include <Brofiler/Brofiler.h>
+#include <functional> 
+#include <future> 
+#include <stack>
+#include <thread>
 
 bool ModuleScene::Init()
 {
@@ -334,7 +337,9 @@ inline void ModuleScene::LoadSceneResource()
 	else
 	{
 		current_scene = App->resources->Load<Scene>(pending_scene_uuid);
+		/*std::thread loader(&Scene::Load, current_scene.get(), true);*/
 		current_scene.get()->Load();
+		/*loader.join();*/
 	}
 }
 
@@ -411,4 +416,9 @@ bool ModuleScene::HasPendingSceneToLoad() const
 bool ModuleScene::CurrentSceneIsSaved() const
 {
 	return current_scene != nullptr;
+}
+
+void ModuleScene::LoadSceneWithThread(Scene* scene)
+{
+	scene->Load();
 }

@@ -376,6 +376,7 @@ void GameObject::AddChild(GameObject* child)
 {
 	if (child->parent != nullptr)
 	{
+		//Potencial lock
 		child->parent->RemoveChild(child);
 	}
 
