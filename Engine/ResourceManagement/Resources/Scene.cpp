@@ -7,6 +7,7 @@
 
 #include "Module/ModuleAnimation.h"
 #include "Module/ModuleFileSystem.h"
+#include "Module/ModuleLight.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScene.h"
@@ -78,6 +79,9 @@ void Scene::Save(GameObject* gameobject_to_save) const
 	scene_config.AddChildrenConfig(prefabs_config, "Prefabs");
 	scene_config.AddChildrenConfig(prefabs_components_config, "PrefabsComponents");
 	scene_config.AddChildrenConfig(game_objects_config, "GameObjects");
+
+	scene_config.AddFloat(App->lights->ambient_light_intensity, "Ambiental Light Intensity");
+	scene_config.AddColor(float4(App->lights->ambient_light_color), "Ambiental Light Color");
 }
 
 void Scene::Load(bool from_file)
@@ -138,6 +142,15 @@ void Scene::Load(bool from_file)
 
 		}
 	}
+
+	App->lights->ambient_light_intensity = scene_config.GetFloat("Ambiental Light Intensity", 1.f);
+	float4 ambiental_light_color;
+	scene_config.GetColor("Ambiental Light Color", ambiental_light_color, float4::one);
+	App->lights->ambient_light_color[0] = ambiental_light_color.x;
+	App->lights->ambient_light_color[1] = ambiental_light_color.y;
+	App->lights->ambient_light_color[2] = ambiental_light_color.z;
+	App->lights->ambient_light_color[3] = ambiental_light_color.w;
+
 	App->scripts->ReLink();
 	App->animations->UpdateAnimationMeshes();
 }

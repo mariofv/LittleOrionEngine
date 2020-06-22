@@ -26,6 +26,13 @@ public:
 		ORTHO = 2
 	};
 
+	enum OrthoIndex
+	{
+		CLOSE = 0,
+		MID = 1,
+		AWAY = 2
+	};
+
 	ComponentCamera();
 	ComponentCamera(GameObject * owner);
 
@@ -92,10 +99,10 @@ public:
 
 	void SetClearMode(ComponentCamera::ClearMode clear_mode);
 	void SetSkybox(uint32_t skybox_uuid);
-
 	void SetSpeedUp(bool is_speeding_up);
 
 	void SetViewMatrix(const float4x4& view_matrix);
+
 	float4x4 GetViewMatrix() const;
 	float4x4 GetProjectionMatrix() const;
 	ENGINE_API float4x4 GetClipMatrix() const;
@@ -113,13 +120,14 @@ public:
 	ENGINE_API void GetRay(const float2 &mouse_position, LineSegment &return_value) const;
 
 	AABB GetMinimalEnclosingAABB() const;
+	void GenerateMatrices();
 
 private:
 	void GenerateFrameBuffers(GLsizei width, GLsizei height);
-	void GenerateMatrices();
 	void InitCamera();
 	void CreateFramebuffer(GLsizei width, GLsizei height);
 	void CreateMssaFramebuffer(GLsizei width, GLsizei height);
+	void CreateOrthographicFramebuffer(GLsizei width, GLsizei height);
 
 public:
 	const float SPEED_UP_FACTOR = 2.f;
@@ -138,18 +146,22 @@ public:
 	float4x4 proj;
 	float4x4 view;
 
+	GLuint depth_map = 0;
+	GLuint last_recorded_frame_texture = 0;
+
+	OrthoIndex ortho_index; //Only for orthographic cameras
+
+
 	bool toggle_msaa = false;
 	bool is_focusing = false;
-
 	Frustum camera_frustum;
 
 private:
 	GLuint rbo = 0;
 	GLuint fbo = 0;
-	
+	GLuint depth_rbo = 0;
 	GLuint msfbo = 0;
 	GLuint msfb_color = 0;
-	GLuint last_recorded_frame_texture = 0;
 
 	float last_height = 0;
 	float last_width = 0;
