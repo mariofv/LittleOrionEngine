@@ -3,11 +3,11 @@
 
 #include "ResourceManagement/Resources/Animation.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/PanelStateMachine.h"
 
 #include <vector>
 
 class StateMachine;
-class Skeleton;
 struct State;
 struct Clip;
 struct Transition;
@@ -45,10 +45,8 @@ public:
 	void SetStateMachine(uint32_t state_machine_uuid);
 	void GetClipTransform(uint32_t skeleton_uuid, std::vector<math::float4x4>& pose);
 	void StartNextState(const std::string& trigger);
-	std::shared_ptr<Transition> active_transition;
 	bool IsOnState(const std::string& state);
 
-	bool apply_transition = false;
 private:
 	void SetActiveState(std::shared_ptr<State> & state);
 	void FinishActiveState();
@@ -57,8 +55,11 @@ public:
 	std::vector<PlayingClip> playing_clips;
 
 private:
+	std::shared_ptr<Transition> active_transition;
+	bool apply_transition = false;
 	std::shared_ptr<State> active_state = nullptr;
 	friend class PanelComponent;
+	friend class PanelStateMachine;
 };
 
 #endif //_ANIMCONTROLLER_H_

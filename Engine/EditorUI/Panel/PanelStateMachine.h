@@ -66,7 +66,6 @@ public:
 
 	//polishing node editor
 	ImDrawList* draw_list = nullptr;
-	const float NODE_SLOT_RADIUS = 6.2f;
 
 	//debug playing animation
 	AnimController* animation_controller = nullptr;

@@ -18,6 +18,10 @@
 #include <imgui_stdlib.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
+namespace
+{
+	const float NODE_SLOT_RADIUS = 6.2f;
+}
 PanelStateMachine::PanelStateMachine()
 {
 	opened = false;
@@ -67,8 +71,8 @@ void PanelStateMachine::Render()
 				RenderStates();
 				HandleInteraction();
 				CreateNodeMenu();
+				ax::NodeEditor::End();
 			}
-			ax::NodeEditor::End();
 			if (firstFrame)
 			{
 				ax::NodeEditor::NavigateToContent(0.0f);
@@ -390,8 +394,8 @@ std::vector<LinkInfo*> PanelStateMachine::GetSelectedLinks()
 
 void PanelStateMachine::LeftPanel()
 {
-	
-	if (ImGui::BeginChild("Details", ImVec2(300, 0)))
+	float window_size = ImGui::GetWindowSize().x / 3;
+	if (ImGui::BeginChild("Details", ImVec2(window_size, 0)))
 	{
 		ImGui::Separator();
 		auto& links = GetSelectedLinks();
