@@ -100,6 +100,11 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 		ImGui::Spacing();
 
 		ShowMaterialTextureMap(material, Material::MaterialTextureType::DIFFUSE);
+		if (material->material_type == Material::MaterialType::MATERIAL_DISSOLVING)
+		{
+			ShowMaterialTextureMap(material, Material::MaterialTextureType::DISSOLVED_DIFFUSE);
+			ShowMaterialTextureMap(material, Material::MaterialTextureType::NOISE);
+		}
 		ImGui::Spacing();
 
 		ShowMaterialTextureMap(material, Material::MaterialTextureType::SPECULAR);
@@ -144,7 +149,7 @@ bool PanelMaterial::IsMaterialExtracted(const std::shared_ptr<Material> &materia
 	return meta->version == 0;
 }
 
-bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, Material::MaterialTextureType type)
+void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, Material::MaterialTextureType type)
 {
 	
 	ImGui::PushID(static_cast<unsigned int>(type));
@@ -154,7 +159,6 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 	void* display_image;
 	if (material->textures[type].get() != nullptr)
 	{
-
 		if (type == Material::MaterialTextureType::NORMAL)
 		{
 			material->use_normal_map = true;
@@ -166,6 +170,10 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		if (type == Material::MaterialTextureType::SPECULAR)
 		{
 			material->use_specular_map = true;
+		}
+		if (type == Material::MaterialTextureType::NOISE)
+		{
+			material->use_noise_map= true;
 		}
 		std::shared_ptr<Texture>& texture = material->textures[type];
 		display_image = (void*)(intptr_t)texture->opengl_texture;
@@ -332,7 +340,15 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 				modified_by_user = true;
 			}
 		}
-	break;
+		break;
+
+	case Material::MaterialTextureType::DISSOLVED_DIFFUSE:
+		ImGui::Text("Dissolved Diffuse");
+		break;
+
+	case Material::MaterialTextureType::NOISE:
+		ImGui::Text("Noise Map");
+		break;
 	}
 
 	if (ImGui::Button(ICON_FA_TIMES))
@@ -350,13 +366,15 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		{
 			material->use_specular_map = false;
 		}
+		if (type == Material::MaterialTextureType::NOISE)
+		{
+			material->use_noise_map = false;
+		}
 		modified_by_user = true;
 	}
 	ImGui::SameLine();
 	ImGui::Text("Remove Texture");
 	ImGui::PopID();
-
-	return modified_by_user;
 }
 
 std::string PanelMaterial::GetTypeName(Material::MaterialTextureType type)

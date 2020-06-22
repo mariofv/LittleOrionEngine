@@ -258,7 +258,11 @@ void ModuleRender::SetListOfMeshesToRender(const ComponentCamera* camera)
 	float3 camera_pos = camera->camera_frustum.pos;
 	for (unsigned int i = 0; i < meshes_to_render.size(); i++)
 	{
-		if (meshes_to_render[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT || meshes_to_render[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
+		if (
+			meshes_to_render[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT 
+			|| meshes_to_render[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID
+			|| meshes_to_render[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING
+		)
 		{
 			meshes_to_render[i]->owner->aabb.bounding_box;
 			float3 center_bounding_box = (meshes_to_render[i]->owner->aabb.bounding_box.minPoint + meshes_to_render[i]->owner->aabb.bounding_box.maxPoint) / 2;

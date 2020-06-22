@@ -43,11 +43,21 @@ void Material::Save(Config& config) const
 		case MaterialTextureType::NORMAL:
 			config.AddUInt(textures_uuid[i],  "Normal");
 			break;
+
 		case MaterialTextureType::LIGHTMAP:
 			config.AddUInt(textures_uuid[i], "Lightmap");
 			break;
+
 		case MaterialTextureType::LIQUID:
 			config.AddUInt(textures_uuid[i], "Liquid");
+			break;
+
+		case MaterialTextureType::NOISE:
+			config.AddUInt(textures_uuid[i], "Noise");
+			break;
+
+		case MaterialTextureType::DISSOLVED_DIFFUSE:
+			config.AddUInt(textures_uuid[i], "Dissolved Diffuse");
 			break;
 		default:
 			break;
@@ -102,6 +112,8 @@ void Material::Load(const Config& config)
 	SetMaterialTexture(MaterialTextureType::NORMAL, config.GetUInt("Normal", 0));
 	SetMaterialTexture(MaterialTextureType::LIGHTMAP, config.GetUInt("Lightmap", 0));
 	SetMaterialTexture(MaterialTextureType::LIQUID, config.GetUInt("Liquid", 0));
+	SetMaterialTexture(MaterialTextureType::DISSOLVED_DIFFUSE, config.GetUInt("Dissolved Diffuse", 0));
+	SetMaterialTexture(MaterialTextureType::NOISE, config.GetUInt("Noise", 0));
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
 	config.GetString("ShaderProgram", shader_program, "Blinn phong");
 
@@ -168,9 +180,6 @@ void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uui
 	{
 		textures[type] = App->resources->Load<Texture>(texture_uuid);
 	}
-	use_normal_map = type == MaterialTextureType::NORMAL && texture_uuid !=0;
-	use_specular_map = type == MaterialTextureType::SPECULAR && texture_uuid != 0;
-	use_liquid_map = type == MaterialTextureType::LIQUID && texture_uuid != 0;
 }
 
 const std::shared_ptr<Texture>& Material::GetMaterialTexture(MaterialTextureType type) const
@@ -195,6 +204,9 @@ std::string Material::GetMaterialTypeName(const MaterialType material_type)
 
 	case MaterialType::MATERIAL_LIQUID:
 		return "Liquid";
+	
+	case MaterialType::MATERIAL_DISSOLVING:
+		return "Dissolving";
 	}
 }
 

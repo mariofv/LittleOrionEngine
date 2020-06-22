@@ -16,22 +16,25 @@ class Material : public Resource
 public:
 	enum class MaterialType
 	{
-		MATERIAL_OPAQUE,
-		MATERIAL_TRANSPARENT,
-		MATERIAL_LIQUID,
-		UNKNOWN
+		MATERIAL_OPAQUE = 0,
+		MATERIAL_TRANSPARENT = 1,
+		MATERIAL_DISSOLVING = 3,
+		MATERIAL_LIQUID = 2,
+		UNKNOWN = 4
 	};
 
 	enum MaterialTextureType
 	{
-		DIFFUSE,
-		SPECULAR,
-		EMISSIVE,
-		OCCLUSION,
-		NORMAL,
-		LIGHTMAP,
-		LIQUID,
-		UNKNOWN
+		DIFFUSE = 0,
+		SPECULAR = 1,
+		EMISSIVE = 2,
+		OCCLUSION = 3,
+		NORMAL = 4,
+		LIGHTMAP = 5,
+		LIQUID = 6,
+		DISSOLVED_DIFFUSE = 7,
+		NOISE = 8,
+		UNKNOWN = 9
 	};
 
 	Material() = default;
@@ -87,11 +90,14 @@ public:
 	float tiling_liquid_y_x = -1.F;
 	float tiling_liquid_y_y = -1.F;
 	bool use_liquid_map = false;
+
 	//This variable will allow the shader to use the normal maps if there is any assigned to the model material
 	bool use_normal_map = false;
 
 	//We also will detect if using specular map
 	bool use_specular_map = false;
+
+	bool use_noise_map = false;
 
 	bool show_checkerboard_texture = false;
 };
