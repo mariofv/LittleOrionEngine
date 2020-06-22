@@ -188,13 +188,13 @@ void ComponentMeshRenderer::AddLiquidMaterialUniforms(unsigned int shader_progra
 
 void ComponentMeshRenderer::AddDissolveMaterialUniforms(unsigned int shader_program) const
 {
-	glActiveTexture(GL_TEXTURE7);
+	glActiveTexture(GL_TEXTURE9);
 	BindTexture(Material::MaterialTextureType::DISSOLVED_DIFFUSE);
-	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_diffuse"), 7);
+	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_diffuse"), 9);
 
-	glActiveTexture(GL_TEXTURE8);
+	glActiveTexture(GL_TEXTURE10);
 	BindTexture(Material::MaterialTextureType::NOISE);
-	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_noise"), 8);
+	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_noise"), 10);
 
 	glUniform1f(glGetUniformLocation(shader_program, "material.dissolve_progress"), material_to_render->dissolve_progress);
 	glUniform1i(glGetUniformLocation(shader_program, "material.use_noise_map"), material_to_render->use_noise_map);

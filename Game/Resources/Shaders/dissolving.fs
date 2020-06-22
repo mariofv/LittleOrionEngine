@@ -53,8 +53,8 @@ struct Material
 	bool use_liquid_map;
 
 	sampler2D dissolved_diffuse;
-	sampler2D dissolve_progress;
-	float progress;
+	sampler2D dissolved_noise;
+	float dissolve_progress;
 	bool use_noise_map;
 
 	bool use_normal_map;
@@ -176,8 +176,26 @@ void main()
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 {
+	vec4 result;
 
-	vec4 result = texture(mat.diffuse_map, texCoord)*mat.diffuse_color;
+	if (mat.use_noise_map)
+	{
+		float mapped_noise = 1 - texture(mat.dissolved_noise, texCoord).x;
+		if (mapped_noise < mat.dissolve_progress)
+		{
+			result = texture(mat.diffuse_map, texCoord);
+		}
+		else
+		{
+			result = texture(mat.dissolved_diffuse, texCoord);
+		}
+	}
+	else
+	{
+		result = texture(mat.diffuse_map, texCoord);
+	}
+
+	result = result * mat.diffuse_color;
 	//alpha testing
 	if(result.a <0.1)
 	{
