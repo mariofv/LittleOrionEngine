@@ -194,6 +194,11 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			{
 				particle_system->max_particles_number = MAX_PARTICLES;
 			}
+
+			ImGui::InputFloat("", &particle_system->gravity_modifier, 0.01f, 0.1f);
+			ImGui::SameLine();
+			ImGui::Checkbox("Gravity", &particle_system->gravity);
+
 			ShowBillboardOptions(particle_system->billboard);
 			if (particle_system->billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET)
 			{

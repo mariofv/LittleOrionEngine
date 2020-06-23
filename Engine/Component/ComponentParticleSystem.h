@@ -133,6 +133,10 @@ public:
 	int playing_particles_number = MAX_PARTICLES;
 	int max_particles_number = MAX_PARTICLES;
 	bool playing = true;
+
+	//Movement
+	bool gravity = false;
+	float gravity_modifier = 0.2f;
 };
 
 #endif

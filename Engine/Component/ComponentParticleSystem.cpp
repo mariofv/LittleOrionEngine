@@ -192,6 +192,9 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	float time_spend = particle.time_passed;
 	particle.life -= App->time->real_time_delta_time; // reduce life
 	time_spend -= particle.life;
+
+	if (gravity)
+		particle.velocity.y -= gravity_modifier * App->time->real_time_delta_time / 1000000;
 	particle.position += particle.velocity * App->time->real_time_delta_time;
 
 	//random tile
