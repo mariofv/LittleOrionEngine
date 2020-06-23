@@ -505,7 +505,6 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 
 		//UndoRedo
 		CheckClickedCamera(camera);
-
 	}
 }
 

@@ -423,6 +423,9 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	Component* created_component;
 	switch (type)
 	{
+	case Component::ComponentType::AABB:
+		created_component = new ComponentAABB(this);
+		break;
 	case Component::ComponentType::ANIMATION:
 		created_component = App->animations->CreateComponentAnimation(this);
 		break;

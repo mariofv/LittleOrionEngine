@@ -4,6 +4,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 
+#include "Module/ModuleCamera.h"
 #include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
@@ -11,6 +12,7 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
+#include "Module/ModuleTime.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
@@ -18,7 +20,6 @@ ComponentMeshRenderer::ComponentMeshRenderer(GameObject * owner) : Component(own
 {
 	SetMesh(0);
 	SetMaterial(0);
-	palette.push_back(float4x4::identity);
 	owner->aabb.GenerateBoundingBox();
 }
 
@@ -26,7 +27,6 @@ ComponentMeshRenderer::ComponentMeshRenderer() : Component(nullptr, ComponentTyp
 {
 	SetMesh(0);
 	SetMaterial(0);
-	palette.push_back(float4x4::identity);
 }
 
 
@@ -64,15 +64,22 @@ void ComponentMeshRenderer::Render()
 	GLuint program = App->program->GetShaderProgramId(program_name);
 	glUseProgram(program);
 
-
-	glUniformMatrix4fv(glGetUniformLocation(program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
 	glUniform1i(glGetUniformLocation(program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
-
+	
+	if (palette.size() > 0)
+	{
+		glUniformMatrix4fv(glGetUniformLocation(program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
+	}
+	glUniform1i(glGetUniformLocation(program, "has_skinning_value"), skeleton_uuid != 0 ? 0 : 1);
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	App->lights->Render(owner->transform.GetGlobalTranslation(), program);
+
+	material_to_render->use_specular_map = material_to_render->GetMaterialTexture(Material::MaterialTextureType::SPECULAR) != nullptr;
+	material_to_render->use_normal_map = material_to_render->GetMaterialTexture(Material::MaterialTextureType::NORMAL) != nullptr;
+
 	RenderMaterial(program);
 	RenderModel();
 
@@ -92,6 +99,7 @@ void ComponentMeshRenderer::RenderModel() const
 
 void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 {
+	glUniform1i(glGetUniformLocation(shader_program, "time"), App->time->real_time_delta_time);
 	AddDiffuseUniforms(shader_program);
 	AddEmissiveUniforms(shader_program);
 	AddSpecularUniforms(shader_program);
@@ -99,7 +107,11 @@ void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 	AddAmbientOclusionUniforms(shader_program);
 	AddNormalUniforms(shader_program);
 	AddLightMapUniforms(shader_program);
-
+	AddLiquidMaterialUniforms(shader_program);
+	if (material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
+	{
+		material_to_render->UpdateLiquidProperties();
+	}
 	AddExtraUniforms(shader_program);
 	
 }
@@ -110,6 +122,7 @@ void ComponentMeshRenderer::AddDiffuseUniforms(unsigned int shader_program) cons
 	glActiveTexture(GL_TEXTURE0);
 	BindTexture(Material::MaterialTextureType::DIFFUSE);
 	glUniform1i(glGetUniformLocation(shader_program, "material.diffuse_map"), 0);
+	
 	glUniform4fv(glGetUniformLocation(shader_program, "material.diffuse_color"), 1, (float*)material_to_render->diffuse_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_diffuse"), material_to_render->k_diffuse);
 
@@ -127,14 +140,12 @@ void ComponentMeshRenderer::AddSpecularUniforms(unsigned int shader_program) con
 {
 	glActiveTexture(GL_TEXTURE2);
 	BindTexture(Material::MaterialTextureType::SPECULAR);
+	glUniform1i(glGetUniformLocation(shader_program, "material.use_specular_map"), material_to_render->use_specular_map);
+
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 2);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)material_to_render->specular_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_specular"), material_to_render->k_specular);
-	glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), material_to_render->specular_color[3]);
-
-	//Material BRDF variables
-	//glUniform1f(glGetUniformLocation(shader_program, "material.roughness"), material_to_render->roughness);
-	//glUniform1f(glGetUniformLocation(shader_program, "material.metalness"), material_to_render->metalness);
+	
 }
 
 void ComponentMeshRenderer::AddAmbientOclusionUniforms(unsigned int shader_program) const
@@ -149,8 +160,8 @@ void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE4);
 	BindTexture(Material::MaterialTextureType::NORMAL);
-	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 4);
 	glUniform1i(glGetUniformLocation(shader_program, "material.use_normal_map"), material_to_render->use_normal_map);
+	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 4);
 }
 
 void ComponentMeshRenderer::AddLightMapUniforms(unsigned int shader_program) const
@@ -160,9 +171,31 @@ void ComponentMeshRenderer::AddLightMapUniforms(unsigned int shader_program) con
 	glUniform1i(glGetUniformLocation(shader_program, "material.light_map"), 5);
 	glUniform1i(glGetUniformLocation(shader_program, "use_light_map"), has_lightmap ? 1 : 0);
 }
-
+void ComponentMeshRenderer::AddLiquidMaterialUniforms(unsigned int shader_program) const
+{
+	glActiveTexture(GL_TEXTURE6);
+	BindTexture(Material::MaterialTextureType::LIQUID);
+	glUniform1i(glGetUniformLocation(shader_program, "material.liquid_map"), 6);
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_x_x"), material_to_render->tiling_liquid_x_x);
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_x_y"), material_to_render->tiling_liquid_x_y);
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_y_x"), material_to_render->tiling_liquid_y_x);
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_y_y"), material_to_render->tiling_liquid_y_y);
+	glUniform1i(glGetUniformLocation(shader_program, "material.use_liquid_map"), material_to_render->use_liquid_map);
+}
 void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
 {
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, App->cameras->directional_light_camera->depth_map);
+	glUniform1i(glGetUniformLocation(shader_program, "close_depth_map"), 6);
+
+	glActiveTexture(GL_TEXTURE7);
+	glBindTexture(GL_TEXTURE_2D, App->cameras->directional_light_mid->depth_map);
+	glUniform1i(glGetUniformLocation(shader_program, "mid_depth_map"), 7);
+
+	glActiveTexture(GL_TEXTURE8);
+	glBindTexture(GL_TEXTURE_2D, App->cameras->directional_light_far->depth_map);
+	glUniform1i(glGetUniformLocation(shader_program, "far_depth_map"), 8);
+
 	if (material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)
 	{
 		glUniform1f(glGetUniformLocation(shader_program, "material.transparency"), 1.f);
@@ -174,6 +207,11 @@ void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
 
 	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_x"), material_to_render->tiling_x);
 	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_y"), material_to_render->tiling_y);
+
+	//Ambient light intesity and color
+	glUniform1f(glGetUniformLocation(shader_program, "ambient_light_intensity"), App->lights->ambient_light_intensity);
+	glUniform4fv(glGetUniformLocation(shader_program, "ambient_light_color"), 1, (float*)App->lights->ambient_light_color);
+	glUniform1i(glGetUniformLocation(shader_program, "render_shadows"), App->renderer->render_shadows);
 }
 
 bool ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const
