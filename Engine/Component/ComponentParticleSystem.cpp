@@ -77,8 +77,8 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	}
 	if (tile_random)
 	{
-		particle.current_sprite_x = (rand() % (int)((max_tile_value - min_tile_value) + 1) + min_tile_value);
-		particle.current_sprite_y = (rand() % (int)((max_tile_value - min_tile_value) + 1) + min_tile_value);
+		particle.current_sprite_x = (rand() % static_cast<int>((max_tile_value - min_tile_value) + 1) + min_tile_value);
+		particle.current_sprite_y = (rand() % static_cast<int>((max_tile_value - min_tile_value) + 1) + min_tile_value);
 	}
 
 	if (change_size)

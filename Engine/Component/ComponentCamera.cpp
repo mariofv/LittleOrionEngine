@@ -263,7 +263,7 @@ void ComponentCamera::RecordDebugDraws(bool scene_mode)
 #if !GAME
 	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 #endif
-	glViewport(0, 0, last_width, last_height);
+	glViewport(0, 0, static_cast<GLsizei>(last_width), static_cast<GLsizei>(last_height));
 
 	if (scene_mode)
 	{

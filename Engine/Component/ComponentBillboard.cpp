@@ -87,15 +87,15 @@ void ComponentBillboard::SwitchFrame()
 				}
 			}
 			
-			if ((int)current_sprite_x >= x_tiles)
+			if (static_cast<int>(current_sprite_x) >= x_tiles)
 			{
 				current_sprite_y--;
 				current_sprite_x = 0;
 			}
 
-			if ((int)current_sprite_y <= 0)
+			if (static_cast<int>(current_sprite_y) <= 0)
 			{
-				current_sprite_y = y_tiles;
+				current_sprite_y = static_cast<float>(y_tiles);
 			}
 			
 			time_since_start = 0.f;
@@ -120,7 +120,7 @@ void ComponentBillboard::EmitOnce()
 	play_once = true;
 	play = true;
 	current_sprite_x = 0;
-	current_sprite_y = y_tiles - 1;
+	current_sprite_y = static_cast<float>(y_tiles - 1);
 }
 
 bool ComponentBillboard::IsPlaying()
@@ -237,8 +237,8 @@ void ComponentBillboard::SpecializedSave(Config& config) const
 	config.AddUInt(texture_uuid, "TextureUUID");
 	config.AddFloat(width, "Width");
 	config.AddFloat(height, "Height");
-	config.AddInt((unsigned int)x_tiles, "Rows");
-	config.AddInt((unsigned int)y_tiles, "Columns");
+	config.AddInt(x_tiles, "Rows");
+	config.AddInt(y_tiles, "Columns");
 }
 
 void ComponentBillboard::SpecializedLoad(const Config& config)
@@ -251,8 +251,8 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 	
 	ChangeTexture(texture_uuid);
 
-	width = config.GetFloat("Width", 1);
-	height = config.GetFloat("Height", 1);
+	width = config.GetFloat("Width", 1.0f);
+	height = config.GetFloat("Height", 1.0f);
 	x_tiles = config.GetInt("Rows", 1);
 	y_tiles = config.GetInt("Columns", 1);
 }
