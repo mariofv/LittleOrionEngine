@@ -13,6 +13,7 @@
 
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentAudioSource.h"
+#include "Component/ComponentBillboard.h"
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
@@ -26,7 +27,9 @@
 #include "Component/ComponentMeshCollider.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentSpriteMask.h"
 #include "Component/ComponentSphereCollider.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
@@ -149,6 +152,255 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 	}
 }
 
+void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* particle_system)
+{
+	
+	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Particle System", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		
+		ImGui::Checkbox("Active", &particle_system->active);
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			App->actions->DeleteComponentUndo(particle_system);
+		}
+		ImGui::Separator();
+		if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			static int emit_count = 0;
+			ImGui::InputInt("##Emit_amount", &emit_count);
+			if (ImGui::Button("Emit"))
+			{
+				particle_system->Emit(emit_count);
+			}
+			if (ImGui::Button("Start"))
+			{
+				particle_system->Play();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Pause"))
+			{
+				particle_system->Pause();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Stop"))
+			{
+				particle_system->Stop();
+			}
+		}
+		if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			if (ImGui::InputScalar("Max particles", ImGuiDataType_U32,&particle_system->max_particles_number) && particle_system->max_particles_number > MAX_PARTICLES)
+			{
+				particle_system->max_particles_number = MAX_PARTICLES;
+			}
+			ShowBillboardOptions(particle_system->billboard);
+			if (particle_system->billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET)
+			{
+				ImGui::Checkbox("Tile random", &particle_system->tile_random);
+				if (particle_system->tile_random)
+				{
+					ImGui::InputFloat("Max", &particle_system->max_tile_value);
+					ImGui::InputFloat("Min", &particle_system->min_tile_value);
+				}
+			}
+
+			int particle_shape = static_cast<int>(particle_system->type_of_particle_system);
+			if (ImGui::Combo("Shape", &particle_shape, "Sphere\0Box\0Cone\0"))
+			{
+				switch (particle_shape)
+				{
+				case 0:
+					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::SPHERE;
+					break;
+				case 1:
+					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::BOX;
+					break;
+				case 2:
+					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::CONE;
+					break;
+				}
+			}
+		
+			ImGui::Checkbox("Loop", &particle_system->loop);
+			ImGui::SameLine();
+			ImGui::Checkbox("Follow GO Parent", &particle_system->follow_owner);
+			ImGui::Spacing();
+			ImGui::Separator();
+
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+			ImGui::DragFloat("Width", &particle_system->particles_width, 0.01f, 0.0f, 100.0F);
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+			ImGui::DragFloat("Height", &particle_system->particles_height, 0.01f, 0.0f, 100.0F);
+
+
+			ImGui::Checkbox("Rand size", &particle_system->size_random);ImGui::SameLine();
+			ImGui::Checkbox("Size change over time", &particle_system->change_size);
+			if (particle_system->size_random || particle_system->change_size)
+			{
+				ImGui::Spacing();
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				ImGui::DragInt("Min size", &particle_system->min_size_of_particle, 10, 0, 999);
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				ImGui::DragInt("Max size", &particle_system->max_size_of_particle, 100, 1, 1000);
+			}
+			
+
+			if (particle_system->change_size)
+			{
+				ImGui::DragFloat("Speed", &particle_system->size_change_speed, 0.01f, 0.0f, 10.0F);
+			}
+			ImGui::Separator();
+			ImGui::Spacing();
+
+			ImGui::DragFloat("Velocity", &particle_system->velocity_particles, 0.01f, 0.0f, 100.0F);
+			ImGui::Spacing();
+
+			ImGui::DragFloat("Life (in seconds)", &particle_system->particles_life_time, 1.0F, 0.0F, 100.0F);
+			ImGui::Spacing();
+
+			ImGui::DragFloat("Time Between Particles", &particle_system->time_between_particles, 0.1F, 0.0F, 10.0f);
+			ImGui::Spacing();
+			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::BOX)
+			{
+				if (particle_system->enabled_random_x)
+				{
+					ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 10000);
+					ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -10000, 0);
+				}
+				else
+				{
+					ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -100, 10000);
+				}
+				ImGui::SameLine();
+				ImGui::Checkbox("Rand X", &particle_system->enabled_random_x);
+
+				ImGui::Spacing();
+
+				if (particle_system->enabled_random_z)
+				{
+					ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 10000);
+					ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -10000, 0);
+				}
+				else
+				{
+					ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -100, 10000);
+				}
+				ImGui::SameLine();
+				ImGui::Checkbox("Rand Z", &particle_system->enabled_random_z);
+			
+			}
+			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::CONE)
+			{
+				ImGui::DragFloat("Outer radius", &particle_system->outer_radius, 0.1F, 0.1F, 10);
+				ImGui::DragFloat("Inner radius", &particle_system->inner_radius, 0.1F, 0.1F, 10);
+			}
+		}
+
+		//Color of Particles
+		if (ImGui::CollapsingHeader(ICON_FA_SQUARE "Color Over Time"))
+		{
+			ImGui::Checkbox("Fade", &particle_system->fade);
+			ImGui::Checkbox("Fade Between Colors", &particle_system->fade_between_colors);
+			if (particle_system->fade)
+			{
+				ImGui::DragFloat("Fade time", &particle_system->fade_time, 0.01f, 0.0f, 10.0F);
+			}
+			ImGui::ColorEdit4("Particle Color##2f", (float*)&particle_system->color_particle, ImGuiColorEditFlags_Float );
+			if (particle_system->fade_between_colors)
+			{
+				ImGui::ColorEdit4("Particle Color To Fade##2f", (float*)&particle_system->color_to_fade, ImGuiColorEditFlags_Float);
+				ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
+			}
+		}		
+	}
+
+}
+void PanelComponent::ShowComponentBillboard(ComponentBillboard* billboard)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Billboard", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (!ShowCommonComponentWindow(billboard))
+		{
+			return;
+		}
+		ImGui::Separator();
+
+		ShowBillboardOptions(billboard);
+
+	}
+}
+
+void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
+{
+	ImGui::AlignTextToFramePadding();
+
+	ImGui::Text("Texture");
+	ImGui::SameLine();
+
+	std::string texture_name = billboard->billboard_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(billboard->billboard_texture->GetUUID())->resource_name;
+	ImGuiID element_id = ImGui::GetID((std::to_string(billboard->UUID) + "TextureSelector").c_str());
+	if (ImGui::Button(texture_name.c_str()))
+	{
+		App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+	}
+
+	uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+	if (selected_resource_uuid != 0)
+	{
+		billboard->ChangeTexture(selected_resource_uuid);
+	}
+	selected_resource_uuid = ImGui::ResourceDropper<Texture>();
+	if (selected_resource_uuid != 0)
+	{
+		billboard->ChangeTexture(selected_resource_uuid);
+	}
+	int alignment_type = static_cast<int>(billboard->alignment_type);
+	if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) {
+		switch (alignment_type)
+		{
+		case 0:
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
+			break;
+		case 1:
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
+			break;
+		case 2:
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::SPRITESHEET);
+			break;
+		case 3:
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
+			break;
+		}
+	}
+
+	if (billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
+		ImGui::InputInt("Columns", &billboard->x_tiles, 1);
+		ImGui::InputInt("Rows", &billboard->y_tiles, 1);
+		ImGui::InputFloat("current x", &billboard->current_sprite_x, 1);
+		ImGui::InputFloat("current y", &billboard->current_sprite_y, 1);
+		ImGui::InputFloat("Speed", &billboard->sheet_speed, 1);
+		ImGui::Checkbox("Oriented to camera", &billboard->oriented_to_camera);
+		if (ImGui::Button("Play once"))
+		{
+			billboard->EmitOnce();
+		}
+		if (ImGui::Button("Reset"))
+		{
+			billboard->play = true;
+		}
+
+	}
+
+	ImGui::Separator();
+	ImGui::Text("Custom");
+	ImGui::DragFloat("Width:", &billboard->width, 0.2f, 0.f, 10.f);
+	ImGui::DragFloat("Height:", &billboard->height, 0.2f, 0.f, 10.f);
+	ImGui::DragFloat("Transparency:", &billboard->transparency, 0.1f, 0.f, 1.f);
+}
+
 void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_VIDEO " Camera", ImGuiTreeNodeFlags_DefaultOpen))
@@ -253,7 +505,6 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 
 		//UndoRedo
 		CheckClickedCamera(camera);
-
 	}
 }
 
@@ -271,7 +522,7 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
-		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f)) { light->modified_by_user = true; }
+		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 100.f)) { light->modified_by_user = true; }
 
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
@@ -515,6 +766,24 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image)
 	}
 }
 
+void PanelComponent::ShowComponentSpriteMaskWindow(ComponentSpriteMask* component_mask)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_THEATER_MASKS " Sprite Mask", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (!ShowCommonComponentWindow(component_mask))
+		{
+			return;
+		}
+
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		ImGui::Checkbox("Invert mask", &component_mask->inverted_mask);
+		ImGui::Checkbox("Show sprite mask", &component_mask->render_mask);
+	}
+}
+
 void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Text", ImGuiTreeNodeFlags_DefaultOpen))
@@ -685,12 +954,23 @@ void PanelComponent::ShowAddNewComponentButton()
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
-
 			if (!App->editor->selected_game_object->IsStatic())
 			{
 				App->space_partitioning->InsertAABBTree(App->editor->selected_game_object);
 			}
+		}
+		
+		sprintf_s(tmp_string, "%s Billboard", ICON_FA_SQUARE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::BILLBOARD);
 
+
+		}
+		sprintf_s(tmp_string, "%s Particle System", ICON_FA_SQUARE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::PARTICLE_SYSTEM);
 		}
 
 		sprintf_s(tmp_string, "%s Animation", ICON_FA_PLAY_CIRCLE);
@@ -755,6 +1035,12 @@ void PanelComponent::ShowAddNewComponentButton()
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_IMAGE);
+		}
+
+		sprintf_s(tmp_string, "%s Sprite Mask", ICON_FA_THEATER_MASKS);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_SPRITE_MASK);
 		}
 
 		sprintf_s(tmp_string, "%s UI Button", ICON_FA_TOGGLE_ON);

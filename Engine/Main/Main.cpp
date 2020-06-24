@@ -28,6 +28,7 @@ int main(int argc, char ** argv)
 
 	// Random number generator
 	pcg32_srandom(time(NULL), 0);
+	srand(static_cast<size_t>(time(NULL)));
 	if(PHYSFS_init(argv[0]) == 0)
 	{
 		APP_LOG_ERROR("Error initializing physfs: %s", PHYSFS_getLastError());

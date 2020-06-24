@@ -2,6 +2,7 @@
 
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCanvasRenderer.h"
+#include "Component/ComponentSpriteMask.h"
 
 #include "EditorUI/Panel/PanelGame.h"
 
@@ -63,8 +64,6 @@ void ComponentCanvas::Delete()
 
 void ComponentCanvas::Render(bool scene_mode)
 {
-	std::vector<ComponentCanvasRenderer*> components_to_render = GetComponentCanvasRendererToRender();
-
 	float2 last_canvas_screen_size = canvas_screen_size;
 
 #if GAME
@@ -108,12 +107,10 @@ void ComponentCanvas::Render(bool scene_mode)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glBlendEquation(GL_FUNC_ADD);
-	for (auto& canvas_renderer : components_to_render)
-	{
-		canvas_renderer->Render(&projection_view);
-	}
-	glDisable(GL_BLEND);
 
+	RenderGameObject(owner, &projection_view);
+
+	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 }
 
@@ -125,28 +122,63 @@ void ComponentCanvas::SpecializedLoad(const Config& config)
 {
 }
 
-std::vector<ComponentCanvasRenderer*> ComponentCanvas::GetComponentCanvasRendererToRender() const
+void ComponentCanvas::RenderGameObject(GameObject* game_object_to_render, float4x4* projection) const
 {
-	std::vector<ComponentCanvasRenderer*> components_to_render;
-	std::queue<GameObject*> pending_game_objects;
-	pending_game_objects.push(owner);
-	while (!pending_game_objects.empty())
-	{
-		GameObject* current_game_object = pending_game_objects.front();
-		pending_game_objects.pop();
+	ComponentSpriteMask* sprite_mask = static_cast<ComponentSpriteMask*>(game_object_to_render->GetComponent(Component::ComponentType::UI_SPRITE_MASK));
+	bool use_mask = sprite_mask != nullptr && sprite_mask->active;
+	
+	ComponentCanvasRenderer* component_canvas_renderer = static_cast<ComponentCanvasRenderer*>(game_object_to_render->GetComponent(Component::ComponentType::CANVAS_RENDERER));
+	bool use_renderer = component_canvas_renderer != nullptr && component_canvas_renderer->active;
 
-		Component* component_canvas_renderer = current_game_object->GetComponent(Component::ComponentType::CANVAS_RENDERER);
-		if (component_canvas_renderer && component_canvas_renderer->active)
+	if (use_renderer)
+	{
+		if (use_mask)
 		{
-			components_to_render.push_back(static_cast<ComponentCanvasRenderer*>(component_canvas_renderer));
+			glEnable(GL_STENCIL_TEST);
+			glEnable(GL_ALPHA_TEST);
+			glAlphaFunc(GL_GREATER, 0.05f);
+			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+			glStencilFunc(GL_ALWAYS, 1, 0xFF);
+			glStencilMask(0xFF); // each bit is written to the stencil buffer as is
+
+			if (!sprite_mask->render_mask)
+			{
+				glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+				component_canvas_renderer->Render(projection);
+				glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+			}
+			else
+			{
+				component_canvas_renderer->Render(projection);
+			}
+
+
+			if (sprite_mask->inverted_mask)
+			{
+				glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+			}
+			else
+			{
+				glStencilFunc(GL_EQUAL, 1, 0xFF);
+			}
+			glStencilMask(0x00); // disable writing to the stencil buffer
 		}
-		for (auto& child : current_game_object->children)
+		else
 		{
-			pending_game_objects.push(child);
+			component_canvas_renderer->Render(projection);
 		}
 	}
 
-	return components_to_render;
+	for (auto& child : game_object_to_render->children)
+	{
+		RenderGameObject(child, projection);
+	}
+
+	if (use_mask)
+	{
+		glDisable(GL_ALPHA_TEST);
+		glDisable(GL_STENCIL_TEST);
+	}
 }
 
 float2 ComponentCanvas::GetCanvasScreenPosition() const

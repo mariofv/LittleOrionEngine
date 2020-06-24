@@ -120,13 +120,14 @@ void ModuleTime::Play()
 	{
 		App->scene->SaveTmpScene();
 		game_time_clock->Start();
+		SetTimeScale(1.f);
 		frame_start_time = game_time_clock->Read();
 		App->animations->PlayAnimations();
 	}
 	else
 	{
 		game_time_clock->Stop();
-		App->scene->LoadScene();
+		App->scene->LoadTmpScene();
 	}
 }
 
@@ -164,6 +165,11 @@ void ModuleTime::StepFrame()
 void ModuleTime::SetTimeScale(float time_scale)
 {
 	this->time_scale = time_scale;
+}
+
+void ModuleTime::ResetInitFrame()
+{
+	frame_start_time = game_time_clock->Read();
 }
 
 bool ModuleTime::isGameRunning()

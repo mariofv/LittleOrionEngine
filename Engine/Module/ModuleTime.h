@@ -5,6 +5,7 @@
 
 #include "Module.h"
 #include "Main/Globals.h"
+
 #include "EditorUI/Panel/PanelToolBar.h"
 #include "EditorUI/Panel/PanelConfiguration.h"
 
@@ -23,6 +24,7 @@ public:
 	ENGINE_API float GetFPS() const;
 	void SetMaxFPS(int fps);
 	void SetTimeScale(float time_scale);
+	void ResetInitFrame();
 
 	bool isGameRunning();
 
@@ -31,7 +33,6 @@ public:
 	void StepFrame();
 
 	void EndFrame();
-
 
 public:
 	long frame_count = 0;

@@ -1,16 +1,19 @@
 #include "ModulePhysics.h"
+
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentCapsuleCollider.h"
 #include "Component/ComponentCollider.h"
 #include "Component/ComponentCylinderCollider.h"
 #include "Component/ComponentMeshCollider.h"
 #include "Component/ComponentSphereCollider.h"
+#include "EditorUI/DebugDraw.h"
+#include "Helper/Utils.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "ModuleTime.h"
 #include "ModuleDebugDraw.h"
+
 #include <GL/glew.h>
-#include "EditorUI/DebugDraw.h"
 
 
 ModulePhysics::ModulePhysics()
@@ -104,10 +107,6 @@ void ModulePhysics::UpdateAllDimensions()
 	}
 }
 
-bool ModulePhysics::CleanUp()
-{
-	return true;
-}
 
 void ModulePhysics::SetGravity(float3& newGravity)
 {
@@ -174,36 +173,14 @@ int DebugDrawer::getDebugMode() const
 	return btIDebugDraw::DBG_DrawWireframe;
 }
 
-bool ModulePhysics::RaycastWorld(const btVector3 &Start, btVector3 &End, btVector3 &Normal)
+ComponentCollider* ModulePhysics::FindColliderByWorldId(int id)
 {
-
-	btCollisionWorld::ClosestRayResultCallback RayCallback(Start, End);
-	//btCollisionWorld::RayResultCallback RayCallback(Start, End);
-	//Magic Line for not jumping on enemies
-	//RayCallback.m_collisionFilterMask = btBroadphaseProxy::StaticFilter;
-	
-	world->rayTest(Start, End, RayCallback);
-	if (RayCallback.hasHit())
+	for (auto collider : colliders)
 	{
-		End = RayCallback.m_hitPointWorld;
-		Normal = RayCallback.m_hitNormalWorld;
-		return true;
+		if (collider->body->getWorldArrayIndex() == id)
+		{
+			return collider;
+		}
 	}
-
-	return false;
-}
-
-int ModulePhysics::GetRaycastWorldId(const btVector3& start, btVector3& end, btVector3& normal)
-{
-	btCollisionWorld::ClosestRayResultCallback RayCallback(start, end);
-
-	world->rayTest(start, end, RayCallback);
-	if (RayCallback.hasHit())
-	{
-		end = RayCallback.m_hitPointWorld;
-		normal = RayCallback.m_hitNormalWorld;
-		return RayCallback.m_collisionObject->getWorldArrayIndex();
-	}
-
-	return -1;
+	return nullptr;
 }

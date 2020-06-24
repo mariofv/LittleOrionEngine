@@ -152,6 +152,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Animation\Tween\LOTween.h" />
+    <ClInclude Include="Engine\Animation\Tween\Tween.h" />
+    <ClInclude Include="Engine\Animation\Tween\TweenSequence.h" />
     <ClInclude Include="Engine\Component\ComponentCanvasRenderer.h" />
     <ClInclude Include="Engine\Component\ComponentBoxCollider.h" />
     <ClInclude Include="Engine\Component\ComponentCapsuleCollider.h" />
@@ -161,6 +164,7 @@
     <ClInclude Include="Engine\Component\ComponentMeshCollider.h" />
     <ClInclude Include="Engine\Component\ComponentSphereCollider.h" />
     <ClInclude Include="Engine\Component\ComponentAudioSource.h" />
+    <ClInclude Include="Engine\Component\ComponentSpriteMask.h" />
     <ClInclude Include="Engine\DLL\DLLManager.h" />
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h" />
@@ -191,6 +195,8 @@
     <ClInclude Include="Engine\AI\SampleDebugDraw.h" />
     <ClInclude Include="Engine\Animation\AnimController.h" />
     <ClInclude Include="Engine\Component\ComponentAnimation.h" />
+    <ClInclude Include="Engine\Component\ComponentBillboard.h" />
+    <ClInclude Include="Engine\Component\ComponentParticleSystem.h" />
     <ClInclude Include="Engine\Component\ComponentButton.h" />
     <ClInclude Include="Engine\Component\ComponentCanvas.h" />
     <ClInclude Include="Engine\Component\ComponentImage.h" />
@@ -244,7 +250,6 @@
     <ClInclude Include="Engine\SpacePartition\OLOctTreeNode.h" />
     <ClInclude Include="Engine\SpacePartition\OLQuadTree.h" />
     <ClInclude Include="Engine\SpacePartition\OLQuadTreeNode.h" />
-    <ClInclude Include="Engine\EditorUI\Helper\Billboard.h" />
     <ClInclude Include="Engine\Component\ComponentLight.h" />
     <ClInclude Include="Engine\Filesystem\Path.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\Importer.h" />
@@ -303,8 +308,12 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\SoundImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h" />
     <ClInclude Include="Engine\Helper\TagManager.h" />
+    <ClInclude Include="Engine\Module\ModuleEffects.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Animation\Tween\LOTween.cpp" />
+    <ClCompile Include="Engine\Animation\Tween\Tween.cpp" />
+    <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp" />
     <ClCompile Include="Engine\Component\ComponentCanvasRenderer.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddGameObject.cpp" />
@@ -321,6 +330,8 @@
     <ClCompile Include="Engine\Animation\AnimController.cpp" />
     <ClCompile Include="Engine\Component\Component.cpp" />
     <ClCompile Include="Engine\Component\ComponentAnimation.cpp" />
+    <ClCompile Include="Engine\Component\ComponentBillboard.cpp" />
+    <ClCompile Include="Engine\Component\ComponentParticleSystem.cpp" />
     <ClCompile Include="Engine\Component\ComponentAudioSource.cpp" />
     <ClCompile Include="Engine\Component\ComponentBoxCollider.cpp" />
     <ClCompile Include="Engine\Component\ComponentButton.cpp" />
@@ -333,6 +344,7 @@
     <ClCompile Include="Engine\Component\ComponentMeshCollider.cpp" />
     <ClCompile Include="Engine\Component\ComponentScript.cpp" />
     <ClCompile Include="Engine\Component\ComponentSphereCollider.cpp" />
+    <ClCompile Include="Engine\Component\ComponentSpriteMask.cpp" />
     <ClCompile Include="Engine\Component\ComponentText.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform2D.cpp" />
     <ClCompile Include="Engine\DLL\DLLManager.cpp" />
@@ -398,7 +410,6 @@
     <ClCompile Include="Engine\SpacePartition\OLOctTreeNode.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLQuadTree.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLQuadTreeNode.cpp" />
-    <ClCompile Include="Engine\EditorUI\Helper\Billboard.cpp" />
     <ClCompile Include="Engine\Component\ComponentLight.cpp" />
     <ClCompile Include="Engine\Filesystem\Path.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\Importer.cpp" />
@@ -466,6 +477,7 @@
     <ClCompile Include="Libraries\include\SoundEngine\AkMultipleFileLocation.cpp" />
     <ClCompile Include="Libraries\include\SoundEngine\stdafx.cpp" />
     <ClCompile Include="Engine\Helper\TagManager.cpp" />
+    <ClCompile Include="Engine\Module\ModuleEffects.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,7 @@
 #include "ComponentLight.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleCamera.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 
@@ -39,6 +40,7 @@ void ComponentLight::Copy(Component * component_to_copy) const
 void ComponentLight::Delete()
 {
 	App->lights->RemoveComponentLight(this);
+
 }
 
 void ComponentLight::SpecializedSave(Config& config) const

@@ -17,7 +17,7 @@ void EditorActionModifyCamera::Undo()
 	float near_plane_aux = component->camera_frustum.nearPlaneDistance;
 	float far_plane_aux = component->camera_frustum.farPlaneDistance;
 	float ortographic_size_aux = component->camera_frustum.orthographicHeight;
-	float depth_aux = component->depth;
+	int depth_aux = component->depth;
 
 	component->camera_movement_speed = mov_speed;
 	component->SetFOV(fov);

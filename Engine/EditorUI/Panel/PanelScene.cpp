@@ -58,8 +58,17 @@ void PanelScene::Render()
 
 		scene_window_content_area_width = scene_window_content_area_max_point.x - scene_window_content_area_pos.x;
 		scene_window_content_area_height = scene_window_content_area_max_point.y - scene_window_content_area_pos.y;
+		
+		if (App->renderer->render_shadows)
+		{
+			App->cameras->directional_light_camera->RecordFrame(scene_window_content_area_width * 4, scene_window_content_area_height * 4);
+			App->cameras->directional_light_mid->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
+			App->cameras->directional_light_far->RecordFrame(scene_window_content_area_width / 4, scene_window_content_area_height / 4);
+		}
+		
 
-		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height, true);
+
+		App->cameras->scene_camera->RecordFrame((GLsizei)scene_window_content_area_width, (GLsizei)scene_window_content_area_height, true);
 		App->debug->Render(App->cameras->scene_camera);
 		App->cameras->scene_camera->RecordDebugDraws(true);
 
@@ -274,7 +283,7 @@ void PanelScene::RenderCameraPreview() const
 		float width = content_area_max_point.x - ImGui::GetCursorPos().x;
 		float height = content_area_max_point.y - ImGui::GetCursorPos().y;
 
-		selected_camera->RecordFrame(width, height);
+		selected_camera->RecordFrame(static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 		ImGui::Image(
 			(void *)selected_camera->GetLastRecordedFrame(),
 			ImVec2(width, height),

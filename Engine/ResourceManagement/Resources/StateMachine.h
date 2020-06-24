@@ -47,7 +47,7 @@ struct Parameter {
 struct Transition
 {
 	Transition() = default;
-	Transition(uint64_t source, uint64_t target, std::string & trigger, long interpolation);
+	Transition(uint64_t source, uint64_t target, std::string & trigger, uint64_t interpolation);
 	uint64_t source_hash = 0;
 	uint64_t target_hash = 0;
 	uint64_t trigger_hash = 0;

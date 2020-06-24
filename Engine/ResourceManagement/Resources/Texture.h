@@ -9,7 +9,8 @@
 
 class Metafile;
 struct TextureOptions;
-
+enum WrapMode;
+enum FilterMode;
 class Texture : public Resource
 {
 public:
@@ -17,21 +18,14 @@ public:
 
 	~Texture();
 
-	void SetWrapS(GLenum wrap_s);
-	GLenum GetWrapS() const;
-	char* GetWrapS_C_Str() const;
+	void SetWrap(WrapMode wrap);
+	GLenum GetWrap() const;
+	char* GetWrap_C_Str() const;
 
-	void SetWrapT(GLenum wrap_t);
-	GLenum GetWrapT() const;
-	char* GetWrapT_C_Str() const;
+	void SetFilter(FilterMode filter);
+	GLenum GetFilter() const;
+	char* GetFilter_C_Str() const;
 
-	void SetMinFilter(GLenum min_filter);
-	GLenum GetMinFilter() const;
-	char* GetMinFilter_C_Str() const;
-
-	void SetMagFilter(GLenum mag_filter);
-	GLenum GetMagFilter() const;
-	char* GetMagFilter_C_Str() const;
 
 
 private:
@@ -47,11 +41,8 @@ public:
 
 private:
 
-	GLenum wrap_s;
-	GLenum wrap_t;
-
-	GLenum min_filter;	
-	GLenum mag_filter;
+	GLenum wrap;
+	GLenum filter;
 	std::vector<char> data;
 
 	friend class Skybox;

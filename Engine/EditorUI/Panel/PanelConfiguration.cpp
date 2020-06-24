@@ -4,6 +4,7 @@
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleLight.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTime.h"
@@ -205,6 +206,7 @@ void PanelConfiguration::ShowRenderOptions()
 		if (ImGui::Checkbox("Depth test", &App->renderer->gl_depth_test))
 		{
 			App->renderer->SetDepthTest(App->renderer->gl_depth_test);
+
 		}
 
 		ImGui::SameLine();
@@ -215,6 +217,7 @@ void PanelConfiguration::ShowRenderOptions()
 		}
 
 		ImGui::Separator();
+
 		if (ImGui::Checkbox("Face culling", &App->renderer->gl_cull_face))
 		{
 			App->renderer->SetFaceCulling(App->renderer->gl_cull_face);
@@ -291,6 +294,26 @@ void PanelConfiguration::ShowRenderOptions()
 			}
 			ImGui::TreePop();
 		}
+
+		ImGui::Separator();
+
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Lighting");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1, 1, 1, 1), "and");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.3f, 0.3f, 0.3f, 1), "Shadows");
+
+		ImGui::Separator();
+
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Ambient Light");
+
+		ImGui::SliderFloat("Intensity", &App->lights->ambient_light_intensity, 0, 1, "%.2f");
+		ImGui::ColorEdit3("Color", App->lights->ambient_light_color);
+
+		//ImGui::Checkbox("Toggle directional camera frustum", &App->renderer->toggle_ortho_frustum);
+		ImGui::Checkbox("Render shadows", &App->renderer->render_shadows);
+
+
 	}
 }
 
@@ -391,68 +414,74 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Separator();
 
 			ImGui::Text("Number of controllers connected: %d", App->input->total_game_controllers);
+			ImGui::Separator();
+			if(App->input->total_game_controllers > 0)
+			{
+				ImGui::Text("Controller 1:");
+				ImGui::Separator();
+				ImGui::Text("A: %d", App->input->GetControllerButton(ControllerCode::A, ControllerID::ONE));
+				ImGui::Text("B: %d", App->input->GetControllerButton(ControllerCode::B, ControllerID::ONE));
+				ImGui::Text("X: %d", App->input->GetControllerButton(ControllerCode::X, ControllerID::ONE));
+				ImGui::Text("Y: %d", App->input->GetControllerButton(ControllerCode::Y, ControllerID::ONE));
+				ImGui::Text("Back: %d", App->input->GetControllerButton(ControllerCode::Back, ControllerID::ONE));
+				ImGui::Text("DownDpad: %d", App->input->GetControllerButton(ControllerCode::DownDpad, ControllerID::ONE));
+				ImGui::Text("Guide: %d", App->input->GetControllerButton(ControllerCode::Guide, ControllerID::ONE));
+				ImGui::Text("LeftDpad: %d", App->input->GetControllerButton(ControllerCode::LeftDpad, ControllerID::ONE));
+				ImGui::Text("LeftShoulder: %d", App->input->GetControllerButton(ControllerCode::LeftShoulder, ControllerID::ONE));
+				ImGui::Text("LeftStick: %d", App->input->GetControllerButton(ControllerCode::LeftStick, ControllerID::ONE));
+				ImGui::Text("RightDpad: %d", App->input->GetControllerButton(ControllerCode::RightDpad, ControllerID::ONE));
+				ImGui::Text("RightShoulder: %d", App->input->GetControllerButton(ControllerCode::RightShoulder, ControllerID::ONE));
+				ImGui::Text("RightStick: %d", App->input->GetControllerButton(ControllerCode::RightStick, ControllerID::ONE));
+				ImGui::Text("Start: %d", App->input->GetControllerButton(ControllerCode::Start, ControllerID::ONE));
+				ImGui::Text("UpDpad: %d", App->input->GetControllerButton(ControllerCode::UpDpad, ControllerID::ONE));
+
+				ImGui::Text("Left Joystick : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::ONE).x, App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::ONE).y);
+				ImGui::Text("Right Joystick : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK, ControllerID::ONE).x, App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK, ControllerID::ONE).y);
+
+				ImGui::Text("Left Joystick Raw : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).x, App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).y);
+				ImGui::Text("Right Joystick Raw : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK_RAW, ControllerID::ONE).x, App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK_RAW, ControllerID::ONE).y);
+
+				ImGui::Text("Left Trigger : %.3f", App->input->GetTriggerController(ControllerAxis::LEFT_TRIGGER, ControllerID::ONE));
+				ImGui::Text("Right Trigger : %.3f", App->input->GetTriggerController(ControllerAxis::RIGHT_TRIGGER, ControllerID::ONE));
+
+				ImGui::Text("Left Raw Trigger : %d", App->input->GetTriggerControllerRaw(ControllerAxis::LEFT_TRIGGER_RAW, ControllerID::ONE));
+				ImGui::Text("Right Raw Trigger : %d", App->input->GetTriggerControllerRaw(ControllerAxis::RIGHT_TRIGGER_RAW, ControllerID::ONE));
+			}
 
 			ImGui::Separator();
-			ImGui::Text("Controller 1:");
-			ImGui::Text("A: %d", App->input->GetControllerButton(ControllerCode::A, ControllerID::ONE));
-			ImGui::Text("B: %d", App->input->GetControllerButton(ControllerCode::B, ControllerID::ONE));
-			ImGui::Text("X: %d", App->input->GetControllerButton(ControllerCode::X, ControllerID::ONE));
-			ImGui::Text("Y: %d", App->input->GetControllerButton(ControllerCode::Y, ControllerID::ONE));
-			ImGui::Text("Back: %d", App->input->GetControllerButton(ControllerCode::Back, ControllerID::ONE));
-			ImGui::Text("DownDpad: %d", App->input->GetControllerButton(ControllerCode::DownDpad, ControllerID::ONE));
-			ImGui::Text("Guide: %d", App->input->GetControllerButton(ControllerCode::Guide, ControllerID::ONE));
-			ImGui::Text("LeftDpad: %d", App->input->GetControllerButton(ControllerCode::LeftDpad, ControllerID::ONE));
-			ImGui::Text("LeftShoulder: %d", App->input->GetControllerButton(ControllerCode::LeftShoulder, ControllerID::ONE));
-			ImGui::Text("LeftStick: %d", App->input->GetControllerButton(ControllerCode::LeftStick, ControllerID::ONE));
-			ImGui::Text("RightDpad: %d", App->input->GetControllerButton(ControllerCode::RightDpad, ControllerID::ONE));
-			ImGui::Text("RightShoulder: %d", App->input->GetControllerButton(ControllerCode::RightShoulder, ControllerID::ONE));
-			ImGui::Text("RightStick: %d", App->input->GetControllerButton(ControllerCode::RightStick, ControllerID::ONE));
-			ImGui::Text("Start: %d", App->input->GetControllerButton(ControllerCode::Start, ControllerID::ONE));
-			ImGui::Text("UpDpad: %d", App->input->GetControllerButton(ControllerCode::UpDpad, ControllerID::ONE));
+			if(App->input->total_game_controllers > 1)
+			{
+				ImGui::Text("Controller 2:");
+				ImGui::Separator();
+				ImGui::Text("A: %d", App->input->GetControllerButton(ControllerCode::A, ControllerID::TWO));
+				ImGui::Text("B: %d", App->input->GetControllerButton(ControllerCode::B, ControllerID::TWO));
+				ImGui::Text("X: %d", App->input->GetControllerButton(ControllerCode::X, ControllerID::TWO));
+				ImGui::Text("Y: %d", App->input->GetControllerButton(ControllerCode::Y, ControllerID::TWO));
+				ImGui::Text("Back: %d", App->input->GetControllerButton(ControllerCode::Back, ControllerID::TWO));
+				ImGui::Text("DownDpad: %d", App->input->GetControllerButton(ControllerCode::DownDpad, ControllerID::TWO));
+				ImGui::Text("Guide: %d", App->input->GetControllerButton(ControllerCode::Guide, ControllerID::TWO));
+				ImGui::Text("LeftDpad: %d", App->input->GetControllerButton(ControllerCode::LeftDpad, ControllerID::TWO));
+				ImGui::Text("LeftShoulder: %d", App->input->GetControllerButton(ControllerCode::LeftShoulder, ControllerID::TWO));
+				ImGui::Text("LeftStick: %d", App->input->GetControllerButton(ControllerCode::LeftStick, ControllerID::TWO));
+				ImGui::Text("RightDpad: %d", App->input->GetControllerButton(ControllerCode::RightDpad, ControllerID::TWO));
+				ImGui::Text("RightShoulder: %d", App->input->GetControllerButton(ControllerCode::RightShoulder, ControllerID::TWO));
+				ImGui::Text("RightStick: %d", App->input->GetControllerButton(ControllerCode::RightStick, ControllerID::TWO));
+				ImGui::Text("Start: %d", App->input->GetControllerButton(ControllerCode::Start, ControllerID::TWO));
+				ImGui::Text("UpDpad: %d", App->input->GetControllerButton(ControllerCode::UpDpad, ControllerID::TWO));
 
-			ImGui::Text("Left Joystick : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::ONE).x, App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::ONE).y);
-			ImGui::Text("Right Joystick : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK, ControllerID::ONE).x, App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK, ControllerID::ONE).y);
+				ImGui::Text("Left Joystick : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::TWO).x, App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::TWO).y);
+				ImGui::Text("Right Joystick : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK, ControllerID::TWO).x, App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK, ControllerID::TWO).y);
 
-			ImGui::Text("Left Joystick Raw : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).x, App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).y);
-			ImGui::Text("Right Joystick Raw : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK_RAW, ControllerID::ONE).x, App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK_RAW, ControllerID::ONE).y);
+				ImGui::Text("Left Joystick Raw : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::TWO).x, App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::TWO).y);
+				ImGui::Text("Right Joystick Raw : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK_RAW, ControllerID::TWO).x, App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK_RAW, ControllerID::TWO).y);
 
-			ImGui::Text("Left Trigger : %d", App->input->GetTriggerController(ControllerAxis::LEFT_TRIGGER, ControllerID::ONE));
-			ImGui::Text("Right Trigger : %d", App->input->GetTriggerController(ControllerAxis::RIGHT_TRIGGER, ControllerID::ONE));
+				ImGui::Text("Left Trigger : %.3f", App->input->GetTriggerController(ControllerAxis::LEFT_TRIGGER, ControllerID::TWO));
+				ImGui::Text("Right Trigger : %.3f", App->input->GetTriggerController(ControllerAxis::RIGHT_TRIGGER, ControllerID::TWO));
 
-			ImGui::Text("Left Raw Trigger : %.3f", App->input->GetTriggerControllerRaw(ControllerAxis::LEFT_TRIGGER_RAW, ControllerID::ONE));
-			ImGui::Text("Right Raw Trigger : %.3f", App->input->GetTriggerControllerRaw(ControllerAxis::RIGHT_TRIGGER_RAW, ControllerID::ONE));
-
-			ImGui::Separator();
-
-			ImGui::Text("Controller 2:");
-			ImGui::Text("A: %d", App->input->GetControllerButton(ControllerCode::A, ControllerID::TWO));
-			ImGui::Text("B: %d", App->input->GetControllerButton(ControllerCode::B, ControllerID::TWO));
-			ImGui::Text("X: %d", App->input->GetControllerButton(ControllerCode::X, ControllerID::TWO));
-			ImGui::Text("Y: %d", App->input->GetControllerButton(ControllerCode::Y, ControllerID::TWO));
-			ImGui::Text("Back: %d", App->input->GetControllerButton(ControllerCode::Back, ControllerID::TWO));
-			ImGui::Text("DownDpad: %d", App->input->GetControllerButton(ControllerCode::DownDpad, ControllerID::TWO));
-			ImGui::Text("Guide: %d", App->input->GetControllerButton(ControllerCode::Guide, ControllerID::TWO));
-			ImGui::Text("LeftDpad: %d", App->input->GetControllerButton(ControllerCode::LeftDpad, ControllerID::TWO));
-			ImGui::Text("LeftShoulder: %d", App->input->GetControllerButton(ControllerCode::LeftShoulder, ControllerID::TWO));
-			ImGui::Text("LeftStick: %d", App->input->GetControllerButton(ControllerCode::LeftStick, ControllerID::TWO));
-			ImGui::Text("RightDpad: %d", App->input->GetControllerButton(ControllerCode::RightDpad, ControllerID::TWO));
-			ImGui::Text("RightShoulder: %d", App->input->GetControllerButton(ControllerCode::RightShoulder, ControllerID::TWO));
-			ImGui::Text("RightStick: %d", App->input->GetControllerButton(ControllerCode::RightStick, ControllerID::TWO));
-			ImGui::Text("Start: %d", App->input->GetControllerButton(ControllerCode::Start, ControllerID::TWO));
-			ImGui::Text("UpDpad: %d", App->input->GetControllerButton(ControllerCode::UpDpad, ControllerID::TWO));
-
-			ImGui::Text("Left Joystick : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::TWO).x, App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::TWO).y);
-			ImGui::Text("Right Joystick : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK, ControllerID::TWO).x, App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK, ControllerID::TWO).y);
-
-			ImGui::Text("Left Joystick Raw : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::TWO).x, App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::TWO).y);
-			ImGui::Text("Right Joystick Raw : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK_RAW, ControllerID::TWO).x, App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK_RAW, ControllerID::TWO).y);
-
-			ImGui::Text("Left Trigger : %d", App->input->GetTriggerController(ControllerAxis::LEFT_TRIGGER, ControllerID::TWO));
-			ImGui::Text("Right Trigger : %d", App->input->GetTriggerController(ControllerAxis::RIGHT_TRIGGER, ControllerID::TWO));
-
-			ImGui::Text("Left Raw Trigger : %.3f", App->input->GetTriggerControllerRaw(ControllerAxis::LEFT_TRIGGER_RAW, ControllerID::TWO));
-			ImGui::Text("Right Raw Trigger : %.3f", App->input->GetTriggerControllerRaw(ControllerAxis::RIGHT_TRIGGER_RAW, ControllerID::TWO));
-
+				ImGui::Text("Left Raw Trigger : %d", App->input->GetTriggerControllerRaw(ControllerAxis::LEFT_TRIGGER_RAW, ControllerID::TWO));
+				ImGui::Text("Right Raw Trigger : %d", App->input->GetTriggerControllerRaw(ControllerAxis::RIGHT_TRIGGER_RAW, ControllerID::TWO));
+			}
+			
 			ImGui::TreePop();
 		}
 
@@ -514,7 +543,7 @@ void PanelConfiguration::ShowInputOptions()
 
 			if(ImGui::Button("Add KeyCode"))
 			{
-				keys.insert((int)selected_key);
+				keys.insert(static_cast<int>(selected_key));
 				string_keys.insert(selected_combo);
 			}
 
@@ -531,7 +560,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Text("Mouse:");
 			for (const auto mouse_key : mouse_keys)
 			{
-				ImGui::Text(mouse_keys_string[(int)mouse_key]);
+				ImGui::Text(mouse_keys_string[static_cast<int>(mouse_key)]);
 			}
 
 			ImGui::Separator();
@@ -555,7 +584,7 @@ void PanelConfiguration::ShowInputOptions()
 
 			if (ImGui::Button("Add Mouse Button"))
 			{
-				mouse_keys.insert((int)selected_mouse);
+				mouse_keys.insert(static_cast<int>(selected_mouse));
 			}
 
 			ImGui::SameLine();
@@ -571,7 +600,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Text("Controller Keys:");
 			for (const auto controller_key : controller_keys)
 			{
-				ImGui::Text(controller_keys_string[(int)controller_key]);
+				ImGui::Text(controller_keys_string[static_cast<int>(controller_key)]);
 			}
 
 			ImGui::Separator();
@@ -595,7 +624,7 @@ void PanelConfiguration::ShowInputOptions()
 
 			if (ImGui::Button("Add Controller Button"))
 			{
-				controller_keys.insert((int)selected_controller);
+				controller_keys.insert(static_cast<int>(selected_controller));
 			}
 
 			ImGui::SameLine();
@@ -656,7 +685,7 @@ void PanelConfiguration::ShowInputOptions()
 						continue;
 					}
 
-					int aux = static_cast<int>(key);
+					size_t aux = static_cast<size_t>(key);
 					if (aux > FIRST_OFFSET_COND)
 						aux -= FIRST_OFFSET;
 					else if (aux > SECOND_OFFSET_COND)
@@ -677,7 +706,7 @@ void PanelConfiguration::ShowInputOptions()
 						continue;
 					}
 
-					ImGui::Text("	%s", mouse_keys_string[(int)mouse]);
+					ImGui::Text("	%s", mouse_keys_string[static_cast<int>(mouse)]);
 				}
 				ImGui::Text("ControllerCodes:");
 				for (const auto& controller_key : game_input.second.controller_buttons)
@@ -687,7 +716,7 @@ void PanelConfiguration::ShowInputOptions()
 						continue;
 					}
 
-					ImGui::Text("	%s", controller_keys_string[(int)controller_key]);
+					ImGui::Text("	%s", controller_keys_string[static_cast<int>(controller_key)]);
 				}
 				
 				

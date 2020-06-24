@@ -75,7 +75,7 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 			if (scene->mMetaData->mKeys[i] == aiString("UnitScaleFactor"))
 			{
 				aiMetadataEntry unit_scale_entry = scene->mMetaData->mValues[i];
-				unit_scale_factor = *(double*)unit_scale_entry.mData;
+				unit_scale_factor = *(float*)unit_scale_entry.mData;
 			};
 		}
 		unit_scale_factor *= model_metafile.scale_factor;
@@ -116,14 +116,11 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 
 
 	model_data = App->resources->prefab_importer->ExtractFromModel(model, model_metafile);
-	if (current_model_data.remmaped_changed)
+	if (current_model_data.remmaped_changed || current_model_data.any_new_node)
 	{
 		App->resources->metafile_manager->SaveMetafile(static_cast<Metafile*>(&model_metafile), assets_file_path);
 	}
-	else
-	{
-		model_metafile.SaveExtractedNodes();
-	}
+
 	return model_data;
 }
 
@@ -213,6 +210,7 @@ uint32_t ModelImporter::SaveDataInLibrary( Metafile &node_metafile, FileData & f
 	node_metafile.exported_file_path = metafile_exported_folder_path->Save(std::to_string(node_metafile.uuid).c_str(), file_data)->GetFullPath();
 	if (is_new_node)
 	{
+		current_model_data.any_new_node = true;
 		current_model_data.model_metafile->nodes.push_back(std::make_unique<Metafile>(node_metafile));
 	}
 	return node_metafile.uuid;

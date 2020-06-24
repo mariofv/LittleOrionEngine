@@ -115,16 +115,16 @@ Path* ModuleFileSystem::GetRootPath() const
 
 FileData ModuleFileSystem::LoadFromSystem(const std::string & load_path)
 {
-	FileData loaded_data;
+	FileData loaded_data = {};
 
 	SDL_RWops *rw = SDL_RWFromFile(load_path.c_str(), "rb");
 	if (rw == NULL) 
 		return loaded_data;
 
-	Sint64 res_size = SDL_RWsize(rw);
+	size_t res_size = static_cast<size_t>(SDL_RWsize(rw));
 	loaded_data.buffer = malloc(res_size + 1);
 
-	Sint64 nb_read_total = 0, nb_read = 1;
+	size_t nb_read_total = 0, nb_read = 1;
 	char* buf = (char*) loaded_data.buffer;
 	while (nb_read_total < res_size && nb_read != 0) {
 		nb_read = SDL_RWread(rw, buf, 1, (res_size - nb_read_total));

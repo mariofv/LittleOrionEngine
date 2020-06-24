@@ -11,8 +11,9 @@
 #include <GL/glew.h>
 #include <list>
 
-class ComponentCamera;
 class ComponentMeshRenderer;
+class ComponentCamera;
+
 class GameObject;
 
 struct SDL_Texture;
@@ -75,6 +76,10 @@ private:
 
 public:
 	bool anti_aliasing = false;
+	bool toggle_ortho_frustum = false;
+	bool toggle_directional_light_aabb = true;
+	bool toggle_perspective_sub_frustums = false;
+	bool render_shadows = true;
 
 private:
 	void* context = nullptr;
@@ -97,8 +102,10 @@ private:
 
 	std::vector<ComponentMeshRenderer*> meshes;
 	std::vector<ComponentMeshRenderer*> meshes_to_render;
+
 	typedef std::pair<float, ComponentMeshRenderer*> ipair;
 	std::list <ipair> opaque_mesh_to_render, transparent_mesh_to_render;
+
 	int num_rendered_tris = 0;
 	int num_rendered_verts = 0;
 	Timer * rendering_measure_timer = new Timer();
@@ -109,6 +116,7 @@ private:
 	friend class PanelConfiguration;
 	friend class PanelScene;
 	friend class NavMesh;
+	friend class ComponentParticleSystem;
 };
 
 #endif //_MODULERENDER_H_

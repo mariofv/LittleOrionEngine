@@ -234,7 +234,7 @@ void ModuleProgram::LoadPrograms(const char* file_path)
 		if (selectable)
 		{
 			char *pc = new char[name.size() + 1];
-			std::strcpy(pc, name.c_str());
+			strcpy_s(pc, name.size() + 1,name.c_str());
 			names.push_back(pc);
 		}
 	}

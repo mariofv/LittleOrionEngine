@@ -5,10 +5,6 @@
 #include "Module/ModuleFileSystem.h"
 #include <algorithm>
 
-namespace
-{
-	constexpr const char* const LIBRARY_MODEL_EXTRACTED_PATH = "/Library/Extracted";
-}
 void ModelMetafile::Save(Config& config) const
 {
 	Metafile::Save(config);
@@ -31,7 +27,7 @@ void ModelMetafile::Save(Config& config) const
 		remapped_materials_config.emplace_back(pair_config);
 	}
 	config.AddChildrenConfig(remapped_materials_config, "RemappedMaterials");
-	SaveExtractedNodes();
+	SaveExtractedNodes(config);
 
 }
 
@@ -56,20 +52,14 @@ void ModelMetafile::Load(const Config& config)
 	{
 		std::string first;
 		pair_config.GetString("Material", first, {});
-		remapped_materials[first] =  pair_config.GetUInt("UUID", 0);
+		remapped_materials[first] =  pair_config.GetUInt32("UUID", 0);
 	}
 
-	LoadExtractedNodes();
+	LoadExtractedNodes(config);
 }
 
-void ModelMetafile::LoadExtractedNodes()
+void ModelMetafile::LoadExtractedNodes(const Config& config)
 {
-	Path* library_path = GetExtractedNodesPath();
-	if (!library_path)
-	{
-		return;
-	}
-	Config config(library_path->GetFile()->Load());
 	std::vector<Config> nodes_config;
 	config.GetChildrenConfig("Nodes", nodes_config);
 	for (const auto & node_config : nodes_config)
@@ -91,35 +81,10 @@ void ModelMetafile::GetModelNode(Metafile& model_node_metafile) const
 	}
 }
 
-Path * ModelMetafile::GetExtractedNodesFolder() const
+void ModelMetafile::SaveExtractedNodes(Config& config) const
 {
-	std::string uuid_string = std::to_string(uuid);
-	std::string path = std::string(LIBRARY_MODEL_EXTRACTED_PATH) + "/" + uuid_string.substr(0, 2);
-	if (!App->filesystem->Exists(path))
-	{
-		App->filesystem->MakeDirectory(LIBRARY_MODEL_EXTRACTED_PATH);
-		App->filesystem->MakeDirectory(path);
-	}
-	return App->filesystem->GetPath(path);
-}
-
-Path * ModelMetafile::GetExtractedNodesPath() const
-{
-	Path * folder = GetExtractedNodesFolder();
-	std::string full_path = folder->GetFullPath() + "/" + std::to_string(uuid);
-	if (App->filesystem->Exists(full_path))
-	{
-		return App->filesystem->GetPath(full_path);
-	}
-	return nullptr;
-}
-
-void ModelMetafile::SaveExtractedNodes() const
-{
-	Config config;
 	std::vector<Config> nodes_config;
 	nodes_config.reserve(nodes.size());
-	Path* library_path = GetExtractedNodesFolder();
 	for (const auto & node : nodes)
 	{
 		assert(node->resource_type != ResourceType::UNKNOWN);
@@ -129,8 +94,4 @@ void ModelMetafile::SaveExtractedNodes() const
 	}
 	assert(nodes_config.size() == nodes.size());
 	config.AddChildrenConfig(nodes_config, "Nodes");
-
-	std::string serialized_string;
-	config.GetSerializedString(serialized_string);
-	library_path->Save(std::to_string(uuid).c_str(), serialized_string);
 }

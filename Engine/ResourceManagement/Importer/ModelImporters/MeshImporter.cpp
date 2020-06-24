@@ -54,21 +54,26 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		Mesh::Vertex new_vertex;
 		aiVector3D transformed_position = node_transformation * mesh->mVertices[i];
 		new_vertex.position = float3(transformed_position.x, transformed_position.y, transformed_position.z);
-		if (mesh->mTextureCoords[0]) 
+		for (size_t j = 0; j < UVChannel::TOTALUVS; j++)
 		{
-			new_vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+			float2 text_coordinate(float2::zero);
+			if (mesh->mTextureCoords[j])
+			{
+				text_coordinate = float2(mesh->mTextureCoords[j][i].x, mesh->mTextureCoords[j][i].y);
+			}
+			new_vertex.tex_coords[j] = text_coordinate;
 		}
 		if (mesh->mNormals)
 		{
-			new_vertex.normals = float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+			new_vertex.normals = float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z).Normalized();
 		}
 		if (mesh->mTangents)
 		{
-			new_vertex.tangent = float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
+			new_vertex.tangent = float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z).Normalized();
 		}
 		if (mesh->mBitangents)
 		{
-			new_vertex.bitangent = float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z);
+			new_vertex.bitangent = float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z).Normalized();
 		}
 		if (vertex_skinning__info.size() > 0)
 		{
@@ -85,7 +90,7 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 				weights_sum += vertex_skinning__info[i].second[j];
 			}
 			
-			auto normalize_factor = 1.0 / weights_sum;
+			float normalize_factor = 1.0f / weights_sum;
 			weights_sum = 0;
 			for (size_t j = 0; j < vertex_skinning__info[i].second.size(); ++j)
 			{

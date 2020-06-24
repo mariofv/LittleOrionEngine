@@ -36,6 +36,7 @@ void ComponentAudioSource::Update()
 void ComponentAudioSource::Delete()
 {
 	StopAll();
+	StopEvent("menu_select");
 	AK::SoundEngine::UnregisterGameObj(gameobject_source);
 	App->audio->RemoveComponentAudioSource(this);
 }
@@ -51,7 +52,7 @@ void ComponentAudioSource::SetVolume(float volume)
 	AK::SoundEngine::SetGameObjectOutputBusVolume(gameobject_source,App->audio->main_sound_gameobject,volume);
 }
 
-ENGINE_API unsigned long ComponentAudioSource::PlayEvent(const std::string & event_to_play)
+unsigned long ComponentAudioSource::PlayEvent(const std::string & event_to_play)
 {
 	AkPlayingID playing_id = AK::SoundEngine::PostEvent(event_to_play.c_str(), gameobject_source);
 	if (playing_id == AK_INVALID_PLAYING_ID)
@@ -116,7 +117,7 @@ void ComponentAudioSource::SpecializedLoad(const Config& config)
 {
 	volume = config.GetFloat("Volume", 1);
 	sound_3d = config.GetBool("3DSound", false);
-	uint32_t soundbank_uuid = config.GetUInt("SoundBank", 0);
+	uint32_t soundbank_uuid = config.GetUInt32("SoundBank", 0);
 	if (soundbank_uuid != 0)
 	{
 		SetSoundBank(soundbank_uuid);
