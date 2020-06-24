@@ -72,8 +72,8 @@ std::shared_ptr<Font> FontManager::Load(uint32_t uuid, const FileData& resource_
 		Font::Character loaded_character
 		{
 			glyph_texture,
-			float2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-			float2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+			float2(static_cast<float>(face->glyph->bitmap.width), static_cast<float>(face->glyph->bitmap.rows)),
+			float2(static_cast<float>(face->glyph->bitmap_left), static_cast<float>(face->glyph->bitmap_top)),
 			face->glyph->advance.x
 		};
 		font_characters.insert(std::pair<GLchar, Font::Character>(character, loaded_character));

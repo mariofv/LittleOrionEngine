@@ -44,13 +44,13 @@ void ComponentMeshRenderer::SpecializedSave(Config& config) const
 
 void ComponentMeshRenderer::SpecializedLoad(const Config& config)
 {
-	mesh_uuid = config.GetUInt("Mesh", 0);
+	mesh_uuid = config.GetUInt32("Mesh", 0);
 	SetMesh(mesh_uuid);
 
-	material_uuid = config.GetUInt("Material", 0);
+	material_uuid = config.GetUInt32("Material", 0);
 	SetMaterial(material_uuid);
 
-	skeleton_uuid =	config.GetUInt("Skeleton", 0);
+	skeleton_uuid =	config.GetUInt32("Skeleton", 0);
 	SetSkeleton(skeleton_uuid);
 }
 

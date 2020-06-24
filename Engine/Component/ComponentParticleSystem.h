@@ -130,8 +130,8 @@ public:
 	float color_to_fade[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	//Runtime values
-	int playing_particles_number = MAX_PARTICLES;
-	int max_particles_number = MAX_PARTICLES;
+	size_t playing_particles_number = MAX_PARTICLES;
+	size_t max_particles_number = MAX_PARTICLES;
 	bool playing = true;
 };
 

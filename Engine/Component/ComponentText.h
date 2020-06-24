@@ -38,7 +38,7 @@ public:
 	void SetHorizontalAlignment(HorizontalAlignment horizontal_alignment);
 
 	void SetFont(uint32_t font_uuid);
-	ENGINE_API void SetFontSize(int font_size);
+	ENGINE_API void SetFontSize(float font_size);
 
 	ENGINE_API void SetFontColor(const float4& new_color);
 	ENGINE_API float4 GetFontColor() const;
