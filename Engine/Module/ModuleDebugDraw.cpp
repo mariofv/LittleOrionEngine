@@ -443,9 +443,14 @@ void ModuleDebugDraw::RenderRectTransform(const GameObject* rect_owner) const
 	dd::line(rect_points[0], rect_points[1], float3::one);
 }
 
-void ModuleDebugDraw::RenderLine(float3 & a, float3 & b) const
+void ModuleDebugDraw::RenderLine(float3& a, float3& b) const
 {
 	dd::line(a, b, float3::unitY);
+}
+
+void ModuleDebugDraw::RenderLine(float3& a, float3& b, float3& color) const
+{
+	dd::line(a, b, color);
 }
 
 void ModuleDebugDraw::RenderCameraFrustum() const
@@ -463,6 +468,7 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 
 		if(selected_camera->camera_frustum.type == FrustumType::PerspectiveFrustum)
 			dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
+
 
 		if (selected_camera->camera_frustum.type == FrustumType::OrthographicFrustum)
 		{
