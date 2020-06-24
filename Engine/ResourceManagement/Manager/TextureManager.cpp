@@ -4,6 +4,7 @@
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleResourceManager.h"
+#include "Helper/Timer.h"
 #include "Helper/Utils.h"
 
 #include "ResourceManagement/Metafile/Metafile.h"
@@ -18,9 +19,21 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
+Timer TextureManager::timer = Timer();
+
 constexpr size_t extension_size = 3; //3 characters: DDS, TGA, JPG..
 std::shared_ptr<Texture> TextureManager::Load(uint32_t uuid, const FileData& resource_data)
 {
+
+	if(timer.IsPaused())
+	{
+		timer.Resume();
+	}
+	else
+	{
+		timer.Start();
+	}
+	BROFILER_CATEGORY("Load Texture Manager", Profiler::Color::PaleGoldenRod);
 	std::string extension;
 	TextureOptions texture_options;
 	char* cursor = (char*)resource_data.buffer;
@@ -53,7 +66,62 @@ std::shared_ptr<Texture> TextureManager::Load(uint32_t uuid, const FileData& res
 	{
 		loaded_texture = std::make_shared<Texture>(uuid, data.data(), data.size(), width, height, num_channels, texture_options);
 	}
+	APP_LOG_SUCCESS("Time Loading Texture Manager: %.3f", timer.Pause());
+
 	return loaded_texture;
+}
+
+std::shared_ptr<Texture> TextureManager::LoadThread(uint32_t uuid, const FileData& resource_data, TextureLoadData& texture_data)
+{
+	if (timer.IsPaused())
+	{
+		timer.Resume();
+	}
+	else
+	{
+		timer.Start();
+	}
+	BROFILER_CATEGORY("Load Texture Manager", Profiler::Color::PaleGoldenRod);
+	std::string extension;
+	TextureOptions texture_options;
+	char* cursor = (char*)resource_data.buffer;
+	size_t bytes = sizeof(TextureOptions);
+	memcpy(&texture_options, cursor, bytes);
+
+	cursor += bytes;
+	bytes = extension_size;
+	extension.resize(extension_size);
+	memcpy(extension.data(), cursor, bytes);
+
+	size_t offset = extension_size + sizeof(TextureOptions);
+
+	std::vector<char> data;
+	int width, height, num_channels = 0;
+	bool normal_map = texture_options.texture_type == TextureType::NORMAL;
+	if (normal_map)
+	{
+		data = LoadImageData(resource_data, offset, extension, width, height, num_channels);
+	}
+	else
+	{
+		DDS::DDS_HEADER ddsHeader;
+		data = LoadCompressedDDS(resource_data, offset, ddsHeader);
+		width = ddsHeader.dwWidth;
+		height = ddsHeader.dwHeight;
+	}
+
+	if (data.size())
+	{
+		//ADD DATA TO THREADSAFEQUEUE
+		texture_data.data = data;
+		texture_data.height = height;
+		texture_data.width = width;
+		texture_data.num_channels = num_channels;
+		texture_data.texture_options = texture_options;
+	}
+	APP_LOG_SUCCESS("Time Loading Texture Manager: %.3f", timer.Pause());
+
+	return nullptr;
 }
 
 

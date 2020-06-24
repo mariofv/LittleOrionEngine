@@ -8,6 +8,7 @@
 
 class Path;
 class Metafile;
+class TextureLoadData;
 
 enum class ResourceType
 {
@@ -57,6 +58,12 @@ namespace ResourceManagement
 
 	template<typename T>
 	static std::shared_ptr<T> Load(uint32_t uuid, const FileData& resource_data)
+	{
+		return nullptr;
+	};
+
+	template<typename T>
+	static std::shared_ptr<T> LoadThread(uint32_t uuid, const FileData& resource_data, TextureLoadData& texture_data)
 	{
 		return nullptr;
 	};

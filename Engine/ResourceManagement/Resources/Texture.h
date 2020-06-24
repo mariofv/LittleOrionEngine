@@ -3,14 +3,25 @@
 
 #include "Resource.h"
 #include "ResourceManagement/Manager/TextureManager.h"
+#include "ResourceManagement/Metafile/TextureMetafile.h"
 
 #include <GL/glew.h>
 #include <string>
 
 class Metafile;
-struct TextureOptions;
 enum WrapMode;
 enum FilterMode;
+
+struct TextureLoadData
+{
+	std::string path;
+	int width = 0;
+	int height = 0;
+	int num_channels = 0;
+	TextureOptions texture_options;
+	std::vector<char> data;
+};
+
 class Texture : public Resource
 {
 public:
@@ -54,6 +65,12 @@ namespace ResourceManagement
 	static std::shared_ptr<Texture> Load(uint32_t uuid, const FileData& resource_data)
 	{
 		return TextureManager::Load(uuid, resource_data);
+	}
+	
+	template<>
+	static std::shared_ptr<Texture> LoadThread(uint32_t uuid, const FileData& resource_data, TextureLoadData& texture_data)
+	{
+		return TextureManager::LoadThread(uuid, resource_data, texture_data);
 	}
 }
 

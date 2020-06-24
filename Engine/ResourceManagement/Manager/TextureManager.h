@@ -2,6 +2,8 @@
 #define _TEXTUREMANAGER_H_
 
 #include "Filesystem/File.h"
+#include "Helper/Timer.h"
+#include "ResourceManagement/Metafile/TextureMetafile.h"
 
 #include <memory>
 #include <vector>
@@ -42,6 +44,7 @@ namespace DDS
 
 class Metafile;
 class Texture;
+class TextureMetafile;
 
 class TextureManager
 {
@@ -50,11 +53,13 @@ public:
 	~TextureManager()= default;
 
 	static std::shared_ptr<Texture> Load(uint32_t uuid, const FileData& resource_data);
+	static std::shared_ptr<Texture> LoadThread(uint32_t uuid, const FileData& resource_data, TextureLoadData& texture_data);
 
 private:
 	static std::vector<char> LoadCompressedDDS(const FileData& resource_data, size_t offset,DDS::DDS_HEADER & dds_header);
 	static std::vector<char> LoadImageData(const FileData& resource_data, size_t offset,const std::string& file_path, int & width, int & height, int & num_channels);
 
+	static Timer timer;
 };
 
 #endif //_TEXTUREMANAGER_H_
