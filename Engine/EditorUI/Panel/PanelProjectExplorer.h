@@ -22,11 +22,12 @@ public:
 	void ProcessResourceMouseInput(Path* metafile_path, Metafile* metafile);
 	void ShowFilesInExplorer();
 
-	void CalculateNextLinePosition(int &current_file_in_line, int files_per_line, int &current_line);
+	void CalculateNextLinePosition(int& current_file_in_line, int files_per_line, int& current_line);
 
 	void ShowFileSystemActionsMenu(Path* path);
 
 	void FilesDrop() const;
+	bool IsOneOfMyChildrens(Path* path);
 	void ResourceDragSource(const Metafile* file) const;
 
 	void ResourceDropTarget(Path* folder_path) const;

@@ -389,6 +389,5 @@ bool PanelHierarchy::IsOneOfMyChildrens(GameObject* game_object)
 			break;
 		}
 	}
-
 	return found;
 }
