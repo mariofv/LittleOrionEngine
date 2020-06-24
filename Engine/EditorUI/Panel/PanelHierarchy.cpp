@@ -378,9 +378,12 @@ bool PanelHierarchy::IsOneOfMyChildrens(GameObject* game_object)
 	for (auto& go : game_object->children) 
 	{
 		found = std::find(go->children.begin(), go->children.end(), App->editor->selected_game_object) != go->children.end() || go == App->editor->selected_game_object;
-		if (found)
+		if (!found && go->children.size() > 0)
 		{
-			APP_LOG_INFO("HOLAAAAA");
+			found = IsOneOfMyChildrens(go);
+		}
+		if(found)
+		{
 			break;
 		}
 	}
