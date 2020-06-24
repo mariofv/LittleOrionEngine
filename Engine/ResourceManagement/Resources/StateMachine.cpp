@@ -23,10 +23,17 @@ void Clip::SetAnimation(const std::shared_ptr<Animation>& animation)
 
 
 State::State(std::string name, std::shared_ptr<Clip> clip) :
-	name(name), name_hash(std::hash<std::string>{}(name)),clip(clip)  {
+	name(name), name_hash(std::hash<std::string>{}(name)),clip(clip) {
 }
 
-Transition::Transition(uint64_t source, uint64_t target, std::string & trigger, uint64_t interpolation) :
+State::State(std::string name, std::shared_ptr<Clip> clip, float speed) :
+	name(name), name_hash(std::hash<std::string>{}(name)), clip(clip), speed(speed) {
+}
+
+State::State(std::string name, std::shared_ptr<Clip> clip, float speed, float2& position) :
+	name(name), name_hash(std::hash<std::string>{}(name)), clip(clip), speed(speed), position(position){
+}
+Transition::Transition(uint64_t source, uint64_t target, std::string & trigger, long interpolation) :
 	source_hash(source), 
 	trigger(trigger),
 	target_hash(target),
@@ -63,7 +70,7 @@ std::shared_ptr<State> StateMachine::GetDefaultState() const
 			return state;
 		}
 	}
-	return nullptr;
+	 return states[0];
 }
 
 std::shared_ptr<State> StateMachine::GetState(uint64_t state_hash) const
@@ -179,6 +186,9 @@ void StateMachine::Save(Config& config) const
 		{
 			state_config.AddString(state->clip->name, "ClipName");
 		}
+		state_config.AddFloat(state->speed, "Speed");//Saving speed
+		state_config.AddFloat(state->position.x, "XPosition");
+		state_config.AddFloat(state->position.y, "YPosition");
 		states_config.push_back(state_config);
 	}
 	config.AddChildrenConfig(states_config, "States");
@@ -212,7 +222,7 @@ void StateMachine::Load(const Config& config)
 		std::string name;
 		clip_config.GetString("Name", name, "");
 
-		uint32_t animation_uuid = clip_config.GetUInt32("AnimationUUID", 0);
+		uint32_t animation_uuid = clip_config.GetUInt("AnimationUUID", 0);
 		std::shared_ptr<Animation> anim = nullptr;
 		if (animation_uuid != 0)
 		{
@@ -231,6 +241,7 @@ void StateMachine::Load(const Config& config)
 		std::string name;
 		state_config.GetString("Name", name, "");
 		state_config.GetString("ClipName", clip_name, "");
+		float clip_speed = state_config.GetFloat("Speed", 1.0f);
 		std::shared_ptr<Clip> state_clip;
 		for (auto& clip : clips)
 		{
@@ -239,7 +250,10 @@ void StateMachine::Load(const Config& config)
 				state_clip = clip;
 			}
 		}
-		this->states.push_back(std::make_shared<State>(name, state_clip));
+		float2 position(10.0f, 10.0f);
+		position.x = state_config.GetFloat("XPosition", 10.0f);
+		position.y = state_config.GetFloat("YPosition", 10.0f);
+		this->states.push_back(std::make_shared<State>(name, state_clip, clip_speed, position));
 	}
 
 	std::vector<Config> transitions_config;
@@ -257,4 +271,63 @@ void StateMachine::Load(const Config& config)
 	}
 
 	default_state = config.GetUInt("Default", 0);
+}
+
+void StateMachine::LoadNames(const Config & config)
+{
+
+	std::vector<Config> clips_config;
+	config.GetChildrenConfig("Clips", clips_config);
+	for (auto& clip_config : clips_config)
+	{
+		std::string name;
+		clip_config.GetString("Name", name, "");
+
+		uint64_t name_hash = (std::hash<std::string>{}(name));
+		for (auto & clip : clips)
+		{
+			if (clip->name_hash == name_hash)
+			{
+				clip->name = name;
+			}
+		}
+	}
+
+	std::vector<Config> states_config;
+	config.GetChildrenConfig("States", states_config);
+	for (auto& state_config : states_config)
+	{
+		std::string name;
+		state_config.GetString("Name", name, "");
+		uint64_t name_hash = (std::hash<std::string>{}(name));
+
+		float2 position(10.0f, 10.0f);
+		position.x = state_config.GetFloat("XPosition", 10.0f);
+		position.y = state_config.GetFloat("YPosition", 10.0f);
+		for (auto & state : states)
+		{
+			if (state->name_hash == name_hash)
+			{
+				state->name = name;
+				state->position = position;
+			}
+		}
+	}
+
+	std::vector<Config> transitions_config;
+	config.GetChildrenConfig("Transitions", transitions_config);
+	for (auto& transition_config : transitions_config)
+	{
+		std::string trigger;
+		transition_config.GetString("Trigger", trigger, "");
+		uint64_t trigger_hash = (std::hash<std::string>{}(trigger));
+		for (auto & transition : transitions)
+		{
+			if (transition->trigger_hash == trigger_hash)
+			{
+				transition->trigger = trigger;
+			}
+		}
+	}
+
 }
