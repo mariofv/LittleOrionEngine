@@ -36,26 +36,32 @@ void PanelStateMachine::Render()
 {
 	if (ImGui::Begin(window_name.c_str(), &opened, ImGuiWindowFlags_MenuBar))
 	{
-			ax::NodeEditor::SetCurrentEditor(editor_context);
+		focused = ImGui::IsWindowFocused();
+		App->actions->active_macros = true;
+		if (focused)
+		{
+			App->actions->active_macros = false;
+		}
+		ax::NodeEditor::SetCurrentEditor(editor_context);
+		{
+			LeftPanel();
+			ax::NodeEditor::Begin("My Editor");
+			if (ImGui::IsMouseClicked(1))
 			{
-				LeftPanel();
-				ax::NodeEditor::Begin("My Editor");
-				if (ImGui::IsMouseClicked(1))
-				{
-					ax::NodeEditor::Suspend();
-					ImGui::OpenPopup("Editor Menu");
-					ax::NodeEditor::Resume();
-				}
-				RenderStates();
-				HandleInteraction();
-				CreateNodeMenu();
+				ax::NodeEditor::Suspend();
+				ImGui::OpenPopup("Editor Menu");
+				ax::NodeEditor::Resume();
 			}
-			ax::NodeEditor::End();
-			if (firstFrame)
-			{
-				ax::NodeEditor::NavigateToContent(0.0f);
-				firstFrame = false;
-			}
+			RenderStates();
+			HandleInteraction();
+			CreateNodeMenu();
+		}
+		ax::NodeEditor::End();
+		if (firstFrame)
+		{
+			ax::NodeEditor::NavigateToContent(0.0f);
+			firstFrame = false;
+		}
 
 	}
 	ImGui::End();
