@@ -26,6 +26,7 @@
 
 #include <Brofiler/Brofiler.h>
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
 PanelHierarchy::PanelHierarchy()
@@ -79,15 +80,16 @@ void PanelHierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 	{
 		flags |= ImGuiTreeNodeFlags_Selected;
 	}
-
-	if (App->editor->selected_game_object == game_object)
+	if(App->editor->selected_game_object != nullptr && App->editor->selected_game_object != game_object)
 	{
-		flags |= ImGuiTreeNodeFlags_Selected;
-	}
+		if(IsOneOfMyChildrens(game_object))
+		{
 
-	if(IsOneOfMyChildrens(game_object))
-	{
-		flags |= ImGuiTreeNodeFlags_DefaultOpen;
+			flags |= ImGuiTreeNodeFlags_DefaultOpen;
+			ImGuiWindow* window = ImGui::GetCurrentWindow();
+			window->DC.StateStorage->SetInt(window->GetID(game_object_name_label.c_str()), true);
+			window->DC.LastItemStatusFlags |= ImGuiItemStatusFlags_ToggledOpen;
+		}
 	}
 
 	bool expanded = ImGui::TreeNodeEx(game_object_name_label.c_str(), flags);
