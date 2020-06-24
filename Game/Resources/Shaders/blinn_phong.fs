@@ -122,7 +122,7 @@ vec3 CalculateLightmap(const vec3 normalized_normal, vec4 diffuse_color, vec4 sp
 
 vec3 CalculateNormalMapAndLiquid(const Material material, const vec2 texCoord);
 
-vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 specular_color);
+vec3 NormalizedDiffuse(vec3 diffuse_color, vec4 specular_color);
 float NormalizedSpecular(vec3 normal, vec3 half_dir);
 
 uniform float ambient_light_intensity;
@@ -284,24 +284,27 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	vec3 light_dir   = normalize(-directional_light.direction );
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
 
+	//----Specular calculations----
+	vec3 reflect_dir = reflect(-light_dir, normalized_normal);
+    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), pow(7*material.specular_color.w + 1, 2));
+    vec3 specular = vec3(1.0,1.0,1.0) * spec * specular_color.rgb;  
 
-	float shadow;	
+	float diff = max(0.0, dot(normalized_normal, light_dir));
 	
+	float shadow;
 	if(render_shadows)
+	{
 		shadow = ShadowCalculation();
+	}
 	else
+	{
 		shadow = 0;
-
-	float specular = NormalizedSpecular(normalized_normal, half_dir);
-
-
-		return directional_light.color * (
-		(emissive_color
-		+ (NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb)
+	}
+	
+	return directional_light.color * (
+		( (NormalizedDiffuse(diffuse_color.rgb, specular_color) 
 		+ specular_color.rgb * specular ) * shadow)
-	) * max(0.0, dot(normalized_normal, light_dir));
-	//Last multiplication added as a recommendation
-
+		) * diff;
 	
 }
 
@@ -310,14 +313,14 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4
 	vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
 	vec3 view_dir    = normalize(view_pos - position);
 	vec3 light_dir   = normalize(spot_light.position - position);
-    float specular   = 0.0;
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
 
-
-	if(material.k_specular > 0.0 && material.specular_color.w > 0.0)
-	{	
-		specular = NormalizedSpecular(normalized_normal, half_dir);
-	}
+	//----Specular calculations----
+	vec3 reflect_dir = reflect(-light_dir, normalized_normal);
+    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), pow(7*material.specular_color.w + 1, 2));
+    vec3 specular = vec3(1.0,1.0,1.0) * spec * specular_color.rgb;  
+	
+	float diff = max(0.0, dot(normalized_normal, light_dir));
 
     float theta = dot(light_dir, normalize(-spot_light.direction)); 
     float epsilon = (spot_light.cutOff - spot_light.outerCutOff);
@@ -328,10 +331,9 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4
                 spot_light.quadratic * (distance * distance));
 
    return spot_light.color * (
-        emissive_color
-        + NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb) * 1/PI *intensity*attenuation
+         NormalizedDiffuse(diffuse_color.rgb, specular_color) *intensity*attenuation
         + specular_color.rgb * specular *intensity*attenuation
-    )* max(0.0, dot(normalized_normal, light_dir));
+    )* diff;
 
 }
 
@@ -341,37 +343,37 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, v
 	vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
 	vec3 view_dir    = normalize(view_pos - position);
 	vec3 light_dir   = normalize(point_light.position - position);
-	float specular   = 0.0;
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
 
+	//----Specular calculations----
+	vec3 reflectDir = reflect(-light_dir, normalized_normal);  
+    float spec = pow(max(dot(view_dir, reflectDir), 0.0), pow(7*material.specular_color.w + 1, 2));
+    vec3 specular = vec3(1.0,1.0,1.0) * spec * specular_color.rgb;  
 
-   if(material.k_specular > 0.0 && material.specular_color.w > 0.0)
-	{	
-		specular = NormalizedSpecular(normalized_normal, half_dir);
-	}
+	float diff = max(0.0, dot(normalized_normal, light_dir));
+  
 
 	float distance    = length(point_light.position - position);
 	float attenuation = 1.0 / (point_light.constant + point_light.linear * distance +
     		    point_light.quadratic * (distance));
 
 	return point_light.color * (
-		emissive_color
-		+ NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb) * 1/PI * attenuation
+		 NormalizedDiffuse(diffuse_color.rgb, specular_color)  * attenuation
 		+ specular_color.rgb * specular * attenuation
-	)* max(0.0, dot(normalized_normal, light_dir));
+	)* diff;
 
 }
 
-vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 specular_color)
+vec3 NormalizedDiffuse(vec3 diffuse_color, vec4 specular_color)
 {
 	if(material.use_specular_map)
 	{
-		return 	(1-specular_color)*diffuse_color * material.k_diffuse * 1/PI; //The more specular, the less diffuse
+		return 	(1-specular_color.rgb)*diffuse_color * material.k_diffuse * 1/PI; //The more specular, the less diffuse
 	}
 
 	else
 	{
-		return 	diffuse_color * material.k_diffuse;
+		return 	diffuse_color * material.k_diffuse * 1/PI ;
 	}
 }
 
@@ -488,7 +490,7 @@ vec3 CalculateLightmap(const vec3 normalized_normal, vec4 diffuse_color, vec4 sp
 	return use_light_map * lightmap_color  * (
 
 		+ diffuse_color.rgb * (occlusion_color*material.k_ambient)
-		+ NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb) * 1/PI * diffuse
+		+ NormalizedDiffuse(diffuse_color.rgb, specular_color)* diffuse
 		+ specular_color.rgb * specular
 	);
 }
