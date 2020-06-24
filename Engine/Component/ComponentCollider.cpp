@@ -540,7 +540,6 @@ std::vector<CollisionInformation> ComponentCollider::GetCollisions()
 			}
 		}
 	}
-	App->event_manager->publish(new CollisionEvent(this->owner, collisions));
 	return collisions;
 }
 
