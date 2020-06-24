@@ -15,7 +15,7 @@ bool ModuleEffects::CleanUp()
 	{
 		bilboard->owner->RemoveComponent(bilboard);
 	}
-	return false;
+	return true;
 }
 
 void ModuleEffects::Render()

@@ -77,14 +77,14 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	}
 	if (tile_random)
 	{
-		particle.current_sprite_x = (rand() % (int)((max_tile_value - min_tile_value) + 1) + min_tile_value);
-		particle.current_sprite_y = (rand() % (int)((max_tile_value - min_tile_value) + 1) + min_tile_value);
+		particle.current_sprite_x = (rand() % static_cast<int>((max_tile_value - min_tile_value) + 1) + min_tile_value);
+		particle.current_sprite_y = (rand() % static_cast<int>((max_tile_value - min_tile_value) + 1) + min_tile_value);
 	}
 
 	if (change_size)
 	{
-		particle.current_height = min_size_of_particle;
-		particle.current_width = min_size_of_particle;
+		particle.current_height = static_cast<float>(min_size_of_particle);
+		particle.current_width = static_cast<float>(min_size_of_particle);
 	}
 	switch (type_of_particle_system)
 	{
@@ -363,13 +363,30 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 Component* ComponentParticleSystem::Clone(bool original_prefab) const
 {
 	ComponentParticleSystem* created_component;
+	if (original_prefab)
+	{
+		created_component = new ComponentParticleSystem();
+	}
+	else
+	{
+		created_component = App->effects->CreateComponentParticleSystem();
+	}
+	auto original_billboard = created_component->billboard;
+	*created_component = *this;
+	*original_billboard = *this->billboard;
+	created_component->billboard = original_billboard;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 };
 
 void ComponentParticleSystem::Copy(Component * component_to_copy) const
 {
 	*component_to_copy = *this;
-	*static_cast<ComponentParticleSystem*>(component_to_copy) = *this;
+	ComponentParticleSystem* component_particle_system = static_cast<ComponentParticleSystem*>(component_to_copy);
+	auto original_billboard = component_particle_system->billboard;
+	*component_particle_system = *this;
+	*original_billboard = *this->billboard;
+	component_particle_system->billboard = original_billboard;
 }
 
 void ComponentParticleSystem::Emit(size_t count)

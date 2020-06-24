@@ -24,6 +24,31 @@
 #include <imgui_impl_sdl.h>
 #include <SDL/SDL.h>
 
+
+void GameInput::Load(Config &config)
+{
+	config.GetString("Name", name, "DefaultName");
+	uint64_t size_keys = config.GetUInt("SizeKeys", 0);
+	for (size_t i = 0; i < size_keys; ++i)
+	{
+		std::string name_k("k" + std::to_string(i));
+		keys[i] = ((KeyCode)config.GetUInt(name_k, 0));
+	}
+
+	uint64_t size_mouse = config.GetUInt("SizeMouse", 0);
+	for (size_t j = 0; j < size_mouse; ++j)
+	{
+		std::string name_m("m" + std::to_string(j));
+		mouse_buttons[j] = ((MouseButton)config.GetUInt(name_m, 0));
+	}
+
+	uint64_t size_controller = config.GetUInt("SizeController", 0);
+	for (size_t k = 0; k < size_controller; ++k)
+	{
+		std::string name_c("c" + std::to_string(k));
+		controller_buttons[k] = ((ControllerCode)config.GetUInt(name_c, 0));
+	}
+}
 // Called before render is available
 bool ModuleInput::Init()
 {
@@ -39,12 +64,12 @@ bool ModuleInput::Init()
 		ret = false;
 	}
 
-	for (int i = 0; i < MAX_KEYS; ++i)
+	for (size_t i = 0; i < MAX_KEYS; ++i)
 	{
 		key_bible[(KeyCode)i] = KeyState::IDLE;
 	}
 
-	for (int i = 0; i < MAX_MOUSE_BUTTONS; ++i)
+	for (size_t i = 0; i < MAX_MOUSE_BUTTONS; ++i)
 	{
 		mouse_bible[(MouseButton)i] = KeyState::IDLE;
 	}
@@ -92,7 +117,7 @@ update_status ModuleInput::PreUpdate()
 			mouse.second = KeyState::IDLE;
 		}
 	}
-	for(int x = 0; x < controller.size(); ++x)
+	for(size_t x = 0; x < controller.size(); ++x)
 	{
 		for (auto& controller : controller[x]->controller_bible)
 		{
@@ -152,7 +177,7 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_CONTROLLERBUTTONDOWN:
-			for (int i = 0; i < controller.size(); ++i) 
+			for (size_t i = 0; i < controller.size(); ++i)
 			{
 				if (event.cbutton.which == controller[i]->joystick)
 				{
@@ -162,7 +187,7 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_CONTROLLERBUTTONUP:
-			for (int i = 0; i < controller.size(); ++i) 
+			for (size_t i = 0; i < controller.size(); ++i)
 			{
 				if (event.cbutton.which == controller[i]->joystick)
 				{
@@ -173,7 +198,7 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_CONTROLLERAXISMOTION:
 		{
-			for (int i = 0; i < controller.size(); ++i) 
+			for (size_t i = 0; i < controller.size(); ++i) 
 			{
 				if (event.caxis.which == controller[i]->joystick)
 				{
@@ -223,7 +248,7 @@ update_status ModuleInput::PreUpdate()
 
 	keys = SDL_GetKeyboardState(nullptr);
 
-	for (int i = 0; i < MAX_KEYS; ++i)
+	for (size_t i = 0; i < MAX_KEYS; ++i)
 	{
 		if (keys[i] == 1)
 		{
@@ -468,7 +493,7 @@ ENGINE_API Sint16 ModuleInput::GetTriggerControllerRaw(ControllerAxis type, Cont
 			return controller[(int)controller_id]->right_controller_trigger_raw;
 
 		default:
-			0.0f;
+			return 0.0f;
 	}
 }
 
@@ -655,7 +680,7 @@ void ModuleInput::AddGamepad(int device)
 	gamepad->controller = SDL_GameControllerOpen(device);
 	gamepad->device = device;
 	gamepad->joystick = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(gamepad->controller));
-	for (int i = 0; i < MAX_CONTROLLER_BUTTONS; ++i)
+	for (size_t i = 0; i < MAX_CONTROLLER_BUTTONS; ++i)
 	{
 		gamepad->controller_bible[(ControllerCode)i] = KeyState::IDLE;
 	}

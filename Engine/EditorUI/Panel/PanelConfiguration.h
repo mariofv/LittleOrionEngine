@@ -310,12 +310,12 @@ private:
 	ControllerCode selected_controller = ControllerCode::A;
 	std::string name_game_input = "";
 
-	const int FIRST_OFFSET_COND = 164;
-	const int SECOND_OFFSET_COND = 221;
-	const int THIRD_OFFSET_COND = 231;	
-	const int FIRST_OFFSET = 15;
-	const int SECOND_OFFSET = 17;
-	const int THIRD_OFFSET = 42;
+	const size_t FIRST_OFFSET_COND = 164;
+	const size_t SECOND_OFFSET_COND = 221;
+	const size_t THIRD_OFFSET_COND = 231;
+	const size_t FIRST_OFFSET = 15;
+	const size_t SECOND_OFFSET = 17;
+	const size_t THIRD_OFFSET = 42;
 };
 
 #endif //_PANELCONFIGURATION_H_

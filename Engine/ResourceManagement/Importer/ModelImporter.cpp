@@ -75,7 +75,7 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 			if (scene->mMetaData->mKeys[i] == aiString("UnitScaleFactor"))
 			{
 				aiMetadataEntry unit_scale_entry = scene->mMetaData->mValues[i];
-				unit_scale_factor = *(double*)unit_scale_entry.mData;
+				unit_scale_factor = *(float*)unit_scale_entry.mData;
 			};
 		}
 		unit_scale_factor *= model_metafile.scale_factor;

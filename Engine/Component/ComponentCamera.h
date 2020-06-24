@@ -56,7 +56,7 @@ public:
 	float GetWidth() const;
 	float GetHeight() const;
 
-	void RecordFrame(float width, float height, bool scene_mode = false);
+	void RecordFrame(GLsizei width, GLsizei height, bool scene_mode = false);
 	ENGINE_API void RecordDebugDraws(bool scene_mode = false);
 	GLuint GetLastRecordedFrame() const;
 
@@ -123,11 +123,11 @@ public:
 	void GenerateMatrices();
 
 private:
-	void GenerateFrameBuffers(float width, float height);
+	void GenerateFrameBuffers(GLsizei width, GLsizei height);
 	void InitCamera();
-	void CreateFramebuffer(float width, float height);
-	void CreateOrthographicFramebuffer(float width, float height);
-	void CreateMssaFramebuffer(float width, float height);
+	void CreateFramebuffer(GLsizei width, GLsizei height);
+	void CreateMssaFramebuffer(GLsizei width, GLsizei height);
+	void CreateOrthographicFramebuffer(GLsizei width, GLsizei height);
 
 public:
 	const float SPEED_UP_FACTOR = 2.f;
