@@ -2,7 +2,10 @@
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleLight.h"
+
 #include "PanelProjectExplorer.h"
 
 #include <Brofiler/Brofiler.h>
@@ -35,5 +38,6 @@ void PanelInspector::Render()
 		}
 
 	}
+
 	ImGui::End();
 }

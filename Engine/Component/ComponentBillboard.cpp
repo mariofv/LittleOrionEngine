@@ -137,9 +137,9 @@ void ComponentBillboard::Render(const float3& position)
 	GLuint shader_program = App->program->GetShaderProgramId("Billboard");
 	glUseProgram(shader_program);
 
-	int n;
-	glGetProgramStageiv(shader_program, GL_VERTEX_SHADER, GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS, &n);
-	unsigned* subroutines_indices = new unsigned[n];
+	int subroutine_position;
+	glGetProgramStageiv(shader_program, GL_VERTEX_SHADER, GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS, &subroutine_position);
+	unsigned* subroutines_indices = new unsigned[subroutine_position];
 
 	//Subroutine functions
 	GLuint viewpoint_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "view_point_alignment");
@@ -152,22 +152,22 @@ void ComponentBillboard::Render(const float3& position)
 	switch (alignment_type) 
 	{
 	case VIEW_POINT:
-		glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &viewpoint_subroutine);
+		glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &viewpoint_subroutine);
 		break;
 	case CROSSED:
-		glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &crossed_subroutine);
+		glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &crossed_subroutine);
 		break;
 
 	case AXIAL:
-		glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &axial_subroutine);
+		glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &axial_subroutine);
 		break;
 
 	case SPRITESHEET:
 		if(oriented_to_camera)
-			glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &viewpoint_subroutine);
+			glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &viewpoint_subroutine);
 
 		else
-			glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &crossed_subroutine);
+			glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &crossed_subroutine);
 
 		glUniform1i(glGetUniformLocation(shader_program, "billboard.XTiles"), x_tiles);
 		glUniform1i(glGetUniformLocation(shader_program, "billboard.YTiles"), y_tiles);
@@ -180,7 +180,7 @@ void ComponentBillboard::Render(const float3& position)
 
 	default:
 		// viewpoint by default, the most consistent one
-		glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &viewpoint_subroutine);
+		glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &viewpoint_subroutine);
 		break;
 	}
 
@@ -199,6 +199,7 @@ void ComponentBillboard::Render(const float3& position)
 	glBindVertexArray(0);
 
 	glUseProgram(0);
+	delete[] subroutines_indices;
 }
 
 Component* ComponentBillboard::Clone(bool original_prefab) const
