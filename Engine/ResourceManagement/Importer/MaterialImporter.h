@@ -19,7 +19,6 @@ public:
 
 private:
 	uint32_t ImportMaterialTexture(const std::string& texture_file_name, const Path& material_file_folder_path) const;
-	Material::MaterialTextureType GetTextureTypeFromAssimpType(aiTextureType type) const;
 };
 
 #endif // !_MATERIALIMPORTER_H_
