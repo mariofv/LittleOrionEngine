@@ -2,6 +2,7 @@
 
 #include "EditorUI/Panel/PanelInspector.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelMetaFile.h"
+#include "EditorUI/Panel/PanelPopups.h"
 
 #include "Filesystem/PathAtlas.h"
 #include "Main/Application.h"
@@ -111,7 +112,7 @@ void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 		if (path_child->IsDirectory())
 		{
 
-			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
+			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow ;
 
 			std::string filename = ICON_FA_FOLDER " " + path_child->GetFilename();
 			if (path_child->sub_folders == 0)
@@ -141,6 +142,7 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 {
 	if (selected_folder == nullptr)
 	{
+		selected_folder = App->filesystem->assets_folder_path;
 		return;
 	}
 
@@ -332,6 +334,7 @@ void PanelProjectExplorer::ApplyRename()
 	}
 }
 
+
 void PanelProjectExplorer::ResourceDragSource(const Metafile* metafile) const
 {
 	if (ImGui::BeginDragDropSource())
@@ -419,34 +422,62 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 	}
 	if (ImGui::BeginPopup("Menu"))
 	{
-		if (selected_folder != nullptr && path->IsDirectory() && ImGui::BeginMenu("Create"))
+		if (selected_folder != nullptr && path->IsDirectory())
 		{
-			if (ImGui::Selectable("Folder"))
+			if (ImGui::BeginMenu("Create"))
 			{
-				std::string new_directory_path = path->GetFullPath() + "/New folder";
-				size_t i = 0;
-				while (App->filesystem->Exists(new_directory_path))
+				if (ImGui::Selectable("Folder"))
 				{
-					new_directory_path = path->GetFullPath() + "/New folder" +" " + std::to_string(i);
-					i++;
+					auto & choose_name_popup = App->editor->popups->new_filename_chooser;
+					choose_name_popup.show_new_filename_popup = true;
+					choose_name_popup.new_filename = "New folder";
+					choose_name_popup.apply_new_name = [path] (std::string & new_directory_path){
+		
+						new_directory_path = path->GetFullPath() + "/" + new_directory_path;
+						size_t i = 0;
+						while (App->filesystem->Exists(new_directory_path))
+						{
+							new_directory_path = path->GetFullPath() + "/New folder" + " " + std::to_string(i);
+							i++;
+						}
+						App->filesystem->MakeDirectory(new_directory_path);
+					};
 				}
-				App->filesystem->MakeDirectory(new_directory_path);
-			}
-			ImGui::Separator();
-			if (ImGui::Selectable("Material"))
-			{
-				App->resources->Create<Material>(*selected_folder, "New Material.mat");
+				ImGui::Separator();
+				if (ImGui::Selectable("Material"))
+				{
+					auto & choose_name_popup = App->editor->popups->new_filename_chooser;
+					choose_name_popup.show_new_filename_popup = true;
+					choose_name_popup.new_filename = "New Material";
+					choose_name_popup.apply_new_name = [this](std::string & new_directory_path) {
 
+						App->resources->Create<Material>(*selected_folder, new_directory_path +".mat");
+					};
+
+
+				}
+				if (ImGui::Selectable("Skybox"))
+				{
+					auto & choose_name_popup = App->editor->popups->new_filename_chooser;
+					choose_name_popup.show_new_filename_popup = true;
+					choose_name_popup.new_filename = "New Skybox";
+					choose_name_popup.apply_new_name = [this](std::string & new_directory_path) {
+
+						App->resources->Create<Skybox>(*selected_folder, new_directory_path + ".skybox");
+					};
+				}
+				if (ImGui::Selectable("State Machine"))
+				{
+					auto & choose_name_popup = App->editor->popups->new_filename_chooser;
+					choose_name_popup.show_new_filename_popup = true;
+					choose_name_popup.new_filename = "New State Machine";
+					choose_name_popup.apply_new_name = [this](std::string & new_directory_path) {
+
+						App->resources->Create<StateMachine>(*selected_folder, new_directory_path + ".stm");
+					};
+				}
+				ImGui::EndMenu();
 			}
-			if (ImGui::Selectable("Skybox"))
-			{
-				App->resources->Create<Skybox>(*selected_folder, "New Skybox.skybox");
-			}
-			if (ImGui::Selectable("State Machine"))
-			{
-				App->resources->Create<StateMachine>(*selected_folder, "New State Machine.stm");
-			}
-			ImGui::EndMenu();
 		}
 
 		if (selected_file != nullptr )
