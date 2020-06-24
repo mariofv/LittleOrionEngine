@@ -23,7 +23,6 @@ public:
 	~ModuleDebug() = default;
 
 	bool Init() override;
-	bool CleanUp() override;
 	void Render(ComponentCamera* cam);
 	
 	void CreateFrustumCullingDebugScene() const;

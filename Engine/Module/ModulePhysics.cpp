@@ -108,10 +108,6 @@ void ModulePhysics::UpdateAllDimensions()
 	}
 }
 
-bool ModulePhysics::CleanUp()
-{
-	return true;
-}
 
 void ModulePhysics::SetGravity(float3& newGravity)
 {
