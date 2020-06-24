@@ -11,6 +11,7 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleAnimation.h"
 
 #include "ResourceManagement/Resources/StateMachine.h"
 
@@ -50,11 +51,13 @@ void PanelStateMachine::Render()
 	if (App->editor->selected_game_object)
 	{
 		ComponentAnimation* animation_component = (ComponentAnimation*)App->editor->selected_game_object->GetComponent(Component::ComponentType::ANIMATION);
-		animation_controller = animation_component ? animation_component->GetAnimController() : nullptr;
+
+		AnimController* controller = animation_component ? animation_component->GetAnimController() : nullptr;
+		animation_controller = controller && controller->state_machine->GetUUID() == state_machine->GetUUID() ? animation_component->GetAnimController() : animation_controller_in_hierarchy;
 	}
 	else
 	{
-		animation_controller = nullptr;
+		animation_controller = animation_controller_in_hierarchy;
 	}
 	if (ImGui::Begin(window_name.c_str(), &opened, ImGuiWindowFlags_MenuBar))
 	{
@@ -487,6 +490,15 @@ void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 	}
 	delete[] state_machine_data.buffer;
 	firstFrame = true;
+
+	for (auto & animation_component : App->animations->animations)
+	{
+		if (animation_component->GetAnimController()->state_machine->GetUUID() == state_machine_uuid)
+		{
+			animation_controller_in_hierarchy = animation_component->GetAnimController();
+			break;
+		}
+	}
 }
 
 

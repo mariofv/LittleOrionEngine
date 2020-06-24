@@ -69,6 +69,7 @@ public:
 
 	//debug playing animation
 	AnimController* animation_controller = nullptr;
+	AnimController* animation_controller_in_hierarchy = nullptr;
 
 private:
 	std::vector<NodeInfo*> GetSelectedNodes();
