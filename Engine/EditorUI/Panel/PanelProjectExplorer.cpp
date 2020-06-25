@@ -477,9 +477,12 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 			{
 				auto & choose_name_popup = App->editor->popups->new_filename_chooser;
 				choose_name_popup.show_new_filename_popup = true;
-				choose_name_popup.new_filename = selected_file->GetFilenameWithoutExtension();
-				choose_name_popup.apply_new_name = [this](std::string & new_filename) {
+				std::string original_file = selected_file->GetFilenameWithoutExtension();
+				std::string extension = original_file.substr(original_file.find_last_of("."));
+				choose_name_popup.new_filename = original_file.substr(0, original_file.find_last_of("."));
+				choose_name_popup.apply_new_name = [this, extension](std::string & new_filename) {
 
+					new_filename +=  extension + ".meta";
 					App->filesystem->Rename(selected_file, new_filename);
 				};
 			}
