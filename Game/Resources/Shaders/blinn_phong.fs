@@ -177,7 +177,8 @@ void main()
 	//fragment_normal = CalculateNormalMapAndLiquid(material, tiling); TODO change it to liquid maps
 	if(material.use_normal_map)	
 	{	
-		fragment_normal = GetNormalMap(material, tiling);	
+		vec3 normal_from_texture = GetNormalMap(material, tiling);	
+		fragment_normal= normalize(TBN * normal_from_texture);	
 	}
 	result += CalculateLightmap(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)
@@ -279,8 +280,8 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 {
 	
 	vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
-	vec3 view_dir    = TBN* normalize(view_pos - position);
-	vec3 light_dir   = TBN* normalize(-directional_light.direction );
+	vec3 view_dir    = normalize(view_pos - position);
+	vec3 light_dir   = normalize(-directional_light.direction );
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
 	float diff = max(0.0, dot(normalized_normal, light_dir));
 
@@ -311,15 +312,14 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 
 vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
-	vec3 frag = normalize(TBN * normalized_normal);	
 	vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
 	vec3 view_dir    = normalize(view_pos - position);
 	vec3 light_dir   = normalize(spot_light.position - position);
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
-	float diff = max(0.0, dot(frag, light_dir));
+	float diff = max(0.0, dot(normalized_normal, light_dir));
 
 	//----Specular calculations----
-	vec3 reflect_dir = reflect(-light_dir, frag);
+	vec3 reflect_dir = reflect(-light_dir, normalized_normal);
 	float shininess = 7*material.specular_color.w + 1;
     float spec = pow(max(dot(view_dir, reflect_dir), 0.0), shininess*shininess);
     vec3 specular = vec3(1.0,1.0,1.0) *  (spec * (spec + 8)/8 * PI)* specular_color.rgb;  
@@ -335,7 +335,7 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4
 
    return spot_light.color * (
          NormalizedDiffuse(diffuse_color.rgb, specular_color) *intensity*attenuation
-        + specular_color.rgb * specular *intensity*attenuation 
+        + specular_color.rgb * specular *intensity*attenuation
     )* diff;
 
 }
@@ -344,8 +344,8 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, v
 {
 
 	vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
-	vec3 view_dir    = TBN* normalize(view_pos - position);
-	vec3 light_dir   = TBN* normalize(point_light.position - position);
+	vec3 view_dir    = normalize(view_pos - position);
+	vec3 light_dir   = normalize(point_light.position - position);
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
 	float diff = max(0.0, dot(normalized_normal, light_dir));
 
