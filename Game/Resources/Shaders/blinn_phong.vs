@@ -105,14 +105,10 @@ void main()
 
 
 	//Tangent space matrix
-	mat4 modelview = matrices.model * matrices.view;
-	mat3 normalMatrix = mat3(matrices.model);
-    vec3 T = normalize(normalMatrix * vertex_tangent);
-    vec3 N = normalize(normalMatrix * vertex_normal);
-    T = normalize(T - N *dot(T, N));
-    vec3 B = cross(N, T);
-
-	TBN = transpose(mat3(T, B, N));  
+	vec3 T = normalize(vec3(matrices.model * vec4(vertex_tangent,   0.0)));
+	vec3 N = normalize(vec3(matrices.model * vec4(vertex_normal,    0.0)));
+	vec3 B = normalize(vec3(matrices.model * vec4(cross(N, T), 0.0)));
+	TBN = transpose(mat3(T, B, N));
 
 	//Light space
 	close_pos_from_light = close_lightSpaceMatrix*vec4(position, 1.0);
