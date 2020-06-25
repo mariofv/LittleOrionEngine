@@ -309,6 +309,7 @@
     <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h" />
     <ClInclude Include="Engine\Helper\TagManager.h" />
     <ClInclude Include="Engine\Module\ModuleEffects.h" />
+    <ClInclude Include="Engine\Helper\ThreadSafeQueue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Animation\Tween\LOTween.cpp" />

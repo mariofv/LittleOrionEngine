@@ -1032,6 +1032,9 @@
     <ClInclude Include="Engine\Animation\Tween\TweenSequence.h">
       <Filter>Engine\Animation\Tween</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Helper\ThreadSafeQueue.h">
+      <Filter>Engine\Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
