@@ -2,6 +2,7 @@
 
 #include "Component/ComponentCamera.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
+#include "Filesystem/PathAtlas.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleAI.h"
@@ -135,6 +136,10 @@ void PanelScene::RenderSceneBar()
 			App->debug->show_debug_metrics = !App->debug->show_debug_metrics;
 		}
 
+		if (ImGui::Selectable("Reload shaders", false, ImGuiSelectableFlags_None, ImVec2(100, 0)))
+		{
+			App->program->LoadPrograms(SHADERS_PATH);
+		}
 		ImGui::EndMenuBar();
 
 	}
