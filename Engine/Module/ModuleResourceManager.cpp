@@ -291,6 +291,10 @@ uint32_t ModuleResourceManager::CreateFromData(FileData data, const std::string&
 	return InternalImport(*created_asset_file_path);
 }
 
+void ModuleResourceManager::LoaderThread()
+{
+}
+
 std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32_t uuid) const
 {
 	//Check if the resource is already loaded

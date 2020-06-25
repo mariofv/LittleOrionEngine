@@ -4,6 +4,7 @@
 #include "Main/Application.h"
 #include "Module.h"
 #include "ModuleFileSystem.h"
+#include "Helper/Timer.h"
 
 #include "ResourceManagement/Resources/Animation.h"
 #include "ResourceManagement/Resources/Font.h"
@@ -104,9 +105,12 @@ public:
 			APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, resource_library_file.c_str());
 			return nullptr;
 		}
-
+		timer.Start();
 		Path* resource_exported_file_path = App->filesystem->GetPath(resource_library_file);
 		FileData exported_file_data = resource_exported_file_path->GetFile()->Load();
+		APP_LOG_ERROR("Loading FILEDATA: %.3f", timer.Stop());
+		//HERE WE CHECK IF T IS TEXTURE AND IF SO WE ADD FILEDATA TO THE QUEUE
+		//WE NEED TO CHECK HOW I AM GONNA SOLVE THE LOADED_RESOURCE NULLPTR WHILE NOT BEING CREATED
 		loaded_resource = ResourceManagement::Load<T>(uuid, exported_file_data);
 
 		delete[] exported_file_data.buffer;
@@ -128,6 +132,9 @@ public:
 	bool CleanResourceFromCache(uint32_t uuid);
 	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);
 	uint32_t CreateFromData(FileData data, const std::string& created_resource_path);
+
+	//Multithread loader
+	void LoaderThread();
 
 private:
 
@@ -174,6 +181,8 @@ private:
 	float cache_time = 0;
 	const size_t cache_interval_millis = 15* 1000 ;
 	mutable std::vector<std::shared_ptr<Resource>> resource_cache;
+
+	Timer timer = Timer();
 
 	friend class MaterialImporter;
 };
