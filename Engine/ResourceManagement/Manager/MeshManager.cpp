@@ -10,6 +10,8 @@
 
 std::shared_ptr<Mesh> MeshManager::Load(uint32_t uuid, const FileData& resource_data)
 {
+	BROFILER_CATEGORY("Load Mesh Manager", Profiler::Color::PaleGoldenRod);
+
 	char * data = (char*)resource_data.buffer;
 	char* cursor = data;
 

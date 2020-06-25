@@ -337,7 +337,7 @@ inline void ModuleScene::LoadSceneResource()
 	else
 	{
 		current_scene = App->resources->Load<Scene>(pending_scene_uuid);
-		/*std::thread loader(&Scene::Load, current_scene.get(), true);*/
+		//std::thread loader(&Scene::Load, current_scene.get(), true);
 		current_scene.get()->Load();
 		/*loader.join();*/
 	}
