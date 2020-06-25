@@ -28,6 +28,7 @@
 #include <imgui.h>
 #include <imgui_stdlib.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
+#include <algorithm>
 
 PanelHierarchy::PanelHierarchy()
 {
@@ -140,6 +141,8 @@ void PanelHierarchy::ShowGameObjectSearch(GameObject *game_object)
 	}
 
 	std::string name = game_object->name;
+	transform(name.begin(), name.end(), name.begin(), ::tolower);
+	transform(searching_name.begin(), searching_name.end(), searching_name.begin(), ::tolower);
 	if (searching_name != "" && name.find(searching_name) != std::string::npos) {
 		ImGui::TreeNodeEx(game_object_name_label.c_str(), flags);
 		ShowGameObjectActionsMenu(game_object);

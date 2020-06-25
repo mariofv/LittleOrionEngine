@@ -519,97 +519,6 @@
     ],
     "GameObjects": [
         {
-            "UUID": 1690967942,
-            "ParentUUID": 0,
-            "Name": "Light",
-            "Tag": "",
-            "IsStatic": false,
-            "Active": false,
-            "Transform": {
-                "UUID": 3749479261,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    -159.8000030517578,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 1012207212,
-                "ComponentType": 7,
-                "Active": true,
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": false,
-            "Components": [
-                {
-                    "UUID": 2143224420,
-                    "ComponentType": 4,
-                    "Active": true,
-                    "LightColor": [
-                        0.4803921580314636,
-                        0.4803921580314636,
-                        0.2684544324874878,
-                        1.0
-                    ],
-                    "Intensity": 1.0,
-                    "LightType": 2,
-                    "PointLightRange": 16.0,
-                    "PointLightConstant": 1.0,
-                    "PointLightLinear": 0.04500000178813934,
-                    "PointLightQuadratic": 0.007499999832361937,
-                    "SpotLightRange": 10.0,
-                    "SpotLightConstant": 1.0,
-                    "SpotLightLinear": 0.04500000178813934,
-                    "SpotLightQuadratic": 0.007499999832361937,
-                    "SpotLightSpotAngle": 30.0,
-                    "SpotLightCutoff": 0.9659258127212524,
-                    "SpotLightSoftness": 0.10000000149011612,
-                    "SpotLightOuterCutoff": 0.9588197469711304
-                }
-            ]
-        },
-        {
             "UUID": 172714554,
             "ParentUUID": 0,
             "Name": "Main Camera",
@@ -696,6 +605,64 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "CameraController"
+                },
+                {
+                    "UUID": 1527511923,
+                    "ComponentType": 3,
+                    "Active": true,
+                    "Translation": [
+                        -126.3328628540039,
+                        27.44099998474121,
+                        40.51383972167969
+                    ],
+                    "Rotation": [
+                        165.99977111816407,
+                        15.999757766723633,
+                        -179.9999542236328
+                    ],
+                    "Scale": [
+                        1.0001201629638672,
+                        0.9999989867210388,
+                        1.0001049041748047
+                    ]
+                },
+                {
+                    "UUID": 1527511923,
+                    "ComponentType": 3,
+                    "Active": true,
+                    "Translation": [
+                        -126.3328628540039,
+                        27.44099998474121,
+                        40.51383972167969
+                    ],
+                    "Rotation": [
+                        165.99977111816407,
+                        15.999757766723633,
+                        -179.9999542236328
+                    ],
+                    "Scale": [
+                        1.0001201629638672,
+                        0.9999989867210388,
+                        1.0001049041748047
+                    ]
+                },
+                {
+                    "UUID": 3641786684,
+                    "ComponentType": 1,
+                    "Active": true,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 500.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 0,
+                    "ClearColor": [
+                        9.999999974752428e-7,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Depth": 0,
+                    "Skybox": 0
                 }
             ]
         },
@@ -849,23 +816,23 @@
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 2504285158,
+                "UUID": 1527511923,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
+                    -126.3328628540039,
+                    27.44099998474121,
+                    40.51383972167969
                 ],
                 "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
+                    165.99977111816407,
+                    15.999757766723633,
+                    -179.9999542236328
                 ],
                 "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    1.0001201629638672,
+                    0.9999989867210388,
+                    1.0001049041748047
                 ]
             },
             "Transform2D": {
@@ -2745,6 +2712,97 @@
             ]
         },
         {
+            "UUID": 985141208,
+            "ParentUUID": 0,
+            "Name": "Light(1)",
+            "Tag": "",
+            "IsStatic": false,
+            "Active": false,
+            "Transform": {
+                "UUID": 2209235974,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    -2.789036273956299,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 668379711,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 2143224420,
+                    "ComponentType": 4,
+                    "Active": true,
+                    "LightColor": [
+                        0.4803921580314636,
+                        0.4803921580314636,
+                        0.2684544324874878,
+                        1.0
+                    ],
+                    "Intensity": 1.0,
+                    "LightType": 2,
+                    "PointLightRange": 16.0,
+                    "PointLightConstant": 1.0,
+                    "PointLightLinear": 0.04500000178813934,
+                    "PointLightQuadratic": 0.007499999832361937,
+                    "SpotLightRange": 10.0,
+                    "SpotLightConstant": 1.0,
+                    "SpotLightLinear": 0.04500000178813934,
+                    "SpotLightQuadratic": 0.007499999832361937,
+                    "SpotLightSpotAngle": 30.0,
+                    "SpotLightCutoff": 0.9659258127212524,
+                    "SpotLightSoftness": 0.10000000149011612,
+                    "SpotLightOuterCutoff": 0.9588197469711304
+                }
+            ]
+        },
+        {
             "UUID": 261041104,
             "ParentUUID": 3318139328,
             "Name": "HUD",
@@ -3267,19 +3325,19 @@
             ]
         },
         {
-            "UUID": 595375468,
+            "UUID": 4050965072,
             "ParentUUID": 3107288681,
-            "Name": "Spawn 1",
+            "Name": "Spawn 1(1)",
             "Tag": "",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 4262119434,
+                "UUID": 4062418259,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
                     75.71685028076172,
-                    0.9218851327896118,
+                    0.9218850135803223,
                     -1.6816813945770264
                 ],
                 "Rotation": [
@@ -3294,7 +3352,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 3451171757,
+                "UUID": 856669486,
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
@@ -3332,14 +3390,14 @@
             "Components": []
         },
         {
-            "UUID": 1670224720,
+            "UUID": 3554721390,
             "ParentUUID": 3107288681,
-            "Name": "Spawn 2",
+            "Name": "Spawn 2(1)",
             "Tag": "",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3654665116,
+                "UUID": 4167049544,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -3359,7 +3417,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 2887085057,
+                "UUID": 293733597,
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
@@ -3397,83 +3455,18 @@
             "Components": []
         },
         {
-            "UUID": 817376336,
+            "UUID": 2054787940,
             "ParentUUID": 3107288681,
-            "Name": "Spawn 3",
+            "Name": "Spawn 4(1)",
             "Tag": "",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 64490696,
+                "UUID": 1822726850,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    261.2848205566406,
-                    -24.280746459960939,
-                    -2.1901907920837404
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2447609268,
-                "ComponentType": 7,
-                "Active": true,
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": false,
-            "Components": []
-        },
-        {
-            "UUID": 675089536,
-            "ParentUUID": 3107288681,
-            "Name": "Spawn 4",
-            "Tag": "",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1602015903,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    311.2185363769531,
+                    311.218505859375,
                     -8.668872833251954,
                     -13.013999938964844
                 ],
@@ -3489,7 +3482,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 696358177,
+                "UUID": 2400732053,
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
@@ -3527,18 +3520,18 @@
             "Components": []
         },
         {
-            "UUID": 2915364061,
+            "UUID": 2997590649,
             "ParentUUID": 3107288681,
-            "Name": "Spawn 5",
+            "Name": "Spawn 5(1)",
             "Tag": "",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3602129689,
+                "UUID": 3751608726,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    353.0039978027344,
+                    353.00396728515627,
                     -6.757453918457031,
                     -13.028534889221192
                 ],
@@ -3554,7 +3547,72 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 267872633,
+                "UUID": 397557120,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": false,
+            "Components": []
+        },
+        {
+            "UUID": 2248728994,
+            "ParentUUID": 3107288681,
+            "Name": "Spawn 3(1)",
+            "Tag": "",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2019874181,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    261.2847900390625,
+                    -24.280746459960939,
+                    -2.1901907920837404
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 667938375,
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
