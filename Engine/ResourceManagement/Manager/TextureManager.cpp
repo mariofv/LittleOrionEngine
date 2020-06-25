@@ -118,6 +118,7 @@ std::shared_ptr<Texture> TextureManager::LoadThread(uint32_t uuid, const FileDat
 		texture_data.width = width;
 		texture_data.num_channels = num_channels;
 		texture_data.texture_options = texture_options;
+		texture_data.uuid = uuid;
 	}
 	APP_LOG_SUCCESS("Time Loading Texture Manager: %.3f", timer.Pause());
 

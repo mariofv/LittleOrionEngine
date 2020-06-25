@@ -48,7 +48,7 @@ class SceneManager;
 struct TextureLoadJob
 {
 	Component* component_to_load = nullptr;
-	TextureLoadData loadedData;
+	TextureLoadData loaded_data;
 };
 
 

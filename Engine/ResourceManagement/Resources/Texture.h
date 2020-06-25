@@ -20,6 +20,7 @@ struct TextureLoadData
 	int num_channels = 0;
 	TextureOptions texture_options;
 	std::vector<char> data;
+	uint32_t uuid = 0;
 };
 
 class Texture : public Resource

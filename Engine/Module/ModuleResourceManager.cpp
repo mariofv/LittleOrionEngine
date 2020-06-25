@@ -37,7 +37,7 @@
 #include <Brofiler/Brofiler.h>
 #include <functional> //for std::hash
 
-#define MULTITHREADING 0
+#define MULTITHREADING 1
 
 ModuleResourceManager::ModuleResourceManager()
 {
@@ -99,6 +99,19 @@ update_status ModuleResourceManager::PreUpdate()
 		cache_time = thread_timer->Read();
 		RefreshResourceCache();
 	}
+
+
+#if MULTITHREADING
+	if(!processing_textures_queue.Empty())
+	{
+		TextureLoadJob texture_job;
+		if(processing_textures_queue.TryPop(texture_job))
+		{
+			//Generate OpenGL texture
+			texture_job.component_to_load->GenerateTextures(texture_job.loaded_data);
+		}
+	}
+#endif
 
 	return update_status::UPDATE_CONTINUE;
 }
