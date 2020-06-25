@@ -283,13 +283,15 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	vec3 view_dir    = normalize(view_pos - position);
 	vec3 light_dir   = normalize(-directional_light.direction );
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
+	float diff = max(0.0, dot(normalized_normal, light_dir));
 
 	//----Specular calculations----
 	vec3 reflect_dir = reflect(-light_dir, normalized_normal);
-    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), pow(7*material.specular_color.w + 1, 2));
-    vec3 specular = vec3(1.0,1.0,1.0) * spec * specular_color.rgb;  
+	float shininess = 7*material.specular_color.w + 1;
+    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), shininess*shininess);
+    vec3 specular = vec3(1.0,1.0,1.0) *  (spec * (spec + 8)/8 * PI) * specular_color.rgb;  
 
-	float diff = max(0.0, dot(normalized_normal, light_dir));
+	
 	
 	float shadow;
 	if(render_shadows)
@@ -314,25 +316,26 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4
 	vec3 view_dir    = normalize(view_pos - position);
 	vec3 light_dir   = normalize(spot_light.position - position);
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
+	float diff = max(0.0, dot(normalized_normal, light_dir));
 
 	//----Specular calculations----
 	vec3 reflect_dir = reflect(-light_dir, normalized_normal);
-    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), pow(7*material.specular_color.w + 1, 2));
-    vec3 specular = vec3(1.0,1.0,1.0) * spec * specular_color.rgb;  
+	float shininess = 7*material.specular_color.w + 1;
+    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), shininess*shininess);
+    vec3 specular = vec3(1.0,1.0,1.0) *  (spec * (spec + 8)/8 * PI)* specular_color.rgb;  
 	
-	float diff = max(0.0, dot(normalized_normal, light_dir));
-
+	
+	//----Softness and atenuation---
     float theta = dot(light_dir, normalize(-spot_light.direction)); 
     float epsilon = (spot_light.cutOff - spot_light.outerCutOff);
     float intensity = clamp((theta - spot_light.outerCutOff) / epsilon, 0.0, 1.0);
-
     float distance    = length(spot_light.position - position);
     float attenuation = 1.0 / (spot_light.constant + spot_light.linear * distance +
                 spot_light.quadratic * (distance * distance));
 
    return spot_light.color * (
          NormalizedDiffuse(diffuse_color.rgb, specular_color) *intensity*attenuation
-        + specular_color.rgb * specular *intensity*attenuation
+        + specular_color.rgb * specular *intensity*attenuation 
     )* diff;
 
 }
@@ -344,15 +347,16 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, v
 	vec3 view_dir    = normalize(view_pos - position);
 	vec3 light_dir   = normalize(point_light.position - position);
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
+	float diff = max(0.0, dot(normalized_normal, light_dir));
 
 	//----Specular calculations----
-	vec3 reflectDir = reflect(-light_dir, normalized_normal);  
-    float spec = pow(max(dot(view_dir, reflectDir), 0.0), pow(7*material.specular_color.w + 1, 2));
-    vec3 specular = vec3(1.0,1.0,1.0) * spec * specular_color.rgb;  
+	vec3 reflect_dir = reflect(-light_dir, normalized_normal);  
+    float shininess = 7*material.specular_color.w + 1;
+    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), shininess*shininess);
+    vec3 specular = vec3(1.0,1.0,1.0) * (spec * (spec + 8)/8 * PI) * specular_color.rgb;  
 
-	float diff = max(0.0, dot(normalized_normal, light_dir));
   
-
+  	//----Softness and atenuation---
 	float distance    = length(point_light.position - position);
 	float attenuation = 1.0 / (point_light.constant + point_light.linear * distance +
     		    point_light.quadratic * (distance));
@@ -368,12 +372,12 @@ vec3 NormalizedDiffuse(vec3 diffuse_color, vec4 specular_color)
 {
 	if(material.use_specular_map)
 	{
-		return 	(1-specular_color.rgb)*diffuse_color * material.k_diffuse * 1/PI; //The more specular, the less diffuse
+		return 	(1-specular_color.rgb)*diffuse_color  * 1/PI; //The more specular, the less diffuse
 	}
 
 	else
 	{
-		return 	diffuse_color * material.k_diffuse * 1/PI ;
+		return 	diffuse_color * 1/PI ;
 	}
 }
 
@@ -382,7 +386,7 @@ float NormalizedSpecular(vec3 normal, vec3 half_dir) // Old refference: http://w
 	
 	float shininess = pow(7*material.specular_color.w + 1, 2); 
 	float spec = pow(max(dot(normal, half_dir), 0.0), shininess);
-	float normalization_factor = (spec + 8)/8;
+	float normalization_factor = (spec + 8)/8 * PI;
 
 	return spec* normalization_factor;
 }
