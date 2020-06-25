@@ -17,10 +17,12 @@ public:
 	void Render() override;
 
 	void ShowFoldersHierarchy(const Path& file);
+	void ShowFoldersHierarchySearch(const Path& file);
 
 	void ProcessMouseInput(Path* file_path);
 	void ProcessResourceMouseInput(Path* metafile_path, Metafile* metafile);
 	void ShowFilesInExplorer();
+	
 
 	void CalculateNextLinePosition(int &current_file_in_line, int files_per_line, int &current_line);
 
@@ -55,6 +57,7 @@ private:
 	std::unordered_map<uint32_t,std::shared_ptr<Texture>> project_explorer_icon_cache;
 public:
 	ModelMetafile* opened_model = nullptr;
-	std::string searching_name;
+	std::string searching_file;
+
 };
 #endif //_PANELPROJECTEXPLORER_H_

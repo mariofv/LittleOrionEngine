@@ -42,6 +42,12 @@ void PanelProjectExplorer::Render()
 	{
 		hovered = ImGui::IsWindowHovered();
 
+		ImGui::SameLine();
+		ImGui::Text(ICON_FA_SEARCH);
+
+		ImGui::SameLine();
+		ImGui::InputText("###File Searching Input", &searching_file);
+
 		project_explorer_dockspace_id = ImGui::GetID("ProjectExplorerDockspace");
 		bool initialized = ImGui::DockBuilderGetNode(project_explorer_dockspace_id) != NULL;
 
@@ -59,7 +65,14 @@ void PanelProjectExplorer::Render()
 		if (ImGui::Begin("Project Folder Explorer"))
 		{
 			hovered =  ImGui::IsWindowHovered();
-			ShowFoldersHierarchy(*App->filesystem->assets_folder_path);
+			if (searching_file == "")
+			{
+				ShowFoldersHierarchy(*App->filesystem->assets_folder_path);
+			}
+			else
+			{
+				ShowFoldersHierarchySearch(*App->filesystem->assets_folder_path);
+			}
 		}
 		ImGui::End();
 
@@ -134,6 +147,49 @@ void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 			}
 			ImGui::PopID();
 		}
+	}
+}
+
+void PanelProjectExplorer::ShowFoldersHierarchySearch(const Path & path)
+{
+	
+	transform(searching_file.begin(), searching_file.end(), searching_file.begin(), ::tolower);
+	for (auto & path_child : path.children)
+	{
+		std::string name = path_child->GetFilename();
+		transform(name.begin(), name.end(), name.begin(), ::tolower);
+		if (path_child->IsDirectory() && name.find(searching_file) != std::string::npos)
+		{
+
+			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
+
+			std::string filename = ICON_FA_FOLDER " " + path_child->GetFilename();
+			if (path_child->sub_folders == 0)
+			{
+				flags |= ImGuiTreeNodeFlags_Leaf;
+			}
+			if (selected_folder == path_child)
+			{
+				flags |= ImGuiTreeNodeFlags_Selected;
+				filename = ICON_FA_FOLDER_OPEN " " + path_child->GetFilename();
+			}
+			bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
+			ResourceDropTarget(path_child);
+			ImGui::PushID(filename.c_str());
+			ProcessMouseInput(path_child);
+			if (expanded)
+			{
+				ShowFoldersHierarchy(*path_child);
+				ImGui::TreePop();
+			}
+			ImGui::PopID();
+		}
+		
+		if (path.IsDirectory() && path_child->sub_folders > 0)
+		{
+			ShowFoldersHierarchySearch(*path_child);				
+		}
+		
 	}
 }
 
