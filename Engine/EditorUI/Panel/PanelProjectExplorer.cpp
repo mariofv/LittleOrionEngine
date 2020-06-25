@@ -29,7 +29,6 @@
 #include <algorithm>
 
 
-static std::string new_name_file;
 PanelProjectExplorer::PanelProjectExplorer()
 {
 	opened = true;
@@ -215,26 +214,19 @@ void PanelProjectExplorer::ShowMetafile(Path* metafile_path, Metafile* metafile,
 		}
 		ImGui::Spacing();
 
-		if (renaming_file && metafile_path == renaming_file)
+		float text_width = ImGui::CalcTextSize(filename.c_str()).x;
+		if (text_width < file_size_width)
 		{
-			ImGui::InputText("###NewName", &new_name_file);
+			ImGui::SetCursorPosX((ImGui::GetWindowWidth() - text_width) * 0.5f);
+			ImGui::Text(filename.c_str());
 		}
 		else
 		{
-			float text_width = ImGui::CalcTextSize(filename.c_str()).x;
-			if (text_width < file_size_width)
-			{
-				ImGui::SetCursorPosX((ImGui::GetWindowWidth() - text_width) * 0.5f);
-				ImGui::Text(filename.c_str());
-			}
-			else
-			{
-				float character_width = text_width / filename.length();
-				size_t string_position_wrap = static_cast<size_t>(file_size_width / character_width - 5);
-				assert(string_position_wrap < filename.length());
-				std::string wrapped_filename = filename.substr(0, string_position_wrap + 3) + "\n" + filename.substr(string_position_wrap, filename.size());
-				ImGui::Text(wrapped_filename.c_str());
-			}
+			float character_width = text_width / filename.length();
+			size_t string_position_wrap = static_cast<size_t>(file_size_width / character_width - 5);
+			assert(string_position_wrap < filename.length());
+			std::string wrapped_filename = filename.substr(0, string_position_wrap + 3) + "\n" + filename.substr(string_position_wrap, filename.size());
+			ImGui::Text(wrapped_filename.c_str());
 		}
 		
 	}
@@ -325,16 +317,6 @@ size_t PanelProjectExplorer::GetResourcePreviewImage(uint32_t uuid)
 	return opengl_id;
 }
 
-void PanelProjectExplorer::ApplyRename()
-{
-	if (renaming_file)
-	{
-		App->filesystem->Rename(renaming_file, new_name_file);
-		renaming_file = nullptr;
-	}
-}
-
-
 void PanelProjectExplorer::ResourceDragSource(const Metafile* metafile) const
 {
 	if (ImGui::BeginDragDropSource())
@@ -402,9 +384,7 @@ void PanelProjectExplorer::ProcessMouseInput(Path* file_path)
 	{
 		if (ImGui::IsMouseClicked(0))
 		{
-			//selected_folder = file_path;
 			selected_file = nullptr;
-			ApplyRename();
 		}
 		if (ImGui::IsMouseDoubleClicked(0))
 		{
@@ -490,14 +470,18 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 				if (success)
 				{
 					selected_file = nullptr;
-					renaming_file = nullptr;
 					opened_model = nullptr;
 				}
 			}
 			if (!has_uuid && ImGui::Selectable("Rename"))
 			{
-				renaming_file = selected_file;
-				new_name_file = selected_file->GetFilename();
+				auto & choose_name_popup = App->editor->popups->new_filename_chooser;
+				choose_name_popup.show_new_filename_popup = true;
+				choose_name_popup.new_filename = selected_file->GetFilenameWithoutExtension();
+				choose_name_popup.apply_new_name = [this](std::string & new_filename) {
+
+					App->filesystem->Rename(selected_file, new_filename);
+				};
 			}
 			ImGui::Separator();
 			Metafile * selected_metafile = App->editor->selected_meta_file;
@@ -535,11 +519,6 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 			App->resources->CleanResourceCache();
 		}
 		ImGui::EndPopup();
-	}
-	bool enter_pressed = ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Enter));
-	if (enter_pressed || renaming_file && renaming_file != selected_file)
-	{
-		ApplyRename();
 	}
 }
 

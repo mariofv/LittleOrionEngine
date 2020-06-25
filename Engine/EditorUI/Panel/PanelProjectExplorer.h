@@ -39,8 +39,6 @@ private:
 	void ShowMetafileIcon(Metafile* metafile);
 
 	size_t GetResourcePreviewImage(uint32_t uuid);
-	void ApplyRename();
-	void ApplyCreateNewFile();
 
 private:
 	float file_size_width = 100.f;
@@ -48,11 +46,6 @@ private:
 
 	Path* selected_folder = nullptr;
 	Path* selected_file = nullptr;
-	Path* renaming_file = nullptr;
-
-	bool creating_new_folder = false;
-	bool creating_new_material = false;
-	bool creating_new_state_machine = false;
 
 	ImGuiID project_explorer_dockspace_id;
 
