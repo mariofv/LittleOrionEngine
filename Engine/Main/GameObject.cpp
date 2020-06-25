@@ -144,12 +144,12 @@ void GameObject::Duplicate(const GameObject& gameobject_to_copy)
 	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
 	this->original_UUID = gameobject_to_copy.original_UUID;
+	this->tag = gameobject_to_copy.tag;
 	if(gameobject_to_copy.prefab_reference != nullptr && !gameobject_to_copy.is_prefab_parent)
 	{
 		this->original_UUID = 0;
 		this->prefab_reference = nullptr;
 	}
-
 
 
 	return;
@@ -423,6 +423,9 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	Component* created_component;
 	switch (type)
 	{
+	case Component::ComponentType::AABB:
+		created_component = new ComponentAABB(this);
+		break;
 	case Component::ComponentType::ANIMATION:
 		created_component = App->animations->CreateComponentAnimation(this);
 		break;
@@ -695,7 +698,15 @@ void GameObject::CopyComponentsPrefabs(const GameObject& gameobject_to_copy)
 		}
 		else if (my_component == nullptr)
 		{
-			Component *copy = component->Clone(this->original_prefab);
+			Component *copy = nullptr;
+		 if (component->type == Component::ComponentType::COLLIDER)
+			{
+				copy = component->Clone(this, this->original_prefab);
+			}
+			else
+			{
+				copy = component->Clone(this->original_prefab);
+			}
 			copy->owner = this;
 			this->components.push_back(copy);
 		}

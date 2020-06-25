@@ -72,5 +72,7 @@ std::string Component::GetComponentTypeName(Component::ComponentType component_t
 
 	case Component::ComponentType::UI_TEXT:
 		return "UI Text";
+	default:
+		return "Unknown";
 	}
 }

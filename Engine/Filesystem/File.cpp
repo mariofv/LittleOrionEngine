@@ -32,7 +32,7 @@ FileData File::Load() const
 	size_t res_size = static_cast<size_t>(PHYSFS_fileLength(physfs_file_handle));
 	char* res = new char[res_size + 1];
 
-	int length_read = PHYSFS_read(physfs_file_handle, res, 1, res_size);
+	int length_read = static_cast<int>(PHYSFS_read(physfs_file_handle, res, 1, res_size));
 	PHYSFS_close(physfs_file_handle);
 
 	if (length_read != res_size)

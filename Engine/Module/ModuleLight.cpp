@@ -1,7 +1,10 @@
 #include "ModuleLight.h"
 #include "Main/Application.h"
-#include "Module/ModuleProgram.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleCamera.h"
+#include "Module/ModuleProgram.h"
+#include "Module/ModuleRender.h"
+#include "Module/ModuleScene.h"
 
 #include <Brofiler/Brofiler.h>
 #include <algorithm>
@@ -14,8 +17,35 @@ ModuleLight::~ModuleLight()
 bool ModuleLight::Init()
 {
 	APP_LOG_SECTION("************ Module Light Init ************");
+	//directional_light_rotation = Quat::identity;
+
 
 	return true;
+}
+
+
+
+
+
+update_status ModuleLight::PostUpdate()
+{
+
+	light_position = float3((light_aabb.maxPoint.x + light_aabb.minPoint.x) * 0.5, (light_aabb.maxPoint.y + light_aabb.minPoint.y) * 0.5, light_aabb.maxPoint.z);
+	
+	float3 new_pos;
+	new_pos = directional_light_rotation * light_position;
+
+
+	App->cameras->dir_light_game_object->transform.SetRotation(directional_light_rotation);
+	App->cameras->dir_light_game_object->transform.SetTranslation(new_pos);
+
+	App->cameras->UpdateDirectionalLightFrustums(light_aabb.maxPoint, light_aabb.minPoint);
+
+	light_aabb.SetNegativeInfinity();
+	light_obb.SetNegativeInfinity();
+	
+	return update_status::UPDATE_CONTINUE;
+
 }
 
 bool ModuleLight::CleanUp()
@@ -35,6 +65,8 @@ void ModuleLight::Render(const float3& mesh_position, GLuint program)
 	RenderDirectionalLight(mesh_position);
 	RenderSpotLights(mesh_position, program);
 	RenderPointLights(mesh_position, program);
+	SendShadowMatricesToShader(program);
+
 }
 
 void ModuleLight::RenderDirectionalLight(const float3& mesh_position)
@@ -54,6 +86,9 @@ void ModuleLight::RenderDirectionalLight(const float3& mesh_position)
 
 		size_t light_direction_offset = App->program->uniform_buffer.lights_uniform_offset + 4 * sizeof(float);
 		glBufferSubData(GL_UNIFORM_BUFFER, light_direction_offset, sizeof(float3), light->owner->transform.GetFrontVector().ptr());
+	
+		directional_light_rotation = directional_light_rotation.LookAt(float3::unitZ, light->owner->transform.GetFrontVector(), float3::unitY, light->owner->transform.GetUpVector());
+		
 
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
@@ -93,6 +128,49 @@ void ModuleLight::RenderSpotLights(const float3& mesh_position, GLuint program)
 	}
 
 	glUniform1i(glGetUniformLocation(program, "num_spot_lights"), current_number_spot_lights_rendered);
+}
+
+void ModuleLight::SendShadowMatricesToShader(GLuint program)
+{
+	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_view"), 1, GL_TRUE, &App->cameras->directional_light_camera->GetViewMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_proj"), 1, GL_TRUE, &App->cameras->directional_light_camera->GetProjectionMatrix()[0][0]);
+
+	glUniformMatrix4fv(glGetUniformLocation(program, "mid_directional_view"), 1, GL_TRUE, &App->cameras->directional_light_mid->GetViewMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "mid_directional_proj"), 1, GL_TRUE, &App->cameras->directional_light_mid->GetProjectionMatrix()[0][0]);
+
+	glUniformMatrix4fv(glGetUniformLocation(program, "far_directional_view"), 1, GL_TRUE, &App->cameras->directional_light_far->GetViewMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "far_directional_proj"), 1, GL_TRUE, &App->cameras->directional_light_far->GetProjectionMatrix()[0][0]);
+
+	if (App->cameras->main_camera != nullptr)
+	{
+		//glUniformMatrix4fv(glGetUniformLocation(program, "main_cam_view"), 1, GL_TRUE, &App->cameras->main_camera->GetViewMatrix()[0][0]);
+		//glUniformMatrix4fv(glGetUniformLocation(program, "main_cam_proj"), 1, GL_TRUE, &App->cameras->main_camera->GetProjectionMatrix()[0][0]);
+
+		/*glUniformMatrix4fv(glGetUniformLocation(program, "close_cam_view"), 1, GL_TRUE, &App->cameras->camera_close->GetViewMatrix()[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(program, "close_cam_proj"), 1, GL_TRUE, &App->cameras->camera_close->GetProjectionMatrix()[0][0]);
+
+		glUniformMatrix4fv(glGetUniformLocation(program, "mid_cam_view"), 1, GL_TRUE, &App->cameras->camera_mid->GetViewMatrix()[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(program, "mid_cam_proj"), 1, GL_TRUE, &App->cameras->camera_mid->GetProjectionMatrix()[0][0]);*/
+
+		glUniform1f(glGetUniformLocation(program, "far_plane"), App->cameras->main_camera->camera_frustum.farPlaneDistance);
+
+	}
+
+}
+
+void ModuleLight::UpdateLightAABB(GameObject& object)
+{
+	//Light aabb will enclose every object in the scene
+	AABB temp;
+	temp = object.aabb.bounding_box;
+
+	object_obb = object.aabb.bounding_box.Transform(directional_light_rotation.Inverted());
+
+	AABB object_aabb = object_obb.MinimalEnclosingAABB();
+
+	light_aabb.Enclose(object_aabb);
+
+	light_obb = light_aabb.Transform(directional_light_rotation);
 }
 
 void ModuleLight::RenderPointLights(const float3& mesh_position, GLuint program)

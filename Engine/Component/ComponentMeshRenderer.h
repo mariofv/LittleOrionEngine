@@ -50,7 +50,10 @@ private:
 	void AddAmbientOclusionUniforms(unsigned int shader_program) const;
 	void AddNormalUniforms(unsigned int shader_program) const;
 	void AddLightMapUniforms(unsigned int shader_program) const;
+	void AddLiquidMaterialUniforms(unsigned int shader_program) const;
 	void AddExtraUniforms(unsigned int shader_program) const;
+
+	void UpdateLiquidProperties();
 
 	bool BindTexture(Material::MaterialTextureType id) const;
 	bool BindTextureNormal(Material::MaterialTextureType id) const;

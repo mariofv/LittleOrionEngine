@@ -44,19 +44,24 @@ public:
 	void OpenPendingScene();
 	void DeleteCurrentScene();
 
+
 	ENGINE_API void LoadScene(const std::string& path);
 	ENGINE_API void LoadScene(unsigned position);
-	void LoadScene();
-	void SaveScene();
-	void SaveTmpScene();
-	bool HasPendingSceneToLoad() const;
 
-	void SetCurrentScene(uint32_t uuid);
+	void SaveScene(uint32_t scene_uuid = 0);
+
+	void OpenNewScene();
+	void LoadTmpScene();
+	void SaveTmpScene();
+
+	bool HasPendingSceneToLoad() const;
+	bool CurrentSceneIsSaved() const;
 
 private:
 	void OpenScene();
-	inline void GetSceneResource();
-	void GetSceneFromPath(const std::string& path);
+	inline void LoadSceneResource();
+	uint32_t GetSceneUUIDFromPath(const std::string& path);
+
 	//Don't use this function use the public one
 	GameObject* DuplicateGO(GameObject* game_object, GameObject* parent_go);
 
@@ -64,11 +69,13 @@ private:
 private:
 	GameObject* root = nullptr;
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
+
 	std::shared_ptr<Scene> current_scene = nullptr;
+	uint32_t pending_scene_uuid = 0;
+
 	std::shared_ptr<Scene> tmp_scene = nullptr;
-	std::string scene_to_load;
-	int build_options_position = -1;
-	bool load_tmp_scene = false;
+	std::shared_ptr<Scene> last_scene = 0;
+
 	std::unique_ptr<BuildOptions> build_options = nullptr;
 
 	friend class PanelScene;

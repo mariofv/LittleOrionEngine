@@ -9,7 +9,7 @@ Font::Font(uint32_t uuid, std::map<GLchar, Character> characters) : Resource(uui
 	{
 		if (character.second.glyph_size.y > max_height)
 		{
-			max_height = character.second.glyph_size.y;
+			max_height = static_cast<int>(character.second.glyph_size.y);
 		}
 
 		if (character.second.advance > max_advance)

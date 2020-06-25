@@ -232,19 +232,19 @@ float Tween::SmoothStep(float t) const {
 }
 
 float Tween::EaseInSine(float t) const {
-	return 1 - cos(t * (3.1416 / 2));
+	return 1 - cos(t * (3.1416f / 2));
 }
 
 float Tween::Sine(float t) const {
-	return (sin(t * (3.1416 * 2) - 3.1416 / 2) + 1.0) / 2.0;
+	return (sin(t * (3.1416f * 2) - 3.1416f / 2) + 1.0f) / 2.0f;
 }
 
 float Tween::EaseOutSine(float t) const {
-	return sin(t * (3.1416 / 2));
+	return sin(t * (3.1416f / 2));
 }
 
 float Tween::EaseInOutSine(float t) const {
-	return -0.5 * (cos(3.1416 * t) - 1);
+	return -0.5f * (cos(3.1416f * t) - 1);
 }
 
 float Tween::EaseInBack(float t) const {
@@ -262,7 +262,7 @@ float Tween::EaseInOutBack(float t) const {
 	float s = 1.70158f * 1.525f;
 	//float s2 = s * 1.525f;
 	t *= 2;
-	if (t < 1) return 1.0 / 2 * (t*t*((s + 1)*t - s));
+	if (t < 1) return 1.0f / 2 * (t*t*((s + 1)*t - s));
 	float postFix = t -= 2;
-	return 1.0 / 2 * ((postFix)*t*((s + 1)*t + s) + 2);
+	return 1.0f / 2 * ((postFix)*t*((s + 1)*t + s) + 2);
 }

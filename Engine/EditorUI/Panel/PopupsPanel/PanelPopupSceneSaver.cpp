@@ -83,15 +83,14 @@ void PanelPopupSceneSaver::Render()
 		APP_LOG_INFO("Saving %s scene.", GetSelected())
 		if (is_overwriting)
 		{
-			App->scene->GetSceneFromPath(GetSelected());
-			App->editor->SaveScene(GetSelected());
+			uint32_t uuid_scene = App->scene->GetSceneUUIDFromPath(GetSelected());
+			App->scene->SaveScene(uuid_scene);
 			is_overwriting = false;
 		}
 		else
 		{
 			uint32_t uuid_scene = SceneManager::Create(GetSelected());
-			App->scene->SetCurrentScene(uuid_scene);
-			App->editor->current_scene_path = GetSelected();
+			App->scene->SaveScene(uuid_scene);
 		}
 	}
 }

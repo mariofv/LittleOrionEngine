@@ -26,6 +26,7 @@ public:
 public:
 	GLuint checkerboard_texture_id = 0;
 	GLuint whitefall_texture_id = 0;
+	GLuint blackfall_texture_id = 0;
 
 	const static int generate_texture_height = 64;
 	const static int generate_texture_width = 64;
@@ -35,7 +36,8 @@ private:
 	enum class PATRON
 	{
 		CHECKBOARD,
-		WHITE
+		WHITE,
+		BLACK
 	};
 
 	void GenerateTexture(GLuint &texture_id_to_store, PATRON color_id);
