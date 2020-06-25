@@ -37,6 +37,8 @@
 #include <Brofiler/Brofiler.h>
 #include <functional> //for std::hash
 
+#define MULTITHREADING 0
+
 ModuleResourceManager::ModuleResourceManager()
 {
 	resource_DB = std::make_unique<ResourceDataBase>();
@@ -67,6 +69,13 @@ bool ModuleResourceManager::Init()
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
 #else
 	App->filesystem->MountDirectory("Library");
+#endif
+
+#if MULTITHREADING
+	for(size_t i = 0; i < max_threads; ++i)
+	{
+		loader_threads.push_back(std::thread(&ModuleResourceManager::LoaderThread, this));
+	}
 #endif
 
 	thread_timer->Start();
@@ -101,6 +110,15 @@ bool ModuleResourceManager::CleanUp()
 	 importing_thread.join();
 #endif
 	 CleanResourceCache();
+
+#if MULTITHREADING
+	 loading_threads_active = false;
+	 for(size_t i = 0; i < max_threads; ++i)
+	 {
+		 loader_threads[i].join();
+	 }
+#endif
+
 	return true;
 }
 
@@ -293,6 +311,10 @@ uint32_t ModuleResourceManager::CreateFromData(FileData data, const std::string&
 
 void ModuleResourceManager::LoaderThread()
 {
+	while(loading_threads_active)
+	{
+		
+	}
 }
 
 std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32_t uuid) const

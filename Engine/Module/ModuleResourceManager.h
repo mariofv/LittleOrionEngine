@@ -4,6 +4,7 @@
 #include "Main/Application.h"
 #include "Module.h"
 #include "ModuleFileSystem.h"
+#include "Helper/ThreadSafeQueue.h"
 #include "Helper/Timer.h"
 
 #include "ResourceManagement/Resources/Animation.h"
@@ -43,6 +44,13 @@ class SoundImporter;
 class TextureImporter;
 
 class SceneManager;
+
+struct TextureLoadJob
+{
+	Component* component_to_load = nullptr;
+	TextureLoadData loadedData;
+};
+
 
 class ModuleResourceManager : public Module
 {
@@ -145,6 +153,7 @@ private:
 	std::shared_ptr<Resource> RetrieveFromCacheIfExist(uint32_t uuid) const;
 
 public:
+	//Multithreading
 	struct ThreadComunication
 	{
 		mutable std::mutex thread_mutex;
@@ -153,6 +162,13 @@ public:
 		std::atomic_uint loaded_items = 0;
 		std::atomic_uint total_items = 0;
 	} thread_comunication;
+
+	int max_threads = 1;
+	std::atomic<bool> loading_threads_active = true;
+	std::vector<std::thread> loader_threads;
+
+	ThreadSafeQueue<TextureLoadJob> loading_textures_queue;
+	ThreadSafeQueue<TextureLoadJob> processing_textures_queue;
 
 	//Importers
 	std::unique_ptr<AnimationImporter> animation_importer;
