@@ -321,15 +321,17 @@ void ModuleScene::OpenScene()
 
 inline void ModuleScene::LoadSceneResource()
 {
+	bool exists = App->filesystem->Exists(std::string(LIBRARY_METADATA_PATH) + "/" + std::to_string(pending_scene_uuid));
+	uint32_t default_uuid = GetSceneUUIDFromPath(DEFAULT_SCENE_PATH);
 	if (pending_scene_uuid == tmp_scene->GetUUID())
 	{
 		tmp_scene.get()->Load();
 		current_scene = last_scene;
 	}
-	else if (pending_scene_uuid == GetSceneUUIDFromPath(DEFAULT_SCENE_PATH))
+	else if (pending_scene_uuid == default_uuid || !exists)
 	{
 		current_scene = nullptr;
-		App->resources->Load<Scene>(pending_scene_uuid).get()->Load();
+		App->resources->Load<Scene>(default_uuid).get()->Load();
 	}
 	else
 	{

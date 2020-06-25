@@ -59,7 +59,7 @@ void PanelProjectExplorer::Render()
 		if (ImGui::Begin("Project Folder Explorer"))
 		{
 			hovered =  ImGui::IsWindowHovered();
-			ShowFoldersHierarchy(*App->filesystem->assets_folder_path);
+			ShowFoldersHierarchy(*App->filesystem->assets_folder_path->GetParent());
 		}
 		ImGui::End();
 
