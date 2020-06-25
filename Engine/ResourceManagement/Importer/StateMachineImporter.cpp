@@ -46,7 +46,7 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 		clip.GetString("Name", name, "");
 		uint64_t name_hash = std::hash<std::string>{}(name);
 
-		uint32_t animation_uuid = clip.GetUInt("AnimationUUID", 0);
+		uint32_t animation_uuid = clip.GetUInt32("AnimationUUID", 0);
 
 		bool loop = clip.GetBool("Loop", false);
 

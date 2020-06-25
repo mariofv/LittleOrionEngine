@@ -13,7 +13,7 @@ public:
 	ComponentBoxCollider(GameObject* owner);
 	~ComponentBoxCollider() = default;
 
-	Component* Clone(GameObject* owner, bool original_prefab = false) const;
+	Component* Clone(GameObject* owner, bool original_prefab = false) const override;
 	ComponentBoxCollider& operator=(const ComponentBoxCollider& component_to_copy);
 
 	void UpdateDimensions();

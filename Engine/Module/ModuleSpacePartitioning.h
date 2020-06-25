@@ -21,8 +21,7 @@ public:
 	ModuleSpacePartitioning() = default;
 	~ModuleSpacePartitioning() = default;
 
-	bool Init();
-	bool CleanUp();
+	bool Init() override;
 
 	void GenerateQuadTree();
 	void GenerateOctTree();

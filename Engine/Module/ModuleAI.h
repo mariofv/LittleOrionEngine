@@ -17,7 +17,6 @@ public:
 
 	bool Init() override;
 	update_status Update() override;
-	bool CleanUp() override;
 
 	void RenderNavMesh(ComponentCamera& camera);
 
