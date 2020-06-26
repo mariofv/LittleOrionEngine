@@ -129,7 +129,7 @@ bool ComponentBillboard::IsPlaying()
 
 void ComponentBillboard::Render(const float3& position)
 {
-	if(!active)
+	if(!active || !billboard_texture)
 	{
 		return;
 	}
@@ -263,6 +263,13 @@ void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)
 		this->texture_uuid = texture_uuid;
 		billboard_texture = App->resources->Load<Texture>(texture_uuid);
 	}
+}
+
+void ComponentBillboard::GenerateTextures(TextureLoadData loaded_data)
+{
+		billboard_texture = std::make_shared<Texture>(loaded_data.uuid,
+			loaded_data.data.data(), loaded_data.data.size(), loaded_data.width,
+			loaded_data.height, loaded_data.num_channels, loaded_data.texture_options);
 }
 
 
