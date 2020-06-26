@@ -13,6 +13,13 @@ class PanelComponent;
 class ModuleProgram : public Module
 {
 public:
+	enum class ShaderVariations
+	{
+		ENABLE_NORMAL_MAP = 1 << 0,
+		ENABLE_SPECULAR_MAP = 1 << 1,
+		ENABLE_RECEIVE_SHADOWS = 1 << 2
+	};
+
 	// Holds information of the distibution of data inside the uniform buffer object
 	struct UniformBuffer 
 	{
