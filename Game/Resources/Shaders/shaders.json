@@ -4,9 +4,6 @@
       "Name": "Test",
       "Vertex": "/Resources/Shaders/uber_test.vs",
       "Fragment": "/Resources/Shaders/uber_test.fs",
-      "Defines": [
-        
-      ],
       "Selectable": true
     }
   ]

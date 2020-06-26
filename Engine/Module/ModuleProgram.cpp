@@ -37,7 +37,7 @@ bool ModuleProgram::CleanUp()
 
 unsigned int ModuleProgram::GetShaderProgramId(const std::string & program_name) const
 {
-	if (loaded_programs.count(program_name) > 0)
+	if (loaded_programs_aux.count(program_name) > 0)
 	{
 		return loaded_programs_aux.at(program_name);
 	}
@@ -152,14 +152,14 @@ bool ModuleProgram::InitVertexShader(GLuint &vertex_shader, const std::string& v
 	Path* vertex_shader_path = App->filesystem->GetPath(vertex_shader_file_name);
 	FileData vertex_shader_path_data = vertex_shader_path->GetFile()->Load();
 
-	char* vertex_shader_loaded_file = (char*)vertex_shader_path_data.buffer;
+	const char* vertex_shader_loaded_file = (const char*)vertex_shader_path_data.buffer;
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	if (vertex_shader == 0) {
 		APP_LOG_ERROR("Error creating vertex shader %s", vertex_shader_file_name);
 		return false;
 	}
 
-	std::vector<char*> vertex_shader_data;
+	std::vector<const char*> vertex_shader_data;
 	for (size_t i = 0; i < defines.size(); ++i)
 	{
 		vertex_shader_data.emplace_back(defines[i].c_str());
@@ -192,13 +192,13 @@ bool ModuleProgram::InitFragmentShader(GLuint &fragment_shader, const std::strin
 	Path* fragment_shader_path = App->filesystem->GetPath(fragment_shader_file_name);
 	FileData fragment_shader_path_data = fragment_shader_path->GetFile()->Load();
 
-	char* fragment_shader_loaded_file = (char*)fragment_shader_path_data.buffer;	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+	const char* fragment_shader_loaded_file = (const char*)fragment_shader_path_data.buffer;	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	if (fragment_shader == 0) {
 		OPENGL_LOG_ERROR("Error creating fragment shader %s", fragment_shader_file_name);
 		return false;
 	}
 
-	std::vector<char*> fragment_shader_data;
+	std::vector<const char*> fragment_shader_data;
 	for (size_t i = 0; i < defines.size(); ++i)
 	{
 		fragment_shader_data.emplace_back(defines[i].c_str());
@@ -365,6 +365,7 @@ void ModuleProgram::LoadPrograms(const char* file_path)
 		shaders[i].GetString("Name", loaded_program.program_name, "");
 		shaders[i].GetString("Vertex", loaded_program.vertex_shader_file_name, "");
 		shaders[i].GetString("Fragment", loaded_program.fragment_shader_file_name, "");
+		
 		if (selectable)
 		{
 			char *pc = new char[loaded_program.program_name.size() + 1];
