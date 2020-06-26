@@ -3,6 +3,7 @@
 #include "Helper/Config.h"
 #include "Main/Application.h"
 
+#include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleTime.h"
@@ -210,4 +211,23 @@ void Material::UpdateLiquidProperties()
 	tiling_liquid_y_y -= speed_tiling_y / 1000 * App->time->delta_time;
 	tiling_liquid_x_x += speed_tiling_x / 1000 * App->time->delta_time;
 	tiling_liquid_x_y += speed_tiling_y / 1000 * App->time->delta_time;
+}
+
+unsigned int Material::GetShaderVariation() const
+{
+	unsigned int variation = 0;
+	if (use_specular_map_uber)
+	{
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_SPECULAR_MAP);
+	}
+	if (use_normal_map_uber)
+	{
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_NORMAL_MAP);
+	}
+	if (use_shadow_uber)
+	{
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_RECEIVE_SHADOWS);
+	}
+
+	return variation;
 }

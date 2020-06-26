@@ -14,7 +14,7 @@ class PanelComponent;
 class ModuleProgram : public Module
 {
 public:
-	enum class ShaderVariations
+	enum class ShaderVariation
 	{
 		ENABLE_NORMAL_MAP = 1 << 0,
 		ENABLE_SPECULAR_MAP = 1 << 1,
@@ -108,9 +108,9 @@ private:
 	std::unordered_map<std::string, ShaderProgram> loaded_programs;
 	std::array<std::string, 3> defines =
 	{
-		"#define NORMAL_MAP 1",
-		"#define SPECULAR_MAP 1",
-		"#define RECEIVE_SHADOWS 1"
+		"#define NORMAL_MAP 1\n",
+		"#define SPECULAR_MAP 1\n",
+		"#define RECEIVE_SHADOWS 1\n"
 	};
 
 	std::vector<const char *> names;

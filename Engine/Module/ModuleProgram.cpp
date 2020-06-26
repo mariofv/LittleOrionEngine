@@ -53,31 +53,35 @@ bool ModuleProgram::UseProgram(const std::string& program_name, unsigned int var
 		return false;
 	}
 	
-	ShaderProgram program = loaded_programs[program_name];
-	bool is_program_compiled = program.compiled_variations.find(variation) != program.compiled_variations.end();
+	ShaderProgram *program = &loaded_programs[program_name];
+	bool is_program_compiled = program->compiled_variations.find(variation) != program->compiled_variations.end();
 	if (!is_program_compiled) 
 	{
-		bool compiled_successfully = CompileProgram(program, variation);
+		bool compiled_successfully = CompileProgram(*program, variation);
 		if (!compiled_successfully)
 		{
 			return false;
 		}
 	}
 
-	glUseProgram(loaded_programs[program_name].compiled_variations[variation]);
+	glUseProgram(program->compiled_variations[variation]);
 }
 
 bool ModuleProgram::CompileProgram(ShaderProgram& program, unsigned int variation)
 {
 	APP_LOG_INIT("Compiling shader program %s", program.program_name.c_str());
 
-	std::vector<std::string> shader_variations;	for (size_t i = 0; i < defines.size(); ++i)
+	std::vector<std::string> shader_variations;
+	shader_variations.emplace_back(std::string("#version 430 core\n"));
+	for (size_t i = 0; i < defines.size(); ++i)
 	{
 		if (variation & (1 << i))
 		{
 			shader_variations.emplace_back(defines[i]);
 		}
-	}	GLuint vertex_shader;
+	}
+
+	GLuint vertex_shader;
 	if (!InitVertexShader(vertex_shader, program.vertex_shader_file_name, shader_variations))
 	{
 		return false;
@@ -96,8 +100,10 @@ bool ModuleProgram::CompileProgram(ShaderProgram& program, unsigned int variatio
 	}
 	program.compiled_variations[variation] = shader_program;
 
-	APP_LOG_SUCCESS("Shader program %s loaded correctly.", program.program_name);
-	return true;}
+	APP_LOG_SUCCESS("Shader program %s loaded correctly.", program.program_name.c_str());
+	return true;
+
+}
 
 void ModuleProgram::InitUniformBuffer()
 {
@@ -149,24 +155,24 @@ bool ModuleProgram::InitVertexShader(GLuint &vertex_shader, const std::string& v
 {
 	APP_LOG_INFO("Loading vertex shader");
 
-	Path* vertex_shader_path = App->filesystem->GetPath(vertex_shader_file_name);
+	Path* vertex_shader_path = App->filesystem->GetPath(vertex_shader_file_name.c_str());
 	FileData vertex_shader_path_data = vertex_shader_path->GetFile()->Load();
 
-	const char* vertex_shader_loaded_file = (const char*)vertex_shader_path_data.buffer;
+	char* vertex_shader_loaded_file = (char*)vertex_shader_path_data.buffer;
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	if (vertex_shader == 0) {
-		APP_LOG_ERROR("Error creating vertex shader %s", vertex_shader_file_name);
+		APP_LOG_ERROR("Error creating vertex shader %s", vertex_shader_file_name.c_str());
 		return false;
 	}
 
-	std::vector<const char*> vertex_shader_data;
+	std::vector<char*> vertex_shader_data;
 	for (size_t i = 0; i < defines.size(); ++i)
 	{
-		vertex_shader_data.emplace_back(defines[i].c_str());
+		vertex_shader_data.emplace_back(const_cast<char*>(defines[i].c_str()));
 	}
 	vertex_shader_data.emplace_back(vertex_shader_loaded_file);
 
-	glShaderSource(vertex_shader, vertex_shader_data.size(), vertex_shader_data.data(), NULL);
+	glShaderSource(vertex_shader, vertex_shader_data.size(), &vertex_shader_data[0], NULL);
 	delete[] vertex_shader_loaded_file;
 
 	APP_LOG_INFO("Compiling vertex shader");
@@ -177,7 +183,7 @@ bool ModuleProgram::InitVertexShader(GLuint &vertex_shader, const std::string& v
 	if (!compilation_status)
 	{
 		glGetShaderInfoLog(vertex_shader, 512, NULL, info_log);
-		APP_LOG_ERROR("Error compiling vertex shader %s", vertex_shader_file_name);
+		APP_LOG_ERROR("Error compiling vertex shader %s", vertex_shader_file_name.c_str());
 		APP_LOG_ERROR(info_log);
 		return false;
 	}
@@ -189,23 +195,23 @@ bool ModuleProgram::InitFragmentShader(GLuint &fragment_shader, const std::strin
 {
 	APP_LOG_INFO("Loading fragment shader");
 
-	Path* fragment_shader_path = App->filesystem->GetPath(fragment_shader_file_name);
+	Path* fragment_shader_path = App->filesystem->GetPath(fragment_shader_file_name.c_str());
 	FileData fragment_shader_path_data = fragment_shader_path->GetFile()->Load();
 
-	const char* fragment_shader_loaded_file = (const char*)fragment_shader_path_data.buffer;	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+	char* fragment_shader_loaded_file = (char*)fragment_shader_path_data.buffer;	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	if (fragment_shader == 0) {
-		OPENGL_LOG_ERROR("Error creating fragment shader %s", fragment_shader_file_name);
+		OPENGL_LOG_ERROR("Error creating fragment shader %s", fragment_shader_file_name.c_str());
 		return false;
 	}
 
-	std::vector<const char*> fragment_shader_data;
+	std::vector<char*> fragment_shader_data;
 	for (size_t i = 0; i < defines.size(); ++i)
 	{
-		fragment_shader_data.emplace_back(defines[i].c_str());
+		fragment_shader_data.emplace_back(const_cast<char*>(defines[i].c_str()));
 	}
 	fragment_shader_data.emplace_back(fragment_shader_loaded_file);
 
-	glShaderSource(fragment_shader, 1, fragment_shader_data.data(), NULL);
+	glShaderSource(fragment_shader, fragment_shader_data.size(), &fragment_shader_data[0], NULL);
 	delete[] fragment_shader_loaded_file;
 
 	APP_LOG_INFO("Compiling fragment shader");
@@ -216,7 +222,7 @@ bool ModuleProgram::InitFragmentShader(GLuint &fragment_shader, const std::strin
 	if (!compilation_status)
 	{
 		glGetShaderInfoLog(fragment_shader, 512, NULL, info_log);
-		APP_LOG_ERROR("Error compiling fragment shader %s", fragment_shader_file_name);
+		APP_LOG_ERROR("Error compiling fragment shader %s", fragment_shader_file_name.c_str());
 		APP_LOG_ERROR(info_log);
 		return false;
 	}
@@ -335,11 +341,13 @@ void ModuleProgram::BindUniformBlocks(GLuint shader_program) const
 		glUniformBlockBinding(shader_program, matrices_uniform_block_index, 0);
 	}
 
+	/*
 	GLuint light_uniform_block_index = glGetUniformBlockIndex(shader_program, "DirectionalLight");
 	if (light_uniform_block_index != GL_INVALID_INDEX)
 	{
 		glUniformBlockBinding(shader_program, light_uniform_block_index, 1);
 	}
+	*/
 }
 
 void ModuleProgram::LoadPrograms(const char* file_path)
@@ -372,6 +380,8 @@ void ModuleProgram::LoadPrograms(const char* file_path)
 			strcpy_s(pc, loaded_program.program_name.size() + 1, loaded_program.program_name.c_str());
 			names.push_back(pc);
 		}
+
+		loaded_programs[loaded_program.program_name] = loaded_program;
 	}
 }
 

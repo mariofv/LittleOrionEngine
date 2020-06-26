@@ -65,7 +65,7 @@ void ModuleLight::Render(const float3& mesh_position, GLuint program)
 	RenderDirectionalLight(mesh_position);
 	RenderSpotLights(mesh_position, program);
 	RenderPointLights(mesh_position, program);
-	SendShadowMatricesToShader(program);
+	//SendShadowMatricesToShader(program);
 
 }
 

@@ -50,6 +50,7 @@ public:
 	static std::string GetMaterialTypeName(const MaterialType material_type);
 
 	void UpdateLiquidProperties();
+	unsigned int GetShaderVariation() const;
 
 
 public:
@@ -94,6 +95,10 @@ public:
 	bool use_specular_map = false;
 
 	bool show_checkerboard_texture = false;
+
+	bool use_specular_map_uber = false;
+	bool use_normal_map_uber = false;
+	bool use_shadow_uber = false;
 };
 
 namespace ResourceManagement

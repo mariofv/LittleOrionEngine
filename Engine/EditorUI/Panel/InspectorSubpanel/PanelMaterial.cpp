@@ -95,6 +95,14 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 		ImGui::Separator();
 		ImGui::Spacing();
 		
+		ImGui::Checkbox("Use Normal Map", &material->use_normal_map_uber);
+		ImGui::Checkbox("Use Specular Map", &material->use_specular_map_uber);
+		ImGui::Checkbox("Use Shadows", &material->use_shadow_uber);
+
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
 		ImGui::Text("Main Maps");
 		ImGui::Spacing();
 		ImGui::Spacing();
