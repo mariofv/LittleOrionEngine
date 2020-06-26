@@ -241,10 +241,6 @@ void ModuleProgram::LoadPrograms(const char* file_path)
 
 void ModuleProgram::LoadProgramsAux(const char* file_path)
 {
-	CleanUp();
-
-	InitUniformBuffer();
-
 	Path* shaders_path = App->filesystem->GetPath(file_path);
 	FileData shaders_data = shaders_path->GetFile()->Load();
 
