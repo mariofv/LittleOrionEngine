@@ -1,5 +1,6 @@
 #include "Texture.h"
 
+#include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Metafile/TextureMetafile.h"
 
 #include <IL/il.h>
@@ -13,6 +14,8 @@ Texture::Texture(uint32_t uuid, char* data, size_t image_size, int width, int he
 	this->data.resize(image_size);
 	memcpy(&this->data.front(), data, image_size);
 	LoadInMemory(options, num_channels);
+
+	++App->resources->number_of_textures_loaded;
 }
 
 

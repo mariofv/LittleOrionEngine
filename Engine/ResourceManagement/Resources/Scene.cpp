@@ -102,6 +102,7 @@ void Scene::Load(bool from_file)
 	}
 
 	timer.Start();
+	App->resources->number_of_textures_loaded = 0;
 
 	std::unordered_map<int64_t, std::vector<GameObject*>> prefab_parents;
 	std::vector<Config> prefabs_config;

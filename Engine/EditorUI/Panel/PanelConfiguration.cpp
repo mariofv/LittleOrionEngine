@@ -6,6 +6,7 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleWindow.h"
@@ -313,6 +314,9 @@ void PanelConfiguration::ShowRenderOptions()
 		//ImGui::Checkbox("Toggle directional camera frustum", &App->renderer->toggle_ortho_frustum);
 		ImGui::Checkbox("Render shadows", &App->renderer->render_shadows);
 
+
+		ImGui::Separator();
+		ImGui::DragInt("Number of textures loaded:", &App->resources->number_of_textures_loaded);
 
 	}
 }
