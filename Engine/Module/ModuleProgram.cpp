@@ -224,18 +224,16 @@ void ModuleProgram::LoadPrograms(const char* file_path)
 	shaders_config.GetChildrenConfig("Shaders", shaders);
 	for (unsigned int i = 0; i < shaders.size(); ++i)
 	{
-		std::string name;
-		std::string vertex;
-		std::string fragment;
+		ShaderProgram loaded_program;
 		bool selectable = shaders[i].GetBool("Selectable", false);
-		shaders[i].GetString("Name", name, "");
-		shaders[i].GetString("Vertex", vertex, "");
-		shaders[i].GetString("Fragment", fragment, "");
-		LoadProgram(name, vertex.c_str(), fragment.c_str());
+		shaders[i].GetString("Name", loaded_program.program_name, "");
+		shaders[i].GetString("Vertex", loaded_program.vertex_shader_file_name, "");
+		shaders[i].GetString("Fragment", loaded_program.fragment_shader_file_name, "");
+		shaders[i].GetVector<std::string>("Defines", loaded_program.defines, std::vector<std::string>());
 		if (selectable)
 		{
-			char *pc = new char[name.size() + 1];
-			strcpy_s(pc, name.size() + 1, name.c_str());
+			char *pc = new char[loaded_program.program_name.size() + 1];
+			strcpy_s(pc, loaded_program.program_name.size() + 1, loaded_program.program_name.c_str());
 			names.push_back(pc);
 		}
 	}
