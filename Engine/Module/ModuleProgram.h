@@ -87,8 +87,8 @@ private:
 	void LoadPrograms(const char* file_path);
 	void LoadProgramsAux(const char* file_path);
 
-	bool CompileProgram(ShaderProgram& program, unsigned int variation);
 	bool LoadProgram(std::string name, const char* vertex_shader_file_name, const char* fragment_shader_file_name);
+	bool CompileProgram(ShaderProgram& program, unsigned int variation);
 
 	bool InitVertexShader(GLuint &vertex_shader, const std::string& vertex_shader_file_name, const std::vector<std::string>& defines);
 	bool InitFragmentShader(GLuint &fragment_shader, const std::string& fragment_shader_file_name, const std::vector<std::string>& defines);
