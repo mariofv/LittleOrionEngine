@@ -37,7 +37,6 @@
 #include <Brofiler/Brofiler.h>
 #include <functional> //for std::hash
 
-#define MULTITHREADING 1
 
 ModuleResourceManager::ModuleResourceManager()
 {
@@ -326,7 +325,22 @@ void ModuleResourceManager::LoaderThread()
 {
 	while(loading_threads_active)
 	{
-		
+		if(!loading_textures_queue.Empty())
+		{
+			TextureLoadJob load_job;
+			if(loading_textures_queue.TryPop(load_job))
+			{
+				ResourceManagement::LoadThread<Texture>(load_job.uuid, load_job.exported_file_data, load_job.loaded_data);
+				//Delete file data buffer
+				delete[] load_job.exported_file_data.buffer;
+				processing_textures_queue.Push(load_job);
+			}
+
+			unsigned int work_load_size_remaining = loading_textures_queue.Size();
+
+			const int ms_to_wait = work_load_size_remaining > 0 ? 10 : 2000;
+			std::this_thread::sleep_for(std::chrono::milliseconds(ms_to_wait));
+		}
 	}
 }
 

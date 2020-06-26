@@ -21,11 +21,14 @@
 #include "ResourceManagement/Metafile/MetafileManager.h"
 #include "ResourceManagement/ResourcesDB/ResourceDataBase.h"
 
+#include <atomic>
 #include <Brofiler/Brofiler.h>
 #include <memory>
-#include <thread>
-#include <atomic>
 #include <mutex>
+#include <thread>
+#include <type_traits>
+
+#define MULTITHREADING 1
 
 class Path;
 class Timer;
@@ -47,6 +50,8 @@ class SceneManager;
 
 struct TextureLoadJob
 {
+	uint32_t uuid = 0;
+	FileData exported_file_data;
 	Component* component_to_load = nullptr;
 	TextureLoadData loaded_data;
 };
@@ -119,9 +124,22 @@ public:
 		APP_LOG_ERROR("Loading FILEDATA: %.3f", timer.Stop());
 		//HERE WE CHECK IF T IS TEXTURE AND IF SO WE ADD FILEDATA TO THE QUEUE
 		//WE NEED TO CHECK HOW I AM GONNA SOLVE THE LOADED_RESOURCE NULLPTR WHILE NOT BEING CREATED
-		loaded_resource = ResourceManagement::Load<T>(uuid, exported_file_data);
-
-		delete[] exported_file_data.buffer;
+		
+		if(MULTITHREADING && std::is_same<T, Texture>::value)
+		{
+			loaded_resource = nullptr;
+			TextureLoadJob load_job;
+			load_job.uuid = uuid;
+			load_job.exported_file_data = exported_file_data;
+			loading_textures_queue.Push(load_job);
+		}
+		else
+		{
+			loaded_resource = ResourceManagement::Load<T>(uuid, exported_file_data);
+			//IMPORTANT IF TEXTURE THIS MUST BE DELETED
+			delete[] exported_file_data.buffer;
+		}
+		
 
 		if (loaded_resource != nullptr)
 		{
