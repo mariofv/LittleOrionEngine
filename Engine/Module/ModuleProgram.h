@@ -6,6 +6,7 @@
 
 #include <GL/glew.h>
 #include <MathGeoLib.h>
+#include <array>
 #include <unordered_map>
 
 class PanelComponent;
@@ -25,6 +26,8 @@ public:
 		std::string program_name;
 		std::string vertex_shader_file_name;
 		std::string fragment_shader_file_name;
+
+		std::unordered_map<unsigned int, GLuint> compiled_variations;
 	};
 
 
@@ -78,6 +81,8 @@ public:
 	bool CleanUp() override;
 
 	unsigned int GetShaderProgramId(const std::string & program_name) const;
+	bool UseProgram(const std::string& program_name, unsigned int variation);
+	bool CompileProgram(const std::string& program_name, unsigned int variation);
 
 private:
 	void LoadPrograms(const char* file_path);

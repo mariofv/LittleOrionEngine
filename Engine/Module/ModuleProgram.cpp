@@ -44,6 +44,33 @@ unsigned int ModuleProgram::GetShaderProgramId(const std::string & program_name)
 	return  loaded_programs_aux.at("Blinn phong");
 }
 
+bool ModuleProgram::UseProgram(const std::string& program_name, unsigned int variation)
+{
+	bool is_program_loaded = loaded_programs.find(program_name) != loaded_programs.end();
+	if (!is_program_loaded)
+	{
+		APP_LOG_ERROR("Program %s is not loaded!", program_name.c_str());
+		return false;
+	}
+	
+	bool is_program_compiled = loaded_programs[program_name].compiled_variations.find(variation) != loaded_programs[program_name].compiled_variations.end();
+	if (!is_program_compiled) 
+	{
+		bool compiled_successfully = CompileProgram(program_name, variation);
+		if (!compiled_successfully)
+		{
+			return false;
+		}
+	}
+
+	glUseProgram(loaded_programs[program_name].compiled_variations[variation]);
+}
+
+bool ModuleProgram::CompileProgram(const std::string& program_name, unsigned int variation)
+{
+
+}
+
 void ModuleProgram::InitUniformBuffer()
 {
 	int uniform_buffer_offset_alignment;
