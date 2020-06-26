@@ -149,6 +149,13 @@ void ComponentImage::GenerateTextures(TextureLoadData loaded_data)
 		loaded_data.height, loaded_data.num_channels, loaded_data.texture_options);
 
 	texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
+	App->resources->AddResourceToCache(texture_to_render);
+}
+
+void ComponentImage::GetTextureFromCache(TextureLoadData loaded_data)
+{
+	texture_to_render = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(loaded_data.uuid));
+	texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
 }
 
 void ComponentImage::SetTextureToRender(uint32_t texture_uuid)

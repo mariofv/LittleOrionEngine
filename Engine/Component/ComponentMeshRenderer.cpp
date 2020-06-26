@@ -59,6 +59,11 @@ void ComponentMeshRenderer::GenerateTextures(TextureLoadData loaded_data)
 	material_to_render->GenerateTexture(loaded_data);
 }
 
+void ComponentMeshRenderer::GetTextureFromCache(TextureLoadData loaded_data)
+{
+	material_to_render->GetTextureFromCache(loaded_data);
+}
+
 void ComponentMeshRenderer::Render()
 {
 	if (material_to_render == nullptr)

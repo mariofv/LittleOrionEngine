@@ -273,11 +273,16 @@ void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)
 
 void ComponentBillboard::GenerateTextures(TextureLoadData loaded_data)
 {
-		billboard_texture = std::make_shared<Texture>(loaded_data.uuid,
-			loaded_data.data.data(), loaded_data.data.size(), loaded_data.width,
-			loaded_data.height, loaded_data.num_channels, loaded_data.texture_options);
+	billboard_texture = std::make_shared<Texture>(loaded_data.uuid,
+		loaded_data.data.data(), loaded_data.data.size(), loaded_data.width,
+		loaded_data.height, loaded_data.num_channels, loaded_data.texture_options);
 
-		App->resources->AddResourceToCache(billboard_texture);
+	App->resources->AddResourceToCache(billboard_texture);
+}
+
+void ComponentBillboard::GetTextureFromCache(TextureLoadData loaded_data)
+{
+	billboard_texture = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(loaded_data.uuid));
 }
 
 

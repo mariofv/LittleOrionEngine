@@ -165,10 +165,17 @@ void Material::GenerateTexture(TextureLoadData loaded_data)
 	App->resources->AddResourceToCache(textures[type]);
 }
 
+void Material::GetTextureFromCache(TextureLoadData loaded_data)
+{
+	MaterialTextureType type = static_cast<MaterialTextureType>(loaded_data.texture_type);
+	textures[type] = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(loaded_data.uuid));
+
+	assert(textures[type]);
+}
+
 void Material::RemoveMaterialTexture(MaterialTextureType type)
 {
 	textures[type] = nullptr;
-	
 }
 
 void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uuid)

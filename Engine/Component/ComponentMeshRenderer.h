@@ -32,6 +32,7 @@ public:
 	void SpecializedLoad(const Config& config) override;
 
 	void GenerateTextures(TextureLoadData loaded_data) override;
+	void GetTextureFromCache(TextureLoadData loaded_data) override;
 
 	void Delete() override;
 

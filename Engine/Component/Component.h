@@ -81,6 +81,7 @@ public:
 	virtual void SpecializedLoad(const Config &config) = 0;
 
 	virtual void GenerateTextures(TextureLoadData loaded_data) {}
+	virtual void GetTextureFromCache(TextureLoadData loaded_data) {}
 
 	virtual ComponentType GetType() const { return type; };
 	bool Is2DComponent() const;

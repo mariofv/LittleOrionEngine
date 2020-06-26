@@ -53,6 +53,7 @@ public:
 
 	void ChangeTexture(uint32_t texture_uuid);
 	void GenerateTextures(TextureLoadData loaded_data) override;
+	void GetTextureFromCache(TextureLoadData loaded_data) override;
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
 
 	ENGINE_API void EmitOnce();

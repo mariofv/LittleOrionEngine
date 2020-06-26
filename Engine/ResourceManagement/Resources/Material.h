@@ -46,6 +46,7 @@ public:
 
 	//Asyncronous loading
 	void GenerateTexture(TextureLoadData loaded_data);
+	void GetTextureFromCache(TextureLoadData loaded_data);
 
 	void RemoveMaterialTexture(MaterialTextureType type);
 
