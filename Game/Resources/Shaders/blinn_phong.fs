@@ -6,7 +6,6 @@ in vec3 position;
 in vec3 normal;
 in vec2 texCoord;
 in vec2 texCoordLightmap;
-in vec3 tangent;
 
 in vec3 view_dir;
 in vec3 view_pos;
@@ -278,9 +277,7 @@ vec3 CalculateNormalMapAndLiquid(const Material material, const vec2 tiling)
 }
 vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
-	
-	vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
-	vec3 view_dir    = normalize(view_pos - position);
+
 	vec3 light_dir   = normalize(-directional_light.direction );
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
 	float diff = max(0.0, dot(normalized_normal, light_dir));
@@ -312,8 +309,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 
 vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
-	vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
-	vec3 view_dir    = normalize(view_pos - position);
+
 	vec3 light_dir   = normalize(spot_light.position - position);
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
 	float diff = max(0.0, dot(normalized_normal, light_dir));
@@ -342,9 +338,6 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4
 
 vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
-
-	vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
-	vec3 view_dir    = normalize(view_pos - position);
 	vec3 light_dir   = normalize(point_light.position - position);
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
 	float diff = max(0.0, dot(normalized_normal, light_dir));

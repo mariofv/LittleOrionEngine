@@ -29,16 +29,11 @@ out vec2 texCoord;
 out vec2 texCoordLightmap;
 out vec3 position;
 out vec3 normal;
-out vec3 tangent;
 out mat3 TBN;
 
 //Without tangent modification
 out vec3 view_pos;
 out vec3 view_dir;
-
-//With tangent modification
-out vec3 t_view_pos;
-out vec3 t_frag_pos;
 
 //Normal mapping
 mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent);
@@ -97,12 +92,9 @@ void main()
 
 	position = (matrices.model*skinning_matrix*vec4(vertex_position, 1.0)).xyz;
 	normal = (matrices.model*skinning_matrix*vec4(vertex_normal, 0.0)).xyz;
-	tangent = (matrices.model*skinning_matrix*vec4(vertex_tangent, 0.0)).xyz;
 
 	view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
-	view_dir    = normalize(view_pos - position);
-	
-
+	view_dir    = normalize(view_pos - position);	
 
 	//Tangent space matrix
 	vec3 T = normalize(vec3(matrices.model * vec4(vertex_tangent,   0.0)));
