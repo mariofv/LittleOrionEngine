@@ -82,7 +82,9 @@ void AnimController::ApplyAutomaticTransitionIfNeeded()
 {
 	if (active_transition && active_transition->automatic)
 	{
+
 		float animation_time_with_interpolation = playing_clips[ClipType::ACTIVE].current_time + active_transition->interpolation_time;
+
 		if (animation_time_with_interpolation >= playing_clips[ClipType::ACTIVE].clip->animation_time)
 		{
 			auto& next_state = state_machine->GetState(active_transition->target_hash);
