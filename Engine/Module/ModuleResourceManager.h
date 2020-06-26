@@ -125,7 +125,7 @@ public:
 		//HERE WE CHECK IF T IS TEXTURE AND IF SO WE ADD FILEDATA TO THE QUEUE
 		//WE NEED TO CHECK HOW I AM GONNA SOLVE THE LOADED_RESOURCE NULLPTR WHILE NOT BEING CREATED
 		
-		if(MULTITHREADING && std::is_same<T, Texture>::value)
+		if(MULTITHREADING && std::is_same<T, Texture>::value && !normal_loading_flag)
 		{
 			loaded_resource = nullptr;
 			TextureLoadJob load_job;
@@ -184,6 +184,7 @@ public:
 	int max_threads = 1;
 	std::atomic<bool> loading_threads_active = true;
 	std::vector<std::thread> loader_threads;
+	bool normal_loading_flag = false;
 
 	ThreadSafeQueue<TextureLoadJob> loading_textures_queue;
 	ThreadSafeQueue<TextureLoadJob> processing_textures_queue;
