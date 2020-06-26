@@ -53,10 +53,11 @@ bool ModuleProgram::UseProgram(const std::string& program_name, unsigned int var
 		return false;
 	}
 	
-	bool is_program_compiled = loaded_programs[program_name].compiled_variations.find(variation) != loaded_programs[program_name].compiled_variations.end();
+	ShaderProgram program = loaded_programs[program_name];
+	bool is_program_compiled = program.compiled_variations.find(variation) != program.compiled_variations.end();
 	if (!is_program_compiled) 
 	{
-		bool compiled_successfully = CompileProgram(program_name, variation);
+		bool compiled_successfully = CompileProgram(program, variation);
 		if (!compiled_successfully)
 		{
 			return false;
@@ -66,10 +67,37 @@ bool ModuleProgram::UseProgram(const std::string& program_name, unsigned int var
 	glUseProgram(loaded_programs[program_name].compiled_variations[variation]);
 }
 
-bool ModuleProgram::CompileProgram(const std::string& program_name, unsigned int variation)
+bool ModuleProgram::CompileProgram(ShaderProgram& program, unsigned int variation)
 {
+	APP_LOG_INIT("Compiling shader program %s", program.program_name.c_str());
 
-}
+	std::vector<std::string> shader_variations;	for (size_t i = 0; i < defines.size(); ++i)
+	{
+		if (variation & (1 << i))
+		{
+			shader_variations.emplace_back(defines[i]);
+		}
+	}	GLuint vertex_shader;
+	if (!InitVertexShader(vertex_shader, program.vertex_shader_file_name, shader_variations))
+	{
+		return false;
+	}
+
+	GLuint fragment_shader;
+	if (!InitFragmentShader(fragment_shader, program.fragment_shader_file_name, shader_variations))
+	{
+		return false;
+	}
+
+	GLuint shader_program;
+	if (!InitProgram(shader_program, vertex_shader, fragment_shader))
+	{
+		return false;
+	}
+	program.compiled_variations[variation] = shader_program;
+
+	APP_LOG_SUCCESS("Shader program %s loaded correctly.", program.program_name);
+	return true;}
 
 void ModuleProgram::InitUniformBuffer()
 {
@@ -97,12 +125,12 @@ bool ModuleProgram::LoadProgram(std::string name, const char* vertex_shader_file
 	GLuint vertex_shader;
 	GLuint fragment_shader;
 	GLuint shader_program;
-	if (!InitVertexShader(vertex_shader, vertex_shader_file_name))
+	if (!InitVertexShaderAux(vertex_shader, vertex_shader_file_name))
 	{
 		return false;
 	}
 
-	if (!InitFragmentShader(fragment_shader, fragment_shader_file_name))
+	if (!InitFragmentShaderAux(fragment_shader, fragment_shader_file_name))
 	{
 		return false;
 	}
@@ -116,7 +144,88 @@ bool ModuleProgram::LoadProgram(std::string name, const char* vertex_shader_file
 	return true;
 }
 
-bool ModuleProgram::InitVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name) const
+
+bool ModuleProgram::InitVertexShader(GLuint &vertex_shader, const std::string& vertex_shader_file_name, const std::vector<std::string>& defines)
+{
+	APP_LOG_INFO("Loading vertex shader");
+
+	Path* vertex_shader_path = App->filesystem->GetPath(vertex_shader_file_name);
+	FileData vertex_shader_path_data = vertex_shader_path->GetFile()->Load();
+
+	char* vertex_shader_loaded_file = (char*)vertex_shader_path_data.buffer;
+	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+	if (vertex_shader == 0) {
+		APP_LOG_ERROR("Error creating vertex shader %s", vertex_shader_file_name);
+		return false;
+	}
+
+	std::vector<char*> vertex_shader_data;
+	for (size_t i = 0; i < defines.size(); ++i)
+	{
+		vertex_shader_data.emplace_back(defines[i].c_str());
+	}
+	vertex_shader_data.emplace_back(vertex_shader_loaded_file);
+
+	glShaderSource(vertex_shader, vertex_shader_data.size(), vertex_shader_data.data(), NULL);
+	delete[] vertex_shader_loaded_file;
+
+	APP_LOG_INFO("Compiling vertex shader");
+	glCompileShader(vertex_shader);
+	int compilation_status;
+	char info_log[512];
+	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &compilation_status);
+	if (!compilation_status)
+	{
+		glGetShaderInfoLog(vertex_shader, 512, NULL, info_log);
+		APP_LOG_ERROR("Error compiling vertex shader %s", vertex_shader_file_name);
+		APP_LOG_ERROR(info_log);
+		return false;
+	}
+
+	return true;
+}
+
+bool ModuleProgram::InitFragmentShader(GLuint &fragment_shader, const std::string& fragment_shader_file_name, const std::vector<std::string>& defines)
+{
+	APP_LOG_INFO("Loading fragment shader");
+
+	Path* fragment_shader_path = App->filesystem->GetPath(fragment_shader_file_name);
+	FileData fragment_shader_path_data = fragment_shader_path->GetFile()->Load();
+
+	char* fragment_shader_loaded_file = (char*)fragment_shader_path_data.buffer;	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+	if (fragment_shader == 0) {
+		OPENGL_LOG_ERROR("Error creating fragment shader %s", fragment_shader_file_name);
+		return false;
+	}
+
+	std::vector<char*> fragment_shader_data;
+	for (size_t i = 0; i < defines.size(); ++i)
+	{
+		fragment_shader_data.emplace_back(defines[i].c_str());
+	}
+	fragment_shader_data.emplace_back(fragment_shader_loaded_file);
+
+	glShaderSource(fragment_shader, 1, fragment_shader_data.data(), NULL);
+	delete[] fragment_shader_loaded_file;
+
+	APP_LOG_INFO("Compiling fragment shader");
+	glCompileShader(fragment_shader);
+	int compilation_status;
+	char info_log[512];
+	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &compilation_status);
+	if (!compilation_status)
+	{
+		glGetShaderInfoLog(fragment_shader, 512, NULL, info_log);
+		APP_LOG_ERROR("Error compiling fragment shader %s", fragment_shader_file_name);
+		APP_LOG_ERROR(info_log);
+		return false;
+	}
+
+	return true;
+}
+
+
+bool ModuleProgram::InitVertexShaderAux(GLuint &vertex_shader, const char* vertex_shader_file_name) const
 {
 	APP_LOG_INFO("Loading vertex shader");
 
@@ -148,7 +257,7 @@ bool ModuleProgram::InitVertexShader(GLuint &vertex_shader, const char* vertex_s
 	return true;
 }
 
-bool ModuleProgram::InitFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name) const
+bool ModuleProgram::InitFragmentShaderAux(GLuint &fragment_shader, const char* fragment_shader_file_name) const
 {
 	APP_LOG_INFO("Loading fragment shader");
 

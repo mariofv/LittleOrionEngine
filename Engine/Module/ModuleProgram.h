@@ -82,15 +82,18 @@ public:
 
 	unsigned int GetShaderProgramId(const std::string & program_name) const;
 	bool UseProgram(const std::string& program_name, unsigned int variation);
-	bool CompileProgram(const std::string& program_name, unsigned int variation);
 
 private:
 	void LoadPrograms(const char* file_path);
 	void LoadProgramsAux(const char* file_path);
+
+	bool CompileProgram(ShaderProgram& program, unsigned int variation);
 	bool LoadProgram(std::string name, const char* vertex_shader_file_name, const char* fragment_shader_file_name);
 
-	bool InitVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name) const;
-	bool InitFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name) const;
+	bool InitVertexShader(GLuint &vertex_shader, const std::string& vertex_shader_file_name, const std::vector<std::string>& defines) const;
+	bool InitFragmentShader(GLuint &fragment_shader, const std::string& fragment_shader_file_name, const std::vector<std::string>& defines) const;
+	bool InitVertexShaderAux(GLuint &vertex_shader, const char* vertex_shader_file_name) const;
+	bool InitFragmentShaderAux(GLuint &fragment_shader, const char* fragment_shader_file_name) const;
 	bool InitProgram(GLuint &shader_program,GLuint vertex_shader,GLuint fragment_shader) const;
 
 	void InitUniformBuffer();
