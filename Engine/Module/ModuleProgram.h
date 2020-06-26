@@ -25,7 +25,6 @@ public:
 		std::string program_name;
 		std::string vertex_shader_file_name;
 		std::string fragment_shader_file_name;
-		std::vector<std::string> defines;
 	};
 
 
@@ -97,7 +96,15 @@ public:
 
 private:
 	std::unordered_map<std::string, GLuint> loaded_programs_aux;
+
 	std::unordered_map<std::string, ShaderProgram> loaded_programs;
+	std::array<std::string, 3> defines =
+	{
+		"#define NORMAL_MAP 1",
+		"#define SPECULAR_MAP 1",
+		"#define RECEIVE_SHADOWS 1"
+	};
+
 	std::vector<const char *> names;
 
 	friend class PanelMaterial;

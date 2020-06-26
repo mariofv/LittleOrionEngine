@@ -229,7 +229,6 @@ void ModuleProgram::LoadPrograms(const char* file_path)
 		shaders[i].GetString("Name", loaded_program.program_name, "");
 		shaders[i].GetString("Vertex", loaded_program.vertex_shader_file_name, "");
 		shaders[i].GetString("Fragment", loaded_program.fragment_shader_file_name, "");
-		shaders[i].GetVector<std::string>("Defines", loaded_program.defines, std::vector<std::string>());
 		if (selectable)
 		{
 			char *pc = new char[loaded_program.program_name.size() + 1];
