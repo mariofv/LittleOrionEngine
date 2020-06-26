@@ -89,7 +89,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	switch (type_of_particle_system)
 	{
 		case SPHERE:
-			particle.velocity = float3::RandomDir(LCG(), velocity_particles) / 1000;
+			particle.velocity = float3::RandomDir(LCG(), velocity_particles_start) / 1000;
 		break;
 		case BOX:
 		{
@@ -97,7 +97,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 			float random_z = (rand() % ((max_range_random_z - min_range_random_z) + 1) + min_range_random_z) / 100.f;
 
-			particle.velocity.y = velocity_particles / 1000;
+			particle.velocity.y = velocity_particles_start / 1000;
 			if (enabled_random_x)
 			{
 				particle.position.x = random_x;
@@ -123,13 +123,28 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 			float proportion = outer_radius / inner_radius;
 			particle.position.x = radius * math::Cos(angle);
 			particle.position.z = radius * math::Sin(angle);
-			float distance = velocity_particles * particles_life_time;
+			float distance = velocity_particles_start * particles_life_time;
 			float height = sqrt((distance*distance) - ((radius*proportion) - radius)*((radius*proportion) - radius));
 			float3 final_local_position = float3(particle.position.x*proportion, height, particle.position.z*proportion);
 			particle.velocity = (final_local_position - particle.position);
-			particle.velocity = particle.velocity.ScaledToLength(velocity_particles) / 1000;
+			particle.velocity = particle.velocity.ScaledToLength(velocity_particles_start) / 1000;
 		break;
 
+	}
+	if (velocity_over_time)
+	{
+		switch (type_of_velocity_over_time)
+		{
+		/*case LINEAR: 
+			current_speed_modifier = velocity_over_time_speed_modifier;*/
+		case CONSTANT:
+			particle.velocity *= velocity_over_time_speed_modifier;
+			break;
+		case RANDOM_BETWEEN_TWO_CONSTANTS:
+			float random_velocity_modifier = LCG().Float(velocity_over_time_speed_modifier, velocity_over_time_speed_modifier_second);
+			particle.velocity *= random_velocity_modifier;
+			break;
+		}
 	}
 	
 	particle.color = { color_particle[0], color_particle[1], color_particle[2], color_particle[3]};
@@ -193,8 +208,23 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	particle.life -= App->time->real_time_delta_time; // reduce life
 	time_spend -= particle.life;
 
+	//if (velocity_over_time)
+	//{
+	//	switch (type_of_velocity_over_time)
+	//	{
+	//	case LINEAR:
+	//		float current_velocity = velocity_over_time_speed_modifier + velocity_over_time_speed_modifier_second / velocity_over_time_speed_modifier * time;
+	//		particle.velocity *= velocity_over_time_speed_modifier;
+	//		break;
+
+	//	/*case CONSTANT: case RANDOM_BETWEEN_TWO_CONSTANTS:
+	//		break;
+	//	}*/
+	//}
+
 	if (gravity)
 		particle.velocity.y -= gravity_modifier * App->time->real_time_delta_time / 1000000;
+
 	particle.position += particle.velocity * App->time->real_time_delta_time;
 
 	//random tile
@@ -269,7 +299,7 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(max_tile_value, "Max Tile");
 	config.AddFloat(min_tile_value, "Min Tile");
 
-	config.AddFloat(velocity_particles, "Velocity of particles");
+	config.AddFloat(velocity_particles_start, "Velocity of particles");
 	config.AddBool(gravity, "Gravity");
 	config.AddFloat(gravity_modifier, "Gravity modifier");
 
@@ -327,7 +357,7 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	max_tile_value = config.GetFloat("Max Tile", 0);
 	min_tile_value = config.GetFloat("Min Tile", 4);
 
-	velocity_particles = config.GetFloat("Velocity of particles", 1.0F);
+	velocity_particles_start = config.GetFloat("Velocity of particles", 1.0F);
 	gravity = config.GetBool("Gravity", false);
 	gravity_modifier = config.GetFloat("Gravity modifier", 0.2F);
 

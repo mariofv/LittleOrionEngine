@@ -488,7 +488,7 @@ void ModuleDebugDraw::RenderParticleSystem() const
 				dd::point_light(
 					App->editor->selected_game_object->transform.GetGlobalTranslation(), 
 					float3(1.f, 1.f, 0.f),
-					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles
+					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles_start
 				);
 			break;
 			case ComponentParticleSystem::TypeOfParticleSystem::BOX:
@@ -497,7 +497,7 @@ void ModuleDebugDraw::RenderParticleSystem() const
 				float max_x = selected_particle_system->max_range_random_x;
 				float min_z = selected_particle_system->min_range_random_z;
 				float max_z = selected_particle_system->max_range_random_z;
-				float height = selected_particle_system->particles_life_time*selected_particle_system->velocity_particles *100;
+				float height = selected_particle_system->particles_life_time*selected_particle_system->velocity_particles_start *100;
 				float3 box_points[8] = {
 					float3(min_x,0.0f,min_z) / 100,
 					float3(min_x, 0.0f, max_z) / 100,
@@ -523,7 +523,7 @@ void ModuleDebugDraw::RenderParticleSystem() const
 				dd::cone(
 					App->editor->selected_game_object->transform.GetGlobalTranslation(), 
 					App->editor->selected_game_object->transform.GetGlobalRotation()*float3::unitY * 
-					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles,
+					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles_start,
 					float3(1.f, 1.f, 0.f), 
 					selected_particle_system->outer_radius, 
 					selected_particle_system->inner_radius

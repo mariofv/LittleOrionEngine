@@ -32,6 +32,13 @@ public:
 		BOX,
 		CONE
 	};
+	enum TypeOfVelocityOverTime
+	{
+		CONSTANT,
+		LINEAR,
+		//CURVE,
+		RANDOM_BETWEEN_TWO_CONSTANTS
+	};
 	ComponentParticleSystem();
 	~ComponentParticleSystem();
 
@@ -75,6 +82,11 @@ public:
 
 	std::vector<Particle> particles;
 
+	//Basic values
+	float velocity_particles_start = 1.0F;
+	bool gravity = false;
+	float gravity_modifier = 0.2F;
+
 	//Spritesheet
 	float max_tile_value = 0;
 	float min_tile_value = 4;
@@ -84,7 +96,6 @@ public:
 	unsigned int last_used_particle = 0;
 	unsigned int nr_new_particles = 2;
 	bool active = true;
-
 
 	//size
 	int min_size_of_particle = 2;
@@ -127,10 +138,14 @@ public:
 	bool fade_between_colors = false;
 	float color_to_fade[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-	//Velocity
-	float velocity_particles = 1.0F;
-	bool gravity = false;
-	float gravity_modifier = 0.2f;
+	//Velocity over time
+	bool velocity_over_time = false;
+	TypeOfVelocityOverTime type_of_velocity_over_time = RANDOM_BETWEEN_TWO_CONSTANTS;
+	float velocity_over_time_speed_modifier = 1.0F;
+	float velocity_over_time_speed_modifier_second = 5.0F;
+	//float current_speed_modifier = velocity_over_time_speed_modifier;
+	
+	
 
 	//Runtime values
 	int playing_particles_number = MAX_PARTICLES;
