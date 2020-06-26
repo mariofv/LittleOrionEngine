@@ -270,6 +270,8 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(min_tile_value, "Min Tile");
 
 	config.AddFloat(velocity_particles, "Velocity of particles");
+	config.AddBool(gravity, "Gravity");
+	config.AddFloat(gravity_modifier, "Gravity modifier");
 
 	config.AddFloat(time_counter, "Time Counter");
 	config.AddFloat(time_between_particles, "Time Between Particles");
@@ -326,6 +328,8 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	min_tile_value = config.GetFloat("Min Tile", 4);
 
 	velocity_particles = config.GetFloat("Velocity of particles", 1.0F);
+	gravity = config.GetBool("Gravity", false);
+	gravity_modifier = config.GetFloat("Gravity modifier", 0.2F);
 
 	time_counter = config.GetFloat("Time Counter", 0.0F);
 	time_between_particles = config.GetFloat("Time Between Particles", 0.2F);

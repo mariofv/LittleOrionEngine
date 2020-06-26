@@ -96,8 +96,6 @@ public:
 	bool change_size = false;
 	float size_change_speed = 1.0F;
 
-	float velocity_particles = 1.0F;
-
 	//time
 	float time_counter = 0.0F;
 	float time_between_particles = 0.2F;
@@ -129,14 +127,15 @@ public:
 	bool fade_between_colors = false;
 	float color_to_fade[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
+	//Velocity
+	float velocity_particles = 1.0F;
+	bool gravity = false;
+	float gravity_modifier = 0.2f;
+
 	//Runtime values
 	int playing_particles_number = MAX_PARTICLES;
 	int max_particles_number = MAX_PARTICLES;
 	bool playing = true;
-
-	//Movement
-	bool gravity = false;
-	float gravity_modifier = 0.2f;
 };
 
 #endif
