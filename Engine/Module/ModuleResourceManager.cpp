@@ -373,6 +373,13 @@ void ModuleResourceManager::RefreshResourceCache()
 		resource_cache.erase(it, resource_cache.end());
 	}
 }
+void ModuleResourceManager::AddResourceToCache(std::shared_ptr<Resource> resource)
+{
+	if (resource != nullptr)
+	{
+		resource_cache.push_back(resource);
+	}
+}
 void ModuleResourceManager::CleanResourceCache()
 {
 	resource_cache.clear();

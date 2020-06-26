@@ -158,7 +158,8 @@ public:
 	void CleanMetafilesInDirectory(const Path& directory_path);
 	void ImportAssetsInDirectory(const Path& directory_path, bool force = false);
 	void CleanBinariesInDirectory(const Path& directory_path);
-
+	
+	void AddResourceToCache(std::shared_ptr<Resource> resource);
 	void CleanResourceCache();
 	bool CleanResourceFromCache(uint32_t uuid);
 	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);
@@ -195,6 +196,9 @@ public:
 	Component* current_component_loading = nullptr;
 	//Texture Type 
 	unsigned texture_type = 0;
+
+	//Debugging variables
+	int number_of_textures_loaded = 0;
 
 	ThreadSafeQueue<TextureLoadJob> loading_textures_queue;
 	ThreadSafeQueue<TextureLoadJob> processing_textures_queue;
