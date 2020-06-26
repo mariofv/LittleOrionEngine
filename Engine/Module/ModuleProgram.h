@@ -20,6 +20,15 @@ public:
 		ENABLE_RECEIVE_SHADOWS = 1 << 2
 	};
 
+	struct ShaderProgram
+	{
+		std::string program_name;
+		std::string vertex_shader_file_name;
+		std::string fragment_shader_file_name;
+		std::vector<std::string> defines;
+	};
+
+
 	// Holds information of the distibution of data inside the uniform buffer object
 	struct UniformBuffer 
 	{
@@ -72,8 +81,10 @@ public:
 	unsigned int GetShaderProgramId(const std::string & program_name) const;
 
 private:
-	bool LoadProgram(std::string name, const char* vertex_shader_file_name, const char* fragment_shader_file_name);
 	void LoadPrograms(const char* file_path);
+	void LoadProgramsAux(const char* file_path);
+	bool LoadProgram(std::string name, const char* vertex_shader_file_name, const char* fragment_shader_file_name);
+
 	bool InitVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name) const;
 	bool InitFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name) const;
 	bool InitProgram(GLuint &shader_program,GLuint vertex_shader,GLuint fragment_shader) const;
@@ -85,7 +96,8 @@ public:
 	UniformBuffer uniform_buffer;
 
 private:
-	std::unordered_map<std::string, GLuint> loaded_programs;
+	std::unordered_map<std::string, GLuint> loaded_programs_aux;
+	std::unordered_map<std::string, ShaderProgram> loaded_programs;
 	std::vector<const char *> names;
 
 	friend class PanelMaterial;

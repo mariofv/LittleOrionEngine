@@ -12,6 +12,7 @@
 #define RESOURCES_PATH "/Resources"
 
 #define SHADERS_PATH "/Resources/Shaders/shaders.json"
+#define SHADERS_PATH_AUX "/Resources/Shaders/shaders_aux.json"
 
 #define RESOURCE_SCRIPT_DLL_FILE "GameplaySystem.dll"
 #define RESOURCES_SCRIPT_PATH "Resources/Scripts"

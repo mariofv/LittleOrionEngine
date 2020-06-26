@@ -13,13 +13,14 @@ bool ModuleProgram::Init()
 {
 	APP_LOG_SECTION("************ Module Program Init ************");
 	LoadPrograms(SHADERS_PATH);
+	LoadProgramsAux(SHADERS_PATH_AUX);
 	return true;
 }
 
 // Called before quitting
 bool ModuleProgram::CleanUp()
 {
-	for (const auto& program : loaded_programs)
+	for (const auto& program : loaded_programs_aux)
 	{
 		glDeleteProgram(program.second);
 	}
@@ -38,9 +39,9 @@ unsigned int ModuleProgram::GetShaderProgramId(const std::string & program_name)
 {
 	if (loaded_programs.count(program_name) > 0)
 	{
-		return loaded_programs.at(program_name);
+		return loaded_programs_aux.at(program_name);
 	}
-	return  loaded_programs.at("Blinn phong");
+	return  loaded_programs_aux.at("Blinn phong");
 }
 
 void ModuleProgram::InitUniformBuffer()
@@ -83,7 +84,7 @@ bool ModuleProgram::LoadProgram(std::string name, const char* vertex_shader_file
 	{
 		return false;
 	}
-	loaded_programs.insert({ name,shader_program });
+	loaded_programs_aux.insert({ name,shader_program });
 	APP_LOG_SUCCESS("Shader program with paths: %s,%s loaded correctly.", vertex_shader_file_name, fragment_shader_file_name);
 	return true;
 }
@@ -206,6 +207,41 @@ void ModuleProgram::BindUniformBlocks(GLuint shader_program) const
 }
 
 void ModuleProgram::LoadPrograms(const char* file_path)
+{
+	CleanUp();
+
+	InitUniformBuffer();
+
+	Path* shaders_path = App->filesystem->GetPath(file_path);
+	FileData shaders_data = shaders_path->GetFile()->Load();
+
+	char* shaders_file_data = (char*)shaders_data.buffer;
+	std::string serialized_shaders = shaders_file_data;
+	delete[] shaders_file_data;
+
+	std::vector<Config> shaders;
+	Config shaders_config(serialized_shaders);
+	shaders_config.GetChildrenConfig("Shaders", shaders);
+	for (unsigned int i = 0; i < shaders.size(); ++i)
+	{
+		std::string name;
+		std::string vertex;
+		std::string fragment;
+		bool selectable = shaders[i].GetBool("Selectable", false);
+		shaders[i].GetString("Name", name, "");
+		shaders[i].GetString("Vertex", vertex, "");
+		shaders[i].GetString("Fragment", fragment, "");
+		LoadProgram(name, vertex.c_str(), fragment.c_str());
+		if (selectable)
+		{
+			char *pc = new char[name.size() + 1];
+			strcpy_s(pc, name.size() + 1, name.c_str());
+			names.push_back(pc);
+		}
+	}
+}
+
+void ModuleProgram::LoadProgramsAux(const char* file_path)
 {
 	CleanUp();
 
