@@ -15,14 +15,15 @@ class ComponentParticleSystem : public Component
 {
 public:
 	struct Particle {
+		float3 position_initial;
 		float3 position;
-		float3 velocity;
+		float3 velocity_initial;
 		float4 color;
 		Quat rotation;
 		float particle_scale;
-		float time_counter;
-		float  life;
 		float time_passed;
+		float life;
+		float time_counter;
 		float current_sprite_x = 0, current_sprite_y = 0;
 		float current_width = 0, current_height = 0;
 	};
@@ -143,10 +144,8 @@ public:
 	TypeOfVelocityOverTime type_of_velocity_over_time = RANDOM_BETWEEN_TWO_CONSTANTS;
 	float velocity_over_time_speed_modifier = 1.0F;
 	float velocity_over_time_speed_modifier_second = 5.0F;
-	//float current_speed_modifier = velocity_over_time_speed_modifier;
+	float3 velocity_acceleration;
 	
-	
-
 	//Runtime values
 	int playing_particles_number = MAX_PARTICLES;
 	int max_particles_number = MAX_PARTICLES;

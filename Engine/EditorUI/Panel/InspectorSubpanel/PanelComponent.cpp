@@ -351,8 +351,12 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 					ImGui::DragFloat("Velocity Modifier", &particle_system->velocity_over_time_speed_modifier);
 					break;
 				case ComponentParticleSystem::TypeOfVelocityOverTime::LINEAR:
-					ImGui::DragFloat("Velocity Modifier Start", &particle_system->velocity_over_time_speed_modifier, 0.1F);
-					ImGui::DragFloat("Velocity Modifier End", &particle_system->velocity_over_time_speed_modifier_second, 0.1F);
+					if (ImGui::DragFloat("Velocity Modifier Start", &particle_system->velocity_over_time_speed_modifier, 0.1F) ||
+						ImGui::DragFloat("Velocity Modifier End", &particle_system->velocity_over_time_speed_modifier_second, 0.1F))
+					{
+						/*particle_system->velocity_acceleration = (particle_system->velocity_over_time_speed_modifier_second
+							- particle_system->velocity_over_time_speed_modifier) / particle_system->particles_life_time;*/
+					}
 					break;
 				case ComponentParticleSystem::TypeOfVelocityOverTime::RANDOM_BETWEEN_TWO_CONSTANTS:
 					particle_system->velocity_over_time_speed_modifier;
