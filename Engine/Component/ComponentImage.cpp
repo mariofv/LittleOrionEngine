@@ -142,11 +142,19 @@ void ComponentImage::SpecializedLoad(const Config& config)
 	}
 }
 
+void ComponentImage::GenerateTextures(TextureLoadData loaded_data)
+{
+	texture_to_render = std::make_shared<Texture>(loaded_data.uuid,
+		loaded_data.data.data(), loaded_data.data.size(), loaded_data.width,
+		loaded_data.height, loaded_data.num_channels, loaded_data.texture_options);
+
+	texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
+}
+
 void ComponentImage::SetTextureToRender(uint32_t texture_uuid)
 {
 	this->texture_uuid = texture_uuid;
 	texture_to_render = App->resources->Load<Texture>(texture_uuid);
-	texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
 }
 
 void ComponentImage::SetColor(float4 color)
@@ -156,5 +164,8 @@ void ComponentImage::SetColor(float4 color)
 
 void ComponentImage::SetNativeSize() const
 {
-	owner->transform_2d.SetSize(float2(texture_to_render->width, texture_to_render->height));
+	if(texture_to_render)
+	{
+		owner->transform_2d.SetSize(float2(texture_to_render->width, texture_to_render->height));
+	}
 }

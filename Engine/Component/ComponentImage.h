@@ -20,6 +20,7 @@ public:
 	void Delete() override;
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
+	void GenerateTextures(TextureLoadData loaded_data) override;
 
 	void SetTextureToRender(uint32_t texture_uuid);
 	ENGINE_API void SetColor(float4 color);
