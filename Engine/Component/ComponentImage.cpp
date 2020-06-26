@@ -153,8 +153,14 @@ void ComponentImage::GenerateTextures(TextureLoadData loaded_data)
 
 void ComponentImage::SetTextureToRender(uint32_t texture_uuid)
 {
+	//Prepare multithreading loading
+	App->resources->current_component_loading = this;
+
 	this->texture_uuid = texture_uuid;
 	texture_to_render = App->resources->Load<Texture>(texture_uuid);
+
+	//Set to default loading component
+	App->resources->current_component_loading = nullptr;
 }
 
 void ComponentImage::SetColor(float4 color)

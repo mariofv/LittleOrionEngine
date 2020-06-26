@@ -21,6 +21,9 @@ struct TextureLoadData
 	TextureOptions texture_options;
 	std::vector<char> data;
 	uint32_t uuid = 0;
+
+	//For material type enum
+	unsigned texture_type = 0;
 };
 
 class Texture : public Resource

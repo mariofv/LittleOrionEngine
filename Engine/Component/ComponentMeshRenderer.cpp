@@ -54,6 +54,11 @@ void ComponentMeshRenderer::SpecializedLoad(const Config& config)
 	SetSkeleton(skeleton_uuid);
 }
 
+void ComponentMeshRenderer::GenerateTextures(TextureLoadData loaded_data)
+{
+	material_to_render->GenerateTexture(loaded_data);
+}
+
 void ComponentMeshRenderer::Render()
 {
 	if (material_to_render == nullptr)
@@ -291,6 +296,9 @@ void ComponentMeshRenderer::SetMesh(uint32_t mesh_uuid)
 
 void ComponentMeshRenderer::SetMaterial(uint32_t material_uuid)
 {
+	//Prepare multithreading loading
+	App->resources->current_component_loading = this;
+
 	this->material_uuid = material_uuid;
 	if (material_uuid != 0)
 	{
@@ -300,6 +308,9 @@ void ComponentMeshRenderer::SetMaterial(uint32_t material_uuid)
 	{
 		material_to_render = App->resources->Load<Material>((uint32_t)CoreResource::DEFAULT_MATERIAL);
 	}
+
+	//Set to default loading component
+	App->resources->current_component_loading = nullptr;
 }
 
 void ComponentMeshRenderer::SetSkeleton(uint32_t skeleton_uuid)

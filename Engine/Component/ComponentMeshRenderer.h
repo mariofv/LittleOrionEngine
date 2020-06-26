@@ -31,6 +31,8 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
+	void GenerateTextures(TextureLoadData loaded_data) override;
+
 	void Delete() override;
 
 	void Render();

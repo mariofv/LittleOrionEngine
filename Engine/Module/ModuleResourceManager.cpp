@@ -106,6 +106,9 @@ update_status ModuleResourceManager::PreUpdate()
 		TextureLoadJob texture_job;
 		if(processing_textures_queue.TryPop(texture_job))
 		{
+			//Pass type variable
+			texture_job.loaded_data.texture_type = texture_job.texture_type;
+
 			//Generate OpenGL texture
 			texture_job.component_to_load->GenerateTextures(texture_job.loaded_data);
 		}

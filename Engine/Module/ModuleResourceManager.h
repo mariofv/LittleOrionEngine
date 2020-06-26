@@ -54,6 +54,9 @@ struct TextureLoadJob
 	FileData exported_file_data;
 	Component* component_to_load = nullptr;
 	TextureLoadData loaded_data;
+
+	//For material type enum
+	unsigned texture_type = 0;
 };
 
 
@@ -129,7 +132,9 @@ public:
 		{
 			loaded_resource = nullptr;
 			TextureLoadJob load_job;
+			load_job.component_to_load = current_component_loading;
 			load_job.uuid = uuid;
+			load_job.texture_type = texture_type;
 			load_job.exported_file_data = exported_file_data;
 			loading_textures_queue.Push(load_job);
 		}
@@ -181,10 +186,15 @@ public:
 		std::atomic_uint total_items = 0;
 	} thread_comunication;
 
+	//Asyncronous loading variables
 	int max_threads = 1;
 	std::atomic<bool> loading_threads_active = true;
 	std::vector<std::thread> loader_threads;
 	bool normal_loading_flag = false;
+	//We change this value to the component that calls Load for textures
+	Component* current_component_loading = nullptr;
+	//Texture Type 
+	unsigned texture_type = 0;
 
 	ThreadSafeQueue<TextureLoadJob> loading_textures_queue;
 	ThreadSafeQueue<TextureLoadJob> processing_textures_queue;

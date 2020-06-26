@@ -155,6 +155,14 @@ void Material::Load(const Config& config)
 	specular_color[3] = specular.w;
 }
 
+void Material::GenerateTexture(TextureLoadData loaded_data)
+{
+	MaterialTextureType type = static_cast<MaterialTextureType>(loaded_data.texture_type);
+	textures[type] = std::make_shared<Texture>(loaded_data.uuid,
+		loaded_data.data.data(), loaded_data.data.size(), loaded_data.width,
+		loaded_data.height, loaded_data.num_channels, loaded_data.texture_options);
+}
+
 void Material::RemoveMaterialTexture(MaterialTextureType type)
 {
 	textures[type] = nullptr;
@@ -166,6 +174,7 @@ void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uui
 	textures_uuid[type] = texture_uuid;
 	if (textures_uuid[type] != 0)
 	{
+		App->resources->texture_type = type;
 		textures[type] = App->resources->Load<Texture>(texture_uuid);
 	}
 	use_normal_map = type == MaterialTextureType::NORMAL && texture_uuid !=0;
