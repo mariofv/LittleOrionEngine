@@ -109,8 +109,16 @@ update_status ModuleResourceManager::PreUpdate()
 			//Pass type variable
 			texture_job.loaded_data.texture_type = texture_job.texture_type;
 
-			//Generate OpenGL texture
-			texture_job.component_to_load->GenerateTextures(texture_job.loaded_data);
+			if(texture_job.already_in_cache)
+			{
+				//Retrieve Texture from cache
+				texture_job.component_to_load->GetTextureFromCache(texture_job.loaded_data);
+			}
+			else
+			{
+				//Generate OpenGL texture
+				texture_job.component_to_load->GenerateTextures(texture_job.loaded_data);
+			}
 		}
 	}
 #endif
@@ -333,7 +341,14 @@ void ModuleResourceManager::LoaderThread()
 			TextureLoadJob load_job;
 			if(loading_textures_queue.TryPop(load_job))
 			{
-				ResourceManagement::LoadThread<Texture>(load_job.uuid, load_job.exported_file_data, load_job.loaded_data);
+				//Check if resource is already on cache
+				if(!load_job.already_in_cache)
+				{
+					ResourceManagement::LoadThread<Texture>(load_job.uuid, load_job.exported_file_data, load_job.loaded_data);
+				}
+
+				load_job.loaded_data.uuid = load_job.uuid;
+
 				//Delete file data buffer
 				delete[] load_job.exported_file_data.buffer;
 				processing_textures_queue.Push(load_job);
@@ -383,6 +398,7 @@ void ModuleResourceManager::AddResourceToCache(std::shared_ptr<Resource> resourc
 void ModuleResourceManager::CleanResourceCache()
 {
 	resource_cache.clear();
+	uuid_cache_queue.clear();
 }
 
 bool ModuleResourceManager::CleanResourceFromCache(uint32_t uuid)
@@ -395,6 +411,19 @@ bool ModuleResourceManager::CleanResourceFromCache(uint32_t uuid)
 	{
 		found = true;
 		resource_cache.erase(it, resource_cache.end());
+	}
+
+	if(found)
+	{
+		const auto it = std::remove_if(uuid_cache_queue.begin(), uuid_cache_queue.end(), [uuid](uint32_t own_uuid) {
+			return own_uuid == uuid;
+		});
+
+		if (it != uuid_cache_queue.end())
+		{
+			found = true;
+			uuid_cache_queue.erase(it, uuid_cache_queue.end());
+		}
 	}
 
 	return found;
