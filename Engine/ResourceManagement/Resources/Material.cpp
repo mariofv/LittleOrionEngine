@@ -65,6 +65,8 @@ void Material::Save(Config& config) const
 	config.AddFloat(k_specular, "kSpecular");
 	config.AddFloat(k_diffuse, "kDiffuse");
 
+	config.AddFloat(smoothness, "Smoothness");
+
 	config.AddFloat(transparency, "Transparency");
 //	config.AddFloat(roughness, "Roughness");
 //	config.AddFloat(metalness, "Metalness");
@@ -113,6 +115,8 @@ void Material::Load(const Config& config)
 	k_diffuse = config.GetFloat("kDiffuse", 1.0f);
 
 	transparency = config.GetFloat("Transparency", 1.f);
+	smoothness = config.GetFloat("Smoothness", 1.0F);
+
 
 	tiling_x = config.GetFloat("Tiling X", 1.0f);
 	tiling_y = config.GetFloat("Tiling Y", 1.0f);

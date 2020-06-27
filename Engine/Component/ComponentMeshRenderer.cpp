@@ -145,6 +145,7 @@ void ComponentMeshRenderer::AddSpecularUniforms(unsigned int shader_program) con
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 2);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)material_to_render->specular_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_specular"), material_to_render->k_specular);
+	glUniform1f(glGetUniformLocation(shader_program, "material.smoothness"), material_to_render->smoothness);
 	
 }
 

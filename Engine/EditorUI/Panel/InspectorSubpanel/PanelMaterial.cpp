@@ -213,7 +213,7 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Spacing();
 		ImGui::Indent();
 
-		if (ImGui::ColorEdit3("Color", material->diffuse_color))
+		if (ImGui::ColorEdit3("Color", material->diffuse_color, ImGuiColorEditFlags_Float))
 		{
 			modified_by_user = true;
 		}
@@ -279,7 +279,7 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Spacing();
 		ImGui::Indent();
 		
-		if (ImGui::ColorEdit3("Color", material->specular_color))
+		if (ImGui::ColorEdit3("Color", material->specular_color, ImGuiColorEditFlags_Float))
 		{
 			modified_by_user = true;
 		}
@@ -287,7 +287,7 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		{
 			modified_by_user = true;
 		}
-		if (ImGui::SliderFloat("Shininess", &material->specular_color[3], 0.f, 1.f))
+		if (ImGui::SliderFloat("Smoothenss", &material->smoothness, 0.f, 1.f))
 		{
 			modified_by_user = true;
 		}
