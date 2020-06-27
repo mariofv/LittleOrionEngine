@@ -26,7 +26,7 @@ void PanelPopupNewFileName::Render()
 			ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 			ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
 		}
-		if (ImGui::Button("ok", ImVec2(50, 0)))
+		if (ImGui::Button("ok", ImVec2(150, 0)))
 		{
 			apply_new_name(new_filename);
 			pending_to_be_closed = true;
