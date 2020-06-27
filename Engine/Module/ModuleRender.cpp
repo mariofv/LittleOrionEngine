@@ -146,7 +146,7 @@ bool ModuleRender::CleanUp()
 
 void ModuleRender::Render() const
 {
-	BROFILER_CATEGORY("Global Render",Profiler::Color::Aqua);
+	BROFILER_CATEGORY("Module Render Render",Profiler::Color::Aqua);
 
 #if GAME
 	if (App->cameras->main_camera != nullptr) 

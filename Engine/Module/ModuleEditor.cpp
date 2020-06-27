@@ -106,6 +106,7 @@ bool ModuleEditor::InitImgui()
 
 update_status ModuleEditor::PreUpdate()
 {
+	BROFILER_CATEGORY("Module Editor PreUpdate", Profiler::Color::HotPink);
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
@@ -116,6 +117,7 @@ update_status ModuleEditor::PreUpdate()
 
 update_status ModuleEditor::Update()
 {
+	BROFILER_CATEGORY("Module Editor Update", Profiler::Color::LightPink);
 	static bool inital_scene_loaded = false;
 
 #if GAME
@@ -145,7 +147,7 @@ update_status ModuleEditor::Update()
 
 void ModuleEditor::Render()
 {
-	BROFILER_CATEGORY("Render UI", Profiler::Color::BlueViolet);
+	BROFILER_CATEGORY("Module Editor Render", Profiler::Color::BlueViolet);
 	
 #if !GAME
 	ImGui::SetNextWindowPos(ImVec2(0, 0));

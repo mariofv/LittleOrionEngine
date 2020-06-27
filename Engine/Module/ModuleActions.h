@@ -34,7 +34,6 @@ public:
 	~ModuleActions() = default;
 
 	bool Init() override;
-	update_status PreUpdate() override;
 	update_status Update() override;
 
 	void ClearRedoStack();

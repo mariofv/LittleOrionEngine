@@ -19,17 +19,12 @@ bool ModuleLight::Init()
 	APP_LOG_SECTION("************ Module Light Init ************");
 	//directional_light_rotation = Quat::identity;
 
-
 	return true;
 }
 
-
-
-
-
 update_status ModuleLight::PostUpdate()
 {
-
+	BROFILER_CATEGORY("Module Light PostUpdate", Profiler::Color::PaleTurquoise);
 	light_position = float3((light_aabb.maxPoint.x + light_aabb.minPoint.x) * 0.5, (light_aabb.maxPoint.y + light_aabb.minPoint.y) * 0.5, light_aabb.maxPoint.z);
 	
 	float3 new_pos;
@@ -60,7 +55,7 @@ bool ModuleLight::CleanUp()
 
 void ModuleLight::Render(const float3& mesh_position, GLuint program)
 {
-	BROFILER_CATEGORY("Render Lights", Profiler::Color::White);
+	BROFILER_CATEGORY("Module Light Render", Profiler::Color::White);
 
 	RenderDirectionalLight(mesh_position);
 	RenderSpotLights(mesh_position, program);
