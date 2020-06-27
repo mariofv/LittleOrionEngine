@@ -683,7 +683,7 @@ void ModuleDebugDraw::RenderBoundingBoxes() const
 
 void ModuleDebugDraw::RenderGlobalBoundingBoxes() const
 {
-	BROFILER_CATEGORY("Render Global Bounding Boxes", Profiler::Color::Lavender);
+	BROFILER_CATEGORY("Render Global Bounding Boxes", Profiler::Color::Beige);
 
 	for (auto& object : App->scene->game_objects_ownership)
 	{
@@ -693,7 +693,7 @@ void ModuleDebugDraw::RenderGlobalBoundingBoxes() const
 
 void ModuleDebugDraw::RenderBillboards() const
 {
-	BROFILER_CATEGORY("Render Billboards", Profiler::Color::Lavender);
+	BROFILER_CATEGORY("Render Billboards", Profiler::Color::Brown);
 
 	for (auto& object : App->scene->game_objects_ownership)
 	{
@@ -710,6 +710,7 @@ void ModuleDebugDraw::RenderBillboards() const
 
 void ModuleDebugDraw::RenderPathfinding() const
 {
+	BROFILER_CATEGORY("Render PathFindings", Profiler::Color::SaddleBrown);
 	//First check if starting and ending point are null and render
 	if(App->artificial_intelligence->start_initialized)
 	{
@@ -729,6 +730,7 @@ void ModuleDebugDraw::RenderPathfinding() const
 
 void ModuleDebugDraw::RenderGrid() const
 {
+	BROFILER_CATEGORY("Render Grid", Profiler::Color::RosyBrown);
 	float scene_camera_height = App->cameras->scene_camera->owner->transform.GetGlobalTranslation().y;
 	grid->ScaleOnDistance(scene_camera_height);
 	grid->Render();
@@ -746,6 +748,7 @@ void ModuleDebugDraw::RenderNavMesh(ComponentCamera & cam) const
 
 void ModuleDebugDraw::RenderQuadTree() const
 {
+	BROFILER_CATEGORY("Render QuadTree", Profiler::Color::Brown);
 	for (auto& ol_quadtree_node : App->space_partitioning->ol_quadtree->flattened_tree)
 	{
 		float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
@@ -756,6 +759,7 @@ void ModuleDebugDraw::RenderQuadTree() const
 
 void ModuleDebugDraw::RenderOcTree() const
 {
+	BROFILER_CATEGORY("Render OcTree", Profiler::Color::Brown);
 	for (auto& ol_octtree_node : App->space_partitioning->ol_octtree->flattened_tree)
 	{
 		float3 octtree_node_min = float3(ol_octtree_node->box.minPoint.x, ol_octtree_node->box.minPoint.y, ol_octtree_node->box.minPoint.z);
@@ -766,11 +770,13 @@ void ModuleDebugDraw::RenderOcTree() const
 
 void ModuleDebugDraw::RenderAABBTree() const
 {
+	BROFILER_CATEGORY("Render ABBTree", Profiler::Color::LightGoldenRodYellow);
 	App->space_partitioning->DrawAABBTree();
 }
 
 void ModuleDebugDraw::RenderPhysics() const
 {
+	BROFILER_CATEGORY("Render Physcis", Profiler::Color::PaleGoldenRod);
 	App->physics->world->debugDrawWorld();
 }
 

@@ -30,11 +30,11 @@ void ModuleEffects::Render()
 	{
 		billboard->Render(billboard->owner->transform.GetGlobalTranslation());
 	}
-	glDisable(GL_BLEND);
 	for (auto &particles : particle_systems)
 	{
 		particles->Render();
 	}
+	glDisable(GL_BLEND);
 }
 
 ComponentBillboard* ModuleEffects::CreateComponentBillboard()

@@ -149,7 +149,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 void ComponentParticleSystem::Render()
 {
-	glEnable(GL_BLEND);
+	BROFILER_CATEGORY("Particle Render", Profiler::Color::OrangeRed);
 	if (active && playing ) 
 	{
 		time_counter += App->time->real_time_delta_time;
@@ -185,7 +185,6 @@ void ComponentParticleSystem::Render()
 		}
 	}
 	
-	glDisable(GL_BLEND);
 }
 void ComponentParticleSystem::UpdateParticle(Particle& particle)
 {

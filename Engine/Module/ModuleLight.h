@@ -28,7 +28,7 @@ public:
 	void RemoveComponentLight(ComponentLight* light_to_remove);
 
 private:
-	void SortClosestLights(const float3& position, ComponentLight::LightType light_type);
+	void SortClosestLights(const float3& position);
 	void SendShadowMatricesToShader(GLuint program);
 
 public:
@@ -53,7 +53,6 @@ public:
 	OBB object_obb;
 
 private:
-	std::vector< std::pair<float, ComponentLight*> >  closest_lights;
 	friend class ModuleEditor;
 	Quat directional_light_rotation;
 
