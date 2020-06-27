@@ -57,77 +57,71 @@ void ModuleLight::Render(const float3& mesh_position, GLuint program)
 {
 	BROFILER_CATEGORY("Module Light Render", Profiler::Color::White);
 	SortClosestLights(mesh_position);
-	RenderDirectionalLight(mesh_position);
-	RenderSpotLights(mesh_position, program);
-	RenderPointLights(mesh_position, program);
-	SendShadowMatricesToShader(program);
 
-}
-
-void ModuleLight::RenderDirectionalLight(const float3& mesh_position)
-{
 	current_number_directional_lights_rendered = 0;
-	int i = 0;
-	while (current_number_directional_lights_rendered < MAX_DIRECTIONAL_LIGHTS_RENDERED && i < lights.size())
+	current_number_spot_lights_rendered = 0;
+	current_number_point_lights_rendered = 0;
+	for (const ComponentLight* light : lights)
 	{
-		ComponentLight* light = lights[i];
-
-		if (light->light_type == ComponentLight::LightType::DIRECTIONAL_LIGHT)
-		{
-
-			float3 light_color_scaled = light->light_intensity * float3(light->light_color);
-
-			glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-
-			glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.lights_uniform_offset, sizeof(float3), light_color_scaled.ptr());
-
-			size_t light_direction_offset = App->program->uniform_buffer.lights_uniform_offset + 4 * sizeof(float);
-			glBufferSubData(GL_UNIFORM_BUFFER, light_direction_offset, sizeof(float3), light->owner->transform.GetFrontVector().ptr());
-
-			directional_light_rotation = directional_light_rotation.LookAt(float3::unitZ, light->owner->transform.GetFrontVector(), float3::unitY, light->owner->transform.GetUpVector());
-
-
-			glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-			++current_number_directional_lights_rendered;
-		}
-		++i;
+		const ComponentLight& light_ref = *light;
+		RenderDirectionalLight(light_ref);
+		RenderSpotLights(light_ref, program);
+		RenderPointLights(light_ref, program);
 	}
 
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	size_t num_directional_lights_offset = App->program->uniform_buffer.lights_uniform_offset + 7 * sizeof(float);
 	glBufferSubData(GL_UNIFORM_BUFFER, num_directional_lights_offset, sizeof(int), &current_number_directional_lights_rendered);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-}
-
-void ModuleLight::RenderSpotLights(const float3& mesh_position, GLuint program)
-{
-
-	current_number_spot_lights_rendered = 0;
-	unsigned int i = 0;
-	while (current_number_spot_lights_rendered < MAX_SPOT_LIGHTS_RENDERED && i < lights.size())
-	{
-		ComponentLight* light = lights[i];
-		if (light->light_type == ComponentLight::LightType::SPOT_LIGHT)
-		{
-			float3 light_color_scaled = light->light_intensity * float3(light->light_color);
-			std::string spot_light_current_uniform_name = "spot_lights[" + std::to_string(current_number_spot_lights_rendered) + "]";
-
-			glUniform3fv(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".color").c_str()), 1, light_color_scaled.ptr());
-			glUniform3fv(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".position").c_str()), 1, light->owner->transform.GetGlobalTranslation().ptr());
-			glUniform3fv(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".direction").c_str()), 1, light->owner->transform.GetFrontVector().ptr());
-			glUniform1f(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".cutOff").c_str()), light->spot_light_parameters.cutoff);
-			glUniform1f(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".outerCutOff").c_str()), light->spot_light_parameters.outer_cutoff);
-			glUniform1f(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".constant").c_str()), light->spot_light_parameters.constant);
-			glUniform1f(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".linear").c_str()), light->spot_light_parameters.linear);
-			glUniform1f(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".quadratic").c_str()), light->spot_light_parameters.quadratic);
-
-			++current_number_spot_lights_rendered;
-		}
-		++i;
-	}
 
 	glUniform1i(glGetUniformLocation(program, "num_spot_lights"), current_number_spot_lights_rendered);
+	glUniform1i(glGetUniformLocation(program, "num_point_lights"), current_number_point_lights_rendered);
+	SendShadowMatricesToShader(program);
+
+}
+
+void ModuleLight::RenderDirectionalLight(const ComponentLight& light)
+{
+	if (light.light_type == ComponentLight::LightType::DIRECTIONAL_LIGHT && current_number_directional_lights_rendered < MAX_DIRECTIONAL_LIGHTS_RENDERED)
+	{
+
+		float3 light_color_scaled = light.light_intensity * float3(light.light_color);
+
+		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+
+		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.lights_uniform_offset, sizeof(float3), light_color_scaled.ptr());
+
+		size_t light_direction_offset = App->program->uniform_buffer.lights_uniform_offset + 4 * sizeof(float);
+		glBufferSubData(GL_UNIFORM_BUFFER, light_direction_offset, sizeof(float3), light.owner->transform.GetFrontVector().ptr());
+
+		directional_light_rotation = directional_light_rotation.LookAt(float3::unitZ, light.owner->transform.GetFrontVector(), float3::unitY, light.owner->transform.GetUpVector());
+
+
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		++current_number_directional_lights_rendered;
+	}
+}
+
+void ModuleLight::RenderSpotLights(const ComponentLight& light, GLuint program)
+{
+
+	if (light.light_type == ComponentLight::LightType::SPOT_LIGHT && current_number_spot_lights_rendered < MAX_SPOT_LIGHTS_RENDERED)
+	{
+		float3 light_color_scaled = light.light_intensity * float3(light.light_color);
+		std::string spot_light_current_uniform_name = "spot_lights[" + std::to_string(current_number_spot_lights_rendered) + "]";
+
+		glUniform3fv(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".color").c_str()), 1, light_color_scaled.ptr());
+		glUniform3fv(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".position").c_str()), 1, light.owner->transform.GetGlobalTranslation().ptr());
+		glUniform3fv(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".direction").c_str()), 1, light.owner->transform.GetFrontVector().ptr());
+		glUniform1f(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".cutOff").c_str()), light.spot_light_parameters.cutoff);
+		glUniform1f(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".outerCutOff").c_str()), light.spot_light_parameters.outer_cutoff);
+		glUniform1f(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".constant").c_str()), light.spot_light_parameters.constant);
+		glUniform1f(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".linear").c_str()), light.spot_light_parameters.linear);
+		glUniform1f(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".quadratic").c_str()), light.spot_light_parameters.quadratic);
+
+		++current_number_spot_lights_rendered;
+	}
 }
 
 void ModuleLight::SendShadowMatricesToShader(GLuint program)
@@ -173,30 +167,23 @@ void ModuleLight::UpdateLightAABB(GameObject& object)
 	light_obb = light_aabb.Transform(directional_light_rotation);
 }
 
-void ModuleLight::RenderPointLights(const float3& mesh_position, GLuint program)
+void ModuleLight::RenderPointLights(const ComponentLight& light, GLuint program)
 {
-	current_number_point_lights_rendered = 0;
-	unsigned int i = 0;
-	while (current_number_point_lights_rendered < MAX_POINT_LIGHTS_RENDERED && i < lights.size())
+
+	if (light.light_type == ComponentLight::LightType::POINT_LIGHT && current_number_point_lights_rendered < MAX_POINT_LIGHTS_RENDERED)
 	{
-		ComponentLight* light = lights[i];
-		if (light->light_type == ComponentLight::LightType::POINT_LIGHT)
-		{
-			float3 light_color_scaled = light->light_intensity * float3(light->light_color);
-			std::string point_light_current_uniform_name = "point_lights[" + std::to_string(current_number_point_lights_rendered) + "]";
+		float3 light_color_scaled = light.light_intensity * float3(light.light_color);
+		std::string point_light_current_uniform_name = "point_lights[" + std::to_string(current_number_point_lights_rendered) + "]";
 
-			glUniform3fv(glGetUniformLocation(program, std::string(point_light_current_uniform_name + ".color").c_str()), 1, light_color_scaled.ptr());
-			glUniform3fv(glGetUniformLocation(program, std::string(point_light_current_uniform_name + ".position").c_str()), 1, light->owner->transform.GetGlobalTranslation().ptr());
-			glUniform1f(glGetUniformLocation(program, std::string(point_light_current_uniform_name + ".constant").c_str()), light->point_light_parameters.constant);
-			glUniform1f(glGetUniformLocation(program, std::string(point_light_current_uniform_name + ".linear").c_str()), light->point_light_parameters.linear);
-			glUniform1f(glGetUniformLocation(program, std::string(point_light_current_uniform_name + ".quadratic").c_str()), light->point_light_parameters.quadratic);
+		glUniform3fv(glGetUniformLocation(program, std::string(point_light_current_uniform_name + ".color").c_str()), 1, light_color_scaled.ptr());
+		glUniform3fv(glGetUniformLocation(program, std::string(point_light_current_uniform_name + ".position").c_str()), 1, light.owner->transform.GetGlobalTranslation().ptr());
+		glUniform1f(glGetUniformLocation(program, std::string(point_light_current_uniform_name + ".constant").c_str()), light.point_light_parameters.constant);
+		glUniform1f(glGetUniformLocation(program, std::string(point_light_current_uniform_name + ".linear").c_str()), light.point_light_parameters.linear);
+		glUniform1f(glGetUniformLocation(program, std::string(point_light_current_uniform_name + ".quadratic").c_str()), light.point_light_parameters.quadratic);
 
-			++current_number_point_lights_rendered;
-		}
-		++i;
+		++current_number_point_lights_rendered;
 	}
 
-	glUniform1i(glGetUniformLocation(program, "num_point_lights"), current_number_point_lights_rendered);
 }
 
 ComponentLight* ModuleLight::CreateComponentLight()

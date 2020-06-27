@@ -61,6 +61,7 @@ void PanelHierarchy::Render()
 
 void PanelHierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 {
+	BROFILER_CATEGORY("Show GO", Profiler::Color::PaleVioletRed);
 	std::string game_object_name_label;
 	if (game_object->original_UUID != 0)
 	{

@@ -19,9 +19,9 @@ public:
 	update_status PostUpdate() override;
 
 	void Render(const float3& mesh_position, GLuint program);
-	void RenderDirectionalLight(const float3& mesh_position);
-	void RenderSpotLights(const float3& mesh_position, GLuint program);
-	void RenderPointLights(const float3& mesh_position, GLuint program);
+	void RenderDirectionalLight(const ComponentLight& light);
+	void RenderSpotLights(const ComponentLight& light, GLuint program);
+	void RenderPointLights(const ComponentLight& light, GLuint program);
 	void UpdateLightAABB(GameObject& object_aabb);
 
 	ComponentLight* CreateComponentLight();

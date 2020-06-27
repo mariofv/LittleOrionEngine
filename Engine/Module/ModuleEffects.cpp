@@ -22,6 +22,10 @@ bool ModuleEffects::CleanUp()
 
 void ModuleEffects::Render()
 {
+	if (!render_particles)
+	{
+		return;
+	}
 	BROFILER_CATEGORY("Module Effects Render", Profiler::Color::OrangeRed);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
