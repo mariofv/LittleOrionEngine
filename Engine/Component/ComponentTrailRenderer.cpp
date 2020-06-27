@@ -10,7 +10,7 @@
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
-namespace { const float MAX_TRAIL_VERTICES = 5000; } //arbitrary number 
+namespace { const float MAX_TRAIL_VERTICES = 10; } //arbitrary number 
 
 ComponentTrailRenderer::ComponentTrailRenderer() : Component(nullptr, ComponentType::TRAILRENDERER)
 {
@@ -55,8 +55,11 @@ void ComponentTrailRenderer::InitData()
 
 	glBindVertexArray(vao);
 
+	//use glBufferMap to obtain a pointer to buffer data
+	trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(float) * MAX_TRAIL_VERTICES * 6, GL_MAP_WRITE_BIT);
+
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);//dynamically draw vertices due to trail changes mesh over time
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices , GL_DYNAMIC_DRAW);//dynamically draw vertices due to trail changes mesh over time
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
@@ -103,9 +106,6 @@ void ComponentTrailRenderer::Render(const float3& position)
 	glGetProgramStageiv(shader_program, GL_VERTEX_SHADER, GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS, &n);
 	unsigned* subroutines_indices = new unsigned[n];
 
-	//use glBufferMap to obtain a pointer to buffer data
-	trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(float) * MAX_TRAIL_VERTICES * 6, GL_MAP_WRITE_BIT); 
-
 	//Subroutine functions
 	GLuint viewpoint_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "view_point_alignment");
 	GLuint crossed_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "crossed_alignment");
@@ -127,7 +127,8 @@ void ComponentTrailRenderer::Render(const float3& position)
 
 	glBindVertexArray(vao);
 	 
-	glDrawElements(GL_TRIANGLES, rendered_vertices, GL_UNSIGNED_INT, 0);
+	//glDrawElements(GL_TRIANGLES, rendered_vertices, GL_UNSIGNED_INT, 0);
+	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, rendered_vertices);
 	glBindVertexArray(0);
 
 	glUseProgram(0);

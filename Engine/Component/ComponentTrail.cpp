@@ -133,6 +133,9 @@ void  ComponentTrail::GetPerpendiculars()
 			it->first.life -= App->time->real_time_delta_time;
 			it->second.life -= App->time->real_time_delta_time;
 			App->debug_draw->RenderLine(it->first.position, it->second.position); // Draw the perpendicular vector
+			float3 mesh_position = it->second.position;
+			trail_renderer->height = width;
+			trail_renderer->Render(mesh_position);
 		}
 	
 		else// But if not, we delete these points
@@ -204,6 +207,7 @@ void ComponentTrail::Render()
 		trail_renderer->rendered_vertices = trail_vertices;
 			
 		}*/
+		
 	}
 	glEnable(GL_CULL_FACE);
 }
