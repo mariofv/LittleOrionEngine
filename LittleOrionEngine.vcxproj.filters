@@ -499,20 +499,17 @@
     <ClCompile Include="Engine\Helper\TagManager.cpp">
       <Filter>Engine\Helper</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentBillboard.cpp">
-      <Filter>Engine\Component</Filter>
+    <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Builders.cpp">
+      <Filter>Libraries\BlueprintUtilities</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentParticleSystem.cpp">
-      <Filter>Engine\Component</Filter>
+    <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Drawing.cpp">
+      <Filter>Libraries\BlueprintUtilities</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PanelTags.cpp">
-      <Filter>Engine\EditorUI\Panel</Filter>
+    <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Widgets.cpp">
+      <Filter>Libraries\BlueprintUtilities</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Module\ModuleEffects.cpp">
-      <Filter>Engine\Module</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentSpriteMask.cpp">
-      <Filter>Engine\Component</Filter>
+    <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp">
+      <Filter>Engine\Animation\Tween</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Animation\Tween\LOTween.cpp">
       <Filter>Engine\Animation\Tween</Filter>
@@ -520,8 +517,20 @@
     <ClCompile Include="Engine\Animation\Tween\Tween.cpp">
       <Filter>Engine\Animation\Tween</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp">
-      <Filter>Engine\Animation\Tween</Filter>
+    <ClCompile Include="Engine\Component\ComponentSpriteMask.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentParticleSystem.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentBillboard.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleEffects.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelTags.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1008,20 +1017,8 @@
     <ClInclude Include="Engine\Helper\TagManager.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentBillboard.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentParticleSystem.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h">
-      <Filter>Engine\EditorUI\Panel</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Module\ModuleEffects.h">
-      <Filter>Engine\Module</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentSpriteMask.h">
-      <Filter>Engine\Component</Filter>
+    <ClInclude Include="Engine\Animation\Tween\TweenSequence.h">
+      <Filter>Engine\Animation\Tween</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Animation\Tween\LOTween.h">
       <Filter>Engine\Animation\Tween</Filter>
@@ -1029,8 +1026,20 @@
     <ClInclude Include="Engine\Animation\Tween\Tween.h">
       <Filter>Engine\Animation\Tween</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Animation\Tween\TweenSequence.h">
-      <Filter>Engine\Animation\Tween</Filter>
+    <ClInclude Include="Engine\Component\ComponentSpriteMask.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentParticleSystem.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentBillboard.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleEffects.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Event\Event.h">
       <Filter>Engine\Event</Filter>
@@ -1133,11 +1142,14 @@
     <Filter Include="Engine\Component\Collider">
       <UniqueIdentifier>{2234ff4f-964f-49d9-9553-0f966006fc99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libraries\BlueprintUtilities">
+      <UniqueIdentifier>{b3408590-e54b-470d-a5dd-dfb526b78367}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\Animation\Tween">
-      <UniqueIdentifier>{e7d08611-64ed-4f00-9fef-3df8aa3fcb03}</UniqueIdentifier>
+      <UniqueIdentifier>{5591d29d-9c42-4d4d-87a9-9e2ce3b5ccac}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Event">
-      <UniqueIdentifier>{13e7c55e-6aa3-4a17-924d-f5bb4fc0ce62}</UniqueIdentifier>
+      <UniqueIdentifier>{182de5df-40ff-40a2-ae90-2adaa77cbdfc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

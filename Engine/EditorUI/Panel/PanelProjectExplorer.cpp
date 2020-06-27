@@ -387,7 +387,7 @@ void PanelProjectExplorer::ProcessResourceMouseInput(Path* metafile_path, Metafi
 	{
 		if (metafile->resource_type == ResourceType::STATE_MACHINE)
 		{
-			App->editor->state_machine->SwitchOpen();
+			App->editor->state_machine->Open();
 			App->editor->state_machine->OpenStateMachine(metafile->uuid);
 		}
 	}
