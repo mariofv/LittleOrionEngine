@@ -192,7 +192,7 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 		}
 		if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			if (ImGui::InputInt("Max particles", &particle_system->max_particles_number) && particle_system->max_particles_number > MAX_PARTICLES)
+			if (ImGui::InputScalar("Max particles", ImGuiDataType_U32,&particle_system->max_particles_number) && particle_system->max_particles_number > MAX_PARTICLES)
 			{
 				particle_system->max_particles_number = MAX_PARTICLES;
 			}
@@ -269,12 +269,12 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			{
 				if (particle_system->enabled_random_x)
 				{
-					ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 1000);
-					ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -1000, 0);
+					ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 10000);
+					ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -10000, 0);
 				}
 				else
 				{
-					ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -100, 1000);
+					ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -100, 10000);
 				}
 				ImGui::SameLine();
 				ImGui::Checkbox("Rand X", &particle_system->enabled_random_x);
@@ -283,12 +283,12 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 
 				if (particle_system->enabled_random_z)
 				{
-					ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 1000);
-					ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -1000, 0);
+					ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 10000);
+					ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -10000, 0);
 				}
 				else
 				{
-					ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -100, 1000);
+					ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -100, 10000);
 				}
 				ImGui::SameLine();
 				ImGui::Checkbox("Rand Z", &particle_system->enabled_random_z);
@@ -296,8 +296,8 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			}
 			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::CONE)
 			{
-				ImGui::DragFloat("Outer radius", &particle_system->outer_radius, 0.1F, 0.1, 10);
-				ImGui::DragFloat("Inner radius", &particle_system->inner_radius, 0.1F, 0.1, 10);
+				ImGui::DragFloat("Outer radius", &particle_system->outer_radius, 0.1F, 0.1F, 10);
+				ImGui::DragFloat("Inner radius", &particle_system->inner_radius, 0.1F, 0.1F, 10);
 			}
 		}
 
@@ -401,7 +401,7 @@ void PanelComponent::ShowComponentBillboard(ComponentBillboard *billboard)
 	}
 }
 
-void PanelComponent::ShowBillboardOptions(ComponentBillboard * billboard)
+void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 {
 	ImGui::AlignTextToFramePadding();
 
@@ -447,8 +447,19 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard * billboard)
 	if (billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
 		ImGui::InputInt("Columns", &billboard->x_tiles, 1);
 		ImGui::InputInt("Rows", &billboard->y_tiles, 1);
+		ImGui::InputFloat("current x", &billboard->current_sprite_x, 1);
+		ImGui::InputFloat("current y", &billboard->current_sprite_y, 1);
 		ImGui::InputFloat("Speed", &billboard->sheet_speed, 1);
 		ImGui::Checkbox("Oriented to camera", &billboard->oriented_to_camera);
+		if (ImGui::Button("Play once"))
+		{
+			billboard->EmitOnce();
+		}
+		if (ImGui::Button("Reset"))
+		{
+			billboard->play = true;
+		}
+
 	}
 
 	ImGui::Separator();
@@ -562,7 +573,6 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 
 		//UndoRedo
 		CheckClickedCamera(camera);
-
 	}
 }
 
@@ -676,6 +686,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		if (animation->animation_controller->state_machine && animation->animation_controller->active_state)
 		{
 			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(animation->animation_controller->active_state->name_hash), nullptr, nullptr, nullptr, ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputText("Active State", &animation->animation_controller->active_state->name, ImGuiInputTextFlags_ReadOnly);
 			static std::string trigger;
 			ImGui::InputText("Trigger ", &trigger);
 			if (ImGui::Button("Activate"))
@@ -703,8 +714,9 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 			{
 				break;
 			}
+			ImGui::InputText("Playing clip:", &playing_clip.clip->name, ImGuiInputTextFlags_ReadOnly);
 			ImGui::Checkbox("Loop", &(playing_clip.clip->loop));
-			ImGui::SliderInt("Animation time", &playing_clip.current_time, 0, playing_clip.clip->animation_time);
+			ImGui::SliderFloat("Animation time", &playing_clip.current_time, 0, playing_clip.clip->animation_time);
 		}
 
 	}

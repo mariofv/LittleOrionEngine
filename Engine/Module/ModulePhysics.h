@@ -39,7 +39,6 @@ public:
 	~ModulePhysics();
 
 	bool Init() override;
-	bool CleanUp() override;
 	update_status PreUpdate() override;
 	update_status Update() override;
 

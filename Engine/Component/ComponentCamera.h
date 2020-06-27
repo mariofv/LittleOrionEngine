@@ -26,6 +26,13 @@ public:
 		ORTHO = 2
 	};
 
+	enum OrthoIndex
+	{
+		CLOSE = 0,
+		MID = 1,
+		AWAY = 2
+	};
+
 	ComponentCamera();
 	ComponentCamera(GameObject * owner);
 
@@ -49,7 +56,7 @@ public:
 	float GetWidth() const;
 	float GetHeight() const;
 
-	void RecordFrame(float width, float height, bool scene_mode = false);
+	void RecordFrame(GLsizei width, GLsizei height, bool scene_mode = false);
 	ENGINE_API void RecordDebugDraws(bool scene_mode = false);
 	GLuint GetLastRecordedFrame() const;
 
@@ -92,10 +99,10 @@ public:
 
 	void SetClearMode(ComponentCamera::ClearMode clear_mode);
 	void SetSkybox(uint32_t skybox_uuid);
-
 	void SetSpeedUp(bool is_speeding_up);
 
 	void SetViewMatrix(const float4x4& view_matrix);
+
 	float4x4 GetViewMatrix() const;
 	float4x4 GetProjectionMatrix() const;
 	ENGINE_API float4x4 GetClipMatrix() const;
@@ -113,13 +120,14 @@ public:
 	ENGINE_API void GetRay(const float2 &mouse_position, LineSegment &return_value) const;
 
 	AABB GetMinimalEnclosingAABB() const;
+	void GenerateMatrices();
 
 private:
-	void GenerateFrameBuffers(float width, float height);
-	void GenerateMatrices();
+	void GenerateFrameBuffers(GLsizei width, GLsizei height);
 	void InitCamera();
-	void CreateFramebuffer(float width, float height);
-	void CreateMssaFramebuffer(float width, float height);
+	void CreateFramebuffer(GLsizei width, GLsizei height);
+	void CreateMssaFramebuffer(GLsizei width, GLsizei height);
+	void CreateOrthographicFramebuffer(GLsizei width, GLsizei height);
 
 public:
 	const float SPEED_UP_FACTOR = 2.f;
@@ -138,20 +146,22 @@ public:
 	float4x4 proj;
 	float4x4 view;
 
+	GLuint depth_map = 0;
+	GLuint last_recorded_frame_texture = 0;
+
+	OrthoIndex ortho_index; //Only for orthographic cameras
+
+
 	bool toggle_msaa = false;
 	bool is_focusing = false;
+	Frustum camera_frustum;
 
 private:
-	Frustum camera_frustum;
 	GLuint rbo = 0;
 	GLuint fbo = 0;
-private:
-	
-	
-	
+	GLuint depth_rbo = 0;
 	GLuint msfbo = 0;
 	GLuint msfb_color = 0;
-	GLuint last_recorded_frame_texture = 0;
 
 	float last_height = 0;
 	float last_width = 0;

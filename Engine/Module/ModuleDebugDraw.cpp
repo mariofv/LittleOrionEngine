@@ -398,8 +398,8 @@ bool ModuleDebugDraw::Init()
     APP_LOG_SUCCESS("Module Debug Draw initialized correctly.")
 
 	return true;
-}	
-	
+}
+
 
 void ModuleDebugDraw::RenderTangentsAndBitangents() const
 {
@@ -468,7 +468,15 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 	if (selected_camera_component != nullptr) {
 		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
 
-		dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
+		if(selected_camera->camera_frustum.type == FrustumType::PerspectiveFrustum)
+			dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
+
+		if (selected_camera->camera_frustum.type == FrustumType::OrthographicFrustum)
+		{
+			float3 points[8];
+			selected_camera->camera_frustum.GetCornerPoints(points);
+			dd::box(points, float3(1, 1, 1), 0, true);
+		}
 	}	
 }
 
@@ -492,11 +500,11 @@ void ModuleDebugDraw::RenderParticleSystem() const
 			break;
 			case ComponentParticleSystem::TypeOfParticleSystem::BOX:
 			{
-				float min_x = selected_particle_system->min_range_random_x;
-				float max_x = selected_particle_system->max_range_random_x;
-				float min_z = selected_particle_system->min_range_random_z;
-				float max_z = selected_particle_system->max_range_random_z;
-				float height = selected_particle_system->particles_life_time*selected_particle_system->velocity_particles *100;
+				float min_x = static_cast<float>(selected_particle_system->min_range_random_x);
+				float max_x = static_cast<float>(selected_particle_system->max_range_random_x);
+				float min_z = static_cast<float>(selected_particle_system->min_range_random_z);
+				float max_z = static_cast<float>(selected_particle_system->max_range_random_z);
+				float height = selected_particle_system->particles_life_time*selected_particle_system->velocity_particles *100.0f;
 				float3 box_points[8] = {
 					float3(min_x,0.0f,min_z) / 100,
 					float3(min_x, 0.0f, max_z) / 100,
@@ -816,8 +824,6 @@ bool ModuleDebugDraw::CleanUp()
     delete dd_interface_implementation;
     dd_interface_implementation = 0;
 
-	delete light_billboard;
-	delete camera_billboard;
 	delete grid;
 
 	return true;

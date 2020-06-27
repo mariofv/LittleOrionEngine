@@ -8,7 +8,6 @@
 #include <GL/glew.h>
 #include <MathGeoLib.h>
 
-class Billboard;
 class ComponentCamera;
 class GameObject;
 class Grid;
@@ -62,9 +61,6 @@ private:
 
 	const float MIN_MAGNITUDE_ORDER_GRID = 0;
 	const float MAX_MAGNITUDE_ORDER_GRID = 20;
-
-	Billboard* camera_billboard = nullptr;
-	Billboard* light_billboard = nullptr;
 
 	Grid* grid = nullptr;
 };

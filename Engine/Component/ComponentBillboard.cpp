@@ -70,25 +70,37 @@ void ComponentBillboard::InitData()
 void ComponentBillboard::SwitchFrame()
 {
 	time_since_start += App->time->delta_time;
-	APP_LOG_INFO("%.1f", time_since_start);
-
-	if (time_since_start * sheet_speed >= 1000)
+	if (play)
 	{
-		current_sprite_x += 1;
-
-		if ((int)current_sprite_x >= x_tiles) 
+		if (time_since_start * sheet_speed >= 1000)
 		{
-			current_sprite_y--;
-			current_sprite_x = 0;
-		}
 
-		if ((int)current_sprite_y <= 0) 
-		{
-			current_sprite_y = y_tiles;
+			current_sprite_x++;
+			if (play_once)
+			{
+				if (current_sprite_y == y_tiles && current_sprite_x == x_tiles-1)
+				{
+					play = false;
+					play_once = false;
+					Disable();
+					return;
+				}
+			}
+			
+			if (static_cast<int>(current_sprite_x) >= x_tiles)
+			{
+				current_sprite_y--;
+				current_sprite_x = 0;
+			}
+
+			if (static_cast<int>(current_sprite_y) <= 0)
+			{
+				current_sprite_y = static_cast<float>(y_tiles);
+			}
+			
+			time_since_start = 0.f;
 		}
-		time_since_start = 0.f;
 	}
-
 
 }
 
@@ -102,6 +114,20 @@ void ComponentBillboard::ChangeBillboardType(ComponentBillboard::AlignmentType _
 		is_spritesheet = false;
 }
 
+void ComponentBillboard::EmitOnce()
+{
+	Enable();
+	play_once = true;
+	play = true;
+	current_sprite_x = 0;
+	current_sprite_y = static_cast<float>(y_tiles - 1);
+}
+
+bool ComponentBillboard::IsPlaying()
+{
+	return play;
+}
+
 void ComponentBillboard::Render(const float3& position)
 {
 	if(!active)
@@ -112,9 +138,9 @@ void ComponentBillboard::Render(const float3& position)
 	GLuint shader_program = App->program->GetShaderProgramId("Billboard");
 	glUseProgram(shader_program);
 
-	int n;
-	glGetProgramStageiv(shader_program, GL_VERTEX_SHADER, GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS, &n);
-	unsigned* subroutines_indices = new unsigned[n];
+	int subroutine_position;
+	glGetProgramStageiv(shader_program, GL_VERTEX_SHADER, GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS, &subroutine_position);
+	unsigned* subroutines_indices = new unsigned[subroutine_position];
 
 	//Subroutine functions
 	GLuint viewpoint_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "view_point_alignment");
@@ -127,22 +153,22 @@ void ComponentBillboard::Render(const float3& position)
 	switch (alignment_type) 
 	{
 	case VIEW_POINT:
-		glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &viewpoint_subroutine);
+		glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &viewpoint_subroutine);
 		break;
 	case CROSSED:
-		glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &crossed_subroutine);
+		glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &crossed_subroutine);
 		break;
 
 	case AXIAL:
-		glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &axial_subroutine);
+		glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &axial_subroutine);
 		break;
 
 	case SPRITESHEET:
 		if(oriented_to_camera)
-			glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &viewpoint_subroutine);
+			glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &viewpoint_subroutine);
 
 		else
-			glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &crossed_subroutine);
+			glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &crossed_subroutine);
 
 		glUniform1i(glGetUniformLocation(shader_program, "billboard.XTiles"), x_tiles);
 		glUniform1i(glGetUniformLocation(shader_program, "billboard.YTiles"), y_tiles);
@@ -155,7 +181,7 @@ void ComponentBillboard::Render(const float3& position)
 
 	default:
 		// viewpoint by default, the most consistent one
-		glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &viewpoint_subroutine);
+		glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &viewpoint_subroutine);
 		break;
 	}
 
@@ -174,6 +200,7 @@ void ComponentBillboard::Render(const float3& position)
 	glBindVertexArray(0);
 
 	glUseProgram(0);
+	delete[] subroutines_indices;
 }
 
 Component* ComponentBillboard::Clone(bool original_prefab) const
@@ -210,8 +237,8 @@ void ComponentBillboard::SpecializedSave(Config& config) const
 	config.AddUInt(texture_uuid, "TextureUUID");
 	config.AddFloat(width, "Width");
 	config.AddFloat(height, "Height");
-	config.AddInt((unsigned int)x_tiles, "Rows");
-	config.AddInt((unsigned int)y_tiles, "Columns");
+	config.AddInt(x_tiles, "Rows");
+	config.AddInt(y_tiles, "Columns");
 }
 
 void ComponentBillboard::SpecializedLoad(const Config& config)
@@ -220,14 +247,14 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 	sheet_speed = config.GetFloat("SheetSpeed", 1.f);
 	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::SPRITESHEET)));
 	ChangeBillboardType(alignment_type);
-	texture_uuid = config.GetUInt("TextureUUID", 0);
+	texture_uuid = config.GetUInt32("TextureUUID", 0);
 	
 	ChangeTexture(texture_uuid);
 
-	width = config.GetFloat("Width", 1.f);
-	height = config.GetFloat("Height", 1.f);
-	x_tiles = config.GetInt("Rows", 1.f);
-	y_tiles = config.GetInt("Columns", 1.f);
+	width = config.GetFloat("Width", 1.0f);
+	height = config.GetFloat("Height", 1.0f);
+	x_tiles = config.GetInt("Rows", 1);
+	y_tiles = config.GetInt("Columns", 1);
 }
 
 void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)

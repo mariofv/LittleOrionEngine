@@ -24,17 +24,22 @@ struct Clip
 
 	//RunTime only
 	std::unordered_map<uint32_t,std::vector<size_t>> skeleton_channels_joints_map;
-	int animation_time = 0;
+	float animation_time = 0.0f;
 };
 
 struct State
 {
 	State() = default;
 	State(std::string name, std::shared_ptr<Clip> clip);
-
+	State(std::string name, std::shared_ptr<Clip> clip, float speed);
+	State(std::string name, std::shared_ptr<Clip> clip, float speed, float2& position);
 	std::string name;
 	uint64_t name_hash = 0;
 	std::shared_ptr<Clip> clip = nullptr;
+	//Adding speed parameter for accelerate/decelerate clip
+	float speed = 1.0f;
+	
+	float2 position = { 10.0f, 10.0f };
 };
 
 template <typename T>
@@ -79,6 +84,7 @@ public:
 
 	void Save(Config& config) const;
 	void Load(const Config& config);
+	void LoadNames(const Config& config);
 
 private:
 	void RemoveState(const std::shared_ptr<State> & state);
@@ -92,6 +98,7 @@ public:
 	std::vector<std::shared_ptr<Parameter<int>>> parameters;
 	uint64_t default_state = 0;
 	friend class PanelStateMachine;
+	
 };
 
 namespace ResourceManagement

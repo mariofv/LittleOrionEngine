@@ -75,7 +75,7 @@ static void APIENTRY openglCallbackFunction(
 		OPENGL_LOG_ERROR(error_message);
 		break;
 	case GL_DEBUG_SEVERITY_MEDIUM:
-		OPENGL_LOG_INIT(error_message); // Actually not an itialization entry, I use this type of entry because the yellow color
+		//OPENGL_LOG_INIT(error_message); // Actually not an itialization entry, I use this type of entry because the yellow color
 		break;
 	case GL_DEBUG_SEVERITY_LOW:
 		//OPENGL_LOG_INFO(error_message); Too many messages in update
@@ -122,7 +122,7 @@ bool ModuleRender::Init()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	APP_LOG_SUCCESS("Glew initialized correctly.")
+	APP_LOG_SUCCESS("Glew initialized correctly.");
 
 	return true;
 }
@@ -155,7 +155,20 @@ void ModuleRender::Render() const
 #if GAME
 	if (App->cameras->main_camera != nullptr) 
 	{
+		glBindFramebuffer(GL_FRAMEBUFFER, App->cameras->directional_light_camera->fbo);
+		App->cameras->directional_light_camera->RecordFrame(App->window->GetWidth() * 4, App->window->GetHeight() * 4);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, App->cameras->directional_light_mid->fbo);
+		App->cameras->directional_light_mid->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, App->cameras->directional_light_far->fbo);
+		App->cameras->directional_light_far->RecordFrame(App->window->GetWidth() / 4, App->window->GetHeight() / 4);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 		App->cameras->main_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
+
 		App->cameras->main_camera->RecordDebugDraws();
 	}
 #endif
@@ -193,6 +206,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			mesh.second->Render();
 			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
 			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
+			App->lights->UpdateLightAABB(*mesh.second->owner);
 			glUseProgram(0);
 
 		}
@@ -209,6 +223,8 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			mesh.second->Render();
 			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
 			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
+			App->lights->UpdateLightAABB(*mesh.second->owner);
+
 			glUseProgram(0);
 			
 		}
@@ -265,7 +281,7 @@ void ModuleRender::SetListOfMeshesToRender(const ComponentCamera* camera)
 	float3 camera_pos = camera->camera_frustum.pos;
 	for (unsigned int i = 0; i < meshes_to_render.size(); i++)
 	{
-		if (meshes_to_render[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
+		if (meshes_to_render[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT || meshes_to_render[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
 		{
 			meshes_to_render[i]->owner->aabb.bounding_box;
 			float3 center_bounding_box = (meshes_to_render[i]->owner->aabb.bounding_box.minPoint + meshes_to_render[i]->owner->aabb.bounding_box.maxPoint) / 2;
@@ -319,6 +335,7 @@ void ModuleRender::SetBlending(bool gl_blend)
 	this->gl_blend = gl_blend;
 
 }
+
 
 void ModuleRender::SetFaceCulling(bool gl_cull_face)
 {

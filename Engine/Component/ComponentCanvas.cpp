@@ -136,7 +136,7 @@ void ComponentCanvas::RenderGameObject(GameObject* game_object_to_render, float4
 		{
 			glEnable(GL_STENCIL_TEST);
 			glEnable(GL_ALPHA_TEST);
-			glAlphaFunc(GL_GREATER, 0.05);
+			glAlphaFunc(GL_GREATER, 0.05f);
 			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 			glStencilFunc(GL_ALWAYS, 1, 0xFF);
 			glStencilMask(0xFF); // each bit is written to the stencil buffer as is

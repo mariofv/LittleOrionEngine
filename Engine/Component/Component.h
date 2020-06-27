@@ -35,7 +35,7 @@ public:
 		TRAILRENDERER = 19
 	};
 
-	Component();
+	Component() = default;
 	Component(ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
 	Component(GameObject * owner, ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
 	virtual ~Component() = default;

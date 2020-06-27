@@ -24,6 +24,7 @@ public:
 	ENGINE_API float GetFPS() const;
 	void SetMaxFPS(int fps);
 	void SetTimeScale(float time_scale);
+	void ResetInitFrame();
 
 	bool isGameRunning();
 
@@ -36,7 +37,7 @@ public:
 public:
 	long frame_count = 0;
 
-	float time_scale = 1.f;
+	float time_scale = 1.0f;
 
 	float delta_time = 0.f;
 	float real_time_delta_time = 0.f;

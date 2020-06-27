@@ -50,9 +50,6 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
-	ENGINE_API void OpenScene(const std::string &path) const;
-	void SaveScene(const std::string &path) const;
-
 	void Render();
 
 	ImFont* GetFont(const Fonts & font) const;
@@ -74,7 +71,6 @@ public:
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 	
 	Metafile *selected_meta_file = nullptr;
-	std::string current_scene_path = "";
 
 	TagManager* tag_manager = nullptr;
 

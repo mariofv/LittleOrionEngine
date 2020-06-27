@@ -134,7 +134,7 @@ void ComponentImage::SpecializedSave(Config& config) const
 void ComponentImage::SpecializedLoad(const Config& config)
 {
 	config.GetColor("ImageColor", color, float4::one);
-	texture_uuid = config.GetUInt("TextureUUID", 0);
+	texture_uuid = config.GetUInt32("TextureUUID", 0);
 	preserve_aspect_ratio = config.GetBool("PreserveAspectRatio", false);
 	if (texture_uuid != 0)
 	{
@@ -157,5 +157,5 @@ void ComponentImage::SetColor(float4 color)
 
 void ComponentImage::SetNativeSize() const
 {
-	owner->transform_2d.SetSize(float2(texture_to_render->width, texture_to_render->height));
+	owner->transform_2d.SetSize(float2((float)texture_to_render->width, (float)texture_to_render->height));
 }

@@ -27,18 +27,9 @@ void Texture::LoadInMemory(TextureOptions& options, int num_channels)
 	glBindTexture(GL_TEXTURE_2D, opengl_texture);
 
 	// set the texture wrapping/filtering options (on the currently bound texture object)
-	wrap_s = GL_REPEAT;
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
-
-	wrap_t = GL_REPEAT;
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
-
-	min_filter = GL_LINEAR;
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
-
-	mag_filter = GL_LINEAR;
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
-
+	SetWrap(options.wrap_mode);
+	SetFilter(options.filter_mode);
+	
 	GLint channels = num_channels > 3 ? GL_RGBA : GL_RGB;
 	if (options.texture_type == TextureType::NORMAL)
 	{
@@ -63,76 +54,65 @@ void Texture::GenerateMipMap()
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture::SetWrapS(GLenum wrap_s)
+void Texture::SetWrap(WrapMode wrap)
 {
-	this->wrap_s = wrap_s;
-	glBindTexture(GL_TEXTURE_2D, opengl_texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	switch (wrap)
+	{
+	case REPEAT:
+		this->wrap = GL_REPEAT;
+		break;
+	case CLAMP:
+		this->wrap = GL_CLAMP;
+		break;
+	case MIRROR:
+		this->wrap = GL_MIRRORED_REPEAT;
+		break;
+	case MIRROR_ONCE:
+		this->wrap = GL_MIRROR_CLAMP_TO_EDGE;
+		break;
+	default:
+		this->wrap = GL_REPEAT;
+		break;
+	}
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->wrap);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->wrap);
 }
 
-GLenum Texture::GetWrapS() const
+GLenum Texture::GetWrap() const
 {
-	return wrap_s;
+	return wrap;
 }
 
-char* Texture::GetWrapS_C_Str() const
+char* Texture::GetWrap_C_Str() const
 {
-	return GLEnumToString(wrap_s);
+	return GLEnumToString(wrap);
 }
 
-void Texture::SetWrapT(GLenum wrap_t)
+void Texture::SetFilter(FilterMode filter)
 {
-	this->wrap_t = wrap_t;
-	glBindTexture(GL_TEXTURE_2D, opengl_texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	switch (filter)
+	{
+	case NEAREST:
+		this->filter = GL_NEAREST;
+		break;
+	case LINEAR:
+		this->filter = GL_LINEAR;
+	default:
+		break;
+	}
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->filter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->filter);
+
 }
 
-GLenum Texture::GetWrapT() const
+GLenum Texture::GetFilter() const
 {
-	return wrap_t;
+	return filter;
 }
 
-char* Texture::GetWrapT_C_Str() const
+char* Texture::GetFilter_C_Str() const
 {
-	return GLEnumToString(wrap_t);
-}
-
-void Texture::SetMinFilter(GLenum min_filter)
-{
-	this->min_filter = min_filter;
-	glBindTexture(GL_TEXTURE_2D, opengl_texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
-	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-GLenum Texture::GetMinFilter() const
-{
-	return min_filter;
-}
-
-char* Texture::GetMinFilter_C_Str() const
-{
-	return GLEnumToString(min_filter);
-}
-
-void Texture::SetMagFilter(GLenum mag_filter)
-{
-	this->mag_filter = mag_filter;
-	glBindTexture(GL_TEXTURE_2D, opengl_texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
-	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-GLenum Texture::GetMagFilter() const
-{
-	return mag_filter;
-}
-
-char* Texture::GetMagFilter_C_Str() const
-{
-	return GLEnumToString(mag_filter);
+	return GLEnumToString(filter);
 }
 
 char* Texture::GLEnumToString(GLenum gl_enum) const
