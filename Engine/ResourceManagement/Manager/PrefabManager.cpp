@@ -95,6 +95,8 @@ void PrefabManager::LoadBasicParameters(const Config& config, std::unique_ptr<Ga
 	config.GetChildConfig("Transform2D", transform_2d_config);
 	loaded_gameObject->transform_2d.Load(transform_2d_config);
 
+	loaded_gameObject->SetTransform2DStatus(config.GetBool("Transform2DEnabled", false));
+
 }
 
 void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameObject> & loaded_gameObject)

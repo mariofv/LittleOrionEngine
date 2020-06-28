@@ -93,6 +93,8 @@ GameObject& GameObject::operator<<(const GameObject& gameobject_to_copy)
 	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
 	this->original_UUID = gameobject_to_copy.original_UUID;
+	this->transform_2d_enabled = gameobject_to_copy.transform_2d_enabled;
+
 	return *this;
 }
 
