@@ -38,7 +38,6 @@ PanelProjectExplorer::PanelProjectExplorer()
 
 void PanelProjectExplorer::Render()
 {
-	BROFILER_CATEGORY("Render Project Explorer Panel", Profiler::Color::BlueViolet);
 	if (ImGui::Begin(ICON_FA_FOLDER " Project Explorer", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();

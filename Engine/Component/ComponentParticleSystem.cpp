@@ -147,7 +147,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 }
 
-void ComponentParticleSystem::Render(const ComponentCamera& camera)
+void ComponentParticleSystem::Render()
 {
 	BROFILER_CATEGORY("Particle Render", Profiler::Color::OrangeRed);
 	if (active && playing ) 
@@ -174,11 +174,11 @@ void ComponentParticleSystem::Render(const ComponentCamera& camera)
 				UpdateParticle(p);
 				if (follow_owner)
 				{
-					billboard->Render(owner->transform.GetGlobalTranslation() + (p.rotation *p.position), camera);
+					billboard->Render(owner->transform.GetGlobalTranslation() + (p.rotation *p.position));
 				}
 				else
 				{
-					billboard->Render(p.position, camera);
+					billboard->Render(p.position);
 				}
 				
 			}

@@ -1,13 +1,11 @@
 #include "ComponentBillboard.h"
 
-#include "Component/ComponentCamera.h"
 #include "Main/Application.h"
 
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTime.h"
-
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
@@ -72,7 +70,6 @@ void ComponentBillboard::InitData()
 
 void ComponentBillboard::SwitchFrame()
 {
-	BROFILER_CATEGORY("Switch Frame billboard", Profiler::Color::Orange);
 	time_since_start += App->time->delta_time;
 	if (play)
 	{
@@ -132,13 +129,14 @@ bool ComponentBillboard::IsPlaying()
 	return play;
 }
 
-void ComponentBillboard::Render(const float3& position, const ComponentCamera &camera)
+void ComponentBillboard::Render(const float3& position)
 {
 	BROFILER_CATEGORY("Render billboard", Profiler::Color::Orange);
-	if(!active || !camera.camera_frustum.Contains(position))
+	if(!active)
 	{
 		return;
 	}
+
 
 	glUseProgram(shader_program);
 
