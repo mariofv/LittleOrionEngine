@@ -67,14 +67,6 @@ private:
 	//Don't use this function use the public one
 	GameObject* DuplicateGO(GameObject* game_object, GameObject* parent_go);
 
-	struct LoadingThreadCommunication
-	{
-		mutable std::mutex loading_mutex;
-		std::atomic_bool loading = false;
-		std::atomic_uint32_t loaded_go = 0;
-		std::atomic_uint32_t total_go = 0;
-	}loading_thread_communication;
-
 
 private:
 	GameObject* root = nullptr;

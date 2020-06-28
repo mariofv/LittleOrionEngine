@@ -151,7 +151,7 @@ public:
 			load_job.texture_type = texture_type;
 			load_job.exported_file_data = exported_file_data;
 			loading_textures_queue.Push(load_job);
-
+			++loading_thread_communication.total_number_of_textures_to_load;
 		}
 		else
 		{
@@ -218,6 +218,13 @@ public:
 
 	ThreadSafeQueue<TextureLoadJob> loading_textures_queue;
 	ThreadSafeQueue<TextureLoadJob> processing_textures_queue;
+
+	struct LoadingTexturesThreadCommunication
+	{
+		std::atomic_bool loading = false;
+		std::atomic<int> total_number_of_textures_to_load = 0;
+		std::atomic<int> current_number_of_textures_loaded = 0;
+	}loading_thread_communication;
 
 	//Importers
 	std::unique_ptr<AnimationImporter> animation_importer;

@@ -119,8 +119,17 @@ update_status ModuleResourceManager::PreUpdate()
 				//Generate OpenGL texture
 				texture_job.component_to_load->GenerateTextures(texture_job.loaded_data);
 			}
+
+			++loading_thread_communication.current_number_of_textures_loaded;
 		}
 	}
+
+	if(loading_thread_communication.loading && 
+		loading_thread_communication.current_number_of_textures_loaded == loading_thread_communication.total_number_of_textures_to_load)
+	{
+		loading_thread_communication.loading = false;
+	}
+
 #endif
 
 	return update_status::UPDATE_CONTINUE;
