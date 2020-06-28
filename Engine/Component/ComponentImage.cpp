@@ -166,10 +166,17 @@ void ComponentImage::SetTextureToRender(uint32_t texture_uuid)
 	this->texture_uuid = texture_uuid;
 	texture_to_render = App->resources->Load<Texture>(texture_uuid);
 
-	App->resources->AddResourceToCache(texture_to_render);
-
 	//Set to default loading component
 	App->resources->current_component_loading = nullptr;
+}
+
+void ComponentImage::SetTextureToRenderFromInspector(uint32_t texture_uuid)
+{
+	this->texture_uuid = texture_uuid;
+
+	App->resources->normal_loading_flag = true;
+	texture_to_render = App->resources->Load<Texture>(texture_uuid);
+	App->resources->normal_loading_flag = false;
 }
 
 void ComponentImage::SetColor(float4 color)

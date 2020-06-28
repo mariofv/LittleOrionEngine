@@ -24,6 +24,8 @@ public:
 	void GetTextureFromCache(TextureLoadData loaded_data) override;
 
 	void SetTextureToRender(uint32_t texture_uuid);
+	void SetTextureToRenderFromInspector(uint32_t texture_uuid);
+
 	ENGINE_API void SetColor(float4 color);
 
 	void Render(float4x4* projection);
