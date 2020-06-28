@@ -174,13 +174,13 @@ void main()
 
 	vec3 fragment_normal = normalize(normal);
 	//fragment_normal = CalculateNormalMapAndLiquid(material, tiling); TODO change it to liquid maps
-		//Tangent space matrix
 	
+	//Tangent space matrix
 	vec3 T = normalize(vec3(matrices.model * vec4(vertex_tangent_fs,   0.0)));
 	vec3 N = normalize(vec3(matrices.model * vec4(vertex_normal_fs,    0.0)));
-	vec3 ortho_tangent = normalize(T-dot(T, N)*N); // Gram-Schmidt
-	vec3 B = normalize(cross(N, ortho_tangent));
+	vec3 B = normalize(cross(N, T));
 	mat3 TBN = mat3(T, B, N);
+
 	if(material.use_normal_map)	
 	{	
 		vec3 normal_from_texture = GetNormalMap(material, tiling);	
@@ -203,10 +203,7 @@ void main()
 	}
 	 
 	result += emissive_color;
-	
 	result += specular_color.rgb * ambient * occlusion_color.rgb; //Ambient light
-	//result += FrustumsCheck();
-	//FragColor = vec4(vec3(normalize(tangent)),1.0);
 	FragColor = vec4(result,1.0);
 	FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
 	FragColor.a=material.transparency;	
@@ -214,7 +211,6 @@ void main()
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 {
-
 	vec4 result = texture(mat.diffuse_map, texCoord)*mat.diffuse_color;
 	//alpha testing
 	if(result.a <0.1)
@@ -232,16 +228,8 @@ vec3 GetLightMapColor(const Material mat, const vec2 texCoord)
 
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord)
 {
-	vec4 result;
-	if(mat.use_specular_map)
-	{
-		result = texture(mat.specular_map, texCoord);
-	}
-	else
-	{
-		result = mat.specular_color;
-	}
-	
+
+	vec4 result = texture(mat.specular_map, texCoord)*mat.specular_color;
 	result.rgb = pow(result.rgb, vec3(2.2));
 	result.a *= mat.smoothness;
 	return result;
@@ -291,7 +279,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	}
 	
 	return directional_light.color * (
-		( (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular) )
+		( (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular)*shadow )
 		) * diff;
 	
 }
