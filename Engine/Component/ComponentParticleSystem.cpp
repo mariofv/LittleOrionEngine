@@ -10,12 +10,11 @@
 
 ComponentParticleSystem::ComponentParticleSystem() : Component(nullptr, ComponentType::PARTICLE_SYSTEM)
 {
-	Init();
 }
 
 ComponentParticleSystem::ComponentParticleSystem(GameObject* owner) : Component(owner, ComponentType::PARTICLE_SYSTEM)
 {
-	Init();
+
 }
 ComponentParticleSystem::~ComponentParticleSystem()
 {
@@ -36,7 +35,7 @@ void ComponentParticleSystem::Init()
 		particles[i].particle_scale = 1.0F;
 		particles[i].time_passed = particles[i].life;
 	}
-	
+	owner->aabb.GenerateBoundingBox();
 }
 
 unsigned int ComponentParticleSystem::FirstUnusedParticle()
