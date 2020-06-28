@@ -7,6 +7,7 @@
 class ComponentBillboard;
 class ComponentParticleSystem;
 class PanelConfiguration;
+class ComponentCamera;
 
 class ModuleEffects : public Module
 {
@@ -14,7 +15,7 @@ class ModuleEffects : public Module
 public:
 
 	bool CleanUp() override;
-	void Render();
+	void Render(const ComponentCamera &camera);
 
 	ComponentBillboard* CreateComponentBillboard();
 	void RemoveComponentBillboard(ComponentBillboard* billboard_to_remove);

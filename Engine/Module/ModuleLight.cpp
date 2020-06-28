@@ -154,6 +154,7 @@ void ModuleLight::SendShadowMatricesToShader(GLuint program)
 
 void ModuleLight::UpdateLightAABB(GameObject& object)
 {
+	BROFILER_CATEGORY("Update Lights AABB", Profiler::Color::Aquamarine);
 	//Light aabb will enclose every object in the scene
 	AABB temp;
 	temp = object.aabb.bounding_box;
@@ -167,6 +168,7 @@ void ModuleLight::UpdateLightAABB(GameObject& object)
 	light_obb = light_aabb.Transform(directional_light_rotation);
 }
 
+//TODO: Use other way to send lighst to shader as creating strings every frame is expensive
 void ModuleLight::RenderPointLights(const ComponentLight& light, GLuint program)
 {
 

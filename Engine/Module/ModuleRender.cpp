@@ -227,7 +227,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	}
 	glDisable(GL_BLEND);
 	
-	App->effects->Render();
+	App->effects->Render(camera);
 
 	
 	rendering_measure_timer->Stop();

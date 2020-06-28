@@ -12,6 +12,7 @@
 #include <GL/glew.h>
 
 class GameObject;
+class ComponentCamera;
 
 class ComponentBillboard : public Component
 {
@@ -48,7 +49,7 @@ public:
 
 	void InitData();
 
-	void Render(const float3& position);
+	void Render(const float3& position, const ComponentCamera &camera);
 	void SwitchFrame();
 
 	void ChangeTexture(uint32_t texture_uuid);

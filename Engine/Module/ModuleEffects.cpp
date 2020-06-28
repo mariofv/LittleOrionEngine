@@ -20,7 +20,7 @@ bool ModuleEffects::CleanUp()
 	return true;
 }
 
-void ModuleEffects::Render()
+void ModuleEffects::Render(const ComponentCamera &camera)
 {
 	if (!render_particles)
 	{
@@ -32,11 +32,11 @@ void ModuleEffects::Render()
 	glBlendEquation(GL_FUNC_ADD);
 	for (auto &billboard : billboards)
 	{
-		billboard->Render(billboard->owner->transform.GetGlobalTranslation());
+		billboard->Render(billboard->owner->transform.GetGlobalTranslation(), camera);
 	}
 	for (auto &particles : particle_systems)
 	{
-		particles->Render();
+		particles->Render(camera);
 	}
 	glDisable(GL_BLEND);
 }

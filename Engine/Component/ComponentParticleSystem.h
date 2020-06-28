@@ -8,6 +8,7 @@
 
 class GameObject;
 class ComponentBillboard;
+class ComponentCamera;
 
 const int MAX_PARTICLES = 500;
 
@@ -41,7 +42,7 @@ public:
 	void Init();
 	unsigned int FirstUnusedParticle();
 	void RespawnParticle(Particle& particle);
-	void Render();
+	void Render(const ComponentCamera& camera);
 	void UpdateParticle(Particle& particle);
 	void SetParticleTexture(uint32_t texture_uuid);
 
