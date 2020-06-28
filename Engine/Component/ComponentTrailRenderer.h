@@ -42,6 +42,7 @@ public:
 
 public:
 	float* trail_renderer_vertices = nullptr;
+	float* trail_renderer_indices = nullptr;
 	int rendered_vertices;
 
 private:
@@ -59,13 +60,13 @@ private:
 	float time_since_start = 0.f;
 	float current_sprite_x = 0, current_sprite_y = 0;
 	float sheet_speed = 1;
-	bool oriented_to_camera;
+	bool oriented_to_camera;	
 
 	bool is_spritesheet = false;
 	float width = 5.f;
 	float height = 5.f;
 
-	unsigned int vbo, vao, ebo;
+	unsigned int vbo, vao, ebo, mbo, embo;
 
 	//Determines when the sprite is changed
 	int innerCount = 0;

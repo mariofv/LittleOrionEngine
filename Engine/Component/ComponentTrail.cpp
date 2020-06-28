@@ -42,7 +42,7 @@ void ComponentTrail::UpdateTrail()
 	if (gameobject_init_position.x != gameobject_position.x || gameobject_init_position.y != gameobject_position.y || gameobject_init_position.z != gameobject_position.z)//if user moves Trail GO
 		on_transform_change = true;
 	
-	if (on_transform_change)
+	if (on_transform_change)//always gets in this is wrong ! TODO create an event here/ merge with event system
 	{
 		head_point = TrailPoint(gameobject_position, width, duration); //If there is movement, update the head point on the GO's position
 		head_point.life = duration; // If the GO moves, we reset the life of the head point
@@ -74,37 +74,6 @@ void ComponentTrail::UpdateTrail()
 			it = test_points.erase(it);
 		}
 	}
-
-
-	
-	/*total_points = trail_points.size();
-	for (unsigned int i = 0; i < total_points; ++i)
-	{
-		if (on_transform_change)
-		{
-			//update front of trail
-			TrailPoint& point = trail_points.front();
-			RespawnTrailPoint(point);
-			
-		}
-	}
-	//update back of trail
-	TrailPoint& last_point = trail_points.back();
-	float distance_previous_point = last_point.position.Distance(gameobject_position);
-	
-	if (distance_previous_point > min_distance)// A new point is generated when distance from current tracking position and last generated point is at least this distance.
-	{
-		if (trail_points.size() == 0)//to define path we need k + 2 points
-		{
-			TrailPoint new_point(gameobject_position, width, duration*10000);
-			trail_points.push(new_point);
-		}
-		else
-		{
-			TrailPoint new_point(static_cast<ComponentTransform>(owner->transform), trail_points.back().position, width, duration*10000);
-			new_point.is_rendered = true;
-		}
-	}*/
 }
 
 void  ComponentTrail::GetPerpendiculars()
@@ -112,36 +81,45 @@ void  ComponentTrail::GetPerpendiculars()
 	//											p + width		 p			p - width
 	// Calculate the points defined by the width	·  --------- · ---------  ·
 	//												<-- width --->
-
+	unsigned int destroy_point_vertice = 0;
+	TrailPoint* previous_point = nullptr;
+	TrailPoint* current_point = nullptr;
+	mesh_points.clear();
 	for (int i = 0; i < test_points.size(); ++i)
 	{
-		//Get the vector that links every two points
-		float3 vector_adjacent = (test_points[i + 1].position - test_points[i].position).Normalized();//vector between each pair -> Normalized to get vector with magnitutde = 1 but same direction
-		float3 perpendicular = vector_adjacent.Cross(owner->transform.GetFrontVector());
-
-		TrailPoint outline_left(test_points[i].position + perpendicular * width, 0, duration);
-		TrailPoint outline_right(test_points[i].position - perpendicular * width, 0, duration);
-
-		mesh_points.push_back(std::make_pair(outline_right, outline_left));
+		current_point = &test_points[i];
+		if (previous_point != nullptr)
+		{
+			mesh_points.push_back(std::make_pair(previous_point, current_point));
+		}
+		previous_point = current_point;
 
 	}
-
-	for (auto it = mesh_points.begin(); it < mesh_points.end(); ++it)
+	for (auto pair = mesh_points.begin(); pair < mesh_points.end(); ++pair)
 	{
-		if (it->first.life >= 0 && it->second.life >= 0) // If life is positive, all good
+		if (pair->first->life > 0 && pair->second->life > 0)
 		{
-			it->first.life -= App->time->real_time_delta_time;
-			it->second.life -= App->time->real_time_delta_time;
-			App->debug_draw->RenderLine(it->first.position, it->second.position); // Draw the perpendicular vector
-			float3 mesh_position = it->second.position;
-			trail_renderer->height = width;
-			trail_renderer->Render(mesh_position);
+			//Get the vector that links every two points
+			float3 vector_adjacent = (pair->second->position - pair->first->position).Normalized();//vector between each pair -> Normalized to get vector with magnitutde = 1 but same direction
+			float3 perpendicular = vector_adjacent.Cross(owner->transform.GetFrontVector()) * width;
+
+			float3 top_left, top_right, bottom_left, bottom_right;
+
+			top_left = pair->first->position + perpendicular;
+			top_right = (pair->second->position + perpendicular);
+			bottom_right = (pair->second->position - perpendicular);
+			bottom_left = (pair->first->position - perpendicular);
+
+			App->debug_draw->RenderLine(top_left, bottom_left); // Draw the perpendicular vector
+			App->debug_draw->RenderLine(top_right, bottom_right); // Draw the perpendicular vector
+			App->debug_draw->RenderLine(top_left, top_right); // Draw the perpendicular vector
+			App->debug_draw->RenderLine(bottom_left, bottom_right); // Draw the perpendicular vectormesh_points
+			App->debug_draw->RenderLine(top_left, bottom_right); // Draw the perpendicular vectormesh_points
+
 		}
-	
-		else// But if not, we delete these points
-			
+		else
 		{
-			it = mesh_points.erase(it);	
+			mesh_points.erase(pair);
 		}
 	}
 }

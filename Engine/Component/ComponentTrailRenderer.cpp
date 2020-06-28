@@ -26,6 +26,7 @@ ComponentTrailRenderer::~ComponentTrailRenderer()
 {
 	if (vbo != 0)
 	{
+		glUnmapBuffer(GL_ARRAY_BUFFER);
 		glDeleteBuffers(1, &vbo);
 		glDeleteBuffers(1, &ebo);
 		glDeleteVertexArrays(1, &vao);
@@ -38,10 +39,10 @@ void ComponentTrailRenderer::InitData()
 
 	float vertices[20] =
 	{
-			0.5f,  0.5f, 0.0f,		1.0f, 1.0f,
-			0.5f, -0.5f, 0.0f,		1.0f, 0.0f,
-		   -0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
-		   -0.5f,  0.5f, 0.0f,		0.0f, 1.0f
+			0.5f,  0.5f, 0.0f,		1.0f, 1.0f, // outline_left second point -- top right
+			0.5f, -0.5f, 0.0f,		1.0f, 0.0f, // outline_right second point -- bottom right
+		   -0.5f, -0.5f, 0.0f,		0.0f, 0.0f, // outline_right second point -- bottom left
+		   -0.5f,  0.5f, 0.0f,		0.0f, 1.0f // outline_left first points -- top left
 	};
 	unsigned int indices[6] =
 	{
@@ -52,14 +53,19 @@ void ComponentTrailRenderer::InitData()
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
+	glGenBuffers(1, &mbo);
 
 	glBindVertexArray(vao);
 
 	//use glBufferMap to obtain a pointer to buffer data
-	trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(float) * MAX_TRAIL_VERTICES * 6, GL_MAP_WRITE_BIT);
+	glBindBuffer(GL_ARRAY_BUFFER, mbo);
+	trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(float) * MAX_TRAIL_VERTICES * 10, GL_MAP_WRITE_BIT);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, embo);
+	trail_renderer_indices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(float) * ( MAX_TRAIL_VERTICES - 1 ) * 6, GL_MAP_WRITE_BIT);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices , GL_DYNAMIC_DRAW);//dynamically draw vertices due to trail changes mesh over time
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);//dynamically draw vertices due to trail changes mesh over time
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
@@ -100,6 +106,8 @@ void ComponentTrailRenderer::SwitchFrame()
 void ComponentTrailRenderer::Render(const float3& position)
 {
 	GLuint shader_program = App->program->GetShaderProgramId("Billboard");
+	//GLuint shader_program = App->program->GetShaderProgramId("Trail");
+
 	glUseProgram(shader_program);
 
 	int n;
@@ -114,7 +122,7 @@ void ComponentTrailRenderer::Render(const float3& position)
 	//Subroutine uniform
 	int selector = glGetSubroutineUniformLocation(shader_program, GL_VERTEX_SHADER, "alignment_selector");
 
-	glUnmapBuffer(GL_ARRAY_BUFFER);
+	
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, trail_texture->opengl_texture);
@@ -126,9 +134,12 @@ void ComponentTrailRenderer::Render(const float3& position)
 	glUniform3fv(glGetUniformLocation(shader_program, "billboard.center_pos"), 1, position.ptr());
 
 	glBindVertexArray(vao);
-	 
+	glBindVertexArray(mbo);
 	//glDrawElements(GL_TRIANGLES, rendered_vertices, GL_UNSIGNED_INT, 0);
-	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, rendered_vertices);
+	//glDrawArraysInstanced(GL_TRIANGLES, 0, 6, rendered_vertices);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(MAX_TRAIL_VERTICES, GL_FLOAT, 0, trail_renderer_vertices);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, rendered_vertices);
 	glBindVertexArray(0);
 
 	glUseProgram(0);
