@@ -155,6 +155,7 @@ void MetafileManager::RefreshMetafile(const Path& metafile_path)
 	Path* new_imported_file_path = App->filesystem->GetPath(assets_file);
 	assert(new_imported_file_path);
 	metafile->imported_file_path = new_imported_file_path->GetFullPath();
+	metafile->resource_name = new_imported_file_path->GetFilename();
 	SaveMetafile(metafile, *new_imported_file_path);
 }
 
