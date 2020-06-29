@@ -178,7 +178,8 @@ void main()
 	//Tangent space matrix
 	vec3 T = normalize(vec3(matrices.model * vec4(vertex_tangent_fs,   0.0)));
 	vec3 N = normalize(vec3(matrices.model * vec4(vertex_normal_fs,    0.0)));
-	vec3 B = normalize(cross(N, T));
+	vec3 ortho_tangent = normalize(T-dot(T, N)*N); // Gram-Schmidt
+	vec3 B = normalize(cross(N, ortho_tangent));
 	mat3 TBN = mat3(T, B, N);
 
 	if(material.use_normal_map)	
