@@ -701,7 +701,15 @@ void GameObject::CopyComponentsPrefabs(const GameObject& gameobject_to_copy)
 		}
 		else if (my_component == nullptr)
 		{
-			Component *copy = component->Clone(this->original_prefab);
+			Component *copy = nullptr;
+		 if (component->type == Component::ComponentType::COLLIDER)
+			{
+				copy = component->Clone(this, this->original_prefab);
+			}
+			else
+			{
+				copy = component->Clone(this->original_prefab);
+			}
 			copy->owner = this;
 			this->components.push_back(copy);
 		}

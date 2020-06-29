@@ -134,7 +134,7 @@ void ComponentImage::SpecializedSave(Config& config) const
 void ComponentImage::SpecializedLoad(const Config& config)
 {
 	config.GetColor("ImageColor", color, float4::one);
-	texture_uuid = config.GetUInt("TextureUUID", 0);
+	texture_uuid = config.GetUInt32("TextureUUID", 0);
 	preserve_aspect_ratio = config.GetBool("PreserveAspectRatio", false);
 	if (texture_uuid != 0)
 	{

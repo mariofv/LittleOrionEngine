@@ -34,7 +34,7 @@ public:
 		PARTICLE_SYSTEM = 17
 	};
 
-	Component();
+	Component() = default;
 	Component(ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
 	Component(GameObject * owner, ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
 	virtual ~Component() = default;

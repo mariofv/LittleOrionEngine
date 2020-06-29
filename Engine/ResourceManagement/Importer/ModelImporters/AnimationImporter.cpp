@@ -36,7 +36,7 @@ FileData AnimationImporter::ExtractAnimationFromAssimp(const aiScene* scene, con
 
 void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float unit_scale_factor) const
 {
-	float animation_duration = animation->mDuration;
+	float animation_duration = static_cast<float>(animation->mDuration);
 	std::map<std::string, std::vector<aiNodeAnim*>> aiNode_by_channel;
 
 	//Organize channels
@@ -63,7 +63,7 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 		{
 			float4x4 pre_transform;
 			GetAcumulatedAssimpTransformations(channel, channel_set.second, root_node, pre_transform);
-			GetChannelTransform(pre_transform, channel, animation_duration, channel_transform);
+			GetChannelTransform(pre_transform, channel, static_cast<size_t>(animation_duration), channel_transform);
 		}
 
 		for (size_t i = 0; i < animation_duration; ++i)

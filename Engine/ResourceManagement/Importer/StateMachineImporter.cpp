@@ -28,7 +28,7 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 	uint32_t ranges[3] = { num_clips, num_states, num_transitions };
 
 	uint32_t size_of_clip = sizeof(uint64_t) + sizeof(uint32_t) + sizeof(bool);
-	uint32_t size_of_state = sizeof(uint64_t) * 2;
+	uint32_t size_of_state = sizeof(uint64_t) * 2 + sizeof(float);
 	uint32_t size_of_transitions = sizeof(uint64_t) * 5 + sizeof(bool);
 	uint32_t size = sizeof(ranges) + size_of_clip * num_clips + size_of_transitions * num_transitions + size_of_state * num_states + sizeof(uint64_t)/*Default state*/;
 
@@ -46,7 +46,7 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 		clip.GetString("Name", name, "");
 		uint64_t name_hash = std::hash<std::string>{}(name);
 
-		uint32_t animation_uuid = clip.GetUInt("AnimationUUID", 0);
+		uint32_t animation_uuid = clip.GetUInt32("AnimationUUID", 0);
 
 		bool loop = clip.GetBool("Loop", false);
 
@@ -71,13 +71,19 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 		state.GetString("ClipName", clip_name, "");
 		uint64_t name_hash = std::hash<std::string>{}(name);
 		uint64_t clip_hash = std::hash<std::string>{}(clip_name);
-
+		//Adding speed
+		float clip_speed = state.GetFloat("Speed", 1.0f);
+		//
 		bytes = sizeof(uint64_t);
 		memcpy(cursor, &name_hash, bytes);
 		cursor += bytes; // Store states
 		bytes = sizeof(uint64_t);
 		memcpy(cursor, &clip_hash, bytes);
 		cursor += bytes; // Store states
+
+		bytes = sizeof(float);//for speed
+		memcpy(cursor, &clip_speed, bytes);
+		cursor += bytes;
 	}
 
 	for (auto & transition : transitions_config)

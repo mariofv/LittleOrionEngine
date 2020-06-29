@@ -44,13 +44,13 @@ void ComponentMeshRenderer::SpecializedSave(Config& config) const
 
 void ComponentMeshRenderer::SpecializedLoad(const Config& config)
 {
-	mesh_uuid = config.GetUInt("Mesh", 0);
+	mesh_uuid = config.GetUInt32("Mesh", 0);
 	SetMesh(mesh_uuid);
 
-	material_uuid = config.GetUInt("Material", 0);
+	material_uuid = config.GetUInt32("Material", 0);
 	SetMaterial(material_uuid);
 
-	skeleton_uuid =	config.GetUInt("Skeleton", 0);
+	skeleton_uuid =	config.GetUInt32("Skeleton", 0);
 	SetSkeleton(skeleton_uuid);
 }
 
@@ -335,9 +335,9 @@ void ComponentMeshRenderer::SetSkeleton(uint32_t skeleton_uuid)
 void ComponentMeshRenderer::UpdatePalette(const std::vector<float4x4>& pose)
 {
 	assert(pose.size() == palette.size());
+	const auto &  joints = skeleton->skeleton;
 	for (size_t i = 0; i < pose.size(); ++i)
 	{
-		auto &  joints = skeleton->skeleton;
 		size_t joint_index = i;
 		float4x4 global_transform = float4x4::identity;
 		while (joints[joint_index].parent_index != -1)

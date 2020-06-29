@@ -74,6 +74,7 @@ void ComponentBillboard::SwitchFrame()
 	{
 		if (time_since_start * sheet_speed >= 1000)
 		{
+
 			current_sprite_x++;
 			if (play_once)
 			{
@@ -86,15 +87,15 @@ void ComponentBillboard::SwitchFrame()
 				}
 			}
 			
-			if ((int)current_sprite_x >= x_tiles)
+			if (static_cast<int>(current_sprite_x) >= x_tiles)
 			{
 				current_sprite_y--;
 				current_sprite_x = 0;
 			}
 
-			if ((int)current_sprite_y <= 0)
+			if (static_cast<int>(current_sprite_y) <= 0)
 			{
-				current_sprite_y = y_tiles;
+				current_sprite_y = static_cast<float>(y_tiles);
 			}
 			
 			time_since_start = 0.f;
@@ -119,7 +120,7 @@ void ComponentBillboard::EmitOnce()
 	play_once = true;
 	play = true;
 	current_sprite_x = 0;
-	current_sprite_y = y_tiles - 1;
+	current_sprite_y = static_cast<float>(y_tiles - 1);
 }
 
 bool ComponentBillboard::IsPlaying()
@@ -236,8 +237,8 @@ void ComponentBillboard::SpecializedSave(Config& config) const
 	config.AddUInt(texture_uuid, "TextureUUID");
 	config.AddFloat(width, "Width");
 	config.AddFloat(height, "Height");
-	config.AddInt((unsigned int)x_tiles, "Rows");
-	config.AddInt((unsigned int)y_tiles, "Columns");
+	config.AddInt(x_tiles, "Rows");
+	config.AddInt(y_tiles, "Columns");
 }
 
 void ComponentBillboard::SpecializedLoad(const Config& config)
@@ -246,14 +247,14 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 	sheet_speed = config.GetFloat("SheetSpeed", 1.f);
 	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::SPRITESHEET)));
 	ChangeBillboardType(alignment_type);
-	texture_uuid = config.GetUInt("TextureUUID", 0);
+	texture_uuid = config.GetUInt32("TextureUUID", 0);
 	
 	ChangeTexture(texture_uuid);
 
-	width = config.GetFloat("Width", 1.f);
-	height = config.GetFloat("Height", 1.f);
-	x_tiles = config.GetInt("Rows", 1.f);
-	y_tiles = config.GetInt("Columns", 1.f);
+	width = config.GetFloat("Width", 1.0f);
+	height = config.GetFloat("Height", 1.0f);
+	x_tiles = config.GetInt("Rows", 1);
+	y_tiles = config.GetInt("Columns", 1);
 }
 
 void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)

@@ -303,7 +303,7 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::SameLine();
 		ImGui::TextColored(ImVec4(1, 1, 1, 1), "and");
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.3, 0.3, 0.3, 1), "Shadows");
+		ImGui::TextColored(ImVec4(0.3f, 0.3f, 0.3f, 1), "Shadows");
 
 		ImGui::Separator();
 
@@ -562,7 +562,7 @@ void PanelConfiguration::ShowInputOptions()
 
 			if(ImGui::Button("Add KeyCode"))
 			{
-				keys.insert((int)selected_key);
+				keys.insert(static_cast<int>(selected_key));
 				string_keys.insert(selected_combo);
 			}
 
@@ -579,7 +579,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Text("Mouse:");
 			for (const auto mouse_key : mouse_keys)
 			{
-				ImGui::Text(mouse_keys_string[(int)mouse_key]);
+				ImGui::Text(mouse_keys_string[static_cast<int>(mouse_key)]);
 			}
 
 			ImGui::Separator();
@@ -603,7 +603,7 @@ void PanelConfiguration::ShowInputOptions()
 
 			if (ImGui::Button("Add Mouse Button"))
 			{
-				mouse_keys.insert((int)selected_mouse);
+				mouse_keys.insert(static_cast<int>(selected_mouse));
 			}
 
 			ImGui::SameLine();
@@ -619,7 +619,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Text("Controller Keys:");
 			for (const auto controller_key : controller_keys)
 			{
-				ImGui::Text(controller_keys_string[(int)controller_key]);
+				ImGui::Text(controller_keys_string[static_cast<int>(controller_key)]);
 			}
 
 			ImGui::Separator();
@@ -643,7 +643,7 @@ void PanelConfiguration::ShowInputOptions()
 
 			if (ImGui::Button("Add Controller Button"))
 			{
-				controller_keys.insert((int)selected_controller);
+				controller_keys.insert(static_cast<int>(selected_controller));
 			}
 
 			ImGui::SameLine();
@@ -704,7 +704,7 @@ void PanelConfiguration::ShowInputOptions()
 						continue;
 					}
 
-					int aux = static_cast<int>(key);
+					size_t aux = static_cast<size_t>(key);
 					if (aux > FIRST_OFFSET_COND)
 						aux -= FIRST_OFFSET;
 					else if (aux > SECOND_OFFSET_COND)
@@ -725,7 +725,7 @@ void PanelConfiguration::ShowInputOptions()
 						continue;
 					}
 
-					ImGui::Text("	%s", mouse_keys_string[(int)mouse]);
+					ImGui::Text("	%s", mouse_keys_string[static_cast<int>(mouse)]);
 				}
 				ImGui::Text("ControllerCodes:");
 				for (const auto& controller_key : game_input.second.controller_buttons)
@@ -735,7 +735,7 @@ void PanelConfiguration::ShowInputOptions()
 						continue;
 					}
 
-					ImGui::Text("	%s", controller_keys_string[(int)controller_key]);
+					ImGui::Text("	%s", controller_keys_string[static_cast<int>(controller_key)]);
 				}
 				
 				

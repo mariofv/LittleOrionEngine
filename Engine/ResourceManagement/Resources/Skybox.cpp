@@ -40,14 +40,14 @@ void Skybox::Save(Config& config) const
 
 void Skybox::Load(const Config& config)
 {
-	textures_id[(size_t)SkyboxFace::RIGHT] = config.GetUInt("Right", 0);
-	textures_id[(size_t)SkyboxFace::LEFT] = config.GetUInt("Left", 0);
+	textures_id[(size_t)SkyboxFace::RIGHT] = config.GetUInt32("Right", 0);
+	textures_id[(size_t)SkyboxFace::LEFT] = config.GetUInt32("Left", 0);
 
-	textures_id[(size_t)SkyboxFace::UP] = config.GetUInt("Up", 0);
-	textures_id[(size_t)SkyboxFace::DOWN] = config.GetUInt("Down", 0);
+	textures_id[(size_t)SkyboxFace::UP] = config.GetUInt32("Up", 0);
+	textures_id[(size_t)SkyboxFace::DOWN] = config.GetUInt32("Down", 0);
 
-	textures_id[(size_t)SkyboxFace::FRONT] = config.GetUInt("Front", 0);
-	textures_id[(size_t)SkyboxFace::BACK] = config.GetUInt("Back", 0);
+	textures_id[(size_t)SkyboxFace::FRONT] = config.GetUInt32("Front", 0);
+	textures_id[(size_t)SkyboxFace::BACK] = config.GetUInt32("Back", 0);
 
 	GenerateSkyboxCubeMap();
 }

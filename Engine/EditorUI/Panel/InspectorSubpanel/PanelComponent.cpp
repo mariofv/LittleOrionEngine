@@ -190,7 +190,7 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 		}
 		if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			if (ImGui::InputInt("Max particles", &particle_system->max_particles_number) && particle_system->max_particles_number > MAX_PARTICLES)
+			if (ImGui::InputScalar("Max particles", ImGuiDataType_U32,&particle_system->max_particles_number) && particle_system->max_particles_number > MAX_PARTICLES)
 			{
 				particle_system->max_particles_number = MAX_PARTICLES;
 			}
@@ -294,8 +294,8 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			}
 			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::CONE)
 			{
-				ImGui::DragFloat("Outer radius", &particle_system->outer_radius, 0.1F, 0.1, 10);
-				ImGui::DragFloat("Inner radius", &particle_system->inner_radius, 0.1F, 0.1, 10);
+				ImGui::DragFloat("Outer radius", &particle_system->outer_radius, 0.1F, 0.1F, 10);
+				ImGui::DragFloat("Inner radius", &particle_system->inner_radius, 0.1F, 0.1F, 10);
 			}
 		}
 
@@ -618,6 +618,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		if (animation->animation_controller->state_machine && animation->animation_controller->active_state)
 		{
 			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(animation->animation_controller->active_state->name_hash), nullptr, nullptr, nullptr, ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputText("Active State", &animation->animation_controller->active_state->name, ImGuiInputTextFlags_ReadOnly);
 			static std::string trigger;
 			ImGui::InputText("Trigger ", &trigger);
 			if (ImGui::Button("Activate"))
@@ -645,8 +646,9 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 			{
 				break;
 			}
+			ImGui::InputText("Playing clip:", &playing_clip.clip->name, ImGuiInputTextFlags_ReadOnly);
 			ImGui::Checkbox("Loop", &(playing_clip.clip->loop));
-			ImGui::SliderInt("Animation time", &playing_clip.current_time, 0, playing_clip.clip->animation_time);
+			ImGui::SliderFloat("Animation time", &playing_clip.current_time, 0, playing_clip.clip->animation_time);
 		}
 
 	}
