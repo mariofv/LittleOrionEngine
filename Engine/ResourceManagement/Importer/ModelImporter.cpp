@@ -152,7 +152,7 @@ std::vector<Config> ModelImporter::ExtractDataFromNode(const aiNode* root_node, 
 		Config node;
 		size_t mesh_index = root_node->mMeshes[i];
 		aiMesh* node_mesh = current_model_data.scene->mMeshes[mesh_index];
-		std::string mesh_name = std::string(node_mesh->mName.data) + "_" + std::to_string(i);
+		std::string mesh_name = std::string(root_node->mName.data);
 		node.AddString(mesh_name, "Name");
 		node.AddFloat3(translation, "Translation");
 		node.AddQuat(rotation, "Rotation");
