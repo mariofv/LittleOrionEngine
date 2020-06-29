@@ -18,6 +18,7 @@ public:
 		float3 position_initial;
 		float3 position;
 		float3 velocity_initial;
+		float3 velocity;
 		float4 color;
 		Quat rotation;
 		float particle_scale;
@@ -37,8 +38,8 @@ public:
 	{
 		CONSTANT,
 		LINEAR,
-		//CURVE,
-		RANDOM_BETWEEN_TWO_CONSTANTS
+		RANDOM_BETWEEN_TWO_CONSTANTS,
+		//CURVE
 	};
 	ComponentParticleSystem();
 	~ComponentParticleSystem();
@@ -146,6 +147,8 @@ public:
 	float velocity_over_time_speed_modifier_second = 2.0F;
 	float acceleration = 0.0F;
 	float3 velocity_over_time_acceleration;
+
+	float3 gravity_vector;
 	
 	//Runtime values
 	size_t playing_particles_number = MAX_PARTICLES;

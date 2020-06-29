@@ -138,8 +138,11 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	{
 		switch (type_of_velocity_over_time)
 		{
-		case LINEAR:
 		case CONSTANT:
+			particle.velocity_initial *= velocity_over_time_speed_modifier;
+			break;
+		case LINEAR:
+			particle.velocity = particle.velocity_initial * velocity_over_time_speed_modifier_second;
 			particle.velocity_initial *= velocity_over_time_speed_modifier;
 			break;
 		case RANDOM_BETWEEN_TWO_CONSTANTS:
@@ -189,9 +192,9 @@ void ComponentParticleSystem::Render()
 				velocity_particles_start * velocity_over_time_speed_modifier) / particles_life_time;
 		}
 
-		velocity_over_time_acceleration = float3(0.0F);
+
 		if (gravity)
-			velocity_over_time_acceleration.y += gravity_modifier / 10000000;
+			gravity_vector = float3 (0, gravity_modifier / 10000000, 0);
 
 
 		// update all particles
@@ -223,15 +226,47 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	time_spend -= particle.life;
 	particle.time_passed += App->time->real_time_delta_time;
 
-	//Move particle
-	float3 acceleration_vector = velocity_over_time_acceleration;
-	if (velocity_over_time && type_of_velocity_over_time == LINEAR)
+	//update position
+	if (velocity_over_time)
 	{
-		acceleration_vector += particle.velocity_initial * acceleration;
+		
+		switch (type_of_velocity_over_time)
+		{
+		case CONSTANT:
+			if (gravity)
+				particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
+				(gravity_vector * Pow(particle.time_passed, 2) / 2);
+			else
+				particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed);
+			break;
+		case LINEAR:
+		{
+			float3 acceleration = (particle.velocity - particle.velocity_initial) / particles_life_time / 1000;
+			if (gravity)
+				acceleration += gravity_vector;
+
+			particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
+				(acceleration * Pow(particle.time_passed, 2) / 2);
+			break;
+		}
+		case RANDOM_BETWEEN_TWO_CONSTANTS:
+			if (gravity)
+				particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
+				(gravity_vector * Pow(particle.time_passed, 2) / 2);
+			else
+				particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed);
+			break;
+		}
 	}
 
-	particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
-		(acceleration_vector * Pow(particle.time_passed, 2) / 2);
+	else
+	{
+		if (gravity)
+			particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
+			(gravity_vector * Pow(particle.time_passed, 2) / 2);
+		else
+			particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed);
+	}
 
 	//random tile
 	if (tile_random)

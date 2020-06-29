@@ -328,7 +328,7 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			if (particle_system->velocity_over_time)
 			{
 				int velocity_type = static_cast<int>(particle_system->type_of_velocity_over_time);
-				if (ImGui::Combo("Speed", &velocity_type, "Constant\0Lineal\0Random Between Two Constants\0"))
+				if (ImGui::Combo("Speed", &velocity_type, "Constant\0Linear\0Random Between Two Constants\0"))
 				{
 					switch (velocity_type)
 					{
@@ -353,7 +353,6 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 				case ComponentParticleSystem::TypeOfVelocityOverTime::LINEAR:
 					ImGui::DragFloat("Start Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.1F);
 					ImGui::DragFloat("End Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.1F);
-				
 					break;
 				case ComponentParticleSystem::TypeOfVelocityOverTime::RANDOM_BETWEEN_TWO_CONSTANTS:
 					particle_system->velocity_over_time_speed_modifier;
