@@ -2,6 +2,7 @@
 
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentTransform.h"
 #include "Helper/Config.h"
 
 #include "Main/Application.h"
@@ -119,6 +120,17 @@ void PrefabImporter::ExtractGameObjectFromNode
 	{
 		ExtractMeshComponent(mesh_uuid, material_uuid, skeleton_uuid, mesh_renderer_components, node_game_object);
 		ComponentMeshRenderer* mesh_renderer = mesh_renderer_components.back().get();
+		float3 position = float3::zero;
+		node_config.GetFloat3("Translation", position, float3::zero);
+		node_game_object->transform.SetGlobalMatrixTranslation(position);
+
+		Quat rotation;
+		node_config.GetQuat("Rotation", rotation, Quat::identity);
+		node_game_object->transform.SetGlobalMatrixRotation(rotation);
+
+		node_config.GetFloat3("Scale", position, float3::one);
+		node_game_object->transform.SetGlobalMatrixScale(position);
+
 		node_game_object->Update();
 	}
 
