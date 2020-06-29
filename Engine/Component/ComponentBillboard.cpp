@@ -284,6 +284,14 @@ void ComponentBillboard::GenerateTextures(TextureLoadData loaded_data)
 void ComponentBillboard::GetTextureFromCache(TextureLoadData loaded_data)
 {
 	billboard_texture = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(loaded_data.uuid));
+
+	if(!billboard_texture)
+	{
+		App->resources->RemoveUUIDFromCache(loaded_data.uuid);
+		ChangeTexture(loaded_data.uuid);
+
+		return;
+	}
 }
 
 

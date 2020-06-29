@@ -135,9 +135,9 @@ public:
 			loaded_resource = nullptr;
 
 			bool find = false;
-			for(const auto& res : resource_cache)
+			for(const auto& res : uuid_cache)
 			{
-				if(res.get() != nullptr && res.get()->GetUUID() == uuid)
+				if(res == uuid)
 				{
 					find = true;
 					break;
@@ -150,6 +150,10 @@ public:
 			if(find)
 			{
 				load_job.already_in_cache = true;
+			}
+			else
+			{
+				uuid_cache.push_back(uuid);
 			}
 
 			load_job.component_to_load = current_component_loading;
@@ -188,6 +192,7 @@ public:
 
 	//Multithread loader
 	void LoaderThread();
+	void RemoveUUIDFromCache(uint32_t uuid);
 	std::shared_ptr<Resource> RetrieveFromCacheIfExist(uint32_t uuid) const;
 
 private:
@@ -220,6 +225,10 @@ public:
 
 	//Debugging variables
 	int number_of_textures_loaded = 0;
+
+	float time_loading_meshes = 0.f;
+
+	mutable std::vector<uint32_t> uuid_cache;
 
 	ThreadSafeQueue<TextureLoadJob> loading_textures_queue;
 	ThreadSafeQueue<TextureLoadJob> processing_textures_queue;

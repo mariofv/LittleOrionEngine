@@ -378,6 +378,18 @@ void ModuleResourceManager::LoaderThread()
 	}
 }
 
+void ModuleResourceManager::RemoveUUIDFromCache(uint32_t uuid)
+{
+	for (auto uit = uuid_cache.begin(); uit != uuid_cache.end(); ++uit)
+	{
+		if ((*uit) == uuid)
+		{
+			uuid_cache.erase(uit);
+			break;
+		}
+	}
+}
+
 std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32_t uuid) const
 {
 	//Check if the resource is already loaded
@@ -401,6 +413,7 @@ void ModuleResourceManager::RefreshResourceCache()
 	const auto it = std::remove_if(resource_cache.begin(), resource_cache.end(), [](const std::shared_ptr<Resource> & resource) {
 		return resource.use_count() == 1;
 	});
+
 	if (it != resource_cache.end())
 	{
 		//Erase Resource Cache
@@ -417,6 +430,7 @@ void ModuleResourceManager::AddResourceToCache(std::shared_ptr<Resource> resourc
 void ModuleResourceManager::CleanResourceCache()
 {
 	resource_cache.clear();
+	uuid_cache.clear();
 }
 
 bool ModuleResourceManager::CleanResourceFromCache(uint32_t uuid)
@@ -429,6 +443,21 @@ bool ModuleResourceManager::CleanResourceFromCache(uint32_t uuid)
 	{
 		found = true;
 		resource_cache.erase(it, resource_cache.end());
+	}
+
+
+
+	if (found)
+	{
+		const auto it = std::remove_if(uuid_cache.begin(), uuid_cache.end(), [uuid](uint32_t own_uuid) {
+			return own_uuid == uuid;
+		});
+
+		if (it != uuid_cache.end())
+		{
+			found = true;
+			uuid_cache.erase(it, uuid_cache.end());
+		}
 	}
 
 	return found;

@@ -61,7 +61,12 @@ void ComponentMeshRenderer::GenerateTextures(TextureLoadData loaded_data)
 
 void ComponentMeshRenderer::GetTextureFromCache(TextureLoadData loaded_data)
 {
-	material_to_render->GetTextureFromCache(loaded_data);
+	bool succes = material_to_render->GetTextureFromCache(loaded_data);
+	if(!succes)
+	{
+		App->resources->RemoveUUIDFromCache(loaded_data.uuid);
+		SetMaterial(loaded_data.uuid);
+	}
 }
 
 void ComponentMeshRenderer::Render()
