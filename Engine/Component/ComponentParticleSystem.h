@@ -86,7 +86,7 @@ public:
 	//Basic values
 	float velocity_particles_start = 1.0F;
 	bool gravity = false;
-	float gravity_modifier = 0.2F;
+	float gravity_modifier = -0.2F;
 
 	//Spritesheet
 	float max_tile_value = 0;
@@ -111,7 +111,7 @@ public:
 	//time
 	float time_counter = 0.0F;
 	float time_between_particles = 0.2F;
-	float particles_life_time = 3.0F;
+	float particles_life_time = 5.0F;
 
 	bool follow_owner = false;
 
@@ -143,8 +143,9 @@ public:
 	bool velocity_over_time = false;
 	TypeOfVelocityOverTime type_of_velocity_over_time = RANDOM_BETWEEN_TWO_CONSTANTS;
 	float velocity_over_time_speed_modifier = 1.0F;
-	float velocity_over_time_speed_modifier_second = 5.0F;
-	float3 velocity_acceleration;
+	float velocity_over_time_speed_modifier_second = 2.0F;
+	float acceleration = 0.0F;
+	float3 velocity_over_time_acceleration;
 	
 	//Runtime values
 	int playing_particles_number = MAX_PARTICLES;

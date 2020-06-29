@@ -133,19 +133,21 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 	}
 	
-	/*if (velocity_over_time)
+	//Velocity over time setup
+	if (velocity_over_time)
 	{
 		switch (type_of_velocity_over_time)
 		{
-		case LINEAR: case CONSTANT:
-			particle.velocity *= velocity_over_time_speed_modifier;
+		case LINEAR:
+		case CONSTANT:
+			particle.velocity_initial *= velocity_over_time_speed_modifier;
 			break;
 		case RANDOM_BETWEEN_TWO_CONSTANTS:
 			float random_velocity_modifier = LCG().Float(velocity_over_time_speed_modifier, velocity_over_time_speed_modifier_second);
 			particle.velocity_initial *= random_velocity_modifier;
 			break;
 		}
-	}*/
+	}
 	
 	particle.color = { color_particle[0], color_particle[1], color_particle[2], color_particle[3]};
 	particle.life = particles_life_time*1000;
@@ -180,6 +182,18 @@ void ComponentParticleSystem::Render()
 			}
 		}
 
+		//update velocity over time
+		if (velocity_over_time && type_of_velocity_over_time == LINEAR)
+		{
+			acceleration = (velocity_particles_start * velocity_over_time_speed_modifier_second -
+				velocity_particles_start * velocity_over_time_speed_modifier) / particles_life_time;
+		}
+
+		velocity_over_time_acceleration = float3(0.0F);
+		if (gravity)
+			velocity_over_time_acceleration.y += gravity_modifier / 10000000;
+
+
 		// update all particles
 		for (unsigned int i = 0; i < playing_particles_number; ++i)
 		{
@@ -209,36 +223,15 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	time_spend -= particle.life;
 	particle.time_passed += App->time->real_time_delta_time;
 
-	//Apply velocity over time
-	//if (velocity_over_time)
-	//{
-	//	switch (type_of_velocity_over_time)
-	//	{
-	//	//case LINEAR:
-	//	//	float current_velocity = velocity_over_time_speed_modifier + velocity_over_time_speed_modifier_second / velocity_over_time_speed_modifier * time;
-	//	//	particle.velocity_initial *= velocity_over_time_speed_modifier;
-	//	//	/*if (!particle.velocity.Equals(particle.velocity_final))
-	//	//	{
-
-	//	//	}*/
-	//	//	break;
-
-	//	case CONSTANT: case RANDOM_BETWEEN_TWO_CONSTANTS:
-	//		break;
-	//	}
-	//}
-
-	//Move particles
-	if (gravity)
+	//Move particle
+	float3 acceleration_vector = velocity_over_time_acceleration;
+	if (velocity_over_time && type_of_velocity_over_time == LINEAR)
 	{
-		velocity_acceleration = float3(0, gravity_modifier / 10000000, 0);
-		particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) + (velocity_acceleration * Pow(particle.time_passed, 2) / 2);
+		acceleration_vector += particle.velocity_initial * acceleration;
 	}
-	else
-		particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed);
-	
 
-	
+	particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
+		(acceleration_vector * Pow(particle.time_passed, 2) / 2);
 
 	//random tile
 	if (tile_random)
