@@ -307,8 +307,11 @@ void ModuleScene::DeleteCurrentScene()
 
 void ModuleScene::OpenScene()
 {
+
+	
 	DeleteCurrentScene();
-	root = new GameObject(0);
+	root = new GameObject(0);	
+	
 
 	LoadSceneResource();
 
@@ -336,10 +339,13 @@ inline void ModuleScene::LoadSceneResource()
 	}
 	else
 	{
+		if(App->time->isGameRunning())
+		{
+			LoadLoadingScreen();
+		}
+		
 		current_scene = App->resources->Load<Scene>(pending_scene_uuid);
-		//std::thread loader(&Scene::Load, current_scene.get(), true);
 		current_scene.get()->Load();
-		/*loader.join();*/
 	}
 }
 
@@ -403,6 +409,38 @@ void ModuleScene::SaveTmpScene()
 	last_scene = current_scene;
 }
 
+void ModuleScene::LoadLoadingScreen()
+{
+	App->resources->normal_loading_flag = true;
+	App->resources->Load<Scene>(GetSceneUUIDFromPath(LOADING_SCREEN_PATH)).get()->Load();
+	loading_screen_canvas = GetGameObjectByName("Canvas");
+	GameObject* light = GetGameObjectByName("Light");
+	GameObject* main_camera = GetGameObjectByName("Main Camera");
+	if(light)
+	{
+		RemoveGameObject(light);
+	}
+
+	if(main_camera)
+	{
+		RemoveGameObject(main_camera);
+	}
+
+	App->resources->normal_loading_flag = false;
+
+	App->resources->loading_thread_communication.loading = true;
+	App->time->time_scale = 0.f;
+}
+
+void ModuleScene::DeleteLoadingScreen()
+{
+	if(loading_screen_canvas)
+	{
+		RemoveGameObject(loading_screen_canvas);
+		loading_screen_canvas = nullptr;
+	}
+}
+
 void ModuleScene::LoadTmpScene()
 {
 	LoadScene(TMP_SCENE_PATH);
@@ -418,7 +456,3 @@ bool ModuleScene::CurrentSceneIsSaved() const
 	return current_scene != nullptr;
 }
 
-void ModuleScene::LoadSceneWithThread(Scene* scene)
-{
-	scene->Load();
-}

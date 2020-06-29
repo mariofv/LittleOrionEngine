@@ -4,6 +4,7 @@
 #include "Main/Application.h"
 #include "Module.h"
 #include "ModuleFileSystem.h"
+#include "Module/ModuleTime.h"
 #include "Helper/ThreadSafeQueue.h"
 #include "Helper/Timer.h"
 
@@ -129,21 +130,26 @@ public:
 		//HERE WE CHECK IF T IS TEXTURE AND IF SO WE ADD FILEDATA TO THE QUEUE
 		//WE NEED TO CHECK HOW I AM GONNA SOLVE THE LOADED_RESOURCE NULLPTR WHILE NOT BEING CREATED
 		
-		if(MULTITHREADING && std::is_same<T, Texture>::value && !normal_loading_flag)
+		if(MULTITHREADING && App->time->isGameRunning() && std::is_same<T, Texture>::value && !normal_loading_flag)
 		{
 			loaded_resource = nullptr;
 
-			bool find = std::find(uuid_cache_queue.begin(), uuid_cache_queue.end(), uuid) != uuid_cache_queue.end();
+			bool find = false;
+			for(const auto& res : resource_cache)
+			{
+				if(res.get() != nullptr && res.get()->GetUUID() == uuid)
+				{
+					find = true;
+					break;
+				}
+			}
+
 			TextureLoadJob load_job;
 
 			//Check if texture is already on queue or in cache
 			if(find)
 			{
 				load_job.already_in_cache = true;
-			}
-			else
-			{
-				uuid_cache_queue.push_back(uuid);
 			}
 
 			load_job.component_to_load = current_component_loading;
@@ -214,7 +220,6 @@ public:
 
 	//Debugging variables
 	int number_of_textures_loaded = 0;
-	mutable std::vector<uint32_t> uuid_cache_queue;
 
 	ThreadSafeQueue<TextureLoadJob> loading_textures_queue;
 	ThreadSafeQueue<TextureLoadJob> processing_textures_queue;

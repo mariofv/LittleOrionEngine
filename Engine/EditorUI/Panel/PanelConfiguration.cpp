@@ -7,6 +7,7 @@
 #include "Module/ModuleLight.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleScene.h"
 #include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleWindow.h"
@@ -326,6 +327,11 @@ void PanelConfiguration::ShowRenderOptions()
 
 		bool loading = App->resources->loading_thread_communication.loading;
 		ImGui::Checkbox("Loading: ", &loading);
+
+		if(ImGui::Button("Generate Loading Screen"))
+		{
+			App->scene->LoadLoadingScreen();
+		}
 
 	}
 }

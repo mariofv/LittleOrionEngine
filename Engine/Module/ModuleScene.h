@@ -54,10 +54,12 @@ public:
 	void LoadTmpScene();
 	void SaveTmpScene();
 
+	void LoadLoadingScreen();
+	void DeleteLoadingScreen();
+
 	bool HasPendingSceneToLoad() const;
 	bool CurrentSceneIsSaved() const;
 
-	void LoadSceneWithThread(Scene* scene);
 
 private:
 	void OpenScene();
@@ -79,6 +81,8 @@ private:
 	std::shared_ptr<Scene> last_scene = 0;
 
 	std::unique_ptr<BuildOptions> build_options = nullptr;
+
+	GameObject* loading_screen_canvas = nullptr;
 
 	friend class PanelScene;
 	friend class PanelBuildOptions;

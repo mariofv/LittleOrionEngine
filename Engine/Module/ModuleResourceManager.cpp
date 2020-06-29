@@ -6,7 +6,7 @@
 #include "Helper/Timer.h"
 
 #include "Main/GameObject.h"
-#include "Module/ModuleTime.h"
+#include "Module/ModuleScene.h"
 
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Importer/FontImporter.h"
@@ -128,6 +128,13 @@ update_status ModuleResourceManager::PreUpdate()
 		loading_thread_communication.current_number_of_textures_loaded == loading_thread_communication.total_number_of_textures_to_load)
 	{
 		loading_thread_communication.loading = false;
+		App->time->time_scale = 1.f;
+		
+		if(App->time->isGameRunning())
+		{
+			App->scene->DeleteLoadingScreen();
+		}
+
 	}
 
 #endif
@@ -384,6 +391,8 @@ std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32
 		APP_LOG_INFO("Resource %u exists in cache.", uuid);
 		return *it;
 	}
+
+
 	return nullptr;
 }
 
@@ -394,6 +403,7 @@ void ModuleResourceManager::RefreshResourceCache()
 	});
 	if (it != resource_cache.end())
 	{
+		//Erase Resource Cache
 		resource_cache.erase(it, resource_cache.end());
 	}
 }
@@ -407,7 +417,6 @@ void ModuleResourceManager::AddResourceToCache(std::shared_ptr<Resource> resourc
 void ModuleResourceManager::CleanResourceCache()
 {
 	resource_cache.clear();
-	uuid_cache_queue.clear();
 }
 
 bool ModuleResourceManager::CleanResourceFromCache(uint32_t uuid)
@@ -420,19 +429,6 @@ bool ModuleResourceManager::CleanResourceFromCache(uint32_t uuid)
 	{
 		found = true;
 		resource_cache.erase(it, resource_cache.end());
-	}
-
-	if(found)
-	{
-		const auto it = std::remove_if(uuid_cache_queue.begin(), uuid_cache_queue.end(), [uuid](uint32_t own_uuid) {
-			return own_uuid == uuid;
-		});
-
-		if (it != uuid_cache_queue.end())
-		{
-			found = true;
-			uuid_cache_queue.erase(it, uuid_cache_queue.end());
-		}
 	}
 
 	return found;
