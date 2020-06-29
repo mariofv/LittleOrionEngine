@@ -148,8 +148,8 @@ public:
 	float3 velocity_over_time_acceleration;
 	
 	//Runtime values
-	int playing_particles_number = MAX_PARTICLES;
-	int max_particles_number = MAX_PARTICLES;
+	size_t playing_particles_number = MAX_PARTICLES;
+	size_t max_particles_number = MAX_PARTICLES;
 	bool playing = true;
 };
 

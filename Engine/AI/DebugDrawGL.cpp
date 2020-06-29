@@ -13,10 +13,10 @@ void DebugDrawGL::Vertex(const float* pos, unsigned int color)
 
 float4 DebugDrawGL::GetColorRGBA(unsigned int color) const
 {
-	unsigned r = color & 0xff;
-	unsigned g = (color >> 8) & 0xff;
-	unsigned b = (color >> 16) & 0xff;
-	unsigned a = (color >> 24) & 0xff;
+	float r = static_cast<float>(color & 0xff);
+	float g = static_cast<float>((color >> 8) & 0xff);
+	float b = static_cast<float>((color >> 16) & 0xff);
+	float a = static_cast<float>((color >> 24) & 0xff);
 	float f = 1.0f / 255.0f;
 	return float4(r, g, b, a) * f;
 }

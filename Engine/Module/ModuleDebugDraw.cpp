@@ -443,9 +443,9 @@ void ModuleDebugDraw::RenderRectTransform(const GameObject* rect_owner) const
 	dd::line(rect_points[0], rect_points[1], float3::one);
 }
 
-void ModuleDebugDraw::RenderLine(float3 & a, float3 & b) const
+void ModuleDebugDraw::RenderLine(const float3& a, const float3& b, const float3& color) const
 {
-	dd::line(a, b, float3::unitY);
+	dd::line(a, b, color);
 }
 
 void ModuleDebugDraw::RenderCameraFrustum() const
@@ -493,11 +493,12 @@ void ModuleDebugDraw::RenderParticleSystem() const
 			break;
 			case ComponentParticleSystem::TypeOfParticleSystem::BOX:
 			{
-				float min_x = selected_particle_system->min_range_random_x;
-				float max_x = selected_particle_system->max_range_random_x;
-				float min_z = selected_particle_system->min_range_random_z;
-				float max_z = selected_particle_system->max_range_random_z;
-				float height = selected_particle_system->particles_life_time*selected_particle_system->velocity_particles_start *100;
+
+				float min_x = static_cast<float>(selected_particle_system->min_range_random_x);
+				float max_x = static_cast<float>(selected_particle_system->max_range_random_x);
+				float min_z = static_cast<float>(selected_particle_system->min_range_random_z);
+				float max_z = static_cast<float>(selected_particle_system->max_range_random_z);
+				float height = selected_particle_system->particles_life_time*selected_particle_system->velocity_particles_start *100.0f;
 				float3 box_points[8] = {
 					float3(min_x,0.0f,min_z) / 100,
 					float3(min_x, 0.0f, max_z) / 100,
@@ -667,7 +668,7 @@ void ModuleDebugDraw::RenderOutline() const
 	}
 }
 
-void ModuleDebugDraw::RenderBoundingBoxes() const
+void ModuleDebugDraw::RenderBoundingBoxes(const float3& color) const
 {
 	BROFILER_CATEGORY("Render Bounding Boxes", Profiler::Color::Lavender);
 
@@ -676,18 +677,18 @@ void ModuleDebugDraw::RenderBoundingBoxes() const
 		GameObject* mesh_game_object = mesh->owner;
 		if (!mesh_game_object->aabb.IsEmpty())
 		{
-			dd::aabb(mesh_game_object->aabb.bounding_box.minPoint, mesh_game_object->aabb.bounding_box.maxPoint, float3::one);
+			dd::aabb(mesh_game_object->aabb.bounding_box.minPoint, mesh_game_object->aabb.bounding_box.maxPoint, color);
 		}
 	}
 }
 
-void ModuleDebugDraw::RenderGlobalBoundingBoxes() const
+void ModuleDebugDraw::RenderGlobalBoundingBoxes(const float3& color) const
 {
 	BROFILER_CATEGORY("Render Global Bounding Boxes", Profiler::Color::Lavender);
 
 	for (auto& object : App->scene->game_objects_ownership)
 	{
-		dd::aabb(object->aabb.global_bounding_box.minPoint, object->aabb.global_bounding_box.maxPoint, float3::one);
+		dd::aabb(object->aabb.global_bounding_box.minPoint, object->aabb.global_bounding_box.maxPoint, color);
 	}
 }
 
@@ -734,9 +735,9 @@ void ModuleDebugDraw::RenderGrid() const
 	grid->Render();
 }
 
-ENGINE_API void ModuleDebugDraw::RenderSingleAABB(AABB& aabb) const
+ENGINE_API void ModuleDebugDraw::RenderSingleAABB(AABB& aabb, const float3& color) const
 {
-	dd::aabb(aabb.minPoint, aabb.maxPoint, float3::one);
+	dd::aabb(aabb.minPoint, aabb.maxPoint, color);
 }
 
 void ModuleDebugDraw::RenderNavMesh(ComponentCamera & cam) const
@@ -744,28 +745,29 @@ void ModuleDebugDraw::RenderNavMesh(ComponentCamera & cam) const
 	App->artificial_intelligence->RenderNavMesh(cam);
 }
 
-void ModuleDebugDraw::RenderQuadTree() const
+void ModuleDebugDraw::RenderQuadTree(const float3& color) const
 {
 	for (auto& ol_quadtree_node : App->space_partitioning->ol_quadtree->flattened_tree)
 	{
 		float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
 		float3 quadtree_node_max = float3(ol_quadtree_node->box.maxPoint.x, 0, ol_quadtree_node->box.maxPoint.y);
-		dd::aabb(quadtree_node_min, quadtree_node_max, float3::one);
+		dd::aabb(quadtree_node_min, quadtree_node_max, color);
 	}
 }
 
-void ModuleDebugDraw::RenderOcTree() const
+void ModuleDebugDraw::RenderOcTree(const float3& color) const
 {
 	for (auto& ol_octtree_node : App->space_partitioning->ol_octtree->flattened_tree)
 	{
 		float3 octtree_node_min = float3(ol_octtree_node->box.minPoint.x, ol_octtree_node->box.minPoint.y, ol_octtree_node->box.minPoint.z);
 		float3 octtree_node_max = float3(ol_octtree_node->box.maxPoint.x, ol_octtree_node->box.maxPoint.y, ol_octtree_node->box.maxPoint.z);
-		dd::aabb(octtree_node_min, octtree_node_max, float3::one);
+		dd::aabb(octtree_node_min, octtree_node_max, color);
 	}
 }
 
-void ModuleDebugDraw::RenderAABBTree() const
+void ModuleDebugDraw::RenderAABBTree(const float3& color) const
 {
+	//TODO: Change this
 	App->space_partitioning->DrawAABBTree();
 }
 
@@ -788,9 +790,9 @@ void ModuleDebugDraw::RenderSelectedGameObjectHelpers() const
 	}
 }
 
-void ModuleDebugDraw::RenderPoint(const float3& point, float size) const
+void ModuleDebugDraw::RenderPoint(const float3& point, float size, const float3& color) const
 {
-	dd::point(point, float3(0.f, 1.f, 0.f), size);
+	dd::point(point, color, size);
 }
 
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
@@ -803,7 +805,6 @@ void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 	dd_interface_implementation->width = static_cast<unsigned int>(camera.GetWidth());
 	dd_interface_implementation->height = static_cast<unsigned int>(camera.GetHeight());
 	dd_interface_implementation->mvpMatrix = proj * view;
-
 	dd::flush();
 }
 
@@ -817,8 +818,6 @@ bool ModuleDebugDraw::CleanUp()
     delete dd_interface_implementation;
     dd_interface_implementation = 0;
 
-	delete light_billboard;
-	delete camera_billboard;
 	delete grid;
 
 	return true;

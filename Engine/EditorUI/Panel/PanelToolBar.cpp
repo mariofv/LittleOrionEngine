@@ -17,7 +17,7 @@ PanelToolBar::PanelToolBar()
 
 void PanelToolBar::Render()
 {
-	if (ImGui::BeginChild("Toolbar", ImVec2(0, App->window->GetHeight() * 0.025), false, ImGuiWindowFlags_NoDecoration))
+	if (ImGui::BeginChild("Toolbar", ImVec2(0, App->window->GetHeight() * 0.025f), false, ImGuiWindowFlags_NoDecoration))
 	{
 		hovered = ImGui::IsWindowHovered();
 

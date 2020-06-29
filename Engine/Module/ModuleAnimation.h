@@ -10,6 +10,7 @@
 
 class ComponentAnimation;
 class GameObject;
+class PanelStateMachine;
 
 class ModuleAnimation : public Module
 {
@@ -33,9 +34,10 @@ public:
 
 private:
 	std::vector<ComponentAnimation*> animations;
-	friend ModuleDebugDraw;
 
 	LOTween* tweener = nullptr;
+	friend ModuleDebugDraw;
+	friend PanelStateMachine;
 };
 
 #endif //_MODULEANIMATION_H_
