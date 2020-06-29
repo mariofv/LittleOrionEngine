@@ -109,6 +109,11 @@ void PrefabImporter::ExtractGameObjectFromNode
 	node_config.GetString("Name", node_game_object->name, "");
 	node_game_object->original_UUID = node_game_object->UUID;
 
+	if (node_game_object->name == "Level_1_Zone_1_Leaves Tree001_0")
+	{
+		int x = 0;
+	}
+
 	auto& remapped_material = metafile.remapped_materials;
 	assert(remapped_material.find(node_game_object->name) != remapped_material.end());
 	uint32_t remapped_material_uuid =  remapped_material.at(node_game_object->name);
