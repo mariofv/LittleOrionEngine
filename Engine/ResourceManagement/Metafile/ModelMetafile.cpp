@@ -52,7 +52,7 @@ void ModelMetafile::Load(const Config& config)
 	{
 		std::string first;
 		pair_config.GetString("Material", first, {});
-		remapped_materials[first] =  pair_config.GetUInt("UUID", 0);
+		remapped_materials[first] =  pair_config.GetUInt32("UUID", 0);
 	}
 
 	LoadExtractedNodes(config);

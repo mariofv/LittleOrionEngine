@@ -62,7 +62,7 @@ void PanelPopupResourceSelector::Render()
 		return;
 	}
 
-	ImGui::SetNextWindowSize(ImVec2(resource_icon_size * 4.5, resource_icon_size * 2 * 1.1f));
+	ImGui::SetNextWindowSize(ImVec2(resource_icon_size * 4.5f, resource_icon_size * 2 * 1.1f));
 
 	if (ImGui::Begin(("Select " + resource_name).c_str(), &opened))
 	{
@@ -71,7 +71,7 @@ void PanelPopupResourceSelector::Render()
 		child_window_focused = false;
 
 		ImVec2 available_region = ImGui::GetContentRegionAvail();
-		int files_per_line = available_region.x / resource_icon_size;
+		int files_per_line = static_cast<int>(available_region.x / resource_icon_size);
 
 		int current_line = 0;
 		int current_file_in_line = 0;
@@ -117,8 +117,8 @@ void PanelPopupResourceSelector::ShowResourceIcon(Metafile* resource_metafile)
 	{
 		ProcessMouseInput(resource_metafile);
 
-		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75 * resource_icon_size) * 0.5f);
-		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75*resource_icon_size, 0.75 * resource_icon_size)); // TODO: Substitute this with resouce thumbnail
+		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75f * resource_icon_size) * 0.5f);
+		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75f*resource_icon_size, 0.75f * resource_icon_size)); // TODO: Substitute this with resouce thumbnail
 		ImGui::Spacing();
 
 		float text_width = ImGui::CalcTextSize(filename.c_str()).x;
@@ -129,9 +129,9 @@ void PanelPopupResourceSelector::ShowResourceIcon(Metafile* resource_metafile)
 		}
 		else
 		{
-			int character_width = text_width / filename.length();
-			int string_position_wrap = resource_icon_size / character_width - 5;
-			assert(string_position_wrap < filename.length());
+			float character_width = text_width / filename.length();
+			int string_position_wrap = static_cast<int>(resource_icon_size / character_width - 5);
+			assert((size_t)string_position_wrap < filename.length());
 			std::string wrapped_filename = filename.substr(0, string_position_wrap) + "...";
 			ImGui::Text(wrapped_filename.c_str());
 		}

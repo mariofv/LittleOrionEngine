@@ -22,11 +22,6 @@ bool ModuleSpacePartitioning::Init()
 	return true;
 }
 
-bool ModuleSpacePartitioning::CleanUp()
-{
-	return true;
-}
-
 void ModuleSpacePartitioning::GenerateQuadTree()
 {
 

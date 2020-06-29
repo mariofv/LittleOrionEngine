@@ -32,12 +32,6 @@ update_status ModuleUI::Update()
 	return update_status::UPDATE_CONTINUE;
 }
 
-// Called before quitting
-bool ModuleUI::CleanUp()
-{
-	return true;
-}
-
 void ModuleUI::Render(bool scene_mode)
 {
 	BROFILER_CATEGORY("UI: Module Render", Profiler::Color::LightSeaGreen);

@@ -19,11 +19,6 @@ update_status ModuleAI::Update()
 	return update_status::UPDATE_CONTINUE;
 }
 
-bool ModuleAI::CleanUp()
-{
-	return true;
-}
-
 void ModuleAI::RenderNavMesh(ComponentCamera& camera)
 {
 	nav_mesh.RenderNavMesh(camera);

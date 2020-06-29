@@ -35,7 +35,8 @@ public:
 	void Disable() override;
 
 	void SetStateMachine(uint32_t state_machine_uuid);
-
+	//to find it from NodeEditor
+	AnimController* GetAnimController();
 	//API
 	ENGINE_API void Play();
 	ENGINE_API void Stop();
@@ -51,6 +52,8 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
+	
+	bool playing = false;
 private:
 	void GetChildrenMeshes(GameObject * current_mesh);
 	void GenerateJointChannelMaps();
@@ -59,8 +62,7 @@ private:
 	std::vector<ComponentMeshRenderer*> skinned_meshes;
 	AnimController* animation_controller = nullptr;
 	std::vector<float4x4> pose;
-	bool playing = false;
-
+	
 	friend class PanelComponent;
 	
 };
