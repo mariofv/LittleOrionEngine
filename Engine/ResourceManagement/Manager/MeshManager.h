@@ -1,10 +1,12 @@
 #ifndef _MESHMANAGER_H_
 #define _MESHMANAGER_H_
 
+#include "Filesystem/File.h"
+#include "Helper/Timer.h"
+
 #include <memory>
 #include <string>
 
-#include "Filesystem/File.h"
 
 class Metafile;
 class Mesh;
@@ -17,6 +19,8 @@ public:
 	~MeshManager() = default;
 
 	static std::shared_ptr<Mesh> Load(uint32_t uuid, const FileData& resource_data);
+
+	static Timer timer;
 };
 
 #endif // !_MESHMANAGER_H_

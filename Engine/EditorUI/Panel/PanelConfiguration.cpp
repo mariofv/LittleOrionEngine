@@ -333,6 +333,9 @@ void PanelConfiguration::ShowRenderOptions()
 			App->scene->LoadLoadingScreen();
 		}
 
+		float time_meshes = App->resources->time_loading_meshes;
+		ImGui::DragFloat("Time loading meshes:", &time_meshes);
+
 	}
 }
 
