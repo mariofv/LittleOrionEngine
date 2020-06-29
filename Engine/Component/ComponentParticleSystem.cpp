@@ -227,38 +227,15 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	particle.time_passed += App->time->real_time_delta_time;
 
 	//update position
-	if (velocity_over_time)
+	if (velocity_over_time && type_of_velocity_over_time == LINEAR)
 	{
-		
-		switch (type_of_velocity_over_time)
-		{
-		case CONSTANT:
-			if (gravity)
-				particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
-				(gravity_vector * Pow(particle.time_passed, 2) / 2);
-			else
-				particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed);
-			break;
-		case LINEAR:
-		{
-			float3 acceleration = (particle.velocity - particle.velocity_initial) / particles_life_time / 1000;
-			if (gravity)
-				acceleration += gravity_vector;
+		float3 acceleration = (particle.velocity - particle.velocity_initial) / particles_life_time / 1000;
+		if (gravity)
+			acceleration += gravity_vector;
 
-			particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
-				(acceleration * Pow(particle.time_passed, 2) / 2);
-			break;
-		}
-		case RANDOM_BETWEEN_TWO_CONSTANTS:
-			if (gravity)
-				particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
-				(gravity_vector * Pow(particle.time_passed, 2) / 2);
-			else
-				particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed);
-			break;
-		}
+		particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
+			(acceleration * Pow(particle.time_passed, 2) / 2);
 	}
-
 	else
 	{
 		if (gravity)
