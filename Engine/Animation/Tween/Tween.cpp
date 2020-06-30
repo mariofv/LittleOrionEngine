@@ -40,12 +40,12 @@ Tween * Tween::LORotate(ComponentTransform2D* transform, float end_value, float 
 	return tween;
 }
 
-Tween * Tween::LOScale(ComponentTransform2D* transform, float end_scale, float desired_time)
+Tween * Tween::LOScale(ComponentTransform2D* transform, float3 end_scale, float desired_time)
 {
 	Tween* tween = new Tween();
 	tween->transform = transform;
-	tween->initial_value = 1.0f;
-	tween->desired_value = end_scale;
+	tween->initial_scale = transform->GetGlobalScale();
+	tween->desired_scale = end_scale;
 	tween->duration = desired_time;
 	tween->tween_type = TweenType::SCALE;
 
@@ -112,8 +112,8 @@ float Tween::UpdateTweenByType()
 		break;
 
 	case Tween::SCALE:
-		tweened_value = math::Lerp(initial_value, desired_value, eased_time);
-		transform->SetScale(float3::one * tweened_value);
+		tweened_scale = math::Lerp(initial_scale, desired_scale, eased_time);
+		transform->SetScale(tweened_scale);
 		break;
 
 	case Tween::COLOR:
@@ -223,42 +223,51 @@ void Tween::ResetTween()
 	}
 }
 
-float Tween::Linear(float t) const {
+float Tween::Linear(float t) const 
+{
 	return t;
 }
 
-float Tween::SmoothStep(float t) const {
+float Tween::SmoothStep(float t) const 
+{
 	return (t*t *(3 - 2 * t));
 }
 
-float Tween::EaseInSine(float t) const {
+float Tween::EaseInSine(float t) const 
+{
 	return 1 - cos(t * (3.1416f / 2));
 }
 
-float Tween::Sine(float t) const {
+float Tween::Sine(float t) const 
+{
 	return (sin(t * (3.1416f * 2) - 3.1416f / 2) + 1.0f) / 2.0f;
 }
 
-float Tween::EaseOutSine(float t) const {
+float Tween::EaseOutSine(float t) const 
+{
 	return sin(t * (3.1416f / 2));
 }
 
-float Tween::EaseInOutSine(float t) const {
+float Tween::EaseInOutSine(float t) const 
+{
 	return -0.5f * (cos(3.1416f * t) - 1);
 }
 
-float Tween::EaseInBack(float t) const {
+float Tween::EaseInBack(float t) const 
+{
 	float s = 1.70158f;
 	return t * t*((s + 1)*t - s);
 }
 
-float Tween::EaseOutBack(float t) const {
+float Tween::EaseOutBack(float t) const 
+{
 	float s = 1.70158f;
 	t--;
 	return (t*t*((s + 1)*t + s) + 1);
 }
 
-float Tween::EaseInOutBack(float t) const {
+float Tween::EaseInOutBack(float t) const 
+{
 	float s = 1.70158f * 1.525f;
 	//float s2 = s * 1.525f;
 	t *= 2;

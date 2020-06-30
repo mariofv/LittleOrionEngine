@@ -52,7 +52,7 @@ public:
 
 	ENGINE_API static Tween* LOTranslate(ComponentTransform2D*, float2, float);
 	ENGINE_API static Tween* LORotate(ComponentTransform2D*, float, float);
-	ENGINE_API static Tween* LOScale(ComponentTransform2D*, float, float);
+	ENGINE_API static Tween* LOScale(ComponentTransform2D*, float3, float);
 	ENGINE_API static Tween* LOColor(ComponentImage*, float4, float);
 	ENGINE_API Tween* SetEase(EaseType);
 	ENGINE_API Tween* SetLoops(int, TweenLoop);
@@ -65,6 +65,10 @@ private:
 	float2 initial_vector = float2::zero;
 	float2 tweened_vector = float2::zero;
 	float2 desired_vector = float2::zero;
+	
+	float3 initial_scale = float3::zero;
+	float3 tweened_scale = float3::zero;
+	float3 desired_scale = float3::zero;
 
 	float4 initial_color = float4::zero;
 	float4 tweened_color = float4::zero;

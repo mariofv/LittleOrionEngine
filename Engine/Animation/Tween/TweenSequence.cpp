@@ -63,6 +63,12 @@ TweenSequence * TweenSequence::Pause()
 	return this;
 }
 
+TweenSequence* TweenSequence::OnCompleted(std::function<void(void)> callback)
+{
+	on_completed_callback = callback;
+	return this;
+}
+
 void TweenSequence::Update(float dt)
 {
 	if (state != TweenSequenceState::PLAYING) return;
@@ -102,6 +108,7 @@ void TweenSequence::Update(float dt)
 
 	if (current_played_tweens.size() <= 0)
 	{
+		if (on_completed_callback != nullptr) on_completed_callback();
 		Stop();
 	}
 }
