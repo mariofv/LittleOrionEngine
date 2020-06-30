@@ -543,7 +543,7 @@ void PanelProjectExplorer::FilesDrop() const
 	}
 }
 
-bool PanelProjectExplorer::IsOneOfMyChildrens(Path* path)
+bool PanelProjectExplorer::IsOneOfMyChildrens(Path* path) const
 {
 	bool found = false;
 	for (auto& path : path->children)

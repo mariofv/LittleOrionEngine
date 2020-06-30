@@ -27,11 +27,12 @@ public:
 	void ShowFileSystemActionsMenu(Path* path);
 
 	void FilesDrop() const;
-	bool IsOneOfMyChildrens(Path* path);
-	void ResourceDragSource(const Metafile* file) const;
 
+	void ResourceDragSource(const Metafile* file) const;
 	void ResourceDropTarget(Path* folder_path) const;
 	void ResourceDropFromOutside(const std::string& dropped_filedir);
+
+	bool IsOneOfMyChildrens(Path* path) const;
 
 private:
 	void InitResourceExplorerDockspace();

@@ -373,7 +373,7 @@ int PanelHierarchy::GetNextBranch()
 	return ++branch_counter;
 }
 
-bool PanelHierarchy::IsOneOfMyChildrens(GameObject* game_object)
+bool PanelHierarchy::IsOneOfMyChildrens(GameObject* game_object) const
 {
 	bool found = false;
 	
