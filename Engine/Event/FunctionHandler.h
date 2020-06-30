@@ -6,13 +6,15 @@
 
 class BaseFunctionHandler {
 public:
-	GameObject* suscriber;
 	BaseFunctionHandler(GameObject* suscriber) : suscriber(suscriber) {}
 	// Call the member function
 	void exec(Event* evnt)
 	{
 		call(evnt);
 	}
+public:
+	GameObject* suscriber;
+
 private:
 	// Implemented by FunctionHandler
 	virtual void call(Event* evnt) = 0;

@@ -7,13 +7,17 @@
 class Event
 {
 public:
-	GameObject* emitter = nullptr;
 	Event(GameObject* emitter) : emitter(emitter) {}
 	virtual ~Event() {};
+
+public:
+	GameObject* emitter = nullptr;
 };
 
-struct CollisionEvent : public Event {
+class CollisionEvent : public Event {
+public:
 	CollisionEvent(GameObject* emitter, std::vector<CollisionInformation> collisions) : Event(emitter), collisions(collisions) {}
+public:
 	std::vector<CollisionInformation> collisions;
 };
 #endif
