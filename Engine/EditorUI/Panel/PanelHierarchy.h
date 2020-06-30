@@ -17,12 +17,15 @@ public:
 	std::string GetNextGameObjectName();
 	int GetNextBranch();
 
+	bool IsOneOfMyChildrens(GameObject* game_object) const;
+
+
 private:
 	void ShowGameObjectHierarchy(GameObject* game_object);
 
-	void DragAndDrop(GameObject* game_object);
-	void DragSource(GameObject* source_game_object);
-	void DropTarget(GameObject* target_game_object);
+	void DragAndDrop(GameObject* game_object) const;
+	void DragSource(GameObject* source_game_object) const;
+	void DropTarget(GameObject* target_game_object) const;
 
 	void ShowGameObjectActionsMenu(GameObject* game_object);
 	void Show3DObjectCreationMenu(GameObject* game_object) const;
