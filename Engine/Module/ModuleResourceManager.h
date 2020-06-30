@@ -123,10 +123,9 @@ public:
 			APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, resource_library_file.c_str());
 			return nullptr;
 		}
-		timer.Start();
+
 		Path* resource_exported_file_path = App->filesystem->GetPath(resource_library_file);
 		FileData exported_file_data = resource_exported_file_path->GetFile()->Load();
-		APP_LOG_ERROR("Loading FILEDATA: %.3f", timer.Stop());
 		//HERE WE CHECK IF T IS TEXTURE AND IF SO WE ADD FILEDATA TO THE QUEUE
 		//WE NEED TO CHECK HOW I AM GONNA SOLVE THE LOADED_RESOURCE NULLPTR WHILE NOT BEING CREATED
 		

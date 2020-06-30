@@ -133,6 +133,7 @@ update_status ModuleResourceManager::PreUpdate()
 		if(App->time->isGameRunning())
 		{
 			App->scene->DeleteLoadingScreen();
+			App->scene->StopSceneTimer();
 		}
 
 	}

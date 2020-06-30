@@ -341,9 +341,10 @@ inline void ModuleScene::LoadSceneResource()
 	{
 		if(App->time->isGameRunning())
 		{
+			timer.Start();
 			LoadLoadingScreen();
 		}
-		
+			
 		current_scene = App->resources->Load<Scene>(pending_scene_uuid);
 		current_scene.get()->Load();
 	}
@@ -454,5 +455,10 @@ bool ModuleScene::HasPendingSceneToLoad() const
 bool ModuleScene::CurrentSceneIsSaved() const
 {
 	return current_scene != nullptr;
+}
+
+void ModuleScene::StopSceneTimer()
+{
+	APP_LOG_SUCCESS("TOTAL TIME LOADING SCENE: %.3f", timer.Stop());
 }
 

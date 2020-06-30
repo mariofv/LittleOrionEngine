@@ -60,6 +60,7 @@ public:
 	bool HasPendingSceneToLoad() const;
 	bool CurrentSceneIsSaved() const;
 
+	void StopSceneTimer();
 
 private:
 	void OpenScene();
@@ -83,6 +84,8 @@ private:
 	std::unique_ptr<BuildOptions> build_options = nullptr;
 
 	GameObject* loading_screen_canvas = nullptr;
+
+	Timer timer;
 
 	friend class PanelScene;
 	friend class PanelBuildOptions;
