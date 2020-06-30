@@ -165,17 +165,20 @@ void Material::GenerateTexture(TextureLoadData loaded_data)
 	App->resources->AddResourceToCache(textures[type]);
 }
 
-bool Material::GetTextureFromCache(TextureLoadData loaded_data)
+void Material::GetTextureFromCache(TextureLoadData loaded_data)
 {
 	MaterialTextureType type = static_cast<MaterialTextureType>(loaded_data.texture_type);
 	textures[type] = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(loaded_data.uuid));
 
 	if(!textures[type])
 	{
-		return false;
+		//If texture fails we load the textures normally
+		App->resources->normal_loading_flag = true;
+		textures[type] = App->resources->Load<Texture>(loaded_data.uuid);
+		App->resources->normal_loading_flag = false;
 	}
 
-	return true;
+	assert(textures[type]);
 }
 
 void Material::RemoveMaterialTexture(MaterialTextureType type)
