@@ -201,7 +201,7 @@ void main()
 	}
 	 
 	result += emissive_color;
-	result += specular_color.rgb * ambient * occlusion_color.rgb; //Ambient light
+	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
 	FragColor = vec4(result,1.0);
 	FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
 	FragColor.a=material.transparency;	
