@@ -5,6 +5,7 @@
 #include "MathGeoLib.h"
 #include "Main/Application.h"
 #include "Module/ModuleTime.h"
+#include <GL/glew.h>
 
 class GameObject;
 class ComponentBillboard;
@@ -154,6 +155,7 @@ public:
 	size_t playing_particles_number = MAX_PARTICLES;
 	size_t max_particles_number = MAX_PARTICLES;
 	bool playing = true;
+	GLuint ssbo;
 };
 
 #endif

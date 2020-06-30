@@ -8,6 +8,18 @@
 #include "Module/ModuleResourceManager.h"
 #include "GL/glew.h"
 
+
+namespace
+{
+	struct ShaderParticle
+	{
+		float4 position;
+		float4 color;
+		float current_width = 0, current_height = 0;
+		float current_sprite_x = 0, current_sprite_y = 0;
+	};
+	static std::vector<ShaderParticle> shader_particles;
+}
 ComponentParticleSystem::ComponentParticleSystem() : Component(nullptr, ComponentType::PARTICLE_SYSTEM)
 {
 	Init();
@@ -24,6 +36,7 @@ ComponentParticleSystem::~ComponentParticleSystem()
 
 void ComponentParticleSystem::Init() 
 {
+	glGenBuffers(1, &ssbo);
 	particles.reserve(MAX_PARTICLES);
 
 	billboard = new ComponentBillboard(this->owner);
@@ -87,6 +100,12 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 		particle.current_height = static_cast<float>(min_size_of_particle);
 		particle.current_width = static_cast<float>(min_size_of_particle);
 	}
+	else
+	{
+		particle.current_width = particles_width * particle.particle_scale;
+		particle.current_height = particles_height * particle.particle_scale;
+	}
+
 	switch (type_of_particle_system)
 	{
 		case SPHERE:
@@ -196,25 +215,36 @@ void ComponentParticleSystem::Render()
 		if (gravity)
 			gravity_vector = float3 (0, gravity_modifier / 10000000, 0);
 
+		GLuint shader_program = App->program->GetShaderProgramId("Particles");
+		glUseProgram(shader_program);
 
-		// update all particles
+		shader_particles.clear();
 		for (unsigned int i = 0; i < playing_particles_number; ++i)
 		{
 			Particle& p = particles[i];
-		
+
 			if (p.life > 0.0f)
 			{
 				UpdateParticle(p);
-				if (follow_owner)
-				{
-					billboard->Render(owner->transform.GetGlobalTranslation() + (p.rotation *p.position));
-				}
-				else
-				{
-					billboard->Render(p.position);
-				}
+				shader_particles.push_back(ShaderParticle{ float4(p.position,1.0f), p.color,p.current_width, p.current_height, p.current_sprite_x, p.current_sprite_y  });
 			}
 		}
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+		glBufferData(GL_SHADER_STORAGE_BUFFER, (sizeof(ShaderParticle))*shader_particles.size(), shader_particles.data(), GL_STATIC_DRAW);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo);
+
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind*/
+		billboard->CommonUniforms(shader_program);
+		glBindVertexArray(billboard->vao);
+		glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, shader_particles.size());
+		glBindVertexArray(0);
+
+		// update all particles
+
+		glUseProgram(0);
+	
+
+
 	}
 	
 	glDisable(GL_BLEND);
@@ -245,23 +275,13 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 			particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed);
 	}
 
-	//random tile
-	if (tile_random)
-	{
-		billboard->current_sprite_x = particle.current_sprite_x;
-		billboard->current_sprite_y = particle.current_sprite_y;
-	}
 
 	//alpha fade
 	if (fade)
 	{
 		particle.color.w -= App->time->real_time_delta_time * (fade_time / 1000);
-		billboard->color[3] = particle.color.w;
 	}
-	else
-	{
-		billboard->color[3] = 1.0F;
-	}
+
 
 	//fade color
 	if (fade_between_colors)
@@ -272,21 +292,17 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 		particle.color.y = (1 - time) * particle.color.y + time * color_to_fade[1];
 		particle.color.z = (1 - time) * particle.color.z + time * color_to_fade[2];
 	}
-	billboard->color[0] = particle.color.x;
-	billboard->color[1] = particle.color.y;
-	billboard->color[2] = particle.color.z;
-	billboard->color[3] = particle.color.w;
 
-	//size
-	billboard->width = particles_width * particle.particle_scale;
-	billboard->height = particles_height * particle.particle_scale;
 	//size fade
 	if (change_size)
 	{
 		particle.current_height += App->time->real_time_delta_time * (size_change_speed / 1000);
 		particle.current_width += App->time->real_time_delta_time * (size_change_speed / 1000);
-		billboard->width = particle.current_width;
-		billboard->height = particle.current_height;
+	}
+
+	if (follow_owner)
+	{
+		particle.position = owner->transform.GetGlobalTranslation() + (particle.rotation *particle.position);
 	}
 }
 void ComponentParticleSystem::SetParticleTexture(uint32_t texture_uuid)
@@ -413,6 +429,8 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	color_to_fade[1] = config.GetFloat("Color to fade G", 1.0F);
 	color_to_fade[2] = config.GetFloat("Color to fade B", 1.0F);
 	color_to_fade[3] = config.GetFloat("Color to fade A", 1.0F);
+
+	shader_particles.reserve(max_particles_number);
 }
 
 Component* ComponentParticleSystem::Clone(bool original_prefab) const
