@@ -27,14 +27,11 @@ struct Material
 {
 	sampler2D diffuse_map;
 	vec4 diffuse_color;
-	float k_diffuse;
 	sampler2D specular_map;
 	vec4 specular_color;
-	float k_specular;
 	float smoothness;
 
 	sampler2D occlusion_map;
-	float k_ambient;
 	sampler2D emissive_map;
 	vec4 emissive_color;
 	sampler2D normal_map;

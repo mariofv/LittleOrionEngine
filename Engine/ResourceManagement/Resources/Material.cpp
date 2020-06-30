@@ -60,11 +60,6 @@ void Material::Save(Config& config) const
 	config.AddBool(show_checkerboard_texture, "Checkboard");
 	config.AddString(shader_program, "ShaderProgram");
 
-	//k
-	config.AddFloat(k_ambient, "kAmbient");
-	config.AddFloat(k_specular, "kSpecular");
-	config.AddFloat(k_diffuse, "kDiffuse");
-
 	config.AddFloat(smoothness, "Smoothness");
 
 	config.AddFloat(transparency, "Transparency");
@@ -108,11 +103,6 @@ void Material::Load(const Config& config)
 	config.GetString("ShaderProgram", shader_program, "Blinn phong");
 
 	material_type = static_cast<MaterialType>(config.GetInt("MaterialType", 0));
-
-	//k
-	k_ambient = config.GetFloat("kAmbient", 1.0f);
-	k_specular = config.GetFloat("kSpecular", 1.0f);
-	k_diffuse = config.GetFloat("kDiffuse", 1.0f);
 
 	transparency = config.GetFloat("Transparency", 1.f);
 	smoothness = config.GetFloat("Smoothness", 1.0F);

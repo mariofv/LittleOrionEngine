@@ -67,9 +67,6 @@ public:
 	float emissive_color[4] = { 1.0f, 1.0f, 1.0f , 1.0f };
 	float specular_color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float smoothness = 1.0F;
-	float k_diffuse = 1.0f;
-	float k_specular = 1.0f;
-	float k_ambient = 1.0f;
 
 	float2 coords = float2(1.0f, 1.0f);
 

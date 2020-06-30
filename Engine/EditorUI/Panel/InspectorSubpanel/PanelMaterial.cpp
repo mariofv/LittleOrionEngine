@@ -217,10 +217,6 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		{
 			modified_by_user = true;
 		}
-		if (ImGui::SliderFloat("K diffuse", &material->k_diffuse, 0.f, 1.f))
-		{
-			modified_by_user = true;
-		}
 
 		if (ImGui::SliderFloat("Tiling X", &material->tiling_x, 0.f, 10.f))
 		{
@@ -263,13 +259,6 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Text("Occlusion");
 
 		ImGui::Spacing();
-		ImGui::Indent();
-
-		if (ImGui::SliderFloat("k ambient", &material->k_ambient, 0, 1))
-		{
-			modified_by_user = true;
-		}
-		ImGui::Unindent();
 
 		break;
 
@@ -280,10 +269,6 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Indent();
 		
 		if (ImGui::ColorEdit3("Color", material->specular_color, ImGuiColorEditFlags_Float))
-		{
-			modified_by_user = true;
-		}
-		if (ImGui::SliderFloat("k specular", &material->k_specular, 0.f, 1.f))
 		{
 			modified_by_user = true;
 		}
