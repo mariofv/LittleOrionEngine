@@ -83,6 +83,12 @@
       "Vertex": "/Resources/Shaders/sprite.vs",
       "Fragment": "/Resources/Shaders/ui_text.fs",
       "Selectable": false
+    },
+	{
+      "Name": "Trail",
+      "Vertex": "/Resources/Shaders/trail.vs",
+      "Fragment": "/Resources/Shaders/trail.fs",
+      "Selectable": false
     }
   ]
 }

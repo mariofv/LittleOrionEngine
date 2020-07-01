@@ -10,6 +10,11 @@
 #include "Module/ModuleDebugDraw.h"
 #include "GL/glew.h"
 
+#include <stdio.h> 
+#include <string.h> 
+#include <list>
+#include <algorithm>
+
 ComponentTrail::ComponentTrail() : Component(nullptr, ComponentType::TRAIL)
 {
 	Init();
@@ -101,7 +106,7 @@ void  ComponentTrail::GetPerpendiculars()
 		{
 			//Get the vector that links every two points
 			float3 vector_adjacent = (pair->second->position - pair->first->position).Normalized();//vector between each pair -> Normalized to get vector with magnitutde = 1 but same direction
-			float3 perpendicular = vector_adjacent.Cross(owner->transform.GetFrontVector()) * width;
+			float3 perpendicular = vector_adjacent.Cross(owner->transform.GetFrontVector()) * width; //Front is currently local
 
 			float3 top_left, top_right, bottom_left, bottom_right;
 
@@ -116,10 +121,20 @@ void  ComponentTrail::GetPerpendiculars()
 			App->debug_draw->RenderLine(bottom_left, bottom_right); // Draw the perpendicular vectormesh_points
 			App->debug_draw->RenderLine(top_left, bottom_right); // Draw the perpendicular vectormesh_points
 
+			memcpy(trail_renderer->trail_renderer_vertices, &top_left, sizeof(float) * 3);
+			trail_renderer->trail_renderer_vertices += 5;
+			memcpy(trail_renderer->trail_renderer_vertices, &top_right, sizeof(float) * 3);
+			trail_renderer->trail_renderer_vertices += 5;
+			memcpy(trail_renderer->trail_renderer_vertices, &bottom_left, sizeof(float) * 3);
+			trail_renderer->trail_renderer_vertices += 5;
+			memcpy(trail_renderer->trail_renderer_vertices, &bottom_right, sizeof(float) * 3);
+			trail_renderer->trail_renderer_vertices += 5;
+
 		}
 		else
 		{
 			mesh_points.erase(pair);
+			++trail_renderer->erase_vertices;
 		}
 	}
 }

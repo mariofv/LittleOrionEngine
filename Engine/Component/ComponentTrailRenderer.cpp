@@ -3,6 +3,7 @@
 #include "ComponentBillboard.h"
 
 #include "Main/Application.h"
+#include "Module/ModuleCamera.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleRender.h"
@@ -24,12 +25,12 @@ ComponentTrailRenderer::ComponentTrailRenderer(GameObject * _owner) : Component(
 
 ComponentTrailRenderer::~ComponentTrailRenderer()
 {
-	if (vbo != 0)
+	if (trail_vbo != 0)
 	{
 		glUnmapBuffer(GL_ARRAY_BUFFER);
-		glDeleteBuffers(1, &vbo);
-		glDeleteBuffers(1, &ebo);
-		glDeleteVertexArrays(1, &vao);
+		//glDeleteBuffers(1, &vbo);
+		//glDeleteBuffers(1, &ebo);
+		//glDeleteVertexArrays(1, &vao);
 	}
 }
 
@@ -37,44 +38,33 @@ void ComponentTrailRenderer::InitData()
 {
 	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
 
-	float vertices[20] =
-	{
-			0.5f,  0.5f, 0.0f,		1.0f, 1.0f, // outline_left second point -- top right
-			0.5f, -0.5f, 0.0f,		1.0f, 0.0f, // outline_right second point -- bottom right
-		   -0.5f, -0.5f, 0.0f,		0.0f, 0.0f, // outline_right second point -- bottom left
-		   -0.5f,  0.5f, 0.0f,		0.0f, 1.0f // outline_left first points -- top left
-	};
+
+	
 	unsigned int indices[6] =
 	{
 		0, 1, 3,
 		1, 2, 3
 	};
 
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &ebo);
-	glGenBuffers(1, &mbo);
 
-	glBindVertexArray(vao);
 
-	//use glBufferMap to obtain a pointer to buffer data
-	glBindBuffer(GL_ARRAY_BUFFER, mbo);
-	trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(float) * MAX_TRAIL_VERTICES * 10, GL_MAP_WRITE_BIT);
+	glGenVertexArrays(1, &trail_vao);
+	glGenBuffers(1, &trail_vbo);
+
+	//glBindVertexArray(vao);
+	glBindVertexArray(trail_vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, trail_vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertices, GL_DYNAMIC_DRAW); //3 float position, 2 float color //before it was MAX_VERTICES * 3 *3
 	
-	glBindBuffer(GL_ARRAY_BUFFER, embo);
-	trail_renderer_indices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(float) * ( MAX_TRAIL_VERTICES - 1 ) * 6, GL_MAP_WRITE_BIT);
+	//trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(float) * MAX_TRAIL_VERTICES * 6, GL_MAP_WRITE_BIT);// 6 indices
+	
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);//dynamically draw vertices due to trail changes mesh over time
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	/*glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);*/
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -103,43 +93,42 @@ void ComponentTrailRenderer::SwitchFrame()
 
 }
 
-void ComponentTrailRenderer::Render(const float3& position)
+void ComponentTrailRenderer::Render()
 {
-	GLuint shader_program = App->program->GetShaderProgramId("Billboard");
-	//GLuint shader_program = App->program->GetShaderProgramId("Trail");
+	//GLuint shader_program = App->program->GetShaderProgramId("Billboard");
+	GLuint shader_program = App->program->GetShaderProgramId("Trail");
 
 	glUseProgram(shader_program);
 
 	int n;
-	glGetProgramStageiv(shader_program, GL_VERTEX_SHADER, GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS, &n);
-	unsigned* subroutines_indices = new unsigned[n];
+	//glGetProgramStageiv(shader_program, GL_VERTEX_SHADER, GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS, &n);
+	//unsigned* subroutines_indices = new unsigned[n];
 
-	//Subroutine functions
-	GLuint viewpoint_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "view_point_alignment");
-	GLuint crossed_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "crossed_alignment");
-	GLuint axial_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "axial_alignment");
+	////Subroutine functions
+	//GLuint viewpoint_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "view_point_alignment");
+	//GLuint crossed_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "crossed_alignment");
+	//GLuint axial_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "axial_alignment");
 
-	//Subroutine uniform
-	int selector = glGetSubroutineUniformLocation(shader_program, GL_VERTEX_SHADER, "alignment_selector");
+	////Subroutine uniform
+	//int selector = glGetSubroutineUniformLocation(shader_program, GL_VERTEX_SHADER, "alignment_selector");
 
+	//glBindVertexArray(vao);
+	glBindVertexArray(trail_vao);
+
+	//use glBufferMap to obtain a pointer to buffer data
+	glBindBuffer(GL_ARRAY_BUFFER, trail_vbo);
 	
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, trail_texture->opengl_texture);
-	glUniform1i(glGetUniformLocation(shader_program, "billboard.texture"), 0);
-	glUniform1f(glGetUniformLocation(shader_program, "billboard.width"), width);
-	glUniform1f(glGetUniformLocation(shader_program, "billboard.height"), height);
-	glUniform1f(glGetUniformLocation(shader_program, "billboard.isSpritesheet"), is_spritesheet);
-	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color"), 1, (float*)color);
-	glUniform3fv(glGetUniformLocation(shader_program, "billboard.center_pos"), 1, position.ptr());
 
-	glBindVertexArray(vao);
-	glBindVertexArray(mbo);
-	//glDrawElements(GL_TRIANGLES, rendered_vertices, GL_UNSIGNED_INT, 0);
-	//glDrawArraysInstanced(GL_TRIANGLES, 0, 6, rendered_vertices);
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(MAX_TRAIL_VERTICES, GL_FLOAT, 0, trail_renderer_vertices);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, rendered_vertices);
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	glUniform4fv(glGetUniformLocation(shader_program, "color"), 1, (float*)color);
+	trail_renderer_vertices = vertices;
+	glDrawArrays(GL_TRIANGLES, 0, 12);
 	glBindVertexArray(0);
 
 	glUseProgram(0);

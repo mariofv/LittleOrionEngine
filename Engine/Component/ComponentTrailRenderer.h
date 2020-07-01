@@ -35,15 +35,20 @@ public:
 
 	void InitData();
 
-	void Render(const float3& position);
+	void Render();
 	void SwitchFrame();
 
 	void ChangeTexture(uint32_t texture_uuid);
 
 public:
+	float vertices[12] = {
+			0.5f,  0.5f, 0.0f,		// outline_left second point -- top right
+			0.5f, -0.5f, 0.0f,		 // outline_right second point -- bottom right
+		   -0.5f, -0.5f, 0.0f,		 // outline_right second point -- bottom left
+		   -0.5f,  0.5f, 0.0f,	// outline_left first points -- top left
+	};
 	float* trail_renderer_vertices = nullptr;
-	float* trail_renderer_indices = nullptr;
-	int rendered_vertices;
+	unsigned int rendered_vertices = 0, erase_vertices = 0;
 
 private:
 	uint32_t texture_uuid = 0;
@@ -66,7 +71,7 @@ private:
 	float width = 5.f;
 	float height = 5.f;
 
-	unsigned int vbo, vao, ebo, mbo, embo;
+	unsigned int vbo, vao, ebo, trail_vao, trail_vbo;
 
 	//Determines when the sprite is changed
 	int innerCount = 0;

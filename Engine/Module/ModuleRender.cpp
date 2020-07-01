@@ -239,15 +239,11 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	{
 		particles->Render();
 	}
-	for (auto &trail : trails)
+	for (auto &trail_renderer : trail_renderers)
 	{
-		trail->Render();
-		for (auto &trail_renderer : trail_renderers)
-		{
-			trail_renderer->Render(trail->owner->transform.GetGlobalTranslation());
-		}
+		trail_renderer->Render();
 	}
-	
+
 	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
 	App->ui->Render(&camera);
 	App->effects->Render();
