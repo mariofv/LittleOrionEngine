@@ -7,6 +7,7 @@
 
 class Component;
 class ComponentAnimation;
+class ComponentAudioListener;
 class ComponentAudioSource;
 class ComponentBillboard;
 class ComponentBoxCollider;
@@ -58,6 +59,7 @@ public:
 	void ShowComponentEventSystem(ComponentEventSystem* event_system);
 
 	void ShowComponentColliderWindow(ComponentCollider* collider);
+	void ShowComponentAudioListenerWindow(ComponentAudioListener* component_audio_listener);
 	void ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source);
 	void ShowComponentParticleSystem(ComponentParticleSystem* particle_system);
 

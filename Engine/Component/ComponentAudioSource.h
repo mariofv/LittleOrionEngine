@@ -33,6 +33,7 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
+
 private:
 	AkSoundPosition sound_position;
 	AkGameObjectID gameobject_source = 0;

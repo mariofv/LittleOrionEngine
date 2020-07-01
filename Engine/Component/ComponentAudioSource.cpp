@@ -35,8 +35,6 @@ void ComponentAudioSource::Update()
 
 void ComponentAudioSource::Delete()
 {
-	StopAll();
-	StopEvent("menu_select");
 	AK::SoundEngine::UnregisterGameObj(gameobject_source);
 	App->audio->RemoveComponentAudioSource(this);
 }
@@ -49,7 +47,7 @@ void ComponentAudioSource::SetSoundBank(uint32_t uuid)
 void ComponentAudioSource::SetVolume(float volume)
 {
 	this->volume = volume;
-	AK::SoundEngine::SetGameObjectOutputBusVolume(gameobject_source,App->audio->main_sound_gameobject,volume);
+	AK::SoundEngine::SetGameObjectOutputBusVolume(gameobject_source,App->audio->default_listener,volume);
 }
 
 unsigned long ComponentAudioSource::PlayEvent(const std::string & event_to_play)
