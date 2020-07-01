@@ -335,6 +335,7 @@ NodeEditor.json
 /[Bb]inaries*
 Game/Library/**
 !Libraries/**
+Libraries/lib/x86/LittleOrionEngine*
 
 # Assets
 Game/Assets
