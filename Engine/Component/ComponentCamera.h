@@ -178,7 +178,7 @@ private:
 	float3 goal_focus_position = float3::zero;
 
 	ClearMode camera_clear_mode = ClearMode::SKYBOX;
-
+	float borderColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	uint32_t skybox_uuid = 0;
 	std::shared_ptr<Skybox> camera_skybox = nullptr;
 

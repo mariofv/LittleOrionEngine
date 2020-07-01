@@ -342,7 +342,9 @@ void ComponentCamera::CreateFramebuffer(float width, float height)
 
 	if (camera_frustum.type == FrustumType::OrthographicFrustum) //Light cameras render this way
 	{
+		glCullFace(GL_FRONT);
 		CreateOrthographicFramebuffer(width, height);
+		glCullFace(GL_BACK);
 	}
 	
 }
@@ -365,13 +367,12 @@ void ComponentCamera::CreateOrthographicFramebuffer(float width, float height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rbo);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
-	//glDrawBuffer(GL_NONE);
-	//glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

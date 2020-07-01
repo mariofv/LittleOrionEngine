@@ -135,12 +135,6 @@ uniform bool render_shadows;
 in vec4 close_pos_from_light;
 in vec4 mid_pos_from_light;
 in vec4 far_pos_from_light;
-
-//perspective cams
-//in vec4 pos_from_main_camera;
-//in vec4 pos_from_close_camera;
-//in vec4 pos_from_mid_camera;
-
 uniform float main_cam_far_plane;
 
 vec3 FrustumsCheck();
@@ -290,7 +284,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	if(render_shadows)
 		shadow = ShadowCalculation();
 	else
-		shadow = 0;
+		shadow = 1;
 
 	float specular = NormalizedSpecular(normalized_normal, half_dir);
 
@@ -300,9 +294,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 		+ (NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb)
 		+ specular_color.rgb * specular ) * shadow)
 	) * max(0.0, dot(normalized_normal, light_dir));
-	//Last multiplication added as a recommendation
-
-	
+	//Last multiplication added as a recommendation	
 }
 
 vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
@@ -397,16 +389,6 @@ float ShadowCalculation()
 	vec3 normalized_far_depth = far_pos_from_light.xyz / far_pos_from_light.w;
 	normalized_far_depth = normalized_far_depth * 0.5 + 0.5;
 
-	//Perspective camera
-	//vec3 normalized_close_cam_pos = pos_from_close_camera.xyz/pos_from_close_camera.w;
-	//normalized_close_cam_pos = normalized_close_cam_pos * 0.5 + 0.5;
-
-	//vec3 normalized_mid_cam_pos = pos_from_mid_camera.xyz/pos_from_mid_camera.w;
-	//normalized_mid_cam_pos = normalized_mid_cam_pos * 0.5 + 0.5;
-
-	//vec3 normalized_main_cam_pos = pos_from_main_camera.xyz/pos_from_main_camera.w;
-	//normalized_main_cam_pos = normalized_main_cam_pos * 0.5 + 0.5;
-	
 	float bias = 0.005;  
 	float factor = 0.0;
 
@@ -443,6 +425,9 @@ float ShadowCalculation()
         }    
     }
     factor /= 9.0;
+
+	if(distance_to_camera > far_plane)
+		factor = 0;
 
 	return factor;
 
