@@ -156,6 +156,7 @@ public:
 	size_t max_particles_number = MAX_PARTICLES;
 	bool playing = true;
 	GLuint ssbo;
+	GLuint shader_program;
 };
 
 #endif

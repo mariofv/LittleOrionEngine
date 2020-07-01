@@ -71,8 +71,8 @@ subroutine (alignment_subroutine) vec4 view_point_alignment() //probably aligned
 
 subroutine (alignment_subroutine) vec4 crossed_alignment()
 {
-	return matrices.proj*matrices.view*vec4(-particles[gl_InstanceID].width*vertex_position.x + particles[gl_InstanceID].position.rgb.x, particles[gl_InstanceID].height*vertex_position.y + particles[gl_InstanceID].position.rgb.y, 
-											vertex_position.z + particles[gl_InstanceID].position.rgb.z,1.0);
+	return matrices.proj*matrices.view*vec4(-particles[gl_InstanceID].width*vertex_position.x + particles[gl_InstanceID].position.rgb.x, particles[gl_InstanceID].height*vertex_position.y + particles[gl_InstanceID].position.y, 
+											vertex_position.z + particles[gl_InstanceID].position.z,1.0);
 }
 
 subroutine (alignment_subroutine) vec4 axial_alignment()

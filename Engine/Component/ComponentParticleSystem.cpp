@@ -37,6 +37,7 @@ ComponentParticleSystem::~ComponentParticleSystem()
 void ComponentParticleSystem::Init() 
 {
 	glGenBuffers(1, &ssbo);
+	shader_program = App->program->GetShaderProgramId("Particles");
 	particles.reserve(MAX_PARTICLES);
 
 	billboard = new ComponentBillboard(this->owner);
@@ -189,7 +190,6 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 void ComponentParticleSystem::Render()
 {
-	glEnable(GL_BLEND);
 	if (active && playing ) 
 	{
 		time_counter += App->time->real_time_delta_time;
@@ -215,10 +215,10 @@ void ComponentParticleSystem::Render()
 		if (gravity)
 			gravity_vector = float3 (0, gravity_modifier / 10000000, 0);
 
-		GLuint shader_program = App->program->GetShaderProgramId("Particles");
 		glUseProgram(shader_program);
 
 		shader_particles.clear();
+		// update all particles
 		for (unsigned int i = 0; i < playing_particles_number; ++i)
 		{
 			Particle& p = particles[i];
@@ -229,22 +229,18 @@ void ComponentParticleSystem::Render()
 				shader_particles.push_back(ShaderParticle{ float4(p.position,1.0f), p.color,p.current_width, p.current_height, p.current_sprite_x, p.current_sprite_y  });
 			}
 		}
+		billboard->CommonUniforms(shader_program);
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
 		glBufferData(GL_SHADER_STORAGE_BUFFER, (sizeof(ShaderParticle))*shader_particles.size(), shader_particles.data(), GL_STATIC_DRAW);
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo);
 
-		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind*/
-		billboard->CommonUniforms(shader_program);
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 		glBindVertexArray(billboard->vao);
 		glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, shader_particles.size());
 		glBindVertexArray(0);
 
-		// update all particles
 
 		glUseProgram(0);
-	
-
-
 	}
 	
 	glDisable(GL_BLEND);
