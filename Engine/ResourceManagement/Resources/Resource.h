@@ -43,6 +43,9 @@ public:
 
 	static std::string GetResourceTypeName(ResourceType resource_type);
 
+public:
+	bool initialized = false;
+
 private:
 	uint32_t uuid = 0;
 };
@@ -57,13 +60,7 @@ namespace ResourceManagement
 	};
 
 	template<typename T>
-	static std::shared_ptr<T> Load(uint32_t uuid, const FileData& resource_data)
-	{
-		return nullptr;
-	};
-
-	template<typename T>
-	static std::shared_ptr<T> LoadThread(uint32_t uuid, const FileData& resource_data, TextureLoadData& texture_data)
+	static std::shared_ptr<T> Load(uint32_t uuid, const FileData& resource_data, bool async = false)
 	{
 		return nullptr;
 	};

@@ -110,7 +110,7 @@ namespace ResourceManagement
 	};
 
 	template<>
-	static std::shared_ptr<StateMachine> Load(uint32_t uuid, const FileData& resource_data)
+	static std::shared_ptr<StateMachine> Load(uint32_t uuid, const FileData& resource_data, bool async)
 	{
 		return StateMachineManager::Load(uuid, resource_data);
 	}

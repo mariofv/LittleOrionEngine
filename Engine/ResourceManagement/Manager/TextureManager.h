@@ -52,8 +52,7 @@ public:
 	TextureManager() = default;
 	~TextureManager()= default;
 
-	static std::shared_ptr<Texture> Load(uint32_t uuid, const FileData& resource_data);
-	static std::shared_ptr<Texture> LoadThread(uint32_t uuid, const FileData& resource_data, TextureLoadData& texture_data);
+	static std::shared_ptr<Texture> Load(uint32_t uuid, const FileData& resource_data, bool async = false);
 
 private:
 	static std::vector<char> LoadCompressedDDS(const FileData& resource_data, size_t offset,DDS::DDS_HEADER & dds_header);

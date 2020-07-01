@@ -47,6 +47,8 @@ public:
 	//Asyncronous loading
 	void GenerateTexture(TextureLoadData loaded_data);
 	void GetTextureFromCache(TextureLoadData loaded_data);
+	void LoadResource(uint32_t uuid, unsigned texture_type);
+	void InitResource(uint32_t uuid, unsigned texture_type);
 
 	void RemoveMaterialTexture(MaterialTextureType type);
 
@@ -109,7 +111,7 @@ namespace ResourceManagement
 	};
 
 	template<>
-	static std::shared_ptr<Material> Load(uint32_t uuid, const FileData& resource_data)
+	static std::shared_ptr<Material> Load(uint32_t uuid, const FileData& resource_data, bool async)
 	{
 		return MaterialManager::Load(uuid, resource_data);
 	}

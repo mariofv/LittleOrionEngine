@@ -98,5 +98,7 @@ void Mesh::LoadInMemory()
 	glEnableVertexAttribArray(7);
 	glVertexAttribPointer(7, 2, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tex_coords[1]));
 	glBindVertexArray(0);
+
+	Resource(initialized) = true;
 }
 

@@ -157,28 +157,72 @@ void Material::Load(const Config& config)
 
 void Material::GenerateTexture(TextureLoadData loaded_data)
 {
-	MaterialTextureType type = static_cast<MaterialTextureType>(loaded_data.texture_type);
-	textures[type] = std::make_shared<Texture>(loaded_data.uuid,
-		loaded_data.data.data(), loaded_data.data.size(), loaded_data.width,
-		loaded_data.height, loaded_data.num_channels, loaded_data.texture_options);
+	//MaterialTextureType type = static_cast<MaterialTextureType>(loaded_data.texture_type);
+	//textures[type] = std::make_shared<Texture>(loaded_data.uuid,
+	//	loaded_data.data.data(), loaded_data.data.size(), loaded_data.width,
+	//	loaded_data.height, loaded_data.num_channels, loaded_data.texture_options);
 
-	App->resources->AddResourceToCache(textures[type]);
+	//App->resources->AddResourceToCache(textures[type]);
 }
 
 void Material::GetTextureFromCache(TextureLoadData loaded_data)
 {
-	MaterialTextureType type = static_cast<MaterialTextureType>(loaded_data.texture_type);
-	textures[type] = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(loaded_data.uuid));
+//	MaterialTextureType type = static_cast<MaterialTextureType>(loaded_data.texture_type);
+//	textures[type] = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(loaded_data.uuid));
+//
+//	if(!textures[type])
+//	{
+//		//If texture fails we load the textures normally
+//		App->resources->normal_loading_flag = true;
+//		textures[type] = App->resources->Load<Texture>(loaded_data.uuid);
+//		App->resources->normal_loading_flag = false;
+//	}
+//
+//	assert(textures[type]);
+}
 
-	if(!textures[type])
+void Material::LoadResource(uint32_t uuid, unsigned texture_type)
+{
+	if(uuid == 814689362)
 	{
-		//If texture fails we load the textures normally
-		App->resources->normal_loading_flag = true;
-		textures[type] = App->resources->Load<Texture>(loaded_data.uuid);
-		App->resources->normal_loading_flag = false;
+		int stop = 0;
+	}
+	MaterialTextureType type = static_cast<MaterialTextureType>(texture_type);
+	textures[type] = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(uuid));
+
+
+	if (textures[type])
+	{
+		textures[type]->initialized = true;
+		return;
 	}
 
-	assert(textures[type]);
+	FileData file_data;
+	bool succes = App->resources->RetrieveFileDataByUUID(uuid, file_data);
+	if (succes)
+	{
+		//THINK WHAT TO DO IF IS IN CACHE
+		textures[type] = ResourceManagement::Load<Texture>(uuid, file_data, true);
+		//Delete file data buffer
+		delete[] file_data.buffer;
+		App->resources->AddResourceToCache(textures[type]);
+
+	}
+
+}
+
+void Material::InitResource(uint32_t uuid, unsigned texture_type)
+{
+	if (uuid == 814689362)
+	{
+		int stop = 0;
+	}
+
+	MaterialTextureType type = static_cast<MaterialTextureType>(texture_type);
+	if (textures[type] && !textures[type].get()->initialized)
+	{
+		textures[type].get()->LoadInMemory();
+	}
 }
 
 void Material::RemoveMaterialTexture(MaterialTextureType type)
@@ -189,6 +233,12 @@ void Material::RemoveMaterialTexture(MaterialTextureType type)
 void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uuid)
 {
 	textures_uuid[type] = texture_uuid;
+
+	if(texture_uuid == 814689362)
+	{
+		int stop = 0;
+	}
+
 	if (textures_uuid[type] != 0)
 	{
 		App->resources->texture_type = type;
