@@ -65,7 +65,7 @@ public:
 
 	float diffuse_color[4] = { 1.0f, 1.0f,1.0f,1.0f };
 	float emissive_color[4] = { 1.0f, 1.0f, 1.0f , 1.0f };
-	float specular_color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float specular_color[4] = { 0.125f, 0.125f, 0.125f, 0.125f };
 	float smoothness = 1.0F;
 
 	float2 coords = float2(1.0f, 1.0f);
