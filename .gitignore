@@ -337,6 +337,9 @@ Game/Library/**
 !Libraries/**
 Libraries/lib/x86/LittleOrionEngine*
 
+# Tmp scene
+Game/Resources/tmp_scene.scene*
+
 # Assets
 Game/Assets
 Game/Resources/Scenes/tmp_scene.*
