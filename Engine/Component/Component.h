@@ -83,6 +83,9 @@ public:
 	virtual void GenerateTextures(TextureLoadData loaded_data) {}
 	virtual void GetTextureFromCache(TextureLoadData loaded_data) {}
 
+	virtual void LoadResource(uint32_t uuid, ResourceType resource) {}
+	virtual void InitResource(uint32_t uuid, ResourceType resource) {}
+
 	virtual ComponentType GetType() const { return type; };
 	bool Is2DComponent() const;
 

@@ -64,6 +64,22 @@ void ComponentMeshRenderer::GetTextureFromCache(TextureLoadData loaded_data)
 	material_to_render->GetTextureFromCache(loaded_data);
 }
 
+void ComponentMeshRenderer::LoadResource(uint32_t uuid, ResourceType resource, unsigned texture_type)
+{
+	if(resource == ResourceType::TEXTURE)
+	{
+		material_to_render->LoadResource(uuid, texture_type);
+	}
+}
+
+void ComponentMeshRenderer::InitResource(uint32_t uuid, ResourceType resource, unsigned texture_type)
+{
+	if (resource == ResourceType::TEXTURE)
+	{
+		material_to_render->InitResource(uuid, texture_type);
+	}
+}
+
 void ComponentMeshRenderer::Render()
 {
 	if (material_to_render == nullptr)

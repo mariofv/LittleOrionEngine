@@ -294,4 +294,35 @@ void ComponentBillboard::GetTextureFromCache(TextureLoadData loaded_data)
 	}
 }
 
+void ComponentBillboard::LoadResource(uint32_t uuid, ResourceType resource)
+{
+	billboard_texture = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(uuid));
+
+	if (billboard_texture)
+	{
+		billboard_texture->initialized = true;
+		return;
+	}
+
+	FileData file_data;
+	bool succes = App->resources->RetrieveFileDataByUUID(uuid, file_data);
+	if (succes)
+	{
+		//THINK WHAT TO DO IF IS IN CACHE
+		billboard_texture = ResourceManagement::Load<Texture>(uuid, file_data, true);
+		//Delete file data buffer
+		delete[] file_data.buffer;
+		App->resources->AddResourceToCache(billboard_texture);
+	}
+
+}
+
+void ComponentBillboard::InitResource(uint32_t uuid, ResourceType resource)
+{
+	if (billboard_texture && !billboard_texture.get()->initialized)
+	{
+		billboard_texture.get()->LoadInMemory();
+	}
+}
+
 

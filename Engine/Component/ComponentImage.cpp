@@ -58,7 +58,7 @@ void ComponentImage::Render(float4x4* projection)
 		return;
 	}
 
-	if (texture_to_render != nullptr)
+	if (texture_to_render != nullptr /*&& texture_to_render.get()->initialized*/)
 	{
 		ScaleOp aspect_ratio_scaling;
 
@@ -166,6 +166,38 @@ void ComponentImage::GetTextureFromCache(TextureLoadData loaded_data)
 	}
 	
 	texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
+}
+
+void ComponentImage::LoadResource(uint32_t uuid, ResourceType resource)
+{
+
+	texture_to_render = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(uuid));
+
+	if(texture_to_render)
+	{
+		texture_to_render->initialized = true;
+		return;
+	}
+
+	FileData file_data;
+	bool succes = App->resources->RetrieveFileDataByUUID(uuid, file_data);
+	if(succes)
+	{
+		//THINK WHAT TO DO IF IS IN CACHE
+		texture_to_render = ResourceManagement::Load<Texture>(uuid, file_data, true);
+		//Delete file data buffer
+		delete[] file_data.buffer;
+		App->resources->AddResourceToCache(texture_to_render);
+	}
+
+}
+
+void ComponentImage::InitResource(uint32_t uuid, ResourceType resource)
+{
+	if(texture_to_render && !texture_to_render.get()->initialized)
+	{
+		texture_to_render.get()->LoadInMemory();
+	}
 }
 
 void ComponentImage::SetTextureToRender(uint32_t texture_uuid)
