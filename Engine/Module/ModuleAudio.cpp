@@ -43,16 +43,13 @@ bool ModuleAudio::Init()
 		APP_LOG_ERROR("Could not initialize the Sound Engine.");
 		return false;
 	}
-	if (!AK::SoundEngine::RegisterGameObj(default_listener, "Default Listener GameObject"))
-	{
-		APP_LOG_ERROR("Unable to register the gameobject");
-	}
-	//AK::SoundEngine::AddDefaultListener(default_listener);
+
 	return true;
 }
 
 update_status ModuleAudio::Update()
 {
+	SelectMainListener();
 	AK::SoundEngine::RenderAudio();
 	return update_status::UPDATE_CONTINUE;
 }

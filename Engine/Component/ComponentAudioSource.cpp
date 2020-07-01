@@ -27,7 +27,7 @@ void ComponentAudioSource::Update()
 {
 	if (sound_3d)
 	{
-		const math::float3 owner_transform = owner->transform.GetTranslation();
+		const math::float3 owner_transform = owner->transform.GetGlobalTranslation();
 		sound_position.SetPosition(owner_transform.x, owner_transform.y, owner_transform.z);
 		AK::SoundEngine::SetPosition(gameobject_source, sound_position);
 	}
