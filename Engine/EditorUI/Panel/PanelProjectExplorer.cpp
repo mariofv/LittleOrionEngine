@@ -111,7 +111,7 @@ void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 		if (path_child->IsDirectory())
 		{
 
-			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow ;
+			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
 
 			std::string filename = ICON_FA_FOLDER " " + path_child->GetFilename();
 			if (path_child->sub_folders == 0)
@@ -122,6 +122,14 @@ void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 			{
 				flags |= ImGuiTreeNodeFlags_Selected;
 				filename = ICON_FA_FOLDER_OPEN " " + path_child->GetFilename();
+			}
+			else
+			{
+				if(IsOneOfMyChildrens(path_child))
+				{
+					flags |= ImGuiTreeNodeFlags_DefaultOpen;
+					filename = ICON_FA_FOLDER_OPEN " " + path_child->GetFilename();
+				}
 			}
 			bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
 			ResourceDropTarget(path_child);
@@ -326,6 +334,7 @@ void PanelProjectExplorer::ResourceDragSource(const Metafile* metafile) const
 		ImGui::EndDragDropSource();
 	}
 }
+
 void PanelProjectExplorer::ResourceDropTarget(Path * folder_path) const
 {
 	if (ImGui::BeginDragDropTarget())
@@ -341,6 +350,7 @@ void PanelProjectExplorer::ResourceDropTarget(Path * folder_path) const
 		ImGui::EndDragDropTarget();
 	}
 }
+
 void PanelProjectExplorer::ResourceDropFromOutside(const std::string& dropped_filedir)
 {
 	if (!selected_folder)
@@ -359,6 +369,7 @@ void PanelProjectExplorer::ResourceDropFromOutside(const std::string& dropped_fi
 		}
 	}
 }
+
 void PanelProjectExplorer::ProcessResourceMouseInput(Path* metafile_path, Metafile* metafile)
 {
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseReleased(0))
@@ -543,4 +554,22 @@ void PanelProjectExplorer::FilesDrop() const
 		}
 		ImGui::EndDragDropTarget();
 	}
+}
+
+bool PanelProjectExplorer::IsOneOfMyChildrens(Path* path) const
+{
+	bool found = false;
+	for (auto& path : path->children)
+	{
+		found = std::find(path->children.begin(), path->children.end(), selected_folder) != path->children.end() || path == selected_folder;
+		if (!found && path->children.size() > 0)
+		{
+			found = IsOneOfMyChildrens(path);
+		}
+		if (found)
+		{
+			break;
+		}
+	}
+	return found;
 }

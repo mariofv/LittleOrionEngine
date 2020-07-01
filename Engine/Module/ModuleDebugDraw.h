@@ -24,16 +24,16 @@ public:
 
 	void RenderDebugDraws(const ComponentCamera& camera);
 
-	ENGINE_API void RenderSingleAABB(AABB& aabb) const;
-	ENGINE_API void RenderBoundingBoxes() const;
-	ENGINE_API void RenderGlobalBoundingBoxes() const;
+	ENGINE_API void RenderSingleAABB(AABB& aabb, const float3& color = float3::one) const;
+	ENGINE_API void RenderBoundingBoxes(const float3& color = float3::one) const;
+	ENGINE_API void RenderGlobalBoundingBoxes(const float3& color = float3::one) const;
 
 	ENGINE_API void RenderNavMesh(ComponentCamera& cam) const;
 
 	ENGINE_API void RenderPathfinding() const;
-	ENGINE_API void RenderQuadTree() const;
-	ENGINE_API void RenderOcTree() const;
-	ENGINE_API void RenderAABBTree() const;
+	ENGINE_API void RenderQuadTree(const float3& color = float3::one) const;
+	ENGINE_API void RenderOcTree(const float3& color = float3::one) const;
+	ENGINE_API void RenderAABBTree(const float3& color = float3::one) const;
 	
 	void RenderSelectedGameObjectHelpers() const;
 	
@@ -43,8 +43,8 @@ public:
 	void RenderTangentsAndBitangents() const;
 	
 	void RenderRectTransform(const GameObject* rect_owner) const;
-	ENGINE_API void RenderLine(float3& a, float3& b) const;
-	ENGINE_API void RenderPoint(const float3& point, float size= 1.f) const;
+	ENGINE_API void RenderLine(const float3& a, const float3& b, const float3& color = float3::one) const;
+	ENGINE_API void RenderPoint(const float3& point, float size= 1.f, const float3& color = float3::one) const;
 
 	ENGINE_API void RenderPhysics() const;
 
