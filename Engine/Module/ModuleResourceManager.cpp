@@ -1,5 +1,6 @@
 #include "ModuleResourceManager.h"
 
+#include "Component/ComponentMeshRenderer.h"
 #include "Filesystem/PathAtlas.h"
 
 #include "Helper/Config.h"
@@ -101,24 +102,26 @@ update_status ModuleResourceManager::PreUpdate()
 
 
 #if MULTITHREADING
-	if(!processing_textures_queue.Empty())
+	if(!processing_resources_queue.Empty())
 	{
-		TextureLoadJob texture_job;
-		if(processing_textures_queue.TryPop(texture_job))
+		LoadingJob load_job;
+		if(processing_resources_queue.TryPop(load_job))
 		{
-			//Pass type variable
-			texture_job.loaded_data.texture_type = texture_job.texture_type;
-
-			if(texture_job.already_in_cache)
+			if(load_job.uuid == 814689362)
 			{
-				//Retrieve Texture from cache
-				texture_job.component_to_load->GetTextureFromCache(texture_job.loaded_data);
+				int stop = 0;
+			}
+
+			//Generate OpenGL texture
+			if (load_job.component_to_load->type == Component::ComponentType::MESH_RENDERER)
+			{
+				static_cast<ComponentMeshRenderer*>(load_job.component_to_load)->InitResource(load_job.uuid, ResourceType::TEXTURE, load_job.texture_type);
 			}
 			else
 			{
-				//Generate OpenGL texture
-				texture_job.component_to_load->GenerateTextures(texture_job.loaded_data);
+				load_job.component_to_load->InitResource(load_job.uuid, ResourceType::TEXTURE);
 			}
+			
 
 			++loading_thread_communication.current_number_of_textures_loaded;
 		}
@@ -353,25 +356,30 @@ void ModuleResourceManager::LoaderThread()
 {
 	while(loading_threads_active)
 	{
-		if(!loading_textures_queue.Empty())
+		if(!loading_resources_queue.Empty())
 		{
-			TextureLoadJob load_job;
-			if(loading_textures_queue.TryPop(load_job))
+			LoadingJob load_job;
+			if(loading_resources_queue.TryPop(load_job))
 			{
-				//Check if resource is already on cache
-				if(!load_job.already_in_cache)
+				if (load_job.uuid == 814689362)
 				{
-					ResourceManagement::LoadThread<Texture>(load_job.uuid, load_job.exported_file_data, load_job.loaded_data);
+					int stop = 0;
 				}
 
-				load_job.loaded_data.uuid = load_job.uuid;
-
-				//Delete file data buffer
-				delete[] load_job.exported_file_data.buffer;
-				processing_textures_queue.Push(load_job);
+				//Check if resource is already on cache
+				if(load_job.component_to_load->type == Component::ComponentType::MESH_RENDERER)
+				{
+					static_cast<ComponentMeshRenderer*>(load_job.component_to_load)->LoadResource(load_job.uuid, ResourceType::TEXTURE, load_job.texture_type);
+				}
+				else
+				{
+					load_job.component_to_load->LoadResource(load_job.uuid, ResourceType::TEXTURE);
+				}
+				
+				processing_resources_queue.Push(load_job);
 			}
 
-			unsigned int work_load_size_remaining = loading_textures_queue.Size();
+			unsigned int work_load_size_remaining = loading_resources_queue.Size();
 
 			const int ms_to_wait = work_load_size_remaining > 0 ? 10 : 2000;
 			std::this_thread::sleep_for(std::chrono::milliseconds(ms_to_wait));
@@ -396,7 +404,10 @@ std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32
 	//Check if the resource is already loaded
 	auto& it = std::find_if(resource_cache.begin(), resource_cache.end(), [&uuid](const std::shared_ptr<Resource> & resource)
 	{
-		return resource->GetUUID() == uuid;
+		if(resource != nullptr)
+		{
+			return resource->GetUUID() == uuid;
+		}
 	});
 
 	if (it != resource_cache.end())
@@ -407,6 +418,21 @@ std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32
 
 
 	return nullptr;
+}
+
+bool ModuleResourceManager::RetrieveFileDataByUUID(uint32_t uuid, FileData& filedata) const
+{
+	std::string resource_library_file = MetafileManager::GetUUIDExportedFile(uuid);
+	if (!App->filesystem->Exists(resource_library_file))
+	{
+		APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, resource_library_file.c_str());
+		return false;
+	}
+
+	Path* resource_exported_file_path = App->filesystem->GetPath(resource_library_file);
+	filedata = resource_exported_file_path->GetFile()->Load();
+
+	return true;
 }
 
 void ModuleResourceManager::RefreshResourceCache()

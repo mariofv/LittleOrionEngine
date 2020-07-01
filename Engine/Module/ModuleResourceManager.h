@@ -49,13 +49,12 @@ class TextureImporter;
 
 class SceneManager;
 
-struct TextureLoadJob
+
+struct LoadingJob
 {
 	uint32_t uuid = 0;
 	bool already_in_cache = false;
-	FileData exported_file_data;
 	Component* component_to_load = nullptr;
-	TextureLoadData loaded_data;
 
 	//For material type enum
 	unsigned texture_type = 0;
@@ -117,53 +116,33 @@ public:
 			return std::static_pointer_cast<T>(loaded_resource);
 		}
 
-		std::string resource_library_file = MetafileManager::GetUUIDExportedFile(uuid);
-		if (!App->filesystem->Exists(resource_library_file))
-		{
-			APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, resource_library_file.c_str());
-			return nullptr;
-		}
-
-		Path* resource_exported_file_path = App->filesystem->GetPath(resource_library_file);
-		FileData exported_file_data = resource_exported_file_path->GetFile()->Load();
 		//HERE WE CHECK IF T IS TEXTURE AND IF SO WE ADD FILEDATA TO THE QUEUE
 		//WE NEED TO CHECK HOW I AM GONNA SOLVE THE LOADED_RESOURCE NULLPTR WHILE NOT BEING CREATED
 		
-		if(MULTITHREADING && App->time->isGameRunning() && std::is_same<T, Texture>::value && !normal_loading_flag)
+		if(MULTITHREADING /*&& App->time->isGameRunning()*/ && std::is_same<T, Texture>::value && !normal_loading_flag)
 		{
 			loaded_resource = nullptr;
 
-			bool find = false;
-			for(const auto& res : uuid_cache)
-			{
-				if(res == uuid)
-				{
-					find = true;
-					break;
-				}
-			}
-
-			TextureLoadJob load_job;
-
-			//Check if texture is already on queue or in cache
-			if(find)
-			{
-				load_job.already_in_cache = true;
-			}
-			else
-			{
-				uuid_cache.push_back(uuid);
-			}
+			LoadingJob load_job;
 
 			load_job.component_to_load = current_component_loading;
 			load_job.uuid = uuid;
 			load_job.texture_type = texture_type;
-			load_job.exported_file_data = exported_file_data;
-			loading_textures_queue.Push(load_job);
+			loading_resources_queue.Push(load_job);
 			++loading_thread_communication.total_number_of_textures_to_load;
 		}
 		else
 		{
+			std::string resource_library_file = MetafileManager::GetUUIDExportedFile(uuid);
+			if (!App->filesystem->Exists(resource_library_file))
+			{
+				APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, resource_library_file.c_str());
+				return nullptr;
+			}
+
+			Path* resource_exported_file_path = App->filesystem->GetPath(resource_library_file);
+			FileData exported_file_data = resource_exported_file_path->GetFile()->Load();
+
 			loaded_resource = ResourceManagement::Load<T>(uuid, exported_file_data);
 			//IMPORTANT IF TEXTURE THIS MUST BE DELETED
 			delete[] exported_file_data.buffer;
@@ -193,6 +172,8 @@ public:
 	void LoaderThread();
 	void RemoveUUIDFromCache(uint32_t uuid);
 	std::shared_ptr<Resource> RetrieveFromCacheIfExist(uint32_t uuid) const;
+
+	bool RetrieveFileDataByUUID(uint32_t uuid, FileData& filedata) const;
 
 private:
 
@@ -229,8 +210,8 @@ public:
 
 	mutable std::vector<uint32_t> uuid_cache;
 
-	ThreadSafeQueue<TextureLoadJob> loading_textures_queue;
-	ThreadSafeQueue<TextureLoadJob> processing_textures_queue;
+	ThreadSafeQueue<LoadingJob> loading_resources_queue;
+	ThreadSafeQueue<LoadingJob> processing_resources_queue;
 
 	struct LoadingTexturesThreadCommunication
 	{
