@@ -182,7 +182,7 @@ void ComponentCamera::SpecializedLoad(const Config& config)
 
 	depth = config.GetInt("Depth", 0);
 
-	skybox_uuid = config.GetUInt("Skybox", 0);
+	skybox_uuid = config.GetUInt32("Skybox", 0);
 	SetSkybox(skybox_uuid);
 
 	GenerateMatrices();
@@ -198,13 +198,14 @@ float ComponentCamera::GetHeight() const
 	return last_height;
 }
 
-void ComponentCamera::RecordFrame(float width, float height, bool scene_mode)
+void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode)
 {
+
 	if (last_width != width || last_height != height || toggle_msaa)
 	{
-		last_width = width;
-		last_height = height;
-		SetAspectRatio(width/height);
+		last_width = static_cast<float>(width);
+		last_height = static_cast<float>(height);
+		SetAspectRatio(last_width / last_height);
 		GenerateFrameBuffers(width, height);
 		toggle_msaa = false;
 
@@ -262,7 +263,7 @@ void ComponentCamera::RecordDebugDraws(bool scene_mode)
 #if !GAME
 	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 #endif
-	glViewport(0, 0, last_width, last_height);
+	glViewport(0, 0, static_cast<GLsizei>(last_width), static_cast<GLsizei>(last_height));
 
 	if (scene_mode)
 	{
@@ -296,7 +297,7 @@ GLuint ComponentCamera::GetLastRecordedFrame() const
 	return last_recorded_frame_texture;
 }
 
-void ComponentCamera::GenerateFrameBuffers(float width, float height)
+void ComponentCamera::GenerateFrameBuffers(GLsizei width, GLsizei height)
 {
 	if (last_recorded_frame_texture != 0)
 	{
@@ -318,7 +319,7 @@ void ComponentCamera::GenerateFrameBuffers(float width, float height)
 	App->renderer->anti_aliasing ? CreateMssaFramebuffer(width, height) : CreateFramebuffer(width, height);
 }
 
-void ComponentCamera::CreateFramebuffer(float width, float height)
+void ComponentCamera::CreateFramebuffer(GLsizei width, GLsizei height)
 {
 
 	if (camera_frustum.type == FrustumType::PerspectiveFrustum) //Scene and game cameras render this way
@@ -349,10 +350,8 @@ void ComponentCamera::CreateFramebuffer(float width, float height)
 	
 }
 
-void ComponentCamera::CreateOrthographicFramebuffer(float width, float height)
+void ComponentCamera::CreateOrthographicFramebuffer(GLsizei width, GLsizei height)
 {
-
-
 	glGenRenderbuffers(1, &depth_rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, depth_rbo);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
@@ -376,7 +375,7 @@ void ComponentCamera::CreateOrthographicFramebuffer(float width, float height)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void ComponentCamera::CreateMssaFramebuffer(float width, float height)
+void ComponentCamera::CreateMssaFramebuffer(GLsizei width, GLsizei height)
 {
 
 	if (camera_frustum.type == FrustumType::PerspectiveFrustum)

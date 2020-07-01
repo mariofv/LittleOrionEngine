@@ -67,11 +67,16 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(uint32_t uuid, const Fil
 
 		bytes = sizeof(uint64_t);
 		memcpy(&state->name_hash, cursor, bytes);
-		cursor += bytes; // Store states
+		cursor += bytes; // Get state
 		uint64_t clip_hash;
+
 		bytes = sizeof(uint64_t);
 		memcpy(&clip_hash, cursor, bytes);
-		cursor += bytes; // Store states
+		cursor += bytes; // Get clip
+
+		bytes = sizeof(float);//for speed
+		memcpy( &state->speed, cursor, bytes);
+		cursor += bytes;
 
 		for (auto & clip : clips)
 		{

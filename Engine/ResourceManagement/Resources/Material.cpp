@@ -60,10 +60,7 @@ void Material::Save(Config& config) const
 	config.AddBool(show_checkerboard_texture, "Checkboard");
 	config.AddString(shader_program, "ShaderProgram");
 
-	//k
-	config.AddFloat(k_ambient, "kAmbient");
-	config.AddFloat(k_specular, "kSpecular");
-	config.AddFloat(k_diffuse, "kDiffuse");
+	config.AddFloat(smoothness, "Smoothness");
 
 	config.AddFloat(transparency, "Transparency");
 //	config.AddFloat(roughness, "Roughness");
@@ -95,24 +92,21 @@ void Material::Save(Config& config) const
 
 void Material::Load(const Config& config)
 {
-	SetMaterialTexture(MaterialTextureType::DIFFUSE, config.GetUInt("Diffuse", 0));
-	SetMaterialTexture(MaterialTextureType::SPECULAR, config.GetUInt("Specular", 0));
-	SetMaterialTexture(MaterialTextureType::OCCLUSION, config.GetUInt("Occlusion", 0));
-	SetMaterialTexture(MaterialTextureType::EMISSIVE, config.GetUInt("Emissive", 0));
-	SetMaterialTexture(MaterialTextureType::NORMAL, config.GetUInt("Normal", 0));
-	SetMaterialTexture(MaterialTextureType::LIGHTMAP, config.GetUInt("Lightmap", 0));
-	SetMaterialTexture(MaterialTextureType::LIQUID, config.GetUInt("Liquid", 0));
+	SetMaterialTexture(MaterialTextureType::DIFFUSE, config.GetUInt32("Diffuse", 0));
+	SetMaterialTexture(MaterialTextureType::SPECULAR, config.GetUInt32("Specular", 0));
+	SetMaterialTexture(MaterialTextureType::OCCLUSION, config.GetUInt32("Occlusion", 0));
+	SetMaterialTexture(MaterialTextureType::EMISSIVE, config.GetUInt32("Emissive", 0));
+	SetMaterialTexture(MaterialTextureType::NORMAL, config.GetUInt32("Normal", 0));
+	SetMaterialTexture(MaterialTextureType::LIGHTMAP, config.GetUInt32("Lightmap", 0));
+	
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
 	config.GetString("ShaderProgram", shader_program, "Blinn phong");
 
 	material_type = static_cast<MaterialType>(config.GetInt("MaterialType", 0));
 
-	//k
-	k_ambient = config.GetFloat("kAmbient", 1.0f);
-	k_specular = config.GetFloat("kSpecular", 1.0f);
-	k_diffuse = config.GetFloat("kDiffuse", 1.0f);
-
 	transparency = config.GetFloat("Transparency", 1.f);
+	smoothness = config.GetFloat("Smoothness", 1.0F);
+
 
 	tiling_x = config.GetFloat("Tiling X", 1.0f);
 	tiling_y = config.GetFloat("Tiling Y", 1.0f);
@@ -137,7 +131,7 @@ void Material::Load(const Config& config)
 
 	config.GetColor("difusseColor", diffuse, float4(1.f, 1.f, 1.f, 1.f));
 	config.GetColor("emissiveColor", emissive, float4(0.0f, 0.0f, 0.0f, 1.0f));
-	config.GetColor("specularColor", specular, float4(0.0f, 0.0f, 0.0f, 1.0f));
+	config.GetColor("specularColor", specular, float4(0.125f, 0.125f, 0.125f, 0.125f));
 
 	diffuse_color[0] = diffuse.x;
 	diffuse_color[1] = diffuse.y;
@@ -187,14 +181,17 @@ std::string Material::GetMaterialTypeName(const MaterialType material_type)
 {
 	switch (material_type)
 	{
-	case MaterialType::MATERIAL_OPAQUE:
-		return "Opaque";
+		case MaterialType::MATERIAL_OPAQUE:
+			return "Opaque";
 
-	case MaterialType::MATERIAL_TRANSPARENT:
-		return "Transparent";
+		case MaterialType::MATERIAL_TRANSPARENT:
+			return "Transparent";
 
-	case MaterialType::MATERIAL_LIQUID:
-		return "Liquid";
+		case MaterialType::MATERIAL_LIQUID:
+			return "Liquid";
+
+		default:
+			return "";
 	}
 }
 

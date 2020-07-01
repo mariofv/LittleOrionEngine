@@ -46,7 +46,7 @@ std::string Resource::GetResourceTypeName(ResourceType resource_type)
 		return "Texture";
 	case ResourceType::SOUND:
 		return "SoundBank";
-	case ResourceType::UNKNOWN:
+	default:
 		return "Unknown";
 	}
 }

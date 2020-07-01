@@ -8,6 +8,7 @@
 
 #include "ResourceManagement/Importer/TextureImporter.h"
 #include "ResourceManagement/Resources/Material.h"
+#include "ResourceManagement/Metafile/TextureMetafile.h"
 
 #include <assimp/scene.h>
 
@@ -34,6 +35,7 @@ FileData MaterialImporter::ExtractMaterialFromAssimp(const aiMaterial* assimp_me
 			assimp_mesh_material->GetTexture(type, j, &file, &mapping, 0);
 			uint32_t material_texture_uuid = ImportMaterialTexture(file.data, material_file_folder_path);
 
+			Metafile* metafile = App->resources->resource_DB->GetEntry(material_texture_uuid);
 			if (material_texture_uuid != 0)
 			{
 				switch (type)
@@ -50,6 +52,12 @@ FileData MaterialImporter::ExtractMaterialFromAssimp(const aiMaterial* assimp_me
 				case aiTextureType_AMBIENT_OCCLUSION:
 					material_config.AddUInt(material_texture_uuid, "Occlusion");
 					break;
+				case aiTextureType_NORMALS:
+					material_config.AddUInt(material_texture_uuid, "Normal");
+					break;
+				case aiTextureType_LIGHTMAP:
+					material_config.AddUInt(material_texture_uuid, "Lightmap");
+					break;
 				default:
 					material_config.AddUInt(material_texture_uuid, "Unknown");
 					break;
@@ -60,10 +68,6 @@ FileData MaterialImporter::ExtractMaterialFromAssimp(const aiMaterial* assimp_me
 	material_config.AddBool(imported_material.show_checkerboard_texture, "Checkboard");
 	material_config.AddString(imported_material.shader_program, "ShaderProgram");
 
-	//k
-	material_config.AddFloat(imported_material.k_ambient, "kAmbient");
-	material_config.AddFloat(imported_material.k_specular, "kSpecular");
-	material_config.AddFloat(imported_material.k_diffuse, "kDiffuse");
 
 	//colors
 	material_config.AddColor(
@@ -139,26 +143,4 @@ uint32_t MaterialImporter::ImportMaterialTexture(const std::string& texture_desc
 	}
 
 	return 0;
-}
-
-Material::MaterialTextureType MaterialImporter::GetTextureTypeFromAssimpType(aiTextureType type) const
-{
-	switch (type)
-	{
-	case aiTextureType_DIFFUSE:
-		return Material::MaterialTextureType::DIFFUSE;
-		break;
-	case aiTextureType_SPECULAR:
-		return Material::MaterialTextureType::SPECULAR;
-		break;
-	case aiTextureType_EMISSIVE:
-		return Material::MaterialTextureType::EMISSIVE;
-		break;
-	case aiTextureType_AMBIENT_OCCLUSION:
-		return Material::MaterialTextureType::OCCLUSION;
-		break;
-	default:
-		return Material::MaterialTextureType::UNKNOWN;
-		break;
-	}
 }

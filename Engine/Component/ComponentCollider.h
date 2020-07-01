@@ -59,8 +59,8 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config &config) override;
 
-	Component* Clone(bool original_prefab = false) const { return nullptr; }
-	virtual Component* Clone(GameObject* owner, bool original_prefab = false) const { return nullptr; }
+	Component* Clone(bool original_prefab = false) const override { return nullptr; }
+	virtual Component* Clone(GameObject* owner, bool original_prefab = false) const override { return nullptr; };
 	
 	void Disable() override;
 	void Enable() override;

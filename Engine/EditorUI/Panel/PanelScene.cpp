@@ -2,6 +2,7 @@
 
 #include "Component/ComponentCamera.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
+#include "Filesystem/PathAtlas.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleAI.h"
@@ -68,7 +69,7 @@ void PanelScene::Render()
 		
 
 
-		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height, true);
+		App->cameras->scene_camera->RecordFrame((GLsizei)scene_window_content_area_width, (GLsizei)scene_window_content_area_height, true);
 		App->debug->Render(App->cameras->scene_camera);
 		App->cameras->scene_camera->RecordDebugDraws(true);
 
@@ -135,6 +136,10 @@ void PanelScene::RenderSceneBar()
 			App->debug->show_debug_metrics = !App->debug->show_debug_metrics;
 		}
 
+		if (ImGui::Selectable("Reload shaders", false, ImGuiSelectableFlags_None, ImVec2(100, 0)))
+		{
+			App->program->LoadPrograms(SHADERS_PATH);
+		}
 		ImGui::EndMenuBar();
 
 	}
@@ -283,7 +288,7 @@ void PanelScene::RenderCameraPreview() const
 		float width = content_area_max_point.x - ImGui::GetCursorPos().x;
 		float height = content_area_max_point.y - ImGui::GetCursorPos().y;
 
-		selected_camera->RecordFrame(width, height);
+		selected_camera->RecordFrame(static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 		ImGui::Image(
 			(void *)selected_camera->GetLastRecordedFrame(),
 			ImVec2(width, height),

@@ -4,7 +4,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Resources/Skeleton.h"
-
+#include "Helper/Utils.h"
 #include <map>
 
 FileData MeshImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
@@ -23,6 +23,8 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 	aiMatrix4x4 node_transformation = mesh_current_transformation;
 
 	node_transformation = scaling_matrix * node_transformation;
+
+	float3x3 node_rotation = Utils::GetTransform(mesh_current_transformation, 1.0f).RotatePart();
 
 	std::vector<uint32_t> indices;
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -54,6 +56,8 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		Mesh::Vertex new_vertex;
 		aiVector3D transformed_position = node_transformation * mesh->mVertices[i];
 		new_vertex.position = float3(transformed_position.x, transformed_position.y, transformed_position.z);
+
+
 		for (size_t j = 0; j < UVChannel::TOTALUVS; j++)
 		{
 			float2 text_coordinate(float2::zero);
@@ -65,15 +69,15 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		}
 		if (mesh->mNormals)
 		{
-			new_vertex.normals = float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z).Normalized();
+			new_vertex.normals = (node_rotation * float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z)).Normalized();
 		}
 		if (mesh->mTangents)
 		{
-			new_vertex.tangent = float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z).Normalized();
+			new_vertex.tangent = (node_rotation * float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z)).Normalized();
 		}
 		if (mesh->mBitangents)
 		{
-			new_vertex.bitangent = float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z).Normalized();
+			new_vertex.bitangent = (node_rotation*float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z)).Normalized();
 		}
 		if (vertex_skinning__info.size() > 0)
 		{
@@ -90,7 +94,7 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 				weights_sum += vertex_skinning__info[i].second[j];
 			}
 			
-			auto normalize_factor = 1.0 / weights_sum;
+			float normalize_factor = 1.0f / weights_sum;
 			weights_sum = 0;
 			for (size_t j = 0; j < vertex_skinning__info[i].second.size(); ++j)
 			{

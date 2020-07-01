@@ -111,7 +111,7 @@ void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 		if (path_child->IsDirectory())
 		{
 
-			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
+			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
 
 			std::string filename = ICON_FA_FOLDER " " + path_child->GetFilename();
 			if (path_child->sub_folders == 0)
@@ -122,6 +122,14 @@ void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 			{
 				flags |= ImGuiTreeNodeFlags_Selected;
 				filename = ICON_FA_FOLDER_OPEN " " + path_child->GetFilename();
+			}
+			else
+			{
+				if(IsOneOfMyChildrens(path_child))
+				{
+					flags |= ImGuiTreeNodeFlags_DefaultOpen;
+					filename = ICON_FA_FOLDER_OPEN " " + path_child->GetFilename();
+				}
 			}
 			bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
 			ResourceDropTarget(path_child);
@@ -145,7 +153,7 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 	}
 
 	ImVec2 available_region = ImGui::GetContentRegionAvail();
-	int files_per_line = available_region.x / file_size_width;
+	int files_per_line = static_cast<int>(available_region.x / file_size_width);
 
 	int current_line = 0;
 	int current_file_in_line = 0;
@@ -201,7 +209,7 @@ void PanelProjectExplorer::ShowMetafile(Path* metafile_path, Metafile* metafile,
 		ResourceDragSource(metafile);
 		ProcessResourceMouseInput(metafile_path, metafile);
 
-		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75 * file_size_width) * 0.5f);
+		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75f * file_size_width) * 0.5f);
 		ShowMetafileIcon(metafile);
 		if (is_model)
 		{
@@ -227,8 +235,8 @@ void PanelProjectExplorer::ShowMetafile(Path* metafile_path, Metafile* metafile,
 			}
 			else
 			{
-				int character_width = text_width / filename.length();
-				int string_position_wrap = file_size_width / character_width - 5;
+				float character_width = text_width / filename.length();
+				size_t string_position_wrap = static_cast<size_t>(file_size_width / character_width - 5);
 				assert(string_position_wrap < filename.length());
 				std::string wrapped_filename = filename.substr(0, string_position_wrap + 3) + "\n" + filename.substr(string_position_wrap, filename.size());
 				ImGui::Text(wrapped_filename.c_str());
@@ -247,7 +255,7 @@ void PanelProjectExplorer::ShowMetafileIcon(Metafile * metafile)
 
 	if(metafile->resource_type == ResourceType::TEXTURE)
 	{
-		ImGui::Image((void *)GetResourcePreviewImage(metafile->uuid), ImVec2(0.75*file_size_width, 0.75*file_size_width));
+		ImGui::Image((void *)GetResourcePreviewImage(metafile->uuid), ImVec2(0.75f*file_size_width, 0.75f*file_size_width));
 	}
 	else
 	{
@@ -297,10 +305,10 @@ void PanelProjectExplorer::ShowMetafileIcon(Metafile * metafile)
 
 		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 
-		static ImVec4 color = ImVec4(0, 0.4, 0.6, 1);
+		static ImVec4 color = ImVec4(0.f, 0.4f, 0.6f, 1.f);
 		ImGui::PushStyleColor(ImGuiCol_Button, color);
 
-		ImGui::Button(icon.c_str(),ImVec2(0.75*file_size_width, 0.75*file_size_width));
+		ImGui::Button(icon.c_str(),ImVec2(0.75f*file_size_width, 0.75f*file_size_width));
 		ImGui::PopStyleColor(1);
 		ImGui::PopItemFlag();
 	}
@@ -341,6 +349,7 @@ void PanelProjectExplorer::ResourceDragSource(const Metafile* metafile) const
 		ImGui::EndDragDropSource();
 	}
 }
+
 void PanelProjectExplorer::ResourceDropTarget(Path * folder_path) const
 {
 	if (ImGui::BeginDragDropTarget())
@@ -356,6 +365,7 @@ void PanelProjectExplorer::ResourceDropTarget(Path * folder_path) const
 		ImGui::EndDragDropTarget();
 	}
 }
+
 void PanelProjectExplorer::ResourceDropFromOutside(const std::string& dropped_filedir)
 {
 	if (!selected_folder)
@@ -374,6 +384,7 @@ void PanelProjectExplorer::ResourceDropFromOutside(const std::string& dropped_fi
 		}
 	}
 }
+
 void PanelProjectExplorer::ProcessResourceMouseInput(Path* metafile_path, Metafile* metafile)
 {
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseReleased(0))
@@ -387,7 +398,7 @@ void PanelProjectExplorer::ProcessResourceMouseInput(Path* metafile_path, Metafi
 	{
 		if (metafile->resource_type == ResourceType::STATE_MACHINE)
 		{
-			App->editor->state_machine->SwitchOpen();
+			App->editor->state_machine->Open();
 			App->editor->state_machine->OpenStateMachine(metafile->uuid);
 		}
 	}
@@ -463,7 +474,7 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 					opened_model = nullptr;
 				}
 			}
-			if (has_uuid && ImGui::Selectable("Rename"))
+			if (!has_uuid && ImGui::Selectable("Rename"))
 			{
 				renaming_file = selected_file;
 				new_name_file = selected_file->GetFilename();
@@ -530,4 +541,22 @@ void PanelProjectExplorer::FilesDrop() const
 		}
 		ImGui::EndDragDropTarget();
 	}
+}
+
+bool PanelProjectExplorer::IsOneOfMyChildrens(Path* path) const
+{
+	bool found = false;
+	for (auto& path : path->children)
+	{
+		found = std::find(path->children.begin(), path->children.end(), selected_folder) != path->children.end() || path == selected_folder;
+		if (!found && path->children.size() > 0)
+		{
+			found = IsOneOfMyChildrens(path);
+		}
+		if (found)
+		{
+			break;
+		}
+	}
+	return found;
 }
