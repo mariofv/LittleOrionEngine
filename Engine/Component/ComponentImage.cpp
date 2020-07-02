@@ -154,18 +154,18 @@ void ComponentImage::GenerateTextures(TextureLoadData loaded_data)
 
 void ComponentImage::GetTextureFromCache(TextureLoadData loaded_data)
 {
-	texture_to_render = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(loaded_data.uuid));
-	
-	//If nullptr we load the texture again
-	if(!texture_to_render)
-	{
-		App->resources->RemoveUUIDFromCache(loaded_data.uuid);
-		SetTextureToRender(loaded_data.uuid);
+	//texture_to_render = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(loaded_data.uuid));
+	//
+	////If nullptr we load the texture again
+	//if(!texture_to_render)
+	//{
+	//	App->resources->RemoveUUIDFromCache(loaded_data.uuid);
+	//	SetTextureToRender(loaded_data.uuid);
 
-		return;
-	}
-	
-	texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
+	//	return;
+	//}
+	//
+	//texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
 }
 
 void ComponentImage::LoadResource(uint32_t uuid, ResourceType resource)

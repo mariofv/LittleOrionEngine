@@ -36,7 +36,10 @@ public:
 
 	Material() = default;
 	Material(uint32_t uuid);
-	~Material() = default;
+	~Material() 
+	{
+		int i_want_to_die = 0;
+	};
 
 	void Save(Config& config) const;
 	void Load(const Config& config);
@@ -68,6 +71,8 @@ public:
 	
 	std::vector<uint32_t> textures_uuid;
 	std::vector<std::shared_ptr<Texture>> textures;
+
+	bool i_hate_my_life = false;
 
 	float diffuse_color[4] = { 1.0f, 1.0f,1.0f,1.0f };
 	float emissive_color[4] = { 1.0f, 1.0f, 1.0f , 1.0f };

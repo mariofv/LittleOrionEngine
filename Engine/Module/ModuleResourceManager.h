@@ -29,7 +29,7 @@
 #include <thread>
 #include <type_traits>
 
-#define MULTITHREADING 1
+#define MULTITHREADING 0
 
 class Path;
 class Timer;
@@ -207,8 +207,6 @@ public:
 	int number_of_textures_loaded = 0;
 
 	float time_loading_meshes = 0.f;
-
-	mutable std::vector<uint32_t> uuid_cache;
 
 	ThreadSafeQueue<LoadingJob> loading_resources_queue;
 	ThreadSafeQueue<LoadingJob> processing_resources_queue;

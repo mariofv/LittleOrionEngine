@@ -186,6 +186,7 @@ void Material::LoadResource(uint32_t uuid, unsigned texture_type)
 	if(uuid == 814689362)
 	{
 		int stop = 0;
+		this->i_hate_my_life = true;
 	}
 	MaterialTextureType type = static_cast<MaterialTextureType>(texture_type);
 	textures[type] = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(uuid));
@@ -203,6 +204,7 @@ void Material::LoadResource(uint32_t uuid, unsigned texture_type)
 	{
 		//THINK WHAT TO DO IF IS IN CACHE
 		textures[type] = ResourceManagement::Load<Texture>(uuid, file_data, true);
+
 		//Delete file data buffer
 		delete[] file_data.buffer;
 		App->resources->AddResourceToCache(textures[type]);
@@ -215,7 +217,7 @@ void Material::InitResource(uint32_t uuid, unsigned texture_type)
 {
 	if (uuid == 814689362)
 	{
-		int stop = 0;
+ 		int stop = 0;
 	}
 
 	MaterialTextureType type = static_cast<MaterialTextureType>(texture_type);
