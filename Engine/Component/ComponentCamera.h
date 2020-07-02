@@ -72,7 +72,7 @@ public:
 
 	void AlignOrientationWithAxis();
 	ENGINE_API void SetOrthographicSize(const float2 & size);
-	void LookAt(const float3 & focus);
+	ENGINE_API void LookAt(const float3 & focus);
 	void LookAt(float x, float y, float z);
 
 	ENGINE_API void SetPosition(const float3 & position);

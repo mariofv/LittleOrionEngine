@@ -11,6 +11,7 @@ class Metafile;
 struct TextureOptions;
 enum WrapMode;
 enum FilterMode;
+
 class Texture : public Resource
 {
 public:

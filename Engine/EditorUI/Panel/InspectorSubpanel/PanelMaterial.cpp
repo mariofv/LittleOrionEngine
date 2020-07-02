@@ -213,11 +213,7 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Spacing();
 		ImGui::Indent();
 
-		if (ImGui::ColorEdit3("Color", material->diffuse_color))
-		{
-			modified_by_user = true;
-		}
-		if (ImGui::SliderFloat("K diffuse", &material->k_diffuse, 0.f, 1.f))
+		if (ImGui::ColorEdit3("Color", material->diffuse_color, ImGuiColorEditFlags_Float))
 		{
 			modified_by_user = true;
 		}
@@ -263,13 +259,6 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Text("Occlusion");
 
 		ImGui::Spacing();
-		ImGui::Indent();
-
-		if (ImGui::SliderFloat("k ambient", &material->k_ambient, 0, 1))
-		{
-			modified_by_user = true;
-		}
-		ImGui::Unindent();
 
 		break;
 
@@ -279,15 +268,11 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Spacing();
 		ImGui::Indent();
 		
-		if (ImGui::ColorEdit3("Color", material->specular_color))
+		if (ImGui::ColorEdit3("Color", material->specular_color, ImGuiColorEditFlags_Float))
 		{
 			modified_by_user = true;
 		}
-		if (ImGui::SliderFloat("k specular", &material->k_specular, 0.f, 1.f))
-		{
-			modified_by_user = true;
-		}
-		if (ImGui::SliderFloat("Shininess", &material->specular_color[3], 0.f, 1.f))
+		if (ImGui::SliderFloat("Smoothenss", &material->smoothness, 0.f, 1.f))
 		{
 			modified_by_user = true;
 		}
