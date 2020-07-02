@@ -532,6 +532,9 @@
     <ClCompile Include="Engine\EditorUI\Panel\PanelTags.cpp">
       <Filter>Engine\EditorUI\Panel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupNewFileName.cpp">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1049,6 +1052,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Event\FunctionHandler.h">
       <Filter>Engine\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupNewFileName.h">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
