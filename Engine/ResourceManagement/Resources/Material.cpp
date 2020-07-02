@@ -131,7 +131,7 @@ void Material::Load(const Config& config)
 
 	config.GetColor("difusseColor", diffuse, float4(1.f, 1.f, 1.f, 1.f));
 	config.GetColor("emissiveColor", emissive, float4(0.0f, 0.0f, 0.0f, 1.0f));
-	config.GetColor("specularColor", specular, float4(0.125f, 0.125f, 0.125f, 0.125f));
+	config.GetColor("specularColor", specular, float4(0.025f, 0.025f, 0.025f, 0.025f));
 
 	diffuse_color[0] = diffuse.x;
 	diffuse_color[1] = diffuse.y;
