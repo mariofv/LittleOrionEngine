@@ -41,7 +41,6 @@ private:
 	void ShowMetafileIcon(Metafile* metafile);
 
 	size_t GetResourcePreviewImage(uint32_t uuid);
-	void ApplyRename();
 
 private:
 	float file_size_width = 100.f;
@@ -49,8 +48,6 @@ private:
 
 	Path* selected_folder = nullptr;
 	Path* selected_file = nullptr;
-	Path* renaming_file = nullptr;
-
 
 	ImGuiID project_explorer_dockspace_id;
 

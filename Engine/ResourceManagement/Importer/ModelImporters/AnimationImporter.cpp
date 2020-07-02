@@ -112,12 +112,12 @@ void AnimationImporter::GetChannelTransform(const float4x4 & pre_transform, cons
 	Quat rotation = Quat::identity;
 	for (size_t j = 0; j <= animation_duration; j++)
 	{
-		if (sample->mNumPositionKeys >= j && sample->mPositionKeys[j].mTime >= 0.0f)
+		if (sample->mNumPositionKeys > j && sample->mPositionKeys[j].mTime >= 0.0f)
 		{
 			aiVector3D position_assimp = sample->mPositionKeys[j].mValue;
 			position = float3(position_assimp.x, position_assimp.y, position_assimp.z);
 		}
-		if (sample->mNumRotationKeys >= j &&sample->mRotationKeys[j].mTime >= 0.0f )
+		if (sample->mNumRotationKeys > j &&sample->mRotationKeys[j].mTime >= 0.0f )
 		{
 			aiQuaternion rotation_assimp = sample->mRotationKeys[j].mValue;
 			rotation = Quat(rotation_assimp.x, rotation_assimp.y, rotation_assimp.z, rotation_assimp.w);

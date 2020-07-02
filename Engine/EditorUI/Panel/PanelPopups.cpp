@@ -28,6 +28,7 @@ void PanelPopups::Render()
 	resource_selector_popup.Render();
 	scene_loader_popup.Render();
 	scene_saver_popup.Render();
+	new_filename_chooser.Render();
 }
 
 void PanelPopups::RenderAssetsLoadingPopup()
