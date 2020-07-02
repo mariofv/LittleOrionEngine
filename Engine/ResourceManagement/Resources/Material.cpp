@@ -183,18 +183,16 @@ void Material::GetTextureFromCache(TextureLoadData loaded_data)
 
 void Material::LoadResource(uint32_t uuid, unsigned texture_type)
 {
-	if(uuid == 814689362)
-	{
-		int stop = 0;
-		this->i_hate_my_life = true;
-	}
 	MaterialTextureType type = static_cast<MaterialTextureType>(texture_type);
 	textures[type] = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(uuid));
 
+	if(uuid == 814689362)
+	{
+		int i = 0;
+	}
 
 	if (textures[type])
 	{
-		textures[type]->initialized = true;
 		return;
 	}
 
@@ -217,7 +215,7 @@ void Material::InitResource(uint32_t uuid, unsigned texture_type)
 {
 	if (uuid == 814689362)
 	{
- 		int stop = 0;
+		int i = 0;
 	}
 
 	MaterialTextureType type = static_cast<MaterialTextureType>(texture_type);
@@ -235,11 +233,6 @@ void Material::RemoveMaterialTexture(MaterialTextureType type)
 void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uuid)
 {
 	textures_uuid[type] = texture_uuid;
-
-	if(texture_uuid == 814689362)
-	{
-		int stop = 0;
-	}
 
 	if (textures_uuid[type] != 0)
 	{

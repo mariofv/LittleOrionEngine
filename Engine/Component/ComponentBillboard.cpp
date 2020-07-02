@@ -278,7 +278,7 @@ void ComponentBillboard::GenerateTextures(TextureLoadData loaded_data)
 		loaded_data.data.data(), loaded_data.data.size(), loaded_data.width,
 		loaded_data.height, loaded_data.num_channels, loaded_data.texture_options);
 
-	App->resources->AddResourceToCache(billboard_texture);
+	App->resources->AddResourceToCache(std::static_pointer_cast<Resource>(billboard_texture));
 }
 
 void ComponentBillboard::GetTextureFromCache(TextureLoadData loaded_data)
@@ -300,7 +300,6 @@ void ComponentBillboard::LoadResource(uint32_t uuid, ResourceType resource)
 
 	if (billboard_texture)
 	{
-		billboard_texture->initialized = true;
 		return;
 	}
 
@@ -312,7 +311,7 @@ void ComponentBillboard::LoadResource(uint32_t uuid, ResourceType resource)
 		billboard_texture = ResourceManagement::Load<Texture>(uuid, file_data, true);
 		//Delete file data buffer
 		delete[] file_data.buffer;
-		App->resources->AddResourceToCache(billboard_texture);
+		App->resources->AddResourceToCache(std::static_pointer_cast<Resource>(billboard_texture));
 	}
 
 }

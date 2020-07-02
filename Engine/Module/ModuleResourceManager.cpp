@@ -97,7 +97,10 @@ update_status ModuleResourceManager::PreUpdate()
 	if(cache_time > 0.0f && (thread_timer->Read() - cache_time) >= cache_interval_millis)
 	{
 		cache_time = thread_timer->Read();
-		RefreshResourceCache();
+		if(!loading_thread_communication.loading)
+		{
+			RefreshResourceCache();
+		}
 	}
 
 
@@ -107,11 +110,6 @@ update_status ModuleResourceManager::PreUpdate()
 		LoadingJob load_job;
 		if(processing_resources_queue.TryPop(load_job))
 		{
-			if(load_job.uuid == 814689362)
-			{
-				int stop = 0;
-			}
-
 			//Generate OpenGL texture
 			if (load_job.component_to_load->type == Component::ComponentType::MESH_RENDERER)
 			{
@@ -121,7 +119,6 @@ update_status ModuleResourceManager::PreUpdate()
 			{
 				load_job.component_to_load->InitResource(load_job.uuid, ResourceType::TEXTURE);
 			}
-			
 
 			++loading_thread_communication.current_number_of_textures_loaded;
 		}
@@ -361,11 +358,6 @@ void ModuleResourceManager::LoaderThread()
 			LoadingJob load_job;
 			if(loading_resources_queue.TryPop(load_job))
 			{
-				if (load_job.uuid == 814689362)
-				{
-					int stop = 0;
-				}
-
 				//Check if resource is already on cache
 				if(load_job.component_to_load->type == Component::ComponentType::MESH_RENDERER)
 				{
@@ -393,10 +385,7 @@ std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32
 	//Check if the resource is already loaded
 	auto& it = std::find_if(resource_cache.begin(), resource_cache.end(), [&uuid](const std::shared_ptr<Resource> & resource)
 	{
-		if(resource != nullptr)
-		{
-			return resource->GetUUID() == uuid;
-		}
+		return resource->GetUUID() == uuid;
 	});
 
 	if (it != resource_cache.end())
@@ -438,10 +427,10 @@ void ModuleResourceManager::RefreshResourceCache()
 }
 void ModuleResourceManager::AddResourceToCache(std::shared_ptr<Resource> resource)
 {
-	//if (resource != nullptr)
-	//{
-	//	resource_cache.push_back(resource);
-	//}
+	if (resource != nullptr)
+	{
+		resource_cache.push_back(resource);
+	}
 }
 void ModuleResourceManager::CleanResourceCache()
 {

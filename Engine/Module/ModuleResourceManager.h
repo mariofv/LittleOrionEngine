@@ -29,7 +29,7 @@
 #include <thread>
 #include <type_traits>
 
-#define MULTITHREADING 0
+#define MULTITHREADING 1
 
 class Path;
 class Timer;

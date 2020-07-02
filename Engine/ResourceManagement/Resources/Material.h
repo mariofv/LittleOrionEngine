@@ -36,10 +36,7 @@ public:
 
 	Material() = default;
 	Material(uint32_t uuid);
-	~Material() 
-	{
-		int i_want_to_die = 0;
-	};
+	~Material() = default;
 
 	void Save(Config& config) const;
 	void Load(const Config& config);

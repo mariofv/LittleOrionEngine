@@ -68,13 +68,7 @@ void ComponentMeshRenderer::LoadResource(uint32_t uuid, ResourceType resource, u
 {
 	if(resource == ResourceType::TEXTURE)
 	{
-		if(uuid == 814689362)
-		{
-			int hello = 0;
-		}
-
 		material_to_render->LoadResource(uuid, texture_type);
-		int i = 0;
 	}
 }
 

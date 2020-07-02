@@ -149,7 +149,6 @@ void ComponentImage::GenerateTextures(TextureLoadData loaded_data)
 		loaded_data.height, loaded_data.num_channels, loaded_data.texture_options);
 
 	texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
-	App->resources->AddResourceToCache(texture_to_render);
 }
 
 void ComponentImage::GetTextureFromCache(TextureLoadData loaded_data)
@@ -175,7 +174,6 @@ void ComponentImage::LoadResource(uint32_t uuid, ResourceType resource)
 
 	if(texture_to_render)
 	{
-		texture_to_render->initialized = true;
 		return;
 	}
 
@@ -187,7 +185,7 @@ void ComponentImage::LoadResource(uint32_t uuid, ResourceType resource)
 		texture_to_render = ResourceManagement::Load<Texture>(uuid, file_data, true);
 		//Delete file data buffer
 		delete[] file_data.buffer;
-		App->resources->AddResourceToCache(texture_to_render);
+		App->resources->AddResourceToCache(std::static_pointer_cast<Resource>(texture_to_render));
 	}
 
 }

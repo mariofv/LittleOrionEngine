@@ -46,8 +46,9 @@ public:
 public:
 	bool initialized = false;
 
-private:
+protected:
 	uint32_t uuid = 0;
+
 };
 
 namespace ResourceManagement
