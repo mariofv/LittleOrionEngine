@@ -68,10 +68,6 @@ FileData MaterialImporter::ExtractMaterialFromAssimp(const aiMaterial* assimp_me
 	material_config.AddBool(imported_material.show_checkerboard_texture, "Checkboard");
 	material_config.AddString(imported_material.shader_program, "ShaderProgram");
 
-	//k
-	material_config.AddFloat(imported_material.k_ambient, "kAmbient");
-	material_config.AddFloat(imported_material.k_specular, "kSpecular");
-	material_config.AddFloat(imported_material.k_diffuse, "kDiffuse");
 
 	//colors
 	material_config.AddColor(

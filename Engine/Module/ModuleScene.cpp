@@ -96,6 +96,9 @@ ENGINE_API GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
 {
 	GameObject * created_game_object_ptr = CreateGameObject();
 	parent->AddChild(created_game_object_ptr);
+	created_game_object_ptr->transform.SetTranslation(float3::zero);
+	created_game_object_ptr->transform.SetRotation(Quat::identity);
+	created_game_object_ptr->transform.SetScale(float3::one);
 
 	return created_game_object_ptr;
 }
