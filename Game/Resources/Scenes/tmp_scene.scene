@@ -1,7 +1,7 @@
 {
     "Prefabs": [
         {
-            "ParentUUID": 241962509,
+            "ParentUUID": 137689912,
             "Prefab": 953855812,
             "Transform": {
                 "UUID": 2906292827,
@@ -25,11 +25,11 @@
             },
             "UUIDS": [
                 {
-                    "UUID": 1202448347,
+                    "UUID": 1407966377,
                     "OriginalUUID": 953855812
                 },
                 {
-                    "UUID": 3417247837,
+                    "UUID": 2263209823,
                     "OriginalUUID": 953855813
                 }
             ]
@@ -59,7 +59,7 @@
             },
             "RemovedComponents": [],
             "Components": [],
-            "UUID": 3417247837
+            "UUID": 2263209823
         }
     ],
     "GameObjects": [
@@ -166,9 +166,9 @@
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    -0.06236577033996582,
-                    -0.048116207122802737,
-                    -5.2728142738342289
+                    0.0035152435302734377,
+                    2.071347236633301,
+                    -13.966621398925782
                 ],
                 "Rotation": [
                     -0.0,
@@ -235,23 +235,18 @@
                     ],
                     "Depth": 0,
                     "Skybox": 0
-                },
-                {
-                    "UUID": 3317522870,
-                    "ComponentType": 20,
-                    "Active": true
                 }
             ]
         },
         {
-            "UUID": 241962509,
+            "UUID": 137689912,
             "ParentUUID": 0,
-            "Name": "AudioSource",
+            "Name": "GameObject (8)",
             "Tag": "",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 1276750641,
+                "UUID": 3997008826,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -271,7 +266,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 3148308193,
+                "UUID": 3198035666,
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
@@ -308,7 +303,7 @@
             "Transform2DEnabled": false,
             "Components": [
                 {
-                    "UUID": 3964023725,
+                    "UUID": 1070893697,
                     "ComponentType": 14,
                     "Active": true,
                     "Volume": 1.0,

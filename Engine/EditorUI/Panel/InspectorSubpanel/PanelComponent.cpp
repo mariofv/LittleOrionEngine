@@ -1059,7 +1059,7 @@ void PanelComponent::ShowAddNewComponentButton()
 		}
 		ImGui::Separator();
 
-		sprintf_s(tmp_string, "%s Audio Source", ICON_FA_AUDIO_DESCRIPTION);
+		sprintf_s(tmp_string, "%s Audio Source", ICON_FA_VOLUME_UP);
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::AUDIO_SOURCE);
@@ -1302,6 +1302,8 @@ void PanelComponent::ShowComponentAudioListenerWindow(ComponentAudioListener* co
 		}
 		ImGui::Separator();
 
+		ImGui::Text("AK ID: ", component_audio_listener->GetAkID());
+
 		//Add More Stuff here 
 
 	}
@@ -1310,7 +1312,7 @@ void PanelComponent::ShowComponentAudioListenerWindow(ComponentAudioListener* co
 
 void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_AUDIO_DESCRIPTION " Audio Source", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_VOLUME_UP " Audio Source", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (!ShowCommonComponentWindow(component_audio_source))
 		{
