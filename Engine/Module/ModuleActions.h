@@ -65,6 +65,7 @@ public:
 	GameObject* action_game_object = nullptr;
 	Component* action_component = nullptr;
 	Component* copied_component = nullptr;
+	Config script_config;
 	Config transform_config;
 	Config transform_2D_config;
 

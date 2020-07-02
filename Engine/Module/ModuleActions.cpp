@@ -204,11 +204,20 @@ void ModuleActions::DeleteComponentUndo(Component * component)
 
 void ModuleActions::PasteComponent(Component* component)
 {
-	if (copied_component != nullptr && component->type != Component::ComponentType::TRANSFORM && component->type != Component::ComponentType::TRANSFORM2D)
+	if (copied_component != nullptr && copied_component->type != Component::ComponentType::SCRIPT && component->type != Component::ComponentType::TRANSFORM && component->type != Component::ComponentType::TRANSFORM2D)
 	{
 		SetCopyComponent(copied_component);
 		copied_component->owner = component->owner;
 		component->owner->components.push_back(copied_component);		
+	}
+	else
+	{
+		if (copied_component->type == Component::ComponentType::SCRIPT)
+		{
+			/*copied_component->Load(script_config);*/
+			copied_component->owner = component->owner;
+			component->owner->components.push_back(copied_component);
+		}
 	}
 }
 
@@ -237,9 +246,11 @@ void ModuleActions::SetCopyComponent(Component * component)
 {
 	if (component->type == Component::ComponentType::SCRIPT)
 	{
-		copied_component = new ComponentScript(component->owner, static_cast<ComponentScript*>(component)->name);
-		ComponentScript* copied_script = static_cast<ComponentScript*>(copied_component);
-		copied_script->name = static_cast<ComponentScript*>(component)->name;
+		Config conf;
+		component->Save(conf);
+		script_config = conf;
+		copied_component = component;
+		/*copied_component = new ComponentScript(component->owner, static_cast<ComponentScript*>(component)->name);*/
 	}
 	else if (component->type == Component::ComponentType::COLLIDER)
 	{
@@ -262,7 +273,8 @@ void ModuleActions::SetCopyComponent(Component * component)
 			transform_2D_config = conf;
 			copied_component = component;
 		}
-		else {
+		else
+		{
 			copied_component = component->Clone(component->owner->original_prefab);
 		}
 	}

@@ -164,28 +164,32 @@ GameObject* ModuleScene::DuplicateGameObject(GameObject* game_object, GameObject
 
 void ModuleScene::DuplicateGameObjectList(std::vector<GameObject*> game_objects)
 {
-	for (auto go : game_objects) {
-
-		if (!HasParentInList(go, game_objects)) {
+	for (auto go : game_objects) 
+	{
+		if (!HasParentInList(go, game_objects)) 
+		{
 			DuplicateGameObject(go, go->parent);
 		}
 	}
 }
 
-bool ModuleScene::HasParentInList(GameObject * go, std::vector<GameObject*> game_objects)
+bool ModuleScene::HasParentInList(GameObject * go, std::vector<GameObject*> game_objects) const
 {
-	if (go->GetHierarchyDepth() == 1) {
+	if (go->GetHierarchyDepth() == 1) 
+	{
 		return false;
 	}
 
 	int depth = go->GetHierarchyDepth();
+	GameObject *game_object = go;
 
-	while (depth >= 2) {
-		if (BelongsToList(go->parent, game_objects)) {
+	while (depth >= 2) 
+	{
+		if (BelongsToList(game_object->parent, game_objects))
+		{
 			return true;
-
 		}
-		go = go->parent;
+		game_object = game_object->parent;
 		depth = depth - 1;
 	}
 	return false;
@@ -213,11 +217,12 @@ GameObject* ModuleScene::DuplicateGO(GameObject* game_object, GameObject* parent
 	return duplicated_go;
 }
 
-bool ModuleScene::BelongsToList(GameObject * game_object, std::vector<GameObject*> game_objects)
+bool ModuleScene::BelongsToList(GameObject * game_object, std::vector<GameObject*> game_objects) const
 {
 	for (auto go : game_objects)
 	{
-		if (go->UUID == game_object->UUID) {
+		if (go->UUID == game_object->UUID) 
+		{
 			return true;
 		}
 	}
