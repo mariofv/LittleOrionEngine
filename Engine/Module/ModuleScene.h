@@ -39,7 +39,7 @@ public:
 	ENGINE_API std::vector<GameObject*> GetGameObjectsWithTag(const std::string& tag) const;
 
 	Component* GetComponent(uint64_t UUID) const;
-
+	void SortGameObjectChilds(GameObject *go) const;
 
 	void OpenPendingScene();
 	void DeleteCurrentScene();
