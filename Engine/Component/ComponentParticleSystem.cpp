@@ -9,20 +9,9 @@
 #include "GL/glew.h"
 
 
-namespace
-{
-	struct ShaderParticle
-	{
-		float4 position;
-		float4 color;
-		float current_width = 0, current_height = 0;
-		float current_sprite_x = 0, current_sprite_y = 0;
-	};
-	static std::vector<ShaderParticle> shader_particles;
-}
 ComponentParticleSystem::ComponentParticleSystem() : Component(nullptr, ComponentType::PARTICLE_SYSTEM)
 {
-	Init();
+	
 }
 
 ComponentParticleSystem::ComponentParticleSystem(GameObject* owner) : Component(owner, ComponentType::PARTICLE_SYSTEM)
@@ -78,7 +67,7 @@ unsigned int ComponentParticleSystem::FirstUnusedParticle()
 
 void ComponentParticleSystem::RespawnParticle(Particle& particle)
 {
-	particle.position_initial = float3(0.0f, 0.0f, 0.0f);
+	particle.position_initial = float4(0.0f, 0.0f, 0.0f,0.0f);
 	particle.rotation = owner->transform.GetGlobalRotation();
 
 	if (size_random)
@@ -110,7 +99,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	switch (type_of_particle_system)
 	{
 		case SPHERE:
-			particle.velocity_initial = float3::RandomDir(LCG(), velocity_particles_start) / 1000;
+			particle.velocity_initial = float4(float3::RandomDir(LCG(), velocity_particles_start) / 1000, 0.0f);
 		break;
 		case BOX:
 		{
@@ -146,9 +135,9 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 			particle.position_initial.z = radius * math::Sin(angle);
 			float distance = velocity_particles_start * particles_life_time;
 			float height = sqrt((distance*distance) - ((radius*proportion) - radius)*((radius*proportion) - radius));
-			float3 final_local_position = float3(particle.position_initial.x*proportion, height, particle.position_initial.z*proportion);
+			float4 final_local_position = float4(particle.position_initial.x*proportion, height, particle.position_initial.z*proportion,0.0f);
 			particle.velocity_initial = (final_local_position - particle.position_initial);
-			particle.velocity_initial = particle.velocity_initial.ScaledToLength(velocity_particles_start) / 1000;
+			particle.velocity_initial = particle.velocity_initial.ScaledToLength3(velocity_particles_start) / 1000;
 		break;
 
 	}
@@ -176,13 +165,11 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	particle.life = particles_life_time*1000;
 	particle.time_counter = particle.life;
 	particle.time_passed = 0.0F;
-	float4 aux_velocity(particle.velocity_initial, 1.0F);
-	aux_velocity = particle.rotation * aux_velocity;
-	particle.velocity_initial = aux_velocity.xyz();
+	particle.velocity_initial = particle.rotation * particle.velocity_initial;
 
 	if (!follow_owner)
 	{
-		particle.position_initial = owner->transform.GetGlobalTranslation() + (particle.rotation *particle.position_initial);
+		particle.position_initial = float4(owner->transform.GetGlobalTranslation(),0.0f) + (particle.rotation *particle.position_initial);
 	}
 	
 
@@ -213,12 +200,12 @@ void ComponentParticleSystem::Render()
 
 
 		if (gravity)
-			gravity_vector = float3 (0, gravity_modifier / 10000000, 0);
+			gravity_vector = float4 (0, gravity_modifier / 10000000, 0,0);
 
 		glUseProgram(shader_program);
 
-		shader_particles.clear();
 		// update all particles
+		int num_of_alive_particles = 0;
 		for (unsigned int i = 0; i < playing_particles_number; ++i)
 		{
 			Particle& p = particles[i];
@@ -226,17 +213,20 @@ void ComponentParticleSystem::Render()
 			if (p.life > 0.0f)
 			{
 				UpdateParticle(p);
-				shader_particles.push_back(ShaderParticle{ float4(p.position,1.0f), p.color,p.current_width, p.current_height, p.current_sprite_x, p.current_sprite_y  });
+				std::iter_swap(particles.begin() +i, particles.begin()+ num_of_alive_particles);
+				++num_of_alive_particles;
 			}
+
 		}
 		billboard->CommonUniforms(shader_program);
+		static_assert(sizeof(Particle) % (sizeof(float) * 4) == 0); //Check comment on particle struct
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-		glBufferData(GL_SHADER_STORAGE_BUFFER, (sizeof(ShaderParticle))*shader_particles.size(), shader_particles.data(), GL_STATIC_DRAW);
+		glBufferData(GL_SHADER_STORAGE_BUFFER, (sizeof(Particle))*(num_of_alive_particles), particles.data(), GL_STATIC_DRAW);
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo);
 
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 		glBindVertexArray(billboard->vao);
-		glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, shader_particles.size());
+		glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, particles.size());
 		glBindVertexArray(0);
 
 
@@ -255,7 +245,7 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	//update position
 	if (velocity_over_time && type_of_velocity_over_time == LINEAR)
 	{
-		float3 acceleration = (particle.velocity - particle.velocity_initial) / particles_life_time / 1000;
+		float4 acceleration = (particle.velocity - particle.velocity_initial) / particles_life_time / 1000;
 		if (gravity)
 			acceleration += gravity_vector;
 
@@ -298,7 +288,7 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 
 	if (follow_owner)
 	{
-		particle.position = owner->transform.GetGlobalTranslation() + (particle.rotation *particle.position);
+		particle.position = float4(owner->transform.GetGlobalTranslation(),0.0f) + (particle.rotation *particle.position);
 	}
 }
 void ComponentParticleSystem::SetParticleTexture(uint32_t texture_uuid)
@@ -426,7 +416,6 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	color_to_fade[2] = config.GetFloat("Color to fade B", 1.0F);
 	color_to_fade[3] = config.GetFloat("Color to fade A", 1.0F);
 
-	shader_particles.reserve(max_particles_number);
 }
 
 Component* ComponentParticleSystem::Clone(bool original_prefab) const

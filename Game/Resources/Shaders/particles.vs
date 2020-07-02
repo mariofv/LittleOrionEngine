@@ -29,13 +29,24 @@ out vec4 color;
 
 struct Particle
 {
+	vec4 position_initial;
 	vec4 position;
+	vec4 velocity_initial;
+	vec4 velocity;
 	vec4 color;
-	float width;
-	float height;
+	vec4 rotation;
+
+	float particle_scale;
+	float time_passed;
+	float life;
+	float time_counter;
+
 
 	float X;
     float Y;
+	float width;
+	float height;
+
 };
 
 

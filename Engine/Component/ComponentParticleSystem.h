@@ -16,10 +16,10 @@ class ComponentParticleSystem : public Component
 {
 public:
 	struct Particle {
-		float3 position_initial;
-		float3 position;
-		float3 velocity_initial;
-		float3 velocity;
+		float4 position_initial;
+		float4 position;
+		float4 velocity_initial;
+		float4 velocity;
 		float4 color;
 		Quat rotation;
 		float particle_scale;
@@ -28,6 +28,20 @@ public:
 		float time_counter;
 		float current_sprite_x = 0, current_sprite_y = 0;
 		float current_width = 0, current_height = 0;
+
+
+		/*
+		if you add a parameter here you have to put the equivalent in the shader particles.vs
+		Also you will need to add block of 4 floats, so if you add a float like this
+		
+		float f1;
+		 
+		Add 3 more even if you don't use them:
+
+		float f2,f3,f4;
+		*/
+
+
 	};
 	enum TypeOfParticleSystem
 	{
@@ -149,7 +163,7 @@ public:
 	float acceleration = 0.0F;
 	float3 velocity_over_time_acceleration;
 
-	float3 gravity_vector;
+	float4 gravity_vector;
 	
 	//Runtime values
 	size_t playing_particles_number = MAX_PARTICLES;
@@ -157,6 +171,7 @@ public:
 	bool playing = true;
 	GLuint ssbo;
 	GLuint shader_program;
+
 };
 
 #endif
