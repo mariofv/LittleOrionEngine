@@ -35,7 +35,7 @@ public:
 
 
 private:
-	AkSoundPosition sound_position;
+	AkTransform source_transform;
 	AkGameObjectID gameobject_source = 0;
 	std::shared_ptr<SoundBank> soundbank;
 	std::unordered_map<AkUInt32,AkPlayingID> event_playing_ids;

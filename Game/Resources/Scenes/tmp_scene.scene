@@ -1,7 +1,7 @@
 {
     "Prefabs": [
         {
-            "ParentUUID": 137689912,
+            "ParentUUID": 4338079,
             "Prefab": 953855812,
             "Transform": {
                 "UUID": 2906292827,
@@ -25,43 +25,17 @@
             },
             "UUIDS": [
                 {
-                    "UUID": 1407966377,
+                    "UUID": 91353759,
                     "OriginalUUID": 953855812
                 },
                 {
-                    "UUID": 2263209823,
+                    "UUID": 2482366739,
                     "OriginalUUID": 953855813
                 }
             ]
         }
     ],
-    "PrefabsComponents": [
-        {
-            "Transform": {
-                "UUID": 381189132,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    100.0,
-                    100.0,
-                    100.0
-                ]
-            },
-            "RemovedComponents": [],
-            "Components": [],
-            "UUID": 2263209823
-        }
-    ],
+    "PrefabsComponents": [],
     "GameObjects": [
         {
             "UUID": 1690967942,
@@ -166,9 +140,9 @@
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    0.0035152435302734377,
-                    2.071347236633301,
-                    -13.966621398925782
+                    -0.0809633731842041,
+                    0.6599758863449097,
+                    -9.421823501586914
                 ],
                 "Rotation": [
                     -0.0,
@@ -235,38 +209,43 @@
                     ],
                     "Depth": 0,
                     "Skybox": 0
+                },
+                {
+                    "UUID": 1104335457,
+                    "ComponentType": 20,
+                    "Active": true
                 }
             ]
         },
         {
-            "UUID": 137689912,
+            "UUID": 4338079,
             "ParentUUID": 0,
             "Name": "GameObject (8)",
             "Tag": "",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3997008826,
+                "UUID": 414288275,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    0.0,
-                    0.0,
+                    -0.019465923309326173,
+                    0.4820117950439453,
                     0.0
                 ],
                 "Rotation": [
+                    -0.0,
                     0.0,
-                    0.0,
-                    0.0
+                    -0.0
                 ],
                 "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    100.0,
+                    100.0,
+                    100.0
                 ]
             },
             "Transform2D": {
-                "UUID": 3198035666,
+                "UUID": 2050693909,
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
@@ -303,7 +282,7 @@
             "Transform2DEnabled": false,
             "Components": [
                 {
-                    "UUID": 1070893697,
+                    "UUID": 1192828955,
                     "ComponentType": 14,
                     "Active": true,
                     "Volume": 1.0,

@@ -28,8 +28,17 @@ void ComponentAudioSource::Update()
 	if (sound_3d)
 	{
 		const math::float3 owner_transform = owner->transform.GetGlobalTranslation();
-		sound_position.SetPosition(owner_transform.x, owner_transform.y, owner_transform.z);
-		AK::SoundEngine::SetPosition(gameobject_source, sound_position);
+		source_transform.SetPosition(owner_transform.x, owner_transform.y, owner_transform.z);
+
+		const math::float3 front_vector = owner->transform.GetFrontVector();
+		AkVector orientation_front{ front_vector.x, front_vector.y, front_vector.z };
+
+		const math::float3 top_vector = owner->transform.GetUpVector();
+		AkVector orientation_top{ top_vector.x, top_vector.y, top_vector.z };
+
+		source_transform.SetOrientation(orientation_front, orientation_top);
+
+		AK::SoundEngine::SetPosition(gameobject_source, source_transform);
 	}
 }
 
