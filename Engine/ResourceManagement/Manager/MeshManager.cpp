@@ -12,7 +12,7 @@
 
 Timer MeshManager::timer = Timer();
 
-std::shared_ptr<Mesh> MeshManager::Load(uint32_t uuid, const FileData& resource_data)
+std::shared_ptr<Mesh> MeshManager::Load(uint32_t uuid, const FileData& resource_data, bool async)
 {
 	BROFILER_CATEGORY("Load Mesh Manager", Profiler::Color::PaleGoldenRod);
 	timer.Start();
@@ -40,7 +40,7 @@ std::shared_ptr<Mesh> MeshManager::Load(uint32_t uuid, const FileData& resource_
 	bytes = sizeof(Mesh::Vertex) * ranges[1];
 	memcpy(&vertices.front(), cursor, bytes);
 
-	std::shared_ptr<Mesh> new_mesh = std::make_shared<Mesh>(uuid, std::move(vertices), std::move(indices));
+	std::shared_ptr<Mesh> new_mesh = std::make_shared<Mesh>(uuid, std::move(vertices), std::move(indices), async);
 
 	float time = timer.Stop();
 	App->resources->time_loading_meshes += time;

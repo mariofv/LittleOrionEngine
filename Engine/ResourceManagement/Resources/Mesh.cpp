@@ -2,12 +2,15 @@
 
 #include "ResourceManagement/Metafile/Metafile.h"
 
-Mesh::Mesh(uint32_t uuid, std::vector<Vertex> && vertices, std::vector<uint32_t> && indices)
+Mesh::Mesh(uint32_t uuid, std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, bool async)
 	: vertices(vertices)
 	, indices(indices)
 	, Resource(uuid)
 {
-	LoadInMemory();
+	if(!async)
+	{
+		LoadInMemory();
+	}
 }
 
 Mesh::~Mesh() 
@@ -99,6 +102,6 @@ void Mesh::LoadInMemory()
 	glVertexAttribPointer(7, 2, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tex_coords[1]));
 	glBindVertexArray(0);
 
-	Resource(initialized) = true;
+	initialized = true;
 }
 

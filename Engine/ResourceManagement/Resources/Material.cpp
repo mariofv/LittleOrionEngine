@@ -237,6 +237,7 @@ void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uui
 	if (textures_uuid[type] != 0)
 	{
 		App->resources->texture_type = type;
+		App->resources->current_type = ResourceType::TEXTURE;
 		textures[type] = App->resources->Load<Texture>(texture_uuid);
 	}
 	use_normal_map = type == MaterialTextureType::NORMAL && texture_uuid !=0;

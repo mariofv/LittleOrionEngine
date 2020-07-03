@@ -70,6 +70,26 @@ void ComponentMeshRenderer::LoadResource(uint32_t uuid, ResourceType resource, u
 	{
 		material_to_render->LoadResource(uuid, texture_type);
 	}
+	else if(resource == ResourceType::MESH)
+	{
+		mesh_to_render = std::static_pointer_cast<Mesh>(App->resources->RetrieveFromCacheIfExist(uuid));
+
+		if (mesh_to_render)
+		{
+			return;
+		}
+
+		FileData file_data;
+		bool succes = App->resources->RetrieveFileDataByUUID(uuid, file_data);
+		if (succes)
+		{
+			//THINK WHAT TO DO IF IS IN CACHE
+			mesh_to_render = ResourceManagement::Load<Mesh>(uuid, file_data, true);
+			//Delete file data buffer
+			delete[] file_data.buffer;
+			App->resources->AddResourceToCache(std::static_pointer_cast<Resource>(mesh_to_render));
+		}
+	}
 }
 
 void ComponentMeshRenderer::InitResource(uint32_t uuid, ResourceType resource, unsigned texture_type)
@@ -77,6 +97,13 @@ void ComponentMeshRenderer::InitResource(uint32_t uuid, ResourceType resource, u
 	if (resource == ResourceType::TEXTURE)
 	{
 		material_to_render->InitResource(uuid, texture_type);
+	}
+	else if (resource == ResourceType::MESH)
+	{
+		if (mesh_to_render && !mesh_to_render.get()->initialized)
+		{
+			mesh_to_render.get()->LoadInMemory();
+		}
 	}
 }
 
@@ -307,12 +334,17 @@ void ComponentMeshRenderer::Copy(Component* component_to_copy) const
 
 void ComponentMeshRenderer::SetMesh(uint32_t mesh_uuid)
 {
+	//Prepare multithreading loading
+	App->resources->current_component_loading = this;
 	this->mesh_uuid = mesh_uuid;
 	if (mesh_uuid != 0)
 	{
+		App->resources->current_type = ResourceType::MESH;
 		this->mesh_to_render = App->resources->Load<Mesh>(mesh_uuid);
 		owner->aabb.GenerateBoundingBox();
 	}
+	
+	App->resources->current_component_loading = nullptr;
 }
 
 void ComponentMeshRenderer::SetMaterial(uint32_t material_uuid)
