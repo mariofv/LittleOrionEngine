@@ -1,6 +1,7 @@
 ﻿#include "ComponentMeshRenderer.h"
 
 #include "ComponentAnimation.h"
+#include "Component/ComponentMeshCollider.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 
@@ -76,6 +77,11 @@ void ComponentMeshRenderer::LoadResource(uint32_t uuid, ResourceType resource, u
 
 		if (mesh_to_render)
 		{
+			if(mesh_collider)
+			{
+				mesh_collider->InitMeshCollider();
+			}
+
 			return;
 		}
 
@@ -88,6 +94,11 @@ void ComponentMeshRenderer::LoadResource(uint32_t uuid, ResourceType resource, u
 			//Delete file data buffer
 			delete[] file_data.buffer;
 			App->resources->AddResourceToCache(std::static_pointer_cast<Resource>(mesh_to_render));
+		
+			if (mesh_collider)
+			{
+				mesh_collider->InitMeshCollider();
+			}
 		}
 	}
 }

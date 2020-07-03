@@ -69,8 +69,15 @@ void ComponentMeshCollider::UpdateDimensions()
 
 void ComponentMeshCollider::Scale()
 {
-	float3 global_scale = owner->transform.GetGlobalScale();
-	body->getCollisionShape()->setLocalScaling(btVector3(global_scale.x * scale.x, global_scale.y * scale.y, global_scale.z * scale.z));
+	float3 global_scale = owner->transform.GetGlobalScale();	
+	if(body)
+	{
+		body->getCollisionShape()->setLocalScaling(btVector3(global_scale.x * scale.x, global_scale.y * scale.y, global_scale.z * scale.z));
+	}
+}
+
+void ComponentMeshCollider::InitMeshCollider()
+{
 }
 
 

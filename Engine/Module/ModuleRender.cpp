@@ -200,9 +200,12 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		if (mesh.second->mesh_uuid != 0 && mesh.second->IsEnabled())
 		{
 			mesh.second->Render();
-			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
-			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
-			App->lights->UpdateLightAABB(*mesh.second->owner);
+			if(mesh.second->mesh_to_render)
+			{
+				num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
+				num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
+				App->lights->UpdateLightAABB(*mesh.second->owner);			
+			}
 			glUseProgram(0);
 
 		}
@@ -217,9 +220,12 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		if (mesh.second->mesh_uuid != 0 && mesh.second->IsEnabled())
 		{
 			mesh.second->Render();
-			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
-			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
-			App->lights->UpdateLightAABB(*mesh.second->owner);
+			if(mesh.second->mesh_to_render)
+			{
+				num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
+				num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
+				App->lights->UpdateLightAABB(*mesh.second->owner);			
+			}
 
 			glUseProgram(0);
 			

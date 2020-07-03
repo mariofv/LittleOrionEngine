@@ -101,8 +101,12 @@ void ComponentCollider::SpecializedLoad(const Config & config)
 	friction = config.GetFloat("Friction", 1.0F);
 	rolling_friction = config.GetFloat("Rolling_friction", 1.0F);
 	config.GetFloat3("Center", center, float3::zero);
-	AddBody();
-	SetConfiguration();
+
+	if(collider_type != ColliderType::MESH)
+	{
+		AddBody();
+		SetConfiguration();	
+	}
 
 }
 
@@ -200,11 +204,13 @@ void ComponentCollider::UpdateCommonDimensions()
 		btQuaternion::getIdentity(),
 		btVector3(center.x, center.y, center.z)
 	);
-
-	motion_state->setWorldTransform(new_body_transformation * center_of_mass);
-	body->setMotionState(motion_state);
+	if(motion_state)
+	{
+		motion_state->setWorldTransform(new_body_transformation * center_of_mass);
+		body->setMotionState(motion_state);		
+		App->physics->world->updateSingleAabb(body);
+	}
 	
-	App->physics->world->updateSingleAabb(body);
 }
 
 void ComponentCollider::SetMass(float new_mass)

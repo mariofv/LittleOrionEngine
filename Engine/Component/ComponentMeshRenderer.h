@@ -76,6 +76,7 @@ public:
 	std::vector<float4x4> palette;
 
 	bool is_raycastable = true;
+	ComponentMeshCollider* mesh_collider = nullptr;
 
 private:
 	friend class PanelComponent;
