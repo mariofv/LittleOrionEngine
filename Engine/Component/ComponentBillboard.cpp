@@ -263,7 +263,7 @@ void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)
 	{
 		//Prepare multithreading loading
 		App->resources->current_component_loading = this;
-
+		App->resources->current_type = ResourceType::TEXTURE;
 		this->texture_uuid = texture_uuid;
 		billboard_texture = App->resources->Load<Texture>(texture_uuid);
 
