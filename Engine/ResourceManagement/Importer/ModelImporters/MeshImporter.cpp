@@ -54,7 +54,7 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 	for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
 	{
 		Mesh::Vertex new_vertex;
-		aiVector3D transformed_position = node_transformation * mesh->mVertices[i];
+		aiVector3D transformed_position = scaling_matrix * mesh->mVertices[i];
 		new_vertex.position = float3(transformed_position.x, transformed_position.y, transformed_position.z);
 
 

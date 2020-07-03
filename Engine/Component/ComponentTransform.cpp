@@ -181,6 +181,12 @@ ENGINE_API void ComponentTransform::SetScale(const float3& scale)
 	OnTransformChange();
 }
 
+ void ComponentTransform::SetGlobalMatrixScale(const float3& scale)
+{
+	 global_model_matrix = float4x4::FromTRS(GetGlobalTranslation(), GetGlobalRotation(), scale);
+	 SetGlobalModelMatrix(global_model_matrix);
+}
+
 float3 ComponentTransform::GetGlobalScale() const
 {
 	return global_model_matrix.GetScale();

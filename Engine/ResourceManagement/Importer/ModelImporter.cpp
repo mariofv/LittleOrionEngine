@@ -26,6 +26,9 @@
 
 #include <Brofiler/Brofiler.h>
 
+#include <fstream>
+
+
 ModelImporter::ModelImporter() : Importer(ResourceType::MODEL)
 {
 	Assimp::DefaultLogger::create("", Assimp::Logger::VERBOSE);
@@ -114,6 +117,9 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 	}
 	aiReleaseImport(scene);
 
+	std::string config_to_serialize;
+	model.GetSerializedString(config_to_serialize);
+	App->filesystem->Save("/Hola.txt", config_to_serialize);
 
 	model_data = App->resources->prefab_importer->ExtractFromModel(model, model_metafile);
 	if (current_model_data.remmaped_changed || current_model_data.any_new_node)
@@ -130,8 +136,16 @@ std::vector<Config> ModelImporter::ExtractDataFromNode(const aiNode* root_node, 
 
 	aiMatrix4x4& current_transformation = parent_transformation * root_node->mTransformation;
 	// Transformation
+	aiVector3D model_position;
+	aiVector3D model_scale;
+	aiQuaternion model_rotation;
 
-	std::map<std::string, std::shared_ptr<Skeleton>> already_loaded_skeleton;
+	current_transformation.Decompose(model_scale, model_rotation, model_position);
+
+	float3 translation = current_model_data.scale * float3(model_position.x, model_position.y, model_position.z);
+	Quat rotation = Quat(model_rotation.x, model_rotation.y, model_rotation.z, model_rotation.w);
+	float3 scale = float3(model_scale.x, model_scale.y, model_scale.z);
+
 	for (size_t i = 0; i < root_node->mNumMeshes; ++i)
 	{
 		Config node;
@@ -139,6 +153,10 @@ std::vector<Config> ModelImporter::ExtractDataFromNode(const aiNode* root_node, 
 		aiMesh* node_mesh = current_model_data.scene->mMeshes[mesh_index];
 		std::string mesh_name = std::string(node_mesh->mName.data) + "_" + std::to_string(i);
 		node.AddString(mesh_name, "Name");
+		node.AddFloat3(translation, "Translation");
+		node.AddQuat(rotation, "Rotation");
+		node.AddFloat3(scale, "Scale");
+
 		if (current_model_data.model_metafile->import_material)
 		{
 			uint32_t extracted_material_uuid = ExtractMaterialFromNode(mesh_index, mesh_name);
@@ -163,7 +181,7 @@ std::vector<Config> ModelImporter::ExtractDataFromNode(const aiNode* root_node, 
 
 		if (current_model_data.model_metafile->import_mesh)
 		{
-			uint32_t extracted_mesh_uuid = ExtractMeshFromNode(node_mesh, mesh_name, parent_transformation, extracted_skeleton_uuid);
+			uint32_t extracted_mesh_uuid = ExtractMeshFromNode(node_mesh, mesh_name, current_transformation, extracted_skeleton_uuid);
 			if (extracted_mesh_uuid != 0)
 			{
 				node.AddUInt(extracted_mesh_uuid, "Mesh");
