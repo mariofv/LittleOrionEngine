@@ -35,6 +35,7 @@ ComponentMeshCollider::ComponentMeshCollider(GameObject* owner) : ComponentColli
 	AddBody();
 }
 
+
 Component* ComponentMeshCollider::Clone(GameObject* owner, bool original_prefab) const
 {
 	ComponentMeshCollider* created_component;
@@ -78,6 +79,27 @@ void ComponentMeshCollider::Scale()
 
 void ComponentMeshCollider::InitMeshCollider()
 {
+	ComponentMeshRenderer* mesh_renderer = static_cast<ComponentMeshRenderer*>(owner->GetComponent(ComponentType::MESH_RENDERER));
+	if (mesh_renderer)
+	{
+		vertices.clear();
+		indices.clear();
+		mesh = mesh_renderer->mesh_to_render;
+
+		for (auto vertex : mesh->vertices)
+		{
+			vertices.push_back(vertex.position.x);
+			vertices.push_back(vertex.position.y);
+			vertices.push_back(vertex.position.z);
+		}
+
+		indices = std::vector<int>(mesh->indices.begin(), mesh->indices.end());
+
+
+		CreateMeshBody();
+		AddBody();
+		SetConfiguration();
+	}
 }
 
 
