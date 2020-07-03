@@ -24,7 +24,6 @@ Texture::Texture(uint32_t uuid, char* data, size_t image_size, int width, int he
 		LoadInMemory();
 	}
 
-	++App->resources->number_of_textures_loaded;
 }
 
 
@@ -66,6 +65,7 @@ void Texture::LoadInMemory()
 	}
 
 	initialized = true;
+	++App->resources->number_of_textures_loaded;
 }
 
 void Texture::GenerateMipMap()
