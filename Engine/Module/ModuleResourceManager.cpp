@@ -113,7 +113,7 @@ update_status ModuleResourceManager::PreUpdate()
 			//Generate OpenGL texture
 			if (load_job.component_to_load->type == Component::ComponentType::MESH_RENDERER)
 			{
-				static_cast<ComponentMeshRenderer*>(load_job.component_to_load)->InitResource(load_job.uuid, ResourceType::TEXTURE, load_job.texture_type);
+				load_job.component_to_load->InitResource(load_job.uuid, ResourceType::TEXTURE, load_job.texture_type);
 			}
 			else
 			{
