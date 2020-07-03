@@ -20,19 +20,18 @@ ComponentMeshCollider::ComponentMeshCollider(GameObject* owner) : ComponentColli
 	{
 		vertices.clear();
 		indices.clear();
-		std::shared_ptr<Mesh> mesh = mesh_renderer->mesh_to_render;
-		for (auto vertex : mesh->vertices)
+		mesh = mesh_renderer->mesh_to_render;
+
+		if (mesh)
 		{
-			vertices.push_back(vertex.position.x);
-			vertices.push_back(vertex.position.y);
-			vertices.push_back(vertex.position.z);
+			InitMeshCollider();
+		}
+		else
+		{
+			mesh_renderer->mesh_collider = this;
 		}
 
-		indices = std::vector<int>(mesh->indices.begin(), mesh->indices.end());
-		
 	}
-	CreateMeshBody();
-	AddBody();
 }
 
 

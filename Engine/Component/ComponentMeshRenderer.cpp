@@ -152,7 +152,7 @@ void ComponentMeshRenderer::Render()
 
 void ComponentMeshRenderer::RenderModel() const
 {
-	if (mesh_to_render == nullptr)
+	if (mesh_to_render == nullptr || !mesh_to_render->initialized)
 	{
 		return;
 	}	
