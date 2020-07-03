@@ -57,6 +57,7 @@ struct LoadingJob
 	Component* component_to_load = nullptr;
 
 	//For material type enum
+	ResourceType resource_type = ResourceType::TEXTURE;
 	unsigned texture_type = 0;
 };
 
@@ -119,7 +120,7 @@ public:
 		//HERE WE CHECK IF T IS TEXTURE AND IF SO WE ADD FILEDATA TO THE QUEUE
 		//WE NEED TO CHECK HOW I AM GONNA SOLVE THE LOADED_RESOURCE NULLPTR WHILE NOT BEING CREATED
 		
-		if(MULTITHREADING /*&& App->time->isGameRunning()*/ && std::is_same<T, Texture>::value && !normal_loading_flag)
+		if(MULTITHREADING /*&& App->time->isGameRunning()*/ && (std::is_same<T, Texture>::value || std::is_same<T, Mesh>::value) && !normal_loading_flag)
 		{
 			loaded_resource = nullptr;
 
@@ -127,6 +128,7 @@ public:
 
 			load_job.component_to_load = current_component_loading;
 			load_job.uuid = uuid;
+			load_job.resource_type = current_type;
 			load_job.texture_type = texture_type;
 			loading_resources_queue.Push(load_job);
 			++loading_thread_communication.total_number_of_textures_to_load;
@@ -200,6 +202,7 @@ public:
 	bool normal_loading_flag = false;
 	//We change this value to the component that calls Load for textures
 	Component* current_component_loading = nullptr;
+	ResourceType current_type = ResourceType::TEXTURE;
 	//Texture Type 
 	unsigned texture_type = 0;
 

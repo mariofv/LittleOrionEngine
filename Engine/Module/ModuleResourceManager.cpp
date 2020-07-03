@@ -113,11 +113,11 @@ update_status ModuleResourceManager::PreUpdate()
 			//Generate OpenGL texture
 			if (load_job.component_to_load->type == Component::ComponentType::MESH_RENDERER)
 			{
-				load_job.component_to_load->InitResource(load_job.uuid, ResourceType::TEXTURE, load_job.texture_type);
+				load_job.component_to_load->InitResource(load_job.uuid, load_job.resource_type, load_job.texture_type);
 			}
 			else
 			{
-				load_job.component_to_load->InitResource(load_job.uuid, ResourceType::TEXTURE);
+				load_job.component_to_load->InitResource(load_job.uuid, load_job.resource_type);
 			}
 
 			++loading_thread_communication.current_number_of_textures_loaded;
@@ -361,11 +361,11 @@ void ModuleResourceManager::LoaderThread()
 				//Check if resource is already on cache
 				if(load_job.component_to_load->type == Component::ComponentType::MESH_RENDERER)
 				{
-					load_job.component_to_load->LoadResource(load_job.uuid, ResourceType::TEXTURE, load_job.texture_type);
+					load_job.component_to_load->LoadResource(load_job.uuid, load_job.resource_type, load_job.texture_type);
 				}
 				else
 				{
-					load_job.component_to_load->LoadResource(load_job.uuid, ResourceType::TEXTURE);
+					load_job.component_to_load->LoadResource(load_job.uuid, load_job.resource_type);
 				}
 				
 				processing_resources_queue.Push(load_job);
