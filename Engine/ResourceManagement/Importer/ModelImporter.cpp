@@ -117,10 +117,6 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 	}
 	aiReleaseImport(scene);
 
-	std::string config_to_serialize;
-	model.GetSerializedString(config_to_serialize);
-	App->filesystem->Save("/Hola.txt", config_to_serialize);
-
 	model_data = App->resources->prefab_importer->ExtractFromModel(model, model_metafile);
 	if (current_model_data.remmaped_changed || current_model_data.any_new_node)
 	{

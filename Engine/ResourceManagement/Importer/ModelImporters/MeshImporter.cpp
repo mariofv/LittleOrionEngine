@@ -24,8 +24,6 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 
 	node_transformation = scaling_matrix * node_transformation;
 
-	float3x3 node_rotation = Utils::GetTransform(mesh_current_transformation, 1.0f).RotatePart();
-
 	std::vector<uint32_t> indices;
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{
@@ -69,15 +67,15 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		}
 		if (mesh->mNormals)
 		{
-			new_vertex.normals = (node_rotation * float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z)).Normalized();
+			new_vertex.normals = (float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z)).Normalized();
 		}
 		if (mesh->mTangents)
 		{
-			new_vertex.tangent = (node_rotation * float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z)).Normalized();
+			new_vertex.tangent = (float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z)).Normalized();
 		}
 		if (mesh->mBitangents)
 		{
-			new_vertex.bitangent = (node_rotation*float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z)).Normalized();
+			new_vertex.bitangent = (float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z)).Normalized();
 		}
 		if (vertex_skinning__info.size() > 0)
 		{
