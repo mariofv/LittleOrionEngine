@@ -31,10 +31,10 @@ void ComponentAudioSource::Update()
 		source_transform.SetPosition(owner_transform.x, owner_transform.y, owner_transform.z);
 
 		const math::float3 front_vector = owner->transform.GetFrontVector();
-		AkVector orientation_front{ front_vector.x, front_vector.y, front_vector.z };
+		AkVector orientation_front{ front_vector.x, front_vector.y, -front_vector.z };
 
 		const math::float3 top_vector = owner->transform.GetUpVector();
-		AkVector orientation_top{ top_vector.x, top_vector.y, top_vector.z };
+		AkVector orientation_top{ top_vector.x, top_vector.y, -top_vector.z };
 
 		source_transform.SetOrientation(orientation_front, orientation_top);
 
