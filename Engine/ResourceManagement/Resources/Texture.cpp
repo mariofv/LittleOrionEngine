@@ -39,7 +39,6 @@ void Texture::LoadInMemory()
 		return;
 	}
 
-	APP_LOG_INFO("INITIALAZING TEXTURE: %s", std::to_string(uuid).c_str());
 
 	glGenTextures(1, &opengl_texture);
 	glBindTexture(GL_TEXTURE_2D, opengl_texture);
