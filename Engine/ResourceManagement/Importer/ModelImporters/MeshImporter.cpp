@@ -47,12 +47,22 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		vertex_skinning__info = GetSkinning(mesh, mesh_skeleton_uuid);
 	}
 
+	aiMatrix4x4 vertex_transformation;
+	if (mesh->HasBones())
+	{
+		vertex_transformation = node_transformation;
+	}
+	else
+	{
+		vertex_transformation = scaling_matrix;
+	}
+
 	std::vector<Mesh::Vertex> vertices;
 	vertices.reserve(mesh->mNumVertices);
 	for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
 	{
 		Mesh::Vertex new_vertex;
-		aiVector3D transformed_position = scaling_matrix * mesh->mVertices[i];
+		aiVector3D transformed_position = vertex_transformation * mesh->mVertices[i];
 		new_vertex.position = float3(transformed_position.x, transformed_position.y, transformed_position.z);
 
 
