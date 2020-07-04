@@ -67,14 +67,17 @@ void ComponentMeshRenderer::GetTextureFromCache(TextureLoadData loaded_data)
 
 void ComponentMeshRenderer::LoadResource(uint32_t uuid, ResourceType resource, unsigned texture_type)
 {
+	APP_LOG_INFO("GO Loading Resource: %s", std::to_string(owner->UUID).c_str());
+
 	if(resource == ResourceType::TEXTURE)
 	{
 		material_to_render->LoadResource(uuid, texture_type);
+		APP_LOG_INFO("INITIALAZING TEXTURE: %s on component %s", std::to_string(uuid).c_str(), std::to_string(this->UUID).c_str());
 	}
 	else if(resource == ResourceType::MESH)
 	{
 		mesh_to_render = std::static_pointer_cast<Mesh>(App->resources->RetrieveFromCacheIfExist(uuid));
-
+		APP_LOG_INFO("INITIALAZING MESH: %s on component %s", std::to_string(uuid).c_str(), std::to_string(this->UUID).c_str());
 		if (mesh_to_render)
 		{
 			if(mesh_collider)
@@ -116,6 +119,12 @@ void ComponentMeshRenderer::InitResource(uint32_t uuid, ResourceType resource, u
 			mesh_to_render.get()->LoadInMemory();
 		}
 	}
+}
+
+void ComponentMeshRenderer::ReassignResource()
+{
+	SetMesh(mesh_uuid);
+	SetMaterial(material_uuid);
 }
 
 void ComponentMeshRenderer::Render()

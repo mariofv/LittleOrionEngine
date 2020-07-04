@@ -35,6 +35,7 @@ public:
 	void GetTextureFromCache(TextureLoadData loaded_data) override;
 	void LoadResource(uint32_t uuid, ResourceType resource, unsigned texture_type) override;
 	void InitResource(uint32_t uuid, ResourceType resource, unsigned texture_type) override;
+	void ReassignResource() override;
 
 	void Delete() override;
 

@@ -7,6 +7,7 @@
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScriptManager.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleLight.h"
@@ -687,6 +688,14 @@ void GameObject::UnpackPrefab()
 	}
 }
 
+void GameObject::Reassign()
+{
+	for(const auto& component : components)
+	{
+		component->ReassignResource();
+	}
+}
+
 void GameObject::CopyComponentsPrefabs(const GameObject& gameobject_to_copy)
 {
 	this->components.reserve(gameobject_to_copy.components.size());
@@ -711,6 +720,7 @@ void GameObject::CopyComponentsPrefabs(const GameObject& gameobject_to_copy)
 				copy = component->Clone(this->original_prefab);
 			}
 			copy->owner = this;
+			my_component = copy;
 			this->components.push_back(copy);
 		}
 	}

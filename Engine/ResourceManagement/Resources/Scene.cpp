@@ -103,8 +103,8 @@ void Scene::Load(bool from_file)
 
 	timer.Start();
 	App->resources->number_of_textures_loaded = 0;
-	App->resources->loading_thread_communication.current_number_of_textures_loaded = 0;
-	App->resources->loading_thread_communication.total_number_of_textures_to_load = 0;
+	App->resources->loading_thread_communication.current_number_of_resources_loaded = 0;
+	App->resources->loading_thread_communication.total_number_of_resources_to_load = 0;
 	App->resources->loading_thread_communication.loading = true;
 
 	std::unordered_map<int64_t, std::vector<GameObject*>> prefab_parents;
@@ -226,10 +226,13 @@ GameObject* Scene::LoadPrefab(const Config & config) const
 		return missing_prefab;
 	}
 
-	GameObject * instance = prefab->Instantiate(App->scene->GetRoot(), &UUIDS_pairs);
+	GameObject* instance = prefab->Instantiate(App->scene->GetRoot(), &UUIDS_pairs);
 	Config transform_config;
 	config.GetChildConfig("Transform", transform_config);
 	instance->transform.Load(transform_config);
+
+	App->resources->prefabs_to_reassign.push_back(prefab);
+
 	return instance;
 }
 

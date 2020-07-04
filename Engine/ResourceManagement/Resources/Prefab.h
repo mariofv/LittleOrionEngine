@@ -32,6 +32,8 @@ public:
 	void RemoveInstance(GameObject * instance);
 	bool IsOverwritable() const;
 
+	void Reassign();
+
 	GameObject* GetRootGameObject() const;
 	GameObject* GetOriginalGameObject(int64_t UUID) const;
 

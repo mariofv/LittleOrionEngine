@@ -120,13 +120,24 @@ update_status ModuleResourceManager::PreUpdate()
 				load_job.component_to_load->InitResource(load_job.uuid, load_job.resource_type);
 			}
 
-			++loading_thread_communication.current_number_of_textures_loaded;
+			++loading_thread_communication.current_number_of_resources_loaded;
 		}
 	}
 
 	if(loading_thread_communication.loading && 
-		loading_thread_communication.current_number_of_textures_loaded == loading_thread_communication.total_number_of_textures_to_load)
+		loading_thread_communication.current_number_of_resources_loaded == loading_thread_communication.total_number_of_resources_to_load)
 	{
+		for(const auto prefab : prefabs_to_reassign)
+		{
+			prefab->Reassign();
+		}
+
+		if(loading_thread_communication.current_number_of_resources_loaded != loading_thread_communication.total_number_of_resources_to_load)
+		{
+			//We have reassigned some prefabs resources that should be loaded
+			return update_status::UPDATE_CONTINUE;
+		}
+
 		loading_thread_communication.loading = false;
 		App->time->time_scale = 1.f;
 		
@@ -375,6 +386,11 @@ void ModuleResourceManager::LoaderThread()
 
 			const int ms_to_wait = work_load_size_remaining > 0 ? 10 : 2000;
 			std::this_thread::sleep_for(std::chrono::milliseconds(ms_to_wait));
+		}
+
+		if(loading_resources_queue.Empty())
+		{
+			int hola = 0;
 		}
 	}
 }
