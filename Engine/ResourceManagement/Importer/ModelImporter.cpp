@@ -138,16 +138,17 @@ std::vector<Config> ModelImporter::ExtractDataFromNode(const aiNode* root_node, 
 
 	current_transformation.Decompose(model_scale, model_rotation, model_position);
 
-	float3 translation = current_model_data.scale * float3(model_position.x, model_position.y, model_position.z);
+	float3 translation = float3(model_position.x, model_position.y, model_position.z);
 	Quat rotation = Quat(model_rotation.x, model_rotation.y, model_rotation.z, model_rotation.w);
 	float3 scale = float3(model_scale.x, model_scale.y, model_scale.z);
 
+	std::map<std::string, std::shared_ptr<Skeleton>> already_loaded_skeleton;
 	for (size_t i = 0; i < root_node->mNumMeshes; ++i)
 	{
 		Config node;
 		size_t mesh_index = root_node->mMeshes[i];
 		aiMesh* node_mesh = current_model_data.scene->mMeshes[mesh_index];
-		std::string mesh_name = std::string(node_mesh->mName.data) + "_" + std::to_string(i);
+		std::string mesh_name = std::string(root_node->mName.data);
 		node.AddString(mesh_name, "Name");
 		node.AddFloat3(translation, "Translation");
 		node.AddQuat(rotation, "Rotation");
