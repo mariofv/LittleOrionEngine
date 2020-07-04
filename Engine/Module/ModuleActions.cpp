@@ -200,12 +200,13 @@ void ModuleActions::HandleInput()
 {
 	if (active_macros)
 	{
-		UndoRedoMacros();
 		DuplicateMacros();
 		DeleteMacros();
-		SceneMacros();
 		GuizmoMacros();
-	}	
+	}
+	
+	UndoRedoMacros();
+	SceneMacros();
 }
 
 void ModuleActions::UndoRedoMacros()
