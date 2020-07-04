@@ -53,10 +53,7 @@ void PanelStateMachine::Render()
 		ComponentAnimation* animation_component = (ComponentAnimation*)App->editor->selected_game_object->GetComponent(Component::ComponentType::ANIMATION);
 
 		AnimController* controller = animation_component ? animation_component->GetAnimController() : nullptr;
-		if (controller->state_machine)
-		{
-			animation_controller = controller && controller->state_machine->GetUUID() == state_machine->GetUUID() ? animation_component->GetAnimController() : animation_controller_in_hierarchy;
-		}
+		animation_controller = controller && controller->state_machine->GetUUID() == state_machine->GetUUID() ? animation_component->GetAnimController() : animation_controller_in_hierarchy;
 	}
 	else
 	{
@@ -496,8 +493,7 @@ void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 
 	for (auto & animation_component : App->animations->animations)
 	{
-		auto& state_machine = animation_component->GetAnimController()->state_machine;
-		if (state_machine && state_machine->GetUUID() == state_machine_uuid)
+		if (animation_component->GetAnimController()->state_machine->GetUUID() == state_machine_uuid)
 		{
 			animation_controller_in_hierarchy = animation_component->GetAnimController();
 			break;

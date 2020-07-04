@@ -149,6 +149,22 @@ float4x4 Utils::Interpolate(const float4x4& first, const float4x4& second, float
 	return result;
 }
 
+float4x4 Utils::GetTransform(const aiMatrix4x4& current_transform, float scale_factor)
+{
+	aiVector3t<float> pScaling, pPosition;
+	aiQuaterniont<float> pRotation;
+
+	aiMatrix4x4 scale_matrix = aiMatrix4x4() * scale_factor;
+	scale_matrix[3][3] = 1;
+
+	aiMatrix4x4 node_transformation = current_transform;
+	node_transformation.Decompose(pScaling, pRotation, pPosition);
+
+	math::float3 scale(pScaling.x, pScaling.y, pScaling.z);
+	math::Quat rotation(pRotation.x, pRotation.y, pRotation.z, pRotation.w);
+	math::float3 translation(pPosition.x, pPosition.y, pPosition.z);
+	return math::float4x4::FromTRS(translation, rotation, scale);
+}
 
 size_t Utils::GetImageType(const std::string& file_extension)
 {
