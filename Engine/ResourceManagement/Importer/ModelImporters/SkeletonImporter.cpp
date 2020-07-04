@@ -34,7 +34,7 @@ FileData SkeletonImporter::ExtractSkeletonFromAssimp(const aiScene* scene, const
 		aiString bone_name = mesh->mBones[i]->mName;
 		aiNode * bone = scene->mRootNode->FindNode(bone_name);
 
-		while (bone->mParent && bone->mParent != scene->mRootNode && std::string(bone->mName.C_Str()).find("$Assimp") == std::string::npos)
+		while (bone->mParent && bone->mParent != scene->mRootNode)
 		{
 			bone = bone->mParent;
 			if (!complex_skeleton)
@@ -84,32 +84,28 @@ void SkeletonImporter::ImportChildBone(const aiNode * previus_node, uint32_t pre
 	for (size_t i = 0; i < previus_node->mNumChildren; i++)
 	{
 		aiNode* current_node = previus_node->mChildren[i];
-		std::string bone_name = std::string(current_node->mName.C_Str());
 		aiMatrix4x4 node_transformation = current_node->mTransformation;
 		aiMatrix4x4 current_global_transformation = parent_global_transformation * node_transformation;
 		aiMatrix4x4 local_transformation = accumulated_local_transformation * node_transformation;
+		std::string bone_name = std::string(current_node->mName.C_Str());
 
 		uint32_t next_joint = previous_joint_index;
+		if (bone_name.find("$Assimp") == std::string::npos)
+		{
 
-		
-		if (bone_name.find("$Assimp") != std::string::npos)
-		{
-			ImportChildBone(current_node, previous_joint_index, parent_global_transformation, accumulated_local_transformation, skeleton, unit_scale_factor);
-			return;
+			Skeleton::Joint bone{ Utils::GetTransform(current_global_transformation,unit_scale_factor).Inverted(),previous_joint_index, bone_name };
+			auto it = std::find_if(skeleton.skeleton.begin(), skeleton.skeleton.end(), [&bone_name](const Skeleton::Joint & joint) { return joint.name == bone_name; });
+			if (it == skeleton.skeleton.end())
+			{
+				skeleton.skeleton.push_back(bone);
+			}
+			next_joint = skeleton.skeleton.size() - 1;
+			if (next_joint == 0)
+			{
+				current_global_transformation = local_transformation;
+			}
+			local_transformation = aiMatrix4x4();
 		}
-
-		Skeleton::Joint bone{ Utils::GetTransform(current_global_transformation,unit_scale_factor).Inverted(),previous_joint_index, bone_name };
-		auto it = std::find_if(skeleton.skeleton.begin(), skeleton.skeleton.end(), [&bone_name](const Skeleton::Joint & joint) { return joint.name == bone_name; });
-		if (it == skeleton.skeleton.end())
-		{
-			skeleton.skeleton.push_back(bone);
-		}
-		next_joint = skeleton.skeleton.size() - 1;
-		if (next_joint == 0)
-		{
-			current_global_transformation = local_transformation;
-		}
-		local_transformation = aiMatrix4x4();
 		ImportChildBone(current_node, next_joint, current_global_transformation, local_transformation, skeleton, unit_scale_factor);
 	}
 }
