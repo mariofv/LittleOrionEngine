@@ -319,11 +319,17 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::Separator();
 		ImGui::DragInt("Number of textures loaded:", &App->resources->number_of_textures_loaded);
 		
-		int current = static_cast<int>(App->resources->loading_thread_communication.current_number_of_textures_loaded);
-		ImGui::DragInt("Number of textures loaded:", &current);
+		//int current = static_cast<int>(App->resources->loading_thread_communication.current_number_of_textures_loaded);
+		//ImGui::DragInt("Number of textures loaded:", &current);
 
-		int total = static_cast<int>(App->resources->loading_thread_communication.total_number_of_textures_to_load);
-		ImGui::DragInt("Number of textures to load:", &total);
+		//int total = static_cast<int>(App->resources->loading_thread_communication.total_number_of_textures_to_load);
+		//ImGui::DragInt("Number of textures to load:", &total);
+
+		int current = static_cast<int>(App->resources->loading_thread_communication.current_number_of_resources_loaded);
+		ImGui::DragInt("Number of resources loaded:", &current);
+
+		int total = static_cast<int>(App->resources->loading_thread_communication.total_number_of_resources_to_load);
+		ImGui::DragInt("Number of resources to load:", &total);
 
 		bool loading = App->resources->loading_thread_communication.loading;
 		ImGui::Checkbox("Loading: ", &loading);

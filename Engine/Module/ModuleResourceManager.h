@@ -50,6 +50,7 @@ class TextureImporter;
 class SceneManager;
 
 
+
 struct LoadingJob
 {
 	uint32_t uuid = 0;
@@ -131,7 +132,7 @@ public:
 			load_job.resource_type = current_type;
 			load_job.texture_type = texture_type;
 			loading_resources_queue.Push(load_job);
-			++loading_thread_communication.total_number_of_textures_to_load;
+			++loading_thread_communication.total_number_of_resources_to_load;
 		}
 		else
 		{
@@ -211,14 +212,16 @@ public:
 
 	float time_loading_meshes = 0.f;
 
+	std::vector<std::shared_ptr<Prefab>> prefabs_to_reassign;
+
 	ThreadSafeQueue<LoadingJob> loading_resources_queue;
 	ThreadSafeQueue<LoadingJob> processing_resources_queue;
 
 	struct LoadingTexturesThreadCommunication
 	{
 		std::atomic_bool loading = false;
-		std::atomic<int> total_number_of_textures_to_load = 0;
-		std::atomic<int> current_number_of_textures_loaded = 0;
+		std::atomic<int> total_number_of_resources_to_load = 0;
+		std::atomic<int> current_number_of_resources_loaded = 0;
 	}loading_thread_communication;
 
 	//Importers

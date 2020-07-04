@@ -248,3 +248,17 @@ bool Prefab::IsOverwritable() const
 {
 	return overwritable;
 }
+
+void Prefab::Reassign()
+{
+	for(const auto instance : instances)
+	{
+		for(const auto go : instance->children)
+		{
+			if(go->prefab_reference)
+			{
+				go->Reassign();
+			}
+		}
+	}
+}
