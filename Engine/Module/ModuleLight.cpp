@@ -24,9 +24,6 @@ bool ModuleLight::Init()
 }
 
 
-
-
-
 update_status ModuleLight::PostUpdate()
 {
 
@@ -42,7 +39,6 @@ update_status ModuleLight::PostUpdate()
 	App->cameras->UpdateDirectionalLightFrustums(light_aabb.maxPoint, light_aabb.minPoint);
 
 	light_aabb.SetNegativeInfinity();
-	light_obb.SetNegativeInfinity();
 	
 	return update_status::UPDATE_CONTINUE;
 
@@ -164,13 +160,12 @@ void ModuleLight::UpdateLightAABB(GameObject& object)
 	AABB temp;
 	temp = object.aabb.bounding_box;
 
-	object_obb = object.aabb.bounding_box.Transform(directional_light_rotation.Inverted());
+	OBB object_obb = object.aabb.bounding_box.Transform(directional_light_rotation.Inverted());
 
 	AABB object_aabb = object_obb.MinimalEnclosingAABB();
 
 	light_aabb.Enclose(object_aabb);
 
-	light_obb = light_aabb.Transform(directional_light_rotation);
 }
 
 void ModuleLight::RenderPointLights(const float3& mesh_position, GLuint program)

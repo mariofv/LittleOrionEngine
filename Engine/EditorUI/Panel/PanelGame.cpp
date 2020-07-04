@@ -47,9 +47,12 @@ void PanelGame::Render()
 			
 			if (App->renderer->render_shadows)
 			{
+				float old_fov = App->cameras->main_camera->camera_frustum.verticalFov;
+				App->cameras->main_camera->SetFOV(old_fov * 2);
 				App->cameras->directional_light_camera->RecordFrame((GLsizei)game_window_content_area_width * 4, (GLsizei)game_window_content_area_width * 4);
 				App->cameras->directional_light_mid->RecordFrame((GLsizei)game_window_content_area_width, (GLsizei)game_window_content_area_width);
 				App->cameras->directional_light_far->RecordFrame((GLsizei)game_window_content_area_width / 4, (GLsizei)game_window_content_area_width / 4);
+				App->cameras->main_camera->SetFOV(old_fov);
 			}
 			App->cameras->main_camera->RecordFrame((GLsizei)game_window_content_area_width, (GLsizei)game_window_content_area_height);
 			App->cameras->main_camera->RecordDebugDraws();

@@ -48,14 +48,13 @@ public:
 	
 	AABB   light_aabb;
 	float3 light_position = float3::zero;
-	
-	OBB light_obb;
-	OBB object_obb;
+
 
 private:
 	std::vector< std::pair<float, ComponentLight*> >  closest_lights;
 	friend class ModuleEditor;
 	Quat directional_light_rotation;
+	float main_camera_fov_increment_factor = 2;
 
 };
 
