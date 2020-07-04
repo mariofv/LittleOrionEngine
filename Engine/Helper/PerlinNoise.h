@@ -5,17 +5,17 @@
 #include <stdio.h>
 #include <math.h>
 
-#define B 0x100
-#define BM 0xff
+#define perlin_B 0x100
+#define perlin_BM 0xff
 
-#define N 0x1000
-#define NP 12   /* 2^N */
-#define NM 0xfff
+#define perlin_N 0x1000
+#define perlin_NP 12   /* 2^N */
+#define perlin_NM 0xfff
 
-static int perlin_p[B + B + 2];
-static float perlin_g3[B + B + 2][3];
-static float perlin_g2[B + B + 2][2];
-static float perlin_g1[B + B + 2];
+static int perlin_p[perlin_B + perlin_B + 2];
+static float perlin_g3[perlin_B + perlin_B + 2][3];
+static float perlin_g2[perlin_B + perlin_B + 2][2];
+static float perlin_g1[perlin_B + perlin_B + 2];
 static int perlin_start = 1;
 
 static void perlin_init(void);
@@ -25,9 +25,9 @@ static void perlin_init(void);
 #define perlin_lerp(t, a, b) ( a + t * (b - a) )
 
 #define perlin_setup(i,b0,b1,r0,r1)\
-	t = vec[i] + N;\
-	b0 = ((int)t) & BM;\
-	b1 = (b0+1) & BM;\
+	t = vec[i] + perlin_N;\
+	b0 = ((int)t) & perlin_BM;\
+	b1 = (b0+1) & perlin_BM;\
 	r0 = t - (int)t;\
 	r1 = r0 - 1.;
 
@@ -165,32 +165,32 @@ static void perlin_init(void)
 {
 	int i, j, k;
 
-	for (i = 0; i < B; i++) {
+	for (i = 0; i < perlin_B; i++) {
 		perlin_p[i] = i;
 
-		perlin_g1[i] = (float)((rand() % (B + B)) - B) / B;
+		perlin_g1[i] = (float)((rand() % (perlin_B + perlin_B)) - perlin_B) / perlin_B;
 
 		for (j = 0; j < 2; j++)
-			perlin_g2[i][j] = (float)((rand() % (B + B)) - B) / B;
+			perlin_g2[i][j] = (float)((rand() % (perlin_B + perlin_B)) - perlin_B) / perlin_B;
 		normalize2(perlin_g2[i]);
 
 		for (j = 0; j < 3; j++)
-			perlin_g3[i][j] = (float)((rand() % (B + B)) - B) / B;
+			perlin_g3[i][j] = (float)((rand() % (perlin_B + perlin_B)) - perlin_B) / perlin_B;
 		normalize3(perlin_g3[i]);
 	}
 
 	while (--i) {
 		k = perlin_p[i];
-		perlin_p[i] = perlin_p[j = rand() % B];
+		perlin_p[i] = perlin_p[j = rand() % perlin_B];
 		perlin_p[j] = k;
 	}
 
-	for (i = 0; i < B + 2; i++) {
-		perlin_p[B + i] = perlin_p[i];
-		perlin_g1[B + i] = perlin_g1[i];
+	for (i = 0; i < perlin_B + 2; i++) {
+		perlin_p[perlin_B + i] = perlin_p[i];
+		perlin_g1[perlin_B + i] = perlin_g1[i];
 		for (j = 0; j < 2; j++)
-			perlin_g2[B + i][j] = perlin_g2[i][j];
+			perlin_g2[perlin_B + i][j] = perlin_g2[i][j];
 		for (j = 0; j < 3; j++)
-			perlin_g3[B + i][j] = perlin_g3[i][j];
+			perlin_g3[perlin_B + i][j] = perlin_g3[i][j];
 	}
 }
