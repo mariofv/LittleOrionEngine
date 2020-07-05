@@ -92,7 +92,11 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 	// STORE ALL MODEL GLOBAL DATA
 	current_model_data = {scene, asset_file_folder_path, unit_scale_factor, skeleton_cache};
 	current_model_data.model_metafile = &model_metafile;
-	current_model_data.animated_model = scene->mNumAnimations > 0;
+	current_model_data.animated_model = false;
+	for (size_t i = 0; i < scene->mNumMeshes; i++)
+	{
+		current_model_data.animated_model |= scene->mMeshes[i]->HasBones();
+	}
 
 	aiNode* root_node = scene->mRootNode;
 	aiMatrix4x4 identity_transformation = aiMatrix4x4();
