@@ -57,6 +57,7 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 	else
 	{
 		vertex_transformation = scaling_matrix;
+		node_rotation = Quat::identity.ToFloat3x3();
 	}
 
 	std::vector<Mesh::Vertex> vertices;

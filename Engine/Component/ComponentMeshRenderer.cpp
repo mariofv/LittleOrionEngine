@@ -56,7 +56,7 @@ void ComponentMeshRenderer::SpecializedLoad(const Config& config)
 
 void ComponentMeshRenderer::Render()
 {
-	if (material_to_render == nullptr)
+	if (mesh_to_render == nullptr || material_to_render == nullptr)
 	{
 		return;
 	}
