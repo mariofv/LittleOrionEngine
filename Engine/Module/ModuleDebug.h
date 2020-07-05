@@ -29,8 +29,8 @@ public:
 public:
 	bool show_imgui_demo = false;
 	bool show_debug_metrics = true;
-	bool show_bounding_boxes = true;
-	bool show_global_bounding_boxes = true;
+	bool show_bounding_boxes = false;
+	bool show_global_bounding_boxes = false;
 	bool show_transform_2d = true;
 	bool show_canvas = true;
 	bool show_camera_frustum = true;
@@ -43,7 +43,7 @@ public:
 	bool show_physics = false;
 
 #if !GAME
-	bool culling_scene_mode = true;
+	bool culling_scene_mode = false;
 #else
 	bool culling_scene_mode = true;
 #endif

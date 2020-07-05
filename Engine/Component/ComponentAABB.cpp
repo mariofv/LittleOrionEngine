@@ -35,15 +35,13 @@ void ComponentAABB::GenerateBoundingBox()
 	bool has_mesh = false;
 	ComponentMeshRenderer* owner_mesh_renderer = static_cast<ComponentMeshRenderer*>(owner->GetComponent(ComponentType::MESH_RENDERER));
 	has_mesh = owner_mesh_renderer != nullptr && owner_mesh_renderer->mesh_to_render != nullptr;
-	bool has_particles = false;
 	ComponentParticleSystem* owner_particle_system= static_cast<ComponentParticleSystem*>(owner->GetComponent(ComponentType::PARTICLE_SYSTEM));
-	has_particles = owner_particle_system;
 
 	if (has_mesh)
 	{
 		GenerateBoundingBoxFromVertices(owner_mesh_renderer->mesh_to_render->vertices);
 	}
-	else if(has_particles)
+	else if(owner_particle_system)
 	{ 
 		GenerateBoundingBoxFromParticleSystem(*owner_particle_system);
 	}
@@ -75,7 +73,7 @@ void ComponentAABB::GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vert
 	}
 }
 
-void ComponentAABB::GenerateBoundingBoxFromParticleSystem(const ComponentParticleSystem & particle_system)
+void ComponentAABB::GenerateBoundingBoxFromParticleSystem(const ComponentParticleSystem& particle_system)
 {
 	bounding_box.SetNegativeInfinity();
 	original_box.SetNegativeInfinity();
@@ -95,7 +93,7 @@ void ComponentAABB::GenerateBoundingBoxFromParticleSystem(const ComponentParticl
 		float max_x = static_cast<float>(particle_system.max_range_random_x);
 		float min_z = static_cast<float>(particle_system.min_range_random_z);
 		float max_z = static_cast<float>(particle_system.max_range_random_z);
-		float height = particle_system.particles_life_time*particle_system.velocity_particles *100.0f;
+		float height = particle_system.particles_life_time * particle_system.velocity_particles * 100.0f;
 
 		AABB box(float3(min_x, 0.0f, min_z) / 100, float3(max_x, height, max_z) / 100);
 		bounding_box.Enclose(box);
