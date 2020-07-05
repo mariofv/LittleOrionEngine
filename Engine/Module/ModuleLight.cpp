@@ -128,6 +128,20 @@ void ModuleLight::RenderSpotLights(const float3& mesh_position, GLuint program)
 
 void ModuleLight::SendShadowMatricesToShader(GLuint program)
 {
+	glUniform1i(glGetUniformLocation(program, "render_shadows"), App->renderer->render_shadows);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, App->cameras->directional_light_camera->depth_map);
+	glUniform1i(glGetUniformLocation(program, "close_depth_map"), 0);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, App->cameras->directional_light_mid->depth_map);
+	glUniform1i(glGetUniformLocation(program, "mid_depth_map"), 1);
+
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, App->cameras->directional_light_far->depth_map);
+	glUniform1i(glGetUniformLocation(program, "far_depth_map"), 2);
+
 	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_view"), 1, GL_TRUE, &App->cameras->directional_light_camera->GetViewMatrix()[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_proj"), 1, GL_TRUE, &App->cameras->directional_light_camera->GetProjectionMatrix()[0][0]);
 
@@ -139,15 +153,6 @@ void ModuleLight::SendShadowMatricesToShader(GLuint program)
 
 	if (App->cameras->main_camera != nullptr)
 	{
-		//glUniformMatrix4fv(glGetUniformLocation(program, "main_cam_view"), 1, GL_TRUE, &App->cameras->main_camera->GetViewMatrix()[0][0]);
-		//glUniformMatrix4fv(glGetUniformLocation(program, "main_cam_proj"), 1, GL_TRUE, &App->cameras->main_camera->GetProjectionMatrix()[0][0]);
-
-		/*glUniformMatrix4fv(glGetUniformLocation(program, "close_cam_view"), 1, GL_TRUE, &App->cameras->camera_close->GetViewMatrix()[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(program, "close_cam_proj"), 1, GL_TRUE, &App->cameras->camera_close->GetProjectionMatrix()[0][0]);
-
-		glUniformMatrix4fv(glGetUniformLocation(program, "mid_cam_view"), 1, GL_TRUE, &App->cameras->camera_mid->GetViewMatrix()[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(program, "mid_cam_proj"), 1, GL_TRUE, &App->cameras->camera_mid->GetProjectionMatrix()[0][0]);*/
-
 		glUniform1f(glGetUniformLocation(program, "far_plane"), App->cameras->main_camera->camera_frustum.farPlaneDistance);
 
 	}
