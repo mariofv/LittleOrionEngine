@@ -45,6 +45,8 @@ public:
 	
 	void Render() const;
 	void RenderFrame(const ComponentCamera& camera);
+	void RenderZBufferFrame(const ComponentCamera& camera);
+	void GetMeshesToRender(const ComponentCamera* camera);
 
 
 	ComponentMeshRenderer* CreateComponentMeshRenderer();
@@ -71,7 +73,6 @@ private:
 
 	std::string GetDrawMode() const;
 
-	void GetMeshesToRender(const ComponentCamera* camera);
 	void SetListOfMeshesToRender(const ComponentCamera* camera);
 
 public:

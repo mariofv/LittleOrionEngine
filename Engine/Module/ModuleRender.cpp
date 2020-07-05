@@ -225,6 +225,27 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	
 }
 
+void ModuleRender::RenderZBufferFrame(const ComponentCamera & camera)
+{
+	BROFILER_CATEGORY("Render Z buffer Frame", Profiler::Color::Azure);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+
+	static size_t projection_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + sizeof(float4x4);
+	glBufferSubData(GL_UNIFORM_BUFFER, projection_matrix_offset, sizeof(float4x4), camera.GetProjectionMatrix().Transposed().ptr());
+
+	static size_t view_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + 2 * sizeof(float4x4);
+	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), camera.GetViewMatrix().Transposed().ptr());
+
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	for (ComponentMeshRenderer* mesh : meshes_to_render)
+	{
+		mesh->Render();
+	}
+
+}
+
 void ModuleRender::GetMeshesToRender(const ComponentCamera* camera)
 {
 	BROFILER_CATEGORY("Get meshes to render", Profiler::Color::Aquamarine);

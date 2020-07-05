@@ -57,6 +57,8 @@ public:
 	float GetHeight() const;
 
 	void RecordFrame(GLsizei width, GLsizei height, bool scene_mode = false);
+	void RecordZBufferFrame(GLsizei width, GLsizei height);
+	void SetWidthAndHeight(const GLsizei &width, const GLsizei &height);
 	ENGINE_API void RecordDebugDraws(bool scene_mode = false);
 	GLuint GetLastRecordedFrame() const;
 

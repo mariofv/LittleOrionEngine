@@ -201,16 +201,7 @@ float ComponentCamera::GetHeight() const
 void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode)
 {
 
-	if (last_width != width || last_height != height || toggle_msaa)
-	{
-		last_width = static_cast<float>(width);
-		last_height = static_cast<float>(height);
-		SetAspectRatio(last_width / last_height);
-		GenerateFrameBuffers(width, height);
-		toggle_msaa = false;
-
-
-	}
+	SetWidthAndHeight(width, height);
 
 #if !GAME
 		App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -256,6 +247,32 @@ void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #endif
+}
+
+void ComponentCamera::RecordZBufferFrame(GLsizei width, GLsizei height)
+{
+
+	SetWidthAndHeight(width, height);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	glViewport(0, 0, width, height);
+
+	glClear(GL_DEPTH_BUFFER_BIT);
+	App->renderer->RenderZBufferFrame(*this);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void ComponentCamera::SetWidthAndHeight(const GLsizei &width, const GLsizei &height)
+{
+	if (last_width != width || last_height != height || toggle_msaa)
+	{
+		last_width = static_cast<float>(width);
+		last_height = static_cast<float>(height);
+		SetAspectRatio(last_width / last_height);
+		GenerateFrameBuffers(width, height);
+		toggle_msaa = false;
+	}
 }
 
 void ComponentCamera::RecordDebugDraws(bool scene_mode)

@@ -180,19 +180,14 @@ void ModuleLight::RecordShadowsFrameBuffers(int width, int height)
 
 	float old_fov = App->cameras->main_camera->camera_frustum.verticalFov;
 	App->cameras->main_camera->SetFOV(old_fov * main_camera_fov_increment_factor);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, directional_light_camera->fbo);
-	directional_light_camera->RecordFrame(width * 4, height * 4);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, directional_light_mid->fbo);
-	directional_light_mid->RecordFrame(width, height);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, directional_light_far->fbo);
-	directional_light_far->RecordFrame(width / 4, height / 4);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	App->renderer->GetMeshesToRender(App->cameras->main_camera);
 	App->cameras->main_camera->SetFOV(old_fov);
+
+	directional_light_camera->RecordZBufferFrame(width * 4, height * 4);
+
+	directional_light_mid->RecordZBufferFrame(width, height);
+
+	directional_light_far->RecordZBufferFrame(width / 4, height / 4);
 }
 
 void ModuleLight::RenderPointLights(const float3& mesh_position, GLuint program)
