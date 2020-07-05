@@ -92,6 +92,7 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 	// STORE ALL MODEL GLOBAL DATA
 	current_model_data = {scene, asset_file_folder_path, unit_scale_factor, skeleton_cache};
 	current_model_data.model_metafile = &model_metafile;
+	current_model_data.animated_model = scene->mNumAnimations > 0;
 
 	aiNode* root_node = scene->mRootNode;
 	aiMatrix4x4 identity_transformation = aiMatrix4x4();
@@ -117,7 +118,7 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 	}
 	aiReleaseImport(scene);
 
-	model_data = App->resources->prefab_importer->ExtractFromModel(model, model_metafile);
+	model_data = App->resources->prefab_importer->ExtractFromModel(model, model_metafile, current_model_data.animated_model);
 	if (current_model_data.remmaped_changed || current_model_data.any_new_node)
 	{
 		App->resources->metafile_manager->SaveMetafile(static_cast<Metafile*>(&model_metafile), assets_file_path);
@@ -178,7 +179,7 @@ std::vector<Config> ModelImporter::ExtractDataFromNode(const aiNode* root_node, 
 
 		if (current_model_data.model_metafile->import_mesh)
 		{
-			uint32_t extracted_mesh_uuid = ExtractMeshFromNode(node_mesh, mesh_name, current_transformation, extracted_skeleton_uuid);
+			uint32_t extracted_mesh_uuid = ExtractMeshFromNode(node_mesh, mesh_name, parent_transformation, extracted_skeleton_uuid);
 			if (extracted_mesh_uuid != 0)
 			{
 				node.AddUInt(extracted_mesh_uuid, "Mesh");
@@ -233,7 +234,7 @@ uint32_t ModelImporter::SaveDataInLibrary( Metafile &node_metafile, FileData & f
 
 uint32_t ModelImporter::ExtractMeshFromNode(const aiMesh* asssimp_mesh, std::string mesh_name, const aiMatrix4x4& mesh_transformation, uint32_t mesh_skeleton_uuid) const
 {
-	FileData mesh_data = App->resources->mesh_importer->ExtractMeshFromAssimp(asssimp_mesh, mesh_transformation, current_model_data.scale, mesh_skeleton_uuid);
+	FileData mesh_data = App->resources->mesh_importer->ExtractMeshFromAssimp(asssimp_mesh, mesh_transformation, current_model_data.scale, mesh_skeleton_uuid, current_model_data.animated_model);
 	if (mesh_data.size == 0)
 	{
 		return 0;

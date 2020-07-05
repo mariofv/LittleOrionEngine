@@ -12,7 +12,7 @@ FileData MeshImporter::ExtractData(Path& assets_file_path, const Metafile& metaf
 	return assets_file_path.GetFile()->Load();
 }
 
-FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, float unit_scale_factor, uint32_t mesh_skeleton_uuid) const
+FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, float unit_scale_factor, uint32_t mesh_skeleton_uuid, bool animated_model) const
 {
 	FileData mesh_data{NULL, 0};
 
@@ -47,10 +47,12 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		vertex_skinning__info = GetSkinning(mesh, mesh_skeleton_uuid);
 	}
 
+	float3x3 node_rotation = float3x3::zero;
 	aiMatrix4x4 vertex_transformation;
-	if (mesh->HasBones())
+	if (animated_model)
 	{
 		vertex_transformation = node_transformation;
+		node_rotation = Utils::GetTransform(mesh_current_transformation, 1.0f).RotatePart();
 	}
 	else
 	{
@@ -77,15 +79,15 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		}
 		if (mesh->mNormals)
 		{
-			new_vertex.normals = (float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z)).Normalized();
+			new_vertex.normals = (node_rotation * float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z)).Normalized();
 		}
 		if (mesh->mTangents)
 		{
-			new_vertex.tangent = (float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z)).Normalized();
+			new_vertex.tangent = (node_rotation * float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z)).Normalized();
 		}
 		if (mesh->mBitangents)
 		{
-			new_vertex.bitangent = (float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z)).Normalized();
+			new_vertex.bitangent = (node_rotation * float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z)).Normalized();
 		}
 		if (vertex_skinning__info.size() > 0)
 		{
