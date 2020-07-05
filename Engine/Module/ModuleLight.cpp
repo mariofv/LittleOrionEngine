@@ -59,7 +59,7 @@ void ModuleLight::Render(const float3& mesh_position, GLuint program)
 	RenderDirectionalLight(mesh_position);
 	RenderSpotLights(mesh_position, program);
 	RenderPointLights(mesh_position, program);
-	SendShadowMatricesToShader(program);
+	SendShadowUniformsToShader(program);
 
 }
 
@@ -124,71 +124,7 @@ void ModuleLight::RenderSpotLights(const float3& mesh_position, GLuint program)
 	glUniform1i(glGetUniformLocation(program, "num_spot_lights"), current_number_spot_lights_rendered);
 }
 
-void ModuleLight::SendShadowMatricesToShader(GLuint program)
-{
-	glUniform1i(glGetUniformLocation(program, "render_shadows"), render_shadows);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, directional_light_camera->depth_map);
-	glUniform1i(glGetUniformLocation(program, "close_depth_map"), 0);
-
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, directional_light_mid->depth_map);
-	glUniform1i(glGetUniformLocation(program, "mid_depth_map"), 1);
-
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, directional_light_far->depth_map);
-	glUniform1i(glGetUniformLocation(program, "far_depth_map"), 2);
-
-	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_view"), 1, GL_TRUE, &directional_light_camera->GetViewMatrix()[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_proj"), 1, GL_TRUE, &directional_light_camera->GetProjectionMatrix()[0][0]);
-
-	glUniformMatrix4fv(glGetUniformLocation(program, "mid_directional_view"), 1, GL_TRUE, &directional_light_mid->GetViewMatrix()[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "mid_directional_proj"), 1, GL_TRUE, &directional_light_mid->GetProjectionMatrix()[0][0]);
-
-	glUniformMatrix4fv(glGetUniformLocation(program, "far_directional_view"), 1, GL_TRUE, &directional_light_far->GetViewMatrix()[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "far_directional_proj"), 1, GL_TRUE, &directional_light_far->GetProjectionMatrix()[0][0]);
-
-	if (App->cameras->main_camera != nullptr)
-	{
-		glUniform1f(glGetUniformLocation(program, "far_plane"), App->cameras->main_camera->camera_frustum.farPlaneDistance);
-
-	}
-
-}
-
-void ModuleLight::UpdateLightAABB(GameObject& object)
-{
-	//Light aabb will enclose every object in the scene
-	AABB temp;
-	temp = object.aabb.bounding_box;
-
-	OBB object_obb = object.aabb.bounding_box.Transform(directional_light_rotation.Inverted());
-
-	AABB object_aabb = object_obb.MinimalEnclosingAABB();
-
-	light_aabb.Enclose(object_aabb);
-
-}
-
-void ModuleLight::RecordShadowsFrameBuffers(int width, int height)
-{
-	if (!render_shadows)
-	{
-		return;
-	}
-
-	float old_fov = App->cameras->main_camera->camera_frustum.verticalFov;
-	App->cameras->main_camera->SetFOV(old_fov * main_camera_fov_increment_factor);
-	App->renderer->GetMeshesToRender(App->cameras->main_camera);
-	App->cameras->main_camera->SetFOV(old_fov);
-
-	directional_light_camera->RecordZBufferFrame(width * 4, height * 4);
-
-	directional_light_mid->RecordZBufferFrame(width, height);
-
-	directional_light_far->RecordZBufferFrame(width / 4, height / 4);
-}
 
 void ModuleLight::RenderPointLights(const float3& mesh_position, GLuint program)
 {
@@ -250,6 +186,19 @@ void ModuleLight::SortClosestLights(const float3& position, ComponentLight::Ligh
 	});
 }
 
+
+//SHADOWS
+
+void ModuleLight::UpdateLightAABB(GameObject& object)
+{
+	//Light aabb will enclose every object in the scene
+	OBB object_obb = object.aabb.bounding_box.Transform(directional_light_rotation.Inverted());
+
+	AABB object_aabb = object_obb.MinimalEnclosingAABB();
+
+	light_aabb.Enclose(object_aabb);
+
+}
 void ModuleLight::SetDirectionalLightFrustums()
 {
 	dir_light_game_object = App->scene->CreateGameObject();
@@ -288,6 +237,25 @@ void ModuleLight::SetDirectionalLightFrustums()
 
 }
 
+void ModuleLight::RecordShadowsFrameBuffers(int width, int height)
+{
+	if (!render_shadows)
+	{
+		return;
+	}
+
+	float old_fov = App->cameras->main_camera->camera_frustum.verticalFov;
+	App->cameras->main_camera->SetFOV(old_fov * main_camera_fov_increment_factor);
+	App->renderer->GetMeshesToRender(App->cameras->main_camera);
+	App->cameras->main_camera->SetFOV(old_fov);
+
+	directional_light_camera->RecordZBufferFrame(width * 4, height * 4);
+
+	directional_light_mid->RecordZBufferFrame(width, height);
+
+	directional_light_far->RecordZBufferFrame(width / 4, height / 4);
+}
+
 void ModuleLight::UpdateDirectionalLightFrustums(float3 max, float3 min)
 {
 	//Setting far planes also from AABB 
@@ -309,4 +277,37 @@ void ModuleLight::UpdateDirectionalLightFrustums(float3 max, float3 min)
 	directional_light_camera->Update();
 	directional_light_mid->Update();
 	directional_light_far->Update();
+}
+
+void ModuleLight::SendShadowUniformsToShader(GLuint program)
+{
+	glUniform1i(glGetUniformLocation(program, "render_shadows"), render_shadows);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, directional_light_camera->depth_map);
+	glUniform1i(glGetUniformLocation(program, "close_depth_map"), 0);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, directional_light_mid->depth_map);
+	glUniform1i(glGetUniformLocation(program, "mid_depth_map"), 1);
+
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, directional_light_far->depth_map);
+	glUniform1i(glGetUniformLocation(program, "far_depth_map"), 2);
+
+	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_view"), 1, GL_TRUE, &directional_light_camera->GetViewMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_proj"), 1, GL_TRUE, &directional_light_camera->GetProjectionMatrix()[0][0]);
+
+	glUniformMatrix4fv(glGetUniformLocation(program, "mid_directional_view"), 1, GL_TRUE, &directional_light_mid->GetViewMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "mid_directional_proj"), 1, GL_TRUE, &directional_light_mid->GetProjectionMatrix()[0][0]);
+
+	glUniformMatrix4fv(glGetUniformLocation(program, "far_directional_view"), 1, GL_TRUE, &directional_light_far->GetViewMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "far_directional_proj"), 1, GL_TRUE, &directional_light_far->GetProjectionMatrix()[0][0]);
+
+	if (App->cameras->main_camera != nullptr)
+	{
+		glUniform1f(glGetUniformLocation(program, "far_plane"), App->cameras->main_camera->camera_frustum.farPlaneDistance);
+
+	}
+
 }

@@ -22,8 +22,8 @@ public:
 	void RenderDirectionalLight(const float3& mesh_position);
 	void RenderSpotLights(const float3& mesh_position, GLuint program);
 	void RenderPointLights(const float3& mesh_position, GLuint program);
-	void UpdateLightAABB(GameObject& object_aabb);
 
+	void UpdateLightAABB(GameObject& object_aabb);
 	void RecordShadowsFrameBuffers(int width, int height);
 
 	ComponentLight* CreateComponentLight();
@@ -31,10 +31,10 @@ public:
 
 private:
 	void SortClosestLights(const float3& position, ComponentLight::LightType light_type);
-	void SendShadowMatricesToShader(GLuint program);
-	void SetDirectionalLightFrustums();
-
 	void UpdateDirectionalLightFrustums(float3 max, float3 min);
+
+	void SetDirectionalLightFrustums();
+	void SendShadowUniformsToShader(GLuint program);
 
 public:
 	static const unsigned int MAX_DIRECTIONAL_LIGHTS_RENDERED = 1;
