@@ -18,6 +18,7 @@ public:
 
 	void UpdateDimensions();
 	void Scale();
+	void InitData();
 };
 
 #endif

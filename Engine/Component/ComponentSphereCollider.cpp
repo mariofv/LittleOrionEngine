@@ -5,14 +5,12 @@
 
 ComponentSphereCollider::ComponentSphereCollider() : ComponentCollider(ComponentCollider::ColliderType::SPHERE)
 {
-	col_shape = new btSphereShape(max(box_size.x(), box_size.y(), box_size.z()));
-	AddBody();
+	InitData();
 }
 
 ComponentSphereCollider::ComponentSphereCollider(GameObject* owner) : ComponentCollider(owner, ComponentCollider::ColliderType::SPHERE)
 {
-	col_shape = new btSphereShape(max(box_size.x(), box_size.y(), box_size.z()));
-	AddBody();
+	InitData();
 }
 
 Component* ComponentSphereCollider::Clone(GameObject* owner, bool original_prefab) const
@@ -50,4 +48,10 @@ void ComponentSphereCollider::Scale()
 	float3 global_scale = owner->transform.GetGlobalScale();
 	body->getCollisionShape()->setLocalScaling(btVector3(max(global_scale.x, global_scale.y, global_scale.z) * scale.x, max(global_scale.x, global_scale.y, global_scale.z) * scale.x, max(global_scale.x, global_scale.y, global_scale.z)* scale.x));
 	box_size = btVector3(scale.x, scale.y, scale.z);
+}
+
+void ComponentSphereCollider::InitData()
+{
+	col_shape = new btSphereShape(max(box_size.x(), box_size.y(), box_size.z()));
+	AddBody();
 }

@@ -5,14 +5,12 @@
 
 ComponentCapsuleCollider::ComponentCapsuleCollider() : ComponentCollider(ComponentCollider::ColliderType::CAPSULE)
 {
-	col_shape = new btCapsuleShape(max(box_size.x(), box_size.z()), box_size.y());
-	AddBody();
+	InitData();
 }
 
 ComponentCapsuleCollider::ComponentCapsuleCollider(GameObject* owner) : ComponentCollider(owner, ComponentCollider::ColliderType::CAPSULE)
 {
-	col_shape = new btCapsuleShape(max(box_size.x(), box_size.z()), box_size.y());
-	AddBody();
+	InitData();
 }
 
 Component* ComponentCapsuleCollider::Clone(GameObject* owner, bool original_prefab) const
@@ -51,5 +49,11 @@ void ComponentCapsuleCollider::Scale()
 	float3 global_scale = owner->transform.GetGlobalScale();
 	body->getCollisionShape()->setLocalScaling(btVector3(max(global_scale.x, global_scale.z) * scale.x, global_scale.y * scale.y, scale.z));
 	box_size = btVector3(scale.x, scale.y, scale.z);
+}
+
+void ComponentCapsuleCollider::InitData()
+{
+	col_shape = new btCapsuleShape(max(box_size.x(), box_size.z()), box_size.y());
+	AddBody();
 }
 
