@@ -229,7 +229,7 @@ void ComponentCollider::SetVisualization()
 	flags |= body->CF_DISABLE_VISUALIZE_OBJECT;
 	if (visualize)
 	{
-		flags -= body->CF_DISABLE_VISUALIZE_OBJECT;
+		flags &= ~(body->CF_DISABLE_VISUALIZE_OBJECT);
 		
 	}
 	body->setCollisionFlags(flags);
@@ -350,7 +350,7 @@ void ComponentCollider::SetStatic()
 	float new_mass = 0.0F;
 	if (!is_static)
 	{
-		flags -= body->CF_KINEMATIC_OBJECT;
+		flags &= ~(body->CF_KINEMATIC_OBJECT);
 		new_mass = mass;
 	}
 	mass = new_mass;
