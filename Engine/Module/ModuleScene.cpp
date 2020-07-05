@@ -96,6 +96,9 @@ ENGINE_API GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
 {
 	GameObject * created_game_object_ptr = CreateGameObject();
 	parent->AddChild(created_game_object_ptr);
+	created_game_object_ptr->transform.SetTranslation(float3::zero);
+	created_game_object_ptr->transform.SetRotation(Quat::identity);
+	created_game_object_ptr->transform.SetScale(float3::one);
 
 	return created_game_object_ptr;
 }
@@ -321,15 +324,18 @@ void ModuleScene::OpenScene()
 
 inline void ModuleScene::LoadSceneResource()
 {
+	std::string uuid_string = std::to_string(pending_scene_uuid);
+	bool exists = App->filesystem->Exists(std::string(LIBRARY_METADATA_PATH) + "/" + uuid_string.substr(0,2)+"/"+uuid_string);
+	uint32_t default_uuid = GetSceneUUIDFromPath(DEFAULT_SCENE_PATH);
 	if (pending_scene_uuid == tmp_scene->GetUUID())
 	{
 		tmp_scene.get()->Load();
 		current_scene = last_scene;
 	}
-	else if (pending_scene_uuid == GetSceneUUIDFromPath(DEFAULT_SCENE_PATH))
+	else if (pending_scene_uuid == default_uuid || !exists)
 	{
 		current_scene = nullptr;
-		App->resources->Load<Scene>(pending_scene_uuid).get()->Load();
+		App->resources->Load<Scene>(default_uuid).get()->Load();
 	}
 	else
 	{

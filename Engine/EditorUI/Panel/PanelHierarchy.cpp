@@ -26,6 +26,7 @@
 
 #include <Brofiler/Brofiler.h>
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
 PanelHierarchy::PanelHierarchy()
@@ -59,7 +60,7 @@ void PanelHierarchy::Render()
 	ImGui::End();
 }
 
-void PanelHierarchy::ShowGameObjectHierarchy(GameObject *game_object)
+void PanelHierarchy::ShowGameObjectHierarchy(GameObject* game_object)
 {
 	std::string game_object_name_label;
 	if (game_object->original_UUID != 0)
@@ -70,7 +71,7 @@ void PanelHierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 	{
 		game_object_name_label = (std::string(ICON_FA_CUBE) + " " + game_object->name);
 	}
-	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
 	if (game_object->children.size() == 0)
 	{
 		flags |= ImGuiTreeNodeFlags_Leaf;
@@ -78,6 +79,17 @@ void PanelHierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 	if (App->editor->selected_game_object == game_object)
 	{
 		flags |= ImGuiTreeNodeFlags_Selected;
+	}
+	if(App->editor->selected_game_object != nullptr && App->editor->selected_game_object != game_object)
+	{
+		if(IsOneOfMyChildrens(game_object))
+		{
+
+			flags |= ImGuiTreeNodeFlags_DefaultOpen;
+			ImGuiWindow* window = ImGui::GetCurrentWindow();
+			window->DC.StateStorage->SetInt(window->GetID(game_object_name_label.c_str()), true);
+			window->DC.LastItemStatusFlags |= ImGuiItemStatusFlags_ToggledOpen;
+		}
 	}
 
 	bool expanded = ImGui::TreeNodeEx(game_object_name_label.c_str(), flags);
@@ -97,14 +109,13 @@ void PanelHierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 	}
 }
 
-void PanelHierarchy::DragAndDrop(GameObject *game_object) const
+void PanelHierarchy::DragAndDrop(GameObject* game_object) const
 {
 	DragSource(game_object);
 	DropTarget(game_object);
 }
 
-
-void PanelHierarchy::DragSource(GameObject *source_game_object) const
+void PanelHierarchy::DragSource(GameObject* source_game_object) const
 {
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 	{
@@ -114,14 +125,14 @@ void PanelHierarchy::DragSource(GameObject *source_game_object) const
 	}
 }
 
-void PanelHierarchy::DropTarget(GameObject *target_game_object) const
+void PanelHierarchy::DropTarget(GameObject* target_game_object) const
 {
 	if (ImGui::BeginDragDropTarget())
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_GameObject"))
 		{
 			assert(payload->DataSize == sizeof(GameObject*));
-			GameObject *incoming_game_object = *(GameObject**)payload->Data;
+			GameObject* incoming_game_object = *(GameObject**)payload->Data;
 			if (!incoming_game_object->IsAboveInHierarchy(*target_game_object) && (incoming_game_object->original_UUID == 0 || incoming_game_object->is_prefab_parent))
 			{
 				incoming_game_object->SetParent(target_game_object);
@@ -155,7 +166,7 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 	
 }
 
-void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
+void PanelHierarchy::ShowGameObjectActionsMenu(GameObject* game_object)
 {
 	std::string label = "GameObject Creation Menu";
 
@@ -216,7 +227,7 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 	}
 }
 
-void PanelHierarchy::Show3DObjectCreationMenu(GameObject *game_object) const
+void PanelHierarchy::Show3DObjectCreationMenu(GameObject* game_object) const
 {
 	if (ImGui::BeginMenu("3D object"))
 	{
@@ -256,7 +267,7 @@ void PanelHierarchy::Show3DObjectCreationMenu(GameObject *game_object) const
 	}
 }
 
-void PanelHierarchy::ShowComponentObjectCreationMenu(GameObject *game_object) const
+void PanelHierarchy::ShowComponentObjectCreationMenu(GameObject* game_object) const
 {
 	GameObject* created_game_object = nullptr;
 
@@ -340,7 +351,7 @@ void PanelHierarchy::ShowComponentObjectCreationMenu(GameObject *game_object) co
 	}
 }
 
-void PanelHierarchy::ProcessMouseInput(GameObject *game_object)
+void PanelHierarchy::ProcessMouseInput(GameObject* game_object)
 {
 	if (ImGui::IsItemHovered())
 	{
@@ -368,4 +379,23 @@ std::string PanelHierarchy::GetNextGameObjectName()
 int PanelHierarchy::GetNextBranch()
 {
 	return ++branch_counter;
+}
+
+bool PanelHierarchy::IsOneOfMyChildrens(GameObject* game_object) const
+{
+	bool found = false;
+	
+	for (auto& go : game_object->children) 
+	{
+		found = std::find(go->children.begin(), go->children.end(), App->editor->selected_game_object) != go->children.end() || go == App->editor->selected_game_object;
+		if (!found && go->children.size() > 0)
+		{
+			found = IsOneOfMyChildrens(go);
+		}
+		if(found)
+		{
+			break;
+		}
+	}
+	return found;
 }

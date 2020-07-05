@@ -198,6 +198,19 @@ void ModuleActions::ClearUndoRedoStacks()
 
 void ModuleActions::HandleInput()
 {
+	if (active_macros)
+	{
+		DuplicateMacros();
+		DeleteMacros();
+		GuizmoMacros();
+	}
+	
+	UndoRedoMacros();
+	SceneMacros();
+}
+
+void ModuleActions::UndoRedoMacros()
+{
 	if (App->input->GetKeyDown(KeyCode::Z))
 	{
 		control_key_down = true;
@@ -216,6 +229,23 @@ void ModuleActions::HandleInput()
 		Redo();
 		control_key_down = false;
 	}
+}
+
+void ModuleActions::DuplicateMacros()
+{
+	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::D))
+	{
+		GameObject* selected_game_object = App->editor->selected_game_object;
+		if (selected_game_object)
+		{
+			action_game_object = App->scene->DuplicateGameObject(selected_game_object, selected_game_object->parent);
+			AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
+		}
+	}
+}
+
+void ModuleActions::DeleteMacros()
+{
 	if (App->input->GetKeyDown(KeyCode::Delete))
 	{
 		GameObject* selected_game_object = App->editor->selected_game_object;
@@ -228,19 +258,13 @@ void ModuleActions::HandleInput()
 
 			App->editor->selected_game_object = nullptr;
 		}
-		
-	}
-	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::D))
-	{
-		GameObject* selected_game_object = App->editor->selected_game_object;
-		if (selected_game_object)
-		{
-			action_game_object = App->scene->DuplicateGameObject(selected_game_object, selected_game_object->parent);
-			AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
-		}
-	}
 
-	if(App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::S) && !App->input->GetKey(KeyCode::LeftShift))
+	}
+}
+
+void ModuleActions::SceneMacros()
+{
+	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::S) && !App->input->GetKey(KeyCode::LeftShift))
 	{
 		//Differenciate when we have to save as or save normally
 		if(App->scene->CurrentSceneIsSaved())
@@ -283,16 +307,19 @@ void ModuleActions::HandleInput()
 	{
 		App->editor->popups->scene_loader_popup.popup_shown = true;
 	}
+}
 
-	if(App->input->GetKeyDown(KeyCode::W) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
+void ModuleActions::GuizmoMacros()
+{
+	if (App->input->GetKeyDown(KeyCode::W) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
 	{
 		App->editor->gizmo_operation = ImGuizmo::TRANSLATE;
 	}
-	if(App->input->GetKeyDown(KeyCode::E) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
+	if (App->input->GetKeyDown(KeyCode::E) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
 	{
 		App->editor->gizmo_operation = ImGuizmo::ROTATE;
 	}
-	if(App->input->GetKeyDown(KeyCode::R) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
+	if (App->input->GetKeyDown(KeyCode::R) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
 	{
 		App->editor->gizmo_operation = ImGuizmo::SCALE;
 	}
