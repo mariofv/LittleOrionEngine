@@ -60,10 +60,7 @@ void Material::Save(Config& config) const
 	config.AddBool(show_checkerboard_texture, "Checkboard");
 	config.AddString(shader_program, "ShaderProgram");
 
-	//k
-	config.AddFloat(k_ambient, "kAmbient");
-	config.AddFloat(k_specular, "kSpecular");
-	config.AddFloat(k_diffuse, "kDiffuse");
+	config.AddFloat(smoothness, "Smoothness");
 
 	config.AddFloat(transparency, "Transparency");
 //	config.AddFloat(roughness, "Roughness");
@@ -107,12 +104,9 @@ void Material::Load(const Config& config)
 
 	material_type = static_cast<MaterialType>(config.GetInt("MaterialType", 0));
 
-	//k
-	k_ambient = config.GetFloat("kAmbient", 1.0f);
-	k_specular = config.GetFloat("kSpecular", 1.0f);
-	k_diffuse = config.GetFloat("kDiffuse", 1.0f);
-
 	transparency = config.GetFloat("Transparency", 1.f);
+	smoothness = config.GetFloat("Smoothness", 1.0F);
+
 
 	tiling_x = config.GetFloat("Tiling X", 1.0f);
 	tiling_y = config.GetFloat("Tiling Y", 1.0f);
@@ -137,7 +131,7 @@ void Material::Load(const Config& config)
 
 	config.GetColor("difusseColor", diffuse, float4(1.f, 1.f, 1.f, 1.f));
 	config.GetColor("emissiveColor", emissive, float4(0.0f, 0.0f, 0.0f, 1.0f));
-	config.GetColor("specularColor", specular, float4(0.0f, 0.0f, 0.0f, 1.0f));
+	config.GetColor("specularColor", specular, float4(0.025f, 0.025f, 0.025f, 0.025f));
 
 	diffuse_color[0] = diffuse.x;
 	diffuse_color[1] = diffuse.y;

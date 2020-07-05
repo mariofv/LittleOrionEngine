@@ -62,11 +62,11 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
+	void LoadPrograms(const char* file_path);
 	unsigned int GetShaderProgramId(const std::string & program_name) const;
 
 private:
 	bool LoadProgram(std::string name, const char* vertex_shader_file_name, const char* fragment_shader_file_name);
-	void LoadPrograms(const char* file_path);
 	bool InitVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name) const;
 	bool InitFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name) const;
 	bool InitProgram(GLuint &shader_program,GLuint vertex_shader,GLuint fragment_shader) const;

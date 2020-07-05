@@ -517,20 +517,23 @@
     <ClCompile Include="Engine\Animation\Tween\Tween.cpp">
       <Filter>Engine\Animation\Tween</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentBillboard.cpp">
+    <ClCompile Include="Engine\Component\ComponentSpriteMask.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentParticleSystem.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentSpriteMask.cpp">
+    <ClCompile Include="Engine\Component\ComponentBillboard.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Module\ModuleEffects.cpp">
-      <Filter>Engine\EditorUI\Panel</Filter>
+      <Filter>Engine\Module</Filter>
     </ClCompile>
     <ClCompile Include="Engine\EditorUI\Panel\PanelTags.cpp">
       <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupNewFileName.cpp">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1026,14 +1029,14 @@
     <ClInclude Include="Engine\Animation\Tween\Tween.h">
       <Filter>Engine\Animation\Tween</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentBillboard.h">
+    <ClInclude Include="Engine\Component\ComponentSpriteMask.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentParticleSystem.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentSpriteMask.h">
-      <Filter>Engine\Module</Filter>
+    <ClInclude Include="Engine\Component\ComponentBillboard.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleEffects.h">
       <Filter>Engine\Module</Filter>
@@ -1041,8 +1044,17 @@
     <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h">
       <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Helper\ThreadSafeQueue.h">
-      <Filter>Engine\Helper</Filter>
+    <ClInclude Include="Engine\Event\Event.h">
+      <Filter>Engine\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Event\EventManager.h">
+      <Filter>Engine\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Event\FunctionHandler.h">
+      <Filter>Engine\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupNewFileName.h">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1141,6 +1153,9 @@
     </Filter>
     <Filter Include="Engine\Animation\Tween">
       <UniqueIdentifier>{5591d29d-9c42-4d4d-87a9-9e2ce3b5ccac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Event">
+      <UniqueIdentifier>{182de5df-40ff-40a2-ae90-2adaa77cbdfc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

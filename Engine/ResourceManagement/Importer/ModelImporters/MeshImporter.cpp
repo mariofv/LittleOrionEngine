@@ -4,7 +4,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Resources/Skeleton.h"
-
+#include "Helper/Utils.h"
 #include <map>
 
 FileData MeshImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
@@ -52,8 +52,10 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 	for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
 	{
 		Mesh::Vertex new_vertex;
-		aiVector3D transformed_position = node_transformation * mesh->mVertices[i];
+		aiVector3D transformed_position = scaling_matrix * mesh->mVertices[i];
 		new_vertex.position = float3(transformed_position.x, transformed_position.y, transformed_position.z);
+
+
 		for (size_t j = 0; j < UVChannel::TOTALUVS; j++)
 		{
 			float2 text_coordinate(float2::zero);
@@ -65,15 +67,15 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		}
 		if (mesh->mNormals)
 		{
-			new_vertex.normals = float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z).Normalized();
+			new_vertex.normals = (float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z)).Normalized();
 		}
 		if (mesh->mTangents)
 		{
-			new_vertex.tangent = float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z).Normalized();
+			new_vertex.tangent = (float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z)).Normalized();
 		}
 		if (mesh->mBitangents)
 		{
-			new_vertex.bitangent = float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z).Normalized();
+			new_vertex.bitangent = (float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z)).Normalized();
 		}
 		if (vertex_skinning__info.size() > 0)
 		{
