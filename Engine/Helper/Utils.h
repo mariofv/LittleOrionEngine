@@ -30,6 +30,7 @@ public:
 	static Quat Interpolate(const Quat& first, const Quat& second, float lambda);
 	static float4x4 Interpolate(const float4x4& first, const float4x4& second, float lambda);
 
+	static float4x4 GetTransform(const aiMatrix4x4& current_transform, float scale_factor = 1.0);
 	static size_t GetImageType(const std::string& file_extension);
 
 	static btVector3 Float3TobtVector3(const float3& vector);
