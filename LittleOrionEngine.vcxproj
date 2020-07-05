@@ -147,8 +147,7 @@
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /y /d "$(OutDir)TwinlightSouls.lib" "./Libraries/lib/x86"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
