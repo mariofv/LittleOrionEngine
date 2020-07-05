@@ -243,6 +243,10 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	{
 		trail_renderer->Render();
 	}
+	for (auto &trail : trails)
+	{
+		trail->UpdateTrail();
+	}
 
 	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
 	App->ui->Render(&camera);
