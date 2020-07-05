@@ -179,7 +179,7 @@ void ModuleLight::RecordShadowsFrameBuffers(int width, int height)
 	}
 
 	float old_fov = App->cameras->main_camera->camera_frustum.verticalFov;
-	App->cameras->main_camera->SetFOV(old_fov * 2);
+	App->cameras->main_camera->SetFOV(old_fov * main_camera_fov_increment_factor);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, directional_light_camera->fbo);
 	directional_light_camera->RecordFrame(width * 4, height * 4);

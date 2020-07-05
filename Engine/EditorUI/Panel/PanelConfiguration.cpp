@@ -312,6 +312,7 @@ void PanelConfiguration::ShowRenderOptions()
 
 		//ImGui::Checkbox("Toggle directional camera frustum", &App->renderer->toggle_ortho_frustum);
 		ImGui::Checkbox("Render shadows", &App->lights->render_shadows);
+		ImGui::SliderFloat("Shadows Fov Factor", &App->lights->main_camera_fov_increment_factor, 0, 4, "%.2f");
 
 
 	}

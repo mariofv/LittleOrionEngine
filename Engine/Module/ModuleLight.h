@@ -48,19 +48,20 @@ public:
 
 	std::vector<ComponentLight*> lights;
 
-	float ambient_light_intensity = 0.3f;
-	float ambient_light_color[4] = { 1.f, 1.f, 1.f, 1.f };
 	
 	AABB   light_aabb;
 	float3 light_position = float3::zero;
 
+	//Configurable values
+	float ambient_light_intensity = 0.3f;
+	float ambient_light_color[4] = { 1.f, 1.f, 1.f, 1.f };
 	bool render_shadows = true;
+	float main_camera_fov_increment_factor = 2;
 
 private:
 	std::vector< std::pair<float, ComponentLight*> >  closest_lights;
 	friend class ModuleEditor;
 	Quat directional_light_rotation;
-	float main_camera_fov_increment_factor = 2;
 
 	//Directional light frustums - Generate shadows at different resolution
 	ComponentCamera* directional_light_camera = nullptr;
