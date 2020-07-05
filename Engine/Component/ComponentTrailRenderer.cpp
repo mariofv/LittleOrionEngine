@@ -28,9 +28,8 @@ ComponentTrailRenderer::~ComponentTrailRenderer()
 	if (trail_vbo != 0)
 	{
 		glUnmapBuffer(GL_ARRAY_BUFFER);
-		//glDeleteBuffers(1, &vbo);
-		//glDeleteBuffers(1, &ebo);
-		//glDeleteVertexArrays(1, &vao);
+		glDeleteBuffers(1, &trail_vbo);
+		glDeleteBuffers(1, &trail_vao);
 	}
 }
 
@@ -55,11 +54,10 @@ void ComponentTrailRenderer::InitData()
 	glBindVertexArray(trail_vao);
 
 	glBindBuffer(GL_ARRAY_BUFFER, trail_vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertices, GL_DYNAMIC_DRAW); //3 float position, 2 float color //before it was MAX_VERTICES * 3 *3
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * MAX_TRAIL_VERTICES * 4 * 5, nullptr, GL_DYNAMIC_DRAW); //3 float position, 2 float color //before it was MAX_VERTICES * 4 *5
 	
-	//trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(float) * MAX_TRAIL_VERTICES * 6, GL_MAP_WRITE_BIT);// 6 indices
 	
-
+	
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
@@ -93,31 +91,19 @@ void ComponentTrailRenderer::SwitchFrame()
 
 }
 
-void ComponentTrailRenderer::Render()
+void ComponentTrailRenderer::Render(float** to_render, int size)
 {
-	//GLuint shader_program = App->program->GetShaderProgramId("Billboard");
 	GLuint shader_program = App->program->GetShaderProgramId("Trail");
 
 	glUseProgram(shader_program);
 
-	int n;
-	//glGetProgramStageiv(shader_program, GL_VERTEX_SHADER, GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS, &n);
-	//unsigned* subroutines_indices = new unsigned[n];
-
-	////Subroutine functions
-	//GLuint viewpoint_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "view_point_alignment");
-	//GLuint crossed_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "crossed_alignment");
-	//GLuint axial_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "axial_alignment");
-
-	////Subroutine uniform
-	//int selector = glGetSubroutineUniformLocation(shader_program, GL_VERTEX_SHADER, "alignment_selector");
-
-	//glBindVertexArray(vao);
 	glBindVertexArray(trail_vao);
 
 	//use glBufferMap to obtain a pointer to buffer data
 	glBindBuffer(GL_ARRAY_BUFFER, trail_vbo);
-	
+	trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(float) * MAX_TRAIL_VERTICES * 4 * 5, GL_MAP_WRITE_BIT);// 6 indices
+	memcpy(trail_renderer_vertices, *to_render, size);
+	glUnmapBuffer(GL_ARRAY_BUFFER);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, trail_texture->opengl_texture);
@@ -127,8 +113,8 @@ void ComponentTrailRenderer::Render()
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	glUniform4fv(glGetUniformLocation(shader_program, "color"), 1, (float*)color);
-	trail_renderer_vertices = vertices;
-	glDrawArrays(GL_TRIANGLES, 0, 12);
+	//glDrawElements(GL_TRIANGLE_STRIP, rendered_vertices, GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, rendered_vertices);
 	glBindVertexArray(0);
 
 	glUseProgram(0);

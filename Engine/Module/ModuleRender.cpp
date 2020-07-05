@@ -239,10 +239,10 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	{
 		particles->Render();
 	}
-	for (auto &trail_renderer : trail_renderers)
+	/*for (auto &trail_renderer : trail_renderers)
 	{
 		trail_renderer->Render();
-	}
+	}*/
 	for (auto &trail : trails)
 	{
 		trail->UpdateTrail();

@@ -35,7 +35,7 @@ public:
 
 	void InitData();
 
-	void Render();
+	void Render(float** to_render, int size);
 	void SwitchFrame();
 
 	void ChangeTexture(uint32_t texture_uuid);

@@ -97,11 +97,11 @@ public:
 	//Toni tests stuff
 	std::vector<TrailPoint> test_points; // These are individual points that define the path
 	TrailPoint head_point;
-	std::vector <TrailPoint> points_to_delete;
+	std::vector <float3> points_to_delete;
 	TrailPoint last_point;
 	std::vector <std::pair <TrailPoint*, TrailPoint*>> mesh_points; // These are from which we're gonna build the mesh
 	void GetPerpendiculars();
-
+	
 };
 
 #endif

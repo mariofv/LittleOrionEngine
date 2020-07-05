@@ -13,5 +13,5 @@ vec4 color;
 
 void main()
 {
-    gl_Position = matrices.projection * matrices.view * matrices.model * vec4(vertex, 1.0f);
+    gl_Position = matrices.proj * matrices.view * matrices.model * vec4(vertex, 1.0f);
 }  

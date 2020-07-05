@@ -100,8 +100,15 @@ void  ComponentTrail::GetPerpendiculars()
 		previous_point = current_point;
 
 	}
+
+	int size = 20 * sizeof(float);
+	
+	unsigned int bytes = sizeof(float) * 5;
 	for (auto pair = mesh_points.begin(); pair < mesh_points.end(); ++pair)
 	{
+		float* vetrices_to_render = new float[size];
+		float* cursor = vetrices_to_render;
+
 		if (pair->first->life > 0 && pair->second->life > 0)
 		{
 			//Get the vector that links every two points
@@ -109,27 +116,29 @@ void  ComponentTrail::GetPerpendiculars()
 			float3 perpendicular = vector_adjacent.Cross(owner->transform.GetFrontVector()) * width; //Front is currently local
 
 			float3 top_left, top_right, bottom_left, bottom_right;
-
+			
 			top_left = pair->first->position + perpendicular;
 			top_right = (pair->second->position + perpendicular);
 			bottom_right = (pair->second->position - perpendicular);
 			bottom_left = (pair->first->position - perpendicular);
+	
+			memcpy(cursor, top_left.ptr(), sizeof(float) * 3);
+			cursor += bytes;
+			memcpy(cursor, bottom_left.ptr(), sizeof(float) * 3);
+			cursor += bytes;
+			memcpy(cursor, top_right.ptr(), sizeof(float) * 3);
+			cursor += bytes;
+			memcpy(cursor, bottom_right.ptr(), sizeof(float) * 3);
+			cursor += bytes;
+
+			trail_renderer->Render(&vetrices_to_render, size);
 
 			App->debug_draw->RenderLine(top_left, bottom_left); // Draw the perpendicular vector
 			App->debug_draw->RenderLine(top_right, bottom_right); // Draw the perpendicular vector
 			App->debug_draw->RenderLine(top_left, top_right); // Draw the perpendicular vector
 			App->debug_draw->RenderLine(bottom_left, bottom_right); // Draw the perpendicular vectormesh_points
 			App->debug_draw->RenderLine(top_left, bottom_right); // Draw the perpendicular vectormesh_points
-
-			memcpy(trail_renderer->trail_renderer_vertices, &top_left, sizeof(float) * 3);
-			trail_renderer->trail_renderer_vertices += 5;
-			memcpy(trail_renderer->trail_renderer_vertices, &top_right, sizeof(float) * 3);
-			trail_renderer->trail_renderer_vertices += 5;
-			memcpy(trail_renderer->trail_renderer_vertices, &bottom_left, sizeof(float) * 3);
-			trail_renderer->trail_renderer_vertices += 5;
-			memcpy(trail_renderer->trail_renderer_vertices, &bottom_right, sizeof(float) * 3);
-			trail_renderer->trail_renderer_vertices += 5;
-
+			
 		}
 		else
 		{
@@ -137,6 +146,8 @@ void  ComponentTrail::GetPerpendiculars()
 			++trail_renderer->erase_vertices;
 		}
 	}
+	trail_renderer->owner = owner;
+
 }
 
 void  ComponentTrail::RespawnTrailPoint(TrailPoint& point)
