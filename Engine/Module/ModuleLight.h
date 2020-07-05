@@ -72,6 +72,8 @@ private:
 	GameObject*		 dir_light_game_object_mid = nullptr;
 	GameObject*		 dir_light_game_object_far = nullptr;
 
+	bool rendering_shadows = false;
+
 };
 
 #endif // !_MODULELIGHT_H_

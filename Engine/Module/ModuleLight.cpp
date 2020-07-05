@@ -54,8 +54,11 @@ bool ModuleLight::CleanUp()
 
 void ModuleLight::Render(const float3& mesh_position, GLuint program)
 {
+	if (rendering_shadows)
+	{
+		return;
+	}
 	BROFILER_CATEGORY("Render Lights", Profiler::Color::White);
-
 	RenderDirectionalLight(mesh_position);
 	RenderSpotLights(mesh_position, program);
 	RenderPointLights(mesh_position, program);
@@ -243,7 +246,7 @@ void ModuleLight::RecordShadowsFrameBuffers(int width, int height)
 	{
 		return;
 	}
-
+	rendering_shadows = true;
 	float old_fov = App->cameras->main_camera->camera_frustum.verticalFov;
 	App->cameras->main_camera->SetFOV(old_fov * main_camera_fov_increment_factor);
 	App->renderer->GetMeshesToRender(App->cameras->main_camera);
@@ -254,6 +257,7 @@ void ModuleLight::RecordShadowsFrameBuffers(int width, int height)
 	directional_light_mid->RecordZBufferFrame(width, height);
 
 	directional_light_far->RecordZBufferFrame(width / 4, height / 4);
+	rendering_shadows = false;
 }
 
 void ModuleLight::UpdateDirectionalLightFrustums(float3 max, float3 min)
