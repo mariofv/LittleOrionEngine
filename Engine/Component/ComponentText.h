@@ -31,6 +31,8 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
+	void InitResource(uint32_t uuid, ResourceType resource) override;
+
 	void Update() override;
 	void Render(float4x4* projection);
 

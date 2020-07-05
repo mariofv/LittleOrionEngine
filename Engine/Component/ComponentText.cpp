@@ -65,7 +65,7 @@ void ComponentText::Update()
 //TODO: Improve this shit
 void ComponentText::Render(float4x4* projection)
 {	
-	if (font_uuid == 0)
+	if (font_uuid == 0 || !font)
 	{
 		return;
 	}
@@ -143,6 +143,11 @@ void ComponentText::Render(float4x4* projection)
 
 void ComponentText::ComputeTextLines()
 {
+	if(!font)
+	{
+		return;
+	}
+
 	line_sizes.clear();
 
 	float cursor_x = 0;
@@ -271,6 +276,15 @@ void ComponentText::SpecializedLoad(const Config& config)
 	horizontal_alignment = static_cast<HorizontalAlignment>(horizontal_alignment_uint32);
 }
 
+void ComponentText::InitResource(uint32_t uuid, ResourceType resource)
+{
+	this->font_uuid = font_uuid;
+	App->resources->normal_loading_flag = true;
+	font = App->resources->Load<Font>(uuid);
+	App->resources->normal_loading_flag = false;
+	ComputeTextLines();
+}
+
 void ComponentText::SetText(const std::string& new_text)
 {
 	text = new_text;
@@ -285,7 +299,9 @@ void ComponentText::SetHorizontalAlignment(HorizontalAlignment horizontal_alignm
 void ComponentText::SetFont(uint32_t font_uuid)
 {
 	this->font_uuid = font_uuid;
+	App->resources->current_component_loading = this;
 	font = App->resources->Load<Font>(font_uuid);
+	App->resources->current_component_loading = nullptr;
 	ComputeTextLines();
 }
 
