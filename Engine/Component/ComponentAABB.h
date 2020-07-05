@@ -7,6 +7,7 @@
 #include <MathGeoLib.h>
 #include <GL/glew.h>
 
+class ComponentParticleSystem;
 class ComponentAABB : public Component
 {
 public:
@@ -39,6 +40,7 @@ public:
 
 private:
 	void GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex>& vertices);
+	void GenerateBoundingBoxFromParticleSystem(const ComponentParticleSystem& particle_system);
 	void GenerateGlobalBoundingBox();
 	Component* Clone(bool original_prefab = true) const override;
 public:

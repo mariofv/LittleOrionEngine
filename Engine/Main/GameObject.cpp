@@ -492,9 +492,9 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	}
 	created_component->owner = this;
 
+	components.push_back(created_component);
 	created_component->Init();
 
-	components.push_back(created_component);
 
 	if (created_component->Is2DComponent())
 	{

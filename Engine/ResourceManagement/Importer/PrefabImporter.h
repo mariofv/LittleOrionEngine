@@ -15,7 +15,7 @@ public:
 	~PrefabImporter() = default;
 
 	FileData ExtractData(Path& file_path, const Metafile& metafile) const override;
-	FileData ExtractFromModel(const Config& model_config, const ModelMetafile& metafile) const;
+	FileData ExtractFromModel(const Config& model_config, const ModelMetafile& metafile, bool animated_model) const;
 	FileData ExtractFromGameObject(GameObject* gameobject, bool overwritable = true) const;
 
 private:
@@ -25,7 +25,8 @@ private:
 		std::vector<std::unique_ptr<GameObject>>& game_objects,
 		std::vector<std::unique_ptr<ComponentMeshRenderer>>& mesh_renderer_components,
 		std::vector<uint32_t>& loaded_skeletons,
-		const ModelMetafile& metafile
+		const ModelMetafile& metafile,
+		bool animated_model
 	);
 	static void ExtractMeshComponent(
 		uint32_t mesh_uuid, uint32_t material_uuid, uint32_t skeleton_uuid,

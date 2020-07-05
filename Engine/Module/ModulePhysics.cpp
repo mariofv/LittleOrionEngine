@@ -7,22 +7,21 @@
 #include "Component/ComponentMeshCollider.h"
 #include "Component/ComponentSphereCollider.h"
 #include "EditorUI/DebugDraw.h"
+#include "Event/EventManager.h"
 #include "Helper/Utils.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "ModuleTime.h"
 #include "ModuleDebugDraw.h"
+#include "Event/EventManager.h"
 
 #include <GL/glew.h>
 
+#include <Brofiler/Brofiler.h>
 
 ModulePhysics::ModulePhysics()
 {
 	physics_timer = new Timer();	
-}
-
-ModulePhysics::~ModulePhysics()
-{
 }
 
 bool ModulePhysics::Init()
@@ -42,14 +41,11 @@ bool ModulePhysics::Init()
 	return true;
 }
 
-update_status ModulePhysics::PreUpdate()
-{
-	
-	return update_status::UPDATE_CONTINUE;
-}
 
 update_status ModulePhysics::Update()
 {
+
+	BROFILER_CATEGORY("Module Physics Update", Profiler::Color::PaleTurquoise);
 	ms = physics_timer->Read();
 		
 	//update the world
@@ -74,6 +70,23 @@ update_status ModulePhysics::Update()
 		{
 			world->synchronizeSingleMotionState(collider->body);
 		}
+	}
+
+	for(auto collider_a : colliders)
+	{
+		std::vector<CollisionInformation> collisions;
+		for (auto collider_b : colliders)
+		{
+			if (collider_a != collider_b)
+			{
+				CollisionInformation collision_info = collider_a->DetectCollisionWith(collider_b);
+				if (collision_info.collider)
+				{
+					collisions.push_back(collision_info);
+				}
+			}
+		}
+		App->event_manager->publish(new CollisionEvent(collider_a->owner, collisions));
 	}
 	
 	float ms2;
