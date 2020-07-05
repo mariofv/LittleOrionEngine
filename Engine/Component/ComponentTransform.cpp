@@ -1,5 +1,8 @@
 #include "ComponentTransform.h"
 
+#include "Event/Event.h"
+#include "Event/EventManager.h"
+#include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
 #include "Helper/Utils.h"
@@ -218,6 +221,7 @@ void ComponentTransform::OnTransformChange()
 		child->transform.OnTransformChange();
 	}
 	owner->aabb.GenerateBoundingBox();
+	App->event_manager->Publish(new Event(owner));
 }
 
 float4x4 ComponentTransform::GetModelMatrix() const
