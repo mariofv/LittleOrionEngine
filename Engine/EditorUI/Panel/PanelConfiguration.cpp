@@ -4,6 +4,7 @@
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleEffects.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleSpacePartitioning.h"
@@ -312,6 +313,7 @@ void PanelConfiguration::ShowRenderOptions()
 
 		//ImGui::Checkbox("Toggle directional camera frustum", &App->renderer->toggle_ortho_frustum);
 		ImGui::Checkbox("Render shadows", &App->renderer->render_shadows);
+		ImGui::Checkbox("Render Particles", &App->effects->render_particles);
 
 
 	}

@@ -21,7 +21,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 
-
+#include <Brofiler/Brofiler.h>
 bool ModuleActions::Init()
 {
 	//Delete all actions (go are deleted here)
@@ -29,13 +29,10 @@ bool ModuleActions::Init()
 	return true;
 }
 
-update_status ModuleActions::PreUpdate()
-{
-	return update_status::UPDATE_CONTINUE;
-}
 
 update_status ModuleActions::Update()
 {
+	BROFILER_CATEGORY("Module Actions Update", Profiler::Color::BlanchedAlmond);
 #if GAME
 	return update_status::UPDATE_CONTINUE;
 #endif 
@@ -200,12 +197,13 @@ void ModuleActions::HandleInput()
 {
 	if (active_macros)
 	{
-		UndoRedoMacros();
 		DuplicateMacros();
 		DeleteMacros();
-		SceneMacros();
 		GuizmoMacros();
-	}	
+	}
+	
+	UndoRedoMacros();
+	SceneMacros();
 }
 
 void ModuleActions::UndoRedoMacros()

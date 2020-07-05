@@ -13,7 +13,7 @@ bool ModuleAI::Init()
 
 update_status ModuleAI::Update()
 {
-	BROFILER_CATEGORY("Module AI Update", Profiler::Color::Lavender);
+	BROFILER_CATEGORY("Module AI Update", Profiler::Color::FireBrick);
 	nav_mesh.Update();
 
 	return update_status::UPDATE_CONTINUE;
@@ -21,6 +21,7 @@ update_status ModuleAI::Update()
 
 void ModuleAI::RenderNavMesh(ComponentCamera& camera)
 {
+	BROFILER_CATEGORY("Module AI Render Nave mesh", Profiler::Color::FloralWhite);
 	nav_mesh.RenderNavMesh(camera);
 }
 
