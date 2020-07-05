@@ -13,6 +13,7 @@
 #include "Main/GameObject.h"
 #include "ModuleTime.h"
 #include "ModuleDebugDraw.h"
+#include "ModuleResourceManager.h"
 #include "Event/EventManager.h"
 
 #include <GL/glew.h>
@@ -50,7 +51,12 @@ update_status ModulePhysics::Update()
 		
 	//update the world
 	world->stepSimulation(App->time->delta_time, 2);
-		
+	
+	if(App->resources->loading_thread_communication.loading)
+	{
+		return update_status::UPDATE_CONTINUE;
+	}
+
 	for (auto collider : colliders)
 	{
 		

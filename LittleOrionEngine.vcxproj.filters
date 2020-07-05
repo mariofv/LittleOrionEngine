@@ -1059,6 +1059,9 @@
     <ClInclude Include="Engine\Helper\PerlinNoise.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Helper\ThreadSafeQueue.h">
+      <Filter>Engine\Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
