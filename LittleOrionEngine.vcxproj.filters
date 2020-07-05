@@ -1056,7 +1056,7 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupNewFileName.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Helper\ThreadSafeQueue.h">
+    <ClInclude Include="Engine\Helper\PerlinNoise.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
   </ItemGroup>

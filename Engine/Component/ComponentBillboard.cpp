@@ -30,6 +30,7 @@ ComponentBillboard::~ComponentBillboard()
 
 void ComponentBillboard::InitData()
 {
+	shader_program = App->program->GetShaderProgramId("Billboard");
 	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
 
 	float vertices[20] =
@@ -130,17 +131,17 @@ bool ComponentBillboard::IsPlaying()
 
 void ComponentBillboard::Render(const float3& position)
 {
+	BROFILER_CATEGORY("Render billboard", Profiler::Color::Orange);
 	if(!active || !billboard_texture)
 	{
 		return;
 	}
 
-	GLuint shader_program = App->program->GetShaderProgramId("Billboard");
+
 	glUseProgram(shader_program);
 
 	int subroutine_position;
 	glGetProgramStageiv(shader_program, GL_VERTEX_SHADER, GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS, &subroutine_position);
-	unsigned* subroutines_indices = new unsigned[subroutine_position];
 
 	//Subroutine functions
 	GLuint viewpoint_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "view_point_alignment");
@@ -200,7 +201,6 @@ void ComponentBillboard::Render(const float3& position)
 	glBindVertexArray(0);
 
 	glUseProgram(0);
-	delete[] subroutines_indices;
 }
 
 Component* ComponentBillboard::Clone(bool original_prefab) const

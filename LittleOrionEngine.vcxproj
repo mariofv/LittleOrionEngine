@@ -177,7 +177,6 @@
     <ClInclude Include="Engine\Helper\BuildOptions.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
-    <ClInclude Include="Engine\Helper\ThreadSafeQueue.h" />
     <ClInclude Include="Engine\Module\ModuleEffects.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\FontImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\FontManager.h" />
@@ -314,6 +313,7 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\SoundImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h" />
     <ClInclude Include="Engine\Helper\TagManager.h" />
+    <ClInclude Include="Engine\Helper\PerlinNoise.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Animation\Tween\LOTween.cpp" />

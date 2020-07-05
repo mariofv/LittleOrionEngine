@@ -49,7 +49,7 @@ bool ModuleScene::Init()
 
 update_status ModuleScene::PreUpdate()
 {
-	BROFILER_CATEGORY("Scene PreUpdate", Profiler::Color::Crimson);
+	BROFILER_CATEGORY("Module Scene PreUpdate", Profiler::Color::Crimson);
 	for (const auto& game_object : game_objects_ownership)
 	{
 		game_object->PreUpdate();
@@ -59,7 +59,7 @@ update_status ModuleScene::PreUpdate()
 
 update_status ModuleScene::Update()
 {
-	BROFILER_CATEGORY("Scene Update", Profiler::Color::Crimson);
+	BROFILER_CATEGORY("Module Scene Update", Profiler::Color::IndianRed);
 	for (const auto&  game_object : game_objects_ownership)
 	{
 		game_object->Update();
@@ -70,7 +70,7 @@ update_status ModuleScene::Update()
 
 update_status ModuleScene::PostUpdate()
 {
-	BROFILER_CATEGORY("Scene PostUpdate", Profiler::Color::Crimson);
+	BROFILER_CATEGORY("Module Scene PostUpdate", Profiler::Color::DarkRed);
 	for (const auto& game_object : game_objects_ownership)
 	{
 		game_object->PostUpdate();

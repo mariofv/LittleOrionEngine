@@ -198,7 +198,7 @@ float ComponentCamera::GetHeight() const
 	return last_height;
 }
 
-void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode)
+void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode, bool render_ui)
 {
 
 	if (last_width != width || last_height != height || toggle_msaa)
@@ -243,8 +243,11 @@ void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode
 
 	App->renderer->RenderFrame(*this);
 
-	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
-	App->ui->Render(scene_mode);
+	if (render_ui)
+	{
+		BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
+		App->ui->Render(scene_mode);
+	}
 
 #if !GAME
 	if (App->renderer->anti_aliasing)
