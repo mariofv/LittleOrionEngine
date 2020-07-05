@@ -32,7 +32,6 @@ bool ModuleCamera::Init()
 	scene_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
 	world_skybox = App->resources->Load<Skybox>((uint32_t)CoreResource::DEFAULT_SKYBOX);
 
-	SetDirectionalLightFrustums();
 	return true;
 }
 
@@ -55,69 +54,6 @@ update_status ModuleCamera::PostUpdate()
 {
 
 	return update_status::UPDATE_CONTINUE;
-}
-
-void ModuleCamera::SetDirectionalLightFrustums()
-{
-	dir_light_game_object = App->scene->CreateGameObject();
-	dir_light_game_object->transform.SetTranslation(float3(0, 0, 0));
-	dir_light_game_object_mid = App->scene->CreateGameObject();
-	dir_light_game_object_mid->transform.SetTranslation(float3(0, 0, 0));
-	dir_light_game_object_far = App->scene->CreateGameObject();
-	dir_light_game_object_far->transform.SetTranslation(float3(0, 0, 0));
-	
-
-
-	directional_light_camera = (ComponentCamera*)dir_light_game_object->CreateComponent(Component::ComponentType::CAMERA);
-	directional_light_camera->depth = -1;
-	directional_light_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
-	directional_light_camera->owner = dir_light_game_object;
-	directional_light_camera->camera_frustum.type = FrustumType::OrthographicFrustum;
-
-
-	directional_light_mid = (ComponentCamera*)dir_light_game_object_mid->CreateComponent(Component::ComponentType::CAMERA);
-	directional_light_mid->depth = -1;
-	directional_light_mid->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
-	directional_light_mid->owner = dir_light_game_object;
-	directional_light_mid->camera_frustum.type = FrustumType::OrthographicFrustum;
-
-
-	directional_light_far = (ComponentCamera*)dir_light_game_object_far->CreateComponent(Component::ComponentType::CAMERA);
-	directional_light_far->depth = -1;
-	directional_light_far->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
-	directional_light_far->owner = dir_light_game_object;
-	directional_light_far->camera_frustum.type = FrustumType::OrthographicFrustum;
-
-
-	App->cameras->directional_light_camera->SetNearDistance(0);
-	App->cameras->directional_light_mid->SetNearDistance(0);
-	App->cameras->directional_light_far->SetNearDistance(0);
-
-
-	
-
-}
-void ModuleCamera::UpdateDirectionalLightFrustums(float3 max, float3 min)
-{
-	//Setting far planes also from AABB 
-	App->cameras->directional_light_camera->SetFarDistance(max.z - min.z);
-	App->cameras->directional_light_mid->SetFarDistance(max.z - min.z);
-	App->cameras->directional_light_far->SetFarDistance(max.z - min.z);
-
-	//Setting frustums' width and height
-
-	App->cameras->directional_light_camera->camera_frustum.orthographicWidth = max.x - min.x;
-	App->cameras->directional_light_camera->camera_frustum.orthographicHeight = max.y - min.y;
-
-	App->cameras->directional_light_mid->camera_frustum.orthographicWidth = max.x - min.x;
-	App->cameras->directional_light_mid->camera_frustum.orthographicHeight = max.y - min.y;
-
-	App->cameras->directional_light_far->camera_frustum.orthographicWidth = max.x - min.x;
-	App->cameras->directional_light_far->camera_frustum.orthographicHeight = max.y - min.y;
-	
-	directional_light_camera->Update();
-	directional_light_mid->Update();
-	directional_light_far->Update();
 }
 
 

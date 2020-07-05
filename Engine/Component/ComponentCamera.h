@@ -148,6 +148,7 @@ public:
 
 	GLuint depth_map = 0;
 	GLuint last_recorded_frame_texture = 0;
+	GLuint fbo = 0;
 
 	OrthoIndex ortho_index; //Only for orthographic cameras
 
@@ -158,7 +159,6 @@ public:
 
 private:
 	GLuint rbo = 0;
-	GLuint fbo = 0;
 	GLuint depth_rbo = 0;
 	GLuint msfbo = 0;
 	GLuint msfb_color = 0;

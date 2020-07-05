@@ -311,7 +311,7 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::ColorEdit3("Color", App->lights->ambient_light_color);
 
 		//ImGui::Checkbox("Toggle directional camera frustum", &App->renderer->toggle_ortho_frustum);
-		ImGui::Checkbox("Render shadows", &App->renderer->render_shadows);
+		ImGui::Checkbox("Render shadows", &App->lights->render_shadows);
 
 
 	}

@@ -48,20 +48,6 @@ uniform mat4 mid_directional_proj;
 uniform mat4 far_directional_view;
 uniform mat4 far_directional_proj;
 
-//Perspective cams
-//uniform mat4 main_cam_proj;
-//uniform mat4 main_cam_view;
-//out vec4 pos_from_main_camera;
-
-//uniform mat4 close_cam_proj;
-//uniform mat4 close_cam_view;
-//out vec4 pos_from_close_camera;
-
-//uniform mat4 mid_cam_proj;
-//uniform mat4 mid_cam_view;
-//out vec4 pos_from_mid_camera;
-
-
 out vec4 close_pos_from_light;
 out vec4 mid_pos_from_light;
 out vec4 far_pos_from_light;
@@ -77,9 +63,6 @@ void main()
 	mat4 mid_lightSpaceMatrix   = mid_directional_proj * mid_directional_view;
 	mat4 far_lightSpaceMatrix   = far_directional_proj * far_directional_view;
 
-//	mat4 main_cam_space			= main_cam_proj * main_cam_view;
-//	mat4 close_cam_space		= close_cam_proj * close_cam_view;
-//	mat4 mid_cam_space		= mid_cam_proj * mid_cam_view;
 
 //Skinning
 	mat4 skinning_matrix = mat4(has_skinning_value);
@@ -105,10 +88,6 @@ void main()
 	close_pos_from_light = close_lightSpaceMatrix*vec4(position, 1.0);
 	mid_pos_from_light = mid_lightSpaceMatrix*vec4(position, 1.0);
 	far_pos_from_light = far_lightSpaceMatrix*vec4(position, 1.0);
-
-	//pos_from_main_camera = main_cam_space*vec4(position, 1.0);
-	//pos_from_close_camera = close_cam_space*vec4(position, 1.0);
-	//pos_from_mid_camera = mid_cam_space*vec4(position, 1.0);
 
 	vec4 eye_coordinate_pos = matrices.view * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
 	distance_to_camera = -eye_coordinate_pos.z;

@@ -17,9 +17,7 @@ ModuleLight::~ModuleLight()
 bool ModuleLight::Init()
 {
 	APP_LOG_SECTION("************ Module Light Init ************");
-	//directional_light_rotation = Quat::identity;
-
-
+	SetDirectionalLightFrustums();
 	return true;
 }
 
@@ -33,10 +31,10 @@ update_status ModuleLight::PostUpdate()
 	new_pos = directional_light_rotation * light_position;
 
 
-	App->cameras->dir_light_game_object->transform.SetRotation(directional_light_rotation);
-	App->cameras->dir_light_game_object->transform.SetTranslation(new_pos);
+	dir_light_game_object->transform.SetRotation(directional_light_rotation);
+	dir_light_game_object->transform.SetTranslation(new_pos);
 
-	App->cameras->UpdateDirectionalLightFrustums(light_aabb.maxPoint, light_aabb.minPoint);
+	UpdateDirectionalLightFrustums(light_aabb.maxPoint, light_aabb.minPoint);
 
 	light_aabb.SetNegativeInfinity();
 	
@@ -128,28 +126,28 @@ void ModuleLight::RenderSpotLights(const float3& mesh_position, GLuint program)
 
 void ModuleLight::SendShadowMatricesToShader(GLuint program)
 {
-	glUniform1i(glGetUniformLocation(program, "render_shadows"), App->renderer->render_shadows);
+	glUniform1i(glGetUniformLocation(program, "render_shadows"), render_shadows);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, App->cameras->directional_light_camera->depth_map);
+	glBindTexture(GL_TEXTURE_2D, directional_light_camera->depth_map);
 	glUniform1i(glGetUniformLocation(program, "close_depth_map"), 0);
 
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, App->cameras->directional_light_mid->depth_map);
+	glBindTexture(GL_TEXTURE_2D, directional_light_mid->depth_map);
 	glUniform1i(glGetUniformLocation(program, "mid_depth_map"), 1);
 
 	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, App->cameras->directional_light_far->depth_map);
+	glBindTexture(GL_TEXTURE_2D, directional_light_far->depth_map);
 	glUniform1i(glGetUniformLocation(program, "far_depth_map"), 2);
 
-	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_view"), 1, GL_TRUE, &App->cameras->directional_light_camera->GetViewMatrix()[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_proj"), 1, GL_TRUE, &App->cameras->directional_light_camera->GetProjectionMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_view"), 1, GL_TRUE, &directional_light_camera->GetViewMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_proj"), 1, GL_TRUE, &directional_light_camera->GetProjectionMatrix()[0][0]);
 
-	glUniformMatrix4fv(glGetUniformLocation(program, "mid_directional_view"), 1, GL_TRUE, &App->cameras->directional_light_mid->GetViewMatrix()[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "mid_directional_proj"), 1, GL_TRUE, &App->cameras->directional_light_mid->GetProjectionMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "mid_directional_view"), 1, GL_TRUE, &directional_light_mid->GetViewMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "mid_directional_proj"), 1, GL_TRUE, &directional_light_mid->GetProjectionMatrix()[0][0]);
 
-	glUniformMatrix4fv(glGetUniformLocation(program, "far_directional_view"), 1, GL_TRUE, &App->cameras->directional_light_far->GetViewMatrix()[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "far_directional_proj"), 1, GL_TRUE, &App->cameras->directional_light_far->GetProjectionMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "far_directional_view"), 1, GL_TRUE, &directional_light_far->GetViewMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "far_directional_proj"), 1, GL_TRUE, &directional_light_far->GetProjectionMatrix()[0][0]);
 
 	if (App->cameras->main_camera != nullptr)
 	{
@@ -171,6 +169,30 @@ void ModuleLight::UpdateLightAABB(GameObject& object)
 
 	light_aabb.Enclose(object_aabb);
 
+}
+
+void ModuleLight::RecordShadowsFrameBuffers(int width, int height)
+{
+	if (!render_shadows)
+	{
+		return;
+	}
+
+	float old_fov = App->cameras->main_camera->camera_frustum.verticalFov;
+	App->cameras->main_camera->SetFOV(old_fov * 2);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, directional_light_camera->fbo);
+	directional_light_camera->RecordFrame(width * 4, height * 4);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, directional_light_mid->fbo);
+	directional_light_mid->RecordFrame(width, height);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, directional_light_far->fbo);
+	directional_light_far->RecordFrame(width / 4, height / 4);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	App->cameras->main_camera->SetFOV(old_fov);
 }
 
 void ModuleLight::RenderPointLights(const float3& mesh_position, GLuint program)
@@ -231,4 +253,65 @@ void ModuleLight::SortClosestLights(const float3& position, ComponentLight::Ligh
 	{
 		return lhs.first < rhs.first;
 	});
+}
+
+void ModuleLight::SetDirectionalLightFrustums()
+{
+	dir_light_game_object = App->scene->CreateGameObject();
+	dir_light_game_object->transform.SetTranslation(float3(0, 0, 0));
+	dir_light_game_object_mid = App->scene->CreateGameObject();
+	dir_light_game_object_mid->transform.SetTranslation(float3(0, 0, 0));
+	dir_light_game_object_far = App->scene->CreateGameObject();
+	dir_light_game_object_far->transform.SetTranslation(float3(0, 0, 0));
+
+
+
+	directional_light_camera = (ComponentCamera*)dir_light_game_object->CreateComponent(Component::ComponentType::CAMERA);
+	directional_light_camera->depth = -1;
+	directional_light_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
+	directional_light_camera->owner = dir_light_game_object;
+	directional_light_camera->camera_frustum.type = FrustumType::OrthographicFrustum;
+
+
+	directional_light_mid = (ComponentCamera*)dir_light_game_object_mid->CreateComponent(Component::ComponentType::CAMERA);
+	directional_light_mid->depth = -1;
+	directional_light_mid->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
+	directional_light_mid->owner = dir_light_game_object;
+	directional_light_mid->camera_frustum.type = FrustumType::OrthographicFrustum;
+
+
+	directional_light_far = (ComponentCamera*)dir_light_game_object_far->CreateComponent(Component::ComponentType::CAMERA);
+	directional_light_far->depth = -1;
+	directional_light_far->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
+	directional_light_far->owner = dir_light_game_object;
+	directional_light_far->camera_frustum.type = FrustumType::OrthographicFrustum;
+
+
+	directional_light_camera->SetNearDistance(0);
+	directional_light_mid->SetNearDistance(0);
+	directional_light_far->SetNearDistance(0);
+
+}
+
+void ModuleLight::UpdateDirectionalLightFrustums(float3 max, float3 min)
+{
+	//Setting far planes also from AABB 
+	directional_light_camera->SetFarDistance(max.z - min.z);
+	directional_light_mid->SetFarDistance(max.z - min.z);
+	directional_light_far->SetFarDistance(max.z - min.z);
+
+	//Setting frustums' width and height
+
+	directional_light_camera->camera_frustum.orthographicWidth = max.x - min.x;
+	directional_light_camera->camera_frustum.orthographicHeight = max.y - min.y;
+
+	directional_light_mid->camera_frustum.orthographicWidth = max.x - min.x;
+	directional_light_mid->camera_frustum.orthographicHeight = max.y - min.y;
+
+	directional_light_far->camera_frustum.orthographicWidth = max.x - min.x;
+	directional_light_far->camera_frustum.orthographicHeight = max.y - min.y;
+
+	directional_light_camera->Update();
+	directional_light_mid->Update();
+	directional_light_far->Update();
 }

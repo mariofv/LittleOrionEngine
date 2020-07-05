@@ -131,7 +131,6 @@ uniform bool render_shadows;
 in vec4 close_pos_from_light;
 in vec4 mid_pos_from_light;
 in vec4 far_pos_from_light;
-uniform float main_cam_far_plane;
 
 vec3 FrustumsCheck();
 
