@@ -117,6 +117,7 @@ void ComponentMeshRenderer::InitResource(uint32_t uuid, ResourceType resource, u
 		if (mesh_to_render && !mesh_to_render.get()->initialized)
 		{
 			mesh_to_render.get()->LoadInMemory();
+			owner->aabb.GenerateBoundingBox();
 		}
 	}
 }
