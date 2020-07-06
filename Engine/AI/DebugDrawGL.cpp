@@ -36,7 +36,7 @@ void DebugDrawGL::DrawMesh(ComponentCamera& camera)
 	glUniformMatrix4fv(glGetUniformLocation(shader, "proj"), 1, GL_TRUE, &camera.proj[0][0]);
 
 	float4 color = float4::zero;
-	if (colors.size > 0)
+	if (colors.size() > 0)
 	{
 		color = colors[0];
 	}

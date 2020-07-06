@@ -1085,9 +1085,9 @@ void NavMesh::drawMeshTile(SampleDebugDraw* dd, const dtNavMesh& mesh, const dtN
 			for (int k = 0; k < 3; ++k)
 			{
 				if (t[k] < p->vertCount)
-					dd->Vertex(&tile->verts[p->verts[t[k]] * 3]);
+					dd->Vertex(&tile->verts[p->verts[t[k]] * 3], col);
 				else
-					dd->Vertex(&tile->detailVerts[(pd->vertBase + t[k] - p->vertCount) * 3]);
+					dd->Vertex(&tile->detailVerts[(pd->vertBase + t[k] - p->vertCount) * 3], col);
 			}
 		}
 	}

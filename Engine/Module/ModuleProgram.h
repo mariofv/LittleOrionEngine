@@ -83,7 +83,7 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	bool UseProgram(const std::string& program_name, unsigned int variation = 0);
+	GLuint UseProgram(const std::string& program_name, unsigned int variation = 0);
 	void LoadPrograms(const char* file_path);
 
 private:

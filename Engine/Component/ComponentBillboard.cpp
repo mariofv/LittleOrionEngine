@@ -251,4 +251,6 @@ unsigned int ComponentBillboard::GetBillboardVariation()
 	{
 		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_SPRITESHEET);
 	}
+
+	return variation;
 }

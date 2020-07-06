@@ -37,13 +37,13 @@ bool ModuleProgram::CleanUp()
 	return true;
 }
 
-bool ModuleProgram::UseProgram(const std::string& program_name, unsigned int variation)
+GLuint ModuleProgram::UseProgram(const std::string& program_name, unsigned int variation)
 {
 	bool is_program_loaded = loaded_programs.find(program_name) != loaded_programs.end();
 	if (!is_program_loaded)
 	{
 		APP_LOG_ERROR("Program %s is not loaded!", program_name.c_str());
-		return false;
+		return 0;
 	}
 	
 	ShaderProgram *program = &loaded_programs[program_name];
@@ -53,11 +53,13 @@ bool ModuleProgram::UseProgram(const std::string& program_name, unsigned int var
 		bool compiled_successfully = CompileProgram(*program, variation);
 		if (!compiled_successfully)
 		{
-			return false;
+			return 0;
 		}
 	}
 
 	glUseProgram(program->compiled_variations[variation]);
+
+	return program->compiled_variations[variation];
 }
 
 bool ModuleProgram::CompileProgram(ShaderProgram& program, unsigned int variation)

@@ -59,7 +59,7 @@ public:
 	ENGINE_API bool IsPlaying();
 
 private:
-	float4x4 ComponentBillboard::GetSpriteRotation(const float3& position) const;
+	float4x4 GetSpriteRotation(const float3& position) const;
 	unsigned int GetBillboardVariation();
 
 public:
