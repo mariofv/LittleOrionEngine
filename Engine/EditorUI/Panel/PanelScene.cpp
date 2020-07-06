@@ -2,6 +2,7 @@
 
 #include "Component/ComponentCamera.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
+#include "Filesystem/PathAtlas.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleAI.h"
@@ -61,9 +62,9 @@ void PanelScene::Render()
 		
 		if (App->renderer->render_shadows)
 		{
-			App->cameras->directional_light_camera->RecordFrame(scene_window_content_area_width * 4, scene_window_content_area_height * 4);
-			App->cameras->directional_light_mid->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
-			App->cameras->directional_light_far->RecordFrame(scene_window_content_area_width / 4, scene_window_content_area_height / 4);
+			App->cameras->directional_light_camera->RecordFrame(scene_window_content_area_width * 4, scene_window_content_area_height * 4, false, false);
+			App->cameras->directional_light_mid->RecordFrame(scene_window_content_area_width, scene_window_content_area_height, false, false);
+			App->cameras->directional_light_far->RecordFrame(scene_window_content_area_width / 4, scene_window_content_area_height / 4, false, false);
 		}
 		
 
@@ -135,6 +136,10 @@ void PanelScene::RenderSceneBar()
 			App->debug->show_debug_metrics = !App->debug->show_debug_metrics;
 		}
 
+		if (ImGui::Selectable("Reload shaders", false, ImGuiSelectableFlags_None, ImVec2(100, 0)))
+		{
+			App->program->LoadPrograms(SHADERS_PATH);
+		}
 		ImGui::EndMenuBar();
 
 	}

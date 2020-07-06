@@ -46,7 +46,7 @@ bool ModuleScene::Init()
 
 update_status ModuleScene::PreUpdate()
 {
-	BROFILER_CATEGORY("Scene PreUpdate", Profiler::Color::Crimson);
+	BROFILER_CATEGORY("Module Scene PreUpdate", Profiler::Color::Crimson);
 	for (const auto& game_object : game_objects_ownership)
 	{
 		game_object->PreUpdate();
@@ -56,7 +56,7 @@ update_status ModuleScene::PreUpdate()
 
 update_status ModuleScene::Update()
 {
-	BROFILER_CATEGORY("Scene Update", Profiler::Color::Crimson);
+	BROFILER_CATEGORY("Module Scene Update", Profiler::Color::IndianRed);
 	for (const auto&  game_object : game_objects_ownership)
 	{
 		game_object->Update();
@@ -67,7 +67,7 @@ update_status ModuleScene::Update()
 
 update_status ModuleScene::PostUpdate()
 {
-	BROFILER_CATEGORY("Scene PostUpdate", Profiler::Color::Crimson);
+	BROFILER_CATEGORY("Module Scene PostUpdate", Profiler::Color::DarkRed);
 	for (const auto& game_object : game_objects_ownership)
 	{
 		game_object->PostUpdate();
@@ -96,6 +96,9 @@ ENGINE_API GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
 {
 	GameObject * created_game_object_ptr = CreateGameObject();
 	parent->AddChild(created_game_object_ptr);
+	created_game_object_ptr->transform.SetTranslation(float3::zero);
+	created_game_object_ptr->transform.SetRotation(Quat::identity);
+	created_game_object_ptr->transform.SetScale(float3::one);
 
 	return created_game_object_ptr;
 }
@@ -366,15 +369,18 @@ void ModuleScene::OpenScene()
 
 inline void ModuleScene::LoadSceneResource()
 {
+	std::string uuid_string = std::to_string(pending_scene_uuid);
+	bool exists = App->filesystem->Exists(std::string(LIBRARY_METADATA_PATH) + "/" + uuid_string.substr(0,2)+"/"+uuid_string);
+	uint32_t default_uuid = GetSceneUUIDFromPath(DEFAULT_SCENE_PATH);
 	if (pending_scene_uuid == tmp_scene->GetUUID())
 	{
 		tmp_scene.get()->Load();
 		current_scene = last_scene;
 	}
-	else if (pending_scene_uuid == GetSceneUUIDFromPath(DEFAULT_SCENE_PATH))
+	else if (pending_scene_uuid == default_uuid || !exists)
 	{
 		current_scene = nullptr;
-		App->resources->Load<Scene>(pending_scene_uuid).get()->Load();
+		App->resources->Load<Scene>(default_uuid).get()->Load();
 	}
 	else
 	{

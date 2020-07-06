@@ -35,7 +35,7 @@ bool ModuleDebug::Init()
 
 void ModuleDebug::Render(ComponentCamera* cam)
 {
-	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
+	BROFILER_CATEGORY("Module Debug Render", Profiler::Color::NavajoWhite);
 
 	if (App->debug->show_canvas && App->ui->main_canvas != nullptr)
 	{

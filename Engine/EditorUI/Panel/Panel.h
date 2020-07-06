@@ -18,6 +18,7 @@ public:
 	void SwitchEnable() { enabled = !enabled; };
 	bool IsOpened() const { return opened; };
 	void SwitchOpen() { opened = !opened; };
+	void Open() { opened = true; };
 
 protected:
 	std::string window_name = "";
