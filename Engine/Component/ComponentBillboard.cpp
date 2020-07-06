@@ -30,7 +30,6 @@ ComponentBillboard::~ComponentBillboard()
 
 void ComponentBillboard::InitData()
 {
-	shader_program = App->program->GetShaderProgramId("Billboard");
 	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
 
 	float vertices[20] =
@@ -105,14 +104,9 @@ void ComponentBillboard::SwitchFrame()
 
 }
 
-void ComponentBillboard::ChangeBillboardType(ComponentBillboard::AlignmentType _alignment_type)
+void ComponentBillboard::ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type)
 {
-	alignment_type = _alignment_type;
-
-	if (alignment_type == SPRITESHEET)
-		is_spritesheet = true;
-	else
-		is_spritesheet = false;
+	this->alignment_type = alignment_type;
 }
 
 void ComponentBillboard::EmitOnce()
@@ -137,54 +131,9 @@ void ComponentBillboard::Render(const float3& position)
 		return;
 	}
 
-
-	glUseProgram(shader_program);
-
-	int subroutine_position;
-	glGetProgramStageiv(shader_program, GL_VERTEX_SHADER, GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS, &subroutine_position);
-
-	//Subroutine functions
-	GLuint viewpoint_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "view_point_alignment");
-	GLuint crossed_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "crossed_alignment");
-	GLuint axial_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "axial_alignment");
-
-	//Subroutine uniform
-	int selector = glGetSubroutineUniformLocation(shader_program, GL_VERTEX_SHADER, "alignment_selector");
-
-	switch (alignment_type) 
-	{
-	case VIEW_POINT:
-		glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &viewpoint_subroutine);
-		break;
-	case CROSSED:
-		glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &crossed_subroutine);
-		break;
-
-	case AXIAL:
-		glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &axial_subroutine);
-		break;
-
-	case SPRITESHEET:
-		if(oriented_to_camera)
-			glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &viewpoint_subroutine);
-
-		else
-			glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &crossed_subroutine);
-
-		glUniform1i(glGetUniformLocation(shader_program, "billboard.XTiles"), x_tiles);
-		glUniform1i(glGetUniformLocation(shader_program, "billboard.YTiles"), y_tiles);
-		glUniform1f(glGetUniformLocation(shader_program, "X"), current_sprite_x);
-		glUniform1f(glGetUniformLocation(shader_program, "Y"), current_sprite_y);
-
-		glUniform1f(glGetUniformLocation(shader_program, "billboard.speed"), sheet_speed);
-		SwitchFrame();
-		break;
-
-	default:
-		// viewpoint by default, the most consistent one
-		glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &viewpoint_subroutine);
-		break;
-	}
+	unsigned int variation = GetBillboardVariation();
+	shader_program = App->program->UseProgram("Billboard", variation);
+		
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, billboard_texture->opengl_texture);
@@ -245,7 +194,7 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 {
 	
 	sheet_speed = config.GetFloat("SheetSpeed", 1.f);
-	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::SPRITESHEET)));
+	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::VIEW_POINT)));
 	ChangeBillboardType(alignment_type);
 	texture_uuid = config.GetUInt32("TextureUUID", 0);
 	
@@ -266,4 +215,22 @@ void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)
 	}
 }
 
+unsigned int ComponentBillboard::GetBillboardVariation()
+{
+	unsigned int variation = 0;
 
+	switch (alignment_type)
+	{
+	case VIEW_POINT:
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::VIEW_POINT_ALIGNMENT);
+		break;
+
+	case CROSSED:
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::CROSSED_ALIGNMENT);
+		break;
+
+	case AXIAL:
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::AXIAL_ALIGNMENT);
+		break;
+	}
+}

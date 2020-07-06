@@ -80,8 +80,6 @@ void ComponentMeshRenderer::Render()
 
 	//App->lights->Render(owner->transform.GetGlobalTranslation(), program);
 
-	material_to_render->use_specular_map = material_to_render->GetMaterialTexture(Material::MaterialTextureType::SPECULAR) != nullptr;
-	material_to_render->use_normal_map = material_to_render->GetMaterialTexture(Material::MaterialTextureType::NORMAL) != nullptr;
 
 	//RenderMaterial(program);
 	RenderModel();
@@ -141,7 +139,6 @@ void ComponentMeshRenderer::AddSpecularUniforms(unsigned int shader_program) con
 {
 	glActiveTexture(GL_TEXTURE2);
 	BindTexture(Material::MaterialTextureType::SPECULAR);
-	glUniform1i(glGetUniformLocation(shader_program, "material.use_specular_map"), material_to_render->use_specular_map);
 
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 2);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)material_to_render->specular_color);
@@ -160,7 +157,6 @@ void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE4);
 	BindTexture(Material::MaterialTextureType::NORMAL);
-	glUniform1i(glGetUniformLocation(shader_program, "material.use_normal_map"), material_to_render->use_normal_map);
 	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 4);
 }
 

@@ -368,21 +368,18 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
 			break;
 		case 2:
-			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::SPRITESHEET);
-			break;
-		case 3:
 			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
 			break;
 		}
 	}
 
-	if (billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
+	if (billboard->is_spritesheet) 
+	{
 		ImGui::InputInt("Columns", &billboard->x_tiles, 1);
 		ImGui::InputInt("Rows", &billboard->y_tiles, 1);
 		ImGui::InputFloat("current x", &billboard->current_sprite_x, 1);
 		ImGui::InputFloat("current y", &billboard->current_sprite_y, 1);
 		ImGui::InputFloat("Speed", &billboard->sheet_speed, 1);
-		ImGui::Checkbox("Oriented to camera", &billboard->oriented_to_camera);
 		if (ImGui::Button("Play once"))
 		{
 			billboard->EmitOnce();

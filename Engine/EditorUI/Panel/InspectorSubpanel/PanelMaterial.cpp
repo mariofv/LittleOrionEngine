@@ -94,14 +94,6 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 		ImGui::Spacing();
 		ImGui::Separator();
 		ImGui::Spacing();
-		
-		ImGui::Checkbox("Use Normal Map", &material->use_normal_map_uber);
-		ImGui::Checkbox("Use Specular Map", &material->use_specular_map_uber);
-		ImGui::Checkbox("Use Shadows", &material->use_shadow_uber);
-
-		ImGui::Spacing();
-		ImGui::Separator();
-		ImGui::Spacing();
 
 		ImGui::Text("Main Maps");
 		ImGui::Spacing();
@@ -162,18 +154,9 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 	void* display_image;
 	if (material->textures[type].get() != nullptr)
 	{
-
-		if (type == Material::MaterialTextureType::NORMAL)
-		{
-			material->use_normal_map = true;
-		}
 		if (type == Material::MaterialTextureType::LIQUID)
 		{
 			material->use_liquid_map = true;
-		}
-		if (type == Material::MaterialTextureType::SPECULAR)
-		{
-			material->use_specular_map = true;
 		}
 		std::shared_ptr<Texture>& texture = material->textures[type];
 		display_image = (void*)(intptr_t)texture->opengl_texture;
@@ -331,17 +314,9 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 	if (ImGui::Button(ICON_FA_TIMES))
 	{
 		material->RemoveMaterialTexture(type);
-		if (type == Material::MaterialTextureType::NORMAL)
-		{
-			material->use_normal_map = false;
-		}
 		if (type == Material::MaterialTextureType::LIQUID)
 		{
 			material->use_liquid_map = false;
-		}
-		if (type == Material::MaterialTextureType::SPECULAR)
-		{
-			material->use_specular_map = false;
 		}
 		modified_by_user = true;
 	}

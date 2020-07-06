@@ -18,7 +18,13 @@ public:
 	{
 		ENABLE_NORMAL_MAP = 1 << 0,
 		ENABLE_SPECULAR_MAP = 1 << 1,
-		ENABLE_RECEIVE_SHADOWS = 1 << 2
+		ENABLE_RECEIVE_SHADOWS = 1 << 2,
+
+		ENABLE_SPRITESHEET = 1 << 3,
+		VIEW_POINT_ALIGNMENT = 1 << 4,
+		CROSSED_ALIGNMENT = 1 << 5,
+		AXIAL_ALIGNMENT = 1 << 6,
+
 	};
 
 	struct ShaderProgram
@@ -98,11 +104,17 @@ public:
 
 private:
 	std::unordered_map<std::string, ShaderProgram> loaded_programs;
-	std::array<std::string, 3> defines =
+	std::array<std::string, 7> defines =
 	{
 		"#define NORMAL_MAP 1\n",
 		"#define SPECULAR_MAP 1\n",
-		"#define RECEIVE_SHADOWS 1\n"
+		"#define RECEIVE_SHADOWS 1\n",
+
+		"#define USE_SPRITESHEET 1\n",
+		"#define VIEW_POINT_ALIGNMENT 1\n",
+		"#define CROSSED_ALIGNMENT 1\n",
+		"#define AXIAL_ALIGNMENT 1\n"
+
 	};
 
 	std::vector<const char *> names;

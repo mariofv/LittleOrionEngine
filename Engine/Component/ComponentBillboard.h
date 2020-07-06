@@ -20,7 +20,6 @@ public:
 	enum AlignmentType {
 		VIEW_POINT,
 		AXIAL,	
-		SPRITESHEET,
 		CROSSED			
 	};
 	
@@ -28,6 +27,7 @@ public:
 		CONSTANT,
 		RANDOM_BETWEEN_VALUES
 	};
+
 	ComponentBillboard();
 	ComponentBillboard(GameObject* owner);
 	~ComponentBillboard();
@@ -57,12 +57,16 @@ public:
 	ENGINE_API void EmitOnce();
 	ENGINE_API bool IsPlaying();
 
+private:
+	unsigned int GetBillboardVariation();
+
 public:
 	float width = 5.f;
 	float height = 5.f;
 	float transparency = 1.f;
 	bool play_once = false;
 	float current_sprite_x = 0, current_sprite_y = 0;
+
 private:
 	GLuint shader_program ;
 	AlignmentType alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
@@ -81,18 +85,12 @@ private:
 	float time_since_start = 0.f;
 
 	float sheet_speed = 1;
-	bool oriented_to_camera;
 	AnimationType animation_type = AnimationType::CONSTANT;
-	int num_of_tiles = 0;
 	bool is_spritesheet = false;
 
-	int total_frame = 0;
-	int current_frame = 0;
 	bool play = true;
-	unsigned int vbo, vao, ebo;
 
-	//Determines when the sprite is changed
-	int innerCount = 0;
+	unsigned int vbo, vao, ebo;
 
 	friend class PanelComponent;
 	friend class ComponentParticleSystem;

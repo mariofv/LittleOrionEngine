@@ -1,10 +1,5 @@
-#version 430 core
-
 layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec2 vertex_uv0;
-
-subroutine vec4 alignment_subroutine();
-subroutine uniform alignment_subroutine alignment_selector;
 
 layout (std140) uniform Matrices
 {
@@ -45,44 +40,42 @@ float V;
 
 out vec2 frame;
 
+vec4 ViewPointAlignment();
+vec4 CrossedAlignment();
+vec4 AxialAlignment();
+
 
 void main()
 {
   gl_Position = alignment_selector();
 
-  if(billboard.isSpritesheet){
-	
-	shader_X = mix(X, X+1, vertex_uv0.x);
-	shader_Y = mix(Y, Y+1, vertex_uv0.y);
+  if(billboard.isSpritesheet)
+  {
 
-	U = shader_X/billboard.XTiles;
-	V = shader_Y/billboard.YTiles;
+      shader_X = mix(X, X+1, vertex_uv0.x);
+      shader_Y = mix(Y, Y+1, vertex_uv0.y);
 
-	frame = vec2(U, V);
+      U = shader_X/billboard.XTiles;
+      V = shader_Y/billboard.YTiles;
 
-	
+      frame = vec2(U, V);
   }
 
   texCoord = vertex_uv0;
 }
 
-subroutine (alignment_subroutine) vec4 view_point_alignment() //probably aligned to viewplane TODO: check it
+vec4 ViewPointAlignment()
 {
 	return matrices.proj*(matrices.view*vec4(billboard.center_pos,1.0) + vec4(billboard.width*vertex_position.x, billboard.height*vertex_position.y, 0.0, 0.0));
 }
 
-subroutine (alignment_subroutine) vec4 crossed_alignment()
+vec4 CrossedAlignment()
 {
-	return matrices.proj*matrices.view*vec4(-billboard.width*vertex_position.x + billboard.center_pos.x, billboard.height*vertex_position.y + billboard.center_pos.y, 
+	return matrices.proj*matrices.view*vec4(-billboard.width*vertex_position.x + billboard.center_pos.x, billboard.height*vertex_position.y + billboard.center_pos.y,
 											vertex_position.z + billboard.center_pos.z,1.0);
 }
 
-subroutine (alignment_subroutine) vec4 axial_alignment()
+vec4 AxialAlignment()
 {
 	return matrices.proj*(matrices.view*vec4(billboard.center_pos,1.0) + vec4(billboard.width*vertex_position.x, billboard.height*vertex_position.y, 0.0, 0.0));
 }
-
-
-
-
-
