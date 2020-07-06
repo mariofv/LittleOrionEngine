@@ -129,7 +129,8 @@ void ComponentBillboard::Render(const float3& global_position)
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.texture"), 0);
 	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color"),1, (float*)color);
 
-	float4x4 model_matrix = float4x4::FromTRS(global_position, GetSpriteRotation(global_position), float3(width, height, 1.f));
+	float4x4 model_matrix = float4x4::FromTRS(global_position, Quat::identity, float3(width, height, 1.f));
+
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), model_matrix.Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -206,46 +207,20 @@ void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)
 	}
 }
 
-float4x4 ComponentBillboard::GetSpriteRotation(const float3& position) const
-{
-	float3 up;
-	float3 front;
-	float3 right;
-
-	float3 camera_position = App->cameras->main_camera->owner->transform.GetGlobalTranslation();
-
-	switch (alignment_type)
-	{
-	case WORLD:
-		up = float3::unitY;
-		front = float3::unitZ;
-		right = float3::unitX;
-		break;
-
-	case VIEW_POINT:
-		up = float3::unitY;
-		front = (camera_position - position).Normalized();
-		right = up.Cross(right);
-		break;
-
-	case AXIAL:
-		up = float3::unitY;
-		right = (camera_position - position).Normalized().Cross(up);
-		front = right.Cross(up);
-		break;
-	}
-
-	float4x4 rotation = float4x4::identity;
-	rotation.SetCol3(0, right);
-	rotation.SetCol3(1, front);
-	rotation.SetCol3(2, up);
-
-	return rotation;
-}
-
 unsigned int ComponentBillboard::GetBillboardVariation()
 {
 	unsigned int variation = 0;
+
+	switch (alignment_type)
+	{
+	case VIEW_POINT:
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_BILLBOARD_VIEWPOINT_ALIGNMENT);
+		break;
+
+	case AXIAL:
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_BILLBOARD_AXIAL_ALIGNMENT);
+		break;
+	}
 
 	if (is_spritesheet)
 	{

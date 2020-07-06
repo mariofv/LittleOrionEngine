@@ -13,7 +13,6 @@ struct Billboard
   sampler2D texture;
   vec4 color;
 
-  bool is_spritesheet;
   int num_columns;
   int num_rows;
   int current_sprite_x;
@@ -23,9 +22,13 @@ uniform Billboard billboard;
 
 out vec2 texCoord;
 
+mat4x4 GetModelViewMatrix();
+
 void main()
 {
-  gl_Position = matrices.proj * matrices.view * matrices.model;
+  mat4x4 model_view_matrix = GetModelViewMatrix();
+
+  gl_Position = matrices.proj *  model_view_matrix * vec4(vertex_position, 1.0);
 
   vec2 vertex_uvs = vertex_uv0;
 
@@ -36,4 +39,33 @@ void main()
 #endif
 
   texCoord = vertex_uvs;
+}
+
+mat4x4 GetModelViewMatrix()
+{
+  mat4x4 model_view = matrices.view * matrices.model;
+  #if ENABLE_BILLBOARD_VIEWPOINT_ALIGNMENT
+      model_view[0][0] = matrices.model[0][0];
+      model_view[0][1] = 0.0;
+      model_view[0][2] = 0.0;
+
+      model_view[1][0] = 0.0;
+      model_view[1][1] = matrices.model[1][1];
+      model_view[1][2] = 0.0;
+
+      model_view[2][0] = 0.0;
+      model_view[2][1] = 0.0;
+      model_view[2][2] = matrices.model[2][2];
+
+  #elif ENABLE_BILLBOARD_AXIAL_ALIGNMENT
+      model_view[0][0] = matrices.model[0][0];
+      model_view[0][1] = 0.0;
+      model_view[0][2] = 0.0;
+
+      model_view[2][0] = 0.0;
+      model_view[2][1] = 0.0;
+      model_view[2][2] = matrices.model[2][2];
+
+  #endif
+  return model_view;
 }
