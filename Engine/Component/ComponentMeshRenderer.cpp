@@ -62,8 +62,8 @@ void ComponentMeshRenderer::Render()
 	}
 	std::string program_name = material_to_render->shader_program;
 	GLuint program = App->program->GetShaderProgramId(program_name);
-	//glUseProgram(program);
-	App->program->UseProgram("Test", material_to_render->GetShaderVariation());
+
+	App->program->UseProgram("Blinn Phong", material_to_render->GetShaderVariation());
 
 	/*
 	glUniform1i(glGetUniformLocation(program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);

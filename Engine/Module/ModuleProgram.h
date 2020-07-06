@@ -80,7 +80,6 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	void LoadPrograms(const char* file_path);
 	bool UseProgram(const std::string& program_name, unsigned int variation);
 
 private:
