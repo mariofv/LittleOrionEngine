@@ -281,11 +281,9 @@ void ModuleProgram::BindUniformBlocks(GLuint shader_program) const
 		glUniformBlockBinding(shader_program, matrices_uniform_block_index, 0);
 	}
 
-	/*
 	GLuint light_uniform_block_index = glGetUniformBlockIndex(shader_program, "DirectionalLight");
 	if (light_uniform_block_index != GL_INVALID_INDEX)
 	{
 		glUniformBlockBinding(shader_program, light_uniform_block_index, 1);
 	}
-	*/
 }

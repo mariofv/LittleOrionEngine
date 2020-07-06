@@ -241,19 +241,19 @@ vec3 GetLiquidMap(const Material mat, const vec2 texCoord)
 vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
 
-	vec3 light_dir   = normalize(-directional_light.direction);
-	vec3 half_dir 	 = normalize(light_dir + view_dir);
-	float diff = max(0.0, dot(normalized_normal, light_dir));
+		vec3 light_dir   = normalize(-directional_light.direction);
+		vec3 half_dir 	 = normalize(light_dir + view_dir);
+		float diff = max(0.0, dot(normalized_normal, light_dir));
 
-	//----Specular calculations----
-	float shininess = 7*specular_color.a+ 1;
-	shininess *= shininess;
-    float spec = pow(max(dot(normalized_normal, half_dir), 0.0), shininess);
-	vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-diff),5);
-    vec3 specular =(spec * (shininess+8)/8*PI) *  fresnel;
+		//----Specular calculations----
+		float shininess = 7*specular_color.a + 1;
+		shininess *= shininess;
+		float spec = pow(max(dot(normalized_normal, half_dir), 0.0), shininess);
+		vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-diff),5);
+		vec3 specular =(spec * (shininess+8)/8*PI) *  fresnel;
 
-		float3 return_value = return_value = directional_light.color * (
-		( (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular))
+		vec3 return_value = directional_light.color * (
+				( (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular))
 		) * diff;
 
 #if RECEIVE_SHADOWS
@@ -261,6 +261,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 		( (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular)*ShadowCalculation())
 		) * diff;
 #endif
+
 		return return_value;
 }
 

@@ -61,11 +61,8 @@ void ComponentMeshRenderer::Render()
 		return;
 	}
 	std::string program_name = material_to_render->shader_program;
-	GLuint program = App->program->UseProgram(program_name);
+	GLuint program = App->program->UseProgram(program_name, material_to_render->GetShaderVariation());
 
-	App->program->UseProgram("Blinn Phong", material_to_render->GetShaderVariation());
-
-	/*
 	glUniform1i(glGetUniformLocation(program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
 	
 	if (palette.size() > 0)
@@ -73,15 +70,15 @@ void ComponentMeshRenderer::Render()
 		glUniformMatrix4fv(glGetUniformLocation(program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
 	}
 	glUniform1i(glGetUniformLocation(program, "has_skinning_value"), skeleton_uuid != 0 ? 0 : 1);
-	*/
+	
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	//App->lights->Render(owner->transform.GetGlobalTranslation(), program);
+	App->lights->Render(owner->transform.GetGlobalTranslation(), program);
 
 
-	//RenderMaterial(program);
+	RenderMaterial(program);
 	RenderModel();
 
 	glUseProgram(0);
@@ -180,7 +177,6 @@ void ComponentMeshRenderer::AddLiquidMaterialUniforms(unsigned int shader_progra
 }
 void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
 {
-	/*
 	glActiveTexture(GL_TEXTURE6);
 	glBindTexture(GL_TEXTURE_2D, App->cameras->directional_light_camera->depth_map);
 	glUniform1i(glGetUniformLocation(shader_program, "close_depth_map"), 6);
@@ -209,7 +205,6 @@ void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
 	glUniform1f(glGetUniformLocation(shader_program, "ambient_light_intensity"), App->lights->ambient_light_intensity);
 	glUniform4fv(glGetUniformLocation(shader_program, "ambient_light_color"), 1, (float*)App->lights->ambient_light_color);
 	glUniform1i(glGetUniformLocation(shader_program, "render_shadows"), App->renderer->render_shadows);
-	*/
 }
 
 bool ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const
