@@ -52,8 +52,6 @@ public:
 	void SwitchFrame();
 
 	void ChangeTexture(uint32_t texture_uuid);
-	void GenerateTextures(TextureLoadData loaded_data) override;
-	void GetTextureFromCache(TextureLoadData loaded_data) override;
 	void LoadResource(uint32_t uuid, ResourceType resource) override;
 	void InitResource(uint32_t uuid, ResourceType resource) override;
 

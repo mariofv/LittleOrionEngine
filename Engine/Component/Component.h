@@ -80,9 +80,6 @@ public:
 	virtual void SpecializedSave(Config& config) const = 0;
 	virtual void SpecializedLoad(const Config &config) = 0;
 
-	virtual void GenerateTextures(TextureLoadData loaded_data) {}
-	virtual void GetTextureFromCache(TextureLoadData loaded_data) {}
-
 	virtual void LoadResource(uint32_t uuid, ResourceType resource) {}
 	virtual void LoadResource(uint32_t uuid, ResourceType resource, unsigned type) {}
 	virtual void InitResource(uint32_t uuid, ResourceType resource) {}

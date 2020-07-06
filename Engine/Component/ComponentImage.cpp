@@ -142,31 +142,6 @@ void ComponentImage::SpecializedLoad(const Config& config)
 	}
 }
 
-void ComponentImage::GenerateTextures(TextureLoadData loaded_data)
-{
-	texture_to_render = std::make_shared<Texture>(loaded_data.uuid,
-		loaded_data.data.data(), loaded_data.data.size(), loaded_data.width,
-		loaded_data.height, loaded_data.num_channels, loaded_data.texture_options);
-
-	texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
-}
-
-void ComponentImage::GetTextureFromCache(TextureLoadData loaded_data)
-{
-	//texture_to_render = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(loaded_data.uuid));
-	//
-	////If nullptr we load the texture again
-	//if(!texture_to_render)
-	//{
-	//	App->resources->RemoveUUIDFromCache(loaded_data.uuid);
-	//	SetTextureToRender(loaded_data.uuid);
-
-	//	return;
-	//}
-	//
-	//texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
-}
-
 void ComponentImage::LoadResource(uint32_t uuid, ResourceType resource)
 {
 

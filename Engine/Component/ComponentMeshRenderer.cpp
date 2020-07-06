@@ -55,16 +55,6 @@ void ComponentMeshRenderer::SpecializedLoad(const Config& config)
 	SetSkeleton(skeleton_uuid);
 }
 
-void ComponentMeshRenderer::GenerateTextures(TextureLoadData loaded_data)
-{
-	material_to_render->GenerateTexture(loaded_data);
-}
-
-void ComponentMeshRenderer::GetTextureFromCache(TextureLoadData loaded_data)
-{
-	material_to_render->GetTextureFromCache(loaded_data);
-}
-
 void ComponentMeshRenderer::LoadResource(uint32_t uuid, ResourceType resource, unsigned texture_type)
 {
 	APP_LOG_INFO("GO Loading Resource: %s", std::to_string(owner->UUID).c_str());
