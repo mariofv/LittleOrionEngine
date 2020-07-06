@@ -195,7 +195,7 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 				particle_system->max_particles_number = MAX_PARTICLES;
 			}
 			ShowBillboardOptions(particle_system->billboard);
-			if (particle_system->billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET)
+			if (particle_system->billboard->is_spritesheet)
 			{
 				ImGui::Checkbox("Tile random", &particle_system->tile_random);
 				if (particle_system->tile_random)
@@ -375,11 +375,9 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 
 	if (billboard->is_spritesheet) 
 	{
-		ImGui::InputInt("Columns", &billboard->x_tiles, 1);
-		ImGui::InputInt("Rows", &billboard->y_tiles, 1);
-		ImGui::InputFloat("current x", &billboard->current_sprite_x, 1);
-		ImGui::InputFloat("current y", &billboard->current_sprite_y, 1);
-		ImGui::InputFloat("Speed", &billboard->sheet_speed, 1);
+		ImGui::DragInt("Columns", &billboard->num_sprisheet_columns, 1.f, 1);
+		ImGui::DragInt("Rows", &billboard->num_sprisheet_rows, 1.f, 1);
+		ImGui::DragInt("Loop Time", &billboard->loop_time, 1.f, 0);
 		if (ImGui::Button("Play once"))
 		{
 			billboard->EmitOnce();

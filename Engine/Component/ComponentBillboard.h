@@ -17,10 +17,11 @@ class ComponentBillboard : public Component
 {
 public:
 
-	enum AlignmentType {
+	enum AlignmentType 
+	{
+		WORLD,
 		VIEW_POINT,
-		AXIAL,	
-		CROSSED			
+		AXIAL			
 	};
 	
 	enum AnimationType {
@@ -48,7 +49,7 @@ public:
 
 	void InitData();
 
-	void Render(const float3& position);
+	void Render(const float3& global_position);
 	void SwitchFrame();
 
 	void ChangeTexture(uint32_t texture_uuid);
@@ -58,39 +59,41 @@ public:
 	ENGINE_API bool IsPlaying();
 
 private:
+	float4x4 ComponentBillboard::GetSpriteRotation(const float3& position) const;
 	unsigned int GetBillboardVariation();
 
 public:
 	float width = 5.f;
 	float height = 5.f;
 	float transparency = 1.f;
+
 	bool play_once = false;
-	float current_sprite_x = 0, current_sprite_y = 0;
+	int current_sprite_x = 0;
+	int current_sprite_y = 0;
 
 private:
-	GLuint shader_program ;
-	AlignmentType alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
+	GLuint shader_program;
+	GLuint vbo, vao, ebo;
 
     uint32_t texture_uuid = 0;
 	std::shared_ptr<Texture> billboard_texture = nullptr;
 	
-	//Spritesheet params
-	int x_tiles = 1;
-	int y_tiles = 1;
-
 	//color
 	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-	//Current sprite position
-	float time_since_start = 0.f;
+	AlignmentType alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
 
-	float sheet_speed = 1;
-	AnimationType animation_type = AnimationType::CONSTANT;
+	//Spritesheet params
 	bool is_spritesheet = false;
+	int num_sprisheet_rows = 1;
+	int num_sprisheet_columns = 1;
+	int num_sprites = 1;
 
+	int time_since_start = 0;
+	int loop_time = 0;
+
+	AnimationType animation_type = AnimationType::CONSTANT;
 	bool play = true;
-
-	unsigned int vbo, vao, ebo;
 
 	friend class PanelComponent;
 	friend class ComponentParticleSystem;

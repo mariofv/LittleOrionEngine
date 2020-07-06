@@ -21,9 +21,6 @@ public:
 		ENABLE_RECEIVE_SHADOWS = 1 << 2,
 
 		ENABLE_SPRITESHEET = 1 << 3,
-		VIEW_POINT_ALIGNMENT = 1 << 4,
-		CROSSED_ALIGNMENT = 1 << 5,
-		AXIAL_ALIGNMENT = 1 << 6,
 
 	};
 
@@ -110,11 +107,7 @@ private:
 		"#define SPECULAR_MAP 1\n",
 		"#define RECEIVE_SHADOWS 1\n",
 
-		"#define USE_SPRITESHEET 1\n",
-		"#define VIEW_POINT_ALIGNMENT 1\n",
-		"#define CROSSED_ALIGNMENT 1\n",
-		"#define AXIAL_ALIGNMENT 1\n"
-
+		"#define ENABLE_SPRITESHEET 1\n"
 	};
 
 	std::vector<const char *> names;

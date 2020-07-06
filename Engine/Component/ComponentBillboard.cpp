@@ -1,7 +1,11 @@
 #include "ComponentBillboard.h"
 
-#include "Main/Application.h"
+#include "ComponentTransform.h"
 
+#include "Main/Application.h"
+#include "Main/GameObject.h"
+
+#include "Module/ModuleCamera.h"
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
@@ -12,20 +16,19 @@
 ComponentBillboard::ComponentBillboard() : Component(nullptr, ComponentType::BILLBOARD)
 {
 	InitData();
+	ChangeBillboardType(AlignmentType::VIEW_POINT);
 }
 ComponentBillboard::ComponentBillboard(GameObject* owner) : Component(owner, ComponentType::BILLBOARD)
 {
 	InitData();
+	ChangeBillboardType(AlignmentType::VIEW_POINT);
 }
 
 ComponentBillboard::~ComponentBillboard()
 {
-	if (vbo != 0)
-	{
-		glDeleteBuffers(1, &vbo);
-		glDeleteBuffers(1, &ebo);
-		glDeleteVertexArrays(1, &vao);
-	}
+	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &ebo);
+	glDeleteVertexArrays(1, &vao);
 }
 
 void ComponentBillboard::InitData()
@@ -69,39 +72,27 @@ void ComponentBillboard::InitData()
 
 void ComponentBillboard::SwitchFrame()
 {
-	time_since_start += App->time->delta_time;
 	if (play)
 	{
-		if (time_since_start * sheet_speed >= 1000)
+		time_since_start += App->time->delta_time;
+		if (time_since_start > loop_time)
 		{
-
-			current_sprite_x++;
 			if (play_once)
 			{
-				if (current_sprite_y == y_tiles && current_sprite_x == x_tiles-1)
-				{
-					play = false;
-					play_once = false;
-					Disable();
-					return;
-				}
+				time_since_start = 0.f;
+				play = false;
 			}
-			
-			if (static_cast<int>(current_sprite_x) >= x_tiles)
+			else
 			{
-				current_sprite_y--;
-				current_sprite_x = 0;
+				time_since_start = time_since_start % loop_time;
 			}
-
-			if (static_cast<int>(current_sprite_y) <= 0)
-			{
-				current_sprite_y = static_cast<float>(y_tiles);
-			}
-			
-			time_since_start = 0.f;
 		}
-	}
+		float loop_progress = time_since_start / loop_time;
 
+		int current_sprite = math::FloorInt(loop_progress * num_sprites);
+		current_sprite_x = current_sprite / num_sprisheet_columns;
+		current_sprite_y = current_sprite % num_sprisheet_columns;
+	}
 }
 
 void ComponentBillboard::ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type)
@@ -111,11 +102,10 @@ void ComponentBillboard::ChangeBillboardType(ComponentBillboard::AlignmentType a
 
 void ComponentBillboard::EmitOnce()
 {
-	Enable();
-	play_once = true;
 	play = true;
+	play_once = true;
 	current_sprite_x = 0;
-	current_sprite_y = static_cast<float>(y_tiles - 1);
+	current_sprite_y = 0;
 }
 
 bool ComponentBillboard::IsPlaying()
@@ -123,27 +113,26 @@ bool ComponentBillboard::IsPlaying()
 	return play;
 }
 
-void ComponentBillboard::Render(const float3& position)
+void ComponentBillboard::Render(const float3& global_position)
 {
-	BROFILER_CATEGORY("Render billboard", Profiler::Color::Orange);
 	if(!active)
 	{
 		return;
 	}
+	BROFILER_CATEGORY("Render billboard", Profiler::Color::Orange);
 
 	unsigned int variation = GetBillboardVariation();
 	shader_program = App->program->UseProgram("Billboard", variation);
-		
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, billboard_texture->opengl_texture);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.texture"), 0);
-	glUniform1f(glGetUniformLocation(shader_program, "billboard.width"), width);
-	glUniform1f(glGetUniformLocation(shader_program, "billboard.height"), height);
-	glUniform1f(glGetUniformLocation(shader_program, "billboard.isSpritesheet"), is_spritesheet);
 	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color"),1, (float*)color);
-	glUniform3fv(glGetUniformLocation(shader_program, "billboard.center_pos"), 1, position.ptr());
 
+	float4x4 model_matrix = float4x4::FromTRS(global_position, GetSpriteRotation(global_position), float3(width, height, 1.f));
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), model_matrix.Transposed().ptr());
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -181,29 +170,31 @@ void ComponentBillboard::Delete()
 
 void ComponentBillboard::SpecializedSave(Config& config) const
 {
-	config.AddFloat(sheet_speed, "SheetSpeed");
-	config.AddInt(static_cast<int>(alignment_type), "BillboardType");
 	config.AddUInt(texture_uuid, "TextureUUID");
 	config.AddFloat(width, "Width");
 	config.AddFloat(height, "Height");
-	config.AddInt(x_tiles, "Rows");
-	config.AddInt(y_tiles, "Columns");
+
+	config.AddInt(static_cast<int>(alignment_type), "BillboardType");
+
+	config.AddInt(loop_time, "LoopTime");
+	config.AddInt(num_sprisheet_rows, "Rows");
+	config.AddInt(num_sprisheet_columns, "Columns");
 }
 
 void ComponentBillboard::SpecializedLoad(const Config& config)
 {
-	
-	sheet_speed = config.GetFloat("SheetSpeed", 1.f);
-	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::VIEW_POINT)));
-	ChangeBillboardType(alignment_type);
 	texture_uuid = config.GetUInt32("TextureUUID", 0);
-	
 	ChangeTexture(texture_uuid);
-
+	
 	width = config.GetFloat("Width", 1.0f);
 	height = config.GetFloat("Height", 1.0f);
-	x_tiles = config.GetInt("Rows", 1);
-	y_tiles = config.GetInt("Columns", 1);
+
+	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::VIEW_POINT)));
+	ChangeBillboardType(alignment_type);
+
+	loop_time = config.GetInt("LoopTime", 0);
+	num_sprisheet_rows = config.GetInt("Rows", 1);
+	num_sprisheet_columns = config.GetInt("Columns", 1);
 }
 
 void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)
@@ -215,22 +206,49 @@ void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)
 	}
 }
 
+float4x4 ComponentBillboard::GetSpriteRotation(const float3& position) const
+{
+	float3 up;
+	float3 front;
+	float3 right;
+
+	float3 camera_position = App->cameras->main_camera->owner->transform.GetGlobalTranslation();
+
+	switch (alignment_type)
+	{
+	case WORLD:
+		up = float3::unitY;
+		front = float3::unitZ;
+		right = float3::unitX;
+		break;
+
+	case VIEW_POINT:
+		up = float3::unitY;
+		front = (camera_position - position).Normalized();
+		right = up.Cross(right);
+		break;
+
+	case AXIAL:
+		up = float3::unitY;
+		right = (camera_position - position).Normalized().Cross(up);
+		front = right.Cross(up);
+		break;
+	}
+
+	float4x4 rotation = float4x4::identity;
+	rotation.SetCol3(0, right);
+	rotation.SetCol3(1, front);
+	rotation.SetCol3(2, up);
+
+	return rotation;
+}
+
 unsigned int ComponentBillboard::GetBillboardVariation()
 {
 	unsigned int variation = 0;
 
-	switch (alignment_type)
+	if (is_spritesheet)
 	{
-	case VIEW_POINT:
-		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::VIEW_POINT_ALIGNMENT);
-		break;
-
-	case CROSSED:
-		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::CROSSED_ALIGNMENT);
-		break;
-
-	case AXIAL:
-		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::AXIAL_ALIGNMENT);
-		break;
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_SPRITESHEET);
 	}
 }
