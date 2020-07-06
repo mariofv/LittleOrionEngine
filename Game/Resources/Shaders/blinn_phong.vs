@@ -29,16 +29,11 @@ out vec2 texCoord;
 out vec2 texCoordLightmap;
 out vec3 position;
 out vec3 normal;
-out vec3 tangent;
 out mat3 TBN;
 
 //Without tangent modification
 out vec3 view_pos;
 out vec3 view_dir;
-
-//With tangent modification
-out vec3 t_view_pos;
-out vec3 t_frag_pos;
 
 //Normal mapping
 mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent);
@@ -70,6 +65,8 @@ uniform mat4 far_directional_proj;
 out vec4 close_pos_from_light;
 out vec4 mid_pos_from_light;
 out vec4 far_pos_from_light;
+out vec3 vertex_normal_fs;
+out vec3 vertex_tangent_fs;
 uniform float render_depth_from_light;
 
 out float distance_to_camera;
@@ -94,25 +91,15 @@ void main()
 // General variables
 	texCoord = vertex_uv0;
 	texCoordLightmap = vertex_uv1;
-
+	vertex_normal_fs =vertex_normal;
+	vertex_tangent_fs =vertex_tangent;
 	position = (matrices.model*skinning_matrix*vec4(vertex_position, 1.0)).xyz;
 	normal = (matrices.model*skinning_matrix*vec4(vertex_normal, 0.0)).xyz;
-	tangent = (matrices.model*skinning_matrix*vec4(vertex_tangent, 0.0)).xyz;
 
 	view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
-	view_dir    = normalize(view_pos - position);
-	
+	view_dir    = normalize(view_pos - position);	
 
 
-	//Tangent space matrix
-	mat4 modelview = matrices.model * matrices.view;
-	mat3 normalMatrix = mat3(matrices.model);
-    vec3 T = normalize(normalMatrix * vertex_tangent);
-    vec3 N = normalize(normalMatrix * vertex_normal);
-    T = normalize(T - N *dot(T, N));
-    vec3 B = cross(N, T);
-
-	TBN = transpose(mat3(T, B, N));  
 
 	//Light space
 	close_pos_from_light = close_lightSpaceMatrix*vec4(position, 1.0);

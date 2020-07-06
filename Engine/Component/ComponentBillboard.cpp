@@ -30,6 +30,7 @@ ComponentBillboard::~ComponentBillboard()
 
 void ComponentBillboard::InitData()
 {
+	shader_program = App->program->GetShaderProgramId("Billboard");
 	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
 
 	float vertices[20] =
@@ -130,12 +131,13 @@ bool ComponentBillboard::IsPlaying()
 
 void ComponentBillboard::Render(const float3& position)
 {
+	BROFILER_CATEGORY("Render billboard", Profiler::Color::Orange);
 	if(!active)
 	{
 		return;
 	}
 
-	GLuint shader_program = App->program->GetShaderProgramId("Billboard");
+
 	glUseProgram(shader_program);
 
 	glUniform1f(glGetUniformLocation(shader_program, "billboard.width"), width);
@@ -203,6 +205,7 @@ void ComponentBillboard::CommonUniforms(const GLuint &shader_program)
 	glBindTexture(GL_TEXTURE_2D, billboard_texture->opengl_texture);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.texture"), 0);
 	glUniform1f(glGetUniformLocation(shader_program, "billboard.isSpritesheet"), is_spritesheet);
+
 }
 
 Component* ComponentBillboard::Clone(bool original_prefab) const

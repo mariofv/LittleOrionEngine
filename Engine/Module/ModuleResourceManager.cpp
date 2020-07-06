@@ -79,6 +79,7 @@ update_status ModuleResourceManager::PreUpdate()
 #if !GAME
 	if (!App->time->isGameRunning() && last_imported_time > 0.0f && (thread_timer->Read() - last_imported_time) >= importer_interval_millis)
 	{
+		assert(importing_thread.joinable());
 		importing_thread.join();
 		importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
 	}

@@ -45,9 +45,16 @@ PanelGameObject::PanelGameObject()
 
 void PanelGameObject::Render(GameObject* game_object)
 {
+	
 	if (game_object == nullptr)
 	{
 		return;
+	}
+	focused = ImGui::IsWindowFocused();
+	App->actions->active_macros = true;
+	if (focused)
+	{
+		App->actions->active_macros = false;
 	}
 
 	ImGui::PushID(static_cast<int>(game_object->UUID));
@@ -63,7 +70,9 @@ void PanelGameObject::Render(GameObject* game_object)
 
 	ImGui::SameLine();
 	if (ImGui::InputText("###GameObject name Input", &game_object->name))
-	{		game_object->modified_by_user = true;
+	{
+		App->actions->active_macros = false;
+		game_object->modified_by_user = true;
 	}
 
 	ImGui::SameLine();
@@ -200,7 +209,7 @@ void PanelGameObject::Render(GameObject* game_object)
 	}
 
 	ComponentMeshRenderer* mesh_renderer_component = static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER));
-	if (mesh_renderer_component != nullptr && mesh_renderer_component->material_uuid != 0)
+	if (mesh_renderer_component != nullptr && mesh_renderer_component->material_to_render != nullptr)
 	{
 		App->editor->inspector->material_panel.Render(mesh_renderer_component->material_to_render);
 	}

@@ -18,7 +18,6 @@ public:
 	~ModuleTime();
 
 	bool Init() override;
-	update_status PreUpdate() override;
 	bool CleanUp() override;
 
 	ENGINE_API float GetFPS() const;

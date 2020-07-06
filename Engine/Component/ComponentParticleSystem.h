@@ -62,7 +62,7 @@ public:
 	ComponentParticleSystem(GameObject* owner);
 	
 
-	void Init();
+	void Init() override;
 	unsigned int FirstUnusedParticle();
 	void RespawnParticle(Particle& particle);
 	void Render();

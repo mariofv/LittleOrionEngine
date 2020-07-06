@@ -1,5 +1,8 @@
 #include "ComponentTransform.h"
 
+#include "Event/Event.h"
+#include "Event/EventManager.h"
+#include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
 #include "Helper/Utils.h"
@@ -181,6 +184,12 @@ ENGINE_API void ComponentTransform::SetScale(const float3& scale)
 	OnTransformChange();
 }
 
+ void ComponentTransform::SetGlobalMatrixScale(const float3& scale)
+{
+	 global_model_matrix = float4x4::FromTRS(GetGlobalTranslation(), GetGlobalRotation(), scale);
+	 SetGlobalModelMatrix(global_model_matrix);
+}
+
 float3 ComponentTransform::GetGlobalScale() const
 {
 	return global_model_matrix.GetScale();
@@ -212,6 +221,7 @@ void ComponentTransform::OnTransformChange()
 		child->transform.OnTransformChange();
 	}
 	owner->aabb.GenerateBoundingBox();
+	App->event_manager->Publish(new Event(owner));
 }
 
 float4x4 ComponentTransform::GetModelMatrix() const
