@@ -39,11 +39,6 @@ bool ModuleTime::Init()
 	return true;
 }
 
-update_status ModuleTime::PreUpdate()
-{
-	return update_status::UPDATE_CONTINUE;
-}
-
 
 void ModuleTime::EndFrame()
 {

@@ -335,6 +335,10 @@ NodeEditor.json
 /[Bb]inaries*
 Game/Library/**
 !Libraries/**
+Libraries/lib/x86/LittleOrionEngine*
+
+# Tmp scene
+Game/Resources/tmp_scene.scene*
 
 # Assets
 Game/Assets

@@ -23,9 +23,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 
-
-
-
+#include <Brofiler/Brofiler.h>
 bool ModuleActions::Init()
 {
 	//Delete all actions (go are deleted here)
@@ -33,18 +31,21 @@ bool ModuleActions::Init()
 	return true;
 }
 
-update_status ModuleActions::PreUpdate()
-{
-	return update_status::UPDATE_CONTINUE;
-}
 
 update_status ModuleActions::Update()
 {
+	BROFILER_CATEGORY("Module Actions Update", Profiler::Color::BlanchedAlmond);
 #if GAME
 	return update_status::UPDATE_CONTINUE;
 #endif 
 	HandleInput();
 	return update_status::UPDATE_CONTINUE;
+}
+
+bool ModuleActions::CleanUp()
+{
+	copied_component = nullptr;
+	return true;
 }
 
 
@@ -204,12 +205,13 @@ void ModuleActions::DeleteComponentUndo(Component * component)
 
 void ModuleActions::PasteComponent(Component* component)
 {
-	if (copied_component != nullptr && component->type != Component::ComponentType::TRANSFORM && component->type != Component::ComponentType::TRANSFORM2D)
+	if (copied_component != nullptr && copied_component->type != Component::ComponentType::SCRIPT && component->type != Component::ComponentType::TRANSFORM && component->type != Component::ComponentType::TRANSFORM2D)
 	{
 		SetCopyComponent(copied_component);
 		copied_component->owner = component->owner;
 		component->owner->components.push_back(copied_component);		
 	}
+	
 }
 
 void ModuleActions::PasteComponentValues(Component * component)
@@ -226,22 +228,20 @@ void ModuleActions::PasteComponentValues(Component * component)
 		}
 		else 
 		{
-			Config configuration;
-			copied_component->Save(configuration);
-			component->Load(configuration);
+			if (copied_component->type != Component::ComponentType::SCRIPT)
+			{
+				Config configuration;
+				copied_component->Save(configuration);
+				component->Load(configuration);
+			}
 		}
 	}
 }
 
 void ModuleActions::SetCopyComponent(Component * component)
 {
-	if (component->type == Component::ComponentType::SCRIPT)
-	{
-		copied_component = new ComponentScript(component->owner, static_cast<ComponentScript*>(component)->name);
-		ComponentScript* copied_script = static_cast<ComponentScript*>(copied_component);
-		copied_script->name = static_cast<ComponentScript*>(component)->name;
-	}
-	else if (component->type == Component::ComponentType::COLLIDER)
+	
+	if (component->type == Component::ComponentType::COLLIDER)
 	{
 		copied_component = component->Clone(component->owner, component->owner->original_prefab);
 	}
@@ -262,7 +262,8 @@ void ModuleActions::SetCopyComponent(Component * component)
 			transform_2D_config = conf;
 			copied_component = component;
 		}
-		else {
+		else
+		{
 			copied_component = component->Clone(component->owner->original_prefab);
 		}
 	}
@@ -276,6 +277,19 @@ void ModuleActions::ClearUndoRedoStacks()
 }
 
 void ModuleActions::HandleInput()
+{
+	if (active_macros)
+	{
+		DuplicateMacros();
+		DeleteMacros();
+		GuizmoMacros();
+	}
+	
+	UndoRedoMacros();
+	SceneMacros();
+}
+
+void ModuleActions::UndoRedoMacros()
 {
 	if (App->input->GetKeyDown(KeyCode::Z))
 	{
@@ -295,31 +309,34 @@ void ModuleActions::HandleInput()
 		Redo();
 		control_key_down = false;
 	}
+}
+
+void ModuleActions::DuplicateMacros()
+{
+	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::D))
+	{	
+		App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_MULTIPLE_GO);
+		App->scene->DuplicateGameObjectList(App->editor->selected_game_objects);	
+	}
+}
+
+void ModuleActions::DeleteMacros()
+{
 	if (App->input->GetKeyDown(KeyCode::Delete))
 	{
-		GameObject* selected_game_object = App->editor->selected_game_object;
-		if (selected_game_object)
+		App->actions->AddUndoAction(ModuleActions::UndoActionType::DELETE_MULTIPLE_GO);
+		for (auto go : App->editor->selected_game_objects)
 		{
-			action_game_object = selected_game_object;
-			AddUndoAction(ModuleActions::UndoActionType::DELETE_GAMEOBJECT);
-
-			App->scene->RemoveGameObject(selected_game_object);
-
-			App->editor->selected_game_object = nullptr;
+			App->scene->RemoveGameObject(go);
 		}
-		
+		App->editor->selected_game_object = nullptr;
+		App->editor->selected_game_objects.erase(App->editor->selected_game_objects.begin(), App->editor->selected_game_objects.end());
 	}
-	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::D))
-	{
-		GameObject* selected_game_object = App->editor->selected_game_object;
-		if (selected_game_object)
-		{
-			action_game_object = App->scene->DuplicateGameObject(selected_game_object, selected_game_object->parent);
-			AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
-		}
-	}
+}
 
-	if(App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::S) && !App->input->GetKey(KeyCode::LeftShift))
+void ModuleActions::SceneMacros()
+{
+	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::S) && !App->input->GetKey(KeyCode::LeftShift))
 	{
 		//Differenciate when we have to save as or save normally
 		if(App->scene->CurrentSceneIsSaved())
@@ -362,16 +379,19 @@ void ModuleActions::HandleInput()
 	{
 		App->editor->popups->scene_loader_popup.popup_shown = true;
 	}
+}
 
-	if(App->input->GetKeyDown(KeyCode::W) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
+void ModuleActions::GuizmoMacros()
+{
+	if (App->input->GetKeyDown(KeyCode::W) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
 	{
 		App->editor->gizmo_operation = ImGuizmo::TRANSLATE;
 	}
-	if(App->input->GetKeyDown(KeyCode::E) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
+	if (App->input->GetKeyDown(KeyCode::E) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
 	{
 		App->editor->gizmo_operation = ImGuizmo::ROTATE;
 	}
-	if(App->input->GetKeyDown(KeyCode::R) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
+	if (App->input->GetKeyDown(KeyCode::R) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
 	{
 		App->editor->gizmo_operation = ImGuizmo::SCALE;
 	}

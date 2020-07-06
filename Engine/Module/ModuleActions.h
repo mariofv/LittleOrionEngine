@@ -37,14 +37,14 @@ public:
 	~ModuleActions() = default;
 
 	bool Init() override;
-	update_status PreUpdate() override;
 	update_status Update() override;
+	bool CleanUp() override;
 
 	void ClearRedoStack();
 	void ClearUndoStack();
 	void Undo();
 	void Redo();
-
+	
 	void AddUndoAction(UndoActionType type);
 	void DeleteComponentUndo(Component* component);
 	void PasteComponent(Component* component);
@@ -54,17 +54,24 @@ public:
 
 private:
 	void HandleInput();
+	void UndoRedoMacros();
+	void DuplicateMacros();
+	void DeleteMacros();
+	void SceneMacros();
+	void GuizmoMacros();
 
 public:
 	// UndoRedo
 	bool control_key_down = false;
 	bool clicked = false;
+	bool active_macros = true;
 	std::vector<EditorAction*> undoStack;
 	std::vector<EditorAction*> redoStack;
 	float3 previous_transform = float3::zero;
 	GameObject* action_game_object = nullptr;
 	Component* action_component = nullptr;
 	Component* copied_component = nullptr;
+	Config script_config;
 	Config transform_config;
 	Config transform_2D_config;
 

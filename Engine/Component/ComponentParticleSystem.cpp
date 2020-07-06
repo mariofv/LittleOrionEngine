@@ -10,12 +10,12 @@
 
 ComponentParticleSystem::ComponentParticleSystem() : Component(nullptr, ComponentType::PARTICLE_SYSTEM)
 {
-	Init();
+	
 }
 
 ComponentParticleSystem::ComponentParticleSystem(GameObject* owner) : Component(owner, ComponentType::PARTICLE_SYSTEM)
 {
-	Init();
+	
 }
 ComponentParticleSystem::~ComponentParticleSystem()
 {
@@ -36,7 +36,6 @@ void ComponentParticleSystem::Init()
 		particles[i].particle_scale = 1.0F;
 		particles[i].time_passed = particles[i].life;
 	}
-	
 }
 
 unsigned int ComponentParticleSystem::FirstUnusedParticle()
@@ -149,7 +148,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 void ComponentParticleSystem::Render()
 {
-	glEnable(GL_BLEND);
+	BROFILER_CATEGORY("Particle Render", Profiler::Color::OrangeRed);
 	if (active && playing ) 
 	{
 		time_counter += App->time->real_time_delta_time;
@@ -185,7 +184,6 @@ void ComponentParticleSystem::Render()
 		}
 	}
 	
-	glDisable(GL_BLEND);
 }
 void ComponentParticleSystem::UpdateParticle(Particle& particle)
 {
@@ -362,6 +360,7 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 
 Component* ComponentParticleSystem::Clone(bool original_prefab) const
 {
+
 	ComponentParticleSystem* created_component;
 	if (original_prefab)
 	{
@@ -371,6 +370,8 @@ Component* ComponentParticleSystem::Clone(bool original_prefab) const
 	{
 		created_component = App->effects->CreateComponentParticleSystem();
 	}
+
+	created_component->Init();
 	auto original_billboard = created_component->billboard;
 	*created_component = *this;
 	*original_billboard = *this->billboard;

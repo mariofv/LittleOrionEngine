@@ -15,8 +15,8 @@ public:
 
 	void Undo();
 	void Redo();
-	bool HasParent(GameObject* go);
-	bool BelongsToList(GameObject* go);
+	bool HasParent(GameObject* go) const;
+	bool BelongsToList(GameObject* go) const;
 
 private:
 

@@ -56,7 +56,7 @@ void ComponentMeshRenderer::SpecializedLoad(const Config& config)
 
 void ComponentMeshRenderer::Render()
 {
-	if (material_to_render == nullptr)
+	if (mesh_to_render == nullptr || material_to_render == nullptr)
 	{
 		return;
 	}
@@ -99,7 +99,6 @@ void ComponentMeshRenderer::RenderModel() const
 
 void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 {
-	glUniform1i(glGetUniformLocation(shader_program, "time"), App->time->real_time_delta_time);
 	AddDiffuseUniforms(shader_program);
 	AddEmissiveUniforms(shader_program);
 	AddSpecularUniforms(shader_program);
@@ -124,7 +123,6 @@ void ComponentMeshRenderer::AddDiffuseUniforms(unsigned int shader_program) cons
 	glUniform1i(glGetUniformLocation(shader_program, "material.diffuse_map"), 0);
 	
 	glUniform4fv(glGetUniformLocation(shader_program, "material.diffuse_color"), 1, (float*)material_to_render->diffuse_color);
-	glUniform1f(glGetUniformLocation(shader_program, "material.k_diffuse"), material_to_render->k_diffuse);
 
 }
 
@@ -144,7 +142,7 @@ void ComponentMeshRenderer::AddSpecularUniforms(unsigned int shader_program) con
 
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 2);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)material_to_render->specular_color);
-	glUniform1f(glGetUniformLocation(shader_program, "material.k_specular"), material_to_render->k_specular);
+	glUniform1f(glGetUniformLocation(shader_program, "material.smoothness"), material_to_render->smoothness);
 	
 }
 
@@ -153,7 +151,6 @@ void ComponentMeshRenderer::AddAmbientOclusionUniforms(unsigned int shader_progr
 	glActiveTexture(GL_TEXTURE3);
 	BindTexture(Material::MaterialTextureType::OCCLUSION);
 	glUniform1i(glGetUniformLocation(shader_program, "material.occlusion_map"), 3);
-	glUniform1f(glGetUniformLocation(shader_program, "material.k_ambient"), material_to_render->k_ambient);
 }
 
 void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
@@ -319,9 +316,9 @@ void ComponentMeshRenderer::SetSkeleton(uint32_t skeleton_uuid)
 void ComponentMeshRenderer::UpdatePalette(const std::vector<float4x4>& pose)
 {
 	assert(pose.size() == palette.size());
+	const auto &  joints = skeleton->skeleton;
 	for (size_t i = 0; i < pose.size(); ++i)
 	{
-		auto &  joints = skeleton->skeleton;
 		size_t joint_index = i;
 		float4x4 global_transform = float4x4::identity;
 		while (joints[joint_index].parent_index != -1)

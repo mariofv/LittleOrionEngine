@@ -18,7 +18,6 @@ public:
 	~ModuleTime();
 
 	bool Init() override;
-	update_status PreUpdate() override;
 	bool CleanUp() override;
 
 	ENGINE_API float GetFPS() const;
@@ -37,7 +36,7 @@ public:
 public:
 	long frame_count = 0;
 
-	float time_scale = 1.f;
+	float time_scale = 1.0f;
 
 	float delta_time = 0.f;
 	float real_time_delta_time = 0.f;

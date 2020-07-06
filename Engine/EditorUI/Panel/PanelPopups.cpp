@@ -3,6 +3,7 @@
 #include "Helper/TagManager.h"
 
 #include "Main/Application.h"
+#include "Module/ModuleActions.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScene.h"
@@ -27,6 +28,7 @@ void PanelPopups::Render()
 	resource_selector_popup.Render();
 	scene_loader_popup.Render();
 	scene_saver_popup.Render();
+	new_filename_chooser.Render();
 }
 
 void PanelPopups::RenderAssetsLoadingPopup()
@@ -53,14 +55,17 @@ void PanelPopups::RenderAssetsLoadingPopup()
 
 void PanelPopups::RenderAddTagPopup()
 {
+	
 	if (add_tag_popup_shown)
 	{
 		add_tag_popup_shown = false;
 		ImGui::OpenPopup("Add Tag");
+		App->actions->active_macros = true;
 	}
 
 	if (ImGui::BeginPopupModal("Add Tag", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 	{
+		App->actions->active_macros = false;
 		ImGui::Text("Tag Name: \n");
 		ImGui::Separator();
 
@@ -84,14 +89,17 @@ void PanelPopups::RenderAddTagPopup()
 
 void PanelPopups::RenderCreateScriptPopup()
 {
+	
 	if (create_script_popup_shown)
 	{
 		create_script_popup_shown = false;
 		ImGui::OpenPopup("Create Script");
+		App->actions->active_macros = true;
 	}
 
 	if (ImGui::BeginPopupModal("Create Script", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 	{
+		App->actions->active_macros = false;
 		ImGui::Text("Script Name: \n");
 		ImGui::Separator();
 

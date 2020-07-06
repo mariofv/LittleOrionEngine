@@ -24,15 +24,17 @@ public:
 	void ShowFilesInExplorer();
 	
 
-	void CalculateNextLinePosition(int &current_file_in_line, int files_per_line, int &current_line);
+	void CalculateNextLinePosition(int& current_file_in_line, int files_per_line, int& current_line);
 
 	void ShowFileSystemActionsMenu(Path* path);
 
 	void FilesDrop() const;
-	void ResourceDragSource(const Metafile* file) const;
 
+	void ResourceDragSource(const Metafile* file) const;
 	void ResourceDropTarget(Path* folder_path) const;
 	void ResourceDropFromOutside(const std::string& dropped_filedir);
+
+	bool IsOneOfMyChildrens(Path* path) const;
 
 private:
 	void InitResourceExplorerDockspace();
@@ -41,7 +43,6 @@ private:
 	void ShowMetafileIcon(Metafile* metafile);
 
 	size_t GetResourcePreviewImage(uint32_t uuid);
-	void ApplyRename();
 
 private:
 	float file_size_width = 100.f;
@@ -49,8 +50,6 @@ private:
 
 	Path* selected_folder = nullptr;
 	Path* selected_file = nullptr;
-	Path* renaming_file = nullptr;
-
 
 	ImGuiID project_explorer_dockspace_id;
 

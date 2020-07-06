@@ -6,6 +6,7 @@
 
 class ComponentBillboard;
 class ComponentParticleSystem;
+class PanelConfiguration;
 
 class ModuleEffects : public Module
 {
@@ -22,12 +23,13 @@ public:
 	void RemoveComponentParticleSystem(ComponentParticleSystem* particle_system_to_remove);
 
 private:
-
+	bool render_particles = true;
 	std::vector<ComponentBillboard*> billboards;
 	std::vector<ComponentBillboard*> billboards_to_render;
 
 	std::vector<ComponentParticleSystem*> particle_systems;
 	std::vector<ComponentParticleSystem*> particle_systems_to_render;
+	friend PanelConfiguration;
 };
 
 #endif
