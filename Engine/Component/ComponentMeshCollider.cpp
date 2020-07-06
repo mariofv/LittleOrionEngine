@@ -16,7 +16,7 @@ ComponentMeshCollider::ComponentMeshCollider(GameObject* owner) : ComponentColli
 {
 	InitData();
 	ComponentMeshRenderer* mesh_renderer = static_cast<ComponentMeshRenderer*>(owner->GetComponent(ComponentType::MESH_RENDERER));
-	if (mesh_renderer && mesh_renderer->mesh_to_render)
+	if (mesh_renderer)
 	{
 		vertices.clear();
 		indices.clear();

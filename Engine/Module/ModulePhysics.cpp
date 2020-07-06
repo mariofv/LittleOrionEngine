@@ -83,7 +83,7 @@ update_status ModulePhysics::Update()
 		std::vector<CollisionInformation> collisions;
 		for (auto collider_b : colliders)
 		{
-			if (collider_a != collider_b)
+			if (collider_a != collider_b && collider_a->body && collider_b->body)
 			{
 				CollisionInformation collision_info = collider_a->DetectCollisionWith(collider_b);
 				if (collision_info.collider)
