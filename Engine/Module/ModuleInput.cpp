@@ -100,7 +100,7 @@ bool ModuleInput::Init()
 // Called every draw update
 update_status ModuleInput::PreUpdate()
 {
-	BROFILER_CATEGORY("Inputs PreUpdate", Profiler::Color::BlueViolet);
+	BROFILER_CATEGORY("Module Inputs PreUpdate", Profiler::Color::BlueViolet);
 
 	mouse_motion = { 0, 0 };
 	mouse_wheel_motion = 0;

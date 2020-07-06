@@ -234,6 +234,7 @@ void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode
 
 	App->renderer->RenderFrame(*this);
 
+
 	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
 	App->ui->Render(scene_mode);
 

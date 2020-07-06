@@ -19,9 +19,10 @@ public:
 	update_status PostUpdate() override;
 
 	void Render(const float3& mesh_position, GLuint program);
-	void RenderDirectionalLight(const float3& mesh_position);
-	void RenderSpotLights(const float3& mesh_position, GLuint program);
-	void RenderPointLights(const float3& mesh_position, GLuint program);
+
+	void RenderDirectionalLight(const ComponentLight& light);
+	void RenderSpotLights(const ComponentLight& light, GLuint program);
+	void RenderPointLights(const ComponentLight& light, GLuint program);
 
 	void UpdateLightAABB(GameObject& object_aabb);
 	void RecordShadowsFrameBuffers(int width, int height);
@@ -30,11 +31,14 @@ public:
 	void RemoveComponentLight(ComponentLight* light_to_remove);
 
 private:
-	void SortClosestLights(const float3& position, ComponentLight::LightType light_type);
+
 	void UpdateDirectionalLightFrustums(float3 max, float3 min);
 
 	void SetDirectionalLightFrustums();
 	void SendShadowUniformsToShader(GLuint program);
+
+	void SortClosestLights(const float3& position);
+
 
 public:
 	static const unsigned int MAX_DIRECTIONAL_LIGHTS_RENDERED = 1;
@@ -59,7 +63,6 @@ public:
 	float main_camera_fov_increment_factor = 2;
 
 private:
-	std::vector< std::pair<float, ComponentLight*> >  closest_lights;
 	friend class ModuleEditor;
 	Quat directional_light_rotation;
 

@@ -12,7 +12,7 @@ FileData MeshImporter::ExtractData(Path& assets_file_path, const Metafile& metaf
 	return assets_file_path.GetFile()->Load();
 }
 
-FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, float unit_scale_factor, uint32_t mesh_skeleton_uuid) const
+FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, float unit_scale_factor, uint32_t mesh_skeleton_uuid, bool animated_model) const
 {
 	FileData mesh_data{NULL, 0};
 
@@ -23,8 +23,6 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 	aiMatrix4x4 node_transformation = mesh_current_transformation;
 
 	node_transformation = scaling_matrix * node_transformation;
-
-	float3x3 node_rotation = Utils::GetTransform(mesh_current_transformation, 1.0f).RotatePart();
 
 	std::vector<uint32_t> indices;
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -49,12 +47,25 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		vertex_skinning__info = GetSkinning(mesh, mesh_skeleton_uuid);
 	}
 
+	float3x3 node_rotation = float3x3::zero;
+	aiMatrix4x4 vertex_transformation;
+	if (animated_model)
+	{
+		vertex_transformation = node_transformation;
+		node_rotation = Utils::GetTransform(mesh_current_transformation, 1.0f).RotatePart();
+	}
+	else
+	{
+		vertex_transformation = scaling_matrix;
+		node_rotation = Quat::identity.ToFloat3x3();
+	}
+
 	std::vector<Mesh::Vertex> vertices;
 	vertices.reserve(mesh->mNumVertices);
 	for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
 	{
 		Mesh::Vertex new_vertex;
-		aiVector3D transformed_position = node_transformation * mesh->mVertices[i];
+		aiVector3D transformed_position = vertex_transformation * mesh->mVertices[i];
 		new_vertex.position = float3(transformed_position.x, transformed_position.y, transformed_position.z);
 
 
@@ -77,7 +88,7 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		}
 		if (mesh->mBitangents)
 		{
-			new_vertex.bitangent = (node_rotation*float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z)).Normalized();
+			new_vertex.bitangent = (node_rotation * float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z)).Normalized();
 		}
 		if (vertex_skinning__info.size() > 0)
 		{

@@ -147,8 +147,7 @@
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /y /d "$(OutDir)TwinlightSouls.lib" "./Libraries/lib/x86"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -313,6 +312,7 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\SoundImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h" />
     <ClInclude Include="Engine\Helper\TagManager.h" />
+    <ClInclude Include="Engine\Helper\PerlinNoise.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Animation\Tween\LOTween.cpp" />

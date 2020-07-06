@@ -55,6 +55,7 @@ public:
 	~PanelStateMachine();
 
 	void Render() override;
+	bool IsElegibleStateMachine(AnimController * controller);
 	void HandleInteraction();
 	void InteractionDelete();
 	void InteractionCreation();

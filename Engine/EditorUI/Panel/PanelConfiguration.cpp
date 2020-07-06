@@ -4,6 +4,7 @@
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleEffects.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleSpacePartitioning.h"
@@ -311,8 +312,11 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::ColorEdit3("Color", App->lights->ambient_light_color);
 
 		//ImGui::Checkbox("Toggle directional camera frustum", &App->renderer->toggle_ortho_frustum);
+
 		ImGui::Checkbox("Render shadows", &App->lights->render_shadows);
 		ImGui::SliderFloat("Shadows Fov Factor", &App->lights->main_camera_fov_increment_factor, 0, 4, "%.2f");
+
+		ImGui::Checkbox("Render Particles", &App->effects->render_particles);
 
 
 	}

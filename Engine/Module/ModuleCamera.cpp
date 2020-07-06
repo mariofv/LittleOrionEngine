@@ -37,6 +37,7 @@ bool ModuleCamera::Init()
 
 update_status ModuleCamera::PreUpdate()
 {
+	BROFILER_CATEGORY("Module Camera PreUpdate", Profiler::Color::OldLace);
 	HandleSceneCameraMovements();
 	return update_status::UPDATE_CONTINUE;
 }
@@ -44,17 +45,12 @@ update_status ModuleCamera::PreUpdate()
 // Called every draw update
 update_status ModuleCamera::Update()
 {
-	BROFILER_CATEGORY("Scene Camera Update", Profiler::Color::Lavender);
+	BROFILER_CATEGORY("Module Camera Update", Profiler::Color::OliveDrab);
 	SelectMainCamera();
 	scene_camera->Update();
 	return update_status::UPDATE_CONTINUE;
 }
 
-update_status ModuleCamera::PostUpdate()
-{
-
-	return update_status::UPDATE_CONTINUE;
-}
 
 
 bool ModuleCamera::CleanUp()

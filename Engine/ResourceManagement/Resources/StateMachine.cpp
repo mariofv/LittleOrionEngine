@@ -33,7 +33,7 @@ State::State(std::string name, std::shared_ptr<Clip> clip, float speed) :
 State::State(std::string name, std::shared_ptr<Clip> clip, float speed, float2& position) :
 	name(name), name_hash(std::hash<std::string>{}(name)), clip(clip), speed(speed), position(position){
 }
-Transition::Transition(uint64_t source, uint64_t target, std::string & trigger, long interpolation) :
+Transition::Transition(uint64_t source, uint64_t target, std::string & trigger, uint64_t interpolation) :
 	source_hash(source), 
 	trigger(trigger),
 	target_hash(target),
