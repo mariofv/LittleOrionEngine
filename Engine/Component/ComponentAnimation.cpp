@@ -167,7 +167,7 @@ void ComponentAnimation::UpdateMeshes()
 	{
 		pose.resize(mesh->skeleton->skeleton.size());
 		auto & skeleton = mesh->skeleton;
-		animation_controller->GetClipTransform(skeleton->GetUUID(), pose);
+		animation_controller->GetClipTransform(skeleton, pose);
 		mesh->UpdatePalette(pose);
 	}
 }
@@ -212,23 +212,24 @@ void ComponentAnimation::GenerateJointChannelMaps()
 	{
 		for (auto& mesh : skinned_meshes)
 		{
-			auto & skeleton = mesh->skeleton;
-			if (clip->animation == nullptr || clip->skeleton_channels_joints_map.find(skeleton->GetUUID()) != clip->skeleton_channels_joints_map.end())
+			auto & skeleton = mesh->skeleton->skeleton;
+			size_t skeleton_uuid = mesh->skeleton->GetUUID();
+			if (clip->animation == nullptr || clip->skeleton_channels_joints_map.find(skeleton_uuid) != clip->skeleton_channels_joints_map.end())
 			{
 				break;
 			}
+			std::vector<size_t> meshes_joints_channels_map(skeleton.size());
 			auto & channels = clip->animation->keyframes[0].channels;
-			std::vector<size_t> meshes_channels_joints_map(channels.size());
-			for (size_t j = 0; j < channels.size(); ++j)
+			for (size_t j = 0; j < skeleton.size(); ++j)
 			{
-				auto & channel = channels[j];
-				auto it = std::find_if(skeleton->skeleton.begin(), skeleton->skeleton.end(), [&channel](const Skeleton::Joint & joint) {
+				auto & joint = skeleton[j];
+				auto it = std::find_if(channels.begin(), channels.end(), [&joint](const Animation::Channel& channel) {
 					return channel.name == joint.name;
 				});
 
-				meshes_channels_joints_map[j] = (it - skeleton->skeleton.begin());
+				meshes_joints_channels_map[j] = (it - channels.begin());
 			}
-			clip->skeleton_channels_joints_map[skeleton->GetUUID()] = std::move(meshes_channels_joints_map);
+			clip->skeleton_channels_joints_map[skeleton_uuid] = std::move(meshes_joints_channels_map);
 		}
 	}
 }

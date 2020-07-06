@@ -11,6 +11,7 @@ class StateMachine;
 struct State;
 struct Clip;
 struct Transition;
+class Skeleton;
 
 struct PlayingClip
 {
@@ -43,7 +44,7 @@ public:
 	void ApplyAutomaticTransitionIfNeeded();
 	void AdjustInterpolationTimes();
 	void SetStateMachine(uint32_t state_machine_uuid);
-	void GetClipTransform(uint32_t skeleton_uuid, std::vector<math::float4x4>& pose);
+	void GetClipTransform(const std::shared_ptr<Skeleton>& skeleton, std::vector<math::float4x4>& pose);
 	void StartNextState(const std::string& trigger);
 	bool IsOnState(const std::string& state);
 

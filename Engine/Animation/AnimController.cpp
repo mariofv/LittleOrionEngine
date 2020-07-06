@@ -8,11 +8,12 @@
 #include "Helper/Utils.h"
 
 #include <math.h>
-void AnimController::GetClipTransform(uint32_t skeleton_uuid, std::vector<math::float4x4>& pose)
+void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton, std::vector<math::float4x4>& pose)
 {
 	for (size_t j = 0; j < playing_clips.size(); j++)
 	{
 		const std::shared_ptr<Clip> clip = playing_clips[j].clip;
+		uint32_t skeleton_uuid = skeleton->GetUUID();
 		if (!clip || clip->skeleton_channels_joints_map.find(skeleton_uuid) == clip->skeleton_channels_joints_map.end())
 		{
 			continue;
@@ -34,28 +35,37 @@ void AnimController::GetClipTransform(uint32_t skeleton_uuid, std::vector<math::
 		auto& joint_channels_map = clip->skeleton_channels_joints_map[skeleton_uuid];
 		for (size_t i = 0; i < joint_channels_map.size(); ++i)
 		{
-			size_t joint_index = joint_channels_map[i];
-			if (joint_index < pose.size())
+			size_t channel_index = joint_channels_map[i];
+			uint32_t joint_parent_index = skeleton->skeleton[i].parent_index;
+			if (i < pose.size())
 			{
-				const float3& last_translation = current_pose[i].translation;
-				const float3& next_translation = next_pose[i].translation;
+				const float3& last_translation = current_pose[channel_index].translation;
+				const float3& next_translation = next_pose[channel_index].translation;
 
-				const Quat& last_rotation = current_pose[i].rotation;
-				const Quat& next_rotation = next_pose[i].rotation;
+				const Quat& last_rotation = current_pose[channel_index].rotation;
+				const Quat& next_rotation = next_pose[channel_index].rotation;
 
 				float3 position = Utils::Interpolate(last_translation, next_translation, interpolation_lambda);
 				Quat rotation = Utils::Interpolate(last_rotation, next_rotation, interpolation_lambda);
 				if (j != ClipType::ACTIVE)
 				{
-					pose[joint_index] = Utils::Interpolate(pose[joint_index], float4x4::FromTRS(position, rotation, float3::one), weight);
+					pose[i] = Utils::Interpolate(pose[i], pose[joint_parent_index]*float4x4::FromTRS(position, rotation, float3::one), weight);
 				}
 				else
 				{
-					pose[joint_index] = float4x4::FromTRS(position, rotation, float3::one);
+					if (joint_parent_index > joint_channels_map.size())
+					{
+						pose[i] = float4x4::FromTRS(position, rotation, float3::one);
+					}
+					else
+					{
+						pose[i] = pose[joint_parent_index] * float4x4::FromTRS(position, rotation, float3::one);
+					}
 
 				}	
 			}
 		}
+
 
 		if (weight >= 1.0f)
 		{
