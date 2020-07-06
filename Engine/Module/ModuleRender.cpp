@@ -266,6 +266,10 @@ void ModuleRender::SetListOfMeshesToRender(const ComponentCamera* camera)
 	float3 camera_pos = camera->camera_frustum.pos;
 	for (ComponentMeshRenderer* mesh_to_render : meshes_to_render)
 	{
+		if (mesh_to_render->mesh_to_render == nullptr || mesh_to_render->material_to_render == nullptr)
+		{
+			continue;
+		}
 
 		if (mesh_to_render->material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT || mesh_to_render->material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
 		{

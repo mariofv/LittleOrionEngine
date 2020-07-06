@@ -33,6 +33,7 @@ struct CurrentModelData
 	 ModelMetafile* model_metafile;
 	 bool remmaped_changed = false;
 	 bool any_new_node = false;
+	 bool animated_model = false;
 };
 
 public:

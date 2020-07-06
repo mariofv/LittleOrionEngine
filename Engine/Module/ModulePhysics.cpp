@@ -92,7 +92,7 @@ update_status ModulePhysics::Update()
 				}
 			}
 		}
-		App->event_manager->publish(new CollisionEvent(collider_a->owner, collisions));
+		App->event_manager->Publish(new CollisionEvent(collider_a->owner, collisions));
 	}
 	
 	float ms2;
