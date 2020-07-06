@@ -312,7 +312,8 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject* game_object)
 				bool belongs_to_list = false;
 				for (auto go : App->editor->selected_game_objects)
 				{
-					if (go->UUID == game_object->UUID) {
+					if (go->UUID == game_object->UUID) 
+					{
 						belongs_to_list = true;
 					}
 				}
