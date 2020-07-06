@@ -373,20 +373,19 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 		}
 	}
 
+	ImGui::Checkbox("Spritesheet", &billboard->is_spritesheet);
+
 	if (billboard->is_spritesheet) 
 	{
-		ImGui::DragInt("Columns", &billboard->num_sprisheet_columns, 1.f, 1);
-		ImGui::DragInt("Rows", &billboard->num_sprisheet_rows, 1.f, 1);
-		ImGui::DragInt("Loop Time", &billboard->loop_time, 1.f, 0);
-		if (ImGui::Button("Play once"))
-		{
-			billboard->EmitOnce();
-		}
-		if (ImGui::Button("Reset"))
-		{
-			billboard->play = true;
-		}
+		ImGui::DragInt("Columns", &billboard->num_sprisheet_columns);
+		ImGui::DragInt("Rows", &billboard->num_sprisheet_rows);
+		ImGui::DragInt("Animation Time", &billboard->animation_time, 10.f, 0);
+		ImGui::Checkbox("Loop", &billboard->loop);
 
+		if (ImGui::Button("Play"))
+		{
+			billboard->Play();
+		}
 	}
 
 	ImGui::Separator();

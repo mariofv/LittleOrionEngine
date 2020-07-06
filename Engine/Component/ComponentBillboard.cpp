@@ -70,28 +70,31 @@ void ComponentBillboard::InitData()
 	glBindVertexArray(0);
 }
 
-void ComponentBillboard::SwitchFrame()
+void ComponentBillboard::Update()
 {
-	if (play)
+	if (playing)
 	{
 		time_since_start += App->time->delta_time;
-		if (time_since_start > loop_time)
+		if (time_since_start > animation_time)
 		{
-			if (play_once)
+			if (!loop)
 			{
 				time_since_start = 0.f;
-				play = false;
+				playing = false;
+				active = false;
 			}
 			else
 			{
-				time_since_start = time_since_start % loop_time;
+				time_since_start = time_since_start % animation_time;
 			}
 		}
-		float loop_progress = time_since_start / loop_time;
+		float loop_progress = (float)time_since_start / animation_time;
+
+		num_sprites = num_sprisheet_columns * num_sprisheet_rows;
 
 		int current_sprite = math::FloorInt(loop_progress * num_sprites);
-		current_sprite_x = current_sprite / num_sprisheet_columns;
-		current_sprite_y = current_sprite % num_sprisheet_columns;
+		current_sprite_x = current_sprite % num_sprisheet_columns;
+		current_sprite_y = (num_sprisheet_columns - 1) - current_sprite / num_sprisheet_columns;
 	}
 }
 
@@ -100,17 +103,21 @@ void ComponentBillboard::ChangeBillboardType(ComponentBillboard::AlignmentType a
 	this->alignment_type = alignment_type;
 }
 
-void ComponentBillboard::EmitOnce()
+void ComponentBillboard::Play()
 {
-	play = true;
-	play_once = true;
+	if (!active)
+	{
+		active = true;
+	}
+	playing = true;
+	time_since_start = 0;
 	current_sprite_x = 0;
 	current_sprite_y = 0;
 }
 
 bool ComponentBillboard::IsPlaying()
 {
-	return play;
+	return playing;
 }
 
 void ComponentBillboard::Render(const float3& global_position)
@@ -129,8 +136,12 @@ void ComponentBillboard::Render(const float3& global_position)
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.texture"), 0);
 	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color"),1, (float*)color);
 
-	float4x4 model_matrix = float4x4::FromTRS(global_position, Quat::identity, float3(width, height, 1.f));
+	glUniform1i(glGetUniformLocation(shader_program, "billboard.num_rows"), num_sprisheet_rows);
+	glUniform1i(glGetUniformLocation(shader_program, "billboard.num_columns"), num_sprisheet_columns);
+	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_x"), current_sprite_x);
+	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_y"), current_sprite_y);
 
+	float4x4 model_matrix = float4x4::FromTRS(global_position, Quat::identity, float3(width, height, 1.f));
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), model_matrix.Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -177,7 +188,8 @@ void ComponentBillboard::SpecializedSave(Config& config) const
 
 	config.AddInt(static_cast<int>(alignment_type), "BillboardType");
 
-	config.AddInt(loop_time, "LoopTime");
+	config.AddInt(animation_time, "AnimationTime");
+	config.AddBool(is_spritesheet, "IsSpriteSheet");
 	config.AddInt(num_sprisheet_rows, "Rows");
 	config.AddInt(num_sprisheet_columns, "Columns");
 }
@@ -190,10 +202,11 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 	width = config.GetFloat("Width", 1.0f);
 	height = config.GetFloat("Height", 1.0f);
 
-	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::VIEW_POINT)));
+	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::WORLD)));
 	ChangeBillboardType(alignment_type);
 
-	loop_time = config.GetInt("LoopTime", 0);
+	animation_time = config.GetInt("AnimationTime", 1000);
+	is_spritesheet = config.GetBool("IsSpriteSheet", false);
 	num_sprisheet_rows = config.GetInt("Rows", 1);
 	num_sprisheet_columns = config.GetInt("Columns", 1);
 }

@@ -3,7 +3,6 @@ struct Billboard
   sampler2D texture;
   vec4 color;
 
-  bool is_spritesheet;
   int num_columns;
   int num_rows;
   int current_sprite_x;

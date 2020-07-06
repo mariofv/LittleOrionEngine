@@ -48,14 +48,14 @@ public:
 	void Copy(Component* component_to_copy) const override;
 
 	void InitData();
+	void Update() override;
 
 	void Render(const float3& global_position);
-	void SwitchFrame();
 
 	void ChangeTexture(uint32_t texture_uuid);
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
 
-	ENGINE_API void EmitOnce();
+	ENGINE_API void Play();
 	ENGINE_API bool IsPlaying();
 
 private:
@@ -66,7 +66,7 @@ public:
 	float height = 5.f;
 	float transparency = 1.f;
 
-	bool play_once = false;
+	bool loop = false;
 	int current_sprite_x = 0;
 	int current_sprite_y = 0;
 
@@ -80,7 +80,7 @@ private:
 	//color
 	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-	AlignmentType alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
+	AlignmentType alignment_type = ComponentBillboard::AlignmentType::WORLD;
 
 	//Spritesheet params
 	bool is_spritesheet = false;
@@ -89,10 +89,10 @@ private:
 	int num_sprites = 1;
 
 	int time_since_start = 0;
-	int loop_time = 0;
+	int animation_time = 1000;
 
 	AnimationType animation_type = AnimationType::CONSTANT;
-	bool play = true;
+	bool playing = false;
 
 	friend class PanelComponent;
 	friend class ComponentParticleSystem;

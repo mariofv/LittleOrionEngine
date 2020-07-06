@@ -33,8 +33,8 @@ void main()
   vec2 vertex_uvs = vertex_uv0;
 
 #if ENABLE_SPRITESHEET
-  float u = mix(current_sprite_x, current_sprite_x + 1, vertex_uv0.x) / num_rows;
-  float v = mix(current_sprite_x, current_sprite_x + 1, vertex_uv0.x) / num_columns;
+  float u = mix(billboard.current_sprite_x, billboard.current_sprite_x + 1, vertex_uv0.x) / billboard.num_columns;
+  float v = mix(billboard.current_sprite_y, billboard.current_sprite_y + 1, vertex_uv0.y) / billboard.num_rows;
   vertex_uvs = vec2(u, v);
 #endif
 
