@@ -51,6 +51,12 @@ bool NavMesh::Update()
 	return true;
 }
 
+NavMesh& NavMesh::operator=(const NavMesh& nav_mesh_to_copy)
+{
+	*this = nav_mesh_to_copy;
+	return *this;
+}
+
 bool NavMesh::CreateNavMesh()
 {
 	CleanUp();
@@ -751,7 +757,7 @@ bool NavMesh::FindNextPolyByDirection(float3& position, float3& next_position)
 void NavMesh::SaveNavMesh(unsigned char* nav_data, unsigned int nav_data_size) const
 {
 	Path* navmesh_path = App->filesystem->GetPath(RESOURCES_NAVMESH_PATH);
-	std::string navmesh_filename("survival_scene_navmesh.bin");
+	std::string navmesh_filename(App->scene->GetCurrentSceneName().append(".bin"));
 
 	unsigned char* copy_nav_data = new unsigned char[nav_data_size];
 	memcpy(copy_nav_data, nav_data, nav_data_size);
@@ -764,8 +770,58 @@ void NavMesh::SaveNavMesh(unsigned char* nav_data, unsigned int nav_data_size) c
 void NavMesh::LoadNavMesh()
 {
 	std::string navmesh_file_path_string(RESOURCES_NAVMESH_PATH);
-	navmesh_file_path_string.append("/survival_scene_navmesh.bin");
+	navmesh_file_path_string.append("survival_scene_navmesh.bin");
 
+	if (!App->filesystem->Exists(navmesh_file_path_string))
+	{
+		APP_LOG_ERROR("Cannot load navmesh.");
+		return;
+	}
+
+	Path* navmesh_file_path = App->filesystem->GetPath(navmesh_file_path_string);
+	FileData navmesh_data = navmesh_file_path->GetFile()->Load();
+
+	size_t readed_bytes = navmesh_data.size;
+	navmesh_read_data = (char*)navmesh_data.buffer;
+
+	nav_mesh = dtAllocNavMesh();
+	if (!nav_mesh)
+	{
+		dtFree(navmesh_read_data);
+		APP_LOG_ERROR("Could not create Detour navmesh");
+		return;
+	}
+
+	dtStatus status;
+
+	status = nav_mesh->init(reinterpret_cast<unsigned char*>(navmesh_read_data), (unsigned int)readed_bytes, DT_TILE_FREE_DATA);
+	if (dtStatusFailed(status))
+	{
+		dtFree(navmesh_read_data);
+		APP_LOG_ERROR("Could not init Detour navmesh");
+		return;
+	}
+
+	status = nav_query->init(nav_mesh, 2048);
+	if (dtStatusFailed(status))
+	{
+		APP_LOG_ERROR("Could not init Detour navmesh query");
+		return;
+	}
+
+
+	is_mesh_computed = true;
+	duDebugDrawNavMeshWithClosedList(&m_dd, *nav_mesh, *nav_query, nav_mesh_draw_flags);
+	m_dd.GenerateBuffers();
+
+}
+
+void NavMesh::LoadNavMesh(const std::string nav_mesh_name)
+{
+	std::string navmesh_file_path_string(RESOURCES_NAVMESH_PATH);
+	navmesh_file_path_string.append("/");
+	navmesh_file_path_string.append(nav_mesh_name);
+	 
 	if (!App->filesystem->Exists(navmesh_file_path_string))
 	{
 		APP_LOG_ERROR("Cannot load navmesh.");

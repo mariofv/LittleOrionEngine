@@ -7,7 +7,7 @@
 
 bool ModuleAI::Init()
 {
-	nav_mesh.LoadNavMesh();
+	nav_mesh.LoadNavMesh(nav_mesh_name);
 	return true;
 }
 
@@ -38,4 +38,18 @@ ENGINE_API bool ModuleAI::IsPointWalkable(float3 & target_position)
 ENGINE_API bool ModuleAI::FindNextPolyByDirection(float3& position, float3& next_position)
 {
 	return nav_mesh.FindNextPolyByDirection(position, next_position);
+}
+
+void ModuleAI::SetNavMesh(const std::string nav_mesh_file)
+{
+	if(nav_mesh_name.size() > 1)
+	{
+		nav_mesh_name = nav_mesh_file;
+	}
+	nav_mesh.LoadNavMesh(nav_mesh_name);
+}
+
+std::string ModuleAI::GetNavMesh() const
+{
+	return nav_mesh_name;
 }

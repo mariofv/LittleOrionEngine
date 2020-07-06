@@ -5,6 +5,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 
+#include "Module/ModuleAI.h"
 #include "Module/ModuleAnimation.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleLight.h"
@@ -82,6 +83,8 @@ void Scene::Save(GameObject* gameobject_to_save) const
 
 	scene_config.AddFloat(App->lights->ambient_light_intensity, "Ambiental Light Intensity");
 	scene_config.AddColor(float4(App->lights->ambient_light_color), "Ambiental Light Color");
+	std::string nav_mesh_name = App->artificial_intelligence->GetNavMesh();
+	scene_config.AddString(nav_mesh_name, "Navmesh Name");
 }
 
 void Scene::Load(bool from_file)
@@ -150,6 +153,11 @@ void Scene::Load(bool from_file)
 	App->lights->ambient_light_color[1] = ambiental_light_color.y;
 	App->lights->ambient_light_color[2] = ambiental_light_color.z;
 	App->lights->ambient_light_color[3] = ambiental_light_color.w;
+
+	std::string nav_mesh_name;
+	scene_config.GetString("Navmesh Path", nav_mesh_name, "survival_scene_navmesh.bin");
+
+	App->artificial_intelligence->SetNavMesh(nav_mesh_name);
 
 	App->scripts->ReLink();
 	App->animations->UpdateAnimationMeshes();
@@ -341,7 +349,7 @@ void Scene::LoadPrefabModifiedComponents(const Config& config) const
 	config.GetChildrenConfig("RemovedComponents", removed_components_config);
 	for (auto & removed_config : removed_components_config)
 	{
-		uint64_t removed_uuid = removed_config.GetUInt( "Removed", 0);
+		uint64_t removed_uuid = removed_config.GetUInt("Removed", 0);
 		prefab_child->RemoveComponent(removed_uuid);
 	}
 }
@@ -360,17 +368,12 @@ bool Scene::ComputeNameScene(const std::string& assets_path)
 {
 	std::string aux_path(assets_path);
 
-	std::size_t founddot = aux_path.find_last_of(".");
-	if (founddot == std::string::npos || founddot == 0) {
-		return false ;
-	}
+	std::string base_filename = aux_path.substr(aux_path.find_last_of("/\\") + 1);
 
-	std::size_t foundbar = aux_path.find_last_of("/");
-	if (foundbar == std::string::npos || foundbar == 0) {
-		return false;
-	}
+	std::string::size_type const p(base_filename.find_last_of('.'));
+	std::string file_without_extension = base_filename.substr(0, p);
 
-	name = aux_path.substr(foundbar, founddot);
+	name = file_without_extension;
 
 	return true;
 }

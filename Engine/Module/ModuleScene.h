@@ -54,6 +54,8 @@ public:
 	bool HasPendingSceneToLoad() const;
 	bool CurrentSceneIsSaved() const;
 
+	std::string GetCurrentSceneName() const;
+
 private:
 	void OpenScene();
 	inline void LoadSceneResource();

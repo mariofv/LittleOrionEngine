@@ -4,6 +4,7 @@
 #include "Panel.h"
 #include <MathGeoLib/MathGeoLib.h>
 #include <string>
+#include "AI/NavMesh.h"
 
 class PanelNavMesh : public Panel
 {
@@ -15,6 +16,9 @@ public:
 
 	bool succes = false;
 	bool first_time = true;
+	bool baked = false;
+
+	NavMesh new_nav_mesh;
 
 };
 

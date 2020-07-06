@@ -418,3 +418,10 @@ bool ModuleScene::CurrentSceneIsSaved() const
 {
 	return current_scene != nullptr;
 }
+
+std::string ModuleScene::GetCurrentSceneName() const
+{
+	Metafile* scene_meta = App->resources->resource_DB->GetEntry(App->scene->current_scene->GetUUID());
+	current_scene->ComputeNameScene(scene_meta->imported_file_path);
+	return current_scene->GetName();
+}

@@ -23,6 +23,8 @@ public:
 	bool FindPath();
 	ENGINE_API bool IsPointWalkable(float3& target_position);
 	ENGINE_API bool FindNextPolyByDirection(float3& position, float3& next_position);
+	void SetNavMesh(const std::string nav_mesh);
+	std::string GetNavMesh() const;
 
 public:
 	std::vector<float3> debug_path;
@@ -37,6 +39,7 @@ public:
 
 private:
 	NavMesh nav_mesh;
+	std::string nav_mesh_name = "survival_scene_navmesh.bin";
 
 	friend PanelNavMesh;
 };

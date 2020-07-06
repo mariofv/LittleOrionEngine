@@ -23,15 +23,14 @@ public:
 	const std::string GetSerializedConfig() const;
 	std::string GetName() const;
 	std::string GetExportedFile() const;
+	bool ComputeNameScene(const std::string& assets_path);
 
- 
 private:
 	void SavePrefab(Config& config, GameObject* gameobject_to_save) const;
 	void SavePrefabUUIDS(std::vector<Config>& config, GameObject* gameobject_to_save) const;
 	bool SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_to_save) const;
-	GameObject * LoadPrefab(const Config& config) const;
+	GameObject* LoadPrefab(const Config& config) const;
 	void LoadPrefabModifiedComponents(const Config& config) const;
-	bool ComputeNameScene(const std::string& assets_path);
 
 private:
 	mutable Config scene_config;

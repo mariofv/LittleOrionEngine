@@ -71,6 +71,7 @@ public:
 
 	bool CleanUp();
 	bool Update();
+	NavMesh& operator=(const NavMesh& nav_mesh_to_copy);
 
 	bool CreateNavMesh();
 	void RenderNavMesh(ComponentCamera& camera);
@@ -82,6 +83,7 @@ public:
 
 	void SaveNavMesh(unsigned char* nav_data, unsigned int nav_data_size) const;
 	void LoadNavMesh();
+	void LoadNavMesh(const std::string nav_mesh_path);
 
 	inline SampleDebugDraw& GetDebugDraw() { return m_dd; }
 
