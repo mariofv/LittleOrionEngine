@@ -17,6 +17,7 @@ ModuleAudio::ModuleAudio()
 
 ModuleAudio::~ModuleAudio()
 {
+	CleanUp();
 }
 
 bool ModuleAudio::Init()
@@ -52,6 +53,7 @@ bool ModuleAudio::Init()
 
 update_status ModuleAudio::Update()
 {
+	BROFILER_CATEGORY("Module Audio Update", Profiler::Color::Khaki);
 	AK::SoundEngine::RenderAudio();
 	return update_status::UPDATE_CONTINUE;
 }

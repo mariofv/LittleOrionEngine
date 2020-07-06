@@ -5,6 +5,7 @@
 #include "PopupsPanel/PanelPopupResourceSelector.h"
 #include "PopupsPanel/PanelPopupSceneLoader.h"
 #include "PopupsPanel/PanelPopupSceneSaver.h"
+#include "PopupsPanel/PanelPopupNewFileName.h"
 
 #include <string>
 
@@ -27,6 +28,7 @@ public:
 	PanelPopupResourceSelector resource_selector_popup;
 	PanelPopupSceneLoader scene_loader_popup;
 	PanelPopupSceneSaver scene_saver_popup;
+	PanelPopupNewFileName new_filename_chooser;
 
 	bool create_script_popup_shown = false;
 	bool add_tag_popup_shown = false;
