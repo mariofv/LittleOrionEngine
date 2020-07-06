@@ -36,7 +36,6 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton,
 		for (size_t i = 0; i < joint_channels_map.size(); ++i)
 		{
 			size_t channel_index = joint_channels_map[i];
-			uint32_t joint_parent_index = skeleton->skeleton[i].parent_index;
 			if (i < pose.size())
 			{
 				const float3& last_translation = current_pose[channel_index].translation;
@@ -47,31 +46,24 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton,
 
 				float3 position = Utils::Interpolate(last_translation, next_translation, interpolation_lambda);
 				Quat rotation = Utils::Interpolate(last_rotation, next_rotation, interpolation_lambda);
+				float4x4 current_pose = float4x4::FromTRS(position, rotation, float3::one);
 				if (j != ClipType::ACTIVE)
 				{
-					pose[i] = Utils::Interpolate(pose[i], pose[joint_parent_index]*float4x4::FromTRS(position, rotation, float3::one), weight);
+					pose[i] = Utils::Interpolate(pose[i], current_pose, weight);
 				}
 				else
 				{
-					if (joint_parent_index > joint_channels_map.size())
-					{
-						pose[i] = float4x4::FromTRS(position, rotation, float3::one);
-					}
-					else
-					{
-						pose[i] = pose[joint_parent_index] * float4x4::FromTRS(position, rotation, float3::one);
-					}
+					pose[i] = current_pose;
 
 				}	
 			}
 		}
-
-
 		if (weight >= 1.0f)
 		{
 			apply_transition = true;
 		}
 	}
+
 }
 
 bool AnimController::Update()
