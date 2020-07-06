@@ -44,7 +44,7 @@ update_status ModuleActions::Update()
 
 bool ModuleActions::CleanUp()
 {
-	delete copied_component;
+	copied_component = nullptr;
 	return true;
 }
 
@@ -211,15 +211,7 @@ void ModuleActions::PasteComponent(Component* component)
 		copied_component->owner = component->owner;
 		component->owner->components.push_back(copied_component);		
 	}
-	else
-	{
-		if (copied_component->type == Component::ComponentType::SCRIPT)
-		{
-			/*copied_component->Load(script_config);*/
-			copied_component->owner = component->owner;
-			component->owner->components.push_back(copied_component);
-		}
-	}
+	
 }
 
 void ModuleActions::PasteComponentValues(Component * component)
@@ -236,24 +228,20 @@ void ModuleActions::PasteComponentValues(Component * component)
 		}
 		else 
 		{
-			Config configuration;
-			copied_component->Save(configuration);
-			component->Load(configuration);
+			if (copied_component->type != Component::ComponentType::SCRIPT)
+			{
+				Config configuration;
+				copied_component->Save(configuration);
+				component->Load(configuration);
+			}
 		}
 	}
 }
 
 void ModuleActions::SetCopyComponent(Component * component)
 {
-	if (component->type == Component::ComponentType::SCRIPT)
-	{
-		Config conf;
-		component->Save(conf);
-		script_config = conf;
-		copied_component = component;
-		/*copied_component = new ComponentScript(component->owner, static_cast<ComponentScript*>(component)->name);*/
-	}
-	else if (component->type == Component::ComponentType::COLLIDER)
+	
+	if (component->type == Component::ComponentType::COLLIDER)
 	{
 		copied_component = component->Clone(component->owner, component->owner->original_prefab);
 	}
