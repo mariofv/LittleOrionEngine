@@ -1,10 +1,70 @@
 {
   "Shaders": [
     {
-      "Name": "Test",
-      "Vertex": "/Resources/Shaders/uber_test.vs",
-      "Fragment": "/Resources/Shaders/uber_test.fs",
+      "Name": "Skybox",
+      "Vertex": "/Resources/Shaders/skybox.vs",
+      "Fragment": "/Resources/Shaders/skybox.fs",
+      "Selectable": false
+    },
+    {
+      "Name": "Linepoint",
+      "Vertex": "/Resources/Shaders/linepoint.vs",
+      "Fragment": "/Resources/Shaders/linepoint.fs",
+      "Selectable": false
+    },
+    {
+      "Name": "Text",
+      "Vertex": "/Resources/Shaders/text.vs",
+      "Fragment": "/Resources/Shaders/text.fs",
+      "Selectable": false
+    },
+    {
+      "Name": "Outline",
+      "Vertex": "/Resources/Shaders/simple_color.vs",
+      "Fragment": "/Resources/Shaders/simple_color.fs",
+      "Selectable": false
+    },
+    {
+      "Name": "Blinn phong",
+      "Vertex": "/Resources/Shaders/blinn_phong.vs",
+      "Fragment": "/Resources/Shaders/blinn_phong.fs",
       "Selectable": true
+    },
+    {
+      "Name": "Lightmap",
+      "Vertex": "/Resources/Shaders/blinn_phong.vs",
+      "Fragment": "/Resources/Shaders/lightmap.fs",
+      "Selectable": true
+    },
+    {
+      "Name": "Billboard",
+      "Vertex": "/Resources/Shaders/billboard.vs",
+      "Fragment": "/Resources/Shaders/billboard.fs",
+      "Selectable": false
+    },
+    {
+      "Name": "NavMesh",
+      "Vertex": "/Resources/Shaders/simple_color.vs",
+      "Fragment": "/Resources/Shaders/simple_color.fs",
+      "Selectable": true
+    },
+    {
+      "Name": "Grid",
+      "Vertex": "/Resources/Shaders/grid.vs",
+      "Fragment": "/Resources/Shaders/grid.fs",
+      "Selectable": false
+    },
+    {
+      "Name":"Sprite",
+      "Vertex":"/Resources/Shaders/sprite.vs",
+      "Fragment":"/Resources/Shaders/sprite.fs",
+      "Selectable":false
+    },
+    {
+      "Name": "UI Text",
+      "Vertex": "/Resources/Shaders/sprite.vs",
+      "Fragment": "/Resources/Shaders/ui_text.fs",
+      "Selectable": false
     }
   ]
 }

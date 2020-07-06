@@ -61,7 +61,7 @@ void ComponentMeshRenderer::Render()
 		return;
 	}
 	std::string program_name = material_to_render->shader_program;
-	GLuint program = App->program->GetShaderProgramId(program_name);
+	GLuint program = App->program->UseProgram(program_name);
 
 	App->program->UseProgram("Blinn Phong", material_to_render->GetShaderVariation());
 

@@ -83,10 +83,10 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	bool UseProgram(const std::string& program_name, unsigned int variation);
+	bool UseProgram(const std::string& program_name, unsigned int variation = 0);
+	void LoadPrograms(const char* file_path);
 
 private:
-	void LoadPrograms(const char* file_path);
 	bool CompileProgram(ShaderProgram& program, unsigned int variation);
 
 	bool InitVertexShader(GLuint &vertex_shader, const std::string& vertex_shader_file_name, const std::vector<std::string>& defines);

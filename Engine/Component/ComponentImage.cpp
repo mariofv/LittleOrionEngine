@@ -25,8 +25,6 @@ ComponentImage::~ComponentImage()
 
 void ComponentImage::InitData()
 {
-	program = App->program->GetShaderProgramId("Sprite");
-
 	GLfloat vertices[] = {
 		// Pos      // Tex
 		-0.5f, 0.5f, 0.0f, 1.0f,
@@ -79,7 +77,7 @@ void ComponentImage::Render(float4x4* projection)
 		}
 		float4x4 model = owner->transform_2d.GetGlobalModelMatrix()  * aspect_ratio_scaling;
 
-		glUseProgram(program);
+		program = App->program->UseProgram("Sprite");
 		glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
 		glUniform1i(glGetUniformLocation(program, "image"), 0);
 		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, model.ptr());

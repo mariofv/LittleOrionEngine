@@ -358,17 +358,17 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 		billboard->ChangeTexture(selected_resource_uuid);
 	}
 	int alignment_type = static_cast<int>(billboard->alignment_type);
-	if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) {
+	if (ImGui::Combo("Billboard type", &alignment_type, "World\0View point\0Axial")) {
 		switch (alignment_type)
 		{
 		case 0:
-			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::WORLD);
 			break;
 		case 1:
-			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
 			break;
 		case 2:
-			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
 			break;
 		}
 	}

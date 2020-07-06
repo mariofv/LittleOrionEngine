@@ -49,9 +49,8 @@ public:
 	{
 		assert(points != nullptr);
 		assert(count > 0 && count <= DEBUG_DRAW_VERTEX_BUFFER_SIZE);
-		GLuint shader_program = App->program->GetShaderProgramId("Linepoint");
 		glBindVertexArray(linePointVAO);
-		glUseProgram(shader_program);
+		GLuint shader_program = App->program->UseProgram("Linepoint");
 
 		glUniformMatrix4fv(
 			glGetUniformLocation(shader_program, "u_MvpMatrix"),
@@ -107,9 +106,8 @@ public:
         assert(glyphs != nullptr);
         assert(count > 0 && count <= DEBUG_DRAW_VERTEX_BUFFER_SIZE);
 
-		GLuint shader_program = App->program->GetShaderProgramId("Text");
         glBindVertexArray(textVAO);
-        glUseProgram(shader_program);
+		GLuint shader_program = App->program->UseProgram("Text");
 
         // These doesn't have to be reset every draw call, I'm just being lazy ;)
         glUniform1i(
@@ -627,17 +625,16 @@ void ModuleDebugDraw::RenderOutline() const
 
 		BROFILER_CATEGORY("Render Outline Read Stencil", Profiler::Color::Lavender);
 
-		GLuint outline_shader_program = App->program->GetShaderProgramId("Outline");
-		glUseProgram(outline_shader_program);
+		GLuint outline_shader_program = App->program->UseProgram("Outline");
 		float4x4 new_transformation_matrix;
 		if (selected_game_object->parent != nullptr)
 		{
 			new_transformation_matrix = selected_game_object->parent->transform.GetGlobalModelMatrix() * selected_game_object->transform.GetModelMatrix() * float4x4::Scale(float3(1.01f));
 
-		ComponentTransform object_transform_copy = selected_game_object->transform;
-		float3 object_scale = object_transform_copy.GetScale();
-		object_transform_copy.SetScale(object_scale*1.01f);
-		object_transform_copy.GenerateGlobalModelMatrix();
+			ComponentTransform object_transform_copy = selected_game_object->transform;
+			float3 object_scale = object_transform_copy.GetScale();
+			object_transform_copy.SetScale(object_scale*1.01f);
+			object_transform_copy.GenerateGlobalModelMatrix();
 		}
 		else 
 		{
@@ -652,6 +649,9 @@ void ModuleDebugDraw::RenderOutline() const
 		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), selected_game_object->transform.GetGlobalModelMatrix().Transposed().ptr());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		float color[4] = { 1.0, 0.4, 0.0, 1.0 };
+		glUniform4fv(glGetUniformLocation(outline_shader_program, "base_color"), 1, color);
 
 		selected_object_mesh->RenderModel();
 
