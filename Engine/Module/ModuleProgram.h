@@ -81,22 +81,15 @@ public:
 	bool CleanUp() override;
 
 	void LoadPrograms(const char* file_path);
-	unsigned int GetShaderProgramId(const std::string & program_name) const;
 	bool UseProgram(const std::string& program_name, unsigned int variation);
 
 private:
 	void LoadPrograms(const char* file_path);
-	void LoadProgramsAux(const char* file_path);
-
-	bool LoadProgram(std::string name, const char* vertex_shader_file_name, const char* fragment_shader_file_name);
 	bool CompileProgram(ShaderProgram& program, unsigned int variation);
 
 	bool InitVertexShader(GLuint &vertex_shader, const std::string& vertex_shader_file_name, const std::vector<std::string>& defines);
 	bool InitFragmentShader(GLuint &fragment_shader, const std::string& fragment_shader_file_name, const std::vector<std::string>& defines);
-	bool InitVertexShaderAux(GLuint &vertex_shader, const char* vertex_shader_file_name) const;
-	bool InitFragmentShaderAux(GLuint &fragment_shader, const char* fragment_shader_file_name) const;
-
-	bool InitProgram(GLuint &shader_program,GLuint vertex_shader,GLuint fragment_shader) const;
+	bool InitProgram(GLuint &shader_program, GLuint vertex_shader, GLuint fragment_shader) const;
 
 	void InitUniformBuffer();
 	void BindUniformBlocks(GLuint shader_program) const;
@@ -105,8 +98,6 @@ public:
 	UniformBuffer uniform_buffer;
 
 private:
-	std::unordered_map<std::string, GLuint> loaded_programs_aux;
-
 	std::unordered_map<std::string, ShaderProgram> loaded_programs;
 	std::array<std::string, 3> defines =
 	{
