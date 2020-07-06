@@ -42,6 +42,12 @@ update_status ModuleActions::Update()
 	return update_status::UPDATE_CONTINUE;
 }
 
+bool ModuleActions::CleanUp()
+{
+	delete copied_component;
+	return true;
+}
+
 
 void ModuleActions::ClearRedoStack()
 {
@@ -320,13 +326,9 @@ void ModuleActions::UndoRedoMacros()
 void ModuleActions::DuplicateMacros()
 {
 	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::D))
-	{
-		GameObject* selected_game_object = App->editor->selected_game_object;
-		if (selected_game_object)
-		{
-			action_game_object = App->scene->DuplicateGameObject(selected_game_object, selected_game_object->parent);
-			AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
-		}
+	{	
+		App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_MULTIPLE_GO);
+		App->scene->DuplicateGameObjectList(App->editor->selected_game_objects);	
 	}
 }
 
@@ -334,17 +336,13 @@ void ModuleActions::DeleteMacros()
 {
 	if (App->input->GetKeyDown(KeyCode::Delete))
 	{
-		GameObject* selected_game_object = App->editor->selected_game_object;
-		if (selected_game_object)
+		App->actions->AddUndoAction(ModuleActions::UndoActionType::DELETE_MULTIPLE_GO);
+		for (auto go : App->editor->selected_game_objects)
 		{
-			action_game_object = selected_game_object;
-			AddUndoAction(ModuleActions::UndoActionType::DELETE_GAMEOBJECT);
-
-			App->scene->RemoveGameObject(selected_game_object);
-
-			App->editor->selected_game_object = nullptr;
+			App->scene->RemoveGameObject(go);
 		}
-
+		App->editor->selected_game_object = nullptr;
+		App->editor->selected_game_objects.erase(App->editor->selected_game_objects.begin(), App->editor->selected_game_objects.end());
 	}
 }
 

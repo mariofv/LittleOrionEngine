@@ -38,12 +38,13 @@ public:
 
 	bool Init() override;
 	update_status Update() override;
+	bool CleanUp() override;
 
 	void ClearRedoStack();
 	void ClearUndoStack();
 	void Undo();
 	void Redo();
-
+	
 	void AddUndoAction(UndoActionType type);
 	void DeleteComponentUndo(Component* component);
 	void PasteComponent(Component* component);
