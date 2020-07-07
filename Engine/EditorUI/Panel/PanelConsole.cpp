@@ -109,4 +109,5 @@ void PanelConsole::SetCurrentLog(CurrentLog current_log_type)
 
 void PanelConsole::ClearCurrentLog()
 {
+	current_sink->messages.clear();
 }
