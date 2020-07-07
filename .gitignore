@@ -347,5 +347,5 @@ Game/Resources/Scripts/GameplaySystem*[0-9]*
 *.ps1
 
 # Engine Log
-Game/log.txt
+*log.txt
 !Engine/Log*
