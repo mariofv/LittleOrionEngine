@@ -67,3 +67,19 @@ void ResourceLogEntry(const EngineLog::LogEntryType type, const char file[], con
 
 	App->engine_log->ResourcesLog(complete_message, type);
 }
+
+void DebugLogEntry(const char file[], const int line, const char* format, ...)
+{
+	static char message[4096];
+	static char complete_message[4096];
+	static va_list ap;
+
+	// Construct the string from variable arguments
+	va_start(ap, format);
+	vsprintf_s(message, 4096, format, ap);
+	va_end(ap);
+	std::string filename = Path::GetFilenameWindows(std::string(file));
+	sprintf_s(complete_message, 4096, "%s(%d) : %s", filename.c_str(), line, message);
+
+	App->engine_log->DebugLog(complete_message);
+}

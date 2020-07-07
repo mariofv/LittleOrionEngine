@@ -50,11 +50,19 @@ EngineLog::EngineLog()
 	resources_duplicate_filter->add_sink(windows_console_sink);
 	resources_duplicate_filter->add_sink(file_sink);
 
+	auto debug_duplicate_filter = std::make_shared<spdlog::sinks::dup_filter_sink_st>(std::chrono::seconds(5));
+	debug_sink = std::make_shared<engine_sink_mt>();
+	debug_duplicate_filter->add_sink(debug_sink);
+	debug_duplicate_filter->add_sink(visual_studio_debug_sink);
+	debug_duplicate_filter->add_sink(windows_console_sink);
+	debug_duplicate_filter->add_sink(file_sink);
+
 	little_orion_logger = std::make_shared<spdlog::logger>("LittleOrionEngine", little_orion_duplicate_filter);
 	game_logger = std::make_shared<spdlog::logger>("Game", game_duplicate_filter);
 	opengl_logger = std::make_shared<spdlog::logger>("OpenGL", opengl_duplicate_filter);
 	assimp_logger = std::make_shared<spdlog::logger>("Assimp", assimp_duplicate_filter);
 	resources_logger = std::make_shared<spdlog::logger>("Resources", resources_duplicate_filter);
+	debug_logger = std::make_shared<spdlog::logger>("Debug", debug_duplicate_filter);
 }
 
 EngineLog::~EngineLog()
@@ -140,4 +148,9 @@ void EngineLog::ResourcesLog(const char* message, const LogEntryType type)
 		resources_logger->trace(message);
 		break;
 	}
+}
+
+void EngineLog::DebugLog(const char* message)
+{
+	debug_logger->info(message);	
 }

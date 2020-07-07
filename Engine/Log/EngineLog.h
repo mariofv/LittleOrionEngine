@@ -35,6 +35,7 @@ public:
 	void AssimpLog(const char* message, const LogEntryType type);
 	void OpenGLLog(const char* message, const LogEntryType type);
 	void ResourcesLog(const char* message, const LogEntryType type);
+	void DebugLog(const char* message);
 	
 private:
 	std::shared_ptr<spdlog::logger> little_orion_logger = nullptr;
@@ -51,6 +52,9 @@ private:
 
 	std::shared_ptr<spdlog::logger> resources_logger = nullptr;
 	std::shared_ptr<engine_sink_mt> resources_sink = nullptr;
+
+	std::shared_ptr<spdlog::logger> debug_logger = nullptr;
+	std::shared_ptr<engine_sink_mt> debug_sink = nullptr;
 
 	bool scroll_down = false;
 
@@ -73,10 +77,13 @@ private:
 #define RESOURCES_LOG_ERROR(format, ...) ResourceLogEntry(EngineLog::LogEntryType::LOG_ERROR, __FILE__, __LINE__, format, __VA_ARGS__);
 #define RESOURCES_LOG_WARNING(format, ...) ResourceLogEntry(EngineLog::LogEntryType::LOG_WARNING, __FILE__, __LINE__, format, __VA_ARGS__);
 
+#define DEBUG_LOG(format, ...) DebugLogEntry(__FILE__, __LINE__, format, __VA_ARGS__);
+
 void LittleOrionLogEntry(const EngineLog::LogEntryType type, const char file[], const int line, const char* format, ...);
 void OpenGLLogEntry(const EngineLog::LogEntryType type, const char file[], const int line, const char* format, ...);
 void AssimpLogEntry(const EngineLog::LogEntryType type, const char file[], const int line, const char* format, ...);
 void ResourceLogEntry(const EngineLog::LogEntryType type, const char file[], const int line, const char* format, ...);
+void DebugLogEntry(const char file[], const int line, const char* format, ...);
 
 #endif //_ENGINELOG_H_
 

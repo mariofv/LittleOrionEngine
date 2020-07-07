@@ -18,7 +18,8 @@ public:
 		LITTLEORION,
 		ASSIMP,
 		OPENGL,
-		RESOURCES
+		RESOURCES,
+		DEBUG
 	};
 
 	PanelConsole();

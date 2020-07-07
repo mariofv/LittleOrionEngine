@@ -54,6 +54,10 @@ void PanelConsole::Render()
 				{
 					SetCurrentLog(CurrentLog::RESOURCES);
 				}
+				if (ImGui::MenuItem("Debug", NULL, current_log_name == "Debug"))
+				{
+					SetCurrentLog(CurrentLog::DEBUG);
+				}
 
 				ImGui::EndMenu();
 			}
@@ -101,6 +105,10 @@ void PanelConsole::SetCurrentLog(CurrentLog current_log_type)
 		case CurrentLog::RESOURCES:
 			current_sink = App->engine_log->resources_sink;
 			current_log_name = "Resources";
+			break;
+		case CurrentLog::DEBUG:
+			current_sink = App->engine_log->debug_sink;
+			current_log_name = "Debug";
 			break;
 		default:
 			break;
