@@ -11,7 +11,7 @@
 
 PanelConsole::PanelConsole()
 {
-	opened = false;
+	opened = true;
 	enabled = true;
 	window_name = ICON_FA_TERMINAL " Console";
 	SetCurrentLog(CurrentLog::LITTLEORION);
