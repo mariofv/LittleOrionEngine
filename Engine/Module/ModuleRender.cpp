@@ -242,7 +242,8 @@ void ModuleRender::RenderZBufferFrame(const ComponentCamera & camera)
 
 	for (ComponentMeshRenderer* mesh : meshes_to_render)
 	{
-		mesh->Render();
+		if(mesh->shadow_caster)
+			mesh->Render();
 	}
 
 }

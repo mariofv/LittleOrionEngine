@@ -243,9 +243,7 @@ void ModuleLight::RecordShadowsFrameBuffers(int width, int height)
 	App->cameras->main_camera->SetFOV(old_fov);
 
 	directional_light_camera->RecordZBufferFrame(width * 4, height * 4);
-
 	directional_light_mid->RecordZBufferFrame(width, height);
-
 	directional_light_far->RecordZBufferFrame(width / 4, height / 4);
 	rendering_shadows = false;
 }

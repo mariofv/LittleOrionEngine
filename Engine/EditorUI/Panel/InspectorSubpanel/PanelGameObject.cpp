@@ -214,6 +214,7 @@ void PanelGameObject::Render(GameObject* game_object)
 		App->editor->inspector->material_panel.Render(mesh_renderer_component->material_to_render);
 	}
 
+
 	ImGui::Spacing();
 	ImGui::Separator();
 	ImGui::Spacing();

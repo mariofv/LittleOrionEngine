@@ -88,6 +88,9 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 			mesh_renderer->modified_by_user = true;
 		}
 
+		ImGui::Checkbox("Shadow caster", &mesh_renderer->shadow_caster);
+
+
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Material");
 		ImGui::SameLine();
