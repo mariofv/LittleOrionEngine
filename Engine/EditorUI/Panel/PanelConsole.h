@@ -12,16 +12,28 @@ struct ImGuiTextBuffer;
 class PanelConsole : public Panel
 {
 public:
+	enum class CurrentLog
+	{
+		GAME,
+		LITTLEORION,
+		ASSIMP,
+		OPENGL,
+		RESOURCES
+	};
+
 	PanelConsole();
 	~PanelConsole() = default;
 
 	void Render() override;
-	void ShowFilterButton(const char* button_label, const ImVec4 & color, bool &filter);
 
 private:
-	bool app_filter = false;
-	bool assimp_filter = false;
-	bool opengl_filter = false;
+	void SetCurrentLog(CurrentLog current_log);
+	void ClearCurrentLog();
+
+private:
+	std::shared_ptr<spdlog::logger> current_log = nullptr;
+	CurrentLog current_log_type = CurrentLog::LITTLEORION;
+	std::string current_log_name = "LittleOrion";
 };
 
 #endif //_PANELCONSOLE_H_
