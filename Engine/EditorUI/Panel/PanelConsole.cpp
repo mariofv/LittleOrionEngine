@@ -34,13 +34,13 @@ void PanelConsole::Render()
 
 			if (ImGui::BeginMenu((current_log_name + " " ICON_FA_CARET_DOWN).c_str()))
 			{
-				if (ImGui::MenuItem("LittleOrion", NULL, current_log_name == "LittleOrion"))
-				{
-					SetCurrentLog(CurrentLog::LITTLEORION);
-				}
 				if (ImGui::MenuItem("Game", NULL, current_log_name == "Game"))
 				{
 					SetCurrentLog(CurrentLog::GAME);
+				}
+				if (ImGui::MenuItem("LittleOrion", NULL, current_log_name == "LittleOrion"))
+				{
+					SetCurrentLog(CurrentLog::LITTLEORION);
 				}
 				if (ImGui::MenuItem("OpenGL", NULL, current_log_name == "OpenGL"))
 				{
