@@ -18,35 +18,43 @@ EngineLog::EngineLog()
 	auto little_orion_duplicate_filter = std::make_shared<spdlog::sinks::dup_filter_sink_st>(std::chrono::seconds(5));
 	little_orion_sink = std::make_shared<engine_sink_mt>();
 	little_orion_duplicate_filter->add_sink(little_orion_sink);
+	little_orion_duplicate_filter->add_sink(visual_studio_debug_sink);
+	little_orion_duplicate_filter->add_sink(windows_console_sink);
+	little_orion_duplicate_filter->add_sink(file_sink);
 
 	auto game_duplicate_filter = std::make_shared<spdlog::sinks::dup_filter_sink_st>(std::chrono::seconds(5));
 	game_sink = std::make_shared<engine_sink_mt>();
 	game_duplicate_filter->add_sink(game_sink);
+	game_duplicate_filter->add_sink(visual_studio_debug_sink);
+	game_duplicate_filter->add_sink(windows_console_sink);
+	game_duplicate_filter->add_sink(file_sink);
 
 	auto opengl_duplicate_filter = std::make_shared<spdlog::sinks::dup_filter_sink_st>(std::chrono::seconds(5));
 	opengl_sink = std::make_shared<engine_sink_mt>();
 	opengl_duplicate_filter->add_sink(opengl_sink);
+	opengl_duplicate_filter->add_sink(visual_studio_debug_sink);
+	opengl_duplicate_filter->add_sink(windows_console_sink);
+	opengl_duplicate_filter->add_sink(file_sink);
 
 	auto assimp_duplicate_filter = std::make_shared<spdlog::sinks::dup_filter_sink_st>(std::chrono::seconds(5));
 	assimp_sink = std::make_shared<engine_sink_mt>();
 	assimp_duplicate_filter->add_sink(assimp_sink);
+	assimp_duplicate_filter->add_sink(visual_studio_debug_sink);
+	assimp_duplicate_filter->add_sink(windows_console_sink);
+	assimp_duplicate_filter->add_sink(file_sink);
 
 	auto resources_duplicate_filter = std::make_shared<spdlog::sinks::dup_filter_sink_st>(std::chrono::seconds(5));
 	resources_sink = std::make_shared<engine_sink_mt>();
 	resources_duplicate_filter->add_sink(resources_sink);
+	resources_duplicate_filter->add_sink(visual_studio_debug_sink);
+	resources_duplicate_filter->add_sink(windows_console_sink);
+	resources_duplicate_filter->add_sink(file_sink);
 
-
-	std::vector<spdlog::sink_ptr> little_orion_sinks = { little_orion_duplicate_filter, visual_studio_debug_sink, windows_console_sink, file_sink };
-	std::vector<spdlog::sink_ptr> game_sinks = { game_duplicate_filter, visual_studio_debug_sink, windows_console_sink, file_sink };
-	std::vector<spdlog::sink_ptr> opengl_sinks = { opengl_duplicate_filter, visual_studio_debug_sink, windows_console_sink, file_sink};
-	std::vector<spdlog::sink_ptr> assimp_sinks = { assimp_duplicate_filter, visual_studio_debug_sink, windows_console_sink, file_sink};
-	std::vector<spdlog::sink_ptr> resources_sinks = { resources_duplicate_filter, visual_studio_debug_sink, windows_console_sink, file_sink };
-
-	little_orion_logger = std::make_shared<spdlog::logger>("LittleOrionEngine", little_orion_sinks.begin(), little_orion_sinks.end());
-	game_logger = std::make_shared<spdlog::logger>("Game", game_sinks.begin(), game_sinks.end());
-	opengl_logger = std::make_shared<spdlog::logger>("OpenGL", opengl_sinks.begin(), opengl_sinks.end());
-	assimp_logger = std::make_shared<spdlog::logger>("Assimp", assimp_sinks.begin(), assimp_sinks.end());
-	resources_logger = std::make_shared<spdlog::logger>("Resources", resources_sinks.begin(), resources_sinks.end());
+	little_orion_logger = std::make_shared<spdlog::logger>("LittleOrionEngine", little_orion_duplicate_filter);
+	game_logger = std::make_shared<spdlog::logger>("Game", game_duplicate_filter);
+	opengl_logger = std::make_shared<spdlog::logger>("OpenGL", opengl_duplicate_filter);
+	assimp_logger = std::make_shared<spdlog::logger>("Assimp", assimp_duplicate_filter);
+	resources_logger = std::make_shared<spdlog::logger>("Resources", resources_duplicate_filter);
 }
 
 EngineLog::~EngineLog()
