@@ -54,5 +54,6 @@ private:
 	std::unordered_map<uint32_t,std::shared_ptr<Texture>> project_explorer_icon_cache;
 public:
 	ModelMetafile* opened_model = nullptr;
+	std::string searching_name;
 };
 #endif //_PANELPROJECTEXPLORER_H_
