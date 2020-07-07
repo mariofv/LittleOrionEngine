@@ -169,6 +169,7 @@ void ComponentAnimation::UpdateMeshes()
 		auto & skeleton = mesh->skeleton;
 		animation_controller->GetClipTransform(skeleton, pose);
 		mesh->UpdatePalette(pose);
+		animation_controller->UpdateAttachedBones(skeleton->GetUUID(), pose);
 	}
 }
 
@@ -218,7 +219,7 @@ void ComponentAnimation::GenerateJointChannelMaps()
 			{
 				break;
 			}
-			std::vector<size_t> meshes_joints_channels_map(skeleton.size());
+			std::vector<std::pair<size_t, GameObject*>> meshes_joints_channels_map(skeleton.size());
 			auto & channels = clip->animation->keyframes[0].channels;
 			for (size_t j = 0; j < skeleton.size(); ++j)
 			{
@@ -227,7 +228,14 @@ void ComponentAnimation::GenerateJointChannelMaps()
 					return channel.name == joint.name;
 				});
 
-				meshes_joints_channels_map[j] = (it - channels.begin());
+				meshes_joints_channels_map[j].first = (it - channels.begin());
+				for (GameObject* gameobject : mesh->owner->children)
+				{
+					if (gameobject->name == joint.name)
+					{
+						meshes_joints_channels_map[j].second = gameobject;
+					}
+				}
 			}
 			clip->skeleton_channels_joints_map[skeleton_uuid] = std::move(meshes_joints_channels_map);
 		}

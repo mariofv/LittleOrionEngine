@@ -41,16 +41,17 @@ public:
 	AnimController & operator=(AnimController&& controller_to_move) = default;
 
 	bool Update();
-	void ApplyAutomaticTransitionIfNeeded();
-	void AdjustInterpolationTimes();
 	void SetStateMachine(uint32_t state_machine_uuid);
 	void GetClipTransform(const std::shared_ptr<Skeleton>& skeleton, std::vector<math::float4x4>& pose);
+	void UpdateAttachedBones(uint32_t skeleton_uuid, const std::vector<math::float4x4>& pose);
 	void StartNextState(const std::string& trigger);
 	bool IsOnState(const std::string& state);
 
 private:
 	void SetActiveState(std::shared_ptr<State> & state);
 	void FinishActiveState();
+	void AdjustInterpolationTimes();
+	void ApplyAutomaticTransitionIfNeeded();
 public:
 	std::shared_ptr<StateMachine> state_machine = nullptr;
 	std::vector<PlayingClip> playing_clips;
