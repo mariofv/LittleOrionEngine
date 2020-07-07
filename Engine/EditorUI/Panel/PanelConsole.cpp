@@ -83,7 +83,7 @@ void PanelConsole::SetCurrentLog(CurrentLog current_log_type)
 	switch (current_log_type)
 	{
 		case CurrentLog::GAME:
-			current_sink = App->engine_log->little_orion_sink;
+			current_sink = App->engine_log->game_sink;
 			current_log_name = "Game";
 			break;
 		case CurrentLog::LITTLEORION:
