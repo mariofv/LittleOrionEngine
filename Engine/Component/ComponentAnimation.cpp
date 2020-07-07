@@ -209,18 +209,23 @@ void ComponentAnimation::GetChildrenMeshes(GameObject* current_mesh_gameobject)
 
 void ComponentAnimation::GenerateJointChannelMaps()
 {
-	for (auto& clip : animation_controller->state_machine->clips)
-	{
+
+		if (!animation_controller->playing_clips[ClipType::ACTIVE].clip)
+		{
+			return;
+		}
+		std::shared_ptr<Animation>& animation = animation_controller->playing_clips[ClipType::ACTIVE].clip->animation;
+		auto& skeleton_channels_joints_map = animation_controller->skeleton_channels_joints_map;
 		for (auto& mesh : skinned_meshes)
 		{
 			auto & skeleton = mesh->skeleton->skeleton;
 			size_t skeleton_uuid = mesh->skeleton->GetUUID();
-			if (clip->animation == nullptr || clip->skeleton_channels_joints_map.find(skeleton_uuid) != clip->skeleton_channels_joints_map.end())
+			if (!animation || skeleton_channels_joints_map.find(skeleton_uuid) != skeleton_channels_joints_map.end())
 			{
 				break;
 			}
 			std::vector<std::pair<size_t, GameObject*>> meshes_joints_channels_map(skeleton.size());
-			auto & channels = clip->animation->keyframes[0].channels;
+			auto & channels = animation->keyframes[0].channels;
 			for (size_t j = 0; j < skeleton.size(); ++j)
 			{
 				auto & joint = skeleton[j];
@@ -229,15 +234,17 @@ void ComponentAnimation::GenerateJointChannelMaps()
 				});
 
 				meshes_joints_channels_map[j].first = (it - channels.begin());
-				for (GameObject* gameobject : mesh->owner->children)
+				GameObject* gameobject = nullptr;
+				for (GameObject* child : mesh->owner->children)
 				{
-					if (gameobject->name == joint.name)
+					if (child->name == joint.name && !gameobject)
 					{
-						meshes_joints_channels_map[j].second = gameobject;
+						assert(child->parent == mesh->owner);
+						gameobject = child;
 					}
 				}
+				meshes_joints_channels_map[j].second = gameobject;
 			}
-			clip->skeleton_channels_joints_map[skeleton_uuid] = std::move(meshes_joints_channels_map);
-		}
+			skeleton_channels_joints_map[skeleton_uuid] = std::move(meshes_joints_channels_map);
 	}
 }

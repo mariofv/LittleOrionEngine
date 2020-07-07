@@ -14,7 +14,7 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton,
 	{
 		const std::shared_ptr<Clip> clip = playing_clips[j].clip;
 		uint32_t skeleton_uuid = skeleton->GetUUID();
-		if (!clip || clip->skeleton_channels_joints_map.find(skeleton_uuid) == clip->skeleton_channels_joints_map.end())
+		if (!clip || skeleton_channels_joints_map.find(skeleton_uuid) == skeleton_channels_joints_map.end())
 		{
 			continue;
 		}
@@ -32,7 +32,7 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton,
 		const std::vector<Animation::Channel>& current_pose = clip->animation->keyframes[first_keyframe_index].channels;
 		const std::vector<Animation::Channel>& next_pose = clip->animation->keyframes[second_keyframe_index].channels;
 
-		auto& joint_channels_map = clip->skeleton_channels_joints_map[skeleton_uuid];
+		auto& joint_channels_map = skeleton_channels_joints_map[skeleton_uuid];
 		for (size_t i = 0; i < joint_channels_map.size(); ++i)
 		{
 			size_t channel_index = joint_channels_map[i].first;
@@ -68,7 +68,7 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton,
 
 void AnimController::UpdateAttachedBones(uint32_t skeleton_uuid, const std::vector<math::float4x4>& pose)
 {
-	auto& joint_channels_map = playing_clips[ClipType::ACTIVE].clip->skeleton_channels_joints_map[skeleton_uuid];
+	auto& joint_channels_map = skeleton_channels_joints_map[skeleton_uuid];
 	for (size_t i = 0; i < joint_channels_map.size(); ++i)
 	{
 		GameObject* gameobject = joint_channels_map[i].second;

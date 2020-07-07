@@ -6,12 +6,14 @@
 #include "EditorUI/Panel/PanelStateMachine.h"
 
 #include <vector>
+#include <unordered_map>
 
 class StateMachine;
 struct State;
 struct Clip;
 struct Transition;
 class Skeleton;
+class GameObject;
 
 struct PlayingClip
 {
@@ -55,6 +57,7 @@ private:
 public:
 	std::shared_ptr<StateMachine> state_machine = nullptr;
 	std::vector<PlayingClip> playing_clips;
+	std::unordered_map<uint32_t, std::vector<std::pair<size_t, GameObject*>>> skeleton_channels_joints_map;
 
 private:
 	std::shared_ptr<Transition> active_transition;

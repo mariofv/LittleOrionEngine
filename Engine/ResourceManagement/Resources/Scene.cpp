@@ -142,7 +142,6 @@ void Scene::Load(bool from_file)
 		LoadPrefabModifiedComponents(prefabs_modified_components[i]);
 	}
 
-
 	App->lights->ambient_light_intensity = scene_config.GetFloat("Ambiental Light Intensity", 1.f);
 	float4 ambiental_light_color;
 	scene_config.GetColor("Ambiental Light Color", ambiental_light_color, float4::one);
