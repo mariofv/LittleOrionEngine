@@ -23,7 +23,7 @@ bool ModuleTime::Init()
 {
 	APP_LOG_SECTION("************ Module Time Init ************");
 
-	APP_LOG_INIT("Initializing Engine clocks");
+	APP_LOG_INFO("Initializing Engine clocks");
 	real_time_clock = new Timer();
 	game_time_clock = new Timer();
 
@@ -33,7 +33,7 @@ bool ModuleTime::Init()
 	game_time_clock->Start();
 #endif
 
-	APP_LOG_SUCCESS("Engine clocks initialized correctly");
+	APP_LOG_INFO("Engine clocks initialized correctly");
 
 	return true;
 }

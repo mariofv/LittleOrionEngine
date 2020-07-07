@@ -49,7 +49,7 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 	FileData model_data{NULL, 0};
 
 	// LOAD ASSIMP SCENE
-	APP_LOG_INIT("Importing model %s.", assets_file_path.GetFullPath().c_str())
+	APP_LOG_INFO("Importing model %s.", assets_file_path.GetFullPath().c_str())
 	performance_timer.Start();
 	FileData file_data = assets_file_path.GetFile()->Load();
 	const aiScene* scene = aiImportFileFromMemory((char*)file_data.buffer, file_data.size, aiProcessPreset_TargetRealtime_MaxQuality, NULL);
@@ -62,7 +62,7 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 	}
 	performance_timer.Stop();
 	float time = performance_timer.Read();
-	APP_LOG_SUCCESS("Model %s loaded correctly from assimp in %f ms.", assets_file_path.GetFullPath().c_str(), time);
+	APP_LOG_INFO("Model %s loaded correctly from assimp in %f ms.", assets_file_path.GetFullPath().c_str(), time);
 
 
 	// LOCATE PATH OF MODEL FILE

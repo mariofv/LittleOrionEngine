@@ -68,7 +68,7 @@ public:
 		switch (severety)
 		{
 		case Assimp::Logger::Debugging:
-			MYASSIMP_LOG_INFO("%s", message);
+			MYASSIMP_LOG_DEBUG("%s", message);
 			break;
 		case Assimp::Logger::Info:
 			MYASSIMP_LOG_INFO("%s", message);
@@ -77,7 +77,7 @@ public:
 			MYASSIMP_LOG_ERROR("%s", message);
 			break;
 		case Assimp::Logger::Warn:
-			MYASSIMP_LOG_INIT("%s", message); // Actually not an itialization entry, I use this type of entry because the yellow color
+			MYASSIMP_LOG_WARNING("%s", message); 
 			break;
 
 		}

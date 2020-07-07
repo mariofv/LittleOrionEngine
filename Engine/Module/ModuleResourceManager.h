@@ -65,7 +65,7 @@ public:
 
 		FileData created_resource_data = ResourceManagement::Create<T>();
 
-		APP_LOG_SUCCESS("Resource %s created correctly.", resource_name.c_str())
+		APP_LOG_INFO("Resource %s created correctly.", resource_name.c_str())
 
 		return CreateFromData(created_resource_data, path, resource_name);
 	}
@@ -81,7 +81,7 @@ public:
 
 		InternalImport(*saved_resource_assets_path);
 
-		APP_LOG_SUCCESS("Resource %u saved corrrectly.", modified_resource->GetUUID());
+		APP_LOG_INFO("Resource %u saved corrrectly.", modified_resource->GetUUID());
 	}
 
 	template<typename T>
@@ -94,7 +94,7 @@ public:
 		loaded_resource = RetrieveFromCacheIfExist(uuid);
 		if (loaded_resource != nullptr)
 		{
-			APP_LOG_SUCCESS("Resource %u loaded correctly from cache.", uuid);
+			APP_LOG_INFO("Resource %u loaded correctly from cache.", uuid);
 			return std::static_pointer_cast<T>(loaded_resource);
 		}
 
@@ -116,7 +116,7 @@ public:
 			resource_cache.push_back(loaded_resource);
 		}
 
-		APP_LOG_SUCCESS("Resource %u loaded correctly.", uuid);
+		APP_LOG_INFO("Resource %u loaded correctly.", uuid);
 		return std::static_pointer_cast<T>(loaded_resource);
 	}
 

@@ -44,7 +44,7 @@ int main(int argc, char ** argv)
 
 			App = new Application();
 
-			APP_LOG_SUCCESS("Application Creation ends. Elapsed time: %f ms", main_timer.Read() * 1000);
+			APP_LOG_INFO("Application Creation ends. Elapsed time: %f ms", main_timer.Read() * 1000);
 			state = MAIN_START;
 			break;
 
@@ -60,7 +60,7 @@ int main(int argc, char ** argv)
 			}
 			else
 			{
-				APP_LOG_SUCCESS("Application Init ends. Elapsed time: %f ms", main_timer.Read() * 1000);
+				APP_LOG_INFO("Application Init ends. Elapsed time: %f ms", main_timer.Read() * 1000);
 				state = MAIN_UPDATE;
 				APP_LOG_SECTION("-------------- Application Update --------------");
 			}
@@ -92,7 +92,7 @@ int main(int argc, char ** argv)
 			}
 			else
 			{
-				APP_LOG_SUCCESS("Application CleanUp ends. Elapsed time: %f ms", main_timer.Read() * 1000);
+				APP_LOG_INFO("Application CleanUp ends. Elapsed time: %f ms", main_timer.Read() * 1000);
 				main_return = EXIT_SUCCESS;
 			}
 

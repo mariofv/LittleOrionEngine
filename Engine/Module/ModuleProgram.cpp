@@ -65,7 +65,7 @@ void ModuleProgram::InitUniformBuffer()
 
 bool ModuleProgram::LoadProgram(std::string name, const char* vertex_shader_file_name, const char* fragment_shader_file_name)
 {
-	APP_LOG_INIT("Loading shader program. With paths: %s,%s", vertex_shader_file_name, fragment_shader_file_name);
+	APP_LOG_INFO("Loading shader program. With paths: %s,%s", vertex_shader_file_name, fragment_shader_file_name);
 	GLuint vertex_shader;
 	GLuint fragment_shader;
 	GLuint shader_program;
@@ -84,7 +84,7 @@ bool ModuleProgram::LoadProgram(std::string name, const char* vertex_shader_file
 		return false;
 	}
 	loaded_programs.insert({ name,shader_program });
-	APP_LOG_SUCCESS("Shader program with paths: %s,%s loaded correctly.", vertex_shader_file_name, fragment_shader_file_name);
+	APP_LOG_INFO("Shader program with paths: %s,%s loaded correctly.", vertex_shader_file_name, fragment_shader_file_name);
 	return true;
 }
 

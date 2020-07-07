@@ -78,7 +78,7 @@ bool ModuleEditor::Init()
 
 bool ModuleEditor::InitImgui()
 {
-	APP_LOG_INIT("Initializing IMGUI editor");
+	APP_LOG_INFO("Initializing IMGUI editor");
 	SDL_GLContext gl_context = ImGui::CreateContext();
 
 	bool err = ImGui_ImplSDL2_InitForOpenGL(App->window->window, gl_context);
@@ -100,7 +100,7 @@ bool ModuleEditor::InitImgui()
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
-	APP_LOG_SUCCESS("IMGUI editor initialized correctly.");
+	APP_LOG_INFO("IMGUI editor initialized correctly.");
 	return true;
 }
 

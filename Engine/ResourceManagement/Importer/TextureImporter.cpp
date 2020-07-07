@@ -10,14 +10,14 @@
 
 TextureImporter::TextureImporter() : Importer(ResourceType::TEXTURE) 
 {
-	APP_LOG_INIT("Initializing DevIL image loader.")
+	APP_LOG_INFO("Initializing DevIL image loader.")
 	ilInit();
 	ilEnable(IL_ORIGIN_SET);
 	ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
 	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
 	iluInit();
 	ilutInit();
-	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
+	APP_LOG_INFO("DevIL image loader initialized correctly.")
 
 }
 
