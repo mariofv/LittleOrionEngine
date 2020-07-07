@@ -529,6 +529,12 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupNewFileName.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Actions\EdirorActionAddMultipleGO.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionDeleteMultipleGO.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Log\Log.cpp">
       <Filter>Engine\Main</Filter>
     </ClCompile>
@@ -1060,6 +1066,8 @@
       <Filter>Engine\EditorUI</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Log\EngineSink.h" />
+    <ClInclude Include="Engine\Actions\EditorActionDeleteMultipleGO.h" />
+    <ClInclude Include="Engine\Actions\EditorActionAddMultipleGO.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

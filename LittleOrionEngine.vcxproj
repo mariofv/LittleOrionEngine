@@ -152,6 +152,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Log\EngineSink.h" />
+    <ClInclude Include="Engine\Actions\EditorActionAddMultipleGO.h" />
+    <ClInclude Include="Engine\Actions\EditorActionDeleteMultipleGO.h" />
     <ClInclude Include="Engine\Animation\Tween\LOTween.h" />
     <ClInclude Include="Engine\Animation\Tween\Tween.h" />
     <ClInclude Include="Engine\Animation\Tween\TweenSequence.h" />
@@ -316,6 +318,8 @@
     <ClInclude Include="Engine\Helper\PerlinNoise.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Actions\EdirorActionAddMultipleGO.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionDeleteMultipleGO.cpp" />
     <ClCompile Include="Engine\Animation\Tween\LOTween.cpp" />
     <ClCompile Include="Engine\Animation\Tween\Tween.cpp" />
     <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp" />
