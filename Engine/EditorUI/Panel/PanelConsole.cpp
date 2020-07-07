@@ -25,6 +25,7 @@ void PanelConsole::Render()
 	char tmp_string[64];
 	if (ImGui::Begin(ICON_FA_TERMINAL " Console", &opened))
 	{
+		/*
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Filters");
 		ImGui::SameLine();
@@ -97,6 +98,7 @@ void PanelConsole::Render()
 			}
 		}
 		ImGui::EndChild();
+		*/
 	}
 	ImGui::End();
 }

@@ -1,6 +1,5 @@
 #include "ModuleTime.h"
 
-#include "EditorUI/EngineLog.h"
 #include "Filesystem/PathAtlas.h"
 #include "Helper/Timer.h"
 #include "Main/Application.h"
@@ -79,8 +78,6 @@ void ModuleTime::EndFrame()
 	if (frame_count % 10 == 0)
 	{
 		current_fps = 1000.f / real_time_delta_time;
-		App->engine_log->LogFPS(current_fps);
-		App->engine_log->LogMS(real_time_delta_time);
 	}
 
 	if (stepping_frame)

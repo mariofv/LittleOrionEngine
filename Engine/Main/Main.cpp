@@ -31,7 +31,6 @@ int main(int argc, char ** argv)
 	srand(static_cast<size_t>(time(NULL)));
 	if(PHYSFS_init(argv[0]) == 0)
 	{
-		APP_LOG_ERROR("Error initializing physfs: %s", PHYSFS_getLastError());
 		return main_return;
 	}
 
@@ -41,7 +40,6 @@ int main(int argc, char ** argv)
 		{
 		case MAIN_CREATION:
 
-			APP_LOG_SECTION("-------------- Application Creation --------------");
 			main_timer.Start();
 
 			App = new Application();

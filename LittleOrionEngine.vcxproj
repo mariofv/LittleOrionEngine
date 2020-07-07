@@ -151,6 +151,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Log\EngineSink.h" />
     <ClInclude Include="Engine\Animation\Tween\LOTween.h" />
     <ClInclude Include="Engine\Animation\Tween\Tween.h" />
     <ClInclude Include="Engine\Animation\Tween\TweenSequence.h" />
@@ -270,7 +271,7 @@
     <ClInclude Include="Engine\Component\ComponentMeshRenderer.h" />
     <ClInclude Include="Engine\Component\ComponentTransform.h" />
     <ClInclude Include="Engine\Component\Component.h" />
-    <ClInclude Include="Engine\EditorUI\EngineLog.h" />
+    <ClInclude Include="Engine\Log\EngineLog.h" />
     <ClInclude Include="Engine\Module\ModuleCamera.h" />
     <ClInclude Include="Engine\Module\ModuleTime.h" />
     <ClInclude Include="Engine\Module\Module.h" />
@@ -369,7 +370,7 @@
     <ClCompile Include="Engine\Helper\Utils.cpp" />
     <ClCompile Include="Engine\Main\Application.cpp" />
     <ClCompile Include="Engine\Main\GameObject.cpp" />
-    <ClCompile Include="Engine\Main\Log.cpp" />
+    <ClCompile Include="Engine\Log\Log.cpp" />
     <ClCompile Include="Engine\Main\Main.cpp" />
     <ClCompile Include="Engine\Module\ModuleAnimation.cpp" />
     <ClCompile Include="Engine\Module\ModuleEffects.cpp" />
@@ -431,7 +432,7 @@
     <ClCompile Include="Engine\Component\ComponentCamera.cpp" />
     <ClCompile Include="Engine\Component\ComponentMeshRenderer.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform.cpp" />
-    <ClCompile Include="Engine\EditorUI\EngineLog.cpp" />
+    <ClCompile Include="Engine\Log\EngineLog.cpp" />
     <ClCompile Include="Engine\Module\ModuleCamera.cpp" />
     <ClCompile Include="Engine\Module\ModuleTime.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelGameObject.cpp" />
