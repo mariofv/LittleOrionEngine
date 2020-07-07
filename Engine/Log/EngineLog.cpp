@@ -13,7 +13,7 @@ EngineLog::EngineLog()
 {
 	auto visual_studio_debug_sink = std::make_shared<spdlog::sinks::msvc_sink_mt>();
 	auto windows_console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-	auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("log.txt", true);
+	auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/log.txt", true);
 
 	auto little_orion_duplicate_filter = std::make_shared<spdlog::sinks::dup_filter_sink_st>(std::chrono::seconds(5));
 	little_orion_sink = std::make_shared<engine_sink_mt>();
