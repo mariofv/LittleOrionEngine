@@ -31,7 +31,7 @@ private:
 	void ClearCurrentLog();
 
 private:
-	std::shared_ptr<spdlog::logger> current_log = nullptr;
+	std::shared_ptr<engine_sink_mt> current_sink = nullptr;
 	CurrentLog current_log_type = CurrentLog::LITTLEORION;
 	std::string current_log_name = "LittleOrion";
 };

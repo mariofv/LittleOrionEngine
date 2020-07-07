@@ -14,6 +14,7 @@ PanelConsole::PanelConsole()
 	opened = false;
 	enabled = true;
 	window_name = ICON_FA_TERMINAL " Console";
+	SetCurrentLog(CurrentLog::LITTLEORION);
 }
 
 void PanelConsole::Render()
@@ -61,17 +62,15 @@ void PanelConsole::Render()
 
 		if (ImGui::BeginChild(""))
 		{
-			/*
-			for (auto& log_entry : current_log->Get)
+			for (auto& log_entry : current_sink->messages)
 			{
-			
+				ImGui::Text(log_entry.c_str());
 			}
 			if (App->engine_log->scroll_down)
 			{
 				ImGui::SetScrollHere(1.0f);
 				App->engine_log->scroll_down = false;
 			}
-			*/
 		}
 		ImGui::EndChild();
 	}
@@ -84,23 +83,23 @@ void PanelConsole::SetCurrentLog(CurrentLog current_log_type)
 	switch (current_log_type)
 	{
 		case CurrentLog::GAME:
-			current_log = App->engine_log->little_orion_logger;
+			current_sink = App->engine_log->little_orion_sink;
 			current_log_name = "Game";
 			break;
 		case CurrentLog::LITTLEORION:
-			current_log = App->engine_log->little_orion_logger;
+			current_sink = App->engine_log->little_orion_sink;
 			current_log_name = "LittleOrion";
 			break;
 		case CurrentLog::ASSIMP:
-			current_log = App->engine_log->assimp_logger;
+			current_sink = App->engine_log->assimp_sink;
 			current_log_name = "Assimp";
 			break;
 		case CurrentLog::OPENGL:
-			current_log = App->engine_log->opengl_logger;
+			current_sink = App->engine_log->opengl_sink;
 			current_log_name = "OpenGL";
 			break;
 		case CurrentLog::RESOURCES:
-			current_log = App->engine_log->resources_logger;
+			current_sink = App->engine_log->resources_sink;
 			current_log_name = "Resources";
 			break;
 		default:
