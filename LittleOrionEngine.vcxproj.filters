@@ -535,8 +535,10 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupNewFileName.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Actions\EdirorActionAddMultipleGO.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionDeleteMultipleGO.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EdirorActionAddMultipleGO.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1063,8 +1065,15 @@
     <ClInclude Include="Engine\Helper\PerlinNoise.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Actions\EditorActionDeleteMultipleGO.h" />
-    <ClInclude Include="Engine\Actions\EditorActionAddMultipleGO.h" />
+    <ClInclude Include="Engine\Helper\ThreadSafeQueue.h">
+      <Filter>Engine\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionDeleteMultipleGO.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionAddMultipleGO.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
