@@ -11,14 +11,14 @@
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
-namespace { const float MAX_TRAIL_VERTICES = 10; } //arbitrary number 
+namespace { const float MAX_TRAIL_VERTICES = 100; } //arbitrary number 
 
 ComponentTrailRenderer::ComponentTrailRenderer() : Component(nullptr, ComponentType::TRAILRENDERER)
 {
 	InitData();
 }
 
-ComponentTrailRenderer::ComponentTrailRenderer(GameObject * _owner) : Component(owner, ComponentType::TRAILRENDERER)
+ComponentTrailRenderer::ComponentTrailRenderer(GameObject * owner) : Component(owner, ComponentType::TRAILRENDERER)
 {
 	InitData();
 }
@@ -56,7 +56,7 @@ void ComponentTrailRenderer::InitData()
 	glBindBuffer(GL_ARRAY_BUFFER, trail_vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * MAX_TRAIL_VERTICES * 4 * 5, nullptr, GL_DYNAMIC_DRAW); //3 float position, 2 float color //before it was MAX_VERTICES * 4 *5
 	
-	
+	trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(float) * MAX_TRAIL_VERTICES * 4 * 5, GL_MAP_WRITE_BIT);// 6 indices
 	
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -101,12 +101,14 @@ void ComponentTrailRenderer::Render(float** to_render, int size)
 
 	//use glBufferMap to obtain a pointer to buffer data
 	glBindBuffer(GL_ARRAY_BUFFER, trail_vbo);
-	trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(float) * MAX_TRAIL_VERTICES * 4 * 5, GL_MAP_WRITE_BIT);// 6 indices
+	
 	memcpy(trail_renderer_vertices, *to_render, size);
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, trail_texture->opengl_texture);
+	//glUniform1i(glGetUniformLocation(shader_program, "trail.texture"), 0);
+	//glUniform3fv(glGetUniformLocation(shader_program, "trail.center_pos"), 1, owner->transform.GetTranslation());
 
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
@@ -114,7 +116,7 @@ void ComponentTrailRenderer::Render(float** to_render, int size)
 
 	glUniform4fv(glGetUniformLocation(shader_program, "color"), 1, (float*)color);
 	//glDrawElements(GL_TRIANGLE_STRIP, rendered_vertices, GL_UNSIGNED_INT, 0);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, rendered_vertices);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, (rendered_vertices) *2);
 	glBindVertexArray(0);
 
 	glUseProgram(0);

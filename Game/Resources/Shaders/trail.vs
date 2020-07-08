@@ -11,7 +11,11 @@ layout (std140) uniform Matrices
 
 vec4 color;
 
+out vec2 texCoord;
+
 void main()
 {
     gl_Position = matrices.proj * matrices.view * matrices.model * vec4(vertex, 1.0f);
+	
+	texCoord = uvs;
 }  

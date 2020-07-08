@@ -90,6 +90,7 @@ void  ComponentTrail::GetPerpendiculars()
 	TrailPoint* previous_point = nullptr;
 	TrailPoint* current_point = nullptr;
 	mesh_points.clear();
+	float mesh_index = 0.0f;
 	for (int i = 0; i < test_points.size(); ++i)
 	{
 		current_point = &test_points[i];
@@ -99,15 +100,19 @@ void  ComponentTrail::GetPerpendiculars()
 		}
 		previous_point = current_point;
 
-	}
 
-	int size = 20 * sizeof(float);
+
+	}
 	
-	unsigned int bytes = sizeof(float) * 5;
+	int size = 20 * sizeof(float);
+	float* vetrices_to_render = new float[size];
+	float* cursor = vetrices_to_render;
+	unsigned int bytes1 =  3;
+	unsigned int bytes2 =  2;
+	int i = 0;
 	for (auto pair = mesh_points.begin(); pair < mesh_points.end(); ++pair)
 	{
-		float* vetrices_to_render = new float[size];
-		float* cursor = vetrices_to_render;
+		++i; //for uvs if needed
 
 		if (pair->first->life > 0 && pair->second->life > 0)
 		{
@@ -121,17 +126,12 @@ void  ComponentTrail::GetPerpendiculars()
 			top_right = (pair->second->position + perpendicular);
 			bottom_right = (pair->second->position - perpendicular);
 			bottom_left = (pair->first->position - perpendicular);
-	
-			memcpy(cursor, top_left.ptr(), sizeof(float) * 3);
-			cursor += bytes;
-			memcpy(cursor, bottom_left.ptr(), sizeof(float) * 3);
-			cursor += bytes;
-			memcpy(cursor, top_right.ptr(), sizeof(float) * 3);
-			cursor += bytes;
-			memcpy(cursor, bottom_right.ptr(), sizeof(float) * 3);
-			cursor += bytes;
 
-			trail_renderer->Render(&vetrices_to_render, size);
+			memcpy(cursor, &top_left.x, sizeof(float) * 3);
+			cursor += bytes1;
+
+			memcpy(cursor, &bottom_left.x, sizeof(float) * 3);
+			cursor += bytes1;
 
 			App->debug_draw->RenderLine(top_left, bottom_left); // Draw the perpendicular vector
 			App->debug_draw->RenderLine(top_right, bottom_right); // Draw the perpendicular vector
@@ -143,11 +143,11 @@ void  ComponentTrail::GetPerpendiculars()
 		else
 		{
 			mesh_points.erase(pair);
-			++trail_renderer->erase_vertices;
+			//++trail_renderer->erase_vertices;
 		}
 	}
+	trail_renderer->Render(&vetrices_to_render, size);
 	trail_renderer->owner = owner;
-
 }
 
 void  ComponentTrail::RespawnTrailPoint(TrailPoint& point)
