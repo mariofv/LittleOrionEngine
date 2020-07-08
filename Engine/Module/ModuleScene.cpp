@@ -510,6 +510,6 @@ bool ModuleScene::CurrentSceneIsSaved() const
 
 void ModuleScene::StopSceneTimer()
 {
-	APP_LOG_SUCCESS("TOTAL TIME LOADING SCENE: %.3f", timer.Stop());
+	APP_LOG_INFO("TOTAL TIME LOADING SCENE: %.3f", timer.Stop());
 }
 

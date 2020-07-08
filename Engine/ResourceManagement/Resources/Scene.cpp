@@ -153,7 +153,7 @@ void Scene::Load(bool from_file)
 	}
 
 	float time_loading = timer.Stop();
-	APP_LOG_SUCCESS("Time loading scene: %.3f ms", time_loading);
+	APP_LOG_INFO("Time loading scene: %.3f ms", time_loading);
 
 	App->lights->ambient_light_intensity = scene_config.GetFloat("Ambiental Light Intensity", 1.f);
 	float4 ambiental_light_color;

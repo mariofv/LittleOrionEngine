@@ -66,7 +66,7 @@ std::shared_ptr<Texture> TextureManager::Load(uint32_t uuid, const FileData& res
 	{
 		loaded_texture = std::make_shared<Texture>(uuid, data.data(), data.size(), width, height, num_channels, texture_options, async);
 	}
-	APP_LOG_SUCCESS("Time Loading Texture Manager: %.3f", timer.Pause());
+	RESOURCES_LOG_INFO("Time Loading Texture Manager: %.3f", timer.Pause());
 
 	return loaded_texture;
 }
