@@ -800,6 +800,11 @@ void ModuleDebugDraw::RenderPoint(const float3& point, float size, const float3&
 	dd::point(point, color, size);
 }
 
+void ModuleDebugDraw::RenderCircle(const float3& center, float radius, const float3& normal, const float3 & color) const
+{
+	dd::circle(center, circle_normal, color, radius, 20.f);
+}
+
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 {
 	BROFILER_CATEGORY("Flush Debug Draw", Profiler::Color::Lavender);
