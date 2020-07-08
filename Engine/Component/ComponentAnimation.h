@@ -43,7 +43,7 @@ public:
 	ENGINE_API void ActiveAnimation(const std::string & trigger);
 	ENGINE_API bool IsOnState(const std::string & trigger);
 	ENGINE_API float GetCurrentClipPercentatge() const;
-	ENGINE_API int GetTotalAnimationTime() const;
+	ENGINE_API float GetTotalAnimationTime() const;
 
 	void Update() override;
 	void UpdateMeshes();
