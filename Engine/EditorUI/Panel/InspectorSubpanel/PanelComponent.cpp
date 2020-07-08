@@ -195,7 +195,7 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 				particle_system->max_particles_number = MAX_PARTICLES;
 			}
 
-			ImGui::InputFloat("", &particle_system->gravity_modifier, 0.01f, 0.1f);
+			ImGui::InputFloat("", &particle_system->gravity_modifier, 0.01F, 0.1F);
 			ImGui::SameLine();
 			ImGui::Checkbox("Gravity", &particle_system->gravity);
 
@@ -348,16 +348,16 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 				{
 				case ComponentParticleSystem::TypeOfVelocityOverTime::CONSTANT:
 					particle_system->velocity_over_time_speed_modifier;
-					ImGui::DragFloat("Velocity Modifier", &particle_system->velocity_over_time_speed_modifier);
+					ImGui::DragFloat("Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
 					break;
 				case ComponentParticleSystem::TypeOfVelocityOverTime::LINEAR:
-					ImGui::DragFloat("Start Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.1F);
-					ImGui::DragFloat("End Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.1F);
+					ImGui::DragFloat("Start Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
+					ImGui::DragFloat("End Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
 					break;
 				case ComponentParticleSystem::TypeOfVelocityOverTime::RANDOM_BETWEEN_TWO_CONSTANTS:
 					particle_system->velocity_over_time_speed_modifier;
-					ImGui::DragFloat("Min Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.1F);
-					ImGui::DragFloat("Max Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.1F);
+					ImGui::DragFloat("Min Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
+					ImGui::DragFloat("Max Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
 					break;
 				}
 			}
