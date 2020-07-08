@@ -76,6 +76,7 @@ public:
 
 	bool is_raycastable = true;
 	ComponentMeshCollider* mesh_collider = nullptr;
+	bool shadow_caster = true;
 
 private:
 	friend class PanelComponent;

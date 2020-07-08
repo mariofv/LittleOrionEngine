@@ -49,6 +49,7 @@ public:
 	void InitData();
 
 	void Render(const float3& position);
+	void CommonUniforms(const GLuint &shader_program);
 	void SwitchFrame();
 
 	void ChangeTexture(uint32_t texture_uuid);

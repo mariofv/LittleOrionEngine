@@ -45,6 +45,8 @@ public:
 	
 	void Render() const;
 	void RenderFrame(const ComponentCamera& camera);
+	void RenderZBufferFrame(const ComponentCamera& camera);
+	void GetMeshesToRender(const ComponentCamera* camera);
 
 
 	ComponentMeshRenderer* CreateComponentMeshRenderer();
@@ -71,7 +73,6 @@ private:
 
 	std::string GetDrawMode() const;
 
-	void GetMeshesToRender(const ComponentCamera* camera);
 	void SetListOfMeshesToRender(const ComponentCamera* camera);
 
 public:
@@ -79,7 +80,6 @@ public:
 	bool toggle_ortho_frustum = false;
 	bool toggle_directional_light_aabb = true;
 	bool toggle_perspective_sub_frustums = false;
-	bool render_shadows = true;
 
 private:
 	void* context = nullptr;
