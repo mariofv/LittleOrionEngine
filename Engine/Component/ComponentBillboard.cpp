@@ -262,13 +262,13 @@ void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)
 	if (texture_uuid != 0)
 	{
 		//Prepare multithreading loading
-		App->resources->current_component_loading = this;
-		App->resources->current_type = ResourceType::TEXTURE;
+		App->resources->loading_thread_communication.current_component_loading = this;
+		App->resources->loading_thread_communication.current_type = ResourceType::TEXTURE;
 		this->texture_uuid = texture_uuid;
 		billboard_texture = App->resources->Load<Texture>(texture_uuid);
 
 		//Set to default loading component
-		App->resources->current_component_loading = nullptr;
+		App->resources->loading_thread_communication.current_component_loading = nullptr;
 	}
 }
 

@@ -399,7 +399,7 @@ inline void ModuleScene::LoadSceneResource()
 		current_scene = App->resources->Load<Scene>(pending_scene_uuid);
 		current_scene.get()->Load();
 
-		App->resources->load_scene_asyncronously = true;
+		App->resources->loading_thread_communication.load_scene_asyncronously = true;
 	}
 }
 
@@ -423,7 +423,7 @@ ENGINE_API void ModuleScene::LoadScene(unsigned position)
 		pending_scene_uuid = build_options->GetSceneUUID(position);
 		if(position == 0)
 		{
-			App->resources->load_scene_asyncronously = false;
+			App->resources->loading_thread_communication.load_scene_asyncronously = false;
 		}
 		if (pending_scene_uuid == 0)
 		{
@@ -469,7 +469,7 @@ void ModuleScene::SaveTmpScene()
 
 void ModuleScene::LoadLoadingScreen()
 {
-	App->resources->normal_loading_flag = true;
+	App->resources->loading_thread_communication.normal_loading_flag = true;
 	App->resources->Load<Scene>(GetSceneUUIDFromPath(LOADING_SCREEN_PATH)).get()->Load();
 	loading_screen_canvas = GetGameObjectByName("Canvas");
 	GameObject* light = GetGameObjectByName("Light");
@@ -484,7 +484,7 @@ void ModuleScene::LoadLoadingScreen()
 		RemoveGameObject(main_camera);
 	}
 
-	App->resources->normal_loading_flag = false;
+	App->resources->loading_thread_communication.normal_loading_flag = false;
 
 	App->resources->loading_thread_communication.loading = true;
 	App->time->time_scale = 0.f;

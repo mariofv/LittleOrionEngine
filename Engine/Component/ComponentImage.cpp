@@ -176,22 +176,22 @@ void ComponentImage::InitResource(uint32_t uuid, ResourceType resource)
 void ComponentImage::SetTextureToRender(uint32_t texture_uuid)
 {
 	//Prepare multithreading loading
-	App->resources->current_component_loading = this;
-	App->resources->current_type = ResourceType::TEXTURE;
+	App->resources->loading_thread_communication.current_component_loading = this;
+	App->resources->loading_thread_communication.current_type = ResourceType::TEXTURE;
 	this->texture_uuid = texture_uuid;
 	texture_to_render = App->resources->Load<Texture>(texture_uuid);
 
 	//Set to default loading component
-	App->resources->current_component_loading = nullptr;
+	App->resources->loading_thread_communication.current_component_loading = nullptr;
 }
 
 void ComponentImage::SetTextureToRenderFromInspector(uint32_t texture_uuid)
 {
 	this->texture_uuid = texture_uuid;
 
-	App->resources->normal_loading_flag = true;
+	App->resources->loading_thread_communication.normal_loading_flag = true;
 	texture_to_render = App->resources->Load<Texture>(texture_uuid);
-	App->resources->normal_loading_flag = false;
+	App->resources->loading_thread_communication.normal_loading_flag = false;
 }
 
 void ComponentImage::SetColor(float4 color)

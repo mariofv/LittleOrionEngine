@@ -64,7 +64,7 @@ void Texture::LoadInMemory()
 	}
 
 	initialized = true;
-	++App->resources->number_of_textures_loaded;
+	++App->resources->loading_thread_communication.number_of_textures_loaded;
 }
 
 void Texture::GenerateMipMap()

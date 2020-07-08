@@ -42,7 +42,7 @@ void PanelDebug::Render()
 		ImGui::DragFloat("Rendering time ", &App->debug->rendering_time, NULL, NULL);
 
 		ImGui::Separator();
-		ImGui::DragInt("Number of textures loaded:", &App->resources->number_of_textures_loaded);
+		ImGui::DragInt("Number of textures loaded:", &App->resources->loading_thread_communication.number_of_textures_loaded);
 
 		int current = static_cast<int>(App->resources->loading_thread_communication.current_number_of_resources_loaded);
 		ImGui::DragInt("Number of resources loaded:", &current);

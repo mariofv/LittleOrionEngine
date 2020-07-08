@@ -343,22 +343,22 @@ void ComponentMeshRenderer::Copy(Component* component_to_copy) const
 void ComponentMeshRenderer::SetMesh(uint32_t mesh_uuid)
 {
 	//Prepare multithreading loading
-	App->resources->current_component_loading = this;
+	App->resources->loading_thread_communication.current_component_loading = this;
 	this->mesh_uuid = mesh_uuid;
 	if (mesh_uuid != 0)
 	{
-		App->resources->current_type = ResourceType::MESH;
+		App->resources->loading_thread_communication.current_type = ResourceType::MESH;
 		this->mesh_to_render = App->resources->Load<Mesh>(mesh_uuid);
 		owner->aabb.GenerateBoundingBox();
 	}
 	
-	App->resources->current_component_loading = nullptr;
+	App->resources->loading_thread_communication.current_component_loading = nullptr;
 }
 
 void ComponentMeshRenderer::SetMaterial(uint32_t material_uuid)
 {
 	//Prepare multithreading loading
-	App->resources->current_component_loading = this;
+	App->resources->loading_thread_communication.current_component_loading = this;
 
 	this->material_uuid = material_uuid;
 	if (material_uuid != 0)
@@ -371,7 +371,7 @@ void ComponentMeshRenderer::SetMaterial(uint32_t material_uuid)
 	}
 
 	//Set to default loading component
-	App->resources->current_component_loading = nullptr;
+	App->resources->loading_thread_communication.current_component_loading = nullptr;
 }
 
 void ComponentMeshRenderer::SetSkeleton(uint32_t skeleton_uuid)

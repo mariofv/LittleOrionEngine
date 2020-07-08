@@ -72,9 +72,9 @@ bool ModuleResourceManager::Init()
 #endif
 
 #if MULTITHREADING
-	for(size_t i = 0; i < max_threads; ++i)
+	for(size_t i = 0; i < loading_thread_communication.max_threads; ++i)
 	{
-		loader_threads.push_back(std::thread(&ModuleResourceManager::LoaderThread, this));
+		loading_thread_communication.loader_threads.push_back(std::thread(&ModuleResourceManager::LoaderThread, this));
 	}
 #endif
 
@@ -164,10 +164,10 @@ bool ModuleResourceManager::CleanUp()
 	 CleanResourceCache();
 
 #if MULTITHREADING
-	 loading_threads_active = false;
-	 for(size_t i = 0; i < max_threads; ++i)
+	 loading_thread_communication.loading_threads_active = false;
+	 for(size_t i = 0; i < loading_thread_communication.max_threads; ++i)
 	 {
-		 loader_threads[i].join();
+		 loading_thread_communication.loader_threads[i].join();
 	 }
 #endif
 
@@ -363,7 +363,7 @@ uint32_t ModuleResourceManager::CreateFromData(FileData data, const std::string&
 
 void ModuleResourceManager::LoaderThread()
 {
-	while(loading_threads_active)
+	while(loading_thread_communication.loading_threads_active)
 	{
 		if(!loading_resources_queue.Empty())
 		{
