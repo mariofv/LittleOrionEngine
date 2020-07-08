@@ -27,14 +27,20 @@ public:
 
 	void Render() override;
 
+	void ClearGameLog();
+
 private:
 	void SetCurrentLog(CurrentLog current_log);
 	void ClearCurrentLog();
+
+public:
+	bool clear_on_play = true;
 
 private:
 	std::shared_ptr<engine_sink_mt> current_sink = nullptr;
 	CurrentLog current_log_type = CurrentLog::LITTLEORION;
 	std::string current_log_name = "LittleOrion";
+
 };
 
 #endif //_PANELCONSOLE_H_

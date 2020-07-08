@@ -27,9 +27,14 @@ void PanelConsole::Render()
 	{
 		if (ImGui::BeginMenuBar())
 		{
-			if (ImGui::Selectable("Clear", false, 0, ImVec2(60,0)))
+			if (ImGui::Selectable("Clear", false, 0, ImVec2(40,0)))
 			{
 				ClearCurrentLog();
+			}
+
+			if (ImGui::Selectable("Clear on Play", clear_on_play, 0, ImVec2(100, 0)))
+			{
+				clear_on_play = !clear_on_play;
 			}
 
 			if (ImGui::BeginMenu((current_log_name + " " ICON_FA_CARET_DOWN).c_str()))
@@ -118,4 +123,9 @@ void PanelConsole::SetCurrentLog(CurrentLog current_log_type)
 void PanelConsole::ClearCurrentLog()
 {
 	current_sink->messages.clear();
+}
+
+void PanelConsole::ClearGameLog()
+{
+	App->engine_log->game_sink->messages.clear();
 }
