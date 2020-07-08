@@ -118,7 +118,7 @@ bool ModuleRender::Init()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	APP_LOG_SUCCESS("Glew initialized correctly.");
+	APP_LOG_INFO("Glew initialized correctly.");
 
 	return true;
 }
