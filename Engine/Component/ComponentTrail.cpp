@@ -63,9 +63,6 @@ void ComponentTrail::UpdateTrail()
 	GetPerpendiculars();
 
 
-	trail_renderer->rendered_vertices = test_points.size();
-
-
 	for (auto it = test_points.begin(); it < test_points.end(); ++it)
 	{
 		if (it->life >= 0) // If life is positive, all good
@@ -100,14 +97,14 @@ void  ComponentTrail::GetPerpendiculars()
 		}
 		previous_point = current_point;
 
-
-
 	}
-	
-	int size = 20 * sizeof(float);
-	float* vetrices_to_render = new float[size];
+
+	std::vector<float> vertices;
+	int max_size = 20 * sizeof(float);
+	int size = 0;
+	float* vetrices_to_render = new float[max_size];
 	float* cursor = vetrices_to_render;
-	unsigned int bytes1 =  3;
+	unsigned int bytes1 =  3 * sizeof(float);
 	unsigned int bytes2 =  2;
 	int i = 0;
 	for (auto pair = mesh_points.begin(); pair < mesh_points.end(); ++pair)
@@ -127,26 +124,28 @@ void  ComponentTrail::GetPerpendiculars()
 			bottom_right = (pair->second->position - perpendicular);
 			bottom_left = (pair->first->position - perpendicular);
 
-			memcpy(cursor, &top_left.x, sizeof(float) * 3);
-			cursor += bytes1;
 
-			memcpy(cursor, &bottom_left.x, sizeof(float) * 3);
-			cursor += bytes1;
+			vertices.push_back(top_left.x);
+			vertices.push_back(top_left.y);
+			vertices.push_back(0.0f);
+			vertices.push_back(bottom_left.x);
+			vertices.push_back(bottom_left.y);
+			vertices.push_back(0.0f);
 
-			App->debug_draw->RenderLine(top_left, bottom_left); // Draw the perpendicular vector
-			App->debug_draw->RenderLine(top_right, bottom_right); // Draw the perpendicular vector
-			App->debug_draw->RenderLine(top_left, top_right); // Draw the perpendicular vector
-			App->debug_draw->RenderLine(bottom_left, bottom_right); // Draw the perpendicular vectormesh_points
-			App->debug_draw->RenderLine(top_left, bottom_right); // Draw the perpendicular vectormesh_points
+			//App->debug_draw->RenderLine(top_left, bottom_left); // Draw the perpendicular vector
+			//App->debug_draw->RenderLine(top_right, bottom_right); // Draw the perpendicular vector
+			//App->debug_draw->RenderLine(top_left, top_right); // Draw the perpendicular vector
+			//App->debug_draw->RenderLine(bottom_left, bottom_right); // Draw the perpendicular vectormesh_points
+			//App->debug_draw->RenderLine(top_left, bottom_right); // Draw the perpendicular vectormesh_points
 			
 		}
 		else
 		{
 			mesh_points.erase(pair);
-			//++trail_renderer->erase_vertices;
 		}
 	}
-	trail_renderer->Render(&vetrices_to_render, size);
+	trail_renderer->rendered_vertices = vertices.size();
+	trail_renderer->Render(vertices);
 	trail_renderer->owner = owner;
 }
 

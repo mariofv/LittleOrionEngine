@@ -1,14 +1,9 @@
 #version 330 core
 
-in vec2 texCoord;
-
-in vec2 frame;
-
+in vec3 col;
 out vec4 FragColor;
 
 struct Trail {
-  vec3 center_pos;
-  sampler2D texture;
 
   vec4 color;
 
@@ -16,5 +11,5 @@ struct Trail {
 
 void main()
 {
-    FragColor = vec4(0.0, 1.0, 0.0, 1.0);   
+    FragColor = vec4(col, 1.0);   
 }  

@@ -35,7 +35,7 @@ public:
 
 	void InitData();
 
-	void Render(float** to_render, int size);
+	void Render(std::vector<float>& to_render);
 	void SwitchFrame();
 
 	void ChangeTexture(uint32_t texture_uuid);
@@ -48,6 +48,7 @@ public:
 		   -0.5f,  0.5f, 0.0f,	// outline_left first points -- top left
 	};
 	float* trail_renderer_vertices = nullptr;
+	uint32_t* indexArray = nullptr;
 	unsigned int rendered_vertices = 0, erase_vertices = 0;
 
 private:

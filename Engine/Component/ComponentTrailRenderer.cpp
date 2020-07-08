@@ -4,6 +4,7 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleRender.h"
@@ -11,7 +12,7 @@
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
-namespace { const float MAX_TRAIL_VERTICES = 100; } //arbitrary number 
+namespace { const float MAX_TRAIL_VERTICES = 20; } //arbitrary number 
 
 ComponentTrailRenderer::ComponentTrailRenderer() : Component(nullptr, ComponentType::TRAILRENDERER)
 {
@@ -37,18 +38,9 @@ void ComponentTrailRenderer::InitData()
 {
 	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
 
-
-	
-	unsigned int indices[6] =
-	{
-		0, 1, 3,
-		1, 2, 3
-	};
-
-
-
 	glGenVertexArrays(1, &trail_vao);
 	glGenBuffers(1, &trail_vbo);
+	glGenBuffers(1, &ebo);
 
 	//glBindVertexArray(vao);
 	glBindVertexArray(trail_vao);
@@ -56,15 +48,17 @@ void ComponentTrailRenderer::InitData()
 	glBindBuffer(GL_ARRAY_BUFFER, trail_vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * MAX_TRAIL_VERTICES * 4 * 5, nullptr, GL_DYNAMIC_DRAW); //3 float position, 2 float color //before it was MAX_VERTICES * 4 *5
 	
-	trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(float) * MAX_TRAIL_VERTICES * 4 * 5, GL_MAP_WRITE_BIT);// 6 indices
-	
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	/*glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, MAX_TRAIL_VERTICES * sizeof(uint32_t), nullptr, GL_DYNAMIC_DRAW);*/
 
 	/*glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);*/
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
 
@@ -91,8 +85,14 @@ void ComponentTrailRenderer::SwitchFrame()
 
 }
 
-void ComponentTrailRenderer::Render(float** to_render, int size)
+void ComponentTrailRenderer::Render(std::vector<float>& to_render)
 {
+	
+	/*for (int i = 0; i < to_render.size(); i += 3)
+	{
+		float3 point = {to_render[i], to_render[i + 1], to_render[i + 2]};
+		App->debug_draw->RenderPoint(point, 20.0f);
+	}*/
 	GLuint shader_program = App->program->GetShaderProgramId("Trail");
 
 	glUseProgram(shader_program);
@@ -101,22 +101,21 @@ void ComponentTrailRenderer::Render(float** to_render, int size)
 
 	//use glBufferMap to obtain a pointer to buffer data
 	glBindBuffer(GL_ARRAY_BUFFER, trail_vbo);
-	
-	memcpy(trail_renderer_vertices, *to_render, size);
+
+	trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(float) *  to_render.size(), GL_MAP_WRITE_BIT);// 6 indices
+	memcpy(trail_renderer_vertices, to_render.data(), to_render.size() * sizeof(float));
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 
+
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, trail_texture->opengl_texture);
-	//glUniform1i(glGetUniformLocation(shader_program, "trail.texture"), 0);
-	//glUniform3fv(glGetUniformLocation(shader_program, "trail.center_pos"), 1, owner->transform.GetTranslation());
+	//glBindTexture(GL_TEXTURE_2D, trail_texture->opengl_texture);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	glUniform4fv(glGetUniformLocation(shader_program, "color"), 1, (float*)color);
-	//glDrawElements(GL_TRIANGLE_STRIP, rendered_vertices, GL_UNSIGNED_INT, 0);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, (rendered_vertices) *2);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, to_render.size() / 3);
 	glBindVertexArray(0);
 
 	glUseProgram(0);
