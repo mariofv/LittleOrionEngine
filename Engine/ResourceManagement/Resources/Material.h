@@ -45,8 +45,6 @@ public:
 	const std::shared_ptr<Texture>& GetMaterialTexture(MaterialTextureType type) const;
 
 	//Asyncronous loading
-	void GenerateTexture(TextureLoadData loaded_data);
-	void GetTextureFromCache(TextureLoadData loaded_data);
 	void LoadResource(uint32_t uuid, unsigned texture_type);
 	void InitResource(uint32_t uuid, unsigned texture_type);
 
@@ -69,7 +67,6 @@ public:
 	std::vector<uint32_t> textures_uuid;
 	std::vector<std::shared_ptr<Texture>> textures;
 
-	bool i_hate_my_life = false;
 
 	float diffuse_color[4] = { 1.0f, 1.0f,1.0f,1.0f };
 	float emissive_color[4] = { 1.0f, 1.0f, 1.0f , 1.0f };

@@ -390,7 +390,7 @@ inline void ModuleScene::LoadSceneResource()
 	}
 	else
 	{
-		if(App->time->isGameRunning())
+		if(MULTITHREADING && App->time->isGameRunning())
 		{
 			timer.Start();
 			LoadLoadingScreen();

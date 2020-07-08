@@ -149,32 +149,6 @@ void Material::Load(const Config& config)
 	specular_color[3] = specular.w;
 }
 
-void Material::GenerateTexture(TextureLoadData loaded_data)
-{
-	//MaterialTextureType type = static_cast<MaterialTextureType>(loaded_data.texture_type);
-	//textures[type] = std::make_shared<Texture>(loaded_data.uuid,
-	//	loaded_data.data.data(), loaded_data.data.size(), loaded_data.width,
-	//	loaded_data.height, loaded_data.num_channels, loaded_data.texture_options);
-
-	//App->resources->AddResourceToCache(textures[type]);
-}
-
-void Material::GetTextureFromCache(TextureLoadData loaded_data)
-{
-//	MaterialTextureType type = static_cast<MaterialTextureType>(loaded_data.texture_type);
-//	textures[type] = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(loaded_data.uuid));
-//
-//	if(!textures[type])
-//	{
-//		//If texture fails we load the textures normally
-//		App->resources->normal_loading_flag = true;
-//		textures[type] = App->resources->Load<Texture>(loaded_data.uuid);
-//		App->resources->normal_loading_flag = false;
-//	}
-//
-//	assert(textures[type]);
-}
-
 void Material::LoadResource(uint32_t uuid, unsigned texture_type)
 {
 	MaterialTextureType type = static_cast<MaterialTextureType>(texture_type);
