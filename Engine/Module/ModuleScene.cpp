@@ -398,6 +398,8 @@ inline void ModuleScene::LoadSceneResource()
 			
 		current_scene = App->resources->Load<Scene>(pending_scene_uuid);
 		current_scene.get()->Load();
+
+		App->resources->load_scene_asyncronously = true;
 	}
 }
 
@@ -419,6 +421,10 @@ ENGINE_API void ModuleScene::LoadScene(unsigned position)
 	if (build_options->is_imported)
 	{
 		pending_scene_uuid = build_options->GetSceneUUID(position);
+		if(position == 0)
+		{
+			App->resources->load_scene_asyncronously = false;
+		}
 		if (pending_scene_uuid == 0)
 		{
 			OpenNewScene();

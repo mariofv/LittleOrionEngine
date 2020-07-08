@@ -121,7 +121,7 @@ public:
 		//HERE WE CHECK IF T IS TEXTURE AND IF SO WE ADD FILEDATA TO THE QUEUE
 		//WE NEED TO CHECK HOW I AM GONNA SOLVE THE LOADED_RESOURCE NULLPTR WHILE NOT BEING CREATED
 		
-		if(MULTITHREADING /*&& App->time->isGameRunning()*/ && (std::is_same<T, Texture>::value || std::is_same<T, Mesh>::value || std::is_same<T, Font>::value) && !normal_loading_flag)
+		if(MULTITHREADING /*&& App->time->isGameRunning()*/ && (std::is_same<T, Texture>::value || std::is_same<T, Mesh>::value || std::is_same<T, Font>::value) && !normal_loading_flag && load_scene_asyncronously)
 		{
 			loaded_resource = nullptr;
 
@@ -201,6 +201,7 @@ public:
 	std::atomic<bool> loading_threads_active = true;
 	std::vector<std::thread> loader_threads;
 	bool normal_loading_flag = false;
+	bool load_scene_asyncronously = true;
 	//We change this value to the component that calls Load for textures
 	Component* current_component_loading = nullptr;
 	ResourceType current_type = ResourceType::TEXTURE;
