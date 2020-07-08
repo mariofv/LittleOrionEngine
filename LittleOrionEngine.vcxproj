@@ -151,6 +151,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Helper\ThreadSafeQueue.h" />
     <ClInclude Include="Engine\Log\EngineSink.h" />
     <ClInclude Include="Engine\Actions\EditorActionAddMultipleGO.h" />
     <ClInclude Include="Engine\Actions\EditorActionDeleteMultipleGO.h" />

@@ -1074,6 +1074,9 @@
     <ClInclude Include="Engine\Log\EngineLog.h">
       <Filter>Engine\Log</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Helper\ThreadSafeQueue.h">
+      <Filter>Engine\Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
