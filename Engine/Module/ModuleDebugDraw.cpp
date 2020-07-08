@@ -393,7 +393,7 @@ bool ModuleDebugDraw::Init()
 
 	grid = new Grid();
 
-    APP_LOG_SUCCESS("Module Debug Draw initialized correctly.")
+    APP_LOG_INFO("Module Debug Draw initialized correctly.")
 
 	return true;
 }
@@ -799,6 +799,11 @@ void ModuleDebugDraw::RenderSelectedGameObjectHelpers() const
 void ModuleDebugDraw::RenderPoint(const float3& point, float size, const float3& color) const
 {
 	dd::point(point, color, size);
+}
+
+void ModuleDebugDraw::RenderCircle(const float3& center, float radius, const float3& normal, const float3 & color) const
+{
+	dd::circle(center, normal, color, radius, 20.f);
 }
 
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)

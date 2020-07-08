@@ -385,12 +385,6 @@ void PanelConfiguration::ShowTimeOptions()
 		sprintf(frame_info, "FPS: %.0f Frame Count: %d", App->time->current_fps, App->time->frame_count);
 		ImGui::Text(frame_info);
 
-		std::vector<float> ms_data = App->engine_log->getMSData();
-		std::vector<float> frame_data = App->engine_log->getFPSData();
-
-		ImGui::PlotLines("Miliseconds", &ms_data[0], ms_data.size(), 0, nullptr, 0, 80);
-
-		ImGui::PlotLines("Frame Rate", &frame_data[0], frame_data.size(), 20, nullptr, 0, 80);
 	}
 
 }

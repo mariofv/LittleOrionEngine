@@ -12,7 +12,7 @@ SoundBank::SoundBank(uint32_t uuid, const void* data, size_t image_size) : game_
 	AKRESULT eResult = AK::SoundEngine::LoadBankMemoryView(cursor, image_size, banck_id);
 	if (eResult != AK_Success)
 	{
-		APP_LOG_ERROR("Unable to load the sound_bank");
+		RESOURCES_LOG_ERROR("Unable to load the sound_bank");
 	}
 }
 SoundBank::~SoundBank()

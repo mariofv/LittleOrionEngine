@@ -345,3 +345,7 @@ Game/Assets
 Game/Resources/Scenes/tmp_scene.*
 Game/Resources/Scripts/GameplaySystem*[0-9]*
 *.ps1
+
+# Engine Log
+*log.txt
+!Engine/Log*

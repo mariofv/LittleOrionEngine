@@ -71,6 +71,12 @@ public:
 	void UpdateHierarchyDepth();
 	void UpdateHierarchyBranch();
 
+	// Returns the first GO with specified tag that is under the hierarchy of this GO
+	ENGINE_API GameObject* GetChildrenWithTag(const std::string& tag);
+
+	// Returns the first GO with specified name that is under the hierarchy of this GO
+	ENGINE_API GameObject* GetChildrenWithName(const std::string& name);
+
 	int GetHierarchyDepth() const;
 	void SetHierarchyDepth(int value);
 

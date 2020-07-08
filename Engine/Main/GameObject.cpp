@@ -45,6 +45,7 @@
 #include <rapidjson/prettywriter.h>
 
 #include <algorithm>
+#include <stack>
 
 GameObject::GameObject() : aabb(this), UUID(pcg32_random())
 {
@@ -648,6 +649,60 @@ void GameObject::UpdateHierarchyBranch()
 	{
 		children[i]->UpdateHierarchyBranch();
 	}
+}
+
+GameObject* GameObject::GetChildrenWithTag(const std::string& tag)
+{
+	std::stack<GameObject*> pending_game_objects;
+	for (auto& child : children)
+	{
+		pending_game_objects.push(child);
+	}
+
+	while (!pending_game_objects.empty())
+	{
+		GameObject* current_game_object = pending_game_objects.top();
+		pending_game_objects.pop();
+
+		if (current_game_object->tag == tag)
+		{
+			return current_game_object;
+		}
+
+		for (auto& child : current_game_object->children)
+		{
+			pending_game_objects.push(child);
+		}
+	}
+
+	return nullptr;
+}
+
+GameObject* GameObject::GetChildrenWithName(const std::string& name)
+{
+	std::stack<GameObject*> pending_game_objects;
+	for (auto& child : children)
+	{
+		pending_game_objects.push(child);
+	}
+
+	while (!pending_game_objects.empty())
+	{
+		GameObject* current_game_object = pending_game_objects.top();
+		pending_game_objects.pop();
+
+		if (current_game_object->name == name)
+		{
+			return current_game_object;
+		}
+
+		for (auto& child : current_game_object->children)
+		{
+			pending_game_objects.push(child);
+		}
+	}
+
+	return nullptr;
 }
 
 int GameObject::GetHierarchyDepth() const

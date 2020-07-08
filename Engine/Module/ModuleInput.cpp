@@ -54,7 +54,7 @@ bool ModuleInput::Init()
 {
 	APP_LOG_SECTION("************ Module Input Init ************");
 
-	APP_LOG_INIT("Init SDL input event system");
+	APP_LOG_INFO("Init SDL input event system");
 	bool ret = true;
 	SDL_Init(0);
 
@@ -76,7 +76,7 @@ bool ModuleInput::Init()
 
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
 
-	APP_LOG_SUCCESS("SDL input event system initialized correctly.");
+	APP_LOG_INFO("SDL input event system initialized correctly.");
 
 	//Load Game Inputs
 	game_inputs_file_path = App->filesystem->GetPath(RESOURCES_GAME_INPUTS_PATH + std::string("/") + RESOURCES_GAME_INPUTS_FILENAME);
