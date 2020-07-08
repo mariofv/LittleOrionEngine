@@ -178,14 +178,14 @@
             ]
         },
         {
-            "UUID": 639098418,
+            "UUID": 1534107240,
             "ParentUUID": 0,
             "Name": "Canvas",
             "Tag": "",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3372547836,
+                "UUID": 2756519813,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -205,7 +205,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 595066148,
+                "UUID": 3387855909,
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
@@ -242,21 +242,21 @@
             "Transform2DEnabled": true,
             "Components": [
                 {
-                    "UUID": 2695486862,
+                    "UUID": 3579515611,
                     "ComponentType": 5,
                     "Active": true
                 }
             ]
         },
         {
-            "UUID": 1995833037,
+            "UUID": 2406250625,
             "ParentUUID": 0,
             "Name": "Event System",
             "Tag": "",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3751942561,
+                "UUID": 2375619832,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -276,7 +276,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 3814095608,
+                "UUID": 27741321,
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
@@ -313,21 +313,21 @@
             "Transform2DEnabled": false,
             "Components": [
                 {
-                    "UUID": 2763298411,
+                    "UUID": 2787594504,
                     "ComponentType": 15,
                     "Active": true
                 }
             ]
         },
         {
-            "UUID": 1687658494,
-            "ParentUUID": 639098418,
+            "UUID": 449264373,
+            "ParentUUID": 1534107240,
             "Name": "Background",
             "Tag": "",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 2222077095,
+                "UUID": 2678644031,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -347,7 +347,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 4264138286,
+                "UUID": 642090129,
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
@@ -373,8 +373,8 @@
                     0.5
                 ],
                 "SizeDelta": [
-                    1162.0,
-                    575.0
+                    1161.0,
+                    576.0
                 ],
                 "Pivot": [
                     0.5,
@@ -384,7 +384,7 @@
             "Transform2DEnabled": true,
             "Components": [
                 {
-                    "UUID": 3916848631,
+                    "UUID": 3632196832,
                     "ComponentType": 12,
                     "Active": true,
                     "ImageColor": [
@@ -397,21 +397,21 @@
                     "PreserveAspectRatio": false
                 },
                 {
-                    "UUID": 3837201643,
+                    "UUID": 506685047,
                     "ComponentType": 10,
                     "Active": true
                 }
             ]
         },
         {
-            "UUID": 3725153581,
-            "ParentUUID": 639098418,
-            "Name": "ProgressBar",
+            "UUID": 3080174136,
+            "ParentUUID": 1534107240,
+            "Name": "HealthBar",
             "Tag": "",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 2811504473,
+                "UUID": 2626756977,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -431,12 +431,12 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 1569948838,
+                "UUID": 417883302,
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    0.0,
-                    0.0
+                    238.0,
+                    -334.0
                 ],
                 "Rotation": [
                     0.0,
@@ -449,16 +449,16 @@
                     1.0
                 ],
                 "MinAnchor": [
-                    0.5,
-                    0.5
+                    0.0,
+                    1.0
                 ],
                 "MaxAnchor": [
-                    0.5,
-                    0.5
+                    0.0,
+                    1.0
                 ],
                 "SizeDelta": [
-                    591.0,
-                    120.0
+                    433.0,
+                    81.0
                 ],
                 "Pivot": [
                     0.5,
@@ -468,12 +468,7 @@
             "Transform2DEnabled": true,
             "Components": [
                 {
-                    "UUID": 1352802353,
-                    "ComponentType": 10,
-                    "Active": true
-                },
-                {
-                    "UUID": 3463422201,
+                    "UUID": 1221788490,
                     "ComponentType": 12,
                     "Active": true,
                     "ImageColor": [
@@ -482,11 +477,16 @@
                         1.0,
                         1.0
                     ],
-                    "TextureUUID": 8,
+                    "TextureUUID": 701811902,
                     "PreserveAspectRatio": false
                 },
                 {
-                    "UUID": 1597332645,
+                    "UUID": 795076962,
+                    "ComponentType": 10,
+                    "Active": true
+                },
+                {
+                    "UUID": 493277182,
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "LoadingScreen"
@@ -494,14 +494,14 @@
             ]
         },
         {
-            "UUID": 1390276156,
-            "ParentUUID": 3725153581,
-            "Name": "Bar",
+            "UUID": 3464243082,
+            "ParentUUID": 1534107240,
+            "Name": "Loading",
             "Tag": "",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 99430505,
+                "UUID": 2487648263,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -521,12 +521,98 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 859245824,
+                "UUID": 2809883767,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    -396.0,
+                    83.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    324.0,
+                    249.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 2381471068,
+                    "ComponentType": 13,
+                    "Active": true,
+                    "Text": "Loading...",
+                    "FontUUID": 17,
+                    "FontSize": 66.0,
+                    "FontColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "HorizontalAlignment": 1
+                },
+                {
+                    "UUID": 4167376729,
+                    "ComponentType": 10,
+                    "Active": true
+                }
+            ]
+        },
+        {
+            "UUID": 414151543,
+            "ParentUUID": 3080174136,
+            "Name": "FillBar",
+            "Tag": "",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2290663314,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3935365617,
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
                     0.0,
-                    0.0
+                    -2.5
                 ],
                 "Rotation": [
                     0.0,
@@ -548,7 +634,7 @@
                 ],
                 "SizeDelta": [
                     0.0,
-                    0.0
+                    5.0
                 ],
                 "Pivot": [
                     0.5,
@@ -558,31 +644,31 @@
             "Transform2DEnabled": true,
             "Components": [
                 {
-                    "UUID": 2835292417,
+                    "UUID": 2302344270,
+                    "ComponentType": 12,
+                    "Active": true,
+                    "ImageColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 3381459729,
+                    "PreserveAspectRatio": false
+                },
+                {
+                    "UUID": 2158621976,
                     "ComponentType": 10,
                     "Active": true
                 },
                 {
-                    "UUID": 4127637536,
-                    "ComponentType": 12,
-                    "Active": true,
-                    "ImageColor": [
-                        0.2273586392402649,
-                        0.09313725680112839,
-                        0.3333333134651184,
-                        1.0
-                    ],
-                    "TextureUUID": 3596831411,
-                    "PreserveAspectRatio": false
-                },
-                {
-                    "UUID": 3361104815,
+                    "UUID": 667762455,
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "ProgressBar",
                     "Inverted": false,
-                    "Name0": "Bar",
-                    "Bar": 1390276156
+                    "Name0": "FillBar",
+                    "FillBar": 414151543
                 }
             ]
         }
