@@ -802,7 +802,7 @@ void ModuleDebugDraw::RenderPoint(const float3& point, float size, const float3&
 
 void ModuleDebugDraw::RenderCircle(const float3& center, float radius, const float3& normal, const float3 & color) const
 {
-	dd::circle(center, circle_normal, color, radius, 20.f);
+	dd::circle(center, normal, color, radius, 20.f);
 }
 
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
