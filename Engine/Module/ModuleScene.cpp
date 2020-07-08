@@ -46,7 +46,7 @@ bool ModuleScene::Init()
 
 update_status ModuleScene::PreUpdate()
 {
-	BROFILER_CATEGORY("Scene PreUpdate", Profiler::Color::Crimson);
+	BROFILER_CATEGORY("Module Scene PreUpdate", Profiler::Color::Crimson);
 	for (const auto& game_object : game_objects_ownership)
 	{
 		game_object->PreUpdate();
@@ -56,7 +56,7 @@ update_status ModuleScene::PreUpdate()
 
 update_status ModuleScene::Update()
 {
-	BROFILER_CATEGORY("Scene Update", Profiler::Color::Crimson);
+	BROFILER_CATEGORY("Module Scene Update", Profiler::Color::IndianRed);
 	for (const auto&  game_object : game_objects_ownership)
 	{
 		game_object->Update();
@@ -67,7 +67,7 @@ update_status ModuleScene::Update()
 
 update_status ModuleScene::PostUpdate()
 {
-	BROFILER_CATEGORY("Scene PostUpdate", Profiler::Color::Crimson);
+	BROFILER_CATEGORY("Module Scene PostUpdate", Profiler::Color::DarkRed);
 	for (const auto& game_object : game_objects_ownership)
 	{
 		game_object->PostUpdate();
@@ -165,6 +165,39 @@ GameObject* ModuleScene::DuplicateGameObject(GameObject* game_object, GameObject
 	return clone_GO;
 }
 
+void ModuleScene::DuplicateGameObjectList(std::vector<GameObject*> game_objects)
+{
+	for (auto go : game_objects) 
+	{
+		if (!HasParentInList(go, game_objects)) 
+		{
+			DuplicateGameObject(go, go->parent);
+		}
+	}
+}
+
+bool ModuleScene::HasParentInList(GameObject * go, std::vector<GameObject*> game_objects) const
+{
+	if (go->GetHierarchyDepth() == 1) 
+	{
+		return false;
+	}
+
+	int depth = go->GetHierarchyDepth();
+	GameObject *game_object = go;
+
+	while (depth >= 2) 
+	{
+		if (BelongsToList(game_object->parent, game_objects))
+		{
+			return true;
+		}
+		game_object = game_object->parent;
+		depth = depth - 1;
+	}
+	return false;
+}
+
 GameObject* ModuleScene::DuplicateGO(GameObject* game_object, GameObject* parent_go)
 {
 	std::unique_ptr<GameObject> aux_copy_pointer = std::make_unique<GameObject>();
@@ -185,6 +218,18 @@ GameObject* ModuleScene::DuplicateGO(GameObject* game_object, GameObject* parent
 	}
 
 	return duplicated_go;
+}
+
+bool ModuleScene::BelongsToList(GameObject * game_object, std::vector<GameObject*> game_objects) const
+{
+	for (auto go : game_objects)
+	{
+		if (go->UUID == game_object->UUID) 
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void ModuleScene::InitDuplicatedScripts(GameObject* clone_go)

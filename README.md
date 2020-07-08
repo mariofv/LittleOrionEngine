@@ -67,7 +67,7 @@ Because this is a academic project is not possible to contribute directly to thi
 </tr>
 </table>
 
-## Developement methodology 
+## Developement methodology
 This project was developed following agile methodologies philosophy. If you are interested to know the tasks distribution don't hesitate to visit our [Trello board](https://trello.com/b/uFhGXWJ1/littleorionengine)!
 
 ## Built With
@@ -86,6 +86,8 @@ This project was developed following agile methodologies philosophy. If you are 
 * [par_shapes](https://github.com/prideout/par/blob/master/par_shapes.h) - Used to generate basic primitives.
 * [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo) - Used to draw gizmos.
 * [PhysFS 3.0.2](http://icculus.org/physfs/) - Used to manage file system.
+* [Bullet Physics](https://pybullet.org/wordpress/) - Used to simulate physics.
+* [spdlog](https://github.com/gabime/spdlog) - Used to log stuff.
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/Unnamed-Company/LittleOrionEngine/blob/master/LICENSE) file for details.

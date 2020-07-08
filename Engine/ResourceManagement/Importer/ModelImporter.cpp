@@ -49,20 +49,20 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 	FileData model_data{NULL, 0};
 
 	// LOAD ASSIMP SCENE
-	APP_LOG_INIT("Importing model %s.", assets_file_path.GetFullPath().c_str())
+	RESOURCES_LOG_INFO("Importing model %s.", assets_file_path.GetFullPath().c_str())
 	performance_timer.Start();
 	FileData file_data = assets_file_path.GetFile()->Load();
 	const aiScene* scene = aiImportFileFromMemory((char*)file_data.buffer, file_data.size, aiProcessPreset_TargetRealtime_MaxQuality, NULL);
 	if (scene == NULL)
 	{
 		const char *error = aiGetErrorString();
-		APP_LOG_ERROR("Error loading model %s ", assets_file_path.GetFullPath().c_str());
-		APP_LOG_ERROR(error);
+		RESOURCES_LOG_ERROR("Error loading model %s ", assets_file_path.GetFullPath().c_str());
+		RESOURCES_LOG_ERROR(error);
 		return model_data;
 	}
 	performance_timer.Stop();
 	float time = performance_timer.Read();
-	APP_LOG_SUCCESS("Model %s loaded correctly from assimp in %f ms.", assets_file_path.GetFullPath().c_str(), time);
+	RESOURCES_LOG_INFO("Model %s loaded correctly from assimp in %f ms.", assets_file_path.GetFullPath().c_str(), time);
 
 
 	// LOCATE PATH OF MODEL FILE
@@ -92,6 +92,11 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 	// STORE ALL MODEL GLOBAL DATA
 	current_model_data = {scene, asset_file_folder_path, unit_scale_factor, skeleton_cache};
 	current_model_data.model_metafile = &model_metafile;
+	current_model_data.animated_model = false;
+	for (size_t i = 0; i < scene->mNumMeshes; i++)
+	{
+		current_model_data.animated_model |= scene->mMeshes[i]->HasBones();
+	}
 
 	aiNode* root_node = scene->mRootNode;
 	aiMatrix4x4 identity_transformation = aiMatrix4x4();
@@ -117,7 +122,7 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 	}
 	aiReleaseImport(scene);
 
-	model_data = App->resources->prefab_importer->ExtractFromModel(model, model_metafile);
+	model_data = App->resources->prefab_importer->ExtractFromModel(model, model_metafile, current_model_data.animated_model);
 	if (current_model_data.remmaped_changed || current_model_data.any_new_node)
 	{
 		App->resources->metafile_manager->SaveMetafile(static_cast<Metafile*>(&model_metafile), assets_file_path);
@@ -138,16 +143,17 @@ std::vector<Config> ModelImporter::ExtractDataFromNode(const aiNode* root_node, 
 
 	current_transformation.Decompose(model_scale, model_rotation, model_position);
 
-	float3 translation = current_model_data.scale * float3(model_position.x, model_position.y, model_position.z);
+	float3 translation = float3(model_position.x, model_position.y, model_position.z);
 	Quat rotation = Quat(model_rotation.x, model_rotation.y, model_rotation.z, model_rotation.w);
 	float3 scale = float3(model_scale.x, model_scale.y, model_scale.z);
 
+	std::map<std::string, std::shared_ptr<Skeleton>> already_loaded_skeleton;
 	for (size_t i = 0; i < root_node->mNumMeshes; ++i)
 	{
 		Config node;
 		size_t mesh_index = root_node->mMeshes[i];
 		aiMesh* node_mesh = current_model_data.scene->mMeshes[mesh_index];
-		std::string mesh_name = std::string(node_mesh->mName.data) + "_" + std::to_string(i);
+		std::string mesh_name = std::string(root_node->mName.data);
 		node.AddString(mesh_name, "Name");
 		node.AddFloat3(translation, "Translation");
 		node.AddQuat(rotation, "Rotation");
@@ -177,7 +183,7 @@ std::vector<Config> ModelImporter::ExtractDataFromNode(const aiNode* root_node, 
 
 		if (current_model_data.model_metafile->import_mesh)
 		{
-			uint32_t extracted_mesh_uuid = ExtractMeshFromNode(node_mesh, mesh_name, current_transformation, extracted_skeleton_uuid);
+			uint32_t extracted_mesh_uuid = ExtractMeshFromNode(node_mesh, mesh_name, parent_transformation, extracted_skeleton_uuid);
 			if (extracted_mesh_uuid != 0)
 			{
 				node.AddUInt(extracted_mesh_uuid, "Mesh");
@@ -232,7 +238,7 @@ uint32_t ModelImporter::SaveDataInLibrary( Metafile &node_metafile, FileData & f
 
 uint32_t ModelImporter::ExtractMeshFromNode(const aiMesh* asssimp_mesh, std::string mesh_name, const aiMatrix4x4& mesh_transformation, uint32_t mesh_skeleton_uuid) const
 {
-	FileData mesh_data = App->resources->mesh_importer->ExtractMeshFromAssimp(asssimp_mesh, mesh_transformation, current_model_data.scale, mesh_skeleton_uuid);
+	FileData mesh_data = App->resources->mesh_importer->ExtractMeshFromAssimp(asssimp_mesh, mesh_transformation, current_model_data.scale, mesh_skeleton_uuid, current_model_data.animated_model);
 	if (mesh_data.size == 0)
 	{
 		return 0;

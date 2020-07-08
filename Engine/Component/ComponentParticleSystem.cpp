@@ -8,14 +8,15 @@
 #include "Module/ModuleResourceManager.h"
 #include "GL/glew.h"
 
+
 ComponentParticleSystem::ComponentParticleSystem() : Component(nullptr, ComponentType::PARTICLE_SYSTEM)
 {
-	Init();
+	
 }
 
 ComponentParticleSystem::ComponentParticleSystem(GameObject* owner) : Component(owner, ComponentType::PARTICLE_SYSTEM)
 {
-	Init();
+	
 }
 ComponentParticleSystem::~ComponentParticleSystem()
 {
@@ -24,6 +25,8 @@ ComponentParticleSystem::~ComponentParticleSystem()
 
 void ComponentParticleSystem::Init() 
 {
+	glGenBuffers(1, &ssbo);
+	shader_program = App->program->GetShaderProgramId("Particles");
 	particles.reserve(MAX_PARTICLES);
 
 	billboard = new ComponentBillboard(this->owner);
@@ -34,9 +37,9 @@ void ComponentParticleSystem::Init()
 		particles.emplace_back(Particle());
 		particles[i].life = 0.0F;
 		particles[i].particle_scale = 1.0F;
-		particles[i].time_passed = particles[i].life;
+		particles[i].time_counter = particles[i].life;
+		particles[i].time_passed = 0.0F;
 	}
-	
 }
 
 unsigned int ComponentParticleSystem::FirstUnusedParticle()
@@ -63,7 +66,7 @@ unsigned int ComponentParticleSystem::FirstUnusedParticle()
 
 void ComponentParticleSystem::RespawnParticle(Particle& particle)
 {
-	particle.position = float3(0.0f, 0.0f, 0.0f);
+	particle.position_initial = float4(0.0f, 0.0f, 0.0f,0.0f);
 	particle.rotation = owner->transform.GetGlobalRotation();
 
 	if (size_random)
@@ -86,10 +89,16 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 		particle.current_height = static_cast<float>(min_size_of_particle);
 		particle.current_width = static_cast<float>(min_size_of_particle);
 	}
+	else
+	{
+		particle.current_width = particles_width * particle.particle_scale;
+		particle.current_height = particles_height * particle.particle_scale;
+	}
+
 	switch (type_of_particle_system)
 	{
 		case SPHERE:
-			particle.velocity = float3::RandomDir(LCG(), velocity_particles) / 1000;
+			particle.velocity_initial = float4(float3::RandomDir(LCG(), velocity_particles_start) / 1000, 0.0f);
 		break;
 		case BOX:
 		{
@@ -97,22 +106,22 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 			float random_z = (rand() % ((max_range_random_z - min_range_random_z) + 1) + min_range_random_z) / 100.f;
 
-			particle.velocity.y = velocity_particles / 1000;
+			particle.velocity_initial.y = velocity_particles_start / 1000;
 			if (enabled_random_x)
 			{
-				particle.position.x = random_x;
+				particle.position_initial.x = random_x;
 			}
 			else
 			{
-				particle.position.x = position_x / 100.0F;
+				particle.position_initial.x = position_x / 100.0F;
 			}
 			if (enabled_random_z)
 			{
-				particle.position.z = random_z;
+				particle.position_initial.z = random_z;
 			}
 			else
 			{
-				particle.position.z = position_z / 100.0F;
+				particle.position_initial.z = position_z / 100.0F;
 			}
 		
 		break;
@@ -121,27 +130,45 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 			float angle = ((rand() % 100)/100.f) * 2 * math::pi;
 			float radius = inner_radius * sqrt((rand() % 100) / 100.f);
 			float proportion = outer_radius / inner_radius;
-			particle.position.x = radius * math::Cos(angle);
-			particle.position.z = radius * math::Sin(angle);
-			float distance = velocity_particles * particles_life_time;
+			particle.position_initial.x = radius * math::Cos(angle);
+			particle.position_initial.z = radius * math::Sin(angle);
+			float distance = velocity_particles_start * particles_life_time;
 			float height = sqrt((distance*distance) - ((radius*proportion) - radius)*((radius*proportion) - radius));
-			float3 final_local_position = float3(particle.position.x*proportion, height, particle.position.z*proportion);
-			particle.velocity = (final_local_position - particle.position);
-			particle.velocity = particle.velocity.ScaledToLength(velocity_particles) / 1000;
+			float4 final_local_position = float4(particle.position_initial.x*proportion, height, particle.position_initial.z*proportion,0.0f);
+			particle.velocity_initial = (final_local_position - particle.position_initial);
+			particle.velocity_initial = particle.velocity_initial.ScaledToLength3(velocity_particles_start) / 1000;
 		break;
 
 	}
 	
+	//Velocity over time setup
+	if (velocity_over_time)
+	{
+		switch (type_of_velocity_over_time)
+		{
+		case CONSTANT:
+			particle.velocity_initial *= velocity_over_time_speed_modifier;
+			break;
+		case LINEAR:
+			particle.velocity = particle.velocity_initial * velocity_over_time_speed_modifier_second;
+			particle.velocity_initial *= velocity_over_time_speed_modifier;
+			break;
+		case RANDOM_BETWEEN_TWO_CONSTANTS:
+			float random_velocity_modifier = LCG().Float(velocity_over_time_speed_modifier, velocity_over_time_speed_modifier_second);
+			particle.velocity_initial *= random_velocity_modifier;
+			break;
+		}
+	}
+	
 	particle.color = { color_particle[0], color_particle[1], color_particle[2], color_particle[3]};
 	particle.life = particles_life_time*1000;
-	particle.time_passed = particle.life;
-	float4 aux_velocity(particle.velocity, 1.0F);
-	aux_velocity = particle.rotation * aux_velocity;
-	particle.velocity = aux_velocity.xyz();
+	particle.time_counter = particle.life;
+	particle.time_passed = 0.0F;
+	particle.velocity_initial = particle.rotation * particle.velocity_initial;
 
 	if (!follow_owner)
 	{
-		particle.position = owner->transform.GetGlobalTranslation() + (particle.rotation *particle.position);
+		particle.position_initial = float4(owner->transform.GetGlobalTranslation(),0.0f) + (particle.rotation *particle.position_initial);
 	}
 	
 
@@ -149,7 +176,9 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 void ComponentParticleSystem::Render()
 {
-	glEnable(GL_BLEND);
+
+	BROFILER_CATEGORY("Particle Render", Profiler::Color::OrangeRed);
+
 	if (active && playing ) 
 	{
 		time_counter += App->time->real_time_delta_time;
@@ -164,53 +193,82 @@ void ComponentParticleSystem::Render()
 			}
 		}
 
+		//update velocity over time
+		if (velocity_over_time && type_of_velocity_over_time == LINEAR)
+		{
+			acceleration = (velocity_particles_start * velocity_over_time_speed_modifier_second -
+				velocity_particles_start * velocity_over_time_speed_modifier) / particles_life_time;
+		}
+
+
+		if (gravity)
+			gravity_vector = float4 (0, gravity_modifier / 10000000, 0,0);
+
+		glUseProgram(shader_program);
+
 		// update all particles
+		int num_of_alive_particles = 0;
 		for (unsigned int i = 0; i < playing_particles_number; ++i)
 		{
 			Particle& p = particles[i];
-		
+
 			if (p.life > 0.0f)
 			{
 				UpdateParticle(p);
-				if (follow_owner)
-				{
-					billboard->Render(owner->transform.GetGlobalTranslation() + (p.rotation *p.position));
-				}
-				else
-				{
-					billboard->Render(p.position);
-				}
-				
+				std::iter_swap(particles.begin() +i, particles.begin()+ num_of_alive_particles);
+				++num_of_alive_particles;
 			}
+
 		}
+		billboard->CommonUniforms(shader_program);
+		static_assert(sizeof(Particle) % (sizeof(float) * 4) == 0); //Check comment on particle struct
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+		glBufferData(GL_SHADER_STORAGE_BUFFER, (sizeof(Particle))*(num_of_alive_particles), particles.data(), GL_STATIC_DRAW);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo);
+
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+		glBindVertexArray(billboard->vao);
+		glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, particles.size());
+		glBindVertexArray(0);
+
+
+		glUseProgram(0);
 	}
 	
-	glDisable(GL_BLEND);
 }
 void ComponentParticleSystem::UpdateParticle(Particle& particle)
 {
-	float time_spend = particle.time_passed;
+	float time_spend = particle.time_counter;
 	particle.life -= App->time->real_time_delta_time; // reduce life
 	time_spend -= particle.life;
-	particle.position += particle.velocity * App->time->real_time_delta_time;
+	particle.time_passed += App->time->real_time_delta_time;
 
-	//random tile
-	if (tile_random)
+	//update position
+	if (velocity_over_time && type_of_velocity_over_time == LINEAR)
 	{
-		billboard->current_sprite_x = particle.current_sprite_x;
-		billboard->current_sprite_y = particle.current_sprite_y;
+		float4 acceleration = (particle.velocity - particle.velocity_initial) / particles_life_time / 1000;
+		if (gravity)
+			acceleration += gravity_vector;
+
+		particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
+			(acceleration * Pow(particle.time_passed, 2) / 2);
 	}
+	else
+	{
+		if (gravity)
+			particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
+			(gravity_vector * Pow(particle.time_passed, 2) / 2);
+		else
+			particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed);
+	}
+
 
 	//alpha fade
 	if (fade)
 	{
 		particle.color.w -= App->time->real_time_delta_time * (fade_time / 1000);
-		billboard->color[3] = particle.color.w;
 	}
-	else
-	{
-		billboard->color[3] = 1.0F;
-	}
+
 
 	//fade color
 	if (fade_between_colors)
@@ -221,21 +279,17 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 		particle.color.y = (1 - time) * particle.color.y + time * color_to_fade[1];
 		particle.color.z = (1 - time) * particle.color.z + time * color_to_fade[2];
 	}
-	billboard->color[0] = particle.color.x;
-	billboard->color[1] = particle.color.y;
-	billboard->color[2] = particle.color.z;
-	billboard->color[3] = particle.color.w;
 
-	//size
-	billboard->width = particles_width * particle.particle_scale;
-	billboard->height = particles_height * particle.particle_scale;
 	//size fade
 	if (change_size)
 	{
 		particle.current_height += App->time->real_time_delta_time * (size_change_speed / 1000);
 		particle.current_width += App->time->real_time_delta_time * (size_change_speed / 1000);
-		billboard->width = particle.current_width;
-		billboard->height = particle.current_height;
+	}
+
+	if (follow_owner)
+	{
+		particle.position = float4(owner->transform.GetGlobalTranslation(),0.0f) + (particle.rotation *particle.position);
 	}
 }
 void ComponentParticleSystem::SetParticleTexture(uint32_t texture_uuid)
@@ -266,7 +320,9 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(max_tile_value, "Max Tile");
 	config.AddFloat(min_tile_value, "Min Tile");
 
-	config.AddFloat(velocity_particles, "Velocity of particles");
+	config.AddFloat(velocity_particles_start, "Velocity of particles");
+	config.AddBool(gravity, "Gravity");
+	config.AddFloat(gravity_modifier, "Gravity modifier");
 
 	config.AddFloat(time_counter, "Time Counter");
 	config.AddFloat(time_between_particles, "Time Between Particles");
@@ -322,7 +378,9 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	max_tile_value = config.GetFloat("Max Tile", 0);
 	min_tile_value = config.GetFloat("Min Tile", 4);
 
-	velocity_particles = config.GetFloat("Velocity of particles", 1.0F);
+	velocity_particles_start = config.GetFloat("Velocity of particles", 1.0F);
+	gravity = config.GetBool("Gravity", false);
+	gravity_modifier = config.GetFloat("Gravity modifier", 0.2F);
 
 	time_counter = config.GetFloat("Time Counter", 0.0F);
 	time_between_particles = config.GetFloat("Time Between Particles", 0.2F);
@@ -358,10 +416,12 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	color_to_fade[1] = config.GetFloat("Color to fade G", 1.0F);
 	color_to_fade[2] = config.GetFloat("Color to fade B", 1.0F);
 	color_to_fade[3] = config.GetFloat("Color to fade A", 1.0F);
+
 }
 
 Component* ComponentParticleSystem::Clone(bool original_prefab) const
 {
+
 	ComponentParticleSystem* created_component;
 	if (original_prefab)
 	{
@@ -371,6 +431,8 @@ Component* ComponentParticleSystem::Clone(bool original_prefab) const
 	{
 		created_component = App->effects->CreateComponentParticleSystem();
 	}
+
+	created_component->Init();
 	auto original_billboard = created_component->billboard;
 	*created_component = *this;
 	*original_billboard = *this->billboard;
@@ -418,7 +480,8 @@ void ComponentParticleSystem::Stop()
 
 		particles[i].life = 0.0F;
 		particles[i].particle_scale = 1.0F;
-		particles[i].time_passed = particles[i].life;
+		particles[i].time_counter = particles[i].life;
+		particles[i].time_passed = 0.0F;
 	}
 	playing = false;
 }

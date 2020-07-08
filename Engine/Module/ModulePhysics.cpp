@@ -17,14 +17,11 @@
 
 #include <GL/glew.h>
 
+#include <Brofiler/Brofiler.h>
 
 ModulePhysics::ModulePhysics()
 {
 	physics_timer = new Timer();	
-}
-
-ModulePhysics::~ModulePhysics()
-{
 }
 
 bool ModulePhysics::Init()
@@ -44,14 +41,11 @@ bool ModulePhysics::Init()
 	return true;
 }
 
-update_status ModulePhysics::PreUpdate()
-{
-	
-	return update_status::UPDATE_CONTINUE;
-}
 
 update_status ModulePhysics::Update()
 {
+
+	BROFILER_CATEGORY("Module Physics Update", Profiler::Color::PaleTurquoise);
 	ms = physics_timer->Read();
 		
 	//update the world
@@ -92,7 +86,7 @@ update_status ModulePhysics::Update()
 				}
 			}
 		}
-		App->event_manager->publish(new CollisionEvent(collider_a->owner, collisions));
+		App->event_manager->Publish(new CollisionEvent(collider_a->owner, collisions));
 	}
 	
 	float ms2;

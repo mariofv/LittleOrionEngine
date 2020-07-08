@@ -106,10 +106,7 @@ void AnimController::AdjustInterpolationTimes()
 void AnimController::SetStateMachine(uint32_t state_machine_uuid)
 {
 	this->state_machine = App->resources->Load<StateMachine>(state_machine_uuid);
-	if (state_machine)
-	{
-		SetActiveState(state_machine->GetDefaultState());
-	}
+	SetActiveState(state_machine->GetDefaultState());
 }
 
 void AnimController::SetActiveState(std::shared_ptr<State> & state)

@@ -49,6 +49,7 @@ public:
 	void InitData();
 
 	void Render(const float3& position);
+	void CommonUniforms(const GLuint &shader_program);
 	void SwitchFrame();
 
 	void ChangeTexture(uint32_t texture_uuid);
@@ -64,6 +65,7 @@ public:
 	bool play_once = false;
 	float current_sprite_x = 0, current_sprite_y = 0;
 private:
+	GLuint shader_program ;
 	AlignmentType alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
 
     uint32_t texture_uuid = 0;
