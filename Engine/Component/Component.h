@@ -3,7 +3,7 @@
 
 #include "Helper/Config.h"
 //UGLY but needed for the moment
-#include "ResourceManagement/Resources/Texture.h"
+#include "ResourceManagement/Resources/Resource.h"
 #include <pcg_basic.h>
 
 class GameObject;

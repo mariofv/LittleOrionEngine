@@ -58,7 +58,7 @@ void ComponentImage::Render(float4x4* projection)
 		return;
 	}
 
-	if (texture_to_render != nullptr /*&& texture_to_render.get()->initialized*/)
+	if (texture_to_render != nullptr)
 	{
 		ScaleOp aspect_ratio_scaling;
 

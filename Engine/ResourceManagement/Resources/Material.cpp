@@ -180,10 +180,6 @@ void Material::LoadResource(uint32_t uuid, unsigned texture_type)
 	MaterialTextureType type = static_cast<MaterialTextureType>(texture_type);
 	textures[type] = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(uuid));
 
-	if(uuid == 814689362)
-	{
-		int i = 0;
-	}
 
 	if (textures[type])
 	{

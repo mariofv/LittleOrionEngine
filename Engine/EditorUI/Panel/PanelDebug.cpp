@@ -4,6 +4,8 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleResourceManager.h"
+#include "Module/ModuleScene.h"
 #include "Module/ModuleSpacePartitioning.h"
 #include "SpacePartition/OLQuadTree.h"
 #include "Module/ModulePhysics.h"
@@ -38,6 +40,27 @@ void PanelDebug::Render()
 		ImGui::Separator();
 
 		ImGui::DragFloat("Rendering time ", &App->debug->rendering_time, NULL, NULL);
+
+		ImGui::Separator();
+		ImGui::DragInt("Number of textures loaded:", &App->resources->number_of_textures_loaded);
+
+		int current = static_cast<int>(App->resources->loading_thread_communication.current_number_of_resources_loaded);
+		ImGui::DragInt("Number of resources loaded:", &current);
+
+		int total = static_cast<int>(App->resources->loading_thread_communication.total_number_of_resources_to_load);
+		ImGui::DragInt("Number of resources to load:", &total);
+
+		bool loading = App->resources->loading_thread_communication.loading;
+		ImGui::Checkbox("Loading: ", &loading);
+
+		if (ImGui::Button("Generate Loading Screen"))
+		{
+			App->scene->LoadLoadingScreen();
+		}
+
+		float time_meshes = App->resources->time_loading_meshes;
+		ImGui::DragFloat("Time loading meshes:", &time_meshes);
+
 	}
 	ImGui::End();
 }
