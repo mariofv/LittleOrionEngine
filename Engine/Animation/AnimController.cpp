@@ -24,9 +24,10 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton,
 
 		size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
 		size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
-		if (second_keyframe_index >= clip->animation->frames)
+		if (second_keyframe_index >= clip->animation->frames || first_keyframe_index >= clip->animation->frames)
 		{
 			second_keyframe_index = clip->loop ? 0 : clip->animation->frames - 1;
+			first_keyframe_index = clip->loop ? 0 : clip->animation->frames - 1;
 		}
 		float interpolation_lambda = current_keyframe - std::floor(current_keyframe);
 		const std::vector<Animation::Channel>& current_pose = clip->animation->keyframes[first_keyframe_index].channels;
