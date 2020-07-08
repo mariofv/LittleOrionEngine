@@ -393,7 +393,7 @@ bool ModuleDebugDraw::Init()
 
 	grid = new Grid();
 
-    APP_LOG_SUCCESS("Module Debug Draw initialized correctly.")
+    APP_LOG_INFO("Module Debug Draw initialized correctly.")
 
 	return true;
 }
