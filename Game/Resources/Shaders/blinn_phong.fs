@@ -266,7 +266,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	}
 	else
 	{
-		shadow = 0;
+		shadow = 1; //It won't affect the calculations
 	}
 	
 	return directional_light.color * (( (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular)*shadow )) * diff;
