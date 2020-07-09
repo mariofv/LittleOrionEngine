@@ -157,230 +157,9 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 
 void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* particle_system)
 {
-	
-	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Particle System", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		
-		ImGui::Checkbox("Active", &particle_system->active);
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
-		{
-			App->actions->DeleteComponentUndo(particle_system);
-		}
-		if (ImGui::Button("Copy")) 
-		{
-			App->actions->SetCopyComponent(particle_system);
-		}
-		if (ImGui::Button("Paste component as new")) 
-		{
-			App->actions->PasteComponent(particle_system);
-		}
-		if (ImGui::Button("Paste component values")) 
-		{
-			App->actions->PasteComponentValues(particle_system);
-		}
-		ImGui::Separator();
-		if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			static int emit_count = 0;
-			ImGui::InputInt("##Emit_amount", &emit_count);
-			if (ImGui::Button("Emit"))
-			{
-				particle_system->Emit(emit_count);
-			}
-			if (ImGui::Button("Start"))
-			{
-				particle_system->Play();
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Pause"))
-			{
-				particle_system->Pause();
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Stop"))
-			{
-				particle_system->Stop();
-			}
-		}
-		if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			if (ImGui::InputScalar("Max particles", ImGuiDataType_U32,&particle_system->max_particles_number) && particle_system->max_particles_number > MAX_PARTICLES)
-			{
-				particle_system->max_particles_number = MAX_PARTICLES;
-			}
-
-			ImGui::InputFloat("", &particle_system->gravity_modifier, 0.01F, 0.1F);
-			ImGui::SameLine();
-			ImGui::Checkbox("Gravity", &particle_system->gravity);
-
-			ShowBillboardOptions(particle_system->billboard);
-			if (particle_system->billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET)
-			{
-				ImGui::Checkbox("Tile random", &particle_system->tile_random);
-				if (particle_system->tile_random)
-				{
-					ImGui::InputFloat("Max", &particle_system->max_tile_value);
-					ImGui::InputFloat("Min", &particle_system->min_tile_value);
-				}
-			}
-
-			int particle_shape = static_cast<int>(particle_system->type_of_particle_system);
-			if (ImGui::Combo("Shape", &particle_shape, "Sphere\0Box\0Cone\0"))
-			{
-				switch (particle_shape)
-				{
-				case 0:
-					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::SPHERE;
-					break;
-				case 1:
-					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::BOX;
-					break;
-				case 2:
-					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::CONE;
-					break;
-				}
-			}
-		
-			ImGui::Checkbox("Loop", &particle_system->loop);
-			ImGui::SameLine();
-			ImGui::Checkbox("Follow GO Parent", &particle_system->follow_owner);
-			ImGui::Spacing();
-			ImGui::Separator();
-
-			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-			ImGui::DragFloat("Width", &particle_system->particles_width, 0.01f, 0.0f, 100.0F);
-			ImGui::SameLine();
-			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-			ImGui::DragFloat("Height", &particle_system->particles_height, 0.01f, 0.0f, 100.0F);
-
-
-			ImGui::Checkbox("Rand size", &particle_system->size_random);ImGui::SameLine();
-			ImGui::Checkbox("Size change over time", &particle_system->change_size);
-			if (particle_system->size_random || particle_system->change_size)
-			{
-				ImGui::Spacing();
-				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragInt("Min size", &particle_system->min_size_of_particle, 10, 0, 999);
-				ImGui::SameLine();
-				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragInt("Max size", &particle_system->max_size_of_particle, 100, 1, 1000);
-			}
-			
-
-			if (particle_system->change_size)
-			{
-				ImGui::DragFloat("Speed", &particle_system->size_change_speed, 0.01f, 0.0f, 10.0F);
-			}
-			ImGui::Separator();
-			ImGui::Spacing();
-
-			ImGui::DragFloat("Velocity Start", &particle_system->velocity_particles_start, 0.01f, 0.0f, 100.0F);
-			ImGui::Spacing();
-
-			ImGui::DragFloat("Life (in seconds)", &particle_system->particles_life_time, 1.0F, 0.0F, 100.0F);
-			ImGui::Spacing();
-
-			ImGui::DragFloat("Time Between Particles", &particle_system->time_between_particles, 0.1F, 0.0F, 10.0f);
-			ImGui::Spacing();
-			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::BOX)
-			{
-				if (particle_system->enabled_random_x)
-				{
-					ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 10000);
-					ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -10000, 0);
-				}
-				else
-				{
-					ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -100, 10000);
-				}
-				ImGui::SameLine();
-				ImGui::Checkbox("Rand X", &particle_system->enabled_random_x);
-
-				ImGui::Spacing();
-
-				if (particle_system->enabled_random_z)
-				{
-					ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 10000);
-					ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -10000, 0);
-				}
-				else
-				{
-					ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -100, 10000);
-				}
-				ImGui::SameLine();
-				ImGui::Checkbox("Rand Z", &particle_system->enabled_random_z);
-			
-			}
-			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::CONE)
-			{
-				ImGui::DragFloat("Outer radius", &particle_system->outer_radius, 0.1F, 0.1F, 10);
-				ImGui::DragFloat("Inner radius", &particle_system->inner_radius, 0.1F, 0.1F, 10);
-			}
-		}
-
-		//Color of Particles
-		if (ImGui::CollapsingHeader(ICON_FA_SQUARE "Color Over Time"))
-		{
-			ImGui::Checkbox("Fade", &particle_system->fade);
-			ImGui::Checkbox("Fade Between Colors", &particle_system->fade_between_colors);
-			if (particle_system->fade)
-			{
-				ImGui::DragFloat("Fade time", &particle_system->fade_time, 0.01f, 0.0f, 10.0F);
-			}
-			ImGui::ColorEdit4("Particle Color##2f", (float*)&particle_system->color_particle, ImGuiColorEditFlags_Float );
-			if (particle_system->fade_between_colors)
-			{
-				ImGui::ColorEdit4("Particle Color To Fade##2f", (float*)&particle_system->color_to_fade, ImGuiColorEditFlags_Float);
-				ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
-			}
-		}
-
-		//Velocity over time
-		if (ImGui::CollapsingHeader(ICON_FA_SQUARE "Velocity Over Time"))
-		{
-			ImGui::Checkbox("Activate Velocity Over Time", &particle_system->velocity_over_time);
-			if (particle_system->velocity_over_time)
-			{
-				int velocity_type = static_cast<int>(particle_system->type_of_velocity_over_time);
-				if (ImGui::Combo("Speed", &velocity_type, "Constant\0Linear\0Random Between Two Constants\0"))
-				{
-					switch (velocity_type)
-					{
-					case 0:
-						particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::CONSTANT;
-						break;
-					case 1:
-						particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::LINEAR;
-						break;
-					case 2:
-						particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::RANDOM_BETWEEN_TWO_CONSTANTS;
-						break;
-					}
-				}
-
-				switch (velocity_type)
-				{
-				case ComponentParticleSystem::TypeOfVelocityOverTime::CONSTANT:
-					particle_system->velocity_over_time_speed_modifier;
-					ImGui::DragFloat("Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
-					break;
-				case ComponentParticleSystem::TypeOfVelocityOverTime::LINEAR:
-					ImGui::DragFloat("Start Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
-					ImGui::DragFloat("End Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
-					break;
-				case ComponentParticleSystem::TypeOfVelocityOverTime::RANDOM_BETWEEN_TWO_CONSTANTS:
-					particle_system->velocity_over_time_speed_modifier;
-					ImGui::DragFloat("Min Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
-					ImGui::DragFloat("Max Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
-					break;
-				}
-			}
-			
-		}
-	}
-
+	particle_system_panel.Render(particle_system);
 }
+
 void PanelComponent::ShowComponentBillboard(ComponentBillboard* billboard)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Billboard", ImGuiTreeNodeFlags_DefaultOpen))
@@ -420,41 +199,38 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 	{
 		billboard->ChangeTexture(selected_resource_uuid);
 	}
+
+	ImGui::ColorEdit4("Color", billboard->color);
+
 	int alignment_type = static_cast<int>(billboard->alignment_type);
-	if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) {
+	if (ImGui::Combo("Billboard type", &alignment_type, "World\0View point\0Axial")) {
 		switch (alignment_type)
 		{
 		case 0:
-			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::WORLD);
 			break;
 		case 1:
-			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
 			break;
 		case 2:
-			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::SPRITESHEET);
-			break;
-		case 3:
-			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
 			break;
 		}
 	}
 
-	if (billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
-		ImGui::InputInt("Columns", &billboard->x_tiles, 1);
-		ImGui::InputInt("Rows", &billboard->y_tiles, 1);
-		ImGui::InputFloat("current x", &billboard->current_sprite_x, 1);
-		ImGui::InputFloat("current y", &billboard->current_sprite_y, 1);
-		ImGui::InputFloat("Speed", &billboard->sheet_speed, 1);
-		ImGui::Checkbox("Oriented to camera", &billboard->oriented_to_camera);
-		if (ImGui::Button("Play once"))
-		{
-			billboard->EmitOnce();
-		}
-		if (ImGui::Button("Reset"))
-		{
-			billboard->play = true;
-		}
+	ImGui::Checkbox("Spritesheet", &billboard->is_spritesheet);
 
+	if (billboard->is_spritesheet) 
+	{
+		ImGui::DragInt("Columns", &billboard->num_sprisheet_columns);
+		ImGui::DragInt("Rows", &billboard->num_sprisheet_rows);
+		ImGui::DragInt("Animation Time", &billboard->animation_time, 10.f, 0);
+		ImGui::Checkbox("Loop", &billboard->loop);
+
+		if (ImGui::Button("Play"))
+		{
+			billboard->Play();
+		}
 	}
 
 	ImGui::Separator();

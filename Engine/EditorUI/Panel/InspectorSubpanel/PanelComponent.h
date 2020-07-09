@@ -4,6 +4,7 @@
 #define ENGINE_EXPORTS
 
 #include "Module/ModuleActions.h"
+#include "PanelParticleSystem.h"
 
 class Component;
 class ComponentAnimation;
@@ -78,6 +79,9 @@ private:
 	void ShowComponentSphereColliderWindow(ComponentSphereCollider* sphere_collider);
 	void ShowComponentCylinderColliderWindow(ComponentCylinderCollider* cylinder_collider);
 	void ShowComponentMeshColliderWindow(ComponentMeshCollider* mesh_collider);
+
+private:
+	PanelParticleSystem particle_system_panel;
 };
 
 #endif //_PANELCOMPONENT_H_

@@ -24,16 +24,23 @@ float4 DebugDrawGL::GetColorRGBA(unsigned int color) const
 void DebugDrawGL::DrawMesh(ComponentCamera& camera)
 {
 	if (vertices.size() == 0)
+	{
 		return;
+	}
 
-
-	unsigned int shader = App->program->GetShaderProgramId("NavMesh");
+	unsigned int shader = App->program->UseProgram("NavMesh");
 	math::float4x4 model = math::float4x4::identity;
 
-	glUseProgram(shader);
 	glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_TRUE, &model[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_TRUE, &camera.view[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(shader, "proj"), 1, GL_TRUE, &camera.proj[0][0]);
+
+	float4 color = float4::zero;
+	if (colors.size() > 0)
+	{
+		color = colors[0];
+	}
+	glUniform4fv(glGetUniformLocation(shader, "base_color"), 1, color.ptr());
 
 	glEnableVertexAttribArray(0); // attribute 0
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -46,20 +53,9 @@ void DebugDrawGL::DrawMesh(ComponentCamera& camera)
 		(void*)0 // array buffer offset
 	);
 
-	glEnableVertexAttribArray(1); // attribute 0
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_color);
-	glVertexAttribPointer(
-		1, // attribute 1
-		4, // number of componentes (4 floats)
-		GL_FLOAT, // data type
-		GL_FALSE, // should be normalized?
-		0, // stride
-		(void*)0 // array buffer offset
-	);
 
 	glDrawArrays(GL_TRIANGLES, 0, vertices.size()); // start at 0 and tris count
 	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glUseProgram(0);
 }
@@ -70,10 +66,6 @@ void DebugDrawGL::GenerateBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(float) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
-	glGenBuffers(1, &vbo_color);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_color);
-	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(float) * colors.size(), &colors[0], GL_STATIC_DRAW);
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -82,5 +74,4 @@ void DebugDrawGL::CleanUp()
 	vertices.clear();
 	colors.clear();
 	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &vbo_color);
 }

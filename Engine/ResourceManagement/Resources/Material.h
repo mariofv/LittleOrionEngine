@@ -50,6 +50,7 @@ public:
 	static std::string GetMaterialTypeName(const MaterialType material_type);
 
 	void UpdateLiquidProperties();
+	unsigned int GetShaderVariation() const;
 
 
 public:
@@ -71,8 +72,6 @@ public:
 	float2 coords = float2(1.0f, 1.0f);
 
 	float transparency = 0.5F;
-//	float roughness = 0.5f;
-//	float metalness = 0.04f;
 
 	float tiling_x = 1.0f;
 	float tiling_y = 1.0f;
@@ -85,13 +84,9 @@ public:
 	float tiling_liquid_y_x = -1.F;
 	float tiling_liquid_y_y = -1.F;
 	bool use_liquid_map = false;
-	//This variable will allow the shader to use the normal maps if there is any assigned to the model material
-	bool use_normal_map = false;
-
-	//We also will detect if using specular map
-	bool use_specular_map = false;
 
 	bool show_checkerboard_texture = false;
+	bool use_shadow_map = true;
 };
 
 namespace ResourceManagement
