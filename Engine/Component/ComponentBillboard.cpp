@@ -90,17 +90,22 @@ void ComponentBillboard::Update()
 		}
 		float loop_progress = (float)time_since_start / animation_time;
 
-		num_sprites = num_sprisheet_columns * num_sprisheet_rows;
-
-		int current_sprite = math::FloorInt(loop_progress * num_sprites);
-		current_sprite_x = current_sprite % num_sprisheet_columns;
-		current_sprite_y = (num_sprisheet_columns - 1) - current_sprite / num_sprisheet_columns;
+		ComputeAnimationFrame(loop_progress);
 	}
 }
 
 void ComponentBillboard::ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type)
 {
 	this->alignment_type = alignment_type;
+}
+
+void ComponentBillboard::ComputeAnimationFrame(float progress)
+{
+	num_sprites = num_sprisheet_columns * num_sprisheet_rows;
+
+	int current_sprite = math::FloorInt(progress * num_sprites);
+	current_sprite_x = current_sprite % num_sprisheet_columns;
+	current_sprite_y = (num_sprisheet_columns - 1) - current_sprite / num_sprisheet_columns;
 }
 
 void ComponentBillboard::Play()

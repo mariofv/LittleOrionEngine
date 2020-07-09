@@ -319,8 +319,6 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			}
 			ImGui::DragInt("Columns", &particle_system->billboard->num_sprisheet_columns);
 			ImGui::DragInt("Rows", &particle_system->billboard->num_sprisheet_rows);
-			ImGui::DragInt("Animation Time", &particle_system->billboard->animation_time, 10.f, 0);
-			ImGui::Checkbox("Loop", &particle_system->loop);
 			
 			if (!particle_system->billboard->is_spritesheet)
 			{

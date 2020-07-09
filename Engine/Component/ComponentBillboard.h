@@ -56,6 +56,8 @@ public:
 	void ChangeTexture(uint32_t texture_uuid);
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
 
+	void ComputeAnimationFrame(float progress);
+
 	ENGINE_API void Play();
 	ENGINE_API bool IsPlaying();
 

@@ -278,6 +278,16 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 		particle.size += float2(size_change_speed * App->time->real_time_delta_time * 0.001f);
 	}
 
+	//animation 
+	if (billboard->is_spritesheet)
+	{
+		float progress = particle.time_passed * 0.001f / particles_life_time;
+		billboard->ComputeAnimationFrame(progress);
+
+		particle.current_sprite_x = billboard->current_sprite_x;
+		particle.current_sprite_y = billboard->current_sprite_y;
+	}
+
 	if (follow_owner)
 	{
 		particle.geometric_space = float4x4::FromTRS(owner->transform.GetGlobalTranslation(), owner->transform.GetGlobalRotation(), float3::one);
