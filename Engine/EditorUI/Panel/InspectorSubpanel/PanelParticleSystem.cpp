@@ -279,6 +279,9 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				ImGui::InputFloat("Max", &particle_system->max_tile_value);
 				ImGui::InputFloat("Min", &particle_system->min_tile_value);
 			}
+			ImGui::DragInt("Columns", &particle_system->billboard->num_sprisheet_columns);
+			ImGui::DragInt("Rows", &particle_system->billboard->num_sprisheet_rows);
+			ImGui::DragInt("Animation Time", &particle_system->billboard->animation_time, 10.f, 0);
 			ImGui::Checkbox("Loop", &particle_system->loop);
 			
 			if (!particle_system->billboard->is_spritesheet)
@@ -289,8 +292,21 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		}
 		if (ImGui::CollapsingHeader("Renderer"))
 		{
-			//ShowBillboardOptions(particle_system->billboard);
-
+			int alignment_type = static_cast<int>(particle_system->billboard->alignment_type);
+			if (ImGui::Combo("Billboard type", &alignment_type, "World\0View point\0Axial")) {
+				switch (alignment_type)
+				{
+				case 0:
+					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::WORLD);
+					break;
+				case 1:
+					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
+					break;
+				case 2:
+					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
+					break;
+				}
+			}
 
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
 			ImGui::DragFloat("Width", &particle_system->particles_width, 0.01f, 0.0f, 100.0F);
