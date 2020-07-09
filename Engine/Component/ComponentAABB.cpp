@@ -81,7 +81,7 @@ void ComponentAABB::GenerateBoundingBoxFromParticleSystem(const ComponentParticl
 	{
 	case ComponentParticleSystem::TypeOfParticleSystem::SPHERE:
 	{
-		float radius = particle_system.particles_life_time*particle_system.velocity_particles;
+		float radius = particle_system.particles_life_time*particle_system.velocity_particles_start;
 		Sphere sphere(float3(0.f,0.f,0.f), radius);
 		bounding_box.Enclose(sphere);
 		original_box.Enclose(sphere);
@@ -93,7 +93,7 @@ void ComponentAABB::GenerateBoundingBoxFromParticleSystem(const ComponentParticl
 		float max_x = static_cast<float>(particle_system.max_range_random_x);
 		float min_z = static_cast<float>(particle_system.min_range_random_z);
 		float max_z = static_cast<float>(particle_system.max_range_random_z);
-		float height = particle_system.particles_life_time * particle_system.velocity_particles * 100.0f;
+		float height = particle_system.particles_life_time * particle_system.velocity_particles_start * 100.0f;
 
 		AABB box(float3(min_x, 0.0f, min_z) / 100, float3(max_x, height, max_z) / 100);
 		bounding_box.Enclose(box);
@@ -102,7 +102,7 @@ void ComponentAABB::GenerateBoundingBoxFromParticleSystem(const ComponentParticl
 	}
 	case ComponentParticleSystem::TypeOfParticleSystem::CONE:
 		float max_radius = max(particle_system.outer_radius, particle_system.inner_radius);
-		float height = particle_system.particles_life_time*particle_system.velocity_particles;
+		float height = particle_system.particles_life_time*particle_system.velocity_particles_start;
 		float3 min_point = -float3(max_radius);
 		min_point.y = 0.0f;
 		float3 max_point =  float3(max_radius);

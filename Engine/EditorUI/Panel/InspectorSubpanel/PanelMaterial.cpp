@@ -320,6 +320,8 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 	break;
 	}
 
+
+
 	if (ImGui::Button(ICON_FA_TIMES))
 	{
 		material->RemoveMaterialTexture(type);

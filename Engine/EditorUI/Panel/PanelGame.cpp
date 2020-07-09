@@ -3,6 +3,7 @@
 #include "Component/ComponentCamera.h"
 #include "Main/Application.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleLight.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleRender.h"
 
@@ -45,12 +46,7 @@ void PanelGame::Render()
 			game_window_content_area_height = game_window_content_area_max_point.y - game_window_content_area_pos.y;
 
 			
-			if (App->renderer->render_shadows)
-			{
-				App->cameras->directional_light_camera->RecordFrame((GLsizei)game_window_content_area_width * 4, (GLsizei)game_window_content_area_width * 4, false, false);
-				App->cameras->directional_light_mid->RecordFrame((GLsizei)game_window_content_area_width, (GLsizei)game_window_content_area_width, false, false);
-				App->cameras->directional_light_far->RecordFrame((GLsizei)game_window_content_area_width / 4, (GLsizei)game_window_content_area_width / 4, false, false);
-			}
+			App->lights->RecordShadowsFrameBuffers((GLsizei)game_window_content_area_width, (GLsizei)game_window_content_area_height);
 			App->cameras->main_camera->RecordFrame((GLsizei)game_window_content_area_width, (GLsizei)game_window_content_area_height);
 			App->cameras->main_camera->RecordDebugDraws();
 
