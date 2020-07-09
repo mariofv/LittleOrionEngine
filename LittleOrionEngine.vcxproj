@@ -319,7 +319,7 @@
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\Actions\EdirorActionAddMultipleGO.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionAddMultipleGO.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionDeleteMultipleGO.cpp" />
     <ClCompile Include="Engine\Animation\Tween\LOTween.cpp" />
     <ClCompile Include="Engine\Animation\Tween\Tween.cpp" />

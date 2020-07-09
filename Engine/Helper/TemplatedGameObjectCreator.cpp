@@ -4,6 +4,7 @@
 #include "Component/ComponentText.h"
 
 #include "Main/Application.h"
+#include "Module/ModuleActions.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleUI.h"
 

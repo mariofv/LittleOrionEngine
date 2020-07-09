@@ -1,5 +1,6 @@
 #include "ModuleProgram.h"
 
+#include "Filesystem/File.h"
 #include "Filesystem/PathAtlas.h"
 #include "Helper/Config.h"
 

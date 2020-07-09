@@ -4,14 +4,12 @@
 #define ENGINE_EXPORTS
 
 #include "Component.h"
-#include "Component/ComponentAABB.h"
-#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
-#include "EditorUI/Panel/PanelScene.h"
 
-#include "MathGeoLib.h"
+#include <MathGeoLib.h>
 #include <GL/glew.h>
 
 class GameObject;
+class Texture;
 
 class ComponentBillboard : public Component
 {

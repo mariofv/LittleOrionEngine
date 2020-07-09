@@ -48,12 +48,24 @@
 #include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleUI.h"
 
+#include "PanelParticleSystem.h"
+
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Resources/StateMachine.h"
 
 #include <imgui.h>
 #include <imgui_stdlib.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
+
+PanelComponent::PanelComponent()
+{
+	particle_system_panel = new PanelParticleSystem();
+}
+
+PanelComponent::~PanelComponent()
+{
+	delete particle_system_panel;
+}
 
 void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh_renderer)
 {
@@ -157,7 +169,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 
 void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* particle_system)
 {
-	particle_system_panel.Render(particle_system);
+	particle_system_panel->Render(particle_system);
 }
 
 void PanelComponent::ShowComponentBillboard(ComponentBillboard* billboard)
@@ -359,11 +371,11 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 
 		if (ImGui::ColorEdit3("Color", light->light_color)) { light->modified_by_user = true; }
 
-		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
+		App->actions->CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
 		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 100.f)) { light->modified_by_user = true; }
 
-		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
+		App->actions->CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
 		int light_type = static_cast<int>(light->light_type);
 
@@ -712,48 +724,6 @@ void PanelComponent::CheckClickedCamera(ComponentCamera* camera)
 		App->actions->action_component = camera;
 		App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTCAMERA);
 	}
-}
-
-void PanelComponent::CheckClickForUndo(ModuleActions::UndoActionType  type, Component* component)
-{
-	if (ImGui::IsItemActive() && !ImGui::IsItemActiveLastFrame())
-	{
-		switch (type)
-		{
-		case ModuleActions::UndoActionType::TRANSLATION:
-			App->actions->previous_transform = ((ComponentTransform*)component)->GetTranslation();
-			break;
-		case ModuleActions::UndoActionType::ROTATION:
-			App->actions->previous_transform = ((ComponentTransform*)component)->GetRotationRadiants();
-			break;
-		case ModuleActions::UndoActionType::SCALE:
-			App->actions->previous_transform = ((ComponentTransform*)component)->GetScale();
-			break;
-		case ModuleActions::UndoActionType::EDIT_RECT2D:
-		case ModuleActions::UndoActionType::EDIT_RECT2D_ROTATION:
-			App->actions->action_component = (ComponentTransform2D*) component;
-			break;
-		case ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT:
-			App->actions->previous_light_color[0] = ((ComponentLight*)component)->light_color[0];
-			App->actions->previous_light_color[1] = ((ComponentLight*)component)->light_color[1];
-			App->actions->previous_light_color[2] = ((ComponentLight*)component)->light_color[2];
-			App->actions->previous_light_intensity = ((ComponentLight*)component)->light_intensity;
-			App->actions->action_component = component;
-			break;
-		default:
-			break;
-		}
-
-
-		App->actions->clicked = true;
-	}
-
-	if (ImGui::IsItemDeactivatedAfterChange())
-	{
-		App->actions->AddUndoAction(type);
-		App->actions->clicked = false;
-	}
-
 }
 
 void PanelComponent::ShowAddNewComponentButton()
