@@ -61,6 +61,7 @@ void ComponentAudioSource::SetVolume(float volume)
 
 unsigned long ComponentAudioSource::PlayEvent(const std::string & event_to_play)
 {
+	last_played_event = event_to_play;
 	AkPlayingID playing_id = AK::SoundEngine::PostEvent(event_to_play.c_str(), gameobject_source);
 	if (playing_id == AK_INVALID_PLAYING_ID)
 	{
@@ -135,4 +136,9 @@ void ComponentAudioSource::SpecializedLoad(const Config& config)
 void ComponentAudioSource::Disable() 
 {
 	StopAll();
+}
+
+void ComponentAudioSource::Enable()
+{
+	PlayEvent(last_played_event);
 }
