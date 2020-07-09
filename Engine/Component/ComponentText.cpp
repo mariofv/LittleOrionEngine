@@ -72,7 +72,14 @@ void ComponentText::Render(float4x4* projection)
 		return;
 	}
 
-	program = App->program->UseProgram("UI Text");
+	if (program == 0)
+	{
+		program = App->program->UseProgram("UI Text");
+	}
+	else
+	{
+		glUseProgram(program);
+	}
 	glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
 	glUniform4fv(glGetUniformLocation(program, "font_color"), 1, font_color.ptr());
 	glActiveTexture(GL_TEXTURE0);

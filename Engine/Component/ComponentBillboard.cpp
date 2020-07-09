@@ -16,12 +16,10 @@
 ComponentBillboard::ComponentBillboard() : Component(nullptr, ComponentType::BILLBOARD)
 {
 	InitData();
-	ChangeBillboardType(AlignmentType::VIEW_POINT);
 }
 ComponentBillboard::ComponentBillboard(GameObject* owner) : Component(owner, ComponentType::BILLBOARD)
 {
 	InitData();
-	ChangeBillboardType(AlignmentType::VIEW_POINT);
 }
 
 ComponentBillboard::~ComponentBillboard()
@@ -142,7 +140,7 @@ void ComponentBillboard::Render(const float3& global_position)
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_x"), current_sprite_x);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_y"), current_sprite_y);
 
-	float4x4 model_matrix = float4x4::FromTRS(global_position, Quat::identity, float3(width, height, 1.f));
+	float4x4 model_matrix = float4x4::FromTRS(global_position, owner->transform.GetGlobalRotation(), float3(width, height, 1.f));
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), model_matrix.Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);

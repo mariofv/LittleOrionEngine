@@ -165,7 +165,7 @@ void main()
 	vec3 B = normalize(cross(N, ortho_tangent));
 	mat3 TBN = mat3(T, B, N);
 
-	#if SPECULAR_MAP
+	#if NORMAL_MAP
 		vec3 normal_from_texture = GetNormalMap(material, tiling);
 		fragment_normal= normalize(TBN * normal_from_texture);
 	#endif
@@ -251,14 +251,9 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 		vec3 specular =(spec * (shininess+8)/8*PI) *  fresnel;
 
 		vec3 return_value = directional_light.color * (
-				( (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular))
-		) * diff;
-
-#if RECEIVE_SHADOWS
-		return_value = directional_light.color * (
 		( (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular)*ShadowCalculation())
 		) * diff;
-#endif
+
 
 		return return_value;
 }
@@ -322,6 +317,12 @@ vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel)
 
 float ShadowCalculation()
 {
+#if RECEIVE_SHADOWS
+	if(distance_to_camera > far_plane)
+	{
+			return 0;
+	}
+
 	//Light frustums
 	vec3 normalized_close_depth = close_pos_from_light.xyz / close_pos_from_light.w;
 	normalized_close_depth = normalized_close_depth * 0.5 + 0.5;
@@ -369,11 +370,10 @@ float ShadowCalculation()
     }
     factor /= 9.0;
 
-	if(distance_to_camera > far_plane)
-		factor = 0;
 
 	return factor;
-
+#endif
+	return 1;
 }
 
 vec3 FrustumsCheck()
