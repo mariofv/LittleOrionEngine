@@ -16,9 +16,6 @@
 #include "Component/ComponentBillboard.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMeshRenderer.h"
-#include "Component/ComponentParticleSystem.h"
-#include "Component/ComponentTrail.h"
-#include "Component/ComponentTrailRenderer.h"
 #include "Component/ComponentLight.h"
 
 #include "EditorUI/DebugDraw.h"
@@ -231,23 +228,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	}
 	glDisable(GL_BLEND);
 	
-	for (auto &billboard : billboards)
-	{
-		billboard->Render(billboard->owner->transform.GetGlobalTranslation());
-	}
-	for (auto &particles : particle_systems)
-	{
-		particles->Render();
-	}
-	/*for (auto &trail_renderer : trail_renderers)
-	{
-		trail_renderer->Render();
-	}*/
-	for (auto &trail : trails)
-	{
-		trail->UpdateTrail();
-	}
-
 	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
 	App->ui->Render(&camera);
 	App->effects->Render();
@@ -418,74 +398,6 @@ void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 	{
 		delete *it;
 		meshes.erase(it);
-	}
-}
-
-ComponentBillboard* ModuleRender::CreateComponentBillboard()
-{
-	ComponentBillboard* created_billboard = new ComponentBillboard();
-	billboards.push_back(created_billboard);
-	return created_billboard;
-}
-
-void ModuleRender::RemoveComponentBillboard(ComponentBillboard* billboard_to_remove)
-{
-	auto it = std::find(billboards.begin(), billboards.end(), billboard_to_remove);
-	if (it != billboards.end())
-	{
-		delete *it;
-		billboards.erase(it);
-	}
-}
-
-ComponentParticleSystem* ModuleRender::CreateComponentParticleSystem()
-{
-	ComponentParticleSystem* created_particle_system = new ComponentParticleSystem();
-	particle_systems.push_back(created_particle_system);
-	return created_particle_system;
-}
-
-void ModuleRender::RemoveComponentParticleSystem(ComponentParticleSystem* particle_system_to_remove)
-{
-	auto it = std::find(particle_systems.begin(), particle_systems.end(), particle_system_to_remove);
-	if (it != particle_systems.end())
-	{
-		delete *it;
-		particle_systems.erase(it);
-	}
-}
-
-ComponentTrail* ModuleRender::CreateComponentTrail(GameObject* owner)
-{
-	ComponentTrail* created_trail = new ComponentTrail(owner);
-	trails.push_back(created_trail);
-	return created_trail;
-}
-
-void ModuleRender::RemoveComponentTrail(ComponentTrail* trail_to_remove)
-{
-	auto it = std::find(trails.begin(), trails.end(), trail_to_remove);
-	if (it != trails.end())
-	{
-		delete *it;
-		trails.erase(it);
-	}
-}
-
-ComponentTrailRenderer* ModuleRender::CreateComponentTrailRenderer(GameObject* owner)
-{
-	ComponentTrailRenderer* created_trail_renderer = new ComponentTrailRenderer(owner);
-	trail_renderers.push_back(created_trail_renderer);
-	return created_trail_renderer;
-}
-
-void ModuleRender::RemoveComponentTrailRenderer(ComponentTrailRenderer* trail_renderer_to_remove)
-{
-	auto it = std::find(trail_renderers.begin(), trail_renderers.end(), trail_renderer_to_remove);
-	if (it != trail_renderers.end())
-	{
-		delete *it;
-		trail_renderers.erase(it);
 	}
 }
 

@@ -1,19 +1,10 @@
 #include "ComponentTrail.h"
+#include "Component/ComponentTrailRenderer.h"
 
 #include "Main/Application.h"
-#include "Module/ModuleProgram.h"
-#include "Module/ModuleRender.h"
-#include "Module/ModuleDebugDraw.h"
-
-#include "Component/ComponentTrailRenderer.h"
+#include "Module/ModuleEffects.h"
 #include "Module/ModuleResourceManager.h"
-#include "Module/ModuleDebugDraw.h"
 #include "GL/glew.h"
-
-#include <stdio.h> 
-#include <string.h> 
-#include <list>
-#include <algorithm>
 
 ComponentTrail::ComponentTrail() : Component(nullptr, ComponentType::TRAIL)
 {
@@ -26,18 +17,14 @@ ComponentTrail::ComponentTrail(GameObject * owner) : Component(owner, ComponentT
 }
 ComponentTrail::~ComponentTrail()
 {
-	std::queue<TrailPoint> empty;
-	std::swap(trail_points, empty);
+	App->effects->RemoveComponentTrail(this);
 }
 
 void ComponentTrail::Init()
 {
 	trail_renderer = new ComponentTrailRenderer(owner);
-	trail_points.emplace(float3{ 0.0f, 0.0f, 0.0f }, width, duration*10000);//initialize 1st trail_point in queue
 	gameobject_init_position = owner->transform.GetGlobalTranslation(); //initial GO position
-	
 	last_point = TrailPoint(gameobject_init_position, width, duration);
-	//last_point_added = gameobject_init_position;
 }
 
 void ComponentTrail::UpdateTrail()
@@ -62,7 +49,6 @@ void ComponentTrail::UpdateTrail()
 
 	GetPerpendiculars();
 
-
 	for (auto it = test_points.begin(); it < test_points.end(); ++it)
 	{
 		if (it->life >= 0) // If life is positive, all good
@@ -80,9 +66,6 @@ void ComponentTrail::UpdateTrail()
 
 void  ComponentTrail::GetPerpendiculars()
 {
-	//											p + width		 p			p - width
-	// Calculate the points defined by the width	·  --------- · ---------  ·
-	//												<-- width --->
 	unsigned int destroy_point_vertice = 0;
 	TrailPoint* previous_point = nullptr;
 	TrailPoint* current_point = nullptr;
@@ -100,17 +83,9 @@ void  ComponentTrail::GetPerpendiculars()
 	}
 
 	std::vector<float> vertices;
-	int max_size = 20 * sizeof(float);
-	int size = 0;
-	float* vetrices_to_render = new float[max_size];
-	float* cursor = vetrices_to_render;
-	unsigned int bytes1 =  3 * sizeof(float);
-	unsigned int bytes2 =  2;
-	int i = 0;
+
 	for (auto pair = mesh_points.begin(); pair < mesh_points.end(); ++pair)
 	{
-		++i; //for uvs if needed
-
 		if (pair->first->life > 0 && pair->second->life > 0)
 		{
 			//Get the vector that links every two points
@@ -120,8 +95,6 @@ void  ComponentTrail::GetPerpendiculars()
 			float3 top_left, top_right, bottom_left, bottom_right;
 			
 			top_left = pair->first->position + perpendicular;
-			top_right = (pair->second->position + perpendicular);
-			bottom_right = (pair->second->position - perpendicular);
 			bottom_left = (pair->first->position - perpendicular);
 
 
@@ -131,13 +104,6 @@ void  ComponentTrail::GetPerpendiculars()
 			vertices.push_back(bottom_left.x);
 			vertices.push_back(bottom_left.y);
 			vertices.push_back(0.0f);
-
-			//App->debug_draw->RenderLine(top_left, bottom_left); // Draw the perpendicular vector
-			//App->debug_draw->RenderLine(top_right, bottom_right); // Draw the perpendicular vector
-			//App->debug_draw->RenderLine(top_left, top_right); // Draw the perpendicular vector
-			//App->debug_draw->RenderLine(bottom_left, bottom_right); // Draw the perpendicular vectormesh_points
-			//App->debug_draw->RenderLine(top_left, bottom_right); // Draw the perpendicular vectormesh_points
-			
 		}
 		else
 		{
@@ -149,71 +115,6 @@ void  ComponentTrail::GetPerpendiculars()
 	trail_renderer->owner = owner;
 }
 
-void  ComponentTrail::RespawnTrailPoint(TrailPoint& point)
-{
-	point.time_left -= App->time->real_time_delta_time; //reduce life of 1st point
-	
-	//size
-	point.width = width;
-	trail_renderer->width = point.width;
-	
-	//if point's life is enough push it further
-	if (point.time_left > 0)
-	{
-		trail_points.push(point);
-		point.is_rendered = true;
-	}
-
-	
-	//trail_points.pop();//Older trail points should progressively disappear 
-}
-
-void ComponentTrail::Render()
-{
-	glDisable(GL_CULL_FACE);
-	unsigned int destroy_point_vertice = 0;
-	if (active)
-	{
-											
-
-		UpdateTrail(); // Do this last 
-
-		/*for (unsigned int i = 0; i < total_points; ++i)
-		{
-			TrailPoint& point = trail_points.front();
-			float3 outline_left, outline_right;
-
-			
-			if (point.life > 0.0f)
-			{
-				UpdateTrail();
-
-				trail_vertices = trail_points.size();// create vertices for each trail point
-
-				if (point.is_rendered)
-				{
-					float width = point.width; //Distance between each pair of vertices generated for a given point.
-					outline_left = point.position + point.position_perpendicular_point * width;
-					outline_right = point.position - point.position_perpendicular_point * width;
-					trail_renderer->Render(owner->transform.GetGlobalTranslation() + outline_left);//Move perpendicular vector over points and multiply by desired width
-					trail_renderer->Render(owner->transform.GetGlobalTranslation() + outline_left);
-					trail_renderer->Render(owner->transform.GetGlobalTranslation() + point.position);
-					App->debug_draw->RenderPoint(outline_left);
-					App->debug_draw->RenderPoint(outline_right);
-				}
-			}
-			else
-			{
-				++destroy_point_vertice;
-			}
-		}
-		trail_renderer->rendered_vertices = trail_vertices;
-			
-		}*/
-		
-	}
-	glEnable(GL_CULL_FACE);
-}
 void ComponentTrail::SetTrailTexture(uint32_t texture_uuid)
 {
 	this->texture_uuid = texture_uuid;
@@ -236,7 +137,7 @@ Component* ComponentTrail::Clone(bool original_prefab) const
 	}
 	else
 	{
-		created_component = App->renderer->CreateComponentTrail(owner);
+		created_component = App->effects->CreateComponentTrail(owner);
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
@@ -251,7 +152,7 @@ void ComponentTrail::Copy(Component* component_to_copy) const
 
 void ComponentTrail::Delete()
 {
-	App->renderer->RemoveComponentTrail(this);
+	App->effects->RemoveComponentTrail(this);
 }
 
 

@@ -54,18 +54,6 @@ public:
 	ComponentMeshRenderer* CreateComponentMeshRenderer();
 	void RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove);
 
-	ComponentBillboard* CreateComponentBillboard();
-	void RemoveComponentBillboard(ComponentBillboard* billboard_to_remove);
-
-	ComponentParticleSystem* CreateComponentParticleSystem();
-	void RemoveComponentParticleSystem(ComponentParticleSystem* particle_system_to_remove);
-
-	ComponentTrail* CreateComponentTrail(GameObject* owner);
-	void RemoveComponentTrail(ComponentTrail* trail_to_remove);
-
-	ComponentTrailRenderer* CreateComponentTrailRenderer(GameObject* owner);
-	void RemoveComponentTrailRenderer(ComponentTrailRenderer* trail_renderer_to_remove);
-
 	ENGINE_API int GetRenderedTris() const;
 	ENGINE_API int GetRenderedVerts() const;
 
@@ -119,15 +107,6 @@ private:
 	std::vector<ComponentMeshRenderer*> meshes;
 	std::vector<ComponentMeshRenderer*> meshes_to_render;
 
-	std::vector<ComponentBillboard*> billboards;
-	std::vector<ComponentBillboard*> billboards_to_render;
-
-	std::vector<ComponentParticleSystem*> particle_systems;
-	std::vector<ComponentParticleSystem*> particle_systems_to_render;
-
-	std::vector<ComponentTrail*> trails;
-	std::vector<ComponentTrailRenderer*> trail_renderers;
-
 	typedef std::pair<float, ComponentMeshRenderer*> ipair;
 	std::list <ipair> opaque_mesh_to_render, transparent_mesh_to_render;
 
@@ -140,8 +119,6 @@ private:
 	friend class ModuleSpacePartitioning;
 	friend class PanelConfiguration;
 	friend class PanelScene;
-	friend class NavMesh;
-	friend class ComponentParticleSystem;
-	friend class ComponentTrail; };
+	friend class NavMesh; };
 
 #endif //_MODULERENDER_H_

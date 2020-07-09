@@ -36,9 +36,11 @@ public:
 	void InitData();
 
 	void Render(std::vector<float>& to_render);
-	void SwitchFrame();
+	//void SwitchFrame();
 
 	void ChangeTexture(uint32_t texture_uuid);
+
+	
 
 public:
 	float vertices[12] = {

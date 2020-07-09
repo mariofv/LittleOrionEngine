@@ -393,8 +393,8 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 	if (ImGui::CollapsingHeader(ICON_FA_SHARE " Trail Renderer", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::InputInt("Number of Trail Points", &trail->total_points, 2);
-		ImGui::InputFloat("Width", &trail->width, 0.5f);
-		ImGui::InputFloat("Trail Duration", &trail->duration, 2.0f);
+		ImGui::InputFloat("Width", &trail->width, 0.1f);
+		ImGui::InputFloat("Duration", &trail->duration, 1000.0f);
 
 		/*if (ImGui::Combo("Blend Mode", &trail->blend_mode, "Alpha Blend\0Additive")) {
 			switch (trail->blend_mode)
@@ -424,24 +424,6 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 		if (selected_resource_uuid != 0)
 		{
 			trail->SetTrailTexture(selected_resource_uuid);
-		}
-		
-
-		//Color of Particles
-		if (ImGui::CollapsingHeader(ICON_FA_PAINT_BRUSH "Color Over Time"))
-		{
-			ImGui::Checkbox("Fade", &trail->fade);
-			ImGui::Checkbox("Fade Between Colors", &trail->fade_between_colors);
-			if (trail->fade)
-			{
-				ImGui::DragFloat("Fade time", &trail->fade_time, 0.01f, 0.0f, 10.0F);
-			}
-			ImGui::ColorEdit4("Trail Color##2f", (float*)&trail->color_trail, ImGuiColorEditFlags_Float);
-			if (trail->fade_between_colors)
-			{
-				ImGui::ColorEdit4("Trail Color To Fade##2f", (float*)&trail->color_to_fade, ImGuiColorEditFlags_Float);
-				ImGui::DragFloat("Color Fade time", &trail->color_fade_time, 0.01f, 0.0f, 10.0F);
-			}
 		}
 	}
 }
