@@ -66,6 +66,8 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				particle_system->Stop();
 			}
 		}
+		
+		ImGui::BeginChild("###Particles", ImVec2(0.f, 300.f), true);
 		if (ImGui::CollapsingHeader("Emission"))
 		{
 			ImGui::DragInt("Max particles", &particle_system->max_particles_number, 1.f, 0, MAX_PARTICLES);
@@ -313,6 +315,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
 			ImGui::DragFloat("Height", &particle_system->particles_height, 0.01f, 0.0f, 100.0F);
-		}
+		}	
+		ImGui::EndChild();
 	}
 }
