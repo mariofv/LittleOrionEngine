@@ -241,18 +241,18 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 
 		vec3 light_dir   = normalize(-directional_light.direction);
 		vec3 half_dir 	 = normalize(light_dir + view_dir);
-		float diff = max(0.0, dot(normalized_normal, light_dir));
+		float ND = max(0.0, dot(normalized_normal, light_dir));
 
 		//----Specular calculations----
 		float shininess = 7*specular_color.a + 1;
 		shininess *= shininess;
 		float spec = pow(max(dot(normalized_normal, half_dir), 0.0), shininess);
-		vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-diff),5);
+		vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-ND),5);
 		vec3 specular =(spec * (shininess+8)/8*PI) *  fresnel;
 
 		vec3 return_value = directional_light.color * (
 		( (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular)*ShadowCalculation())
-		) * diff;
+		) * ND;
 
 
 		return return_value;
@@ -262,12 +262,14 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4
 {
 	vec3 light_dir   = normalize(spot_light.position - position);
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
-	float diff = max(0.0, dot(normalized_normal, light_dir));
+	float ND = max(0.0, dot(normalized_normal, light_dir));
+
 	//----Specular calculations----
-	float shininess = 7*material.specular_color.w + 1;
-    float spec = pow(max(dot(normalized_normal, half_dir), 0.0), shininess);
-    vec3 specular =(spec * (shininess+8)/8*PI) * specular_color.rgb;
-	vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-diff),5);
+	float shininess = 7*specular_color.a + 1;
+	shininess *= shininess;
+	float spec = pow(max(dot(normalized_normal, half_dir), 0.0), shininess);
+	vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-ND),5);
+	vec3 specular =(spec * (shininess+8)/8*PI) *  fresnel;
 
 	//----Softness and atenuation---
     float theta = dot(light_dir, normalize(-spot_light.direction));
@@ -279,8 +281,8 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4
 
    return spot_light.color * (
          NormalizedDiffuse(diffuse_color.rgb, fresnel) *intensity*attenuation
-        + specular_color.rgb * specular *intensity*attenuation
-    )*diff;
+        +  specular *intensity*attenuation
+    )*ND;
 
 }
 
@@ -288,13 +290,13 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, v
 {
 	vec3 light_dir   = normalize(point_light.position - position);
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
-	float diff = max(0.0, dot(normalized_normal, light_dir));
+	float ND = max(0.0, dot(normalized_normal, light_dir));
 
 //----Specular calculations----
 	float shininess = 7*specular_color.a+ 1;
 	shininess *= shininess;
     float spec = pow(max(dot(normalized_normal, half_dir), 0.0), shininess);
-	vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-diff),5);
+	vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-ND),5);
     vec3 specular =(spec * (shininess+8)/8*PI) *  fresnel;
 
   	//----Softness and atenuation---
@@ -305,7 +307,7 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, v
 	return point_light.color * (
 		 NormalizedDiffuse(diffuse_color.rgb, fresnel)  * attenuation
 		+ specular * attenuation
-	)*diff;
+	)*ND;
 
 }
 

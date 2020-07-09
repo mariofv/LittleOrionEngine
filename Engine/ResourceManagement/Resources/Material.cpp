@@ -3,6 +3,7 @@
 #include "Helper/Config.h"
 #include "Main/Application.h"
 
+#include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTexture.h"
@@ -210,7 +211,7 @@ unsigned int Material::GetShaderVariation() const
 	{
 		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_NORMAL_MAP);
 	}
-	if (use_shadow_map) 
+	if (use_shadow_map && App->lights->render_shadows) 
 	{
 		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_RECEIVE_SHADOWS);
 	}
