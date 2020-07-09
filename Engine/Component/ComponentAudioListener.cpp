@@ -82,3 +82,16 @@ void ComponentAudioListener::Copy(Component* component_to_copy) const
 	*component_to_copy = *this;
 	*static_cast<ComponentAudioListener*>(component_to_copy) = *this;
 }
+
+void ComponentAudioListener::Disable()
+{
+	AK::SoundEngine::UnregisterGameObj(gameobject_listener);
+}
+
+void ComponentAudioListener::Enable()
+{
+	if (!AK::SoundEngine::RegisterGameObj(gameobject_listener))
+	{
+		APP_LOG_ERROR("Unable to register sound gameobject");
+	}
+}

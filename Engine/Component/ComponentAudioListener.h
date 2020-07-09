@@ -22,6 +22,10 @@ public:
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
+	void Disable();
+
+	void Enable();
+
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 

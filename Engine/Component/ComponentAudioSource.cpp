@@ -44,6 +44,7 @@ void ComponentAudioSource::Update()
 
 void ComponentAudioSource::Delete()
 {
+	StopAll();
 	AK::SoundEngine::UnregisterGameObj(gameobject_source);
 	App->audio->RemoveComponentAudioSource(this);
 }
@@ -136,9 +137,18 @@ void ComponentAudioSource::SpecializedLoad(const Config& config)
 void ComponentAudioSource::Disable() 
 {
 	StopAll();
+	AK::SoundEngine::UnregisterGameObj(gameobject_source);
 }
 
 void ComponentAudioSource::Enable()
 {
-	PlayEvent(last_played_event);
+	if (!AK::SoundEngine::RegisterGameObj(gameobject_source))
+	{
+		APP_LOG_ERROR("Unable to register sound gameobject");
+	}
+	else if (last_played_event!="")
+	{
+		PlayEvent(last_played_event);
+	}
+
 }
