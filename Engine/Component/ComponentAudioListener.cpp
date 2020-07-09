@@ -63,7 +63,7 @@ AkGameObjectID ComponentAudioListener::GetAkID()
 
 Component* ComponentAudioListener::Clone(bool original_prefab) const
 {
-	ComponentAudioListener * created_component;
+	ComponentAudioListener* created_component;
 	if (original_prefab)
 	{
 		created_component = new ComponentAudioListener();
