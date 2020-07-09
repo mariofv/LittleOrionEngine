@@ -541,6 +541,9 @@
     <ClCompile Include="Engine\Log\EngineLog.cpp">
       <Filter>Engine\Log</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentAudioListener.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1073,6 +1076,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Log\EngineLog.h">
       <Filter>Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentAudioListener.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
