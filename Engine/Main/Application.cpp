@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "EditorUI/EngineLog.h"
+#include "Log/EngineLog.h"
 #include "Event/EventManager.h"
 #include "Module/ModuleActions.h"
 #include "Module/ModuleAI.h"
