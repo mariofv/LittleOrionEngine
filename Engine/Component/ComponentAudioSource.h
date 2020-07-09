@@ -33,6 +33,8 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
+	void Disable();
+
 
 private:
 	AkTransform source_transform;

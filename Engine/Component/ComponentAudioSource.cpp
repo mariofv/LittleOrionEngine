@@ -131,3 +131,8 @@ void ComponentAudioSource::SpecializedLoad(const Config& config)
 	}
 	SetVolume(volume);
 }
+
+void ComponentAudioSource::Disable() 
+{
+	StopAll();
+}

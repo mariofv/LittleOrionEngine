@@ -1302,8 +1302,6 @@ void PanelComponent::ShowComponentAudioListenerWindow(ComponentAudioListener* co
 		}
 		ImGui::Separator();
 
-		ImGui::Text("AK ID: ", component_audio_listener->GetAkID());
-
 		//Add More Stuff here 
 
 	}
