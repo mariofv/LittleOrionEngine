@@ -31,7 +31,7 @@ public:
 
 	void SelectMainListener();
 
-	const AkGameObjectID default_listener = 3;
+	const AkGameObjectID default_listener = 0;
 	ComponentAudioListener * main_listener = nullptr;
 
 private:
