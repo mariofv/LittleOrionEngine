@@ -111,6 +111,12 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			ImGui::Separator();
 			ImGui::Spacing();
 
+			ImGui::DragFloat("Gravity Modifier", &particle_system->gravity_modifier, 0.01f, 0.0f);
+
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+
 			ImGui::Checkbox("Local Space", &particle_system->follow_owner);
 			ImGui::Spacing();
 
@@ -289,23 +295,6 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			ImGui::DragFloat("Speed", &particle_system->size_change_speed, 0.01f, 0.0f, 10.0F);
 
 			if (!particle_system->change_size)
-			{
-				ImGui::PopItemFlag();
-				ImGui::PopStyleVar();
-			}
-		}
-
-		ImGui::Checkbox("###Gravity", &particle_system->gravity);
-		ImGui::SameLine();
-		if (ImGui::CollapsingHeader("Gravity"))
-		{
-			if (!particle_system->gravity)
-			{
-				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
-			}
-			ImGui::DragFloat("Gravity Modifier", &particle_system->gravity_modifier, 0.01F, 0.1F);
-			if (!particle_system->gravity)
 			{
 				ImGui::PopItemFlag();
 				ImGui::PopStyleVar();

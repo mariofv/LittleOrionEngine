@@ -88,7 +88,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	}
 	else
 	{
-		particle.size = particle.particle_scale * particles_size;;
+		particle.size = particle.particle_scale * particles_size;
 	}
 
 	switch (type_of_particle_system)
@@ -215,10 +215,7 @@ void ComponentParticleSystem::Update()
 		}
 
 
-		if (gravity)
-		{
-			gravity_vector = float4(0, gravity_modifier *0.000001f, 0, 0);
-		}
+		gravity_vector = float4(0, gravity_modifier *0.000001f, 0, 0);
 
 		// update all particles
 		num_of_alive_particles = 0;
@@ -243,17 +240,19 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	particle.time_passed += App->time->real_time_delta_time;
 
 	//update position
-	float4 acceleration = float4::zero;
-	if (gravity)
-	{
-		acceleration += gravity_vector;
-	}
 	if (velocity_over_time && type_of_velocity_over_time == LINEAR)
 	{
-		acceleration += (particle.velocity - particle.velocity_initial) / (particles_life_time * 0.001f);
-	}
-	particle.position = particle.position_initial + particle.velocity_initial * particle.time_passed + acceleration * particle.time_passed * particle.time_passed * 0.5f;
+		float4 acceleration = (particle.velocity - particle.velocity_initial) / particles_life_time / 1000;
+		acceleration += gravity_vector;
 
+		particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
+			(acceleration * Pow(particle.time_passed, 2) / 2);
+	}
+	else
+	{
+		particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
+			(gravity_vector * Pow(particle.time_passed, 2) / 2);
+	}
 
 	//alpha fade
 	if (fade)
@@ -337,7 +336,6 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(min_tile_value, "Min Tile");
 
 	config.AddFloat(velocity_particles_start, "Velocity of particles");
-	config.AddBool(gravity, "Gravity");
 	config.AddFloat(gravity_modifier, "Gravity modifier");
 
 	config.AddFloat(time_counter, "Time Counter");
@@ -387,8 +385,7 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	min_tile_value = config.GetFloat("Min Tile", 4);
 
 	velocity_particles_start = config.GetFloat("Velocity of particles", 1.0F);
-	gravity = config.GetBool("Gravity", false);
-	gravity_modifier = config.GetFloat("Gravity modifier", 0.2F);
+	gravity_modifier = config.GetFloat("Gravity modifier", 0.f);
 
 	time_counter = config.GetFloat("Time Counter", 0.0F);
 	time_between_particles = config.GetFloat("Time Between Particles", 0.2F);

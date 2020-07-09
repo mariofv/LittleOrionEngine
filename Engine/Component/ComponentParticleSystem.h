@@ -111,8 +111,8 @@ public:
 
 	//Basic values
 	float velocity_particles_start = 1.0F;
-	bool gravity = false;
-	float gravity_modifier = -0.2F;
+	float gravity_modifier = 0.f;
+	float4 gravity_vector;
 
 	//Spritesheet
 	float max_tile_value = 0;
@@ -173,7 +173,6 @@ public:
 	float acceleration = 0.0F;
 	float3 velocity_over_time_acceleration;
 
-	float4 gravity_vector;
 	
 	//Runtime values
 	size_t playing_particles_number = MAX_PARTICLES;
