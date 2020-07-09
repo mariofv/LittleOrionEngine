@@ -70,7 +70,7 @@ std::vector<char> TextureManager::LoadImageData(const FileData& resource_data, s
 	error = ilGetError();
 	while (error != IL_NO_ERROR)
 	{
-		APP_LOG_ERROR("Error loading texture: %s", iluErrorString(error));
+		RESOURCES_LOG_ERROR("Error loading texture: %s", iluErrorString(error));
 		error = ilGetError();
 	}
 

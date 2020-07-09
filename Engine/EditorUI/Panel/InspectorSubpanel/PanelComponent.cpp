@@ -88,6 +88,9 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 			mesh_renderer->modified_by_user = true;
 		}
 
+		ImGui::Checkbox("Shadow caster", &mesh_renderer->shadow_caster);
+
+
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Material");
 		ImGui::SameLine();
@@ -164,6 +167,18 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 		{
 			App->actions->DeleteComponentUndo(particle_system);
 		}
+		if (ImGui::Button("Copy")) 
+		{
+			App->actions->SetCopyComponent(particle_system);
+		}
+		if (ImGui::Button("Paste component as new")) 
+		{
+			App->actions->PasteComponent(particle_system);
+		}
+		if (ImGui::Button("Paste component values")) 
+		{
+			App->actions->PasteComponentValues(particle_system);
+		}
 		ImGui::Separator();
 		if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen))
 		{
@@ -194,6 +209,11 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			{
 				particle_system->max_particles_number = MAX_PARTICLES;
 			}
+
+			ImGui::InputFloat("", &particle_system->gravity_modifier, 0.01F, 0.1F);
+			ImGui::SameLine();
+			ImGui::Checkbox("Gravity", &particle_system->gravity);
+
 			ShowBillboardOptions(particle_system->billboard);
 			if (particle_system->billboard->is_spritesheet)
 			{
@@ -255,7 +275,7 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			ImGui::Separator();
 			ImGui::Spacing();
 
-			ImGui::DragFloat("Velocity", &particle_system->velocity_particles, 0.01f, 0.0f, 100.0F);
+			ImGui::DragFloat("Velocity Start", &particle_system->velocity_particles_start, 0.01f, 0.0f, 100.0F);
 			ImGui::Spacing();
 
 			ImGui::DragFloat("Life (in seconds)", &particle_system->particles_life_time, 1.0F, 0.0F, 100.0F);
@@ -314,7 +334,50 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 				ImGui::ColorEdit4("Particle Color To Fade##2f", (float*)&particle_system->color_to_fade, ImGuiColorEditFlags_Float);
 				ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
 			}
-		}		
+		}
+
+		//Velocity over time
+		if (ImGui::CollapsingHeader(ICON_FA_SQUARE "Velocity Over Time"))
+		{
+			ImGui::Checkbox("Activate Velocity Over Time", &particle_system->velocity_over_time);
+			if (particle_system->velocity_over_time)
+			{
+				int velocity_type = static_cast<int>(particle_system->type_of_velocity_over_time);
+				if (ImGui::Combo("Speed", &velocity_type, "Constant\0Linear\0Random Between Two Constants\0"))
+				{
+					switch (velocity_type)
+					{
+					case 0:
+						particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::CONSTANT;
+						break;
+					case 1:
+						particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::LINEAR;
+						break;
+					case 2:
+						particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::RANDOM_BETWEEN_TWO_CONSTANTS;
+						break;
+					}
+				}
+
+				switch (velocity_type)
+				{
+				case ComponentParticleSystem::TypeOfVelocityOverTime::CONSTANT:
+					particle_system->velocity_over_time_speed_modifier;
+					ImGui::DragFloat("Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
+					break;
+				case ComponentParticleSystem::TypeOfVelocityOverTime::LINEAR:
+					ImGui::DragFloat("Start Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
+					ImGui::DragFloat("End Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
+					break;
+				case ComponentParticleSystem::TypeOfVelocityOverTime::RANDOM_BETWEEN_TWO_CONSTANTS:
+					particle_system->velocity_over_time_speed_modifier;
+					ImGui::DragFloat("Min Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
+					ImGui::DragFloat("Max Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
+					break;
+				}
+			}
+			
+		}
 	}
 
 }
@@ -1130,6 +1193,21 @@ bool PanelComponent::ShowCommonComponentWindow(Component* component)
 		App->actions->DeleteComponentUndo(component);
 		return false;
 	}
+	if (ImGui::Button("Copy"))
+	{
+		App->actions->SetCopyComponent(component);
+	}
+	if (component->type != Component::ComponentType::MESH_RENDERER) 
+	{
+		if (ImGui::Button("Paste component as new"))
+		{
+			App->actions->PasteComponent(component);
+		}
+	}
+	if (ImGui::Button("Paste component values"))
+	{
+		App->actions->PasteComponentValues(component);
+	}
 
 	return true;
 }
@@ -1148,6 +1226,18 @@ bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
 	{
 		App->actions->DeleteComponentUndo(collider);
 		return false;
+	}
+	if (ImGui::Button("Copy")) 
+	{
+		App->actions->SetCopyComponent(collider);
+	}
+	if (ImGui::Button("Paste component as new"))
+	{
+		App->actions->PasteComponent(collider);
+	}
+	if (ImGui::Button("Paste component values"))
+	{
+		App->actions->PasteComponentValues(collider);
 	}
 	ImGui::Separator();
 

@@ -26,10 +26,13 @@ public:
 	bool IsBinary() const;
 
 	std::string GetFullPath() const;
+	std::string GetFullPathWithoutExtension() const;
+
+	static std::string GetFilename(const std::string& path);
+	static std::string GetFilenameWindows(const std::string& path);
 	std::string GetFilename() const;
 	std::string GetFilenameWithoutExtension() const;
 
-	std::string GetFullPathWithoutExtension() const;
 
 	static std::string GetParentPathString(const std::string& path);
 	std::string GetExtension() const;

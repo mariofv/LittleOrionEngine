@@ -118,7 +118,7 @@ bool ModuleRender::Init()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	APP_LOG_SUCCESS("Glew initialized correctly.");
+	APP_LOG_INFO("Glew initialized correctly.");
 
 	return true;
 }
@@ -151,17 +151,8 @@ void ModuleRender::Render() const
 #if GAME
 	if (App->cameras->main_camera != nullptr) 
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, App->cameras->directional_light_camera->fbo);
-		App->cameras->directional_light_camera->RecordFrame(App->window->GetWidth() * 4, App->window->GetHeight() * 4, false, false);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, App->cameras->directional_light_mid->fbo);
-		App->cameras->directional_light_mid->RecordFrame(App->window->GetWidth(), App->window->GetHeight(), false, false);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, App->cameras->directional_light_far->fbo);
-		App->cameras->directional_light_far->RecordFrame(App->window->GetWidth() / 4, App->window->GetHeight() / 4, false, false);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		App->lights->RecordShadowsFrameBuffers(App->window->GetWidth(), App->window->GetHeight());
 
 		App->cameras->main_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
 
@@ -233,6 +224,28 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
 	
+}
+
+void ModuleRender::RenderZBufferFrame(const ComponentCamera & camera)
+{
+	BROFILER_CATEGORY("Render Z buffer Frame", Profiler::Color::Azure);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+
+	static size_t projection_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + sizeof(float4x4);
+	glBufferSubData(GL_UNIFORM_BUFFER, projection_matrix_offset, sizeof(float4x4), camera.GetProjectionMatrix().Transposed().ptr());
+
+	static size_t view_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + 2 * sizeof(float4x4);
+	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), camera.GetViewMatrix().Transposed().ptr());
+
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	for (ComponentMeshRenderer* mesh : meshes_to_render)
+	{
+		if(mesh->shadow_caster)
+			mesh->Render();
+	}
+
 }
 
 void ModuleRender::GetMeshesToRender(const ComponentCamera* camera)

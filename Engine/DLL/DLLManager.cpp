@@ -118,7 +118,7 @@ void DLLManager::CheckCompilation()
 		{
 			if (App->filesystem->Exists(COMPILED_SCRIPT_DLL_PATH) && hot_reloading)
 			{
-				APP_LOG_SUCCESS("Compilation was successful");
+				APP_LOG_INFO("Compilation was successful");
 				hot_reloading = false;
 			}
 			else

@@ -167,9 +167,9 @@ void ComponentTransform::Rotate(const float3x3& rotation)
 
 ENGINE_API void ComponentTransform::LookAt(const float3& target)
 {
-	float3 direction = (target - GetTranslation());
-	Quat new_rotation = GetRotation().LookAt(float3::unitZ, direction.Normalized(), float3::unitY, float3::unitY);
-	SetRotation(new_rotation);
+	float3 direction = (target - GetGlobalTranslation());
+	Quat new_rotation = GetGlobalRotation().LookAt(float3::unitZ, direction.Normalized(), float3::unitY, float3::unitY);
+	SetGlobalMatrixRotation(new_rotation);
 }
 
 ENGINE_API float3 ComponentTransform::ComponentTransform::GetScale() const

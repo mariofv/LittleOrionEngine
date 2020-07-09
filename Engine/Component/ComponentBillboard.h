@@ -51,6 +51,7 @@ public:
 	void Update() override;
 
 	void Render(const float3& global_position);
+	void CommonUniforms(const GLuint &shader_program);
 
 	void ChangeTexture(uint32_t texture_uuid);
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);

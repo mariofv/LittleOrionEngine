@@ -391,7 +391,7 @@ bool ModuleDebugDraw::Init()
 
 	grid = new Grid();
 
-    APP_LOG_SUCCESS("Module Debug Draw initialized correctly.")
+    APP_LOG_INFO("Module Debug Draw initialized correctly.")
 
 	return true;
 }
@@ -486,16 +486,17 @@ void ModuleDebugDraw::RenderParticleSystem() const
 				dd::point_light(
 					App->editor->selected_game_object->transform.GetGlobalTranslation(), 
 					float3(1.f, 1.f, 0.f),
-					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles
+					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles_start
 				);
 			break;
 			case ComponentParticleSystem::TypeOfParticleSystem::BOX:
 			{
+
 				float min_x = static_cast<float>(selected_particle_system->min_range_random_x);
 				float max_x = static_cast<float>(selected_particle_system->max_range_random_x);
 				float min_z = static_cast<float>(selected_particle_system->min_range_random_z);
 				float max_z = static_cast<float>(selected_particle_system->max_range_random_z);
-				float height = selected_particle_system->particles_life_time*selected_particle_system->velocity_particles *100.0f;
+				float height = selected_particle_system->particles_life_time*selected_particle_system->velocity_particles_start *100.0f;
 				float3 box_points[8] = {
 					float3(min_x,0.0f,min_z) / 100,
 					float3(min_x, 0.0f, max_z) / 100,
@@ -521,7 +522,7 @@ void ModuleDebugDraw::RenderParticleSystem() const
 				dd::cone(
 					App->editor->selected_game_object->transform.GetGlobalTranslation(), 
 					App->editor->selected_game_object->transform.GetGlobalRotation()*float3::unitY * 
-					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles,
+					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles_start,
 					float3(1.f, 1.f, 0.f), 
 					selected_particle_system->outer_radius, 
 					selected_particle_system->inner_radius
@@ -798,6 +799,11 @@ void ModuleDebugDraw::RenderSelectedGameObjectHelpers() const
 void ModuleDebugDraw::RenderPoint(const float3& point, float size, const float3& color) const
 {
 	dd::point(point, color, size);
+}
+
+void ModuleDebugDraw::RenderCircle(const float3& center, float radius, const float3& normal, const float3 & color) const
+{
+	dd::circle(center, normal, color, radius, 20.f);
 }
 
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)

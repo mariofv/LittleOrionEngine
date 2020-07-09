@@ -64,7 +64,7 @@ GLuint ModuleProgram::UseProgram(const std::string& program_name, unsigned int v
 
 bool ModuleProgram::CompileProgram(ShaderProgram& program, unsigned int variation)
 {
-	APP_LOG_INIT("Compiling shader program %s", program.program_name.c_str());
+	APP_LOG_INFO("Compiling shader program %s", program.program_name.c_str());
 
 	std::vector<std::string> shader_variations;
 	shader_variations.emplace_back(std::string("#version 430 core\n"));
@@ -95,7 +95,7 @@ bool ModuleProgram::CompileProgram(ShaderProgram& program, unsigned int variatio
 	}
 	program.compiled_variations[variation] = shader_program;
 
-	APP_LOG_SUCCESS("Shader program %s loaded correctly.", program.program_name.c_str());
+	APP_LOG_INFO("Shader program %s loaded correctly.", program.program_name.c_str());
 	return true;
 
 }

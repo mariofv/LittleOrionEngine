@@ -128,8 +128,6 @@ in vec4 close_pos_from_light;
 in vec4 mid_pos_from_light;
 in vec4 far_pos_from_light;
 
-uniform float main_cam_far_plane;
-
 vec3 FrustumsCheck();
 
 uniform sampler2DShadow close_depth_map;
@@ -267,7 +265,6 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 
 vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
-
 	vec3 light_dir   = normalize(spot_light.position - position);
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
 	float diff = max(0.0, dot(normalized_normal, light_dir));
@@ -371,6 +368,9 @@ float ShadowCalculation()
         }
     }
     factor /= 9.0;
+
+	if(distance_to_camera > far_plane)
+		factor = 0;
 
 	return factor;
 
