@@ -30,6 +30,7 @@ ComponentBillboard::~ComponentBillboard()
 
 void ComponentBillboard::InitData()
 {
+	shader_program = App->program->GetShaderProgramId("Billboard");
 	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
 
 	float vertices[20] =
@@ -130,17 +131,36 @@ bool ComponentBillboard::IsPlaying()
 
 void ComponentBillboard::Render(const float3& position)
 {
+	BROFILER_CATEGORY("Render billboard", Profiler::Color::Orange);
 	if(!active)
 	{
 		return;
 	}
 
-	GLuint shader_program = App->program->GetShaderProgramId("Billboard");
+
 	glUseProgram(shader_program);
+
+	glUniform1f(glGetUniformLocation(shader_program, "billboard.width"), width);
+	glUniform1f(glGetUniformLocation(shader_program, "billboard.height"), height);
+	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color"),1, (float*)color);
+	glUniform3fv(glGetUniformLocation(shader_program, "billboard.center_pos"), 1, position.ptr());
+	glUniform1f(glGetUniformLocation(shader_program, "X"), current_sprite_x);
+	glUniform1f(glGetUniformLocation(shader_program, "Y"), current_sprite_y);
+	glUniform1f(glGetUniformLocation(shader_program, "billboard.speed"), sheet_speed);
+
+	CommonUniforms(shader_program);
+
+	glBindVertexArray(vao);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+	glUseProgram(0);
+}
+
+void ComponentBillboard::CommonUniforms(const GLuint &shader_program)
+{
 
 	int subroutine_position;
 	glGetProgramStageiv(shader_program, GL_VERTEX_SHADER, GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS, &subroutine_position);
-	unsigned* subroutines_indices = new unsigned[subroutine_position];
 
 	//Subroutine functions
 	GLuint viewpoint_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "view_point_alignment");
@@ -150,7 +170,7 @@ void ComponentBillboard::Render(const float3& position)
 	//Subroutine uniform
 	int selector = glGetSubroutineUniformLocation(shader_program, GL_VERTEX_SHADER, "alignment_selector");
 
-	switch (alignment_type) 
+	switch (alignment_type)
 	{
 	case VIEW_POINT:
 		glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &viewpoint_subroutine);
@@ -164,7 +184,7 @@ void ComponentBillboard::Render(const float3& position)
 		break;
 
 	case SPRITESHEET:
-		if(oriented_to_camera)
+		if (oriented_to_camera)
 			glUniformSubroutinesuiv(GL_VERTEX_SHADER, subroutine_position, &viewpoint_subroutine);
 
 		else
@@ -172,10 +192,6 @@ void ComponentBillboard::Render(const float3& position)
 
 		glUniform1i(glGetUniformLocation(shader_program, "billboard.XTiles"), x_tiles);
 		glUniform1i(glGetUniformLocation(shader_program, "billboard.YTiles"), y_tiles);
-		glUniform1f(glGetUniformLocation(shader_program, "X"), current_sprite_x);
-		glUniform1f(glGetUniformLocation(shader_program, "Y"), current_sprite_y);
-
-		glUniform1f(glGetUniformLocation(shader_program, "billboard.speed"), sheet_speed);
 		SwitchFrame();
 		break;
 
@@ -188,19 +204,8 @@ void ComponentBillboard::Render(const float3& position)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, billboard_texture->opengl_texture);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.texture"), 0);
-	glUniform1f(glGetUniformLocation(shader_program, "billboard.width"), width);
-	glUniform1f(glGetUniformLocation(shader_program, "billboard.height"), height);
 	glUniform1f(glGetUniformLocation(shader_program, "billboard.isSpritesheet"), is_spritesheet);
-	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color"),1, (float*)color);
-	glUniform3fv(glGetUniformLocation(shader_program, "billboard.center_pos"), 1, position.ptr());
 
-
-	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
-
-	glUseProgram(0);
-	delete[] subroutines_indices;
 }
 
 Component* ComponentBillboard::Clone(bool original_prefab) const

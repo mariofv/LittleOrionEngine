@@ -61,11 +61,11 @@ public:
 	uint32_t Create(Path& path, const std::string& resource_name)
 	{
 		BROFILER_CATEGORY("Create Resource", Profiler::Color::Brown);
-		APP_LOG_INFO("Creating Resource %s.", resource_name.c_str())
+		RESOURCES_LOG_INFO("Creating Resource %s.", resource_name.c_str())
 
 		FileData created_resource_data = ResourceManagement::Create<T>();
 
-		APP_LOG_SUCCESS("Resource %s created correctly.", resource_name.c_str())
+		RESOURCES_LOG_INFO("Resource %s created correctly.", resource_name.c_str())
 
 		return CreateFromData(created_resource_data, path, resource_name);
 	}
@@ -73,7 +73,7 @@ public:
 	template<typename T>
 	void Save(std::shared_ptr<Resource> modified_resource)
 	{
-		APP_LOG_INFO("Saving Resource %u.", modified_resource->GetUUID());
+		RESOURCES_LOG_INFO("Saving Resource %u.", modified_resource->GetUUID());
 
 		FileData resource_data = ResourceManagement::Binarize<T>(modified_resource.get());
 		std::string modified_resource_path = resource_DB->GetEntry(modified_resource->GetUUID())->imported_file_path;
@@ -81,27 +81,27 @@ public:
 
 		InternalImport(*saved_resource_assets_path);
 
-		APP_LOG_SUCCESS("Resource %u saved corrrectly.", modified_resource->GetUUID());
+		RESOURCES_LOG_INFO("Resource %u saved corrrectly.", modified_resource->GetUUID());
 	}
 
 	template<typename T>
 	std::shared_ptr<T> Load(uint32_t uuid)
 	{
 		BROFILER_CATEGORY("Load Resource", Profiler::Color::Brown);
-		APP_LOG_INFO("Loading Resource %u.", uuid);
+		RESOURCES_LOG_INFO("Loading Resource %u.", uuid);
 
 		std::shared_ptr<Resource> loaded_resource;
 		loaded_resource = RetrieveFromCacheIfExist(uuid);
 		if (loaded_resource != nullptr)
 		{
-			APP_LOG_SUCCESS("Resource %u loaded correctly from cache.", uuid);
+			RESOURCES_LOG_INFO("Resource %u loaded correctly from cache.", uuid);
 			return std::static_pointer_cast<T>(loaded_resource);
 		}
 
 		std::string resource_library_file = MetafileManager::GetUUIDExportedFile(uuid);
 		if (!App->filesystem->Exists(resource_library_file))
 		{
-			APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, resource_library_file.c_str());
+			RESOURCES_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, resource_library_file.c_str());
 			return nullptr;
 		}
 
@@ -116,7 +116,7 @@ public:
 			resource_cache.push_back(loaded_resource);
 		}
 
-		APP_LOG_SUCCESS("Resource %u loaded correctly.", uuid);
+		RESOURCES_LOG_INFO("Resource %u loaded correctly.", uuid);
 		return std::static_pointer_cast<T>(loaded_resource);
 	}
 

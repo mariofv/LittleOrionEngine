@@ -201,16 +201,7 @@ float ComponentCamera::GetHeight() const
 void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode)
 {
 
-	if (last_width != width || last_height != height || toggle_msaa)
-	{
-		last_width = static_cast<float>(width);
-		last_height = static_cast<float>(height);
-		SetAspectRatio(last_width / last_height);
-		GenerateFrameBuffers(width, height);
-		toggle_msaa = false;
-
-
-	}
+	SetWidthAndHeight(width, height);
 
 #if !GAME
 		App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -243,6 +234,7 @@ void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode
 
 	App->renderer->RenderFrame(*this);
 
+
 	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
 	App->ui->Render(scene_mode);
 
@@ -256,6 +248,32 @@ void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #endif
+}
+
+void ComponentCamera::RecordZBufferFrame(GLsizei width, GLsizei height)
+{
+
+	SetWidthAndHeight(width, height);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	glViewport(0, 0, width, height);
+
+	glClear(GL_DEPTH_BUFFER_BIT);
+	App->renderer->RenderZBufferFrame(*this);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void ComponentCamera::SetWidthAndHeight(const GLsizei &width, const GLsizei &height)
+{
+	if (last_width != width || last_height != height || toggle_msaa)
+	{
+		last_width = static_cast<float>(width);
+		last_height = static_cast<float>(height);
+		SetAspectRatio(last_width / last_height);
+		GenerateFrameBuffers(width, height);
+		toggle_msaa = false;
+	}
 }
 
 void ComponentCamera::RecordDebugDraws(bool scene_mode)
@@ -343,7 +361,9 @@ void ComponentCamera::CreateFramebuffer(GLsizei width, GLsizei height)
 
 	if (camera_frustum.type == FrustumType::OrthographicFrustum) //Light cameras render this way
 	{
+		glCullFace(GL_FRONT);
 		CreateOrthographicFramebuffer(width, height);
+		glCullFace(GL_BACK);
 	}
 	
 }
@@ -362,15 +382,16 @@ void ComponentCamera::CreateOrthographicFramebuffer(GLsizei width, GLsizei heigh
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rbo);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
-	//glDrawBuffer(GL_NONE);
-	//glReadBuffer(GL_NONE);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

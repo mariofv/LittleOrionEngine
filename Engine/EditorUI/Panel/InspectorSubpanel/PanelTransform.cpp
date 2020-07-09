@@ -39,6 +39,15 @@ void PanelTransform::ShowComponentTransformWindow(ComponentTransform *transform)
 			transform->OnTransformChange();
 			transform->modified_by_user = true;
 		}
+
+		if (ImGui::Button("Copy"))
+		{
+			App->actions->SetCopyComponent(transform);
+		}
+		if (ImGui::Button("Paste component values"))
+		{
+			App->actions->PasteComponentValues(transform);
+		}
 		//UndoRedo
 		CheckClickForUndo(ModuleActions::UndoActionType::SCALE, transform);
 	}
@@ -52,6 +61,14 @@ void PanelTransform::ShowComponentTransform2DWindow(ComponentTransform2D *transf
 		{
 			transform_2D->owner->SetTransform2DStatus(false);
 			return;
+		}
+		if (ImGui::Button("Copy"))
+		{
+			App->actions->SetCopyComponent(transform_2D);
+		}
+		if (ImGui::Button("Paste component values"))
+		{
+			App->actions->PasteComponentValues(transform_2D);
 		}
 
 		float child_width = (ImGui::GetContentRegionAvail().x - 2 * ImGui::GetStyle().ItemSpacing.x) / 3;

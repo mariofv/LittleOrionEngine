@@ -22,28 +22,34 @@ public:
 		DELETE_GAMEOBJECT,
 		ADD_COMPONENT,
 		DELETE_COMPONENT,
+		PASTE_COMPONENT,
 		ENABLE_DISABLE_COMPONENT,
 		EDIT_COMPONENTLIGHT,
 		//EDIT_COMPONENTMATERIAL,
 		EDIT_COMPONENTCAMERA,
 		EDIT_RECT2D,
-		EDIT_RECT2D_ROTATION
+		EDIT_RECT2D_ROTATION,
+		ADD_MULTIPLE_GO,
+		DELETE_MULTIPLE_GO,
 	};
 
 	ModuleActions() = default;
 	~ModuleActions() = default;
 
 	bool Init() override;
-	update_status PreUpdate() override;
 	update_status Update() override;
+	bool CleanUp() override;
 
 	void ClearRedoStack();
 	void ClearUndoStack();
 	void Undo();
 	void Redo();
-
+	
 	void AddUndoAction(UndoActionType type);
 	void DeleteComponentUndo(Component* component);
+	void PasteComponent(Component* component);
+	void PasteComponentValues(Component* component);
+	void SetCopyComponent(Component* component);
 	void ClearUndoRedoStacks();
 
 private:
@@ -64,6 +70,10 @@ public:
 	float3 previous_transform = float3::zero;
 	GameObject* action_game_object = nullptr;
 	Component* action_component = nullptr;
+	Component* copied_component = nullptr;
+	Config script_config;
+	Config transform_config;
+	Config transform_2D_config;
 
 	float previous_light_color[3];
 	float previous_light_intensity;

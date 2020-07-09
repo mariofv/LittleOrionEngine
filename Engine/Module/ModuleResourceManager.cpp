@@ -79,6 +79,7 @@ update_status ModuleResourceManager::PreUpdate()
 #if !GAME
 	if (!App->time->isGameRunning() && last_imported_time > 0.0f && (thread_timer->Read() - last_imported_time) >= importer_interval_millis)
 	{
+		assert(importing_thread.joinable());
 		importing_thread.join();
 		importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
 	}
@@ -301,7 +302,7 @@ std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32
 
 	if (it != resource_cache.end())
 	{
-		APP_LOG_INFO("Resource %u exists in cache.", uuid);
+		RESOURCES_LOG_INFO("Resource %u exists in cache.", uuid);
 		return *it;
 	}
 	return nullptr;

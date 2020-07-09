@@ -1,5 +1,8 @@
 #include "ComponentTransform.h"
 
+#include "Event/Event.h"
+#include "Event/EventManager.h"
+#include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
 #include "Helper/Utils.h"
@@ -164,9 +167,9 @@ void ComponentTransform::Rotate(const float3x3& rotation)
 
 ENGINE_API void ComponentTransform::LookAt(const float3& target)
 {
-	float3 direction = (target - GetTranslation());
-	Quat new_rotation = GetRotation().LookAt(float3::unitZ, direction.Normalized(), float3::unitY, float3::unitY);
-	SetRotation(new_rotation);
+	float3 direction = (target - GetGlobalTranslation());
+	Quat new_rotation = GetGlobalRotation().LookAt(float3::unitZ, direction.Normalized(), float3::unitY, float3::unitY);
+	SetGlobalMatrixRotation(new_rotation);
 }
 
 ENGINE_API float3 ComponentTransform::ComponentTransform::GetScale() const
@@ -179,6 +182,12 @@ ENGINE_API void ComponentTransform::SetScale(const float3& scale)
 	this->scale = scale;
 	
 	OnTransformChange();
+}
+
+ void ComponentTransform::SetGlobalMatrixScale(const float3& scale)
+{
+	 global_model_matrix = float4x4::FromTRS(GetGlobalTranslation(), GetGlobalRotation(), scale);
+	 SetGlobalModelMatrix(global_model_matrix);
 }
 
 float3 ComponentTransform::GetGlobalScale() const
@@ -212,6 +221,7 @@ void ComponentTransform::OnTransformChange()
 		child->transform.OnTransformChange();
 	}
 	owner->aabb.GenerateBoundingBox();
+	App->event_manager->Publish(new Event(owner));
 }
 
 float4x4 ComponentTransform::GetModelMatrix() const

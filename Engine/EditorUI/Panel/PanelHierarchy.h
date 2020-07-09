@@ -17,12 +17,16 @@ public:
 	std::string GetNextGameObjectName();
 	int GetNextBranch();
 
-private:
-	void ShowGameObjectHierarchy(GameObject* game_object);
+	bool IsOneOfMyChildrens(GameObject* game_object) const;
 
-	void DragAndDrop(GameObject* game_object);
-	void DragSource(GameObject* source_game_object);
-	void DropTarget(GameObject* target_game_object);
+
+private:
+	void ShowGameObjectHierarchy(GameObject *game_object);
+	void ShowGameObjectSearch(GameObject* game_object);
+
+	void DragAndDrop(GameObject* game_object) const;
+	void DragSource(GameObject* source_game_object) const;
+	void DropTarget(GameObject* target_game_object) const;
 
 	void ShowGameObjectActionsMenu(GameObject* game_object);
 	void Show3DObjectCreationMenu(GameObject* game_object) const;
@@ -33,6 +37,9 @@ private:
 private:
 	int num_game_objects = 0;
 	int branch_counter = 0;
+	bool control_key_down = false;
+	std::string searching_name = "";
+	bool searching_mode;
 };
 
 #endif //_PANELHIERARCHY_H_

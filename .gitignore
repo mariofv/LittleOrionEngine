@@ -335,9 +335,17 @@ NodeEditor.json
 /[Bb]inaries*
 Game/Library/**
 !Libraries/**
+Libraries/lib/x86/LittleOrionEngine*
+
+# Tmp scene
+Game/Resources/tmp_scene.scene*
 
 # Assets
 Game/Assets
 Game/Resources/Scenes/tmp_scene.*
 Game/Resources/Scripts/GameplaySystem*[0-9]*
 *.ps1
+
+# Engine Log
+*log.txt
+!Engine/Log*
