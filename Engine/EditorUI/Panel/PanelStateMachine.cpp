@@ -47,7 +47,6 @@ PanelStateMachine::~PanelStateMachine()
 
 void PanelStateMachine::Render()
 {
-	modified_by_user = false;
 	//initialize GO to get corresponding animation controller
 	if (App->editor->selected_game_object)
 	{
@@ -89,6 +88,7 @@ void PanelStateMachine::Render()
 	if (modified_by_user)
 	{
 		App->resources->Save<StateMachine>(state_machine);
+		modified_by_user = false;
 	}
 }
 bool PanelStateMachine::IsElegibleStateMachine(AnimController * controller)
@@ -100,10 +100,6 @@ void PanelStateMachine::RenderStates()
 	ImGuiIO& io = ImGui::GetIO();
 
 	draw_list = ImGui::GetWindowDrawList();
-	if (modified_by_user)
-	{
-		App->resources->Save<StateMachine>(state_machine);
-	}
 	for (auto & node : nodes)
 	{
 		assert(!node->id.Invalid);
@@ -436,7 +432,7 @@ void PanelStateMachine::LeftPanel()
 		ImGui::Separator();
 		if (ImGui::Button("Save"))
 		{
-			modified_by_user = true;
+			modified_by_user = false;
 			App->resources->Save<StateMachine>(state_machine);
 		}
 		ImGui::SameLine();
@@ -473,6 +469,7 @@ void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 		node->output = uniqueid++;
 		node->input = uniqueid++;
 		node->position = ImVec2(state->position.x, state->position.y);
+		node->speed = state->speed;
 		nodes.push_back(node);
 	}
 
