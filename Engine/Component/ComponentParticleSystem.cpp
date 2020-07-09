@@ -258,7 +258,8 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	//alpha fade
 	if (fade)
 	{
-		particle.color.w -= App->time->real_time_delta_time * 0.001f * fade_time;
+		float progress = particle.time_passed * 0.001f / fade_time;
+		particle.color.w = math::Lerp(0.f, 1.f, 1 - progress);
 	}
 
 
@@ -325,7 +326,6 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	billboard->SpecializedSave(config);
 	config.AddInt(static_cast<int>(type_of_particle_system), "Type of particle system");
 	config.AddBool(loop, "Loop");
-	config.AddInt(nr_new_particles, "Number of new particles");
 	config.AddBool(active, "Active");
 	config.AddInt(min_size_of_particle, "Max Size Particles");
 	config.AddInt(max_size_of_particle, "Min Size Particles");
@@ -377,7 +377,6 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	type_of_particle_system = static_cast<TypeOfParticleSystem>(config.GetInt("Type of particle system", static_cast<int>(TypeOfParticleSystem::BOX)));
 	
 	loop = config.GetBool("Loop", true);
-	nr_new_particles = config.GetInt("Number of new particles",2);
 	min_size_of_particle = config.GetInt("Max Size Particles", 10);
 	max_size_of_particle = config.GetInt("Min Size Particles", 2);
 	config.GetFloat2("Particle Size", particles_size, float2(0.2f));

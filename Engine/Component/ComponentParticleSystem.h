@@ -121,7 +121,6 @@ public:
 	//standard values
 	bool loop = true;
 	unsigned int last_used_particle = 0;
-	unsigned int nr_new_particles = 2;
 	bool active = true;
 
 	//size
