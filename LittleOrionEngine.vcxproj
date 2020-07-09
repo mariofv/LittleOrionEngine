@@ -151,6 +151,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Component\ComponentAudioListener.h" />
     <ClInclude Include="Engine\Log\EngineSink.h" />
     <ClInclude Include="Engine\Actions\EditorActionAddMultipleGO.h" />
     <ClInclude Include="Engine\Actions\EditorActionDeleteMultipleGO.h" />
@@ -324,6 +325,7 @@
     <ClCompile Include="Engine\Animation\Tween\LOTween.cpp" />
     <ClCompile Include="Engine\Animation\Tween\Tween.cpp" />
     <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp" />
+    <ClCompile Include="Engine\Component\ComponentAudioListener.cpp" />
     <ClCompile Include="Engine\Component\ComponentBillboard.cpp" />
     <ClCompile Include="Engine\Component\ComponentCanvasRenderer.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />

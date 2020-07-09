@@ -12,6 +12,7 @@
 #include "Helper/Utils.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioListener.h"
 #include "Component/ComponentAudioSource.h"
 #include "Component/ComponentBillboard.h"
 #include "Component/ComponentBoxCollider.h"
@@ -867,12 +868,20 @@ void PanelComponent::ShowAddNewComponentButton()
 		}
 		ImGui::Separator();
 
-		sprintf_s(tmp_string, "%s Audio Source", ICON_FA_AUDIO_DESCRIPTION);
+		sprintf_s(tmp_string, "%s Audio Source", ICON_FA_VOLUME_UP);
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::AUDIO_SOURCE);
 
 		}
+
+		sprintf_s(tmp_string, "%s Audio Listener", ICON_FA_HEADPHONES);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::AUDIO_LISTENER);
+
+		}
+
 
 		ImGui::EndPopup();
 	}
@@ -1118,9 +1127,26 @@ void PanelComponent::ShowComponentMeshColliderWindow(ComponentMeshCollider* mesh
 		}
 	}
 }
+
+void PanelComponent::ShowComponentAudioListenerWindow(ComponentAudioListener* component_audio_listener)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_HEADPHONES " Audio Listener", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (!ShowCommonComponentWindow(component_audio_listener))
+		{
+			return;
+		}
+		ImGui::Separator();
+
+		//Add More Stuff here 
+
+	}
+	
+}
+
 void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_AUDIO_DESCRIPTION " Audio Source", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_VOLUME_UP " Audio Source", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (!ShowCommonComponentWindow(component_audio_source))
 		{

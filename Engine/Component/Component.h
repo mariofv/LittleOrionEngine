@@ -14,6 +14,9 @@ public:
 	{
 		AABB = 0,
 		ANIMATION = 8,
+		AUDIO_LISTENER = 20,
+		AUDIO_SOURCE = 14,
+		BILLBOARD = 16,
 		CAMERA = 1,
 		CANVAS = 5,
 		COLLIDER = 9,
@@ -28,9 +31,8 @@ public:
 		UI_IMAGE = 12,
 		UI_SPRITE_MASK = 18,
 		UI_TEXT = 13,
-		AUDIO_SOURCE = 14,
-		BILLBOARD = 16,
 		PARTICLE_SYSTEM = 17
+		
 	};
 
 	Component() = default;

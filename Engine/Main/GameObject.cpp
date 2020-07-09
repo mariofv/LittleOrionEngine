@@ -22,6 +22,7 @@
 
 #include "Component/Component.h"
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioListener.h"
 #include "Component/ComponentAudioSource.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
@@ -485,6 +486,10 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 
 	case Component::ComponentType::AUDIO_SOURCE:
 		created_component = App->audio->CreateComponentAudioSource();
+		break;
+
+	case Component::ComponentType::AUDIO_LISTENER:
+		created_component = App->audio->CreateComponentAudioListener();
 		break;
 		
 	default:

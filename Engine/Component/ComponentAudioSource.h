@@ -35,11 +35,17 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
+	void Disable();
+
+	void Enable();
+
+
 private:
-	AkSoundPosition sound_position;
+	AkTransform source_transform;
 	AkGameObjectID gameobject_source = 0;
 	std::shared_ptr<SoundBank> soundbank;
 	std::unordered_map<AkUInt32,AkPlayingID> event_playing_ids;
+	std::string last_played_event;
 
 
 	bool sound_3d = false;
