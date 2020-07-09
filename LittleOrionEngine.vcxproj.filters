@@ -544,6 +544,9 @@
     <ClCompile Include="Engine\Actions\EditorActionAddMultipleGO.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentAudioListener.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1079,6 +1082,9 @@
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.h">
       <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentAudioListener.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
