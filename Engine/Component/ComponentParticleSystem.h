@@ -18,10 +18,12 @@ public:
 	struct Particle {
 		float4 position_initial;
 		float4 position;
+
 		float4 velocity_initial;
 		float4 velocity;
+
 		float4 color;
-		Quat rotation;
+
 		float particle_scale;
 		float time_passed;
 		float life;
@@ -29,7 +31,8 @@ public:
 		float current_sprite_x = 0, current_sprite_y = 0;
 		float current_width = 0, current_height = 0;
 
-
+		float4x4 model;
+		float4x4 geometric_space;
 		/*
 		if you add a parameter here you have to put the equivalent in the shader particles.vs
 		Also you will need to add block of 4 floats, so if you add a float like this
@@ -40,15 +43,15 @@ public:
 
 		float f2,f3,f4;
 		*/
-
-
 	};
+
 	enum TypeOfParticleSystem
 	{
 		SPHERE,
 		BOX,
 		CONE
 	};
+
 	enum TypeOfVelocityOverTime
 	{
 		CONSTANT,
@@ -56,6 +59,7 @@ public:
 		RANDOM_BETWEEN_TWO_CONSTANTS,
 		//CURVE
 	};
+
 	ComponentParticleSystem();
 	~ComponentParticleSystem();
 
@@ -63,10 +67,13 @@ public:
 	
 
 	void Init() override;
+
+	void Update();
+	void UpdateParticle(Particle& particle);
+
 	unsigned int FirstUnusedParticle();
 	void RespawnParticle(Particle& particle);
 	void Render();
-	void UpdateParticle(Particle& particle);
 	void SetParticleTexture(uint32_t texture_uuid);
 
 	void Delete() override;
@@ -89,6 +96,9 @@ public:
 	ENGINE_API void Play();
 	ENGINE_API void Stop();
 	ENGINE_API void Pause();
+
+private:
+	unsigned int GetParticlesSystemVariation();
 
 public:
 
@@ -167,6 +177,7 @@ public:
 	
 	//Runtime values
 	size_t playing_particles_number = MAX_PARTICLES;
+	size_t num_of_alive_particles = 0;
 	size_t max_particles_number = MAX_PARTICLES;
 	bool playing = true;
 	GLuint ssbo;

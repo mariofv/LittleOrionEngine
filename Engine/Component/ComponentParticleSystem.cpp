@@ -26,7 +26,6 @@ ComponentParticleSystem::~ComponentParticleSystem()
 void ComponentParticleSystem::Init() 
 {
 	glGenBuffers(1, &ssbo);
-	shader_program = App->program->GetShaderProgramId("Particles");
 	particles.reserve(MAX_PARTICLES);
 
 	billboard = new ComponentBillboard(this->owner);
@@ -67,7 +66,6 @@ unsigned int ComponentParticleSystem::FirstUnusedParticle()
 void ComponentParticleSystem::RespawnParticle(Particle& particle)
 {
 	particle.position_initial = float4(0.0f, 0.0f, 0.0f,0.0f);
-	particle.rotation = owner->transform.GetGlobalRotation();
 
 	if (size_random)
 	{
@@ -164,14 +162,9 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	particle.life = particles_life_time*1000;
 	particle.time_counter = particle.life;
 	particle.time_passed = 0.0F;
-	particle.velocity_initial = particle.rotation * particle.velocity_initial;
+	particle.velocity_initial = particle.velocity_initial;
 
-	if (!follow_owner)
-	{
-		particle.position_initial = float4(owner->transform.GetGlobalTranslation(),0.0f) + (particle.rotation *particle.position_initial);
-	}
-	
-
+	particle.geometric_space = float4x4::FromTRS(owner->transform.GetGlobalTranslation(), owner->transform.GetRotation(), float3::one);
 }
 
 void ComponentParticleSystem::Render()
@@ -179,7 +172,31 @@ void ComponentParticleSystem::Render()
 
 	BROFILER_CATEGORY("Particle Render", Profiler::Color::OrangeRed);
 
-	if (active && playing ) 
+	if (active && playing) 
+	{
+		unsigned int variation = GetParticlesSystemVariation();
+		shader_program = App->program->UseProgram("Particles", variation);
+
+		billboard->CommonUniforms(shader_program);
+		static_assert(sizeof(Particle) % (sizeof(float) * 4) == 0); //Check comment on particle struct
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+		glBufferData(GL_SHADER_STORAGE_BUFFER, (sizeof(Particle))*(num_of_alive_particles), particles.data(), GL_STATIC_DRAW);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo);
+
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+		glBindVertexArray(billboard->vao);
+		glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, particles.size());
+		glBindVertexArray(0);
+
+
+		glUseProgram(0);
+	}
+	
+}
+
+void ComponentParticleSystem::Update()
+{
+	if (active && playing)
 	{
 		time_counter += App->time->real_time_delta_time;
 
@@ -202,12 +219,12 @@ void ComponentParticleSystem::Render()
 
 
 		if (gravity)
-			gravity_vector = float4 (0, gravity_modifier / 10000000, 0,0);
-
-		glUseProgram(shader_program);
+		{
+			gravity_vector = float4(0, gravity_modifier / 10000000, 0, 0);
+		}
 
 		// update all particles
-		int num_of_alive_particles = 0;
+		num_of_alive_particles = 0;
 		for (unsigned int i = 0; i < playing_particles_number; ++i)
 		{
 			Particle& p = particles[i];
@@ -215,65 +232,43 @@ void ComponentParticleSystem::Render()
 			if (p.life > 0.0f)
 			{
 				UpdateParticle(p);
-				std::iter_swap(particles.begin() +i, particles.begin()+ num_of_alive_particles);
+				std::iter_swap(particles.begin() + i, particles.begin() + num_of_alive_particles);
 				++num_of_alive_particles;
 			}
 
 		}
-		billboard->CommonUniforms(shader_program);
-		static_assert(sizeof(Particle) % (sizeof(float) * 4) == 0); //Check comment on particle struct
-		glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-		glBufferData(GL_SHADER_STORAGE_BUFFER, (sizeof(Particle))*(num_of_alive_particles), particles.data(), GL_STATIC_DRAW);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo);
-
-		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-		glBindVertexArray(billboard->vao);
-		glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, particles.size());
-		glBindVertexArray(0);
-
-
-		glUseProgram(0);
 	}
-	
 }
+
 void ComponentParticleSystem::UpdateParticle(Particle& particle)
 {
-	float time_spend = particle.time_counter;
 	particle.life -= App->time->real_time_delta_time; // reduce life
-	time_spend -= particle.life;
 	particle.time_passed += App->time->real_time_delta_time;
 
 	//update position
+	float4 acceleration = float4::zero;
+	if (gravity)
+	{
+		acceleration += gravity_vector;
+	}
 	if (velocity_over_time && type_of_velocity_over_time == LINEAR)
 	{
-		float4 acceleration = (particle.velocity - particle.velocity_initial) / particles_life_time / 1000;
-		if (gravity)
-			acceleration += gravity_vector;
-
-		particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
-			(acceleration * Pow(particle.time_passed, 2) / 2);
+		acceleration += (particle.velocity - particle.velocity_initial) / (particles_life_time * 0.001f);
 	}
-	else
-	{
-		if (gravity)
-			particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
-			(gravity_vector * Pow(particle.time_passed, 2) / 2);
-		else
-			particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed);
-	}
+	particle.position = particle.position_initial + particle.velocity_initial * particle.time_passed + acceleration * particle.time_passed * particle.time_passed * 0.5f;
 
 
 	//alpha fade
 	if (fade)
 	{
-		particle.color.w -= App->time->real_time_delta_time * (fade_time / 1000);
+		particle.color.w -= App->time->real_time_delta_time * 0.001f * fade_time;
 	}
 
 
 	//fade color
 	if (fade_between_colors)
 	{
-		float time = (time_spend / 1000) * (color_fade_time / 100);
+		float time = (particle.time_counter - particle.life) * 0.001f  * (color_fade_time / 100);
 		float temp_color[3] = { particle.color.x ,particle.color.y ,particle.color.z };
 		particle.color.x = (1 - time) * particle.color.x + time * color_to_fade[0];
 		particle.color.y = (1 - time) * particle.color.y + time * color_to_fade[1];
@@ -283,15 +278,18 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	//size fade
 	if (change_size)
 	{
-		particle.current_height += App->time->real_time_delta_time * (size_change_speed / 1000);
-		particle.current_width += App->time->real_time_delta_time * (size_change_speed / 1000);
+		particle.current_height += size_change_speed * App->time->real_time_delta_time * 0.001f;
+		particle.current_width += size_change_speed * App->time->real_time_delta_time * 0.001f;
 	}
 
 	if (follow_owner)
 	{
-		particle.position = float4(owner->transform.GetGlobalTranslation(),0.0f) + (particle.rotation *particle.position);
+		particle.geometric_space = float4x4::FromTRS(owner->transform.GetGlobalTranslation(), owner->transform.GetGlobalRotation(), float3::one);
 	}
+	particle.model = particle.geometric_space * float4x4::FromTRS(particle.position.xyz(), Quat::identity, float3(particle.particle_scale, particle.particle_scale, 1.f));
+	particle.model = particle.model.Transposed();
 }
+
 void ComponentParticleSystem::SetParticleTexture(uint32_t texture_uuid)
 {
 	this->texture_uuid = texture_uuid;
@@ -300,6 +298,29 @@ void ComponentParticleSystem::SetParticleTexture(uint32_t texture_uuid)
 void ComponentParticleSystem::Delete()
 {
 	App->effects->RemoveComponentParticleSystem(this);
+}
+
+unsigned int ComponentParticleSystem::GetParticlesSystemVariation()
+{
+	unsigned int variation = 0;
+
+	switch (billboard->alignment_type)
+	{
+	case ComponentBillboard::AlignmentType::VIEW_POINT:
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_BILLBOARD_VIEWPOINT_ALIGNMENT);
+		break;
+
+	case ComponentBillboard::AlignmentType::AXIAL:
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_BILLBOARD_AXIAL_ALIGNMENT);
+		break;
+	}
+
+	if (billboard->is_spritesheet)
+	{
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_SPRITESHEET);
+	}
+
+	return variation;
 }
 
 void ComponentParticleSystem::SpecializedSave(Config& config) const
@@ -345,19 +366,13 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(inner_radius, "Inner Radius");
 	config.AddFloat(outer_radius, "Outer Radius");
 
-	config.AddFloat(color_particle[0], "Color Particle R");
-	config.AddFloat(color_particle[1], "Color Particle G");
-	config.AddFloat(color_particle[2], "Color Particle B");
-	config.AddFloat(color_particle[3], "Color Particle A");
+	config.AddColor(float4(color_particle), "Color Particle");
 	config.AddBool(fade, "Fade");
 	config.AddFloat(fade_time, "Fade Time");
 	config.AddFloat(size_change_speed, "Size Fade Time");
 	config.AddFloat(color_fade_time, "Color Fade Time");
 	config.AddBool(fade_between_colors, "Fade between Colors");
-	config.AddFloat(color_to_fade[0], "Color to fade R");
-	config.AddFloat(color_to_fade[1], "Color to fade G");
-	config.AddFloat(color_to_fade[2], "Color to fade B");
-	config.AddFloat(color_to_fade[3], "Color to fade A");
+	config.AddColor(float4(color_to_fade), "Color to fade");
 }
 
 void ComponentParticleSystem::SpecializedLoad(const Config& config)
@@ -403,19 +418,24 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	inner_radius = config.GetFloat("Inner Radius", 1.0F);
 	outer_radius = config.GetFloat("Outer Radius", 3.0F);
 
-	color_particle[0] = config.GetFloat("Color Particle R", 1.0F);
-	color_particle[1] = config.GetFloat( "Color Particle G", 1.0F);
-	color_particle[2] = config.GetFloat("Color Particle B", 1.0F);
-	color_particle[3] = config.GetFloat("Color Particle A", 1.0F);
+	float4 color_aux;
+	config.GetColor("Color Particle", color_aux, float4::one);
+	color_particle[0] = color_aux[0];
+	color_particle[1] = color_aux[1];
+	color_particle[2] = color_aux[2];
+	color_particle[3] = color_aux[3];
+
 	fade = config.GetBool("Fade", false);
 	fade_time = config.GetFloat("Fade Time", 1.0F);
 	size_change_speed = config.GetFloat("Fade Time", 1.0F);
 	color_fade_time = config.GetFloat("Color Fade Time", 1.0F);
+
 	fade_between_colors = config.GetBool("Fade between Colors", false);
-	color_to_fade[0] = config.GetFloat("Color to fade R", 1.0F);
-	color_to_fade[1] = config.GetFloat("Color to fade G", 1.0F);
-	color_to_fade[2] = config.GetFloat("Color to fade B", 1.0F);
-	color_to_fade[3] = config.GetFloat("Color to fade A", 1.0F);
+	config.GetColor("Color to fade", color_aux, float4::one);
+	color_to_fade[0] = color_aux[0];
+	color_to_fade[1] = color_aux[1];
+	color_to_fade[2] = color_aux[2];
+	color_to_fade[3] = color_aux[3];
 
 }
 

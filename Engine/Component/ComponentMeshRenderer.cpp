@@ -92,9 +92,6 @@ void ComponentMeshRenderer::RenderModel() const
 
 void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 {
-	material_to_render->use_specular_map = material_to_render->GetMaterialTexture(Material::MaterialTextureType::SPECULAR) != nullptr;
-	material_to_render->use_normal_map = material_to_render->GetMaterialTexture(Material::MaterialTextureType::NORMAL) != nullptr;
-
 	AddDiffuseUniforms(shader_program);
 	AddEmissiveUniforms(shader_program);
 	AddSpecularUniforms(shader_program);

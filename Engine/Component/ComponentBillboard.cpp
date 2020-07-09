@@ -131,13 +131,9 @@ void ComponentBillboard::Render(const float3& global_position)
 	unsigned int variation = GetBillboardVariation();
 	shader_program = App->program->UseProgram("Billboard", variation);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, billboard_texture->opengl_texture);
-	glUniform1i(glGetUniformLocation(shader_program, "billboard.texture"), 0);
+	CommonUniforms(shader_program);
 	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color"),1, (float*)color);
 
-	glUniform1i(glGetUniformLocation(shader_program, "billboard.num_rows"), num_sprisheet_rows);
-	glUniform1i(glGetUniformLocation(shader_program, "billboard.num_columns"), num_sprisheet_columns);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_x"), current_sprite_x);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_y"), current_sprite_y);
 
@@ -151,6 +147,16 @@ void ComponentBillboard::Render(const float3& global_position)
 	glBindVertexArray(0);
 
 	glUseProgram(0);
+}
+
+void ComponentBillboard::CommonUniforms(const GLuint &shader_program)
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, billboard_texture->opengl_texture);
+	glUniform1i(glGetUniformLocation(shader_program, "billboard.texture"), 0);
+
+	glUniform1i(glGetUniformLocation(shader_program, "billboard.num_rows"), num_sprisheet_rows);
+	glUniform1i(glGetUniformLocation(shader_program, "billboard.num_columns"), num_sprisheet_columns);
 }
 
 Component* ComponentBillboard::Clone(bool original_prefab) const

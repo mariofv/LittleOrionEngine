@@ -43,6 +43,12 @@
       "Selectable": false
     },
     {
+      "Name": "Particles",
+      "Vertex": "/Resources/Shaders/particles.vs",
+      "Fragment": "/Resources/Shaders/particles.fs",
+      "Selectable": false
+    },
+    {
       "Name": "NavMesh",
       "Vertex": "/Resources/Shaders/simple_color.vs",
       "Fragment": "/Resources/Shaders/simple_color.fs",
