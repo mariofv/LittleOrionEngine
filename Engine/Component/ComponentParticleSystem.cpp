@@ -179,7 +179,7 @@ void ComponentParticleSystem::Render()
 
 	BROFILER_CATEGORY("Particle Render", Profiler::Color::OrangeRed);
 
-	if (active && playing ) 
+	if (active && playing && billboard->billboard_texture)
 	{
 		time_counter += App->time->real_time_delta_time;
 
