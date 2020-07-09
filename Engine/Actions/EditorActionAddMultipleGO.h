@@ -2,10 +2,10 @@
 #define _EDITORACTIONADDMULTIPLEGO_H_
 
 #include "EditorAction.h"
-#include "Helper/Config.h"
-#include "EditorActionAddGameObject.h"
+#include <vector>
 
 class GameObject;
+class EditorActionAddGameObject;
 
 class EditorActionAddMultipleGO : public EditorAction
 {

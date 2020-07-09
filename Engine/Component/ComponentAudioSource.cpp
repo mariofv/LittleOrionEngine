@@ -73,7 +73,7 @@ unsigned long ComponentAudioSource::PlayEvent(const std::string & event_to_play)
 	return playing_id;
 }
 
-ENGINE_API void ComponentAudioSource::StopEvent(const std::string & event_to_stop)
+void ComponentAudioSource::StopEvent(const std::string & event_to_stop)
 {
 	AkUInt32 event_id = AK::SoundEngine::GetIDFromString(event_to_stop.c_str());
 	if (event_playing_ids.find(event_id) != event_playing_ids.end())
@@ -82,12 +82,12 @@ ENGINE_API void ComponentAudioSource::StopEvent(const std::string & event_to_sto
 	}
 }
 
-ENGINE_API void ComponentAudioSource::StopEvent(unsigned long playing_id_to_stop)
+void ComponentAudioSource::StopEvent(unsigned long playing_id_to_stop)
 {
 	AK::SoundEngine::StopPlayingID(playing_id_to_stop);
 }
 
-ENGINE_API void ComponentAudioSource::StopAll()
+void ComponentAudioSource::StopAll()
 {
 	AK::SoundEngine::StopAll(gameobject_source);
 }

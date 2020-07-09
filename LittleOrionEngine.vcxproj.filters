@@ -529,9 +529,6 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupNewFileName.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Actions\EdirorActionAddMultipleGO.cpp">
-      <Filter>Engine\Actions</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Actions\EditorActionDeleteMultipleGO.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
@@ -541,8 +538,11 @@
     <ClCompile Include="Engine\Log\EngineLog.cpp">
       <Filter>Engine\Log</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentAudioListener.cpp">
-      <Filter>Engine\Component</Filter>
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.cpp">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionAddMultipleGO.cpp">
+      <Filter>Engine\Actions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1077,8 +1077,8 @@
     <ClInclude Include="Engine\Log\EngineLog.h">
       <Filter>Engine\Log</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentAudioListener.h">
-      <Filter>Engine\Component</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.h">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

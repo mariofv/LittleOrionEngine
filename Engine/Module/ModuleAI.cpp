@@ -30,12 +30,12 @@ bool ModuleAI::FindPath()
 	return nav_mesh.FindPath(start_position, end_position , debug_path, PathMode::FOLLOW_PATH);
 }
 
-ENGINE_API bool ModuleAI::IsPointWalkable(float3 & target_position)
+bool ModuleAI::IsPointWalkable(float3 & target_position)
 {
 	return nav_mesh.IsPointWalkable(target_position);
 }
 
-ENGINE_API bool ModuleAI::FindNextPolyByDirection(float3& position, float3& next_position)
+bool ModuleAI::FindNextPolyByDirection(float3& position, float3& next_position)
 {
 	return nav_mesh.FindNextPolyByDirection(position, next_position);
 }
