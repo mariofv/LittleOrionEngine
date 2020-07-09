@@ -68,6 +68,41 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		}
 		
 		ImGui::BeginChild("###Particles", ImVec2(0.f, 300.f), true);
+
+		float billboard_texture_size = 17.5f;
+		void* display_image;
+		if (particle_system->billboard->billboard_texture.get() != nullptr)
+		{
+			display_image = (void*)(intptr_t)particle_system->billboard->billboard_texture->opengl_texture;
+		}
+		ImGuiID element_id = ImGui::GetID(std::to_string(particle_system->billboard->billboard_texture->GetUUID()).c_str());
+		if (ImGui::ImageButton(
+			display_image,
+			ImVec2(billboard_texture_size, billboard_texture_size),
+			ImVec2(0, 1),
+			ImVec2(1, 0),
+			1,
+			ImVec4(1.f, 1.f, 1.f, 1.f),
+			ImVec4(1.f, 1.f, 1.f, 1.f)
+		))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+		}
+		uint32_t dropped_texture_uuid = ImGui::ResourceDropper<Texture>();
+		if (dropped_texture_uuid != 0)
+		{
+			particle_system->billboard->ChangeTexture(dropped_texture_uuid);
+			modified_by_user = true;
+		}
+
+		uint32_t resource_selector_texture = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (resource_selector_texture != 0)
+		{
+			particle_system->billboard->ChangeTexture(resource_selector_texture);
+			modified_by_user = true;
+		}
+		ImGui::SameLine();
+
 		if (ImGui::CollapsingHeader("Particle System"))
 		{
 			ImGui::Spacing();
@@ -121,12 +156,14 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			ImGui::Spacing();
 
 		}
+
 		if (ImGui::CollapsingHeader("Emission"))
 		{
 			ImGui::Spacing();
 			ImGui::DragFloat("Time Between Particles", &particle_system->time_between_particles, 0.1F, 0.0F, 10.0f);
 			ImGui::Spacing();
 		}
+
 		if (ImGui::CollapsingHeader("Shape"))
 		{
 			ImGui::Spacing();
