@@ -316,6 +316,7 @@
     <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h" />
     <ClInclude Include="Engine\Helper\TagManager.h" />
     <ClInclude Include="Engine\Helper\PerlinNoise.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Actions\EdirorActionAddMultipleGO.cpp" />
@@ -491,6 +492,7 @@
     <ClCompile Include="Libraries\include\SoundEngine\AkMultipleFileLocation.cpp" />
     <ClCompile Include="Libraries\include\SoundEngine\stdafx.cpp" />
     <ClCompile Include="Engine\Helper\TagManager.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -96,6 +96,7 @@ private:
 	bool playing = false;
 
 	friend class PanelComponent;
+	friend class PanelParticleSystem;
 	friend class ComponentParticleSystem;
 };
 
