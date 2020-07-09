@@ -272,3 +272,7 @@ void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)
 }
 
 
+void ComponentBillboard::SetOrientation(bool is_oriented)
+{
+	oriented_to_camera = is_oriented;
+}

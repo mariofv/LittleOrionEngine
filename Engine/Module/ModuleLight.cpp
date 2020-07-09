@@ -89,7 +89,7 @@ void ModuleLight::Render(const float3& mesh_position, GLuint program)
 
 void ModuleLight::RenderDirectionalLight(const ComponentLight& light)
 {
-	if (light.light_type == ComponentLight::LightType::DIRECTIONAL_LIGHT && current_number_directional_lights_rendered < MAX_DIRECTIONAL_LIGHTS_RENDERED)
+	if (light.light_type == ComponentLight::LightType::DIRECTIONAL_LIGHT && current_number_directional_lights_rendered < MAX_DIRECTIONAL_LIGHTS_RENDERED && light.active)
 	{
 
 		float3 light_color_scaled = light.light_intensity * float3(light.light_color);
@@ -113,7 +113,7 @@ void ModuleLight::RenderDirectionalLight(const ComponentLight& light)
 void ModuleLight::RenderSpotLights(const ComponentLight& light, GLuint program)
 {
 
-	if (light.light_type == ComponentLight::LightType::SPOT_LIGHT && current_number_spot_lights_rendered < MAX_SPOT_LIGHTS_RENDERED)
+	if (light.light_type == ComponentLight::LightType::SPOT_LIGHT && current_number_spot_lights_rendered < MAX_SPOT_LIGHTS_RENDERED && light.active)
 	{
 		float3 light_color_scaled = light.light_intensity * float3(light.light_color);
 		std::string spot_light_current_uniform_name = "spot_lights[" + std::to_string(current_number_spot_lights_rendered) + "]";
@@ -136,7 +136,7 @@ void ModuleLight::RenderSpotLights(const ComponentLight& light, GLuint program)
 void ModuleLight::RenderPointLights(const ComponentLight& light, GLuint program)
 {
 
-	if (light.light_type == ComponentLight::LightType::POINT_LIGHT && current_number_point_lights_rendered < MAX_POINT_LIGHTS_RENDERED)
+	if (light.light_type == ComponentLight::LightType::POINT_LIGHT && current_number_point_lights_rendered < MAX_POINT_LIGHTS_RENDERED && light.active)
 	{
 		float3 light_color_scaled = light.light_intensity * float3(light.light_color);
 		std::string point_light_current_uniform_name = "point_lights[" + std::to_string(current_number_point_lights_rendered) + "]";
