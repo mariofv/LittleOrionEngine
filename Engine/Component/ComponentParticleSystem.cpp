@@ -84,13 +84,11 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 	if (change_size)
 	{
-		particle.current_height = static_cast<float>(min_size_of_particle);
-		particle.current_width = static_cast<float>(min_size_of_particle);
+		particle.size = float2(min_size_of_particle);
 	}
 	else
 	{
-		particle.current_width = particles_width * particle.particle_scale;
-		particle.current_height = particles_height * particle.particle_scale;
+		particle.size = particle.particle_scale * particles_size;;
 	}
 
 	switch (type_of_particle_system)
@@ -158,7 +156,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 		}
 	}
 	
-	particle.color = { color_particle[0], color_particle[1], color_particle[2], color_particle[3]};
+	particle.color = initial_color;
 	particle.life = particles_life_time*1000;
 	particle.time_counter = particle.life;
 	particle.time_passed = 0.0F;
@@ -267,25 +265,24 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	//fade color
 	if (fade_between_colors)
 	{
-		float time = (particle.time_counter - particle.life) * 0.001f  * (color_fade_time / 100);
-		float temp_color[3] = { particle.color.x ,particle.color.y ,particle.color.z };
-		particle.color.x = (1 - time) * particle.color.x + time * color_to_fade[0];
-		particle.color.y = (1 - time) * particle.color.y + time * color_to_fade[1];
-		particle.color.z = (1 - time) * particle.color.z + time * color_to_fade[2];
+		float progress = particle.time_passed * 0.001f / color_fade_time;
+		float3 tmp_color = float3::Lerp(initial_color.xyz(), color_to_fade.xyz(), progress);
+		particle.color.x = tmp_color.x;
+		particle.color.y = tmp_color.y;
+		particle.color.z = tmp_color.z;
 	}
 
 	//size fade
 	if (change_size)
 	{
-		particle.current_height += size_change_speed * App->time->real_time_delta_time * 0.001f;
-		particle.current_width += size_change_speed * App->time->real_time_delta_time * 0.001f;
+		particle.size += float2(size_change_speed * App->time->real_time_delta_time * 0.001f);
 	}
 
 	if (follow_owner)
 	{
 		particle.geometric_space = float4x4::FromTRS(owner->transform.GetGlobalTranslation(), owner->transform.GetGlobalRotation(), float3::one);
 	}
-	particle.model = particle.geometric_space * float4x4::FromTRS(particle.position.xyz(), Quat::identity, float3(particle.current_width, particle.current_height, 1.f));
+	particle.model = particle.geometric_space * float4x4::FromTRS(particle.position.xyz(), Quat::identity, float3(particle.size, 1.f));
 	particle.model = particle.model.Transposed();
 }
 
@@ -332,8 +329,7 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddBool(active, "Active");
 	config.AddInt(min_size_of_particle, "Max Size Particles");
 	config.AddInt(max_size_of_particle, "Min Size Particles");
-	config.AddFloat(particles_width, "Particle Width");
-	config.AddFloat(particles_height, "Particle Height");
+	config.AddFloat2(particles_size, "Particle Size");
 	config.AddBool(size_random, "Size random");
 	config.AddBool(change_size, "Change size");
 	config.AddBool(tile_random, "Tile random");
@@ -365,13 +361,13 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(inner_radius, "Inner Radius");
 	config.AddFloat(outer_radius, "Outer Radius");
 
-	config.AddColor(float4(color_particle), "Color Particle");
+	config.AddColor(initial_color, "Intial Color");
 	config.AddBool(fade, "Fade");
 	config.AddFloat(fade_time, "Fade Time");
 	config.AddFloat(size_change_speed, "Size Fade Time");
 	config.AddFloat(color_fade_time, "Color Fade Time");
 	config.AddBool(fade_between_colors, "Fade between Colors");
-	config.AddColor(float4(color_to_fade), "Color to fade");
+	config.AddColor(color_to_fade, "Color to fade");
 }
 
 void ComponentParticleSystem::SpecializedLoad(const Config& config)
@@ -384,8 +380,7 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	nr_new_particles = config.GetInt("Number of new particles",2);
 	min_size_of_particle = config.GetInt("Max Size Particles", 10);
 	max_size_of_particle = config.GetInt("Min Size Particles", 2);
-	particles_width = config.GetFloat("Particle Width", 0.2F);
-	particles_height = config.GetFloat("Particle Height", 0.2F);
+	config.GetFloat2("Particle Size", particles_size, float2(0.2f));
 	size_random = config.GetBool("Size random", false);
 	tile_random = config.GetBool("Tile random", false);
 	change_size = config.GetBool("Change size", false);
@@ -418,11 +413,7 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	outer_radius = config.GetFloat("Outer Radius", 3.0F);
 
 	float4 color_aux;
-	config.GetColor("Color Particle", color_aux, float4::one);
-	color_particle[0] = color_aux[0];
-	color_particle[1] = color_aux[1];
-	color_particle[2] = color_aux[2];
-	color_particle[3] = color_aux[3];
+	config.GetColor("Intial Color", initial_color, float4::one);
 
 	fade = config.GetBool("Fade", false);
 	fade_time = config.GetFloat("Fade Time", 1.0F);
@@ -430,12 +421,7 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	color_fade_time = config.GetFloat("Color Fade Time", 1.0F);
 
 	fade_between_colors = config.GetBool("Fade between Colors", false);
-	config.GetColor("Color to fade", color_aux, float4::one);
-	color_to_fade[0] = color_aux[0];
-	color_to_fade[1] = color_aux[1];
-	color_to_fade[2] = color_aux[2];
-	color_to_fade[3] = color_aux[3];
-
+	config.GetColor("Color to fade", color_to_fade, float4::one);
 }
 
 Component* ComponentParticleSystem::Clone(bool original_prefab) const

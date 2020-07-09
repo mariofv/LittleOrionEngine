@@ -29,7 +29,7 @@ public:
 		float life;
 		float time_counter;
 		float current_sprite_x = 0, current_sprite_y = 0;
-		float current_width = 0, current_height = 0;
+		float2 size = float2::zero;
 
 		float4x4 model;
 		float4x4 geometric_space;
@@ -127,12 +127,12 @@ public:
 	//size
 	int min_size_of_particle = 2;
 	int max_size_of_particle = 10;
-	float particles_width = 0.2F;
-	float particles_height = 0.2F;
+	float2 particles_size = float2(0.2f);
 	bool size_random = false;
-	bool tile_random = false;
 	bool change_size = false;
 	float size_change_speed = 1.0F;
+
+	bool tile_random = false;
 
 	//time
 	float time_counter = 0.0F;
@@ -158,12 +158,13 @@ public:
 	float outer_radius = 3.0F;
 	
 	//color
-	float color_particle[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float4 initial_color = float4::one;
+	bool fade_between_colors = false;
+	float4 color_to_fade = float4::one;;
+	float color_fade_time = 1.0F;
+
 	bool fade = false;
 	float fade_time = 1.0F;
-	float color_fade_time = 1.0F;
-	bool fade_between_colors = false;
-	float color_to_fade[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	//Velocity over time
 	bool velocity_over_time = false;
