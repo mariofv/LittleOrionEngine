@@ -114,7 +114,7 @@ void AnimController::AdjustInterpolationTimes()
 {
 	if (!playing_clips[ClipType::ACTIVE].clip->loop)
 	{
-		float time_left = playing_clips[ClipType::ACTIVE].clip->animation_time - playing_clips[ClipType::ACTIVE].current_time* playing_clips[ClipType::ACTIVE].speed;	
+		float time_left = playing_clips[ClipType::ACTIVE].clip->animation_time - playing_clips[ClipType::ACTIVE].current_time;	
 		playing_clips[ClipType::NEXT].interpolation_time = min(active_transition->interpolation_time, time_left);
 	}
 }
