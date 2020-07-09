@@ -178,7 +178,7 @@ public:
 	//Runtime values
 	size_t playing_particles_number = MAX_PARTICLES;
 	size_t num_of_alive_particles = 0;
-	size_t max_particles_number = MAX_PARTICLES;
+	int max_particles_number = MAX_PARTICLES;
 	bool playing = true;
 	GLuint ssbo;
 	GLuint shader_program;

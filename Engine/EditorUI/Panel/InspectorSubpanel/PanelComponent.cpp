@@ -203,28 +203,23 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 				particle_system->Stop();
 			}
 		}
-		if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
+		if (ImGui::CollapsingHeader("Emission"))
 		{
-			if (ImGui::InputScalar("Max particles", ImGuiDataType_U32,&particle_system->max_particles_number) && particle_system->max_particles_number > MAX_PARTICLES)
-			{
-				particle_system->max_particles_number = MAX_PARTICLES;
-			}
+			ImGui::DragInt("Max particles", &particle_system->max_particles_number, 1.f, 0, MAX_PARTICLES);
+			ImGui::DragFloat("Velocity Start", &particle_system->velocity_particles_start, 0.01f, 0.0f, 100.0F);
+			ImGui::Spacing();
 
-			ImGui::InputFloat("", &particle_system->gravity_modifier, 0.01F, 0.1F);
-			ImGui::SameLine();
-			ImGui::Checkbox("Gravity", &particle_system->gravity);
+			ImGui::DragFloat("Life (in seconds)", &particle_system->particles_life_time, 1.0F, 0.0F, 100.0F);
+			ImGui::Spacing();
 
-			ShowBillboardOptions(particle_system->billboard);
-			if (particle_system->billboard->is_spritesheet)
-			{
-				ImGui::Checkbox("Tile random", &particle_system->tile_random);
-				if (particle_system->tile_random)
-				{
-					ImGui::InputFloat("Max", &particle_system->max_tile_value);
-					ImGui::InputFloat("Min", &particle_system->min_tile_value);
-				}
-			}
+			ImGui::DragFloat("Time Between Particles", &particle_system->time_between_particles, 0.1F, 0.0F, 10.0f);
+			ImGui::Spacing();
 
+			ImGui::Checkbox("Follow GO Parent", &particle_system->follow_owner);
+
+		}
+		if (ImGui::CollapsingHeader("Shape"))
+		{
 			int particle_shape = static_cast<int>(particle_system->type_of_particle_system);
 			if (ImGui::Combo("Shape", &particle_shape, "Sphere\0Box\0Cone\0"))
 			{
@@ -241,48 +236,7 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 					break;
 				}
 			}
-		
-			ImGui::Checkbox("Loop", &particle_system->loop);
-			ImGui::SameLine();
-			ImGui::Checkbox("Follow GO Parent", &particle_system->follow_owner);
-			ImGui::Spacing();
-			ImGui::Separator();
 
-			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-			ImGui::DragFloat("Width", &particle_system->particles_width, 0.01f, 0.0f, 100.0F);
-			ImGui::SameLine();
-			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-			ImGui::DragFloat("Height", &particle_system->particles_height, 0.01f, 0.0f, 100.0F);
-
-
-			ImGui::Checkbox("Rand size", &particle_system->size_random);ImGui::SameLine();
-			ImGui::Checkbox("Size change over time", &particle_system->change_size);
-			if (particle_system->size_random || particle_system->change_size)
-			{
-				ImGui::Spacing();
-				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragInt("Min size", &particle_system->min_size_of_particle, 10, 0, 999);
-				ImGui::SameLine();
-				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragInt("Max size", &particle_system->max_size_of_particle, 100, 1, 1000);
-			}
-			
-
-			if (particle_system->change_size)
-			{
-				ImGui::DragFloat("Speed", &particle_system->size_change_speed, 0.01f, 0.0f, 10.0F);
-			}
-			ImGui::Separator();
-			ImGui::Spacing();
-
-			ImGui::DragFloat("Velocity Start", &particle_system->velocity_particles_start, 0.01f, 0.0f, 100.0F);
-			ImGui::Spacing();
-
-			ImGui::DragFloat("Life (in seconds)", &particle_system->particles_life_time, 1.0F, 0.0F, 100.0F);
-			ImGui::Spacing();
-
-			ImGui::DragFloat("Time Between Particles", &particle_system->time_between_particles, 0.1F, 0.0F, 10.0f);
-			ImGui::Spacing();
 			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::BOX)
 			{
 				if (particle_system->enabled_random_x)
@@ -310,7 +264,7 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 				}
 				ImGui::SameLine();
 				ImGui::Checkbox("Rand Z", &particle_system->enabled_random_z);
-			
+
 			}
 			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::CONE)
 			{
@@ -319,27 +273,11 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			}
 		}
 
-		//Color of Particles
-		if (ImGui::CollapsingHeader(ICON_FA_SQUARE "Color Over Time"))
-		{
-			ImGui::Checkbox("Fade", &particle_system->fade);
-			ImGui::Checkbox("Fade Between Colors", &particle_system->fade_between_colors);
-			if (particle_system->fade)
-			{
-				ImGui::DragFloat("Fade time", &particle_system->fade_time, 0.01f, 0.0f, 10.0F);
-			}
-			ImGui::ColorEdit4("Particle Color##2f", (float*)&particle_system->color_particle, ImGuiColorEditFlags_Float );
-			if (particle_system->fade_between_colors)
-			{
-				ImGui::ColorEdit4("Particle Color To Fade##2f", (float*)&particle_system->color_to_fade, ImGuiColorEditFlags_Float);
-				ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
-			}
-		}
-
 		//Velocity over time
-		if (ImGui::CollapsingHeader(ICON_FA_SQUARE "Velocity Over Time"))
+		ImGui::Checkbox("###Velocity over lifetime", &particle_system->velocity_over_time);
+		ImGui::SameLine();
+		if (ImGui::CollapsingHeader("Velocity Over Time"))
 		{
-			ImGui::Checkbox("Activate Velocity Over Time", &particle_system->velocity_over_time);
 			if (particle_system->velocity_over_time)
 			{
 				int velocity_type = static_cast<int>(particle_system->type_of_velocity_over_time);
@@ -376,7 +314,84 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 					break;
 				}
 			}
-			
+
+		}
+
+		//Color of Particles
+		ImGui::Checkbox("###Fade Between Colors", &particle_system->fade_between_colors);
+		ImGui::SameLine();
+		if (ImGui::CollapsingHeader("Color Over Lifetime"))
+		{		
+			ImGui::ColorEdit4("Particle Color##2f", (float*)&particle_system->color_particle, ImGuiColorEditFlags_Float);
+			if (particle_system->fade_between_colors)
+			{
+				ImGui::ColorEdit4("Particle Color To Fade##2f", (float*)&particle_system->color_to_fade, ImGuiColorEditFlags_Float);
+				ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
+			}
+		}
+
+		ImGui::Checkbox("###Fade", &particle_system->fade);
+		ImGui::SameLine();
+		if (ImGui::CollapsingHeader("Alpha Over Lifetime"))
+		{
+			if (particle_system->fade)
+			{
+				ImGui::DragFloat("Fade time", &particle_system->fade_time, 0.01f, 0.0f, 10.0F);
+			}
+		}
+
+		ImGui::Checkbox("###Size change over time", &particle_system->change_size);
+		ImGui::SameLine();
+		if (ImGui::CollapsingHeader("Size Over Lifetime"))
+		{
+			ImGui::Checkbox("Rand size", &particle_system->size_random); ImGui::SameLine();
+			if (particle_system->size_random || particle_system->change_size)
+			{
+				ImGui::Spacing();
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				ImGui::DragInt("Min size", &particle_system->min_size_of_particle, 10, 0, 999);
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				ImGui::DragInt("Max size", &particle_system->max_size_of_particle, 100, 1, 1000);
+			}
+
+
+			if (particle_system->change_size)
+			{
+				ImGui::DragFloat("Speed", &particle_system->size_change_speed, 0.01f, 0.0f, 10.0F);
+			}
+		}
+
+		ImGui::Checkbox("###Gravity", &particle_system->gravity);
+		ImGui::SameLine();
+		if (ImGui::CollapsingHeader("Gravity"))
+		{
+			ImGui::DragFloat("", &particle_system->gravity_modifier, 0.01F, 0.1F);
+		}
+
+		if (ImGui::CollapsingHeader("Texture Sheet Animation"))
+		{
+			if (particle_system->billboard->is_spritesheet)
+			{
+				ImGui::Checkbox("Tile random", &particle_system->tile_random);
+				if (particle_system->tile_random)
+				{
+					ImGui::InputFloat("Max", &particle_system->max_tile_value);
+					ImGui::InputFloat("Min", &particle_system->min_tile_value);
+				}
+				ImGui::Checkbox("Loop", &particle_system->loop);
+			}
+		}
+		if (ImGui::CollapsingHeader("Renderer"))
+		{
+			ShowBillboardOptions(particle_system->billboard);
+
+
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+			ImGui::DragFloat("Width", &particle_system->particles_width, 0.01f, 0.0f, 100.0F);
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+			ImGui::DragFloat("Height", &particle_system->particles_height, 0.01f, 0.0f, 100.0F);
 		}
 	}
 
