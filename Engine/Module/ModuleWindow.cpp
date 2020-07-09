@@ -12,7 +12,7 @@ bool ModuleWindow::Init()
 {
 	APP_LOG_SECTION("************ Module Window Init ************");
 
-	APP_LOG_INIT("Init SDL window & surface.");
+	APP_LOG_INFO("Init SDL window & surface.");
 	bool ret = true;
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -72,7 +72,7 @@ bool ModuleWindow::Init()
 	bordered = BORDERED;
 	resizable = RESIZABLE;
 
-	APP_LOG_SUCCESS("SDL window & surface initialized correctly.");
+	APP_LOG_INFO("SDL window & surface initialized correctly.");
 
 	return ret;
 }
@@ -173,7 +173,7 @@ void ModuleWindow::WindowResized(unsigned width, unsigned height)
 
 void ModuleWindow::InitOpenGLAttributes() const
 {
-	APP_LOG_INIT("Creating Glew Renderer context");
+	APP_LOG_INFO("Creating Glew Renderer context");
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);

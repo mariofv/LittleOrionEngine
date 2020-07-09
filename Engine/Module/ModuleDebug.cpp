@@ -27,7 +27,7 @@ bool ModuleDebug::Init()
 	APP_LOG_SECTION("************ Module Debug Init ************");
 
 	
-	APP_LOG_SUCCESS("Module Debug initialized correctly.")
+	APP_LOG_INFO("Module Debug initialized correctly.")
 
 	return true;
 }

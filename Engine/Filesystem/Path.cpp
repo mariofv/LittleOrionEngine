@@ -250,9 +250,20 @@ std::string Path::GetFullPath() const
 	return file_path;
 }
 
+std::string Path::GetFilename(const std::string& path)
+{
+	return path.substr(path.find_last_of('/') + 1, -1);
+}
+
+std::string Path::GetFilenameWindows(const std::string& path)
+{
+	return path.substr(path.find_last_of('\\') + 1, -1);
+}
+
+
 std::string Path::GetFilename() const
 {
-	return file_path.substr(file_path.find_last_of('/') + 1, -1);
+	return GetFilename(file_path);
 }
 
 std::string Path::GetFilenameWithoutExtension() const
