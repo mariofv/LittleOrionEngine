@@ -141,7 +141,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		ImGui::SameLine();
 		if (ImGui::CollapsingHeader("Velocity Over Time"))
 		{
-			if (particle_system->velocity_over_time)
+			if (!particle_system->velocity_over_time)
 			{
 				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
@@ -181,7 +181,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				break;
 			}
 
-			if (particle_system->velocity_over_time)
+			if (!particle_system->velocity_over_time)
 			{
 				ImGui::PopItemFlag();
 				ImGui::PopStyleVar();
@@ -194,11 +194,18 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		ImGui::SameLine();
 		if (ImGui::CollapsingHeader("Color Over Lifetime"))
 		{
-			ImGui::ColorEdit4("Particle Color##2f", (float*)&particle_system->color_particle, ImGuiColorEditFlags_Float);
-			if (particle_system->fade_between_colors)
+			if (!particle_system->fade_between_colors)
 			{
-				ImGui::ColorEdit4("Particle Color To Fade##2f", (float*)&particle_system->color_to_fade, ImGuiColorEditFlags_Float);
-				ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
+				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+			}
+			ImGui::ColorEdit4("Particle Color##2f", (float*)&particle_system->color_particle, ImGuiColorEditFlags_Float);
+			ImGui::ColorEdit4("Particle Color To Fade##2f", (float*)&particle_system->color_to_fade, ImGuiColorEditFlags_Float);
+			ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
+			if (!particle_system->fade_between_colors)
+			{
+				ImGui::PopItemFlag();
+				ImGui::PopStyleVar();
 			}
 		}
 
@@ -206,9 +213,16 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		ImGui::SameLine();
 		if (ImGui::CollapsingHeader("Alpha Over Lifetime"))
 		{
-			if (particle_system->fade)
+			if (!particle_system->fade)
 			{
-				ImGui::DragFloat("Fade time", &particle_system->fade_time, 0.01f, 0.0f, 10.0F);
+				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+			}
+			ImGui::DragFloat("Fade time", &particle_system->fade_time, 0.01f, 0.0f, 10.0F);
+			if (!particle_system->fade)
+			{
+				ImGui::PopItemFlag();
+				ImGui::PopStyleVar();
 			}
 		}
 
@@ -216,7 +230,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		ImGui::SameLine();
 		if (ImGui::CollapsingHeader("Size Over Lifetime"))
 		{
-			ImGui::Checkbox("Rand size", &particle_system->size_random); ImGui::SameLine();
+			ImGui::Checkbox("Rand size", &particle_system->size_random); 
 			if (particle_system->size_random || particle_system->change_size)
 			{
 				ImGui::Spacing();
@@ -226,8 +240,6 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
 				ImGui::DragInt("Max size", &particle_system->max_size_of_particle, 100, 1, 1000);
 			}
-
-
 			if (particle_system->change_size)
 			{
 				ImGui::DragFloat("Speed", &particle_system->size_change_speed, 0.01f, 0.0f, 10.0F);
@@ -238,20 +250,41 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		ImGui::SameLine();
 		if (ImGui::CollapsingHeader("Gravity"))
 		{
-			ImGui::DragFloat("", &particle_system->gravity_modifier, 0.01F, 0.1F);
+			if (!particle_system->gravity)
+			{
+				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+			}
+			ImGui::DragFloat("Gravity Modifier", &particle_system->gravity_modifier, 0.01F, 0.1F);
+			if (!particle_system->gravity)
+			{
+				ImGui::PopItemFlag();
+				ImGui::PopStyleVar();
+			}
 		}
 
+		ImGui::Checkbox("###Texture Sheet Animation", &particle_system->billboard->is_spritesheet);
+		ImGui::SameLine();
 		if (ImGui::CollapsingHeader("Texture Sheet Animation"))
 		{
-			if (particle_system->billboard->is_spritesheet)
+			if (!particle_system->billboard->is_spritesheet)
 			{
-				ImGui::Checkbox("Tile random", &particle_system->tile_random);
-				if (particle_system->tile_random)
-				{
-					ImGui::InputFloat("Max", &particle_system->max_tile_value);
-					ImGui::InputFloat("Min", &particle_system->min_tile_value);
-				}
-				ImGui::Checkbox("Loop", &particle_system->loop);
+				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+			}
+
+			ImGui::Checkbox("Tile random", &particle_system->tile_random);
+			if (particle_system->tile_random)
+			{
+				ImGui::InputFloat("Max", &particle_system->max_tile_value);
+				ImGui::InputFloat("Min", &particle_system->min_tile_value);
+			}
+			ImGui::Checkbox("Loop", &particle_system->loop);
+			
+			if (!particle_system->billboard->is_spritesheet)
+			{
+				ImGui::PopItemFlag();
+				ImGui::PopStyleVar();
 			}
 		}
 		if (ImGui::CollapsingHeader("Renderer"))
