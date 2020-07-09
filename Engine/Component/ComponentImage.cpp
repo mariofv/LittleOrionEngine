@@ -109,6 +109,9 @@ Component* ComponentImage::Clone(bool original_prefab) const
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->ReassignResource();
+
 	return created_component;
 };
 
@@ -170,6 +173,14 @@ void ComponentImage::InitResource(uint32_t uuid, ResourceType resource)
 	if(texture_to_render && !texture_to_render.get()->initialized)
 	{
 		texture_to_render.get()->LoadInMemory();
+	}
+}
+
+void ComponentImage::ReassignResource()
+{
+	if(texture_uuid != 0)
+	{
+		SetTextureToRender(texture_uuid);
 	}
 }
 

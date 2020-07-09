@@ -220,6 +220,9 @@ Component* ComponentBillboard::Clone(bool original_prefab) const
 		created_component = App->effects->CreateComponentBillboard();
 	}
 	*created_component = *this;
+
+	created_component->ReassignResource();
+
 	return created_component;
 };
 
@@ -306,6 +309,11 @@ void ComponentBillboard::InitResource(uint32_t uuid, ResourceType resource)
 	{
 		billboard_texture.get()->LoadInMemory();
 	}
+}
+
+void ComponentBillboard::ReassignResource()
+{
+	ChangeTexture(texture_uuid);
 }
 
 

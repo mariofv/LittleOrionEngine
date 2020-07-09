@@ -25,6 +25,8 @@ public:
 	void LoadResource(uint32_t uuid, ResourceType resource) override;
 	void InitResource(uint32_t uuid, ResourceType resource) override;
 
+	void ReassignResource() override;
+
 	void SetTextureToRender(uint32_t texture_uuid);
 	void SetTextureToRenderFromInspector(uint32_t texture_uuid);
 

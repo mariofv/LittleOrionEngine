@@ -33,6 +33,8 @@ public:
 
 	void InitResource(uint32_t uuid, ResourceType resource) override;
 
+	void ReassignResource() override;
+
 	void Update() override;
 	void Render(float4x4* projection);
 

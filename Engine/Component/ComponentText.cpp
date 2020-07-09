@@ -230,6 +230,9 @@ Component* ComponentText::Clone(bool original_prefab) const
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->ReassignResource();
+
 	return created_component;
 };
 
@@ -283,6 +286,14 @@ void ComponentText::InitResource(uint32_t uuid, ResourceType resource)
 	font = App->resources->Load<Font>(uuid);
 	App->resources->loading_thread_communication.normal_loading_flag = false;
 	ComputeTextLines();
+}
+
+void ComponentText::ReassignResource()
+{
+	if(font_uuid != 0)
+	{
+		SetFont(font_uuid);
+	}
 }
 
 void ComponentText::SetText(const std::string& new_text)

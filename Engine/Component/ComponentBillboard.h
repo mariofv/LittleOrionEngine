@@ -56,6 +56,8 @@ public:
 	void LoadResource(uint32_t uuid, ResourceType resource) override;
 	void InitResource(uint32_t uuid, ResourceType resource) override;
 
+	void ReassignResource() override;
+
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
 
 	ENGINE_API void EmitOnce();
