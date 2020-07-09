@@ -213,14 +213,13 @@ void ComponentParticleSystem::Update()
 		//update velocity over time
 		if (velocity_over_time && type_of_velocity_over_time == LINEAR)
 		{
-			acceleration = (velocity_particles_start * velocity_over_time_speed_modifier_second -
-				velocity_particles_start * velocity_over_time_speed_modifier) / particles_life_time;
+			acceleration = velocity_particles_start * (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) / particles_life_time;
 		}
 
 
 		if (gravity)
 		{
-			gravity_vector = float4(0, gravity_modifier / 10000000, 0, 0);
+			gravity_vector = float4(0, gravity_modifier *0.000001f, 0, 0);
 		}
 
 		// update all particles
