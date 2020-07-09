@@ -286,7 +286,7 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	{
 		particle.geometric_space = float4x4::FromTRS(owner->transform.GetGlobalTranslation(), owner->transform.GetGlobalRotation(), float3::one);
 	}
-	particle.model = particle.geometric_space * float4x4::FromTRS(particle.position.xyz(), Quat::identity, float3(particle.particle_scale, particle.particle_scale, 1.f));
+	particle.model = particle.geometric_space * float4x4::FromTRS(particle.position.xyz(), Quat::identity, float3(particle.current_width, particle.current_height, 1.f));
 	particle.model = particle.model.Transposed();
 }
 
