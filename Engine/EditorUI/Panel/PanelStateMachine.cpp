@@ -12,6 +12,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleAnimation.h"
+#include "Module/ModuleTime.h"
 
 #include "ResourceManagement/Resources/StateMachine.h"
 
@@ -54,11 +55,11 @@ void PanelStateMachine::Render()
 
 		AnimController* controller = animation_component ? animation_component->GetAnimController() : nullptr;
 		bool valid = IsElegibleStateMachine(controller);
-		animation_controller = valid ? animation_component->GetAnimController() : animation_controller_in_hierarchy;
+		animation_controller = valid ? animation_component->GetAnimController() : GetHierarchyAnimation();
 	}
 	else
 	{
-		animation_controller = animation_controller_in_hierarchy;
+		animation_controller = GetHierarchyAnimation();
 	}
 	if (ImGui::Begin(window_name.c_str(), &opened, ImGuiWindowFlags_MenuBar))
 	{
@@ -498,16 +499,19 @@ void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 	}
 	delete[] state_machine_data.buffer;
 	firstFrame = true;
+}
 
+AnimController* PanelStateMachine::GetHierarchyAnimation()
+{
 	for (auto & animation_component : App->animations->animations)
 	{
 		AnimController* controller = animation_component->GetAnimController();
 		if (IsElegibleStateMachine(controller))
 		{
-			animation_controller_in_hierarchy = animation_component->GetAnimController();
-			break;
+			return animation_component->GetAnimController();
 		}
 	}
+	return nullptr;
 }
 
 
