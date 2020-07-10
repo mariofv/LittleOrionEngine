@@ -6,6 +6,7 @@
 
 #include <GL/glew.h>
 #include <MathGeoLib.h>
+#include <array>
 #include <unordered_map>
 
 class PanelComponent;
@@ -13,6 +14,28 @@ class PanelComponent;
 class ModuleProgram : public Module
 {
 public:
+	enum class ShaderVariation
+	{
+		ENABLE_NORMAL_MAP = 1 << 0,
+		ENABLE_SPECULAR_MAP = 1 << 1,
+		ENABLE_RECEIVE_SHADOWS = 1 << 2,
+
+		ENABLE_SPRITESHEET = 1 << 3,
+
+		ENABLE_BILLBOARD_VIEWPOINT_ALIGNMENT = 1 << 4,
+		ENABLE_BILLBOARD_AXIAL_ALIGNMENT = 1 << 5
+	};
+
+	struct ShaderProgram
+	{
+		std::string program_name;
+		std::string vertex_shader_file_name;
+		std::string fragment_shader_file_name;
+
+		std::unordered_map<unsigned int, GLuint> compiled_variations;
+	};
+
+
 	// Holds information of the distibution of data inside the uniform buffer object
 	struct UniformBuffer 
 	{
@@ -62,14 +85,15 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
+	GLuint UseProgram(const std::string& program_name, unsigned int variation = 0);
 	void LoadPrograms(const char* file_path);
-	unsigned int GetShaderProgramId(const std::string & program_name) const;
 
 private:
-	bool LoadProgram(std::string name, const char* vertex_shader_file_name, const char* fragment_shader_file_name);
-	bool InitVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name) const;
-	bool InitFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name) const;
-	bool InitProgram(GLuint &shader_program,GLuint vertex_shader,GLuint fragment_shader) const;
+	bool CompileProgram(ShaderProgram& program, unsigned int variation);
+
+	bool InitVertexShader(GLuint &vertex_shader, const std::string& vertex_shader_file_name, const std::vector<std::string>& defines);
+	bool InitFragmentShader(GLuint &fragment_shader, const std::string& fragment_shader_file_name, const std::vector<std::string>& defines);
+	bool InitProgram(GLuint &shader_program, GLuint vertex_shader, GLuint fragment_shader) const;
 
 	void InitUniformBuffer();
 	void BindUniformBlocks(GLuint shader_program) const;
@@ -78,7 +102,18 @@ public:
 	UniformBuffer uniform_buffer;
 
 private:
-	std::unordered_map<std::string, GLuint> loaded_programs;
+	std::unordered_map<std::string, ShaderProgram> loaded_programs;
+	std::array<std::string, 6> defines =
+	{
+		"#define NORMAL_MAP 1\n",
+		"#define SPECULAR_MAP 1\n",
+		"#define RECEIVE_SHADOWS 1\n",
+
+		"#define ENABLE_SPRITESHEET 1\n",
+		"#define ENABLE_BILLBOARD_VIEWPOINT_ALIGNMENT  1\n",
+		"#define ENABLE_BILLBOARD_AXIAL_ALIGNMENT 1\n"
+	};
+
 	std::vector<const char *> names;
 
 	friend class PanelMaterial;

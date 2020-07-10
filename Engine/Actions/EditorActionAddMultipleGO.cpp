@@ -1,5 +1,6 @@
-
 #include "EditorActionAddMultipleGO.h"
+
+#include "EditorActionAddGameObject.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"

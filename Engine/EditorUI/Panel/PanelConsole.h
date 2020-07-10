@@ -19,7 +19,7 @@ public:
 		ASSIMP,
 		OPENGL,
 		RESOURCES,
-		DEBUG
+		DEBUGLOG
 	};
 
 	PanelConsole();

@@ -276,6 +276,47 @@ void ModuleActions::ClearUndoRedoStacks()
 	ClearUndoStack();
 }
 
+void ModuleActions::CheckClickForUndo(UndoActionType type, Component * component)
+{
+	if (ImGui::IsItemActive() && !ImGui::IsItemActiveLastFrame())
+	{
+		switch (type)
+		{
+		case ModuleActions::UndoActionType::TRANSLATION:
+			App->actions->previous_transform = ((ComponentTransform*)component)->GetTranslation();
+			break;
+		case ModuleActions::UndoActionType::ROTATION:
+			App->actions->previous_transform = ((ComponentTransform*)component)->GetRotationRadiants();
+			break;
+		case ModuleActions::UndoActionType::SCALE:
+			App->actions->previous_transform = ((ComponentTransform*)component)->GetScale();
+			break;
+		case ModuleActions::UndoActionType::EDIT_RECT2D:
+		case ModuleActions::UndoActionType::EDIT_RECT2D_ROTATION:
+			App->actions->action_component = (ComponentTransform2D*)component;
+			break;
+		case ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT:
+			App->actions->previous_light_color[0] = ((ComponentLight*)component)->light_color[0];
+			App->actions->previous_light_color[1] = ((ComponentLight*)component)->light_color[1];
+			App->actions->previous_light_color[2] = ((ComponentLight*)component)->light_color[2];
+			App->actions->previous_light_intensity = ((ComponentLight*)component)->light_intensity;
+			App->actions->action_component = component;
+			break;
+		default:
+			break;
+		}
+
+
+		App->actions->clicked = true;
+	}
+
+	if (ImGui::IsItemDeactivatedAfterChange())
+	{
+		App->actions->AddUndoAction(type);
+		App->actions->clicked = false;
+	}
+}
+
 void ModuleActions::HandleInput()
 {
 	if (active_macros)

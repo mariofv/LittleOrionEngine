@@ -68,7 +68,8 @@ public:
 	float text_heigth = 0;
 
 private:
-	GLuint program, vao, vbo;
+	GLuint program = 0;
+	GLuint vao, vbo;
 
 	float scale_factor = 0.f;
 	std::vector<float> line_sizes;

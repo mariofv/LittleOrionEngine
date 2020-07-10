@@ -31,8 +31,6 @@ ComponentText::~ComponentText()
 
 void ComponentText::InitData()
 {
-	program = App->program->GetShaderProgramId("UI Text");
-
 	GLfloat vertices[] = {
 		// Pos      // Tex
 		0.f, 1.f, 0.0f, 0.0f,
@@ -74,7 +72,14 @@ void ComponentText::Render(float4x4* projection)
 		return;
 	}
 
-	glUseProgram(program);
+	if (program == 0)
+	{
+		program = App->program->UseProgram("UI Text");
+	}
+	else
+	{
+		glUseProgram(program);
+	}
 	glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
 	glUniform4fv(glGetUniformLocation(program, "font_color"), 1, font_color.ptr());
 	glActiveTexture(GL_TEXTURE0);

@@ -55,8 +55,7 @@ void Skybox::Load(const Config& config)
 void Skybox::Render(const ComponentCamera& camera) const
 {
 	glDepthFunc(GL_LEQUAL);
-	GLuint shader_program = App->program->GetShaderProgramId("Skybox");
-	glUseProgram(shader_program);
+	GLuint shader_program = App->program->UseProgram("Skybox");
 
 	float4x4 view_matrix = camera.GetViewMatrix();
 	view_matrix.SetRow(3, float4::zero);
