@@ -1086,6 +1086,9 @@
     <ClInclude Include="Engine\Component\ComponentAudioListener.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Helper\ThreadSafeQueue.h">
+      <Filter>Engine\Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
