@@ -587,7 +587,6 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		if (ImGui::Button("Reload"))
 		{
 			animation->SetStateMachine(animation->animation_controller->state_machine->GetUUID());
-			animation->animation_controller->skeleton_channels_joints_map.clear();
 			animation->Init();
 			return;
 		}

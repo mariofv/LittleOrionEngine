@@ -5,7 +5,7 @@
 #include "Animation.h"
 #include "ResourceManagement/Manager/StateMachineManager.h"
 #include "EditorUI/Panel/PanelStateMachine.h"
-
+#include <unordered_map>
 
 class File;
 
@@ -21,6 +21,7 @@ struct Clip
 	bool loop = false;
 
 	//RunTime only
+	std::unordered_map<uint32_t, std::vector<size_t>> skeleton_channels_joints_map;
 	float animation_time = 0.0f;
 };
 

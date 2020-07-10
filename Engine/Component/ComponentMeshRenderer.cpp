@@ -319,11 +319,14 @@ void ComponentMeshRenderer::UpdatePalette(std::vector<float4x4>& pose)
 	const auto &  joints = skeleton->skeleton;
 	for (size_t i = 0; i < pose.size(); ++i)
 	{
-		size_t parent_index = joints[i].parent_index;
-		if (parent_index <= pose.size())
+		size_t joint_index = i;
+		float4x4 global_transform = float4x4::identity;
+		while (joints[joint_index].parent_index != -1)
 		{
-			pose[i] = pose[parent_index] * pose[i];
+			joint_index = joints[joint_index].parent_index;
+			global_transform = pose[joint_index] * global_transform;
+
 		}
-		palette[i] =  pose[i] * joints[i].transform_global;
+		palette[i] = global_transform * pose[i] * joints[i].transform_global;
 	}
 }
