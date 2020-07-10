@@ -70,29 +70,34 @@ void main()
 
 mat4x4 GetModelViewMatrix()
 {
-  mat4x4 model_view = matrices.view * particles[gl_InstanceID].model;
-  #if ENABLE_BILLBOARD_VIEWPOINT_ALIGNMENT
-      model_view[0][0] = particles[gl_InstanceID].model[0][0];
-      model_view[0][1] = 0.0;
-      model_view[0][2] = 0.0;
+    mat4x4 model_view = matrices.view * particles[gl_InstanceID].model;
+    #if ENABLE_BILLBOARD_VIEWPOINT_ALIGNMENT
+        float x_scale = length(model_view[0].xyz);
+        model_view[0][0] = x_scale;
+        model_view[0][1] = 0.0;
+        model_view[0][2] = 0.0;
 
-      model_view[1][0] = 0.0;
-      model_view[1][1] = particles[gl_InstanceID].model[1][1];
-      model_view[1][2] = 0.0;
+        float y_scale = length(model_view[1].xyz);
+        model_view[1][0] = 0.0;
+        model_view[1][1] = y_scale;
+        model_view[1][2] = 0.0;
 
-      model_view[2][0] = 0.0;
-      model_view[2][1] = 0.0;
-      model_view[2][2] = particles[gl_InstanceID].model[2][2];
+        float z_scale = length(model_view[2].xyz);
+        model_view[2][0] = 0.0;
+        model_view[2][1] = 0.0;
+        model_view[2][2] = z_scale;
 
-  #elif ENABLE_BILLBOARD_AXIAL_ALIGNMENT
-      model_view[0][0] = particles[gl_InstanceID].model[0][0];
-      model_view[0][1] = 0.0;
-      model_view[0][2] = 0.0;
+    #elif ENABLE_BILLBOARD_AXIAL_ALIGNMENT
+        float x_scale = length(model_view[0].xyz);
+        model_view[0][0] = x_scale;
+        model_view[0][1] = 0.0;
+        model_view[0][2] = 0.0;
 
-      model_view[2][0] = 0.0;
-      model_view[2][1] = 0.0;
-      model_view[2][2] = particles[gl_InstanceID].model[2][2];
+        float z_scale = length(model_view[2].xyz);
+        model_view[2][0] = 0.0;
+        model_view[2][1] = 0.0;
+        model_view[2][2] = z_scale;
 
-  #endif
-  return model_view;
+    #endif
+    return model_view;
 }
