@@ -36,7 +36,7 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton,
 		auto& joint_channels_map = clip->skeleton_channels_joints_map[skeleton_uuid];
 		for (size_t i = 0; i < joint_channels_map.size(); ++i)
 		{
-			size_t joint_index = joint_channels_map[i].first;
+			size_t joint_index = joint_channels_map[i];
 			if (joint_index < pose.size())
 			{
 				const float3& last_translation = current_pose[i].translation;
@@ -67,15 +67,21 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton,
 
 }
 
-void AnimController::UpdateAttachedBones(uint32_t skeleton_uuid, const std::vector<math::float4x4>& pose)
+void AnimController::UpdateAttachedBones(const std::shared_ptr<Skeleton>& skeleton, const std::vector<math::float4x4>& palette)
 {
-	const auto& joint_channels_map = playing_clips[ClipType::ACTIVE].clip->skeleton_channels_joints_map[skeleton_uuid];
+	if (attached_bones.empty())
+	{
+		return;
+	}
+	const auto& joint_channels_map = playing_clips[ClipType::ACTIVE].clip->skeleton_channels_joints_map[skeleton->GetUUID()];
 	for (size_t i = 0; i < joint_channels_map.size(); ++i)
 	{
-		GameObject* gameobject = joint_channels_map[i].second;
-		if (gameobject)
+		size_t joint_index = joint_channels_map[i];
+		if (attached_bones[joint_index])
 		{
-			gameobject->transform.SetGlobalModelMatrix(pose[joint_channels_map[i].first]);
+			float4x4 new_model_matrix = palette[joint_index] * skeleton->skeleton[i].transform_global.Inverted();
+			attached_bones[joint_index]->transform.SetTranslation(new_model_matrix.TranslatePart());
+			attached_bones[joint_index]->transform.SetRotation(new_model_matrix.TranslatePart());
 		}
 	}
 }
@@ -196,6 +202,29 @@ void PlayingClip::Update()
 		else
 		{
 			playing = false;
+		}
+	}
+}
+
+void AnimController::GenerateAttachedBones(GameObject* mesh, std::vector<Skeleton::Joint> & skeleton)
+{
+	if (mesh->children.empty())
+	{
+		return;
+	}
+	attached_bones.resize(skeleton.size());
+	for (GameObject* child : mesh->children)
+	{
+		for (size_t j = 0; j < skeleton.size(); ++j)
+		{
+			if (skeleton[j].name == child->name)
+			{
+				attached_bones[j] = child;
+			}
+			else
+			{
+				attached_bones[j] = nullptr;
+			}
 		}
 	}
 }

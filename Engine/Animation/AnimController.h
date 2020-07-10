@@ -2,6 +2,7 @@
 #define _ANIMCONTROLLER_H_
 
 #include "ResourceManagement/Resources/Animation.h"
+#include "ResourceManagement/Resources/Skeleton.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 #include "EditorUI/Panel/PanelStateMachine.h"
 
@@ -9,7 +10,6 @@
 
 struct Clip;
 class GameObject;
-class Skeleton;
 class StateMachine;
 struct State;
 struct Transition;
@@ -29,6 +29,8 @@ enum ClipType
 	ACTIVE = 0,
 	NEXT
 };
+
+typedef std::pair<size_t, GameObject*> AttachedBone;
 class AnimController
 {
 public:
@@ -44,9 +46,11 @@ public:
 	bool Update();
 	void SetStateMachine(uint32_t state_machine_uuid);
 	void GetClipTransform(const std::shared_ptr<Skeleton>& skeleton, std::vector<math::float4x4>& pose);
-	void UpdateAttachedBones(uint32_t skeleton_uuid, const std::vector<math::float4x4>& pose);
+	void UpdateAttachedBones(const std::shared_ptr<Skeleton>& skeleton, const std::vector<math::float4x4>& palette);
 	void StartNextState(const std::string& trigger);
 	bool IsOnState(const std::string& state);
+
+	void GenerateAttachedBones(GameObject* mesh, std::vector<Skeleton::Joint> & skeleton);
 
 private:
 	void SetActiveState(std::shared_ptr<State> & state);
@@ -56,6 +60,7 @@ private:
 public:
 	std::shared_ptr<StateMachine> state_machine = nullptr;
 	std::vector<PlayingClip> playing_clips;
+	std::vector<GameObject*> attached_bones;
 
 private:
 	std::shared_ptr<Transition> active_transition;
