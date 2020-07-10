@@ -1,5 +1,3 @@
-#version 150
-
 in vec3 in_Position;
 in vec4 in_ColorPointSize;
 

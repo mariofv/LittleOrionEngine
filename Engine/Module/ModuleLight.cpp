@@ -84,7 +84,6 @@ void ModuleLight::Render(const float3& mesh_position, GLuint program)
 	glUniform1i(glGetUniformLocation(program, "num_spot_lights"), current_number_spot_lights_rendered);
 	glUniform1i(glGetUniformLocation(program, "num_point_lights"), current_number_point_lights_rendered);
 	SendShadowUniformsToShader(program);
-
 }
 
 void ModuleLight::RenderDirectionalLight(const ComponentLight& light)
