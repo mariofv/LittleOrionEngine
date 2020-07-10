@@ -169,7 +169,7 @@ void ComponentAnimation::UpdateMeshes()
 		auto & skeleton = mesh->skeleton;
 		animation_controller->GetClipTransform(skeleton, pose);
 		mesh->UpdatePalette(pose);
-		//animation_controller->UpdateAttachedBones(skeleton->GetUUID(), pose);
+		animation_controller->UpdateAttachedBones(skeleton->GetUUID(), pose);
 	}
 }
 
@@ -220,7 +220,7 @@ void ComponentAnimation::GenerateJointChannelMaps()
 				break;
 			}
 			auto & channels = clip->animation->keyframes[0].channels;
-			std::vector<size_t> meshes_channels_joints_map(channels.size());
+			std::vector<ChannelReference> meshes_channels_joints_map(channels.size());
 			for (size_t j = 0; j < channels.size(); ++j)
 			{
 				auto & channel = channels[j];
@@ -228,7 +228,8 @@ void ComponentAnimation::GenerateJointChannelMaps()
 					return channel.name == joint.name;
 				});
 
-				meshes_channels_joints_map[j] = (it - skeleton->skeleton.begin());
+				meshes_channels_joints_map[j].first = (it - skeleton->skeleton.begin());
+				meshes_channels_joints_map[j].second = nullptr;
 			}
 			clip->skeleton_channels_joints_map[skeleton->GetUUID()] = std::move(meshes_channels_joints_map);
 		}

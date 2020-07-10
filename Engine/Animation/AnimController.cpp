@@ -36,8 +36,8 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton,
 		auto& joint_channels_map = clip->skeleton_channels_joints_map[skeleton_uuid];
 		for (size_t i = 0; i < joint_channels_map.size(); ++i)
 		{
-			size_t joint_index = joint_channels_map[i];
-			if (i < pose.size())
+			size_t joint_index = joint_channels_map[i].first;
+			if (joint_index < pose.size())
 			{
 				const float3& last_translation = current_pose[i].translation;
 				const float3& next_translation = next_pose[i].translation;
@@ -69,7 +69,7 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton,
 
 void AnimController::UpdateAttachedBones(uint32_t skeleton_uuid, const std::vector<math::float4x4>& pose)
 {
-	/*const auto& joint_channels_map = playing_clips[ClipType::ACTIVE].clip->skeleton_channels_joints_map[skeleton_uuid];
+	const auto& joint_channels_map = playing_clips[ClipType::ACTIVE].clip->skeleton_channels_joints_map[skeleton_uuid];
 	for (size_t i = 0; i < joint_channels_map.size(); ++i)
 	{
 		GameObject* gameobject = joint_channels_map[i].second;
@@ -77,7 +77,7 @@ void AnimController::UpdateAttachedBones(uint32_t skeleton_uuid, const std::vect
 		{
 			gameobject->transform.SetGlobalModelMatrix(pose[joint_channels_map[i].first]);
 		}
-	}*/
+	}
 }
 
 bool AnimController::Update()

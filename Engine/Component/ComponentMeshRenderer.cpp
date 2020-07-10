@@ -313,7 +313,7 @@ void ComponentMeshRenderer::SetSkeleton(uint32_t skeleton_uuid)
 	}
 }
 
-void ComponentMeshRenderer::UpdatePalette(std::vector<float4x4>& pose)
+void ComponentMeshRenderer::UpdatePalette(const std::vector<float4x4>& pose)
 {
 	assert(pose.size() == palette.size());
 	const auto &  joints = skeleton->skeleton;

@@ -8,7 +8,7 @@
 #include <unordered_map>
 
 class File;
-
+typedef std::pair<size_t, GameObject*> ChannelReference;
 struct Clip
 {
 	Clip() = default;
@@ -21,7 +21,7 @@ struct Clip
 	bool loop = false;
 
 	//RunTime only
-	std::unordered_map<uint32_t, std::vector<size_t>> skeleton_channels_joints_map;
+	std::unordered_map<uint32_t, std::vector<ChannelReference>> skeleton_channels_joints_map;
 	float animation_time = 0.0f;
 };
 
