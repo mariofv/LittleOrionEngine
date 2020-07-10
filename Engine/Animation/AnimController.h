@@ -60,7 +60,7 @@ private:
 public:
 	std::shared_ptr<StateMachine> state_machine = nullptr;
 	std::vector<PlayingClip> playing_clips;
-	std::vector<GameObject*> attached_bones;
+	std::vector<AttachedBone> attached_bones;
 
 private:
 	std::shared_ptr<Transition> active_transition;

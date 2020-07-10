@@ -77,12 +77,16 @@ void AnimController::UpdateAttachedBones(const std::shared_ptr<Skeleton>& skelet
 	for (size_t i = 0; i < joint_channels_map.size(); ++i)
 	{
 		size_t joint_index = joint_channels_map[i];
-		if (attached_bones[joint_index])
+		for (AttachedBone attached_bones : attached_bones)
 		{
-			float4x4 new_model_matrix = palette[joint_index] * skeleton->skeleton[i].transform_global.Inverted();
-			attached_bones[joint_index]->transform.SetTranslation(new_model_matrix.TranslatePart());
-			attached_bones[joint_index]->transform.SetRotation(new_model_matrix.TranslatePart());
+			if (attached_bones.first)
+			{
+				float4x4 new_model_matrix = palette[joint_index] * skeleton->skeleton[i].transform_global.Inverted();
+				attached_bones.second->transform.SetTranslation(new_model_matrix.TranslatePart());
+				attached_bones.second->transform.SetRotation(new_model_matrix.TranslatePart());
+			}
 		}
+
 	}
 }
 
@@ -212,19 +216,20 @@ void AnimController::GenerateAttachedBones(GameObject* mesh, std::vector<Skeleto
 	{
 		return;
 	}
-	attached_bones.resize(skeleton.size());
-	for (GameObject* child : mesh->children)
+	attached_bones.clear();
+
+	for (size_t j = 0; j < skeleton.size(); ++j)
 	{
-		for (size_t j = 0; j < skeleton.size(); ++j)
+		for (GameObject* child : mesh->children)
 		{
 			if (skeleton[j].name == child->name)
 			{
-				attached_bones[j] = child;
+				attached_bones.push_back({ j,child });
 			}
-			else
-			{
-				attached_bones[j] = nullptr;
-			}
+		}
+		if (mesh->name == skeleton[j].name)
+		{
+			attached_bones.push_back({ j,mesh });
 		}
 	}
 }
