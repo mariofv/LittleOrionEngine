@@ -806,7 +806,7 @@ void ModuleDebugDraw::RenderCircle(const float3& center, float radius, const flo
 	dd::circle(center, normal, color, radius, 20.f);
 }
 
-void ModuleDebugDraw::RenderShpere(const float3 & center, float radius, const float3 & color) const
+void ModuleDebugDraw::RenderShpere(const float3& center, const float radius, const float3& color) const
 {
 	dd::sphere(center, color, radius);
 }
