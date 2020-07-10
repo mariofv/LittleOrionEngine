@@ -121,7 +121,7 @@ public:
 		//HERE WE CHECK IF T IS TEXTURE AND IF SO WE ADD FILEDATA TO THE QUEUE
 		//WE NEED TO CHECK HOW I AM GONNA SOLVE THE LOADED_RESOURCE NULLPTR WHILE NOT BEING CREATED
 		
-		if(MULTITHREADING && (std::is_same<T, Texture>::value || std::is_same<T, Mesh>::value || std::is_same<T, Font>::value) && !loading_thread_communication.normal_loading_flag && loading_thread_communication.load_scene_asyncronously)
+		if(MULTITHREADING && App->time->isGameRunning() && (std::is_same<T, Texture>::value || std::is_same<T, Mesh>::value || std::is_same<T, Font>::value) && !loading_thread_communication.normal_loading_flag && loading_thread_communication.load_scene_asyncronously)
 		{
 			loaded_resource = nullptr;
 
