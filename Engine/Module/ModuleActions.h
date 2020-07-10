@@ -52,6 +52,8 @@ public:
 	void SetCopyComponent(Component* component);
 	void ClearUndoRedoStacks();
 
+	void CheckClickForUndo(UndoActionType type, Component* component);
+
 private:
 	void HandleInput();
 	void UndoRedoMacros();

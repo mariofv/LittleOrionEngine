@@ -39,7 +39,8 @@ public:
 	float4 color = float4::one;
 
 private:
-	GLuint program, vao, vbo;
+	GLuint program = 0;
+	GLuint vao, vbo;
 
 	float texture_aspect_ratio = 0.f;
 };

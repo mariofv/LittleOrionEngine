@@ -3,6 +3,7 @@
 #include "Helper/TagManager.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioListener.h"
 #include "Component/ComponentAudioSource.h"
 #include "Component/ComponentBillboard.h"
 #include "Component/ComponentBoxCollider.h"
@@ -199,6 +200,10 @@ void PanelGameObject::Render(GameObject* game_object)
 
 			case Component::ComponentType::AUDIO_SOURCE:
 				component_panel.ShowComponentAudioSourceWindow(static_cast<ComponentAudioSource*>(component));
+				break;
+
+			case Component::ComponentType::AUDIO_LISTENER:
+				component_panel.ShowComponentAudioListenerWindow(static_cast<ComponentAudioListener*>(component));
 				break;
 
 			default:

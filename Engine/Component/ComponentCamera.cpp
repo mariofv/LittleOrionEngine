@@ -463,17 +463,17 @@ void ComponentCamera::SetOrientation(const float3 & orientation)
 	owner->transform.Rotate(rotation);
 }
 
-ENGINE_API void ComponentCamera::SetStartFocusPosition(const float3& focus_position)
+void ComponentCamera::SetStartFocusPosition(const float3& focus_position)
 {
 	start_focus_position = focus_position;
 }
 
-ENGINE_API void ComponentCamera::SetGoalFocusPosition(const float3& focus_position)
+void ComponentCamera::SetGoalFocusPosition(const float3& focus_position)
 {
 	goal_focus_position = focus_position;
 }
 
-ENGINE_API void ComponentCamera::SetFocusTime(const float focus_time)
+void ComponentCamera::SetFocusTime(const float focus_time)
 {
 	start_focus_time = focus_time;
 }
@@ -506,12 +506,12 @@ void ComponentCamera::LookAt(float x, float y, float z)
 	LookAt(float3(x, y, z));
 }
 
-ENGINE_API void ComponentCamera::SetPosition(const float3 & position)
+void ComponentCamera::SetPosition(const float3 & position)
 {
 	owner->transform.SetTranslation(position);
 }
 
-ENGINE_API void ComponentCamera::Center(const AABB &bounding_box)
+void ComponentCamera::Center(const AABB &bounding_box)
 {
 	float containing_sphere_radius = bounding_box.Size().Length() / 2;
 
@@ -522,7 +522,7 @@ ENGINE_API void ComponentCamera::Center(const AABB &bounding_box)
 	start_focus_time = App->time->real_time_since_startup;
 }
 
-ENGINE_API void ComponentCamera::CenterGame(const GameObject* go)
+void ComponentCamera::CenterGame(const GameObject* go)
 {
 	float containing_sphere_radius = go->aabb.bounding_box.Size().Length() / 2 ;
 	is_focusing = true;
@@ -531,37 +531,37 @@ ENGINE_API void ComponentCamera::CenterGame(const GameObject* go)
 	start_focus_time = App->time->delta_time;
 }
 
-ENGINE_API void ComponentCamera::MoveUp()
+void ComponentCamera::MoveUp()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(float3(0, distance, 0));
 }
 
-ENGINE_API void ComponentCamera::MoveDown()
+void ComponentCamera::MoveDown()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(float3(0, -distance, 0));
 }
 
-ENGINE_API void ComponentCamera::MoveForward()
+void ComponentCamera::MoveForward()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(camera_frustum.front.ScaledToLength(distance));
 }
 
-ENGINE_API void ComponentCamera::MoveBackward()
+void ComponentCamera::MoveBackward()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(-camera_frustum.front.ScaledToLength(distance));
 }
 
-ENGINE_API void ComponentCamera::MoveLeft()
+void ComponentCamera::MoveLeft()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(-camera_frustum.WorldRight().ScaledToLength(distance));
 }
 
-ENGINE_API void ComponentCamera::MoveRight()
+void ComponentCamera::MoveRight()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(camera_frustum.WorldRight().ScaledToLength(distance));
@@ -650,7 +650,7 @@ void ComponentCamera::SetPerpesctiveView()
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
 }
 
-ENGINE_API void ComponentCamera::SetOrthographicView()
+void ComponentCamera::SetOrthographicView()
 {
 	camera_frustum.type = FrustumType::OrthographicFrustum;
 }
@@ -731,17 +731,17 @@ std::vector<float> ComponentCamera::GetFrustumVertices() const
 	return vertices;
 }
 
-ENGINE_API bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const
+bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const
 {
 	return CheckAABBCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
 }
 
-ENGINE_API bool ComponentCamera::IsInsideFrustum(const AABB2D& aabb) const
+bool ComponentCamera::IsInsideFrustum(const AABB2D& aabb) const
 {
 	return CheckAABB2DCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
 }
 
-ENGINE_API bool ComponentCamera::IsCompletlyInsideFrustum(const AABB& aabb) const
+bool ComponentCamera::IsCompletlyInsideFrustum(const AABB& aabb) const
 {
 	return CheckAABBCollision(aabb) == ComponentAABB::CollisionState::INSIDE;
 }
