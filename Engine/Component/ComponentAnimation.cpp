@@ -141,6 +141,13 @@ ENGINE_API float ComponentAnimation::GetTotalAnimationTime() const
 	return 0.0f;
 }
 
+void ComponentAnimation::SetSpeedAnimation(float speed) const
+{
+	animation_controller->SetSpeed(speed);
+
+	return;
+}
+
 
 void ComponentAnimation::Update()
 {
