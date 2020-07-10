@@ -31,7 +31,6 @@ public:
 	void RemoveComponentLight(ComponentLight* light_to_remove);
 
 private:
-
 	void UpdateDirectionalLightFrustums(float3 max, float3 min);
 
 	void SetDirectionalLightFrustums();
@@ -63,7 +62,6 @@ public:
 	float main_camera_fov_increment_factor = 2;
 
 private:
-	friend class ModuleEditor;
 	Quat directional_light_rotation;
 
 	//Directional light frustums - Generate shadows at different resolution
@@ -71,12 +69,13 @@ private:
 	ComponentCamera* directional_light_mid = nullptr;
 	ComponentCamera* directional_light_far = nullptr;
 
-	GameObject*		 dir_light_game_object = nullptr;
-	GameObject*		 dir_light_game_object_mid = nullptr;
-	GameObject*		 dir_light_game_object_far = nullptr;
+	GameObject*	dir_light_game_object = nullptr;
+	GameObject*	dir_light_game_object_mid = nullptr;
+	GameObject*	dir_light_game_object_far = nullptr;
 
 	bool rendering_shadows = false;
 
+	friend class ModuleEditor;
 };
 
 #endif // !_MODULELIGHT_H_

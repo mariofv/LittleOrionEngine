@@ -14,7 +14,7 @@ PanelConsole::PanelConsole()
 	opened = true;
 	enabled = true;
 	window_name = ICON_FA_TERMINAL " Console";
-	SetCurrentLog(CurrentLog::GAME);
+	SetCurrentLog(CurrentLog::GAMELOG);
 }
 
 void PanelConsole::Render()
@@ -41,7 +41,7 @@ void PanelConsole::Render()
 			{
 				if (ImGui::MenuItem("Game", NULL, current_log_name == "Game"))
 				{
-					SetCurrentLog(CurrentLog::GAME);
+					SetCurrentLog(CurrentLog::GAMELOG);
 				}
 				if (ImGui::MenuItem("LittleOrion", NULL, current_log_name == "LittleOrion"))
 				{
@@ -61,7 +61,7 @@ void PanelConsole::Render()
 				}
 				if (ImGui::MenuItem("Debug", NULL, current_log_name == "Debug"))
 				{
-					SetCurrentLog(CurrentLog::DEBUG);
+					SetCurrentLog(CurrentLog::DEBUGLOG);
 				}
 
 				ImGui::EndMenu();
@@ -91,7 +91,7 @@ void PanelConsole::SetCurrentLog(CurrentLog current_log_type)
 	this->current_log_type = current_log_type;
 	switch (current_log_type)
 	{
-		case CurrentLog::GAME:
+		case CurrentLog::GAMELOG:
 			current_sink = App->engine_log->game_sink;
 			current_log_name = "Game";
 			break;
@@ -111,7 +111,7 @@ void PanelConsole::SetCurrentLog(CurrentLog current_log_type)
 			current_sink = App->engine_log->resources_sink;
 			current_log_name = "Resources";
 			break;
-		case CurrentLog::DEBUG:
+		case CurrentLog::DEBUGLOG:
 			current_sink = App->engine_log->debug_sink;
 			current_log_name = "Debug";
 			break;

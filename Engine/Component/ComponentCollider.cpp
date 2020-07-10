@@ -284,7 +284,7 @@ CollisionInformation ComponentCollider::DetectCollisionWith(ComponentCollider* c
 	
 	CollisionInformation collision_info;
 
-	if (detect_collision && collider->detect_collision)
+	if (detect_collision && collider->detect_collision && (active_physics || collider->active_physics))
 	{	
 		int numManifolds = App->physics->world->getDispatcher()->getNumManifolds();
 		for (int i = 0; i < numManifolds; i++)

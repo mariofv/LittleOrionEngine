@@ -1,6 +1,8 @@
 #ifndef _COMPONENTANIMATION_H_
 #define _COMPONENTANIMATION_H_
 
+#define ENGINE_EXPORTS
+
 #include "Component.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
