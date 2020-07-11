@@ -41,7 +41,7 @@ public:
 
 	void InitData();
 
-	void Render(std::vector<Vertex>& to_render, std::vector<float>& to_render_uvs);
+	void Render(std::vector<Vertex>& to_render);
 	//void SwitchFrame();
 
 	void ChangeTexture(uint32_t texture_uuid);

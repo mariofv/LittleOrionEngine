@@ -53,7 +53,7 @@ void ComponentTrailRenderer::InitData()
 	glBindVertexArray(0);
 }
 
-void ComponentTrailRenderer::Render(std::vector<Vertex>& to_render, std::vector<float>& to_render_uvs)
+void ComponentTrailRenderer::Render(std::vector<Vertex>& to_render)
 {
 	if (active)
 	{
@@ -65,12 +65,12 @@ void ComponentTrailRenderer::Render(std::vector<Vertex>& to_render, std::vector<
 
 		//use glBufferMap to obtain a pointer to buffer data
 		glBindBuffer(GL_ARRAY_BUFFER, trail_vbo);
-		trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(Vertex) *  to_render.size(), GL_MAP_WRITE_BIT);// 6 indices
+		trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(Vertex) *  to_render.size(), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);// 6 indices
 		memcpy(trail_renderer_vertices, to_render.data(), to_render.size() * sizeof(Vertex));
 		glUnmapBuffer(GL_ARRAY_BUFFER);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, trail_texture->opengl_texture);
+		//glBindTexture(GL_TEXTURE_2D, trail_texture->opengl_texture);
 		//glUniform1i(glGetUniformLocation(shader_program, "trail.texture"), 0);
 
 		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);

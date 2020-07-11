@@ -1,5 +1,10 @@
-layout (location = 0) in vec3 vertex; 
-layout(location = 1) in vec2 vertex_uv0;
+struct Trail
+{
+  vec4 position;
+  vec4 uv;
+};
+
+in vec4 vertex; 
 
 layout (std140) uniform Matrices
 {
@@ -15,7 +20,7 @@ out vec2 texCoord;
 
 void main()
 {
-    gl_Position = matrices.proj * matrices.view * vec4(vertex, 1.0f);
-	col = vertex;
-	texCoord =  vertex_uv0;
+    gl_Position = matrices.proj * matrices.view * vertex;
+	col = vec3(0.0f, 0.0f, 1.0f);
+	texCoord =  vec2(0.0f, 0.0f);
 }  

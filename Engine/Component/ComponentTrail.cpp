@@ -84,7 +84,6 @@ void  ComponentTrail::GetPerpendiculars()
 	}
 
 	std::vector<Vertex> vertices;
-	std::vector<float> uvs;
 	unsigned int i = 0;
 	mesh_index = 1 / (float)test_points.size(); // to coordinate texture
 	for (auto pair = mesh_points.begin(); pair < mesh_points.end(); ++pair)
@@ -103,11 +102,7 @@ void  ComponentTrail::GetPerpendiculars()
 
 			vertices.push_back({ top_left });
 			vertices.push_back({ bottom_left });
-			//uvs
-			uvs.push_back(0.0f);
-			uvs.push_back(0.0f);
-			uvs.push_back(0.0f);
-			uvs.push_back(0.0f);
+			
 			/*trail_renderer->tex_uv.x = mesh_index * i;
 			trail_renderer->tex_uv.y = 0.0f;*/
 		}
@@ -117,7 +112,7 @@ void  ComponentTrail::GetPerpendiculars()
 		}
 	}
 	trail_renderer->rendered_vertices = vertices.size();
-	trail_renderer->Render(vertices, uvs);
+	trail_renderer->Render(vertices);
 	trail_renderer->owner = owner;
 }
 
