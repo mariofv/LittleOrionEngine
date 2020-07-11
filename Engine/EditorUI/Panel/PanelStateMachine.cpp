@@ -175,7 +175,7 @@ void PanelStateMachine::RenderStates()
 			modified_by_user = true;
 		}
 		
-		if (ImGui::InputFloat("Speed", &node->speed, 0.5f, 0.0f, "%.2f", 0))
+		if (ImGui::InputFloat("Speed", &node->speed, 0.1f, 0.0f, "%.2f", 0))
 		{
 			node->state->speed = node->speed;
 			modified_by_user = true;
