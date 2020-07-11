@@ -10,6 +10,8 @@
 #include <math.h>
 void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton, std::vector<math::float4x4>& pose)
 {
+
+	pose.resize(skeleton->skeleton.size());
 	for (size_t j = 0; j < playing_clips.size(); j++)
 	{
 		const std::shared_ptr<Clip> clip = playing_clips[j].clip;
@@ -32,30 +34,33 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton,
 		float interpolation_lambda = current_keyframe - std::floor(current_keyframe);
 		const std::vector<Animation::Channel>& current_pose = clip->animation->keyframes[first_keyframe_index].channels;
 		const std::vector<Animation::Channel>& next_pose = clip->animation->keyframes[second_keyframe_index].channels;
+		assert(current_pose.size() == next_pose.size());
 
 		//Calculate interpolated position
 		auto& joint_channels_map = clip->skeleton_channels_joints_map[skeleton_uuid];
+		assert(joint_channels_map.size() == skeleton->skeleton.size());
 		for (size_t i = 0; i < joint_channels_map.size(); ++i)
 		{
-			size_t joint_index = joint_channels_map[i];
-			if (joint_index < pose.size())
+			pose[i] = skeleton->skeleton[i].transform_local;
+			size_t channel_index = joint_channels_map[i];
+			if (channel_index < current_pose.size())
 			{
-				const float3& last_translation = current_pose[i].translation;
-				const float3& next_translation = next_pose[i].translation;
+				const float3& last_translation = current_pose[channel_index].translation;
+				const float3& next_translation = next_pose[channel_index].translation;
 
-				const Quat& last_rotation = current_pose[i].rotation;
-				const Quat& next_rotation = next_pose[i].rotation;
+				const Quat& last_rotation = current_pose[channel_index].rotation;
+				const Quat& next_rotation = next_pose[channel_index].rotation;
 
 				float3 position = Utils::Interpolate(last_translation, next_translation, interpolation_lambda);
 				Quat rotation = Utils::Interpolate(last_rotation, next_rotation, interpolation_lambda);
 				float4x4 current_pose = float4x4::FromTRS(position, rotation, float3::one);
 				if (j != ClipType::ACTIVE)
 				{
-					pose[joint_index] = Utils::Interpolate(pose[joint_index], current_pose, weight);
+					pose[i] = Utils::Interpolate(pose[i], current_pose, weight);
 				}
 				else
 				{
-					pose[joint_index] = current_pose;
+					pose[i] = current_pose;
 
 				}	
 			}
@@ -68,7 +73,7 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton,
 
 }
 
-void AnimController::UpdateAttachedBones(const std::shared_ptr<Skeleton>& skeleton, const std::vector<math::float4x4>& palette)
+void AnimController::UpdateAttachedBones(const std::shared_ptr<Skeleton>& skeleton, const std::vector<math::float4x4>& pose)
 {
 	if (attached_bones.empty())
 	{
@@ -82,7 +87,7 @@ void AnimController::UpdateAttachedBones(const std::shared_ptr<Skeleton>& skelet
 		{
 			if (attached_bones.first == joint_index)
 			{
-				float4x4 new_model_matrix = palette[joint_index] * skeleton->skeleton[joint_index].transform_global.Inverted();
+				const float4x4& new_model_matrix = pose[joint_index];
 				attached_bones.second->transform.SetTranslation(new_model_matrix.TranslatePart());
 				attached_bones.second->transform.SetRotation(new_model_matrix.TranslatePart());
 			}
