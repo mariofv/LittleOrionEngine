@@ -108,7 +108,11 @@ void TweenSequence::Update(float dt)
 
 	if (current_played_tweens.size() <= 0)
 	{
-		if (on_completed_callback != nullptr) on_completed_callback();
+		if (on_completed_callback != nullptr)
+		{
+			on_completed_callback();
+		}
+
 		Stop();
 	}
 }

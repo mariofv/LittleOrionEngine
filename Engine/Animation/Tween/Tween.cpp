@@ -16,7 +16,7 @@ void Tween::Pause()
 	state = TweenState::PAUSED;
 }
 
-Tween * Tween::LOTranslate(ComponentTransform2D* transform, float2 end_value, float desired_time)
+Tween * Tween::LOTranslate(ComponentTransform2D* transform, const float2 end_value, float desired_time)
 {
 	Tween* tween = new Tween();
 	tween->transform = transform;
@@ -28,7 +28,7 @@ Tween * Tween::LOTranslate(ComponentTransform2D* transform, float2 end_value, fl
 	return tween;
 }
 
-Tween * Tween::LORotate(ComponentTransform2D* transform, float end_value, float desired_time)
+Tween * Tween::LORotate(ComponentTransform2D* transform, const float end_value, float desired_time)
 {
 	Tween* tween = new Tween();
 	tween->transform = transform;
@@ -40,7 +40,7 @@ Tween * Tween::LORotate(ComponentTransform2D* transform, float end_value, float 
 	return tween;
 }
 
-Tween * Tween::LOScale(ComponentTransform2D* transform, float3 end_scale, float desired_time)
+Tween * Tween::LOScale(ComponentTransform2D* transform, const float3 end_scale, float desired_time)
 {
 	Tween* tween = new Tween();
 	tween->transform = transform;
@@ -52,7 +52,7 @@ Tween * Tween::LOScale(ComponentTransform2D* transform, float3 end_scale, float 
 	return tween;
 }
 
-Tween * Tween::LOColor(ComponentImage* image, float4 end_color, float desired_time)
+Tween * Tween::LOColor(ComponentImage* image, const float4 end_color, float desired_time)
 {
 	Tween* tween = new Tween();
 	tween->image = image;
@@ -235,22 +235,22 @@ float Tween::SmoothStep(float t) const
 
 float Tween::EaseInSine(float t) const 
 {
-	return 1 - cos(t * (3.1416f / 2));
+	return 1 - cos(t * (math::pi / 2));
 }
 
 float Tween::Sine(float t) const 
 {
-	return (sin(t * (3.1416f * 2) - 3.1416f / 2) + 1.0f) / 2.0f;
+	return (sin(t * (math::pi * 2) - math::pi / 2) + 1.0f) / 2.0f;
 }
 
 float Tween::EaseOutSine(float t) const 
 {
-	return sin(t * (3.1416f / 2));
+	return sin(t * (math::pi / 2));
 }
 
 float Tween::EaseInOutSine(float t) const 
 {
-	return -0.5f * (cos(3.1416f * t) - 1);
+	return -0.5f * (cos(math::pi * t) - 1);
 }
 
 float Tween::EaseInBack(float t) const 
