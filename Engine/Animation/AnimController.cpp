@@ -79,9 +79,9 @@ void AnimController::UpdateAttachedBones(const std::shared_ptr<Skeleton>& skelet
 		size_t joint_index = joint_channels_map[i];
 		for (AttachedBone attached_bones : attached_bones)
 		{
-			if (attached_bones.first)
+			if (attached_bones.first == joint_index)
 			{
-				float4x4 new_model_matrix = palette[joint_index] * skeleton->skeleton[i].transform_global.Inverted();
+				float4x4 new_model_matrix = palette[joint_index] * skeleton->skeleton[joint_index].transform_global.Inverted();
 				attached_bones.second->transform.SetTranslation(new_model_matrix.TranslatePart());
 				attached_bones.second->transform.SetRotation(new_model_matrix.TranslatePart());
 			}
@@ -210,26 +210,3 @@ void PlayingClip::Update()
 	}
 }
 
-void AnimController::GenerateAttachedBones(GameObject* mesh, std::vector<Skeleton::Joint> & skeleton)
-{
-	if (mesh->children.empty())
-	{
-		return;
-	}
-	attached_bones.clear();
-
-	for (size_t j = 0; j < skeleton.size(); ++j)
-	{
-		for (GameObject* child : mesh->children)
-		{
-			if (skeleton[j].name == child->name)
-			{
-				attached_bones.push_back({ j,child });
-			}
-		}
-		if (mesh->name == skeleton[j].name)
-		{
-			attached_bones.push_back({ j,mesh });
-		}
-	}
-}

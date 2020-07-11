@@ -4,6 +4,7 @@
 #include "Component.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "ResourceManagement/Resources/Skeleton.h"
 
 #include <GL/glew.h>
 #include <memory>
@@ -57,7 +58,7 @@ public:
 private:
 	void GetChildrenMeshes(GameObject * current_mesh);
 	void GenerateJointChannelMaps();
-
+	void GenerateAttachedBones(GameObject* mesh, std::vector<Skeleton::Joint> & skeleton);
 private:
 	std::vector<ComponentMeshRenderer*> skinned_meshes;
 	AnimController* animation_controller = nullptr;

@@ -2,7 +2,6 @@
 #define _ANIMCONTROLLER_H_
 
 #include "ResourceManagement/Resources/Animation.h"
-#include "ResourceManagement/Resources/Skeleton.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 #include "EditorUI/Panel/PanelStateMachine.h"
 
@@ -10,6 +9,7 @@
 
 struct Clip;
 class GameObject;
+class Skeleton;
 class StateMachine;
 struct State;
 struct Transition;
@@ -50,7 +50,6 @@ public:
 	void StartNextState(const std::string& trigger);
 	bool IsOnState(const std::string& state);
 
-	void GenerateAttachedBones(GameObject* mesh, std::vector<Skeleton::Joint> & skeleton);
 
 private:
 	void SetActiveState(std::shared_ptr<State> & state);

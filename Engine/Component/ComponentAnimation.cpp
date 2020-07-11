@@ -220,7 +220,7 @@ void ComponentAnimation::GenerateJointChannelMaps()
 		{
 			auto & skeleton = mesh->skeleton->skeleton;
 			size_t skeleton_uuid = mesh->skeleton->GetUUID();
-			animation_controller->GenerateAttachedBones(mesh->owner, skeleton);
+			GenerateAttachedBones(mesh->owner, skeleton);
 			if (clip->animation == nullptr || clip->skeleton_channels_joints_map.find(skeleton_uuid) != clip->skeleton_channels_joints_map.end())
 			{
 				break;
@@ -244,5 +244,23 @@ void ComponentAnimation::GenerateJointChannelMaps()
 	}
 }
 
+void ComponentAnimation::GenerateAttachedBones(GameObject* mesh, std::vector<Skeleton::Joint> & skeleton)
+{
+	if (mesh->children.empty())
+	{
+		return;
+	}
+	animation_controller->attached_bones.clear();
 
+	for (size_t j = 0; j < skeleton.size(); ++j)
+	{
+		for (GameObject* child : mesh->children)
+		{
+			if (skeleton[j].name == child->name)
+			{
+				animation_controller->attached_bones.push_back({ j,child });
+			}
+		}
+	}
+}
 
