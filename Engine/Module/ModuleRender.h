@@ -13,9 +13,6 @@
 
 class ComponentBillboard;
 class ComponentMeshRenderer;
-class ComponentParticleSystem;
-class ComponentTrail;
-class ComponentTrailRenderer;
 class ComponentCamera;
 
 class GameObject;
@@ -119,6 +116,7 @@ private:
 	friend class ModuleSpacePartitioning;
 	friend class PanelConfiguration;
 	friend class PanelScene;
-	friend class NavMesh; };
+	friend class NavMesh; 
+};
 
 #endif //_MODULERENDER_H_

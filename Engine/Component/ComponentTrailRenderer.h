@@ -40,44 +40,18 @@ public:
 
 	void ChangeTexture(uint32_t texture_uuid);
 
-	
-
 public:
-	float vertices[12] = {
-			0.5f,  0.5f, 0.0f,		// outline_left second point -- top right
-			0.5f, -0.5f, 0.0f,		 // outline_right second point -- bottom right
-		   -0.5f, -0.5f, 0.0f,		 // outline_right second point -- bottom left
-		   -0.5f,  0.5f, 0.0f,	// outline_left first points -- top left
-	};
 	float* trail_renderer_vertices = nullptr;
-	uint32_t* indexArray = nullptr;
-	unsigned int rendered_vertices = 0, erase_vertices = 0;
+	unsigned int rendered_vertices = 0;
 
 private:
 	uint32_t texture_uuid = 0;
 	std::shared_ptr<Texture> trail_texture = nullptr;
 
-	//Spritesheet params
-	int x_tiles = 1;
-	int y_tiles = 1;
-
 	//color
 	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-	//Current sprite position
-	float time_since_start = 0.f;
-	float current_sprite_x = 0, current_sprite_y = 0;
-	float sheet_speed = 1;
-	bool oriented_to_camera;	
-
-	bool is_spritesheet = false;
-	float width = 5.f;
-	float height = 5.f;
-
-	unsigned int vbo, vao, ebo, trail_vao, trail_vbo;
-
-	//Determines when the sprite is changed
-	int innerCount = 0;
+	unsigned int trail_vao, trail_vbo;
 
 	friend class PanelComponent;
 	friend class ComponentParticleSystem;

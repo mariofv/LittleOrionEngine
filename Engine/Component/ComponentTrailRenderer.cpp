@@ -53,40 +53,12 @@ void ComponentTrailRenderer::InitData()
 	glBindVertexArray(0);
 }
 
-//void ComponentTrailRenderer::SwitchFrame()
-//{
-//	time_since_start += App->time->delta_time;
-//	APP_LOG_INFO("%.1f", time_since_start);
-//
-//	if (time_since_start * sheet_speed >= 1)
-//	{
-//		current_sprite_x += 1;
-//
-//		if ((int)current_sprite_x >= x_tiles) {
-//			current_sprite_y--;
-//			current_sprite_x = 0;
-//		}
-//
-//		if ((int)current_sprite_y <= 0) {
-//			current_sprite_y = y_tiles;
-//		}
-//		time_since_start = 0.f;
-//	}
-//
-//
-//}
-
 void ComponentTrailRenderer::Render(std::vector<float>& to_render)
 {
 	if (active)
 	{
-		/*for (int i = 0; i < to_render.size(); i += 3)
-	{
-		float3 point = {to_render[i], to_render[i + 1], to_render[i + 2]};
-		App->debug_draw->RenderPoint(point, 20.0f);
-	}*/
+		
 		GLuint shader_program = App->program->GetShaderProgramId("Trail");
-
 		glUseProgram(shader_program);
 
 		glBindVertexArray(trail_vao);
@@ -143,12 +115,7 @@ void ComponentTrailRenderer::Delete()
 
 void ComponentTrailRenderer::SpecializedSave(Config& config) const
 {
-	config.AddFloat(sheet_speed, "SheetSpeed");
 	config.AddUInt(texture_uuid, "TextureUUID");
-	config.AddFloat(width, "Width");
-	config.AddFloat(height, "Height");
-	config.AddInt((unsigned int)x_tiles, "Rows");
-	config.AddInt((unsigned int)y_tiles, "Columns");
 }
 
 void ComponentTrailRenderer::SpecializedLoad(const Config& config)
@@ -156,15 +123,10 @@ void ComponentTrailRenderer::SpecializedLoad(const Config& config)
 
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
-	sheet_speed = config.GetFloat("SheetSpeed", 1.f);
 	texture_uuid = config.GetUInt("TextureUUID", 0);
 
 	ChangeTexture(texture_uuid);
 
-	width = config.GetFloat("Width", 1.f);
-	height = config.GetFloat("Height", 1.f);
-	x_tiles = config.GetInt("Rows", 1.f);
-	y_tiles = config.GetInt("Columns", 1.f);
 }
 
 void ComponentTrailRenderer::ChangeTexture(uint32_t texture_uuid)

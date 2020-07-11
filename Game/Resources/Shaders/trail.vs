@@ -1,5 +1,6 @@
 #version 330 core
 layout (location = 0) in vec3 vertex; 
+layout (location = 1) in vec2 uvs; 
 
 layout (std140) uniform Matrices
 {
@@ -10,6 +11,7 @@ layout (std140) uniform Matrices
 
 vec4 color;
 out vec3 col;
+out vec2 texCoord;
 
 void main()
 {

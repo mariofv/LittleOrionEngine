@@ -228,11 +228,8 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	}
 	glDisable(GL_BLEND);
 	
-	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
-	App->ui->Render(&camera);
 	App->effects->Render();
 
-	
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
 	
