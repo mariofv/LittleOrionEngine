@@ -155,6 +155,14 @@ bool AnimController::IsOnState(const std::string& state)
 	return active_state.get()->name_hash == state_hash;
 }
 
+void AnimController::SetSpeed(float speed)
+{
+	if(active_state)
+	{
+		playing_clips[ClipType::ACTIVE].speed = speed;
+	}
+}
+
 void AnimController::FinishActiveState()
 {
 	std::shared_ptr<State> next_state = state_machine->GetState(active_transition->target_hash);

@@ -54,6 +54,7 @@ GLuint ModuleProgram::UseProgram(const std::string& program_name, unsigned int v
 		bool compiled_successfully = CompileProgram(*program, variation);
 		if (!compiled_successfully)
 		{
+			APP_LOG_ERROR("Couldn't compile program %s!", program_name.c_str());
 			return 0;
 		}
 	}
