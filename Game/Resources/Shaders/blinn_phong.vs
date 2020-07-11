@@ -1,7 +1,3 @@
-#version 430
-
-//Commit addition (sorry)
-
 layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec2 vertex_uv0;
 layout(location = 7) in vec2 vertex_uv1;
@@ -24,7 +20,7 @@ uniform int time;
 
 uniform mat4 palette[128]; // REMEMBER MAXIMUM NUMBER OF BONES NOT MORE PLEASE DON'T LOSE YOUR TIME LIKE ME
 uniform int has_skinning_value;
- 
+
 out vec2 texCoord;
 out vec2 texCoordLightmap;
 out vec3 position;
@@ -35,9 +31,6 @@ out mat3 TBN;
 out vec3 view_pos;
 out vec3 view_dir;
 
-//Normal mapping
-mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent);
-
 //SHADOWS
 uniform mat4 close_directional_view;
 uniform mat4 close_directional_proj;
@@ -47,20 +40,6 @@ uniform mat4 mid_directional_proj;
 
 uniform mat4 far_directional_view;
 uniform mat4 far_directional_proj;
-
-//Perspective cams
-//uniform mat4 main_cam_proj;
-//uniform mat4 main_cam_view;
-//out vec4 pos_from_main_camera;
-
-//uniform mat4 close_cam_proj;
-//uniform mat4 close_cam_view;
-//out vec4 pos_from_close_camera;
-
-//uniform mat4 mid_cam_proj;
-//uniform mat4 mid_cam_view;
-//out vec4 pos_from_mid_camera;
-
 
 out vec4 close_pos_from_light;
 out vec4 mid_pos_from_light;
@@ -76,10 +55,6 @@ void main()
 	mat4 close_lightSpaceMatrix = close_directional_proj * close_directional_view;
 	mat4 mid_lightSpaceMatrix   = mid_directional_proj * mid_directional_view;
 	mat4 far_lightSpaceMatrix   = far_directional_proj * far_directional_view;
-
-//	mat4 main_cam_space			= main_cam_proj * main_cam_view;
-//	mat4 close_cam_space		= close_cam_proj * close_cam_view;
-//	mat4 mid_cam_space		= mid_cam_proj * mid_cam_view;
 
 //Skinning
 	mat4 skinning_matrix = mat4(has_skinning_value);
@@ -97,8 +72,7 @@ void main()
 	normal = (matrices.model*skinning_matrix*vec4(vertex_normal, 0.0)).xyz;
 
 	view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
-	view_dir    = normalize(view_pos - position);	
-
+	view_dir    = normalize(view_pos - position);
 
 
 	//Light space
@@ -106,20 +80,8 @@ void main()
 	mid_pos_from_light = mid_lightSpaceMatrix*vec4(position, 1.0);
 	far_pos_from_light = far_lightSpaceMatrix*vec4(position, 1.0);
 
-	//pos_from_main_camera = main_cam_space*vec4(position, 1.0);
-	//pos_from_close_camera = close_cam_space*vec4(position, 1.0);
-	//pos_from_mid_camera = mid_cam_space*vec4(position, 1.0);
-
 	vec4 eye_coordinate_pos = matrices.view * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
 	distance_to_camera = -eye_coordinate_pos.z;
 
 	gl_Position = matrices.proj * eye_coordinate_pos;
-
-}
-
-mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent)
-{
-	vec3 ortho_tangent = normalize(tangent-dot(tangent, normal)*normal); // Gram-Schmidt
-	vec3 bitangent = cross(normal, ortho_tangent);
-	return mat3(tangent, bitangent, normal);
 }

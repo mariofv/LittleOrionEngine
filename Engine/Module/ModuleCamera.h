@@ -28,7 +28,6 @@ public:
 	void RemoveComponentCamera(ComponentCamera* camera_to_remove);
 
 	bool IsSceneCameraMoving() const;
-	void UpdateDirectionalLightFrustums(float3 maxp, float3 minp);
 
 
 private:
@@ -38,35 +37,11 @@ private:
 
 	void SetMovement(bool movement_enabled);
 	void HandleSceneCameraMovements();
-	void SetMainCameraFrustums();
-	void SetDirectionalLightFrustums();
-	void UpdateMainCameraFrustums();
 	
 public:
 	ComponentCamera* scene_camera = nullptr;
 	ComponentCamera* main_camera = nullptr;
 
-	//Main camera frustums
-	ComponentCamera* camera_close = nullptr;
-	ComponentCamera* camera_mid = nullptr;
-	ComponentCamera* camera_far = nullptr;
-
-	//Directional light frustums - Generate shadows at different resolution
-	ComponentCamera* directional_light_camera = nullptr;
-	ComponentCamera* directional_light_mid = nullptr;
-	ComponentCamera* directional_light_far = nullptr;
-
-	GameObject*		 dir_light_game_object = nullptr;
-	GameObject*		 dir_light_game_object_mid = nullptr;
-	GameObject*		 dir_light_game_object_far = nullptr;
-
-
-	GameObject*		 main_close= nullptr;
-	GameObject*		 main_mid = nullptr;
-	GameObject*		 main_far = nullptr;
-
-
-	
 	float aux_width = 25;
 	float aux_height = 25;
 

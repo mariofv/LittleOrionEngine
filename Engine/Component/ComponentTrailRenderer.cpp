@@ -58,7 +58,7 @@ void ComponentTrailRenderer::Render(std::vector<Vertex>& to_render, std::vector<
 	if (active)
 	{
 		
-		GLuint shader_program = App->program->GetShaderProgramId("Trail");
+		GLuint shader_program = App->program->UseProgram("Trail");
 		glUseProgram(shader_program);
 
 		glBindVertexArray(trail_vao);
@@ -67,8 +67,6 @@ void ComponentTrailRenderer::Render(std::vector<Vertex>& to_render, std::vector<
 		glBindBuffer(GL_ARRAY_BUFFER, trail_vbo);
 		trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(Vertex) *  to_render.size(), GL_MAP_WRITE_BIT);// 6 indices
 		memcpy(trail_renderer_vertices, to_render.data(), to_render.size() * sizeof(Vertex));
-		//trail_renderer_uvs = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 1, sizeof(float) *  to_render_uvs.size(), GL_MAP_WRITE_BIT);// 6 indices
-		//memcpy(trail_renderer_uvs, to_render_uvs.data(), to_render_uvs.size() * sizeof(float));
 		glUnmapBuffer(GL_ARRAY_BUFFER);
 
 		glActiveTexture(GL_TEXTURE0);

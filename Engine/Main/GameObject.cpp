@@ -22,6 +22,7 @@
 
 #include "Component/Component.h"
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioListener.h"
 #include "Component/ComponentAudioSource.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
@@ -256,7 +257,7 @@ void GameObject::PreUpdate()
 	}
 }
 
-ENGINE_API void GameObject::Update()
+void GameObject::Update()
 {
 	BROFILER_CATEGORY("GameObject Update", Profiler::Color::Green);
 
@@ -421,7 +422,7 @@ void GameObject::SetTransform2DStatus(bool enabled)
 	transform_2d_enabled = enabled;
 }
 
-ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType type)
+Component* GameObject::CreateComponent(const Component::ComponentType type)
 {
 	Component* created_component;
 	switch (type)
@@ -496,6 +497,10 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	case Component::ComponentType::AUDIO_SOURCE:
 		created_component = App->audio->CreateComponentAudioSource();
 		break;
+
+	case Component::ComponentType::AUDIO_LISTENER:
+		created_component = App->audio->CreateComponentAudioListener();
+		break;
 		
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");
@@ -516,7 +521,7 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 }
 
 
-ENGINE_API Component* GameObject::CreateComponent(const ComponentCollider::ColliderType collider_type)
+Component* GameObject::CreateComponent(const ComponentCollider::ColliderType collider_type)
 {
 	Component* created_component = App->physics->CreateComponentCollider(collider_type, this);
 	components.push_back(created_component);
@@ -540,7 +545,8 @@ void GameObject::RemoveComponent(uint64_t UUID)
 		RemoveComponent(component);
 	}
 }
-ENGINE_API Component* GameObject::GetComponent(const Component::ComponentType type) const
+
+Component* GameObject::GetComponent(const Component::ComponentType type) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
@@ -552,7 +558,7 @@ ENGINE_API Component* GameObject::GetComponent(const Component::ComponentType ty
 	return nullptr;
 }
 
-ENGINE_API Component* GameObject::GetComponent(uint64_t UUID) const
+Component* GameObject::GetComponent(uint64_t UUID) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
@@ -564,7 +570,7 @@ ENGINE_API Component* GameObject::GetComponent(uint64_t UUID) const
 	return nullptr;
 }
 
-ENGINE_API ComponentScript* GameObject::GetComponentScript(const char* name) const
+ComponentScript* GameObject::GetComponentScript(const char* name) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{

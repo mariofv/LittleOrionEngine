@@ -10,6 +10,7 @@
 #include <GL/glew.h>
 
 class GameObject;
+class Texture;
 
 struct Vertex
 {

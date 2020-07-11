@@ -15,6 +15,7 @@ class GameObject;
 class ComponentBillboard;
 class ComponentTrailRenderer;
 class ComponentTransform;
+class Texture;
 
 struct TrailPoint {
 	float3 position;

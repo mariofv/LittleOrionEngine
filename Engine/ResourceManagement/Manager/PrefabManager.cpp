@@ -1,6 +1,7 @@
 #include "PrefabManager.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioListener.h"
 #include "Component/ComponentAudioSource.h"
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
@@ -152,6 +153,9 @@ void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameO
 			break;
 		case Component::ComponentType::AUDIO_SOURCE:
 			created_component = new ComponentAudioSource();
+			break;
+		case Component::ComponentType::AUDIO_LISTENER:
+			created_component = new ComponentAudioListener();
 			break;
 		case Component::ComponentType::PARTICLE_SYSTEM:
 			created_component = new ComponentParticleSystem();

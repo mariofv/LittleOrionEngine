@@ -27,16 +27,24 @@ void ComponentAudioSource::Update()
 {
 	if (sound_3d)
 	{
-		const math::float3 owner_transform = owner->transform.GetTranslation();
-		sound_position.SetPosition(owner_transform.x, owner_transform.y, owner_transform.z);
-		AK::SoundEngine::SetPosition(gameobject_source, sound_position);
+		const math::float3 owner_transform = owner->transform.GetGlobalTranslation();
+		source_transform.SetPosition(owner_transform.x, owner_transform.y, owner_transform.z);
+
+		const math::float3 front_vector = owner->transform.GetFrontVector();
+		AkVector orientation_front{ front_vector.x, front_vector.y, -front_vector.z };
+
+		const math::float3 top_vector = owner->transform.GetUpVector();
+		AkVector orientation_top{ top_vector.x, top_vector.y, -top_vector.z };
+
+		source_transform.SetOrientation(orientation_front, orientation_top);
+
+		AK::SoundEngine::SetPosition(gameobject_source, source_transform);
 	}
 }
 
 void ComponentAudioSource::Delete()
 {
 	StopAll();
-	StopEvent("menu_select");
 	AK::SoundEngine::UnregisterGameObj(gameobject_source);
 	App->audio->RemoveComponentAudioSource(this);
 }
@@ -49,11 +57,15 @@ void ComponentAudioSource::SetSoundBank(uint32_t uuid)
 void ComponentAudioSource::SetVolume(float volume)
 {
 	this->volume = volume;
-	AK::SoundEngine::SetGameObjectOutputBusVolume(gameobject_source,App->audio->main_sound_gameobject,volume);
+	if (App->audio->default_listener)
+	{
+		AK::SoundEngine::SetGameObjectOutputBusVolume(gameobject_source, App->audio->default_listener, volume);
+	}
 }
 
 unsigned long ComponentAudioSource::PlayEvent(const std::string & event_to_play)
 {
+	last_played_event = event_to_play;
 	AkPlayingID playing_id = AK::SoundEngine::PostEvent(event_to_play.c_str(), gameobject_source);
 	if (playing_id == AK_INVALID_PLAYING_ID)
 	{
@@ -64,7 +76,7 @@ unsigned long ComponentAudioSource::PlayEvent(const std::string & event_to_play)
 	return playing_id;
 }
 
-ENGINE_API void ComponentAudioSource::StopEvent(const std::string & event_to_stop)
+void ComponentAudioSource::StopEvent(const std::string & event_to_stop)
 {
 	AkUInt32 event_id = AK::SoundEngine::GetIDFromString(event_to_stop.c_str());
 	if (event_playing_ids.find(event_id) != event_playing_ids.end())
@@ -73,12 +85,12 @@ ENGINE_API void ComponentAudioSource::StopEvent(const std::string & event_to_sto
 	}
 }
 
-ENGINE_API void ComponentAudioSource::StopEvent(unsigned long playing_id_to_stop)
+void ComponentAudioSource::StopEvent(unsigned long playing_id_to_stop)
 {
 	AK::SoundEngine::StopPlayingID(playing_id_to_stop);
 }
 
-ENGINE_API void ComponentAudioSource::StopAll()
+void ComponentAudioSource::StopAll()
 {
 	AK::SoundEngine::StopAll(gameobject_source);
 }
@@ -123,4 +135,23 @@ void ComponentAudioSource::SpecializedLoad(const Config& config)
 		SetSoundBank(soundbank_uuid);
 	}
 	SetVolume(volume);
+}
+
+void ComponentAudioSource::Disable() 
+{
+	StopAll();
+	AK::SoundEngine::UnregisterGameObj(gameobject_source);
+}
+
+void ComponentAudioSource::Enable()
+{
+	if (!AK::SoundEngine::RegisterGameObj(gameobject_source))
+	{
+		APP_LOG_ERROR("Unable to register sound gameobject");
+	}
+	else if (last_played_event!="")
+	{
+		PlayEvent(last_played_event);
+	}
+
 }

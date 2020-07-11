@@ -14,12 +14,12 @@ class PanelConsole : public Panel
 public:
 	enum class CurrentLog
 	{
-		GAME,
+		GAMELOG,
 		LITTLEORION,
 		ASSIMP,
 		OPENGL,
 		RESOURCES,
-		DEBUG
+		DEBUGLOG
 	};
 
 	PanelConsole();
