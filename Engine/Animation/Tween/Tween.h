@@ -55,7 +55,7 @@ public:
 	ENGINE_API static Tween* LOScale(ComponentTransform2D* transform, const float3 desired_scale, float time);
 	ENGINE_API static Tween* LOColor(ComponentImage* image, const float4 desired_color, float time);
 	ENGINE_API Tween* SetEase(EaseType ease);
-	ENGINE_API Tween* SetLoops(int loops, TweenLoop loop_type);
+	ENGINE_API Tween* SetLoops(const int loops, TweenLoop loop_type);
 
 private:
 	float start_time = 0.0f;
@@ -97,15 +97,15 @@ private:
 
 	void ResetTween();
 
-	float Linear(float time) const;
-	float SmoothStep(float time) const;
-	float EaseInSine(float time) const;
-	float Sine(float time) const;
-	float EaseOutSine(float time) const;
-	float EaseInOutSine(float time) const;
-	float EaseInBack(float time) const;
-	float EaseOutBack(float time) const;
-	float EaseInOutBack(float time) const;
+	float Linear(const float time) const;
+	float SmoothStep(const float time) const;
+	float EaseInSine(const float time) const;
+	float Sine(const float time) const;
+	float EaseOutSine(const float time) const;
+	float EaseInOutSine(const float time) const;
+	float EaseInBack(const float time) const;
+	float EaseOutBack(const float time) const;
+	float EaseInOutBack(const float time) const;
 
 	friend class TweenSequence;
 };
