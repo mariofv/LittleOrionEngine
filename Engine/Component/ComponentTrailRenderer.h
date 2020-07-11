@@ -15,6 +15,7 @@ class Texture;
 struct Vertex
 {
 	float3 position;
+	float2 uvs;
 };
 
 class ComponentTrailRenderer : public Component

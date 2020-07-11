@@ -100,8 +100,8 @@ void  ComponentTrail::GetPerpendiculars()
 			top_left = pair->first->position + perpendicular;
 			bottom_left = (pair->first->position - perpendicular);
 
-			vertices.push_back({ top_left });
-			vertices.push_back({ bottom_left });
+			vertices.push_back({ top_left, float2(0.0f, 0.0f) });
+			vertices.push_back({ bottom_left, float2(0.0f, 0.0f) });
 			
 			/*trail_renderer->tex_uv.x = mesh_index * i;
 			trail_renderer->tex_uv.y = 0.0f;*/
