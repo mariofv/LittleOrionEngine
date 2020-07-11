@@ -41,6 +41,7 @@ void LOTween::CleanSequences()
 		if (sequence->state == TweenSequence::TweenSequenceState::STOPPED)
 		{
 			it = sequences.erase(it);
+			delete(sequence);
 		}
 		else
 		{
