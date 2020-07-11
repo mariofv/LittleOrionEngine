@@ -59,13 +59,10 @@ layout (std140) uniform Matrices
 } matrices;
 
 
-uniform int use_light_map;
-
-
 //COLOR TEXTURES
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord);
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord);
-vec3 GetLightMapColor(const vec3 normalized_normal, const Material mat, const vec2 texCoordLightmap);
+vec3 CalculateLightmap(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
 vec3 GetOcclusionColor(const Material mat, const vec2 texCoord);
 vec3 GetEmissiveColor(const Material mat, const vec2 texCoord);
 
@@ -103,21 +100,7 @@ void main()
 		vec3 normal_from_texture = GetNormalMap(material, tiling);
 		fragment_normal= normalize(TBN * normal_from_texture);
 	#endif
-
-	vec3 light_dir   =vec3(1.0f,1.0f,1.0f);
-	vec3 half_dir 	 = normalize(light_dir + view_dir);
-	float ND = max(0.0, dot(fragment_normal, light_dir));
-
-	//----Specular calculations----
-	float shininess = 7*specular_color.a + 1;
-	shininess *= shininess;
-	float spec = pow(max(dot(fragment_normal, half_dir), 0.0), shininess);
-	vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-ND),5);
-	vec3 specular =(spec * (shininess+8)/8*PI) *  fresnel;
-
-	result += texture(material.light_map, texCoord).rgb * (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular)* ND;
-
-
+	result += CalculateLightmap(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	result += emissive_color;
 	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
 	FragColor = vec4(result,1.0);
@@ -165,5 +148,21 @@ vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel)
 	return (1-frensel)*diffuse_color/PI;
 }
 
+vec3 CalculateLightmap(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
+{
 
+		vec3 light_dir   =vec3(1.0f,1.0f,1.0f);
+	vec3 half_dir 	 = normalize(light_dir + view_dir);
+	float ND = max(0.0, dot(normalized_normal, light_dir));
+
+	//----Specular calculations----
+	float shininess = 7*specular_color.a + 1;
+	shininess *= shininess;
+	float spec = pow(max(dot(normalized_normal, half_dir), 0.0), shininess);
+	vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-ND),5);
+	vec3 specular =(spec * (shininess+8)/8*PI) *  fresnel;
+
+	return texture(material.light_map, texCoord).rgb * (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular)* ND;
+
+}
 
