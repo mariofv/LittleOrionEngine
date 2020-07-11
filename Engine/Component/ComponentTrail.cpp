@@ -71,6 +71,7 @@ void  ComponentTrail::GetPerpendiculars()
 	TrailPoint* current_point = nullptr;
 	mesh_points.clear();
 	float mesh_index = 0.0f;
+	
 	for (int i = 0; i < test_points.size(); ++i)
 	{
 		current_point = &test_points[i];
@@ -82,10 +83,13 @@ void  ComponentTrail::GetPerpendiculars()
 
 	}
 
-	std::vector<float> vertices;
-
+	std::vector<Vertex> vertices;
+	std::vector<float> uvs;
+	unsigned int i = 0;
+	mesh_index = 1 / (float)test_points.size(); // to coordinate texture
 	for (auto pair = mesh_points.begin(); pair < mesh_points.end(); ++pair)
 	{
+		++i;
 		if (pair->first->life > 0 && pair->second->life > 0)
 		{
 			//Get the vector that links every two points
@@ -97,13 +101,15 @@ void  ComponentTrail::GetPerpendiculars()
 			top_left = pair->first->position + perpendicular;
 			bottom_left = (pair->first->position - perpendicular);
 
-
-			vertices.push_back(top_left.x);
-			vertices.push_back(top_left.y);
-			vertices.push_back(0.0f);
-			vertices.push_back(bottom_left.x);
-			vertices.push_back(bottom_left.y);
-			vertices.push_back(0.0f);
+			vertices.push_back({ top_left });
+			vertices.push_back({ bottom_left });
+			//uvs
+			uvs.push_back(0.0f);
+			uvs.push_back(0.0f);
+			uvs.push_back(0.0f);
+			uvs.push_back(0.0f);
+			/*trail_renderer->tex_uv.x = mesh_index * i;
+			trail_renderer->tex_uv.y = 0.0f;*/
 		}
 		else
 		{
@@ -111,7 +117,7 @@ void  ComponentTrail::GetPerpendiculars()
 		}
 	}
 	trail_renderer->rendered_vertices = vertices.size();
-	trail_renderer->Render(vertices);
+	trail_renderer->Render(vertices, uvs);
 	trail_renderer->owner = owner;
 }
 

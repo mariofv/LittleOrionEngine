@@ -1,6 +1,6 @@
 #version 330 core
 layout (location = 0) in vec3 vertex; 
-layout (location = 1) in vec2 uvs; 
+layout(location = 1) in vec2 vertex_uv0;
 
 layout (std140) uniform Matrices
 {
@@ -13,8 +13,10 @@ vec4 color;
 out vec3 col;
 out vec2 texCoord;
 
+
 void main()
 {
     gl_Position = matrices.proj * matrices.view * vec4(vertex, 1.0f);
 	col = vertex;
+	texCoord =  vertex_uv0;
 }  

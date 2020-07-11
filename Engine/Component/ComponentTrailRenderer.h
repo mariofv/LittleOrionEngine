@@ -11,6 +11,11 @@
 
 class GameObject;
 
+struct Vertex
+{
+	float3 position;
+};
+
 class ComponentTrailRenderer : public Component
 {
 public:
@@ -35,19 +40,20 @@ public:
 
 	void InitData();
 
-	void Render(std::vector<float>& to_render);
+	void Render(std::vector<Vertex>& to_render, std::vector<float>& to_render_uvs);
 	//void SwitchFrame();
 
 	void ChangeTexture(uint32_t texture_uuid);
 
 public:
 	float* trail_renderer_vertices = nullptr;
+	float* trail_renderer_uvs = nullptr;
 	unsigned int rendered_vertices = 0;
 
 private:
 	uint32_t texture_uuid = 0;
 	std::shared_ptr<Texture> trail_texture = nullptr;
-
+	float2 tex_uv = {0.0f, 0.0f};
 	//color
 	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
