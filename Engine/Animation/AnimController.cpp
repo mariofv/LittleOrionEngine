@@ -21,7 +21,7 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton,
 		float weight = j != ClipType::ACTIVE ? playing_clips[j].current_time / (playing_clips[j].interpolation_time) : 0.0f;
 		float current_percentage = playing_clips[j].current_time / clip->animation_time;
 		float current_keyframe = current_percentage * (clip->animation->frames - 1);
-
+		//Get current Keyframe
 		size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
 		size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
 		if (second_keyframe_index >= clip->animation->frames || first_keyframe_index >= clip->animation->frames)
@@ -33,6 +33,7 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton,
 		const std::vector<Animation::Channel>& current_pose = clip->animation->keyframes[first_keyframe_index].channels;
 		const std::vector<Animation::Channel>& next_pose = clip->animation->keyframes[second_keyframe_index].channels;
 
+		//Calculate interpolated position
 		auto& joint_channels_map = clip->skeleton_channels_joints_map[skeleton_uuid];
 		for (size_t i = 0; i < joint_channels_map.size(); ++i)
 		{
