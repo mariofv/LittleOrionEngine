@@ -25,7 +25,7 @@ public:
 	void SetTimeScale(float time_scale);
 	void ResetInitFrame();
 
-	bool isGameRunning();
+	ENGINE_API bool isGameRunning();
 
 	void Play();
 	void Pause();
