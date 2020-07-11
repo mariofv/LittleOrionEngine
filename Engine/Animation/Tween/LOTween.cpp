@@ -26,7 +26,7 @@ void LOTween::Update(float dt)
 			sequences.erase(sequences.begin() + pos);
 			pos -= 1;
 
-			delete(sequence);
+			//delete(sequence);
 		}
 		pos += 1;
 	}

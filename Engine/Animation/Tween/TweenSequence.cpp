@@ -102,7 +102,7 @@ void TweenSequence::Update(float dt)
 			current_played_tweens.erase(current_played_tweens.begin() + i);
 			i -= 1;
 
-			delete(the_tween);
+			//delete(the_tween);
 		}
 	}
 
