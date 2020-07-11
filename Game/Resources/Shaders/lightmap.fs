@@ -1,4 +1,3 @@
-#version 430 core
 #define PI 3.14159
 
 //General variables
@@ -6,35 +5,32 @@ in vec3 position;
 in vec3 normal;
 in vec2 texCoord;
 in vec2 texCoordLightmap;
-in vec3 tangent;
-
-//Without tangent transform
-in vec3 view_pos;
 in vec3 view_dir;
+in vec3 view_pos;
+in vec3 vertex_normal_fs;
+in vec3 vertex_tangent_fs;
 
 //Tangent - Normal mapping variables
 in mat3 TBN;
-in vec3 t_view_pos;
-in vec3 t_frag_pos;
-
-
 
 out vec4 FragColor;
 
 //constants
 const float gamma = 2.2;
+const float ambient_light_strength = 0.1;
+
+vec3 normal_from_texture;
+vec3 liquid_normal_from_texture;
 
 struct Material
 {
 	sampler2D diffuse_map;
 	vec4 diffuse_color;
-	float k_diffuse;
 	sampler2D specular_map;
 	vec4 specular_color;
-	float k_specular;
+	float smoothness;
 
 	sampler2D occlusion_map;
-	float k_ambient;
 	sampler2D emissive_map;
 	vec4 emissive_color;
 	sampler2D normal_map;
@@ -45,7 +41,13 @@ struct Material
 	float transparency;
 	float tiling_x;
 	float tiling_y;
-	bool use_normal_map;
+
+	sampler2D liquid_map;
+	float tiling_liquid_x_x;
+	float tiling_liquid_x_y;
+	float tiling_liquid_y_x;
+	float tiling_liquid_y_y;
+	bool use_liquid_map;
 };
 uniform Material material;
 
@@ -86,31 +88,58 @@ struct PointLight
     float quadratic;
 };
 
+uniform int num_spot_lights;
+uniform SpotLight spot_lights[10];
+
+uniform int num_point_lights;
+uniform PointLight point_lights[10];
+
+uniform int use_light_map;
+
 
 //COLOR TEXTURES
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord);
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord);
-vec3 GetLightMapColor(const Material mat, const vec2 texCoordLightmap);
+vec3 GetLightMapColor(const vec3 normalized_normal, const Material mat, const vec2 texCoordLightmap);
 vec3 GetOcclusionColor(const Material mat, const vec2 texCoord);
 vec3 GetEmissiveColor(const Material mat, const vec2 texCoord);
 
 //MAPS
 vec3 GetNormalMap(const Material mat, const vec2 texCoord);
+vec3 GetLiquidMap(const Material mat, const vec2 texCoord);
 
-//TYPE OF LIGHTS
-vec3 CalculateLightmap(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
-//COMPUTE NORMALIZED LIGHTS
-vec3 ComputeDiffuseColor(vec3 diffuse_color, vec3 specular_color);
-float ComputeSpecularLight(vec3 normal, vec3 half_dir);
+
+
+vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel);
+
+uniform float ambient_light_intensity;
+uniform vec4 ambient_light_color;
+
+in vec4 close_pos_from_light;
+in vec4 mid_pos_from_light;
+in vec4 far_pos_from_light;
+
+vec3 FrustumsCheck();
+
+uniform sampler2DShadow close_depth_map;
+uniform sampler2DShadow mid_depth_map;
+uniform sampler2DShadow far_depth_map;
+
+in float distance_to_camera;
+uniform float far_plane;
 
 
 void main()
 {
-
 	vec3 result = vec3(0);
-
+	vec3 ambient = ambient_light_color.xyz* ambient_light_strength*ambient_light_intensity;
 	//tiling
 	vec2 tiling = vec2(material.tiling_x, material.tiling_y)*texCoord;
+	//TODO->change it to liquid maps and not hardcoded
+	if(material.use_liquid_map)
+	{
+		tiling += vec2(material.tiling_liquid_x_x, material.tiling_liquid_x_y);
+	}
 
 	//computation of colors
 	vec4 diffuse_color  = GetDiffuseColor(material, tiling);
@@ -118,51 +147,61 @@ void main()
 	vec3 occlusion_color = GetOcclusionColor(material, tiling);
 	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
-	if(material.use_normal_map)
-	{
+	vec3 fragment_normal = normalize(normal);
+
+	//Tangent space matrix
+	vec3 T = normalize(vec3(matrices.model * vec4(vertex_tangent_fs,   0.0)));
+	vec3 N = normalize(vec3(matrices.model * vec4(vertex_normal_fs,    0.0)));
+	vec3 ortho_tangent = normalize(T-dot(T, N)*N); // Gram-Schmidt
+	vec3 B = normalize(cross(N, ortho_tangent));
+	mat3 TBN = mat3(T, B, N);
+
+	#if NORMAL_MAP
 		vec3 normal_from_texture = GetNormalMap(material, tiling);
+		fragment_normal= normalize(TBN * normal_from_texture);
+	#endif
 
-		vec3 fragment_normal = normalize(TBN * normal_from_texture);
+	vec3 light_dir   =vec3(1.0f,1.0f,1.0f);
+	vec3 half_dir 	 = normalize(light_dir + view_dir);
+	float ND = max(0.0, dot(fragment_normal, light_dir));
 
-		result += CalculateLightmap(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
-	}
+	//----Specular calculations----
+	float shininess = 7*specular_color.a + 1;
+	shininess *= shininess;
+	float spec = pow(max(dot(fragment_normal, half_dir), 0.0), shininess);
+	vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-ND),5);
+	vec3 specular =(spec * (shininess+8)/8*PI) *  fresnel;
 
-	else
-	{
-		result += CalculateLightmap(normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
-	}
+	result += texture(material.light_map, texCoord).rgb * (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular)* ND;
+
 
 	result += emissive_color;
-	//FragColor = vec4(vec3(normalize(tangent)),1.0);
+	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
 	FragColor = vec4(result,1.0);
-
-	//Gamma Correction
-	FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma));
+	FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
 	FragColor.a=material.transparency;
 }
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 {
-
 	vec4 result = texture(mat.diffuse_map, texCoord)*mat.diffuse_color;
 	//alpha testing
 	if(result.a <0.1)
 	{
 		discard;
 	}
+	result.rgb = pow(result.rgb, vec3(2.2));
 	return result;
-}
-
-vec3 GetLightMapColor(const Material mat, const vec2 texCoord)
-{
-	return texture(mat.light_map, texCoord).rgb;
 }
 
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord)
 {
-	return texture(mat.specular_map, texCoord)*mat.specular_color;
-}
 
+	vec4 result = texture(mat.specular_map, texCoord)*mat.specular_color;
+	result.rgb = pow(result.rgb, vec3(2.2));
+	result.a *= mat.smoothness;
+	return result;
+}
 vec3 GetOcclusionColor(const Material mat, const vec2 texCoord)
 {
 	return texture(mat.occlusion_map, texCoord).rgb;
@@ -175,44 +214,13 @@ vec3 GetEmissiveColor(const Material mat, const vec2 texCoord)
 
 vec3 GetNormalMap(const Material mat, const vec2 texCoord)
 {
-	return texture(mat.normal_map, texCoord).rgb*2.0-1.0;
+	return normalize(texture(mat.normal_map, texCoord).rgb*2.0-1.0);
 }
 
-vec3 CalculateLightmap(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
+vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel)
 {
-
-	vec3 lightmap_color  = GetLightMapColor(material, texCoordLightmap);
-
-	vec3 light_dir   = vec3(1.0,1.0,1.0);
-	float diffuse    = max(0.0, dot(normalized_normal, light_dir));
-	float specular   = 0.0;
-
-	vec3 half_dir = normalize(light_dir + view_dir);
-
-	if(diffuse > 0.0 && material.k_specular > 0.0 && material.specular_color.w > 0.0)
-	{
-		specular = ComputeSpecularLight(normalized_normal, half_dir);
-	}
-
-	return lightmap_color * (
-
-		+ diffuse_color.rgb * (occlusion_color*material.k_ambient)
-		+ ComputeDiffuseColor(diffuse_color.rgb, specular_color.rgb) * 1/PI * diffuse
-		+ specular_color.rgb * specular
-	);
+	return (1-frensel)*diffuse_color/PI;
 }
 
-vec3 ComputeDiffuseColor(vec3 diffuse_color, vec3 specular_color)
-{
-	return 	(1-specular_color)*diffuse_color;
-}
 
-float ComputeSpecularLight(vec3 normal, vec3 half_dir) // Refference: http://www.farbrausch.de/~fg/stuff/phong.pdf
-{
-	float spec = pow(max(dot(normal, half_dir), 0.0), 64.0);
 
-	float normalization_denom = (material.specular_color.w + 2) * (material.specular_color.w + 4);
-	float normalization_nom = 8*PI *(pow(2, -material.specular_color.w/2) + material.specular_color.w);
-
-	return pow(spec, material.specular_color.w) * (normalization_denom/normalization_nom);
-}
