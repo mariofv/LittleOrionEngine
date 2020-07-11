@@ -21,6 +21,20 @@ update_status ModuleAnimation::Update()
 	{
 		tweener->Update(App->time->delta_time);
 	}
+	else
+	{
+		tweener->Reset();
+	}
+
+	return update_status::UPDATE_CONTINUE;
+}
+
+update_status ModuleAnimation::PostUpdate()
+{
+	if (App->time->isGameRunning())
+	{
+		tweener->CleanSequences();
+	}
 
 	return update_status::UPDATE_CONTINUE;
 }
