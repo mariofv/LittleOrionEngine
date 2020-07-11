@@ -58,41 +58,6 @@ layout (std140) uniform Matrices
 	mat4 view;
 } matrices;
 
-layout (std140) uniform DirectionalLight
-{
-	vec3 color;
-	vec3 direction;
-	int num_directional_lights;
-} directional_light;
-
-struct SpotLight
-{
-	vec3 color;
-    vec3 position;
-    vec3 direction;
-    float cutOff;
-    float outerCutOff;
-
-    float constant;
-    float linear;
-    float quadratic;
-};
-
-struct PointLight
-{
-	vec3 color;
-	vec3 position;
-
-	float constant;
-    float linear;
-    float quadratic;
-};
-
-uniform int num_spot_lights;
-uniform SpotLight spot_lights[10];
-
-uniform int num_point_lights;
-uniform PointLight point_lights[10];
 
 uniform int use_light_map;
 
@@ -106,28 +71,11 @@ vec3 GetEmissiveColor(const Material mat, const vec2 texCoord);
 
 //MAPS
 vec3 GetNormalMap(const Material mat, const vec2 texCoord);
-vec3 GetLiquidMap(const Material mat, const vec2 texCoord);
-
-
 
 vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel);
 
 uniform float ambient_light_intensity;
 uniform vec4 ambient_light_color;
-
-in vec4 close_pos_from_light;
-in vec4 mid_pos_from_light;
-in vec4 far_pos_from_light;
-
-vec3 FrustumsCheck();
-
-uniform sampler2DShadow close_depth_map;
-uniform sampler2DShadow mid_depth_map;
-uniform sampler2DShadow far_depth_map;
-
-in float distance_to_camera;
-uniform float far_plane;
-
 
 void main()
 {
@@ -135,11 +83,6 @@ void main()
 	vec3 ambient = ambient_light_color.xyz* ambient_light_strength*ambient_light_intensity;
 	//tiling
 	vec2 tiling = vec2(material.tiling_x, material.tiling_y)*texCoord;
-	//TODO->change it to liquid maps and not hardcoded
-	if(material.use_liquid_map)
-	{
-		tiling += vec2(material.tiling_liquid_x_x, material.tiling_liquid_x_y);
-	}
 
 	//computation of colors
 	vec4 diffuse_color  = GetDiffuseColor(material, tiling);
