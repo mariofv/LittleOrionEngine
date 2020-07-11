@@ -235,6 +235,7 @@ void ModuleLight::RecordShadowsFrameBuffers(int width, int height)
 	{
 		return;
 	}
+	glCullFace(GL_FRONT);
 	rendering_shadows = true;
 	float old_fov = App->cameras->main_camera->camera_frustum.verticalFov;
 	App->cameras->main_camera->SetFOV(old_fov * main_camera_fov_increment_factor);
@@ -245,6 +246,7 @@ void ModuleLight::RecordShadowsFrameBuffers(int width, int height)
 	directional_light_mid->RecordZBufferFrame(width, height);
 	directional_light_far->RecordZBufferFrame(width / 4, height / 4);
 	rendering_shadows = false;
+	glCullFace(GL_BACK);
 }
 
 void ModuleLight::UpdateDirectionalLightFrustums(float3 max, float3 min)
