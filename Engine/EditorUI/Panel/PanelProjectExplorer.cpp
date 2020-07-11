@@ -106,7 +106,7 @@ void PanelProjectExplorer::InitResourceExplorerDockspace()
 
 void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 {
-	if (!App->resources->thread_comunication.finished_loading && path.GetFilename() == "Library")
+	if (!App->resources->thread_comunication.finished_loading)
 	{
 		return;
 	}
