@@ -3,10 +3,11 @@
 
 #define ENGINE_EXPORTS
 
-#include "Module/ModuleActions.h"
+#include "Main/Globals.h"
 
 class Component;
 class ComponentAnimation;
+class ComponentAudioListener;
 class ComponentAudioSource;
 class ComponentBillboard;
 class ComponentBoxCollider;
@@ -30,13 +31,13 @@ class ComponentTransform;
 class ComponentScript;
 class ComponentSpriteMask;
 class GameObject;
-
+class PanelParticleSystem;
 
 class PanelComponent
 {
 public:
-	PanelComponent() = default;
-	~PanelComponent() = default;
+	ENGINE_API PanelComponent();
+	~PanelComponent();
 
 	void ShowComponentMeshRendererWindow(ComponentMeshRenderer* mesh_renderer);
 	void ShowComponentCanvasRendererWindow(ComponentCanvasRenderer* canvas_renderer);
@@ -58,6 +59,7 @@ public:
 	void ShowComponentEventSystem(ComponentEventSystem* event_system);
 
 	void ShowComponentColliderWindow(ComponentCollider* collider);
+	void ShowComponentAudioListenerWindow(ComponentAudioListener* component_audio_listener);
 	void ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source);
 	void ShowComponentParticleSystem(ComponentParticleSystem* particle_system);
 
@@ -67,7 +69,6 @@ public:
 	void ShowScriptsCreated(ComponentScript* component_script);
 
 	void CheckClickedCamera(ComponentCamera* camera);
-	void CheckClickForUndo(ModuleActions::UndoActionType type, Component* component);
 
 	ENGINE_API void DropGOTarget(GameObject*& go);
 
@@ -78,6 +79,9 @@ private:
 	void ShowComponentSphereColliderWindow(ComponentSphereCollider* sphere_collider);
 	void ShowComponentCylinderColliderWindow(ComponentCylinderCollider* cylinder_collider);
 	void ShowComponentMeshColliderWindow(ComponentMeshCollider* mesh_collider);
+
+private:
+	PanelParticleSystem* particle_system_panel = nullptr;
 };
 
 #endif //_PANELCOMPONENT_H_

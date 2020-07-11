@@ -1,0 +1,260 @@
+[2020-07-09 17:55:36.181] [LittleOrionEngine] [info] main.cpp(47) : Application Creation ends. Elapsed time: 0.000000 ms
+[2020-07-09 17:55:36.182] [LittleOrionEngine] [info] modulewindow.cpp(15) : Init SDL window & surface.
+[2020-07-09 17:55:36.186] [LittleOrionEngine] [info] modulewindow.cpp(176) : Creating Glew Renderer context
+[2020-07-09 17:55:36.831] [LittleOrionEngine] [info] modulewindow.cpp(75) : SDL window & surface initialized correctly.
+[2020-07-09 17:55:36.890] [LittleOrionEngine] [info] path.cpp(199) : Error reading directory /Assets/Models/Level 1 VS3: (null)
+[2020-07-09 17:55:37.202] [LittleOrionEngine] [info] path.cpp(199) : Error reading directory /Assets/Wwise/English(US): (null)
+[2020-07-09 17:55:37.214] [LittleOrionEngine] [info] path.cpp(199) : Error reading directory /Library/Metadata/0: (null)
+[2020-07-09 17:55:37.701] [Resources] [info] textureimporter.cpp(13) : Initializing DevIL image loader.
+[2020-07-09 17:55:37.702] [Resources] [info] textureimporter.cpp(20) : DevIL image loader initialized correctly.
+[2020-07-09 17:55:37.732] [LittleOrionEngine] [info] moduleinput.cpp(57) : Init SDL input event system
+[2020-07-09 17:55:37.827] [LittleOrionEngine] [info] moduleinput.cpp(79) : SDL input event system initialized correctly.
+[2020-07-09 17:55:37.828] [LittleOrionEngine] [info] moduletime.cpp(26) : Initializing Engine clocks
+[2020-07-09 17:55:37.828] [LittleOrionEngine] [info] moduletime.cpp(36) : Engine clocks initialized correctly
+[2020-07-09 17:55:37.840] [LittleOrionEngine] [info] modulerender.cpp(97) : Using Glew 2.1.0
+[2020-07-09 17:55:37.840] [LittleOrionEngine] [info] modulerender.cpp(98) : Vendor: NVIDIA Corporation
+[2020-07-09 17:55:37.840] [LittleOrionEngine] [info] modulerender.cpp(99) : Renderer: GeForce GTX 1070/PCIe/SSE2
+[2020-07-09 17:55:37.840] [LittleOrionEngine] [info] modulerender.cpp(100) : OpenGL version supported 4.6.0 NVIDIA 436.48
+[2020-07-09 17:55:37.840] [LittleOrionEngine] [info] modulerender.cpp(101) : GLSL: 4.60 NVIDIA
+
+[2020-07-09 17:55:37.844] [LittleOrionEngine] [info] modulerender.cpp(121) : Glew initialized correctly.
+[2020-07-09 17:55:37.844] [LittleOrionEngine] [info] moduleeditor.cpp(81) : Initializing IMGUI editor
+[2020-07-09 17:55:37.845] [LittleOrionEngine] [info] moduleeditor.cpp(103) : IMGUI editor initialized correctly.
+[2020-07-09 17:55:37.847] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/skybox.vs,/Resources/Shaders/skybox.fs
+[2020-07-09 17:55:37.847] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
+[2020-07-09 17:55:37.848] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
+[2020-07-09 17:55:37.848] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
+[2020-07-09 17:55:37.849] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
+[2020-07-09 17:55:37.849] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
+[2020-07-09 17:55:37.849] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
+[2020-07-09 17:55:37.849] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
+[2020-07-09 17:55:37.849] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
+[2020-07-09 17:55:37.850] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
+[2020-07-09 17:55:37.850] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
+[2020-07-09 17:55:37.850] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/skybox.vs,/Resources/Shaders/skybox.fs loaded correctly.
+[2020-07-09 17:55:37.850] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/linepoint.vs,/Resources/Shaders/linepoint.fs
+[2020-07-09 17:55:37.851] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
+[2020-07-09 17:55:37.851] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
+[2020-07-09 17:55:37.852] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
+[2020-07-09 17:55:37.852] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
+[2020-07-09 17:55:37.852] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
+[2020-07-09 17:55:37.853] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
+[2020-07-09 17:55:37.853] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
+[2020-07-09 17:55:37.853] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
+[2020-07-09 17:55:37.853] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
+[2020-07-09 17:55:37.853] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
+[2020-07-09 17:55:37.853] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/linepoint.vs,/Resources/Shaders/linepoint.fs loaded correctly.
+[2020-07-09 17:55:37.853] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/text.vs,/Resources/Shaders/text.fs
+[2020-07-09 17:55:37.854] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
+[2020-07-09 17:55:37.854] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
+[2020-07-09 17:55:37.855] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
+[2020-07-09 17:55:37.856] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
+[2020-07-09 17:55:37.856] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
+[2020-07-09 17:55:37.856] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
+[2020-07-09 17:55:37.856] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
+[2020-07-09 17:55:37.856] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
+[2020-07-09 17:55:37.856] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
+[2020-07-09 17:55:37.856] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
+[2020-07-09 17:55:37.856] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/text.vs,/Resources/Shaders/text.fs loaded correctly.
+[2020-07-09 17:55:37.857] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/outline.vs,/Resources/Shaders/outline.fs
+[2020-07-09 17:55:37.857] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
+[2020-07-09 17:55:37.857] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
+[2020-07-09 17:55:37.857] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
+[2020-07-09 17:55:37.858] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
+[2020-07-09 17:55:37.858] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
+[2020-07-09 17:55:37.858] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
+[2020-07-09 17:55:37.858] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
+[2020-07-09 17:55:37.858] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
+[2020-07-09 17:55:37.859] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
+[2020-07-09 17:55:37.859] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
+[2020-07-09 17:55:37.859] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/outline.vs,/Resources/Shaders/outline.fs loaded correctly.
+[2020-07-09 17:55:37.859] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/flat.vs,/Resources/Shaders/flat.fs
+[2020-07-09 17:55:37.859] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
+[2020-07-09 17:55:37.860] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
+[2020-07-09 17:55:37.860] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
+[2020-07-09 17:55:37.861] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
+[2020-07-09 17:55:37.861] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
+[2020-07-09 17:55:37.861] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
+[2020-07-09 17:55:37.861] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
+[2020-07-09 17:55:37.861] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
+[2020-07-09 17:55:37.861] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
+[2020-07-09 17:55:37.861] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
+[2020-07-09 17:55:37.862] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/flat.vs,/Resources/Shaders/flat.fs loaded correctly.
+[2020-07-09 17:55:37.862] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/gouraund.vs,/Resources/Shaders/gouraund.fs
+[2020-07-09 17:55:37.862] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
+[2020-07-09 17:55:37.862] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
+[2020-07-09 17:55:37.862] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
+[2020-07-09 17:55:37.863] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
+[2020-07-09 17:55:37.863] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
+[2020-07-09 17:55:37.863] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
+[2020-07-09 17:55:37.863] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
+[2020-07-09 17:55:37.863] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
+[2020-07-09 17:55:37.864] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
+[2020-07-09 17:55:37.864] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
+[2020-07-09 17:55:37.864] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/gouraund.vs,/Resources/Shaders/gouraund.fs loaded correctly.
+[2020-07-09 17:55:37.864] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/phong.vs,/Resources/Shaders/phong.fs
+[2020-07-09 17:55:37.864] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
+[2020-07-09 17:55:37.864] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
+[2020-07-09 17:55:37.865] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
+[2020-07-09 17:55:37.865] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
+[2020-07-09 17:55:37.865] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
+[2020-07-09 17:55:37.865] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
+[2020-07-09 17:55:37.865] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
+[2020-07-09 17:55:37.866] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
+[2020-07-09 17:55:37.867] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
+[2020-07-09 17:55:37.867] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
+[2020-07-09 17:55:37.867] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/phong.vs,/Resources/Shaders/phong.fs loaded correctly.
+[2020-07-09 17:55:37.867] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/blinn_phong.vs,/Resources/Shaders/blinn_phong.fs
+[2020-07-09 17:55:37.867] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
+[2020-07-09 17:55:37.868] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
+[2020-07-09 17:55:37.868] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
+[2020-07-09 17:55:37.869] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
+[2020-07-09 17:55:37.869] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
+[2020-07-09 17:55:37.869] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
+[2020-07-09 17:55:37.869] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
+[2020-07-09 17:55:37.869] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
+[2020-07-09 17:55:37.871] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
+[2020-07-09 17:55:37.871] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
+[2020-07-09 17:55:37.872] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/blinn_phong.vs,/Resources/Shaders/blinn_phong.fs loaded correctly.
+[2020-07-09 17:55:37.872] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/blinn_phong.vs,/Resources/Shaders/lightmap.fs
+[2020-07-09 17:55:37.872] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
+[2020-07-09 17:55:37.872] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
+[2020-07-09 17:55:37.872] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
+[2020-07-09 17:55:37.873] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
+[2020-07-09 17:55:37.873] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
+[2020-07-09 17:55:37.873] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
+[2020-07-09 17:55:37.873] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
+[2020-07-09 17:55:37.873] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
+[2020-07-09 17:55:37.875] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
+[2020-07-09 17:55:37.875] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
+[2020-07-09 17:55:37.875] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/blinn_phong.vs,/Resources/Shaders/lightmap.fs loaded correctly.
+[2020-07-09 17:55:37.875] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/billboard.vs,/Resources/Shaders/billboard.fs
+[2020-07-09 17:55:37.876] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
+[2020-07-09 17:55:37.876] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
+[2020-07-09 17:55:37.876] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
+[2020-07-09 17:55:37.877] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
+[2020-07-09 17:55:37.877] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
+[2020-07-09 17:55:37.877] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
+[2020-07-09 17:55:37.878] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
+[2020-07-09 17:55:37.878] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
+[2020-07-09 17:55:37.878] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
+[2020-07-09 17:55:37.879] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
+[2020-07-09 17:55:37.879] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/billboard.vs,/Resources/Shaders/billboard.fs loaded correctly.
+[2020-07-09 17:55:37.879] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/particles.vs,/Resources/Shaders/particles.fs
+[2020-07-09 17:55:37.879] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
+[2020-07-09 17:55:37.879] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
+[2020-07-09 17:55:37.880] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
+[2020-07-09 17:55:37.880] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
+[2020-07-09 17:55:37.881] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
+[2020-07-09 17:55:37.881] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
+[2020-07-09 17:55:37.881] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
+[2020-07-09 17:55:37.881] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
+[2020-07-09 17:55:37.881] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
+[2020-07-09 17:55:37.882] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
+[2020-07-09 17:55:37.882] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/particles.vs,/Resources/Shaders/particles.fs loaded correctly.
+[2020-07-09 17:55:37.882] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/NavMesh.vs,/Resources/Shaders/NavMesh.fs
+[2020-07-09 17:55:37.882] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
+[2020-07-09 17:55:37.882] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
+[2020-07-09 17:55:37.882] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
+[2020-07-09 17:55:37.883] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
+[2020-07-09 17:55:37.883] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
+[2020-07-09 17:55:37.883] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
+[2020-07-09 17:55:37.883] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
+[2020-07-09 17:55:37.883] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
+[2020-07-09 17:55:37.884] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
+[2020-07-09 17:55:37.884] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
+[2020-07-09 17:55:37.884] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/NavMesh.vs,/Resources/Shaders/NavMesh.fs loaded correctly.
+[2020-07-09 17:55:37.884] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/grid.vs,/Resources/Shaders/grid.fs
+[2020-07-09 17:55:37.884] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
+[2020-07-09 17:55:37.884] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
+[2020-07-09 17:55:37.884] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
+[2020-07-09 17:55:37.885] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
+[2020-07-09 17:55:37.885] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
+[2020-07-09 17:55:37.885] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
+[2020-07-09 17:55:37.885] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
+[2020-07-09 17:55:37.885] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
+[2020-07-09 17:55:37.886] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
+[2020-07-09 17:55:37.886] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
+[2020-07-09 17:55:37.886] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/grid.vs,/Resources/Shaders/grid.fs loaded correctly.
+[2020-07-09 17:55:37.886] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/sprite.vs,/Resources/Shaders/sprite.fs
+[2020-07-09 17:55:37.886] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
+[2020-07-09 17:55:37.887] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
+[2020-07-09 17:55:37.887] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
+[2020-07-09 17:55:37.887] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
+[2020-07-09 17:55:37.887] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
+[2020-07-09 17:55:37.888] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
+[2020-07-09 17:55:37.888] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
+[2020-07-09 17:55:37.888] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
+[2020-07-09 17:55:37.888] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
+[2020-07-09 17:55:37.888] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
+[2020-07-09 17:55:37.888] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/sprite.vs,/Resources/Shaders/sprite.fs loaded correctly.
+[2020-07-09 17:55:37.888] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/sprite.vs,/Resources/Shaders/ui_text.fs
+[2020-07-09 17:55:37.888] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
+[2020-07-09 17:55:37.889] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
+[2020-07-09 17:55:37.889] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
+[2020-07-09 17:55:37.890] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
+[2020-07-09 17:55:37.890] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
+[2020-07-09 17:55:37.890] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
+[2020-07-09 17:55:37.890] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
+[2020-07-09 17:55:37.890] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
+[2020-07-09 17:55:37.890] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
+[2020-07-09 17:55:37.890] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
+[2020-07-09 17:55:37.891] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/sprite.vs,/Resources/Shaders/ui_text.fs loaded correctly.
+[2020-07-09 17:55:37.891] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 7.
+[2020-07-09 17:55:37.911] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 8.
+[2020-07-09 17:55:37.926] [Resources] [info] moduleresourcemanager.h(119) : Resource 8 loaded correctly.
+[2020-07-09 17:55:37.926] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 9.
+[2020-07-09 17:55:37.945] [Resources] [info] moduleresourcemanager.h(119) : Resource 9 loaded correctly.
+[2020-07-09 17:55:37.945] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 10.
+[2020-07-09 17:55:37.973] [Resources] [info] moduleresourcemanager.h(119) : Resource 10 loaded correctly.
+[2020-07-09 17:55:37.974] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 11.
+[2020-07-09 17:55:37.988] [Resources] [info] moduleresourcemanager.h(119) : Resource 11 loaded correctly.
+[2020-07-09 17:55:37.988] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 12.
+[2020-07-09 17:55:38.010] [Resources] [info] moduleresourcemanager.h(119) : Resource 12 loaded correctly.
+[2020-07-09 17:55:38.011] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 13.
+[2020-07-09 17:55:38.030] [Resources] [info] moduleresourcemanager.h(119) : Resource 13 loaded correctly.
+[2020-07-09 17:55:38.031] [Resources] [info] moduleresourcemanager.h(119) : Resource 7 loaded correctly.
+[2020-07-09 17:55:38.031] [LittleOrionEngine] [info] moduledebug.cpp(30) : Module Debug initialized correctly.
+[2020-07-09 17:55:38.043] [LittleOrionEngine] [info] path.cpp(83) : File /Resources/Scenes/tmp_scene.scene saved!
+
+[2020-07-09 17:55:38.380] [LittleOrionEngine] [info] path.cpp(83) : File /Library/Metadata/41/4143578850 saved!
+
+[2020-07-09 17:55:38.439] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 4143578850.
+[2020-07-09 17:55:38.440] [Resources] [info] moduleresourcemanager.h(119) : Resource 4143578850 loaded correctly.
+[2020-07-09 17:55:38.448] [LittleOrionEngine] [info] dllmanager.cpp(101) : Change detected in the Gameplay System, compilation in process.
+[2020-07-09 17:55:38.448] [LittleOrionEngine] [info] cr.h(1640) : unload 'Resources\Scripts\GameplaySystemRelease0.dll' with rollback: 0
+
+[2020-07-09 17:55:38.541] [LittleOrionEngine] [info] cr.h(1695) : loaded: Resources\Scripts\GameplaySystemRelease1.dll (version: 1)
+
+[2020-07-09 17:55:38.559] [LittleOrionEngine] [info] moduledebugdraw.cpp(396) : Module Debug Draw initialized correctly.
+[2020-07-09 17:55:38.559] [LittleOrionEngine] [info] main.cpp(63) : Application Init ends. Elapsed time: 2500.000000 ms
+[2020-07-09 17:55:38.617] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 4045890434.
+[2020-07-09 17:55:38.618] [Resources] [info] moduleresourcemanager.h(119) : Resource 4045890434 loaded correctly.
+[2020-07-09 17:55:59.223] [LittleOrionEngine] [info] cr.h(1640) : unload 'Resources\Scripts\GameplaySystemRelease1.dll' with rollback: 0
+
+[2020-07-09 17:55:59.344] [LittleOrionEngine] [info] cr.h(1695) : loaded: Resources\Scripts\GameplaySystemRelease2.dll (version: 2)
+
+[2020-07-09 17:55:59.363] [LittleOrionEngine] [info] dllmanager.cpp(121) : Compilation was successful
+[2020-07-09 17:58:31.124] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 2707508288.
+[2020-07-09 17:58:31.193] [Resources] [info] moduleresourcemanager.h(119) : Resource 2707508288 loaded correctly.
+[2020-07-09 17:59:02.141] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 4208404416.
+[2020-07-09 17:59:02.186] [Resources] [info] moduleresourcemanager.h(119) : Resource 4208404416 loaded correctly.
+[2020-07-09 17:59:05.440] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 249539085.
+[2020-07-09 17:59:05.493] [Resources] [info] moduleresourcemanager.h(119) : Resource 249539085 loaded correctly.
+[2020-07-09 17:59:19.124] [Resources] [info] moduleresourcemanager.h(76) : Saving Resource 4143578850.
+[2020-07-09 17:59:19.124] [LittleOrionEngine] [info] path.cpp(83) : File /Resources/Scenes/tmp_scene.scene saved!
+
+[2020-07-09 17:59:19.393] [LittleOrionEngine] [info] path.cpp(83) : File /Library/Metadata/41/4143578850 saved!
+
+[2020-07-09 17:59:19.469] [Resources] [info] moduleresourcemanager.h(84) : Resource 4143578850 saved corrrectly.
+[2020-07-09 17:59:47.391] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 249539085.
+[2020-07-09 17:59:47.391] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 249539085 exists in cache.
+[2020-07-09 17:59:47.391] [Resources] [info] moduleresourcemanager.h(97) : Resource 249539085 loaded correctly from cache.
+[2020-07-09 18:00:05.008] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 249539085.
+[2020-07-09 18:00:05.008] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 249539085 exists in cache.
+[2020-07-09 18:00:05.008] [Resources] [info] moduleresourcemanager.h(97) : Resource 249539085 loaded correctly from cache.
+[2020-07-09 18:00:05.600] [LittleOrionEngine] [info] moduledebugdraw.cpp(825) : Destroying Module Debug Draw
+[2020-07-09 18:00:05.606] [LittleOrionEngine] [info] modulerender.cpp(137) : Destroying renderer
+[2020-07-09 18:00:05.606] [LittleOrionEngine] [info] moduleinput.cpp(283) : Quitting SDL input event subsystem
+[2020-07-09 18:00:05.606] [LittleOrionEngine] [info] modulewindow.cpp(83) : Destroying SDL window and quitting all SDL systems
+[2020-07-09 18:00:05.629] [LittleOrionEngine] [info] main.cpp(95) : Application CleanUp ends. Elapsed time: 0.000000 ms

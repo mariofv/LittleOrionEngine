@@ -54,8 +54,7 @@ void Grid::Render() const
 {
 	BROFILER_CATEGORY("Render Grid", Profiler::Color::BlueViolet);
 	glEnable(GL_BLEND);
-	GLuint grid_program = App->program->GetShaderProgramId("Grid");
-	glUseProgram(grid_program);
+	GLuint grid_program = App->program->UseProgram("Grid");
 
 	float4x4 model_matrix = float4x4::FromTRS
 	(

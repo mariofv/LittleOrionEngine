@@ -1,6 +1,7 @@
 #include "ModuleAudio.h"
 #include "Main/Application.h"
 #include "Component/ComponentAudioSource.h"
+#include "Component/ComponentAudioListener.h"
 #include "Module/ModuleResourceManager.h"
 #include <SoundEngine/AkFilePackageLowLevelIOBlocking.h>
 CAkFilePackageLowLevelIOBlocking g_lowLevelIO;
@@ -42,23 +43,20 @@ bool ModuleAudio::Init()
 		APP_LOG_ERROR("Could not initialize the Sound Engine.");
 		return false;
 	}
-	if (!AK::SoundEngine::RegisterGameObj(main_sound_gameobject))
-	{
-		APP_LOG_ERROR("Unable to register the gameobject");
-	}
-	AK::SoundEngine::AddDefaultListener(main_sound_gameobject);
+
 	return true;
 }
 
 update_status ModuleAudio::Update()
 {
+	SelectMainListener();
 	AK::SoundEngine::RenderAudio();
 	return update_status::UPDATE_CONTINUE;
 }
 
 bool ModuleAudio::CleanUp()
 {
-	AK::SoundEngine::UnregisterGameObj(main_sound_gameobject);
+	AK::SoundEngine::UnregisterGameObj(default_listener);
 
 	for (auto& audio_source : audio_sources)
 	{
@@ -82,5 +80,38 @@ void ModuleAudio::RemoveComponentAudioSource(ComponentAudioSource* audio_source_
 	{
 		delete *it;
 		audio_sources.erase(it);
+	}
+}
+
+ComponentAudioListener * ModuleAudio::CreateComponentAudioListener()
+{
+	ComponentAudioListener * new_audio_listener = new ComponentAudioListener();
+	audio_listeners.push_back(new_audio_listener);
+	return new_audio_listener;
+}
+
+void ModuleAudio::RemoveComponentAudioListener(ComponentAudioListener* audio_listener_to_remove)
+{
+	const auto it = std::find(audio_listeners.begin(), audio_listeners.end(), audio_listener_to_remove);
+	if (it != audio_listeners.end())
+	{
+		delete *it;
+		audio_listeners.erase(it);
+	}
+}
+
+void ModuleAudio::SelectMainListener()
+{
+	main_listener = nullptr;
+
+	for (auto& listener : audio_listeners)
+	{
+		if (listener->IsEnabled())
+		{
+			AkGameObjectID ak_id = listener->GetAkID();
+			AK::SoundEngine::SetDefaultListeners(&ak_id, 1);
+			main_listener = listener;
+			return;
+		}
 	}
 }

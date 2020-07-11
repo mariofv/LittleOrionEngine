@@ -3,6 +3,8 @@
 #include "Helper/Config.h"
 #include "Main/Application.h"
 
+#include "Module/ModuleLight.h"
+#include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleTime.h"
@@ -60,14 +62,9 @@ void Material::Save(Config& config) const
 	config.AddBool(show_checkerboard_texture, "Checkboard");
 	config.AddString(shader_program, "ShaderProgram");
 
-	//k
-	config.AddFloat(k_ambient, "kAmbient");
-	config.AddFloat(k_specular, "kSpecular");
-	config.AddFloat(k_diffuse, "kDiffuse");
+	config.AddFloat(smoothness, "Smoothness");
 
 	config.AddFloat(transparency, "Transparency");
-//	config.AddFloat(roughness, "Roughness");
-//	config.AddFloat(metalness, "Metalness");
 
 	config.AddFloat(tiling_x, "Tiling X");
 	config.AddFloat(tiling_y, "Tiling Y");
@@ -82,10 +79,6 @@ void Material::Save(Config& config) const
 	config.AddFloat(tiling_liquid_y_x, "Tiling Liquid Map 2 x");
 	config.AddFloat(tiling_liquid_y_y, "Tiling Liquid Map 2 y");
 	config.AddBool(use_liquid_map, "Use Liquid Map");
-
-	config.AddBool(use_normal_map, "UseNormalMap");
-	config.AddBool(use_specular_map, "UseSpecularMap");
-
 
 	//colors
 	config.AddColor(float4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]), "difusseColor");
@@ -107,12 +100,9 @@ void Material::Load(const Config& config)
 
 	material_type = static_cast<MaterialType>(config.GetInt("MaterialType", 0));
 
-	//k
-	k_ambient = config.GetFloat("kAmbient", 1.0f);
-	k_specular = config.GetFloat("kSpecular", 1.0f);
-	k_diffuse = config.GetFloat("kDiffuse", 1.0f);
-
 	transparency = config.GetFloat("Transparency", 1.f);
+	smoothness = config.GetFloat("Smoothness", 1.0F);
+
 
 	tiling_x = config.GetFloat("Tiling X", 1.0f);
 	tiling_y = config.GetFloat("Tiling Y", 1.0f);
@@ -137,7 +127,7 @@ void Material::Load(const Config& config)
 
 	config.GetColor("difusseColor", diffuse, float4(1.f, 1.f, 1.f, 1.f));
 	config.GetColor("emissiveColor", emissive, float4(0.0f, 0.0f, 0.0f, 1.0f));
-	config.GetColor("specularColor", specular, float4(0.0f, 0.0f, 0.0f, 1.0f));
+	config.GetColor("specularColor", specular, float4(0.025f, 0.025f, 0.025f, 0.025f));
 
 	diffuse_color[0] = diffuse.x;
 	diffuse_color[1] = diffuse.y;
@@ -168,8 +158,6 @@ void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uui
 	{
 		textures[type] = App->resources->Load<Texture>(texture_uuid);
 	}
-	use_normal_map = type == MaterialTextureType::NORMAL && texture_uuid !=0;
-	use_specular_map = type == MaterialTextureType::SPECULAR && texture_uuid != 0;
 	use_liquid_map = type == MaterialTextureType::LIQUID && texture_uuid != 0;
 }
 
@@ -210,4 +198,23 @@ void Material::UpdateLiquidProperties()
 	tiling_liquid_y_y -= speed_tiling_y / 1000 * App->time->delta_time;
 	tiling_liquid_x_x += speed_tiling_x / 1000 * App->time->delta_time;
 	tiling_liquid_x_y += speed_tiling_y / 1000 * App->time->delta_time;
+}
+
+unsigned int Material::GetShaderVariation() const
+{
+	unsigned int variation = 0;
+	if (textures[MaterialTextureType::SPECULAR] != nullptr)
+	{
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_SPECULAR_MAP);
+	}
+	if (textures[MaterialTextureType::NORMAL] != nullptr)
+	{
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_NORMAL_MAP);
+	}
+	if (use_shadow_map && App->lights->render_shadows) 
+	{
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_RECEIVE_SHADOWS);
+	}
+
+	return variation;
 }

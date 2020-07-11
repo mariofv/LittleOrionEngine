@@ -1,5 +1,3 @@
-#version 330 core
-
 in vec2 frag_position;
 out vec4 FragColor;
 
