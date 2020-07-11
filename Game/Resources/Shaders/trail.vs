@@ -1,9 +1,3 @@
-struct Trail
-{
-  vec4 position;
-  vec4 uv;
-};
-
 layout(location = 0)in vec3 vertex; 
 layout(location = 1)in vec2 uvs;
 
@@ -23,5 +17,5 @@ void main()
 {
     gl_Position = matrices.proj * matrices.view * vec4(vertex, 1.0f);
 	col = vec3(0.0f, 0.0f, 1.0f);
-	texCoord =  vec2(0.0f, 0.0f);
+	texCoord =  uvs;
 }  

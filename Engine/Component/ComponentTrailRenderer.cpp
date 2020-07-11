@@ -73,8 +73,8 @@ void ComponentTrailRenderer::Render(std::vector<Vertex>& to_render)
 		glUnmapBuffer(GL_ARRAY_BUFFER);
 
 		glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, trail_texture->opengl_texture);
-		//glUniform1i(glGetUniformLocation(shader_program, "trail.texture"), 0);
+		glBindTexture(GL_TEXTURE_2D, trail_texture->opengl_texture);
+		glUniform1i(glGetUniformLocation(shader_program, "tex"), 0);
 
 		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());

@@ -50,8 +50,10 @@ void ModuleEffects::Render()
 	{
 		trail->UpdateTrail();
 	}
+
 	glDisable(GL_BLEND);
 	glDepthMask(GL_TRUE);
+	
 }
 
 ComponentBillboard* ModuleEffects::CreateComponentBillboard()

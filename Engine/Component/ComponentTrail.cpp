@@ -5,7 +5,14 @@
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleResourceManager.h"
 #include "GL/glew.h"
-
+namespace {
+	const float2 uvs[4] = {
+			float2(0.0f, 0.0f),
+			float2(0.0f, 1.0f),
+			float2(1.0f, 0.0f),
+			float2(1.0f, 1.0f)
+	};
+}
 ComponentTrail::ComponentTrail() : Component(nullptr, ComponentType::TRAIL)
 {
 	Init();
@@ -80,15 +87,14 @@ void  ComponentTrail::GetPerpendiculars()
 			mesh_points.push_back(std::make_pair(previous_point, current_point));
 		}
 		previous_point = current_point;
-
 	}
 
 	std::vector<Vertex> vertices;
+	
 	unsigned int i = 0;
 	mesh_index = 1 / (float)test_points.size(); // to coordinate texture
 	for (auto pair = mesh_points.begin(); pair < mesh_points.end(); ++pair)
 	{
-		++i;
 		if (pair->first->life > 0 && pair->second->life > 0)
 		{
 			//Get the vector that links every two points
@@ -100,11 +106,13 @@ void  ComponentTrail::GetPerpendiculars()
 			top_left = pair->first->position + perpendicular;
 			bottom_left = (pair->first->position - perpendicular);
 
-			vertices.push_back({ top_left, float2(0.0f, 0.0f) });
-			vertices.push_back({ bottom_left, float2(0.0f, 0.0f) });
-			
-			/*trail_renderer->tex_uv.x = mesh_index * i;
-			trail_renderer->tex_uv.y = 0.0f;*/
+			vertices.push_back({ top_left, uvs[i] });
+			vertices.push_back({ bottom_left, uvs[++i] });
+			++i;
+			if (i > 3)
+			{
+				i = 0;
+			}
 		}
 		else
 		{
