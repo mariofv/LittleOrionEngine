@@ -57,8 +57,7 @@ void ComponentMeshRenderer::Render()
 		return;
 	}
 	std::string program_name = material_to_render->shader_program;
-	GLuint program = App->program->GetShaderProgramId(program_name);
-	glUseProgram(program);
+	GLuint program = App->program->UseProgram(program_name, material_to_render->GetShaderVariation());
 
 	glUniform1i(glGetUniformLocation(program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
 	
@@ -67,6 +66,7 @@ void ComponentMeshRenderer::Render()
 		glUniformMatrix4fv(glGetUniformLocation(program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
 	}
 	glUniform1i(glGetUniformLocation(program, "has_skinning_value"), skeleton_uuid != 0 ? 0 : 1);
+	
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -92,9 +92,6 @@ void ComponentMeshRenderer::RenderModel() const
 
 void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 {
-	material_to_render->use_specular_map = material_to_render->GetMaterialTexture(Material::MaterialTextureType::SPECULAR) != nullptr;
-	material_to_render->use_normal_map = material_to_render->GetMaterialTexture(Material::MaterialTextureType::NORMAL) != nullptr;
-
 	AddDiffuseUniforms(shader_program);
 	AddEmissiveUniforms(shader_program);
 	AddSpecularUniforms(shader_program);
@@ -134,7 +131,6 @@ void ComponentMeshRenderer::AddSpecularUniforms(unsigned int shader_program) con
 {
 	glActiveTexture(GL_TEXTURE5);
 	BindTexture(Material::MaterialTextureType::SPECULAR);
-	glUniform1i(glGetUniformLocation(shader_program, "material.use_specular_map"), material_to_render->use_specular_map);
 
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 5);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)material_to_render->specular_color);
@@ -153,8 +149,7 @@ void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE7);
 	BindTexture(Material::MaterialTextureType::NORMAL);
-	glUniform1i(glGetUniformLocation(shader_program, "material.use_normal_map"), material_to_render->use_normal_map);
-	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 7);
+	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 4);
 }
 
 void ComponentMeshRenderer::AddLightMapUniforms(unsigned int shader_program) const
