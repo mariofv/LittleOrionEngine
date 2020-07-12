@@ -71,7 +71,8 @@ public:
 	std::vector<float4x4> palette;
 
 	bool is_raycastable = true;
-	bool shadow_caster = true;
+	bool shadow_caster = false;
+	bool shadow_receiver = false;
 
 private:
 	friend class PanelComponent;
