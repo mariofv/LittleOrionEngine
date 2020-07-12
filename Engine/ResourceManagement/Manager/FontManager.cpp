@@ -22,14 +22,14 @@ std::shared_ptr<Font> FontManager::Load(uint32_t uuid, const FileData& resource_
 	// All functions return a value different than 0 whenever an error occurred
 	if (FT_Init_FreeType(&ft))
 	{
-		APP_LOG_ERROR("Could not init FreeType Library")
+		RESOURCES_LOG_ERROR("Could not init FreeType Library")
 		return nullptr;
 	}
 
 	// Load font as face
 	if (FT_New_Memory_Face(ft, (FT_Byte*)resource_data.buffer, resource_data.size, 0, &face))
 	{
-		APP_LOG_ERROR("Failed to load font %u from memory")
+		RESOURCES_LOG_ERROR("Failed to load font %u from memory")
 		FT_Done_FreeType(ft);
 		return nullptr;
 	}
@@ -45,7 +45,7 @@ std::shared_ptr<Font> FontManager::Load(uint32_t uuid, const FileData& resource_
 	{
 		if (FT_Load_Char(face, character, FT_LOAD_RENDER))
 		{
-			APP_LOG_ERROR("Failed to load Glyph")
+			RESOURCES_LOG_ERROR("Failed to load Glyph")
 			continue;
 		}
 
@@ -72,8 +72,8 @@ std::shared_ptr<Font> FontManager::Load(uint32_t uuid, const FileData& resource_
 		Font::Character loaded_character
 		{
 			glyph_texture,
-			float2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-			float2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+			float2(static_cast<float>(face->glyph->bitmap.width), static_cast<float>(face->glyph->bitmap.rows)),
+			float2(static_cast<float>(face->glyph->bitmap_left), static_cast<float>(face->glyph->bitmap_top)),
 			face->glyph->advance.x
 		};
 		font_characters.insert(std::pair<GLchar, Font::Character>(character, loaded_character));

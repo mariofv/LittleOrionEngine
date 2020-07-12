@@ -1,5 +1,7 @@
 #include "ComponentCollider.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Event/Event.h"
+#include "Event/EventManager.h"
 #include "Helper/Utils.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -282,7 +284,7 @@ CollisionInformation ComponentCollider::DetectCollisionWith(ComponentCollider* c
 	
 	CollisionInformation collision_info;
 
-	if (detect_collision && collider->detect_collision)
+	if (detect_collision && collider->detect_collision && (active_physics || collider->active_physics))
 	{	
 		int numManifolds = App->physics->world->getDispatcher()->getNumManifolds();
 		for (int i = 0; i < numManifolds; i++)
@@ -421,14 +423,11 @@ CollisionInformation ComponentCollider::RaycastClosestHit(float3& start, float3&
 	size_t num_hits = raycallback.m_hitPointWorld.size();
 	for (size_t i = 0; i < num_hits; ++i)
 	{
-		if (raycallback.m_collisionObjects[i]->hasContactResponse())
-		{
-			end = float3(raycallback.m_hitPointWorld[i]);
-			info.collider = App->physics->FindColliderByWorldId(raycallback.m_collisionObjects[i]->getWorldArrayIndex());
-			info.normal = float3(raycallback.m_hitNormalWorld[i]);
-			info.distance = (end - start).Length();
-			break;
-		}
+		end = float3(raycallback.m_hitPointWorld[i]);
+		info.collider = App->physics->FindColliderByWorldId(raycallback.m_collisionObjects[i]->getWorldArrayIndex());
+		info.normal = float3(raycallback.m_hitNormalWorld[i]);
+		info.distance = (end - start).Length();
+		break;
 	}
 
 	return info;
@@ -447,13 +446,9 @@ std::vector<CollisionInformation> ComponentCollider::RaycastAllHits(float3& star
 	for (size_t i = 0; i < num_hits; ++i)
 	{
 		CollisionInformation collision;
-		if (raycallback.m_collisionObjects[i]->hasContactResponse())
-		{
-			
-			collision.collider = App->physics->FindColliderByWorldId(raycallback.m_collisionObjects[i]->getWorldArrayIndex());
-			collision.normal = float3(raycallback.m_hitNormalWorld[i]);
-			collision.distance = (end - start).Length();
-		}
+		collision.collider = App->physics->FindColliderByWorldId(raycallback.m_collisionObjects[i]->getWorldArrayIndex());
+		collision.normal = float3(raycallback.m_hitNormalWorld[i]);
+		collision.distance = (end - start).Length();
 	}
 
 	return info;

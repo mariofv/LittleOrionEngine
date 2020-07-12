@@ -194,7 +194,7 @@ void Scene::SavePrefabUUIDS(std::vector<Config>& original_UUIDS, GameObject* gam
 GameObject* Scene::LoadPrefab(const Config & config) const
 {
 	uint32_t prefab_uuid;
-	prefab_uuid = config.GetUInt("Prefab", 0);
+	prefab_uuid = config.GetUInt32("Prefab", 0);
 
 	std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(prefab_uuid);
 	std::unordered_map<int64_t, int64_t> UUIDS_pairs;
@@ -286,7 +286,7 @@ void Scene::LoadPrefabModifiedComponents(const Config& config) const
 	GameObject * prefab_child = App->scene->GetGameObject(config.GetUInt("UUID", 0));
 	if (!prefab_child)
 	{
-		APP_LOG_ERROR("Missing prefab");
+		RESOURCES_LOG_ERROR("Missing prefab");
 		return;
 	}
 	if (config.config_document.HasMember("Transform"))

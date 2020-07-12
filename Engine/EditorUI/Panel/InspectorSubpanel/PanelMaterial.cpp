@@ -94,7 +94,7 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 		ImGui::Spacing();
 		ImGui::Separator();
 		ImGui::Spacing();
-		
+
 		ImGui::Text("Main Maps");
 		ImGui::Spacing();
 		ImGui::Spacing();
@@ -160,22 +160,6 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 	void* display_image;
 	if (material->textures[type].get() != nullptr)
 	{
-		if (type == Material::MaterialTextureType::NORMAL)
-		{
-			material->use_normal_map = true;
-		}
-		if (type == Material::MaterialTextureType::LIQUID)
-		{
-			material->use_liquid_map = true;
-		}
-		if (type == Material::MaterialTextureType::SPECULAR)
-		{
-			material->use_specular_map = true;
-		}
-		if (type == Material::MaterialTextureType::NOISE)
-		{
-			material->use_noise_map= true;
-		}
 		std::shared_ptr<Texture>& texture = material->textures[type];
 		display_image = (void*)(intptr_t)texture->opengl_texture;
 	}
@@ -222,11 +206,7 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Spacing();
 		ImGui::Indent();
 
-		if (ImGui::ColorEdit3("Color", material->diffuse_color))
-		{
-			modified_by_user = true;
-		}
-		if (ImGui::SliderFloat("K diffuse", &material->k_diffuse, 0.f, 1.f))
+		if (ImGui::ColorEdit3("Color", material->diffuse_color, ImGuiColorEditFlags_Float))
 		{
 			modified_by_user = true;
 		}
@@ -246,10 +226,7 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 				modified_by_user = true;
 			}
 		}
-		
-		
 
-		
 		ImGui::Unindent();
 
 		break;
@@ -272,13 +249,6 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Text("Occlusion");
 
 		ImGui::Spacing();
-		ImGui::Indent();
-
-		if (ImGui::SliderFloat("k ambient", &material->k_ambient, 0, 1))
-		{
-			modified_by_user = true;
-		}
-		ImGui::Unindent();
 
 		break;
 
@@ -288,15 +258,11 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Spacing();
 		ImGui::Indent();
 		
-		if (ImGui::ColorEdit3("Color", material->specular_color))
+		if (ImGui::ColorEdit3("Color", material->specular_color, ImGuiColorEditFlags_Float))
 		{
 			modified_by_user = true;
 		}
-		if (ImGui::SliderFloat("k specular", &material->k_specular, 0.f, 1.f))
-		{
-			modified_by_user = true;
-		}
-		if (ImGui::SliderFloat("Shininess", &material->specular_color[3], 0.f, 1.f))
+		if (ImGui::SliderFloat("Smoothenss", &material->smoothness, 0.f, 1.f))
 		{
 			modified_by_user = true;
 		}
@@ -320,18 +286,6 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 
 		if (material->material_type == Material::MaterialType::MATERIAL_LIQUID)
 		{
-			//TODO->change it to liquid maps and not hardcoded
-			/*if (material->tiling_liquid_x_x >= 1)
-			{
-				material->tiling_liquid_x_x = 0;
-				material->tiling_liquid_x_y = 0;
-			}
-			if (material->tiling_liquid_y_x <= -1)
-			{
-				material->tiling_liquid_y_x = 0;
-				material->tiling_liquid_y_y = 0;
-			}*/
-
 			if (ImGui::SliderFloat("Speed Tiling X", &material->speed_tiling_x, 0.01f, 1.0f))
 			{
 				modified_by_user = true;
@@ -352,25 +306,10 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		break;
 	}
 
+
 	if (ImGui::Button(ICON_FA_TIMES))
 	{
 		material->RemoveMaterialTexture(type);
-		if (type == Material::MaterialTextureType::NORMAL)
-		{
-			material->use_normal_map = false;
-		}
-		if (type == Material::MaterialTextureType::LIQUID)
-		{
-			material->use_liquid_map = false;
-		}
-		if (type == Material::MaterialTextureType::SPECULAR)
-		{
-			material->use_specular_map = false;
-		}
-		if (type == Material::MaterialTextureType::NOISE)
-		{
-			material->use_noise_map = false;
-		}
 		modified_by_user = true;
 	}
 	ImGui::SameLine();

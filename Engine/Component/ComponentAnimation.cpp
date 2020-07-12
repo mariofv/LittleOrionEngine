@@ -23,6 +23,10 @@ ComponentAnimation::ComponentAnimation(GameObject* owner) : Component(owner, Com
 	Init();
 }
 
+AnimController* ComponentAnimation::GetAnimController()
+{
+	return animation_controller;
+}
 ComponentAnimation::~ComponentAnimation()
 {
 	if (animation_controller)
@@ -90,7 +94,7 @@ void ComponentAnimation::Play()
 	{
 		return;
 	}
-	playing_clip->current_time = 0;
+	playing_clip->current_time = 0.0f;
 	playing_clip->playing = true;
 	playing = true;
 }
@@ -134,6 +138,14 @@ ENGINE_API int ComponentAnimation::GetTotalAnimationTime() const
 		return playing_clip.clip->animation_time;
 
 	}
+	return 0;
+}
+
+void ComponentAnimation::SetAnimationSpeed(float speed) const
+{
+	animation_controller->SetSpeed(speed);
+
+	return;
 }
 
 
@@ -180,7 +192,7 @@ void ComponentAnimation::SpecializedSave(Config& config) const
 
 void ComponentAnimation::SpecializedLoad(const Config& config)
 {
-	uint32_t state_machine_uuid = config.GetUInt("StateMachineResource", 0);
+	uint32_t state_machine_uuid = config.GetUInt32("StateMachineResource", 0);
 	if (state_machine_uuid != 0)
 	{
 		SetStateMachine(state_machine_uuid);

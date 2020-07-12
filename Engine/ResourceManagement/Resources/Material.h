@@ -53,6 +53,7 @@ public:
 	static std::string GetMaterialTypeName(const MaterialType material_type);
 
 	void UpdateLiquidProperties();
+	unsigned int GetShaderVariation() const;
 
 
 public:
@@ -68,16 +69,12 @@ public:
 
 	float diffuse_color[4] = { 1.0f, 1.0f,1.0f,1.0f };
 	float emissive_color[4] = { 1.0f, 1.0f, 1.0f , 1.0f };
-	float specular_color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float k_diffuse = 1.0f;
-	float k_specular = 1.0f;
-	float k_ambient = 1.0f;
+	float specular_color[4] = { 0.025f, 0.025f, 0.025f, 0.025f };
+	float smoothness = 1.0F;
 
 	float2 coords = float2(1.0f, 1.0f);
 
 	float transparency = 0.5F;
-//	float roughness = 0.5f;
-//	float metalness = 0.04f;
 
 	float tiling_x = 1.0f;
 	float tiling_y = 1.0f;
@@ -89,16 +86,8 @@ public:
 	float tiling_liquid_x_y = 1.F;
 	float tiling_liquid_y_x = -1.F;
 	float tiling_liquid_y_y = -1.F;
-	bool use_liquid_map = false;
-
-	//This variable will allow the shader to use the normal maps if there is any assigned to the model material
-	bool use_normal_map = false;
-
-	//We also will detect if using specular map
-	bool use_specular_map = false;
 
 	float dissolve_progress = 0.f;
-	bool use_noise_map = false;
 
 	bool show_checkerboard_texture = false;
 };

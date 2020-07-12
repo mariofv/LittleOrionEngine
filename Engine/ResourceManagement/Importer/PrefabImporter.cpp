@@ -2,6 +2,7 @@
 
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentTransform.h"
 #include "Helper/Config.h"
 
 #include "Main/Application.h"
@@ -21,7 +22,7 @@ FileData PrefabImporter::ExtractData(Path& file_path, const Metafile& metafile) 
 	return file_path.GetFile()->Load();
 }
 
-FileData PrefabImporter::ExtractFromModel(const Config& model_config, const ModelMetafile& metafile) const
+FileData PrefabImporter::ExtractFromModel(const Config& model_config, const ModelMetafile& metafile, bool animated_model) const
 {
 	std::vector<std::unique_ptr<GameObject>> game_objects;
 	std::vector<std::unique_ptr<ComponentMeshRenderer>> mesh_renderer_components;
@@ -38,7 +39,7 @@ FileData PrefabImporter::ExtractFromModel(const Config& model_config, const Mode
 	model_config.GetChildrenConfig("Node", game_objects_config);
 	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
 	{
-		ExtractGameObjectFromNode(model_root_node, game_objects_config[i], game_objects, mesh_renderer_components, loaded_skeletons, metafile);
+		ExtractGameObjectFromNode(model_root_node, game_objects_config[i], game_objects, mesh_renderer_components, loaded_skeletons, metafile, animated_model);
 	}
 	size_t gameobject_index = 1;
 	for (auto & game_object : game_objects)
@@ -98,7 +99,8 @@ void PrefabImporter::ExtractGameObjectFromNode
 	std::vector<std::unique_ptr<GameObject>>& game_objects,
 	std::vector<std::unique_ptr<ComponentMeshRenderer>>& mesh_renderer_components,
 	std::vector<uint32_t>& loaded_skeletons,
-	const ModelMetafile& metafile
+	const ModelMetafile& metafile,
+	bool animated_model
 ) {
 	game_objects.emplace_back(std::make_unique<GameObject>());
 	GameObject * node_game_object = game_objects.back().get();
@@ -111,14 +113,30 @@ void PrefabImporter::ExtractGameObjectFromNode
 	auto& remapped_material = metafile.remapped_materials;
 	assert(remapped_material.find(node_game_object->name) != remapped_material.end());
 	uint32_t remapped_material_uuid =  remapped_material.at(node_game_object->name);
-	uint32_t material_uuid = remapped_material_uuid == 0 ? node_config.GetUInt("Material", 0) : remapped_material_uuid;
-	uint32_t mesh_uuid = node_config.GetUInt("Mesh", 0);
-	uint32_t skeleton_uuid = node_config.GetUInt("Skeleton", 0);
+	uint32_t material_uuid = remapped_material_uuid == 0 ? node_config.GetUInt32("Material", 0) : remapped_material_uuid;
+	uint32_t mesh_uuid = node_config.GetUInt32("Mesh", 0);
+	uint32_t skeleton_uuid = node_config.GetUInt32("Skeleton", 0);
 
 	if (mesh_uuid != 0)
 	{
 		ExtractMeshComponent(mesh_uuid, material_uuid, skeleton_uuid, mesh_renderer_components, node_game_object);
 		ComponentMeshRenderer* mesh_renderer = mesh_renderer_components.back().get();
+		
+		if (!animated_model)
+		{
+			float3 position = float3::zero;
+			node_config.GetFloat3("Translation", position, float3::zero);
+			node_game_object->transform.SetGlobalMatrixTranslation(position);
+
+			Quat rotation;
+			node_config.GetQuat("Rotation", rotation, Quat::identity);
+			node_game_object->transform.SetGlobalMatrixRotation(rotation);
+
+			node_config.GetFloat3("Scale", position, float3::one);
+			node_game_object->transform.SetGlobalMatrixScale(position);
+
+		}
+		
 		node_game_object->Update();
 	}
 

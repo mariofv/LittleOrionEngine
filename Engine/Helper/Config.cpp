@@ -3,6 +3,7 @@
 #include "Filesystem/File.h"
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/prettywriter.h>
+
 Config::Config()
 {
 	config_document.SetObject();
@@ -81,6 +82,23 @@ uint64_t Config::GetUInt(const std::string& name, unsigned int opt_value) const
 	{
 		const rapidjson::Value& current_value = config_document[name.c_str()];
 		return current_value.GetUint64();
+	}
+}
+ENGINE_API void Config::AddUInt32(uint32_t value_to_add, const std::string & name)
+{
+	rapidjson::Value member_name(name.c_str(), *allocator);
+	config_document.AddMember(member_name, value_to_add, *allocator);
+}
+ENGINE_API uint32_t Config::GetUInt32(const std::string & name, unsigned int opt_value) const
+{
+	if (!config_document.HasMember(name.c_str()))
+	{
+		return opt_value;
+	}
+	else
+	{
+		const rapidjson::Value& current_value = config_document[name.c_str()];
+		return current_value.GetUint();
 	}
 }
 void Config::AddInt64(int64_t value_to_add, const std::string& name)
@@ -235,10 +253,10 @@ void Config::GetRect(const std::string &name, SDL_Rect &return_value, const SDL_
 	{
 		const rapidjson::Value& current_value = config_document[name.c_str()];
 		return_value = SDL_Rect();
-		return_value.x = current_value[0].GetFloat();
-		return_value.y = current_value[1].GetFloat();
-		return_value.w = current_value[2].GetFloat();
-		return_value.h = current_value[3].GetFloat();
+		return_value.x = static_cast<int>(current_value[0].GetFloat());
+		return_value.y = static_cast<int>(current_value[1].GetFloat());
+		return_value.w = static_cast<int>(current_value[2].GetFloat());
+		return_value.h = static_cast<int>(current_value[3].GetFloat());
 	}
 }
 

@@ -38,7 +38,7 @@ public:
 	void SetHorizontalAlignment(HorizontalAlignment horizontal_alignment);
 
 	void SetFont(uint32_t font_uuid);
-	ENGINE_API void SetFontSize(int font_size);
+	ENGINE_API void SetFontSize(float font_size);
 
 	ENGINE_API void SetFontColor(const float4& new_color);
 	ENGINE_API float4 GetFontColor() const;
@@ -64,7 +64,8 @@ public:
 	float text_heigth = 0;
 
 private:
-	GLuint program, vao, vbo;
+	GLuint program = 0;
+	GLuint vao, vbo;
 
 	float scale_factor = 0.f;
 	std::vector<float> line_sizes;

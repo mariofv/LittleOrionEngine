@@ -4,7 +4,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Resources/Skeleton.h"
-
+#include "Helper/Utils.h"
 #include <map>
 
 FileData MeshImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
@@ -12,7 +12,7 @@ FileData MeshImporter::ExtractData(Path& assets_file_path, const Metafile& metaf
 	return assets_file_path.GetFile()->Load();
 }
 
-FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, float unit_scale_factor, uint32_t mesh_skeleton_uuid) const
+FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, float unit_scale_factor, uint32_t mesh_skeleton_uuid, bool animated_model) const
 {
 	FileData mesh_data{NULL, 0};
 
@@ -37,7 +37,7 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 	//We only accept triangle formed meshes
 	if (indices.size() % 3 != 0)
 	{
-		APP_LOG_ERROR("Mesh %s have incorrect indices", mesh->mName.C_Str());
+		RESOURCES_LOG_ERROR("Mesh %s have incorrect indices", mesh->mName.C_Str());
 		return mesh_data;
 	}
 
@@ -47,13 +47,28 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		vertex_skinning__info = GetSkinning(mesh, mesh_skeleton_uuid);
 	}
 
+	float3x3 node_rotation = float3x3::zero;
+	aiMatrix4x4 vertex_transformation;
+	if (animated_model)
+	{
+		vertex_transformation = node_transformation;
+		node_rotation = Utils::GetTransform(mesh_current_transformation, 1.0f).RotatePart();
+	}
+	else
+	{
+		vertex_transformation = scaling_matrix;
+		node_rotation = Quat::identity.ToFloat3x3();
+	}
+
 	std::vector<Mesh::Vertex> vertices;
 	vertices.reserve(mesh->mNumVertices);
 	for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
 	{
 		Mesh::Vertex new_vertex;
-		aiVector3D transformed_position = node_transformation * mesh->mVertices[i];
+		aiVector3D transformed_position = vertex_transformation * mesh->mVertices[i];
 		new_vertex.position = float3(transformed_position.x, transformed_position.y, transformed_position.z);
+
+
 		for (size_t j = 0; j < UVChannel::TOTALUVS; j++)
 		{
 			float2 text_coordinate(float2::zero);
@@ -65,15 +80,15 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		}
 		if (mesh->mNormals)
 		{
-			new_vertex.normals = float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z).Normalized();
+			new_vertex.normals = (node_rotation * float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z)).Normalized();
 		}
 		if (mesh->mTangents)
 		{
-			new_vertex.tangent = float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z).Normalized();
+			new_vertex.tangent = (node_rotation * float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z)).Normalized();
 		}
 		if (mesh->mBitangents)
 		{
-			new_vertex.bitangent = float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z).Normalized();
+			new_vertex.bitangent = (node_rotation * float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z)).Normalized();
 		}
 		if (vertex_skinning__info.size() > 0)
 		{
@@ -90,7 +105,7 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 				weights_sum += vertex_skinning__info[i].second[j];
 			}
 			
-			auto normalize_factor = 1.0 / weights_sum;
+			float normalize_factor = 1.0f / weights_sum;
 			weights_sum = 0;
 			for (size_t j = 0; j < vertex_skinning__info[i].second.size(); ++j)
 			{

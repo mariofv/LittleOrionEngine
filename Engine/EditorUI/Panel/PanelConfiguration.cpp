@@ -4,6 +4,7 @@
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleEffects.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleSpacePartitioning.h"
@@ -301,7 +302,7 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::SameLine();
 		ImGui::TextColored(ImVec4(1, 1, 1, 1), "and");
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.3, 0.3, 0.3, 1), "Shadows");
+		ImGui::TextColored(ImVec4(0.3f, 0.3f, 0.3f, 1), "Shadows");
 
 		ImGui::Separator();
 
@@ -311,7 +312,11 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::ColorEdit3("Color", App->lights->ambient_light_color);
 
 		//ImGui::Checkbox("Toggle directional camera frustum", &App->renderer->toggle_ortho_frustum);
-		ImGui::Checkbox("Render shadows", &App->renderer->render_shadows);
+
+		ImGui::Checkbox("Render shadows", &App->lights->render_shadows);
+		ImGui::SliderFloat("Shadows Fov Factor", &App->lights->main_camera_fov_increment_factor, 0, 4, "%.2f");
+
+		ImGui::Checkbox("Render Particles", &App->effects->render_particles);
 
 
 	}
@@ -355,12 +360,6 @@ void PanelConfiguration::ShowTimeOptions()
 		sprintf(frame_info, "FPS: %.0f Frame Count: %d", App->time->current_fps, App->time->frame_count);
 		ImGui::Text(frame_info);
 
-		std::vector<float> ms_data = App->engine_log->getMSData();
-		std::vector<float> frame_data = App->engine_log->getFPSData();
-
-		ImGui::PlotLines("Miliseconds", &ms_data[0], ms_data.size(), 0, nullptr, 0, 80);
-
-		ImGui::PlotLines("Frame Rate", &frame_data[0], frame_data.size(), 20, nullptr, 0, 80);
 	}
 
 }
@@ -543,7 +542,7 @@ void PanelConfiguration::ShowInputOptions()
 
 			if(ImGui::Button("Add KeyCode"))
 			{
-				keys.insert((int)selected_key);
+				keys.insert(static_cast<int>(selected_key));
 				string_keys.insert(selected_combo);
 			}
 
@@ -560,7 +559,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Text("Mouse:");
 			for (const auto mouse_key : mouse_keys)
 			{
-				ImGui::Text(mouse_keys_string[(int)mouse_key]);
+				ImGui::Text(mouse_keys_string[static_cast<int>(mouse_key)]);
 			}
 
 			ImGui::Separator();
@@ -584,7 +583,7 @@ void PanelConfiguration::ShowInputOptions()
 
 			if (ImGui::Button("Add Mouse Button"))
 			{
-				mouse_keys.insert((int)selected_mouse);
+				mouse_keys.insert(static_cast<int>(selected_mouse));
 			}
 
 			ImGui::SameLine();
@@ -600,7 +599,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Text("Controller Keys:");
 			for (const auto controller_key : controller_keys)
 			{
-				ImGui::Text(controller_keys_string[(int)controller_key]);
+				ImGui::Text(controller_keys_string[static_cast<int>(controller_key)]);
 			}
 
 			ImGui::Separator();
@@ -624,7 +623,7 @@ void PanelConfiguration::ShowInputOptions()
 
 			if (ImGui::Button("Add Controller Button"))
 			{
-				controller_keys.insert((int)selected_controller);
+				controller_keys.insert(static_cast<int>(selected_controller));
 			}
 
 			ImGui::SameLine();
@@ -685,7 +684,7 @@ void PanelConfiguration::ShowInputOptions()
 						continue;
 					}
 
-					int aux = static_cast<int>(key);
+					size_t aux = static_cast<size_t>(key);
 					if (aux > FIRST_OFFSET_COND)
 						aux -= FIRST_OFFSET;
 					else if (aux > SECOND_OFFSET_COND)
@@ -706,7 +705,7 @@ void PanelConfiguration::ShowInputOptions()
 						continue;
 					}
 
-					ImGui::Text("	%s", mouse_keys_string[(int)mouse]);
+					ImGui::Text("	%s", mouse_keys_string[static_cast<int>(mouse)]);
 				}
 				ImGui::Text("ControllerCodes:");
 				for (const auto& controller_key : game_input.second.controller_buttons)
@@ -716,7 +715,7 @@ void PanelConfiguration::ShowInputOptions()
 						continue;
 					}
 
-					ImGui::Text("	%s", controller_keys_string[(int)controller_key]);
+					ImGui::Text("	%s", controller_keys_string[static_cast<int>(controller_key)]);
 				}
 				
 				

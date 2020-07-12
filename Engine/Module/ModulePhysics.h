@@ -36,11 +36,9 @@ class ModulePhysics : public Module
 public:
 	
 	ModulePhysics();
-	~ModulePhysics();
+	~ModulePhysics() = default;
 
 	bool Init() override;
-	bool CleanUp() override;
-	update_status PreUpdate() override;
 	update_status Update() override;
 
 	void SetGravity(float3& newGgravity);

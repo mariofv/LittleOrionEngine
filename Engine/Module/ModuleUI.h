@@ -24,7 +24,6 @@ public:
 
 	bool Init() override;
 	update_status Update() override;
-	bool CleanUp() override;
 
 	void Render(bool scene_mode);
 

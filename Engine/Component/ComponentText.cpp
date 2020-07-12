@@ -31,8 +31,6 @@ ComponentText::~ComponentText()
 
 void ComponentText::InitData()
 {
-	program = App->program->GetShaderProgramId("UI Text");
-
 	GLfloat vertices[] = {
 		// Pos      // Tex
 		0.f, 1.f, 0.0f, 0.0f,
@@ -74,7 +72,14 @@ void ComponentText::Render(float4x4* projection)
 		return;
 	}
 
-	glUseProgram(program);
+	if (program == 0)
+	{
+		program = App->program->UseProgram("UI Text");
+	}
+	else
+	{
+		glUseProgram(program);
+	}
 	glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
 	glUniform4fv(glGetUniformLocation(program, "font_color"), 1, font_color.ptr());
 	glActiveTexture(GL_TEXTURE0);
@@ -207,6 +212,8 @@ float ComponentText::GetLineStartPosition(float line_size) const
 
 	case HorizontalAlignment::RIGHT:
 		return owner->transform_2d.size.x * 0.5f - line_size;
+	default:
+		return 0.0f;
 	}
 }
 
@@ -254,7 +261,7 @@ void ComponentText::SpecializedLoad(const Config& config)
 {
 	config.GetString("Text", text, "");
 
-	font_uuid = config.GetUInt("FontUUID", 0);
+	font_uuid = config.GetUInt32("FontUUID", 0);
 	if (font_uuid != 0)
 	{
 		SetFont(font_uuid);
@@ -265,7 +272,7 @@ void ComponentText::SpecializedLoad(const Config& config)
 
 	config.GetColor("FontColor", font_color, float4::one);
 
-	uint32_t horizontal_alignment_uint32 = config.GetUInt("HorizontalAlignment", 0);
+	uint32_t horizontal_alignment_uint32 = config.GetUInt32("HorizontalAlignment", 0);
 	horizontal_alignment = static_cast<HorizontalAlignment>(horizontal_alignment_uint32);
 }
 
@@ -287,7 +294,7 @@ void ComponentText::SetFont(uint32_t font_uuid)
 	ComputeTextLines();
 }
 
-void ComponentText::SetFontSize(int font_size)
+void ComponentText::SetFontSize(float font_size)
 {
 	this->font_size = font_size;
 	scale_factor = font_size / 64.f;

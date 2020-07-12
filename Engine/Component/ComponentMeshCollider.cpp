@@ -16,7 +16,7 @@ ComponentMeshCollider::ComponentMeshCollider(GameObject* owner) : ComponentColli
 {
 	InitData();
 	ComponentMeshRenderer* mesh_renderer = static_cast<ComponentMeshRenderer*>(owner->GetComponent(ComponentType::MESH_RENDERER));
-	if (mesh_renderer)
+	if (mesh_renderer && mesh_renderer->mesh_to_render)
 	{
 		vertices.clear();
 		indices.clear();
@@ -106,7 +106,7 @@ void ComponentMeshCollider::InitData()
 }
 void ComponentMeshCollider::CreateMeshBody()
 {
-	btTriangleIndexVertexArray* vertex_array = new btTriangleIndexVertexArray(indices.size() / 3, indices.data(), static_cast <int>(3 * sizeof(int)), static_cast<int>(vertices.size()), vertices.data(), static_cast <int>(3 * sizeof(float)));
+	btTriangleIndexVertexArray* vertex_array = new btTriangleIndexVertexArray(indices.size() / 3, indices.data(), static_cast<int>(3 * sizeof(int)), static_cast<int>(vertices.size()), vertices.data(), static_cast <int>(3 * sizeof(float)));
 	col_shape = new btBvhTriangleMeshShape(vertex_array, false);
 }
 

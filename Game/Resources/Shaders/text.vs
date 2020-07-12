@@ -1,5 +1,3 @@
-#version 150
-
 in vec2 in_Position;
 in vec2 in_TexCoords;
 in vec3 in_Color;

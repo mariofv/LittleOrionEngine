@@ -28,19 +28,14 @@ bool ModuleUI::Init()
 // Called every draw update
 update_status ModuleUI::Update()
 {
+	BROFILER_CATEGORY("Module UI Update", Profiler::Color::GreenYellow);
 	SelectMainCanvas();
 	return update_status::UPDATE_CONTINUE;
 }
 
-// Called before quitting
-bool ModuleUI::CleanUp()
-{
-	return true;
-}
-
 void ModuleUI::Render(bool scene_mode)
 {
-	BROFILER_CATEGORY("UI: Module Render", Profiler::Color::LightSeaGreen);
+	BROFILER_CATEGORY("Module UI Render", Profiler::Color::LightSeaGreen);
 	if (main_canvas != nullptr)
 	{
 		main_canvas->Render(scene_mode);

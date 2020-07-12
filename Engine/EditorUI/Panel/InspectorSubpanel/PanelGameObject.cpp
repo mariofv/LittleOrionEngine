@@ -3,6 +3,7 @@
 #include "Helper/TagManager.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioListener.h"
 #include "Component/ComponentAudioSource.h"
 #include "Component/ComponentBillboard.h"
 #include "Component/ComponentBoxCollider.h"
@@ -45,12 +46,19 @@ PanelGameObject::PanelGameObject()
 
 void PanelGameObject::Render(GameObject* game_object)
 {
+	
 	if (game_object == nullptr)
 	{
 		return;
 	}
+	focused = ImGui::IsWindowFocused();
+	App->actions->active_macros = true;
+	if (focused)
+	{
+		App->actions->active_macros = false;
+	}
 
-	ImGui::PushID(game_object->UUID);
+	ImGui::PushID(static_cast<int>(game_object->UUID));
 
 	if (ImGui::Checkbox("###State", &game_object->active))
 	{
@@ -63,7 +71,9 @@ void PanelGameObject::Render(GameObject* game_object)
 
 	ImGui::SameLine();
 	if (ImGui::InputText("###GameObject name Input", &game_object->name))
-	{		game_object->modified_by_user = true;
+	{
+		App->actions->active_macros = false;
+		game_object->modified_by_user = true;
 	}
 
 	ImGui::SameLine();
@@ -192,6 +202,10 @@ void PanelGameObject::Render(GameObject* game_object)
 				component_panel.ShowComponentAudioSourceWindow(static_cast<ComponentAudioSource*>(component));
 				break;
 
+			case Component::ComponentType::AUDIO_LISTENER:
+				component_panel.ShowComponentAudioListenerWindow(static_cast<ComponentAudioListener*>(component));
+				break;
+
 			default:
 				break;
 		}
@@ -200,10 +214,11 @@ void PanelGameObject::Render(GameObject* game_object)
 	}
 
 	ComponentMeshRenderer* mesh_renderer_component = static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER));
-	if (mesh_renderer_component != nullptr && mesh_renderer_component->material_uuid != 0)
+	if (mesh_renderer_component != nullptr && mesh_renderer_component->material_to_render != nullptr)
 	{
 		App->editor->inspector->material_panel.Render(mesh_renderer_component->material_to_render);
 	}
+
 
 	ImGui::Spacing();
 	ImGui::Separator();

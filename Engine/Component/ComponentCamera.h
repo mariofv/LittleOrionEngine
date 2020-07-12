@@ -56,7 +56,10 @@ public:
 	float GetWidth() const;
 	float GetHeight() const;
 
-	void RecordFrame(float width, float height, bool scene_mode = false);
+	void RecordFrame(GLsizei width, GLsizei height, bool scene_mode = false);
+	void RecordZBufferFrame(GLsizei width, GLsizei height);
+	void SetWidthAndHeight(const GLsizei &width, const GLsizei &height);
+
 	ENGINE_API void RecordDebugDraws(bool scene_mode = false);
 	GLuint GetLastRecordedFrame() const;
 
@@ -72,7 +75,7 @@ public:
 
 	void AlignOrientationWithAxis();
 	ENGINE_API void SetOrthographicSize(const float2 & size);
-	void LookAt(const float3 & focus);
+	ENGINE_API void LookAt(const float3 & focus);
 	void LookAt(float x, float y, float z);
 
 	ENGINE_API void SetPosition(const float3 & position);
@@ -123,11 +126,11 @@ public:
 	void GenerateMatrices();
 
 private:
-	void GenerateFrameBuffers(float width, float height);
+	void GenerateFrameBuffers(GLsizei width, GLsizei height);
 	void InitCamera();
-	void CreateFramebuffer(float width, float height);
-	void CreateOrthographicFramebuffer(float width, float height);
-	void CreateMssaFramebuffer(float width, float height);
+	void CreateFramebuffer(GLsizei width, GLsizei height);
+	void CreateMssaFramebuffer(GLsizei width, GLsizei height);
+	void CreateOrthographicFramebuffer(GLsizei width, GLsizei height);
 
 public:
 	const float SPEED_UP_FACTOR = 2.f;
@@ -148,6 +151,7 @@ public:
 
 	GLuint depth_map = 0;
 	GLuint last_recorded_frame_texture = 0;
+	GLuint fbo = 0;
 
 	OrthoIndex ortho_index; //Only for orthographic cameras
 
@@ -158,7 +162,6 @@ public:
 
 private:
 	GLuint rbo = 0;
-	GLuint fbo = 0;
 	GLuint depth_rbo = 0;
 	GLuint msfbo = 0;
 	GLuint msfb_color = 0;
@@ -178,7 +181,7 @@ private:
 	float3 goal_focus_position = float3::zero;
 
 	ClearMode camera_clear_mode = ClearMode::SKYBOX;
-
+	float borderColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	uint32_t skybox_uuid = 0;
 	std::shared_ptr<Skybox> camera_skybox = nullptr;
 

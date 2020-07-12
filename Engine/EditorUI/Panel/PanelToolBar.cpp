@@ -1,5 +1,7 @@
 #include "PanelToolBar.h"
 
+#include "PanelConsole.h"
+
 #include "Helper/Timer.h"
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
@@ -17,7 +19,7 @@ PanelToolBar::PanelToolBar()
 
 void PanelToolBar::Render()
 {
-	if (ImGui::BeginChild("Toolbar", ImVec2(0, App->window->GetHeight() * 0.025), false, ImGuiWindowFlags_NoDecoration))
+	if (ImGui::BeginChild("Toolbar", ImVec2(0, App->window->GetHeight() * 0.025f), false, ImGuiWindowFlags_NoDecoration))
 	{
 		hovered = ImGui::IsWindowHovered();
 
@@ -68,6 +70,10 @@ void PanelToolBar::ShowTimeControls()
 		if (ImGui::Button(ICON_FA_PLAY, ImVec2(24, 24)))
 		{
 			App->time->Play();
+			if (App->editor->console->clear_on_play)
+			{
+				App->editor->console->ClearGameLog();
+			}
 		}
 		ImGui::PopStyleColor();
 	}

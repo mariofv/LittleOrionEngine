@@ -5,6 +5,7 @@
 #include "Module/ModuleTime.h"
 #include "Component/ComponentAnimation.h"
 
+#include <Brofiler/Brofiler.h>
 bool ModuleAnimation::Init()
 {
 	APP_LOG_SECTION("************ Module Animation Init ************");
@@ -15,9 +16,24 @@ bool ModuleAnimation::Init()
 
 update_status ModuleAnimation::Update()
 {
+	BROFILER_CATEGORY("Module Animation Update", Profiler::Color::LemonChiffon);
 	if (App->time->isGameRunning())
 	{
 		tweener->Update(App->time->delta_time);
+	}
+	else
+	{
+		tweener->Reset();
+	}
+
+	return update_status::UPDATE_CONTINUE;
+}
+
+update_status ModuleAnimation::PostUpdate()
+{
+	if (App->time->isGameRunning())
+	{
+		tweener->CleanSequences();
 	}
 
 	return update_status::UPDATE_CONTINUE;

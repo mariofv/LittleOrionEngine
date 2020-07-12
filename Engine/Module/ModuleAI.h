@@ -1,5 +1,6 @@
 #ifndef _MODULEAI_H_
 #define _MODULEAI_H_
+
 #define ENGINE_EXPORTS
 
 #include "AI/NavMesh.h"
@@ -17,7 +18,6 @@ public:
 
 	bool Init() override;
 	update_status Update() override;
-	bool CleanUp() override;
 
 	void RenderNavMesh(ComponentCamera& camera);
 

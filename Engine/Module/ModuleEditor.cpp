@@ -58,8 +58,8 @@ bool ModuleEditor::Init()
 	panels.push_back(scene_panel = new PanelScene());
 	panels.push_back(inspector = new PanelInspector());
 	panels.push_back(hierarchy = new PanelHierarchy());
-	panels.push_back(project_explorer = new PanelProjectExplorer());
 	panels.push_back(console = new PanelConsole());
+	panels.push_back(project_explorer = new PanelProjectExplorer());
 	panels.push_back(debug_panel = new PanelDebug());
 	panels.push_back(configuration = new PanelConfiguration());
 	panels.push_back(about = new PanelAbout());
@@ -78,7 +78,7 @@ bool ModuleEditor::Init()
 
 bool ModuleEditor::InitImgui()
 {
-	APP_LOG_INIT("Initializing IMGUI editor");
+	APP_LOG_INFO("Initializing IMGUI editor");
 	SDL_GLContext gl_context = ImGui::CreateContext();
 
 	bool err = ImGui_ImplSDL2_InitForOpenGL(App->window->window, gl_context);
@@ -100,12 +100,13 @@ bool ModuleEditor::InitImgui()
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
-	APP_LOG_SUCCESS("IMGUI editor initialized correctly.");
+	APP_LOG_INFO("IMGUI editor initialized correctly.");
 	return true;
 }
 
 update_status ModuleEditor::PreUpdate()
 {
+	BROFILER_CATEGORY("Module Editor PreUpdate", Profiler::Color::HotPink);
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
@@ -116,6 +117,7 @@ update_status ModuleEditor::PreUpdate()
 
 update_status ModuleEditor::Update()
 {
+	BROFILER_CATEGORY("Module Editor Update", Profiler::Color::LightPink);
 	static bool inital_scene_loaded = false;
 
 #if GAME
@@ -145,7 +147,7 @@ update_status ModuleEditor::Update()
 
 void ModuleEditor::Render()
 {
-	BROFILER_CATEGORY("Render UI", Profiler::Color::BlueViolet);
+	BROFILER_CATEGORY("Module Editor Render", Profiler::Color::BlueViolet);
 	
 #if !GAME
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
