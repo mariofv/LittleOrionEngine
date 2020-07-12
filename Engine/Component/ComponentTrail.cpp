@@ -94,11 +94,22 @@ void  ComponentTrail::GetPerpendiculars()
 			float3 vector_adjacent = (pair->second->position - pair->first->position).Normalized();//vector between each pair -> Normalized to get vector with magnitutde = 1 but same direction
 			float3 perpendicular = vector_adjacent.Cross(owner->transform.GetFrontVector()) * width; //Front is currently local
 
-			float3 top_left, top_right, bottom_left, bottom_right;
-			
+			float3 top_left, bottom_left;
+			++j;
+			//Commented code is for rendering the last point of path
+			//if (++pair == mesh_points.end())
+			//{
+			//	/*--pair;
+			//	top_left = pair->second->position + perpendicular;
+			//	bottom_left = (pair->second->position - perpendicular);*/
+			//}
+			//else
+			//{
+			//	top_left = pair->first->position + perpendicular;
+			//	bottom_left = (pair->first->position - perpendicular);
+			//}
 			top_left = pair->first->position + perpendicular;
 			bottom_left = (pair->first->position - perpendicular);
-			++j;
 			vertices.push_back({ top_left, float2(mesh_index * j,1.0f) }); //uv[i]
 			vertices.push_back({ bottom_left, float2(mesh_index * j,0.0f) });//uv[++i]
 		}

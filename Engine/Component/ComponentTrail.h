@@ -35,6 +35,11 @@ struct TrailPoint {
 	}
 };
 
+struct Spline
+{
+	std::vector<TrailPoint> path;
+};
+
 class ComponentTrail : public Component
 {
 public:

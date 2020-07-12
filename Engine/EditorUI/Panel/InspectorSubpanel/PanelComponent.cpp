@@ -266,19 +266,8 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 	ImGui::Separator();
 	if (ImGui::CollapsingHeader(ICON_FA_SHARE " Trail Renderer", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::InputInt("Number of Trail Points", &trail->total_points, 2);
 		ImGui::InputFloat("Width", &trail->width, 0.1f);
 		ImGui::InputFloat("Duration", &trail->duration, 1000.0f);
-
-		/*if (ImGui::Combo("Blend Mode", &trail->blend_mode, "Alpha Blend\0Additive")) {
-			switch (trail->blend_mode)
-			{
-			case 0:
-				break;
-			case 1:
-				break;
-			}
-		}*/
 		ImGui::Text("Texture");
 		ImGui::SameLine();
 
