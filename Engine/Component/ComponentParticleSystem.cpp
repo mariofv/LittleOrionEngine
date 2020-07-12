@@ -355,7 +355,6 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(velocity_particles_start, "Velocity of particles");
 	config.AddFloat(gravity_modifier, "Gravity modifier");
 
-	config.AddFloat(time_counter, "Time Counter");
 	config.AddFloat(time_between_particles, "Time Between Particles");
 	config.AddFloat(particles_life_time, "Particles Life Time");
 
@@ -404,7 +403,6 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	velocity_particles_start = config.GetFloat("Velocity of particles", 1.0F);
 	gravity_modifier = config.GetFloat("Gravity modifier", 0.f);
 
-	time_counter = config.GetFloat("Time Counter", 0.0F);
 	time_between_particles = config.GetFloat("Time Between Particles", 0.2F);
 	particles_life_time = config.GetFloat("Particles Life Time", 3.0F);
 
