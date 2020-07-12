@@ -221,9 +221,31 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			}
 		}
 
+		//Color of Particles
+
+		if (ImGui::CollapsingHeader("Color"))
+		{
+			ImGui::ColorEdit4("Particle Color##2f", particle_system->initial_color.ptr(), ImGuiColorEditFlags_Float);
+			ImGui::Text("Fade Between Colors");
+			ImGui::Checkbox("###Fade Between Colors", &particle_system->fade_between_colors);
+			ImGui::SameLine();
+			if (!particle_system->fade_between_colors)
+			{
+				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+			}
+			ImGui::ColorEdit4("Particle Color To Fade##2f", particle_system->color_to_fade.ptr(), ImGuiColorEditFlags_Float);
+			ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
+			if (!particle_system->fade_between_colors)
+			{
+				ImGui::PopItemFlag();
+				ImGui::PopStyleVar();
+			}
+		}
 		//Velocity over time
 		ImGui::Checkbox("###Velocity over lifetime", &particle_system->velocity_over_time);
 		ImGui::SameLine();
+
 		if (ImGui::CollapsingHeader("Velocity Over Time"))
 		{
 			if (!particle_system->velocity_over_time)
@@ -272,26 +294,6 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				ImGui::PopStyleVar();
 			}
 
-		}
-
-		//Color of Particles
-		ImGui::Checkbox("###Fade Between Colors", &particle_system->fade_between_colors);
-		ImGui::SameLine();
-		if (ImGui::CollapsingHeader("Color Over Lifetime"))
-		{
-			if (!particle_system->fade_between_colors)
-			{
-				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
-			}
-			ImGui::ColorEdit4("Particle Color##2f", particle_system->initial_color.ptr(), ImGuiColorEditFlags_Float);
-			ImGui::ColorEdit4("Particle Color To Fade##2f", particle_system->color_to_fade.ptr(), ImGuiColorEditFlags_Float);
-			ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
-			if (!particle_system->fade_between_colors)
-			{
-				ImGui::PopItemFlag();
-				ImGui::PopStyleVar();
-			}
 		}
 
 		ImGui::Checkbox("###Fade", &particle_system->fade);
