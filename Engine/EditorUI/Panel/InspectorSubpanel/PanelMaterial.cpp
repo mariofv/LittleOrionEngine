@@ -90,6 +90,7 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 			}
 			ImGui::EndCombo();
 		}
+		ImGui::Checkbox("Receive Shadows", &material->use_shadow_map);
 
 		ImGui::Spacing();
 		ImGui::Separator();

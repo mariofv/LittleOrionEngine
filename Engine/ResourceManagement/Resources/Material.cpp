@@ -79,6 +79,7 @@ void Material::Save(Config& config) const
 	config.AddFloat(tiling_liquid_y_x, "Tiling Liquid Map 2 x");
 	config.AddFloat(tiling_liquid_y_y, "Tiling Liquid Map 2 y");
 	config.AddBool(use_liquid_map, "Use Liquid Map");
+	config.AddBool(use_shadow_map, "Use Shadow Map");
 
 	//colors
 	config.AddColor(float4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]), "difusseColor");
@@ -117,6 +118,7 @@ void Material::Load(const Config& config)
 	tiling_liquid_y_x = config.GetFloat("Tiling Liquid Map 2 x", 1.0F);
 	tiling_liquid_y_y = config.GetFloat("Tiling Liquid Map 2 y", 1.0F);
 	use_liquid_map = config.GetBool("Use Liquid Map", false);
+	use_shadow_map = config.GetBool("Use Shadow Map", true);
 
 
 
