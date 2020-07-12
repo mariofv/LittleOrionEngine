@@ -116,16 +116,13 @@ uint32_t MaterialImporter::ImportMaterialTexture(const std::string& texture_desc
 		sanitazed_string.replace(pos, std::string("\\").length(), "/");
 		pos += std::string("/").length();
 	}
-<<<<<<< HEAD
+
 	if (sanitazed_string.empty())
 	{
 		return 0;
 	}
-	APP_LOG_INIT("Loading material texture in described path %s.", sanitazed_string.c_str());
-=======
 
 	RESOURCES_LOG_INFO("Loading material texture in described path %s.", sanitazed_string.c_str());
->>>>>>> develop
 	if (App->filesystem->Exists(sanitazed_string))
 	{
 		RESOURCES_LOG_INFO("Material loaded correctly from %s.", sanitazed_string.c_str());
