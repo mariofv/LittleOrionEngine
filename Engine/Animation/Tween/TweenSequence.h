@@ -4,6 +4,7 @@
 
 #include "Animation/Tween/Tween.h"
 #include <vector>
+#include <functional>
 
 class TweenSequence
 {
@@ -20,6 +21,9 @@ public:
 	ENGINE_API TweenSequence* Play();
 	ENGINE_API TweenSequence* Stop();
 	ENGINE_API TweenSequence* Pause();
+
+	ENGINE_API TweenSequence* OnCompleted(std::function<void(void)> callback);
+
 private:
 	void Update(float);
 
@@ -27,6 +31,7 @@ private:
 	TweenSequenceState state = TweenSequenceState::DISABLED;
 	std::vector<Tween*> tweens;
 	std::vector<Tween*> current_played_tweens;
+	std::function<void(void)> on_completed_callback = nullptr;
 
 	friend class LOTween;
 };
