@@ -5,14 +5,7 @@
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleResourceManager.h"
 #include "GL/glew.h"
-namespace {
-	const float2 uvs[4] = {
-			float2(0.0f, 0.0f),
-			float2(0.0f, 1.0f),
-			float2(1.0f, 0.0f),
-			float2(1.0f, 1.0f)
-	};
-}
+
 ComponentTrail::ComponentTrail() : Component(nullptr, ComponentType::TRAIL)
 {
 	Init();
@@ -91,7 +84,7 @@ void  ComponentTrail::GetPerpendiculars()
 
 	std::vector<Vertex> vertices;
 	
-	unsigned int i = 0;
+	unsigned int j = 0;
 	mesh_index = 1 / (float)test_points.size(); // to coordinate texture
 	for (auto pair = mesh_points.begin(); pair < mesh_points.end(); ++pair)
 	{
@@ -105,21 +98,15 @@ void  ComponentTrail::GetPerpendiculars()
 			
 			top_left = pair->first->position + perpendicular;
 			bottom_left = (pair->first->position - perpendicular);
-
-			vertices.push_back({ top_left, uvs[i] });
-			vertices.push_back({ bottom_left, uvs[++i] });
-			++i;
-			if (i > 3)
-			{
-				i = 0;
-			}
+			++j;
+			vertices.push_back({ top_left, float2(mesh_index * j,1.0f) }); //uv[i]
+			vertices.push_back({ bottom_left, float2(mesh_index * j,0.0f) });//uv[++i]
 		}
 		else
 		{
 			mesh_points.erase(pair);
 		}
 	}
-	trail_renderer->rendered_vertices = vertices.size();
 	trail_renderer->Render(vertices);
 	trail_renderer->owner = owner;
 }
@@ -167,9 +154,13 @@ void ComponentTrail::Delete()
 
 void ComponentTrail::SpecializedSave(Config& config) const
 {
-
+	config.AddUInt(texture_uuid, "TextureUUID");
 }
 void ComponentTrail::SpecializedLoad(const Config& config)
 {
+	UUID = config.GetUInt("UUID", 0);
+	active = config.GetBool("Active", true);
+	texture_uuid = config.GetUInt("TextureUUID", 0);
 
+	trail_renderer->ChangeTexture(texture_uuid);
 }

@@ -49,8 +49,6 @@ public:
 
 public:
 	float* trail_renderer_vertices = nullptr;
-	float* trail_renderer_uvs = nullptr;
-	unsigned int rendered_vertices = 0;
 
 private:
 	uint32_t texture_uuid = 0;

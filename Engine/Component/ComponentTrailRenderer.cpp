@@ -10,7 +10,7 @@
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
-namespace { const float MAX_TRAIL_VERTICES = 20; } //arbitrary number 
+namespace { const float MAX_TRAIL_VERTICES = 1000; } //arbitrary number 
 
 ComponentTrailRenderer::ComponentTrailRenderer() : Component(nullptr, ComponentType::TRAILRENDERER)
 {
