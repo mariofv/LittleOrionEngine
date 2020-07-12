@@ -46,6 +46,7 @@ public:
 	void GetClipTransform(uint32_t skeleton_uuid, std::vector<math::float4x4>& pose);
 	void StartNextState(const std::string& trigger);
 	bool IsOnState(const std::string& state);
+	void SetSpeed(float speed);
 
 private:
 	void SetActiveState(std::shared_ptr<State> & state);
