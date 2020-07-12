@@ -73,7 +73,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Engine/;./Libraries/include/cr;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/recast;./Libraries/include/par_shapes;./Libraries/include/BlueprintUtilities;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Libraries/include/spdlog;./Engine/;./Libraries/include/cr;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/recast;./Libraries/include/par_shapes;./Libraries/include/BlueprintUtilities;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_MBCS;WINDOWS_IGNORE_PACKING_MISMATCH;DEBUG;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -100,7 +100,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/recast;./Libraries/include/imgui;./Libraries/include/cr;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include/BlueprintUtilities;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Libraries/include/spdlog;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/recast;./Libraries/include/imgui;./Libraries/include/cr;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include/BlueprintUtilities;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -129,7 +129,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/recast;./Libraries/include/cr;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include/BlueprintUtilities;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Libraries/include/spdlog;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/recast;./Libraries/include/cr;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include/BlueprintUtilities;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>_MBCS;GAME;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
@@ -151,6 +151,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Component\ComponentAudioListener.h" />
+    <ClInclude Include="Engine\Log\EngineSink.h" />
+    <ClInclude Include="Engine\Actions\EditorActionAddMultipleGO.h" />
+    <ClInclude Include="Engine\Actions\EditorActionDeleteMultipleGO.h" />
     <ClInclude Include="Engine\Animation\Tween\LOTween.h" />
     <ClInclude Include="Engine\Animation\Tween\Tween.h" />
     <ClInclude Include="Engine\Animation\Tween\TweenSequence.h" />
@@ -270,7 +274,7 @@
     <ClInclude Include="Engine\Component\ComponentMeshRenderer.h" />
     <ClInclude Include="Engine\Component\ComponentTransform.h" />
     <ClInclude Include="Engine\Component\Component.h" />
-    <ClInclude Include="Engine\EditorUI\EngineLog.h" />
+    <ClInclude Include="Engine\Log\EngineLog.h" />
     <ClInclude Include="Engine\Module\ModuleCamera.h" />
     <ClInclude Include="Engine\Module\ModuleTime.h" />
     <ClInclude Include="Engine\Module\Module.h" />
@@ -313,11 +317,15 @@
     <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h" />
     <ClInclude Include="Engine\Helper\TagManager.h" />
     <ClInclude Include="Engine\Helper\PerlinNoise.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Actions\EditorActionAddMultipleGO.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionDeleteMultipleGO.cpp" />
     <ClCompile Include="Engine\Animation\Tween\LOTween.cpp" />
     <ClCompile Include="Engine\Animation\Tween\Tween.cpp" />
     <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp" />
+    <ClCompile Include="Engine\Component\ComponentAudioListener.cpp" />
     <ClCompile Include="Engine\Component\ComponentBillboard.cpp" />
     <ClCompile Include="Engine\Component\ComponentCanvasRenderer.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
@@ -369,7 +377,7 @@
     <ClCompile Include="Engine\Helper\Utils.cpp" />
     <ClCompile Include="Engine\Main\Application.cpp" />
     <ClCompile Include="Engine\Main\GameObject.cpp" />
-    <ClCompile Include="Engine\Main\Log.cpp" />
+    <ClCompile Include="Engine\Log\Log.cpp" />
     <ClCompile Include="Engine\Main\Main.cpp" />
     <ClCompile Include="Engine\Module\ModuleAnimation.cpp" />
     <ClCompile Include="Engine\Module\ModuleEffects.cpp" />
@@ -431,7 +439,7 @@
     <ClCompile Include="Engine\Component\ComponentCamera.cpp" />
     <ClCompile Include="Engine\Component\ComponentMeshRenderer.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform.cpp" />
-    <ClCompile Include="Engine\EditorUI\EngineLog.cpp" />
+    <ClCompile Include="Engine\Log\EngineLog.cpp" />
     <ClCompile Include="Engine\Module\ModuleCamera.cpp" />
     <ClCompile Include="Engine\Module\ModuleTime.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelGameObject.cpp" />
@@ -486,6 +494,7 @@
     <ClCompile Include="Libraries\include\SoundEngine\AkMultipleFileLocation.cpp" />
     <ClCompile Include="Libraries\include\SoundEngine\stdafx.cpp" />
     <ClCompile Include="Engine\Helper\TagManager.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

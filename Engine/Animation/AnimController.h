@@ -49,6 +49,7 @@ public:
 	void UpdateAttachedBones(const std::shared_ptr<Skeleton>& skeleton, const std::vector<math::float4x4>& palette);
 	void StartNextState(const std::string& trigger);
 	bool IsOnState(const std::string& state);
+	void SetSpeed(float speed);
 
 
 private:

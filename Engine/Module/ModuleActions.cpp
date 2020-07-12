@@ -6,6 +6,8 @@
 #include "Actions/EditorActionAddComponent.h"
 #include "Actions/EditorActionDeleteComponent.h"
 #include "Actions/EditorActionAddGameObject.h"
+#include "Actions/EditorActionAddMultipleGO.h"
+#include "Actions/EditorActionDeleteMultipleGO.h"
 #include "Actions/EditorActionDeleteGameObject.h"
 #include "Actions/EditorActionTranslate.h"
 #include "Actions/EditorActionRotation.h"
@@ -38,6 +40,12 @@ update_status ModuleActions::Update()
 #endif 
 	HandleInput();
 	return update_status::UPDATE_CONTINUE;
+}
+
+bool ModuleActions::CleanUp()
+{
+	copied_component = nullptr;
+	return true;
 }
 
 
@@ -130,6 +138,14 @@ void ModuleActions::AddUndoAction(UndoActionType type)
 		);
 		break;
 
+	case UndoActionType::ADD_MULTIPLE_GO:
+		new_action = new EditorActionAddMultipleGO();
+		break;
+
+	case UndoActionType::DELETE_MULTIPLE_GO:
+		new_action = new EditorActionDeleteMultipleGO();
+		break;
+
 	case UndoActionType::DELETE_GAMEOBJECT:
 		new_action = new EditorActionDeleteGameObject(
 			action_game_object
@@ -187,10 +203,118 @@ void ModuleActions::DeleteComponentUndo(Component * component)
 	component->owner->RemoveComponent(component);
 }
 
+void ModuleActions::PasteComponent(Component* component)
+{
+	if (copied_component != nullptr && copied_component->type != Component::ComponentType::SCRIPT && component->type != Component::ComponentType::TRANSFORM && component->type != Component::ComponentType::TRANSFORM2D)
+	{
+		SetCopyComponent(copied_component);
+		copied_component->owner = component->owner;
+		component->owner->components.push_back(copied_component);		
+	}
+	
+}
+
+void ModuleActions::PasteComponentValues(Component * component)
+{
+	if (copied_component != nullptr && component->type == copied_component->type) 
+	{
+		if (component->type == Component::ComponentType::TRANSFORM) 
+		{	
+			component->Load(transform_config);		
+		}
+		else if (component->type == Component::ComponentType::TRANSFORM2D)
+		{
+			component->Load(transform_2D_config);
+		}
+		else 
+		{
+			if (copied_component->type != Component::ComponentType::SCRIPT)
+			{
+				Config configuration;
+				copied_component->Save(configuration);
+				component->Load(configuration);
+			}
+		}
+	}
+}
+
+void ModuleActions::SetCopyComponent(Component * component)
+{
+	
+	if (component->type == Component::ComponentType::COLLIDER)
+	{
+		copied_component = component->Clone(component->owner, component->owner->original_prefab);
+	}
+	else
+	{
+		if (component->type == Component::ComponentType::TRANSFORM)
+		{
+			Config conf;
+			component->Save(conf);
+			transform_config = conf;
+			copied_component = component;
+			
+		}
+		else if(component->type == Component::ComponentType::TRANSFORM2D)
+		{
+			Config conf;
+			component->Save(conf);
+			transform_2D_config = conf;
+			copied_component = component;
+		}
+		else
+		{
+			copied_component = component->Clone(component->owner->original_prefab);
+		}
+	}
+}
+
+
 void ModuleActions::ClearUndoRedoStacks()
 {
 	ClearRedoStack();
 	ClearUndoStack();
+}
+
+void ModuleActions::CheckClickForUndo(UndoActionType type, Component * component)
+{
+	if (ImGui::IsItemActive() && !ImGui::IsItemActiveLastFrame())
+	{
+		switch (type)
+		{
+		case ModuleActions::UndoActionType::TRANSLATION:
+			App->actions->previous_transform = ((ComponentTransform*)component)->GetTranslation();
+			break;
+		case ModuleActions::UndoActionType::ROTATION:
+			App->actions->previous_transform = ((ComponentTransform*)component)->GetRotationRadiants();
+			break;
+		case ModuleActions::UndoActionType::SCALE:
+			App->actions->previous_transform = ((ComponentTransform*)component)->GetScale();
+			break;
+		case ModuleActions::UndoActionType::EDIT_RECT2D:
+		case ModuleActions::UndoActionType::EDIT_RECT2D_ROTATION:
+			App->actions->action_component = (ComponentTransform2D*)component;
+			break;
+		case ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT:
+			App->actions->previous_light_color[0] = ((ComponentLight*)component)->light_color[0];
+			App->actions->previous_light_color[1] = ((ComponentLight*)component)->light_color[1];
+			App->actions->previous_light_color[2] = ((ComponentLight*)component)->light_color[2];
+			App->actions->previous_light_intensity = ((ComponentLight*)component)->light_intensity;
+			App->actions->action_component = component;
+			break;
+		default:
+			break;
+		}
+
+
+		App->actions->clicked = true;
+	}
+
+	if (ImGui::IsItemDeactivatedAfterChange())
+	{
+		App->actions->AddUndoAction(type);
+		App->actions->clicked = false;
+	}
 }
 
 void ModuleActions::HandleInput()
@@ -231,13 +355,9 @@ void ModuleActions::UndoRedoMacros()
 void ModuleActions::DuplicateMacros()
 {
 	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::D))
-	{
-		GameObject* selected_game_object = App->editor->selected_game_object;
-		if (selected_game_object)
-		{
-			action_game_object = App->scene->DuplicateGameObject(selected_game_object, selected_game_object->parent);
-			AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
-		}
+	{	
+		App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_MULTIPLE_GO);
+		App->scene->DuplicateGameObjectList(App->editor->selected_game_objects);	
 	}
 }
 
@@ -245,17 +365,13 @@ void ModuleActions::DeleteMacros()
 {
 	if (App->input->GetKeyDown(KeyCode::Delete))
 	{
-		GameObject* selected_game_object = App->editor->selected_game_object;
-		if (selected_game_object)
+		App->actions->AddUndoAction(ModuleActions::UndoActionType::DELETE_MULTIPLE_GO);
+		for (auto go : App->editor->selected_game_objects)
 		{
-			action_game_object = selected_game_object;
-			AddUndoAction(ModuleActions::UndoActionType::DELETE_GAMEOBJECT);
-
-			App->scene->RemoveGameObject(selected_game_object);
-
-			App->editor->selected_game_object = nullptr;
+			App->scene->RemoveGameObject(go);
 		}
-
+		App->editor->selected_game_object = nullptr;
+		App->editor->selected_game_objects.erase(App->editor->selected_game_objects.begin(), App->editor->selected_game_objects.end());
 	}
 }
 

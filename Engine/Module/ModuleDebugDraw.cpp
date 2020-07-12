@@ -49,9 +49,8 @@ public:
 	{
 		assert(points != nullptr);
 		assert(count > 0 && count <= DEBUG_DRAW_VERTEX_BUFFER_SIZE);
-		GLuint shader_program = App->program->GetShaderProgramId("Linepoint");
 		glBindVertexArray(linePointVAO);
-		glUseProgram(shader_program);
+		GLuint shader_program = App->program->UseProgram("Linepoint");
 
 		glUniformMatrix4fv(
 			glGetUniformLocation(shader_program, "u_MvpMatrix"),
@@ -107,9 +106,8 @@ public:
         assert(glyphs != nullptr);
         assert(count > 0 && count <= DEBUG_DRAW_VERTEX_BUFFER_SIZE);
 
-		GLuint shader_program = App->program->GetShaderProgramId("Text");
         glBindVertexArray(textVAO);
-        glUseProgram(shader_program);
+		GLuint shader_program = App->program->UseProgram("Text");
 
         // These doesn't have to be reset every draw call, I'm just being lazy ;)
         glUniform1i(
@@ -393,7 +391,7 @@ bool ModuleDebugDraw::Init()
 
 	grid = new Grid();
 
-    APP_LOG_SUCCESS("Module Debug Draw initialized correctly.")
+    APP_LOG_INFO("Module Debug Draw initialized correctly.")
 
 	return true;
 }
@@ -488,16 +486,17 @@ void ModuleDebugDraw::RenderParticleSystem() const
 				dd::point_light(
 					App->editor->selected_game_object->transform.GetGlobalTranslation(), 
 					float3(1.f, 1.f, 0.f),
-					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles
+					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles_start
 				);
 			break;
 			case ComponentParticleSystem::TypeOfParticleSystem::BOX:
 			{
+
 				float min_x = static_cast<float>(selected_particle_system->min_range_random_x);
 				float max_x = static_cast<float>(selected_particle_system->max_range_random_x);
 				float min_z = static_cast<float>(selected_particle_system->min_range_random_z);
 				float max_z = static_cast<float>(selected_particle_system->max_range_random_z);
-				float height = selected_particle_system->particles_life_time*selected_particle_system->velocity_particles *100.0f;
+				float height = selected_particle_system->particles_life_time*selected_particle_system->velocity_particles_start *100.0f;
 				float3 box_points[8] = {
 					float3(min_x,0.0f,min_z) / 100,
 					float3(min_x, 0.0f, max_z) / 100,
@@ -523,7 +522,7 @@ void ModuleDebugDraw::RenderParticleSystem() const
 				dd::cone(
 					App->editor->selected_game_object->transform.GetGlobalTranslation(), 
 					App->editor->selected_game_object->transform.GetGlobalRotation()*float3::unitY * 
-					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles,
+					selected_particle_system->particles_life_time*selected_particle_system->velocity_particles_start,
 					float3(1.f, 1.f, 0.f), 
 					selected_particle_system->outer_radius, 
 					selected_particle_system->inner_radius
@@ -627,17 +626,16 @@ void ModuleDebugDraw::RenderOutline() const
 
 		BROFILER_CATEGORY("Render Outline Read Stencil", Profiler::Color::Lavender);
 
-		GLuint outline_shader_program = App->program->GetShaderProgramId("Outline");
-		glUseProgram(outline_shader_program);
+		GLuint outline_shader_program = App->program->UseProgram("Outline");
 		float4x4 new_transformation_matrix;
 		if (selected_game_object->parent != nullptr)
 		{
 			new_transformation_matrix = selected_game_object->parent->transform.GetGlobalModelMatrix() * selected_game_object->transform.GetModelMatrix() * float4x4::Scale(float3(1.01f));
 
-		ComponentTransform object_transform_copy = selected_game_object->transform;
-		float3 object_scale = object_transform_copy.GetScale();
-		object_transform_copy.SetScale(object_scale*1.01f);
-		object_transform_copy.GenerateGlobalModelMatrix();
+			ComponentTransform object_transform_copy = selected_game_object->transform;
+			float3 object_scale = object_transform_copy.GetScale();
+			object_transform_copy.SetScale(object_scale*1.01f);
+			object_transform_copy.GenerateGlobalModelMatrix();
 		}
 		else 
 		{
@@ -652,6 +650,9 @@ void ModuleDebugDraw::RenderOutline() const
 		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), selected_game_object->transform.GetGlobalModelMatrix().Transposed().ptr());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		float color[4] = { 1.0, 0.4, 0.0, 1.0 };
+		glUniform4fv(glGetUniformLocation(outline_shader_program, "base_color"), 1, color);
 
 		selected_object_mesh->RenderModel();
 
@@ -798,6 +799,16 @@ void ModuleDebugDraw::RenderSelectedGameObjectHelpers() const
 void ModuleDebugDraw::RenderPoint(const float3& point, float size, const float3& color) const
 {
 	dd::point(point, color, size);
+}
+
+void ModuleDebugDraw::RenderCircle(const float3& center, float radius, const float3& normal, const float3 & color) const
+{
+	dd::circle(center, normal, color, radius, 20.f);
+}
+
+void ModuleDebugDraw::RenderSphere(const float3& center, float radius, const float3& color) const
+{
+	dd::sphere(center, color, radius);
 }
 
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)

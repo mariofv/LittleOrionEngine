@@ -37,7 +37,7 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 	//We only accept triangle formed meshes
 	if (indices.size() % 3 != 0)
 	{
-		APP_LOG_ERROR("Mesh %s have incorrect indices", mesh->mName.C_Str());
+		RESOURCES_LOG_ERROR("Mesh %s have incorrect indices", mesh->mName.C_Str());
 		return mesh_data;
 	}
 

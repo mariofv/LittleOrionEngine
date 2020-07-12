@@ -7,6 +7,7 @@
 #include "Helper/Config.h"
 
 #include "Main/Application.h"
+#include "ModuleActions.h"
 #include "ModuleAnimation.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
@@ -81,7 +82,7 @@ bool ModuleScene::CleanUp()
 	return true;
 }
 
-ENGINE_API GameObject* ModuleScene::CreateGameObject()
+GameObject* ModuleScene::CreateGameObject()
 {
 	std::string created_game_object_name = App->editor->hierarchy->GetNextGameObjectName();
 	std::unique_ptr<GameObject> created_game_object = std::make_unique<GameObject>(created_game_object_name);
@@ -92,7 +93,7 @@ ENGINE_API GameObject* ModuleScene::CreateGameObject()
 	return created_game_object_ptr;
 }
 
-ENGINE_API GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
+GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
 {
 	GameObject * created_game_object_ptr = CreateGameObject();
 	parent->AddChild(created_game_object_ptr);
@@ -165,6 +166,39 @@ GameObject* ModuleScene::DuplicateGameObject(GameObject* game_object, GameObject
 	return clone_GO;
 }
 
+void ModuleScene::DuplicateGameObjectList(std::vector<GameObject*> game_objects)
+{
+	for (auto go : game_objects) 
+	{
+		if (!HasParentInList(go, game_objects)) 
+		{
+			DuplicateGameObject(go, go->parent);
+		}
+	}
+}
+
+bool ModuleScene::HasParentInList(GameObject * go, std::vector<GameObject*> game_objects) const
+{
+	if (go->GetHierarchyDepth() == 1) 
+	{
+		return false;
+	}
+
+	int depth = go->GetHierarchyDepth();
+	GameObject *game_object = go;
+
+	while (depth >= 2) 
+	{
+		if (BelongsToList(game_object->parent, game_objects))
+		{
+			return true;
+		}
+		game_object = game_object->parent;
+		depth = depth - 1;
+	}
+	return false;
+}
+
 GameObject* ModuleScene::DuplicateGO(GameObject* game_object, GameObject* parent_go)
 {
 	std::unique_ptr<GameObject> aux_copy_pointer = std::make_unique<GameObject>();
@@ -185,6 +219,18 @@ GameObject* ModuleScene::DuplicateGO(GameObject* game_object, GameObject* parent
 	}
 
 	return duplicated_go;
+}
+
+bool ModuleScene::BelongsToList(GameObject * game_object, std::vector<GameObject*> game_objects) const
+{
+	for (auto go : game_objects)
+	{
+		if (go->UUID == game_object->UUID) 
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void ModuleScene::InitDuplicatedScripts(GameObject* clone_go)
@@ -209,7 +255,7 @@ GameObject* ModuleScene::GetRoot() const
 	return root;
 }
 
-ENGINE_API GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
+GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 {
 	if (UUID == 0)
 	{
@@ -230,7 +276,7 @@ ENGINE_API GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 	return nullptr;
 }
 
-ENGINE_API GameObject* ModuleScene::GetGameObjectByName(const std::string & go_name) const
+GameObject* ModuleScene::GetGameObjectByName(const std::string & go_name) const
 {
 	APP_LOG_INFO("Getting game object %s", go_name.c_str());
 	APP_LOG_INFO("%d", game_objects_ownership.size())
@@ -352,12 +398,12 @@ uint32_t ModuleScene::GetSceneUUIDFromPath(const std::string& path)
 	return scene_metafile->uuid;
 }
 
-ENGINE_API void ModuleScene::LoadScene(const std::string &path)
+void ModuleScene::LoadScene(const std::string &path)
 {
 	pending_scene_uuid = GetSceneUUIDFromPath(path);
 }
 
-ENGINE_API void ModuleScene::LoadScene(unsigned position)
+void ModuleScene::LoadScene(unsigned position)
 {
 	if (build_options->is_imported)
 	{

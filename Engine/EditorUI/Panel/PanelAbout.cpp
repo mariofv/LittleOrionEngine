@@ -61,6 +61,7 @@ void PanelAbout::Render()
 		MenuURL("ImGuizmo", "https://github.com/CedricGuillemet/ImGuizmo");
 		MenuURL("PhysFS 3.0.2", "http://icculus.org/physfs/");
 		MenuURL("cr", "https://github.com/fungos/cr");
+		MenuURL("spdlog", "https://github.com/gabime/spdlog");
 
 		ImGui::Separator();
 

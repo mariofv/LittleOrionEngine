@@ -1,4 +1,3 @@
-#version 430 core
 #define PI 3.14159
 
 //General variables
@@ -49,9 +48,6 @@ struct Material
 	float tiling_liquid_y_x;
 	float tiling_liquid_y_y;
 	bool use_liquid_map;
-
-	bool use_normal_map;
-	bool use_specular_map;
 };
 uniform Material material;
 
@@ -132,13 +128,6 @@ in vec4 close_pos_from_light;
 in vec4 mid_pos_from_light;
 in vec4 far_pos_from_light;
 
-//perspective cams
-//in vec4 pos_from_main_camera;
-//in vec4 pos_from_close_camera;
-//in vec4 pos_from_mid_camera;
-
-uniform float main_cam_far_plane;
-
 vec3 FrustumsCheck();
 
 uniform sampler2DShadow close_depth_map;
@@ -151,8 +140,6 @@ uniform float far_plane;
 
 void main()
 {
-	
-
 	vec3 result = vec3(0);
 	vec3 ambient = ambient_light_color.xyz* ambient_light_strength*ambient_light_intensity;
 	//tiling
@@ -170,8 +157,7 @@ void main()
 	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
 	vec3 fragment_normal = normalize(normal);
-	//fragment_normal = CalculateNormalMapAndLiquid(material, tiling); TODO change it to liquid maps
-	
+
 	//Tangent space matrix
 	vec3 T = normalize(vec3(matrices.model * vec4(vertex_tangent_fs,   0.0)));
 	vec3 N = normalize(vec3(matrices.model * vec4(vertex_normal_fs,    0.0)));
@@ -179,12 +165,11 @@ void main()
 	vec3 B = normalize(cross(N, ortho_tangent));
 	mat3 TBN = mat3(T, B, N);
 
-	if(material.use_normal_map)	
-	{	
-		vec3 normal_from_texture = GetNormalMap(material, tiling);	
-		fragment_normal= normalize(TBN * normal_from_texture);	
-	}
-	
+	#if NORMAL_MAP
+		vec3 normal_from_texture = GetNormalMap(material, tiling);
+		fragment_normal= normalize(TBN * normal_from_texture);
+	#endif
+
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)
 	{
 		result += CalculateDirectionalLight(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
@@ -199,12 +184,12 @@ void main()
 	{
 		result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
-	 
+
 	result += emissive_color;
 	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
 	FragColor = vec4(result,1.0);
 	FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
-	FragColor.a=material.transparency;	
+	FragColor.a=material.transparency;
 }
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
@@ -254,48 +239,40 @@ vec3 GetLiquidMap(const Material mat, const vec2 texCoord)
 vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
 
-	vec3 light_dir   = normalize(-directional_light.direction);
-	vec3 half_dir 	 = normalize(light_dir + view_dir);
-	float diff = max(0.0, dot(normalized_normal, light_dir));
+		vec3 light_dir   = normalize(-directional_light.direction);
+		vec3 half_dir 	 = normalize(light_dir + view_dir);
+		float ND = max(0.0, dot(normalized_normal, light_dir));
 
-	//----Specular calculations----
-	float shininess = 7*specular_color.a+ 1;
-	shininess *= shininess;
-    float spec = pow(max(dot(normalized_normal, half_dir), 0.0), shininess);
-	vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-diff),5);
-    vec3 specular =(spec * (shininess+8)/8*PI) *  fresnel;  
-	
+		//----Specular calculations----
+		float shininess = 7*specular_color.a + 1;
+		shininess *= shininess;
+		float spec = pow(max(dot(normalized_normal, half_dir), 0.0), shininess);
+		vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-ND),5);
+		vec3 specular =(spec * (shininess+8)/8*PI) *  fresnel;
 
-	float shadow;
-	if(render_shadows)
-	{
-		shadow = ShadowCalculation();
-	}
-	else
-	{
-		shadow = 0;
-	}
-	
-	return directional_light.color * (
-		( (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular)*shadow )
-		) * diff;
-	
+		vec3 return_value = directional_light.color * (
+		( (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular)*ShadowCalculation())
+		) * ND;
+
+
+		return return_value;
 }
 
 vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
-
 	vec3 light_dir   = normalize(spot_light.position - position);
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
-	float diff = max(0.0, dot(normalized_normal, light_dir));
+	float ND = max(0.0, dot(normalized_normal, light_dir));
+
 	//----Specular calculations----
-	float shininess = 7*material.specular_color.w + 1;
-    float spec = pow(max(dot(normalized_normal, half_dir), 0.0), shininess);
-    vec3 specular =(spec * (shininess+8)/8*PI) * specular_color.rgb;  
-	vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-diff),5);
-	
+	float shininess = 7*specular_color.a + 1;
+	shininess *= shininess;
+	float spec = pow(max(dot(normalized_normal, half_dir), 0.0), shininess);
+	vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-ND),5);
+	vec3 specular =(spec * (shininess+8)/8*PI) *  fresnel;
+
 	//----Softness and atenuation---
-    float theta = dot(light_dir, normalize(-spot_light.direction)); 
+    float theta = dot(light_dir, normalize(-spot_light.direction));
     float epsilon = (spot_light.cutOff - spot_light.outerCutOff);
     float intensity = clamp((theta - spot_light.outerCutOff) / epsilon, 0.0, 1.0);
     float distance    = length(spot_light.position - position);
@@ -304,8 +281,8 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4
 
    return spot_light.color * (
          NormalizedDiffuse(diffuse_color.rgb, fresnel) *intensity*attenuation
-        + specular_color.rgb * specular *intensity*attenuation 
-    )*diff;
+        +  specular *intensity*attenuation
+    )*ND;
 
 }
 
@@ -313,15 +290,15 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, v
 {
 	vec3 light_dir   = normalize(point_light.position - position);
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
-	float diff = max(0.0, dot(normalized_normal, light_dir));
+	float ND = max(0.0, dot(normalized_normal, light_dir));
 
 //----Specular calculations----
 	float shininess = 7*specular_color.a+ 1;
 	shininess *= shininess;
     float spec = pow(max(dot(normalized_normal, half_dir), 0.0), shininess);
-	vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-diff),5);
-    vec3 specular =(spec * (shininess+8)/8*PI) *  fresnel;  
-	
+	vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-ND),5);
+    vec3 specular =(spec * (shininess+8)/8*PI) *  fresnel;
+
   	//----Softness and atenuation---
 	float distance    = length(point_light.position - position);
 	float attenuation = 1.0 / (point_light.constant + point_light.linear * distance +
@@ -330,7 +307,7 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, v
 	return point_light.color * (
 		 NormalizedDiffuse(diffuse_color.rgb, fresnel)  * attenuation
 		+ specular * attenuation
-	)*diff;
+	)*ND;
 
 }
 
@@ -342,6 +319,12 @@ vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel)
 
 float ShadowCalculation()
 {
+#if RECEIVE_SHADOWS
+	if(distance_to_camera > far_plane)
+	{
+			return 0;
+	}
+
 	//Light frustums
 	vec3 normalized_close_depth = close_pos_from_light.xyz / close_pos_from_light.w;
 	normalized_close_depth = normalized_close_depth * 0.5 + 0.5;
@@ -352,17 +335,7 @@ float ShadowCalculation()
 	vec3 normalized_far_depth = far_pos_from_light.xyz / far_pos_from_light.w;
 	normalized_far_depth = normalized_far_depth * 0.5 + 0.5;
 
-	//Perspective camera
-	//vec3 normalized_close_cam_pos = pos_from_close_camera.xyz/pos_from_close_camera.w;
-	//normalized_close_cam_pos = normalized_close_cam_pos * 0.5 + 0.5;
-
-	//vec3 normalized_mid_cam_pos = pos_from_mid_camera.xyz/pos_from_mid_camera.w;
-	//normalized_mid_cam_pos = normalized_mid_cam_pos * 0.5 + 0.5;
-
-	//vec3 normalized_main_cam_pos = pos_from_main_camera.xyz/pos_from_main_camera.w;
-	//normalized_main_cam_pos = normalized_main_cam_pos * 0.5 + 0.5;
-	
-	float bias = 0.005;  
+	float bias = 0.005;
 	float factor = 0.0;
 
 	vec3 close_coords = vec3(normalized_close_depth.xy, normalized_close_depth.z - bias);
@@ -394,30 +367,32 @@ float ShadowCalculation()
 				far_coords.xy = normalized_far_depth.xy + vec2(x, y)*(1.0 / textureSize(far_depth_map, 0));
 				factor += texture(far_depth_map, far_coords);
 			}
-			
-        }    
+
+        }
     }
     factor /= 9.0;
 
-	return factor;
 
+	return factor;
+#endif
+	return 1;
 }
 
 vec3 FrustumsCheck()
 {
 	vec3 result = vec3(0, 0, 0);
-	
+
 	if(distance_to_camera > 0 && distance_to_camera  < far_plane/3)
 	{
 		result = vec3(100, 0, 0);
 	}
 
-	if(distance_to_camera  >= far_plane/3 && distance_to_camera  < 2*far_plane/3) 
+	if(distance_to_camera  >= far_plane/3 && distance_to_camera  < 2*far_plane/3)
 	{
 		result = vec3(0, 100, 0);
 	}
-	
-	if(distance_to_camera  >= 2*far_plane/3 && distance_to_camera  < far_plane) 
+
+	if(distance_to_camera  >= 2*far_plane/3 && distance_to_camera  < far_plane)
 	{
 		result = vec3(0, 0, 100);
 	}

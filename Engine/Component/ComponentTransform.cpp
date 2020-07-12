@@ -64,51 +64,51 @@ void ComponentTransform::SpecializedLoad(const Config& config)
 	OnTransformChange();
 }
 
-ENGINE_API float3 ComponentTransform::GetGlobalTranslation() const
+float3 ComponentTransform::GetGlobalTranslation() const
 {
 	return global_model_matrix.TranslatePart();
 }
 
-ENGINE_API float3 ComponentTransform::GetTranslation() const
+float3 ComponentTransform::GetTranslation() const
 {
 	return translation;
 }
 
-ENGINE_API void ComponentTransform::SetTranslation(const float3& translation)
+void ComponentTransform::SetTranslation(const float3& translation)
 {
 	BROFILER_CATEGORY("SetTranslation", Profiler::Color::Lavender);
 	this->translation = translation;
 	OnTransformChange();
 }
 
-ENGINE_API void ComponentTransform::Translate(const float3& translation)
+void ComponentTransform::Translate(const float3& translation)
 {
 	this->translation += translation;
 	OnTransformChange();
 }
 
-ENGINE_API void ComponentTransform::SetGlobalMatrixTranslation(const float3& translation)
+void ComponentTransform::SetGlobalMatrixTranslation(const float3& translation)
 {
 	global_model_matrix.SetTranslatePart(translation);
 	SetGlobalModelMatrix(global_model_matrix);
 }
 
-ENGINE_API Quat ComponentTransform::GetGlobalRotation() const
+Quat ComponentTransform::GetGlobalRotation() const
 {
 	return global_model_matrix.RotatePart().ToQuat();
 }
 
-ENGINE_API Quat ComponentTransform::GetRotation() const
+Quat ComponentTransform::GetRotation() const
 {
 	return rotation;
 }
 
-ENGINE_API float3 ComponentTransform::GetRotationRadiants() const
+float3 ComponentTransform::GetRotationRadiants() const
 {
 	return rotation_radians;
 }
 
-ENGINE_API void ComponentTransform::SetRotation(const float3x3& rotation)
+void ComponentTransform::SetRotation(const float3x3& rotation)
 {
 	this->rotation = rotation.ToQuat();
 	rotation_radians = rotation.ToEulerXYZ();
@@ -119,7 +119,7 @@ ENGINE_API void ComponentTransform::SetRotation(const float3x3& rotation)
 /*
 	@param new_rotation The rotation in degrees
 */
-ENGINE_API void ComponentTransform::SetRotation(const float3& new_rotation)
+void ComponentTransform::SetRotation(const float3& new_rotation)
 {
 	rotation_radians = Utils::Float3DegToRad(new_rotation);
 	rotation = math::Quat::FromEulerXYZ(rotation_radians.x, rotation_radians.y, rotation_radians.z);
@@ -127,7 +127,7 @@ ENGINE_API void ComponentTransform::SetRotation(const float3& new_rotation)
 	OnTransformChange();
 }
 
-ENGINE_API void ComponentTransform::SetRotation(const Quat& new_rotation)
+void ComponentTransform::SetRotation(const Quat& new_rotation)
 {
 	rotation = new_rotation;
 	rotation_radians = new_rotation.ToEulerXYZ();
@@ -135,13 +135,13 @@ ENGINE_API void ComponentTransform::SetRotation(const Quat& new_rotation)
 	OnTransformChange();
 }
 
-ENGINE_API void ComponentTransform::SetGlobalMatrixRotation(const float3x3& rotation)
+void ComponentTransform::SetGlobalMatrixRotation(const float3x3& rotation)
 {
 	global_model_matrix.SetRotatePart(rotation);
 	SetGlobalModelMatrix(global_model_matrix);
 }
 
-ENGINE_API void ComponentTransform::SetGlobalMatrixRotation(const Quat& rotation)
+void ComponentTransform::SetGlobalMatrixRotation(const Quat& rotation)
 {
 	global_model_matrix.SetRotatePart(rotation);
 	SetGlobalModelMatrix(global_model_matrix);
@@ -165,19 +165,19 @@ void ComponentTransform::Rotate(const float3x3& rotation)
 	OnTransformChange();
 }
 
-ENGINE_API void ComponentTransform::LookAt(const float3& target)
+void ComponentTransform::LookAt(const float3& target)
 {
-	float3 direction = (target - GetTranslation());
-	Quat new_rotation = GetRotation().LookAt(float3::unitZ, direction.Normalized(), float3::unitY, float3::unitY);
-	SetRotation(new_rotation);
+	float3 direction = (target - GetGlobalTranslation());
+	Quat new_rotation = GetGlobalRotation().LookAt(float3::unitZ, direction.Normalized(), float3::unitY, float3::unitY);
+	SetGlobalMatrixRotation(new_rotation);
 }
 
-ENGINE_API float3 ComponentTransform::ComponentTransform::GetScale() const
+float3 ComponentTransform::ComponentTransform::GetScale() const
 {
 	return scale;
 }
 
-ENGINE_API void ComponentTransform::SetScale(const float3& scale)
+void ComponentTransform::SetScale(const float3& scale)
 {
 	this->scale = scale;
 	
@@ -195,18 +195,18 @@ float3 ComponentTransform::GetGlobalScale() const
 	return global_model_matrix.GetScale();
 }
 
-ENGINE_API float3 ComponentTransform::GetUpVector() const
+float3 ComponentTransform::GetUpVector() const
 {
 	return rotation * float3::unitY;
 }
 
 
-ENGINE_API float3 ComponentTransform::GetFrontVector() const
+float3 ComponentTransform::GetFrontVector() const
 {
 	return rotation * float3::unitZ;
 }
 
-ENGINE_API float3 ComponentTransform::GetRightVector() const
+float3 ComponentTransform::GetRightVector() const
 {
 	return Cross(GetFrontVector(), GetUpVector());
 }

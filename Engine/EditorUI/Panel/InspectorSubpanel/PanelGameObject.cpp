@@ -3,6 +3,7 @@
 #include "Helper/TagManager.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioListener.h"
 #include "Component/ComponentAudioSource.h"
 #include "Component/ComponentBillboard.h"
 #include "Component/ComponentBoxCollider.h"
@@ -201,6 +202,10 @@ void PanelGameObject::Render(GameObject* game_object)
 				component_panel.ShowComponentAudioSourceWindow(static_cast<ComponentAudioSource*>(component));
 				break;
 
+			case Component::ComponentType::AUDIO_LISTENER:
+				component_panel.ShowComponentAudioListenerWindow(static_cast<ComponentAudioListener*>(component));
+				break;
+
 			default:
 				break;
 		}
@@ -213,6 +218,7 @@ void PanelGameObject::Render(GameObject* game_object)
 	{
 		App->editor->inspector->material_panel.Render(mesh_renderer_component->material_to_render);
 	}
+
 
 	ImGui::Spacing();
 	ImGui::Separator();

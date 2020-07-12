@@ -20,27 +20,9 @@
     },
     {
       "Name": "Outline",
-      "Vertex": "/Resources/Shaders/outline.vs",
-      "Fragment": "/Resources/Shaders/outline.fs",
+      "Vertex": "/Resources/Shaders/simple_color.vs",
+      "Fragment": "/Resources/Shaders/simple_color.fs",
       "Selectable": false
-    },
-    {
-      "Name": "Flat",
-      "Vertex": "/Resources/Shaders/flat.vs",
-      "Fragment": "/Resources/Shaders/flat.fs",
-      "Selectable": false
-    },
-    {
-      "Name": "Gouraund",
-      "Vertex": "/Resources/Shaders/gouraund.vs",
-      "Fragment": "/Resources/Shaders/gouraund.fs",
-      "Selectable": false
-    },
-    {
-      "Name": "Phong",
-      "Vertex": "/Resources/Shaders/phong.vs",
-      "Fragment": "/Resources/Shaders/phong.fs",
-      "Selectable": true
     },
     {
       "Name": "Blinn phong",
@@ -61,9 +43,15 @@
       "Selectable": false
     },
     {
+      "Name": "Particles",
+      "Vertex": "/Resources/Shaders/particles.vs",
+      "Fragment": "/Resources/Shaders/particles.fs",
+      "Selectable": false
+    },
+    {
       "Name": "NavMesh",
-      "Vertex": "/Resources/Shaders/NavMesh.vs",
-      "Fragment": "/Resources/Shaders/NavMesh.fs",
+      "Vertex": "/Resources/Shaders/simple_color.vs",
+      "Fragment": "/Resources/Shaders/simple_color.fs",
       "Selectable": true
     },
     {

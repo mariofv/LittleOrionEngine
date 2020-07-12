@@ -8,10 +8,7 @@
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
 
-#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
-
-#include "imgui.h"
-
+#include <imgui.h>
 
 
 TemplateScript* TemplateScriptDLL()
@@ -22,7 +19,6 @@ TemplateScript* TemplateScriptDLL()
 
 TemplateScript::TemplateScript()
 {
-	panel = new PanelComponent();
 }
 
 // Use this for initialization before Start()

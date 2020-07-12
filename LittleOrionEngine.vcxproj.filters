@@ -94,9 +94,6 @@
     <ClCompile Include="Engine\SpacePartition\OLOctTree.cpp">
       <Filter>Engine\SpacePartition</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Main\Log.cpp">
-      <Filter>Engine\Main</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Helper\Config.cpp">
       <Filter>Engine\Helper</Filter>
     </ClCompile>
@@ -234,9 +231,6 @@
     </ClCompile>
     <ClCompile Include="Engine\EditorUI\Panel\PanelToolBar.cpp">
       <Filter>Engine\EditorUI\Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\EditorUI\EngineLog.cpp">
-      <Filter>Engine\EditorUI</Filter>
     </ClCompile>
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp">
       <Filter>Engine\EditorUI\Helper</Filter>
@@ -535,6 +529,24 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupNewFileName.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionDeleteMultipleGO.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Log\Log.cpp">
+      <Filter>Engine\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Log\EngineLog.cpp">
+      <Filter>Engine\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.cpp">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionAddMultipleGO.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentAudioListener.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -767,9 +779,6 @@
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\PrefabImporter.h">
       <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\EditorUI\EngineLog.h">
-      <Filter>Engine\EditorUI</Filter>
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Helper\Grid.h">
       <Filter>Engine\EditorUI\Helper</Filter>
@@ -1059,6 +1068,24 @@
     <ClInclude Include="Engine\Helper\PerlinNoise.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionAddMultipleGO.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionDeleteMultipleGO.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Log\EngineSink.h">
+      <Filter>Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Log\EngineLog.h">
+      <Filter>Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.h">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentAudioListener.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -1159,6 +1186,9 @@
     </Filter>
     <Filter Include="Engine\Event">
       <UniqueIdentifier>{182de5df-40ff-40a2-ae90-2adaa77cbdfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Log">
+      <UniqueIdentifier>{d22e17b5-e141-4631-a234-4cf691074a55}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

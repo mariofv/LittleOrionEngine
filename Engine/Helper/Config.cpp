@@ -3,6 +3,7 @@
 #include "Filesystem/File.h"
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/prettywriter.h>
+
 Config::Config()
 {
 	config_document.SetObject();
