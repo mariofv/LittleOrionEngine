@@ -1,260 +1,538 @@
-[2020-07-09 17:55:36.181] [LittleOrionEngine] [info] main.cpp(47) : Application Creation ends. Elapsed time: 0.000000 ms
-[2020-07-09 17:55:36.182] [LittleOrionEngine] [info] modulewindow.cpp(15) : Init SDL window & surface.
-[2020-07-09 17:55:36.186] [LittleOrionEngine] [info] modulewindow.cpp(176) : Creating Glew Renderer context
-[2020-07-09 17:55:36.831] [LittleOrionEngine] [info] modulewindow.cpp(75) : SDL window & surface initialized correctly.
-[2020-07-09 17:55:36.890] [LittleOrionEngine] [info] path.cpp(199) : Error reading directory /Assets/Models/Level 1 VS3: (null)
-[2020-07-09 17:55:37.202] [LittleOrionEngine] [info] path.cpp(199) : Error reading directory /Assets/Wwise/English(US): (null)
-[2020-07-09 17:55:37.214] [LittleOrionEngine] [info] path.cpp(199) : Error reading directory /Library/Metadata/0: (null)
-[2020-07-09 17:55:37.701] [Resources] [info] textureimporter.cpp(13) : Initializing DevIL image loader.
-[2020-07-09 17:55:37.702] [Resources] [info] textureimporter.cpp(20) : DevIL image loader initialized correctly.
-[2020-07-09 17:55:37.732] [LittleOrionEngine] [info] moduleinput.cpp(57) : Init SDL input event system
-[2020-07-09 17:55:37.827] [LittleOrionEngine] [info] moduleinput.cpp(79) : SDL input event system initialized correctly.
-[2020-07-09 17:55:37.828] [LittleOrionEngine] [info] moduletime.cpp(26) : Initializing Engine clocks
-[2020-07-09 17:55:37.828] [LittleOrionEngine] [info] moduletime.cpp(36) : Engine clocks initialized correctly
-[2020-07-09 17:55:37.840] [LittleOrionEngine] [info] modulerender.cpp(97) : Using Glew 2.1.0
-[2020-07-09 17:55:37.840] [LittleOrionEngine] [info] modulerender.cpp(98) : Vendor: NVIDIA Corporation
-[2020-07-09 17:55:37.840] [LittleOrionEngine] [info] modulerender.cpp(99) : Renderer: GeForce GTX 1070/PCIe/SSE2
-[2020-07-09 17:55:37.840] [LittleOrionEngine] [info] modulerender.cpp(100) : OpenGL version supported 4.6.0 NVIDIA 436.48
-[2020-07-09 17:55:37.840] [LittleOrionEngine] [info] modulerender.cpp(101) : GLSL: 4.60 NVIDIA
+[2020-07-12 00:59:38.153] [LittleOrionEngine] [info] main.cpp(47) : Application Creation ends. Elapsed time: 0.000000 ms
+[2020-07-12 00:59:38.154] [LittleOrionEngine] [info] modulewindow.cpp(15) : Init SDL window & surface.
+[2020-07-12 00:59:38.160] [LittleOrionEngine] [info] modulewindow.cpp(176) : Creating Glew Renderer context
+[2020-07-12 00:59:39.054] [LittleOrionEngine] [info] modulewindow.cpp(75) : SDL window & surface initialized correctly.
+[2020-07-12 00:59:40.201] [LittleOrionEngine] [info] path.cpp(199) : Error reading directory /Library/Metadata/0: (null)
+[2020-07-12 00:59:42.071] [Resources] [info] textureimporter.cpp(13) : Initializing DevIL image loader.
+[2020-07-12 00:59:42.072] [Resources] [info] textureimporter.cpp(20) : DevIL image loader initialized correctly.
+[2020-07-12 00:59:42.166] [LittleOrionEngine] [info] moduleinput.cpp(57) : Init SDL input event system
+[2020-07-12 00:59:42.252] [LittleOrionEngine] [info] moduleinput.cpp(79) : SDL input event system initialized correctly.
+[2020-07-12 00:59:42.253] [LittleOrionEngine] [info] moduletime.cpp(26) : Initializing Engine clocks
+[2020-07-12 00:59:42.254] [LittleOrionEngine] [info] moduletime.cpp(36) : Engine clocks initialized correctly
+[2020-07-12 00:59:42.267] [LittleOrionEngine] [info] modulerender.cpp(97) : Using Glew 2.1.0
+[2020-07-12 00:59:42.268] [LittleOrionEngine] [info] modulerender.cpp(98) : Vendor: NVIDIA Corporation
+[2020-07-12 00:59:42.268] [LittleOrionEngine] [info] modulerender.cpp(99) : Renderer: GeForce GT 730/PCIe/SSE2
+[2020-07-12 00:59:42.268] [LittleOrionEngine] [info] modulerender.cpp(100) : OpenGL version supported 4.6.0 NVIDIA 388.13
+[2020-07-12 00:59:42.268] [LittleOrionEngine] [info] modulerender.cpp(101) : GLSL: 4.60 NVIDIA
 
-[2020-07-09 17:55:37.844] [LittleOrionEngine] [info] modulerender.cpp(121) : Glew initialized correctly.
-[2020-07-09 17:55:37.844] [LittleOrionEngine] [info] moduleeditor.cpp(81) : Initializing IMGUI editor
-[2020-07-09 17:55:37.845] [LittleOrionEngine] [info] moduleeditor.cpp(103) : IMGUI editor initialized correctly.
-[2020-07-09 17:55:37.847] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/skybox.vs,/Resources/Shaders/skybox.fs
-[2020-07-09 17:55:37.847] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
-[2020-07-09 17:55:37.848] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
-[2020-07-09 17:55:37.848] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
-[2020-07-09 17:55:37.849] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
-[2020-07-09 17:55:37.849] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
-[2020-07-09 17:55:37.849] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
-[2020-07-09 17:55:37.849] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
-[2020-07-09 17:55:37.849] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
-[2020-07-09 17:55:37.850] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
-[2020-07-09 17:55:37.850] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
-[2020-07-09 17:55:37.850] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/skybox.vs,/Resources/Shaders/skybox.fs loaded correctly.
-[2020-07-09 17:55:37.850] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/linepoint.vs,/Resources/Shaders/linepoint.fs
-[2020-07-09 17:55:37.851] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
-[2020-07-09 17:55:37.851] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
-[2020-07-09 17:55:37.852] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
-[2020-07-09 17:55:37.852] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
-[2020-07-09 17:55:37.852] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
-[2020-07-09 17:55:37.853] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
-[2020-07-09 17:55:37.853] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
-[2020-07-09 17:55:37.853] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
-[2020-07-09 17:55:37.853] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
-[2020-07-09 17:55:37.853] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
-[2020-07-09 17:55:37.853] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/linepoint.vs,/Resources/Shaders/linepoint.fs loaded correctly.
-[2020-07-09 17:55:37.853] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/text.vs,/Resources/Shaders/text.fs
-[2020-07-09 17:55:37.854] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
-[2020-07-09 17:55:37.854] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
-[2020-07-09 17:55:37.855] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
-[2020-07-09 17:55:37.856] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
-[2020-07-09 17:55:37.856] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
-[2020-07-09 17:55:37.856] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
-[2020-07-09 17:55:37.856] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
-[2020-07-09 17:55:37.856] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
-[2020-07-09 17:55:37.856] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
-[2020-07-09 17:55:37.856] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
-[2020-07-09 17:55:37.856] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/text.vs,/Resources/Shaders/text.fs loaded correctly.
-[2020-07-09 17:55:37.857] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/outline.vs,/Resources/Shaders/outline.fs
-[2020-07-09 17:55:37.857] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
-[2020-07-09 17:55:37.857] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
-[2020-07-09 17:55:37.857] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
-[2020-07-09 17:55:37.858] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
-[2020-07-09 17:55:37.858] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
-[2020-07-09 17:55:37.858] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
-[2020-07-09 17:55:37.858] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
-[2020-07-09 17:55:37.858] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
-[2020-07-09 17:55:37.859] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
-[2020-07-09 17:55:37.859] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
-[2020-07-09 17:55:37.859] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/outline.vs,/Resources/Shaders/outline.fs loaded correctly.
-[2020-07-09 17:55:37.859] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/flat.vs,/Resources/Shaders/flat.fs
-[2020-07-09 17:55:37.859] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
-[2020-07-09 17:55:37.860] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
-[2020-07-09 17:55:37.860] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
-[2020-07-09 17:55:37.861] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
-[2020-07-09 17:55:37.861] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
-[2020-07-09 17:55:37.861] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
-[2020-07-09 17:55:37.861] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
-[2020-07-09 17:55:37.861] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
-[2020-07-09 17:55:37.861] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
-[2020-07-09 17:55:37.861] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
-[2020-07-09 17:55:37.862] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/flat.vs,/Resources/Shaders/flat.fs loaded correctly.
-[2020-07-09 17:55:37.862] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/gouraund.vs,/Resources/Shaders/gouraund.fs
-[2020-07-09 17:55:37.862] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
-[2020-07-09 17:55:37.862] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
-[2020-07-09 17:55:37.862] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
-[2020-07-09 17:55:37.863] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
-[2020-07-09 17:55:37.863] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
-[2020-07-09 17:55:37.863] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
-[2020-07-09 17:55:37.863] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
-[2020-07-09 17:55:37.863] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
-[2020-07-09 17:55:37.864] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
-[2020-07-09 17:55:37.864] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
-[2020-07-09 17:55:37.864] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/gouraund.vs,/Resources/Shaders/gouraund.fs loaded correctly.
-[2020-07-09 17:55:37.864] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/phong.vs,/Resources/Shaders/phong.fs
-[2020-07-09 17:55:37.864] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
-[2020-07-09 17:55:37.864] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
-[2020-07-09 17:55:37.865] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
-[2020-07-09 17:55:37.865] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
-[2020-07-09 17:55:37.865] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
-[2020-07-09 17:55:37.865] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
-[2020-07-09 17:55:37.865] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
-[2020-07-09 17:55:37.866] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
-[2020-07-09 17:55:37.867] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
-[2020-07-09 17:55:37.867] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
-[2020-07-09 17:55:37.867] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/phong.vs,/Resources/Shaders/phong.fs loaded correctly.
-[2020-07-09 17:55:37.867] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/blinn_phong.vs,/Resources/Shaders/blinn_phong.fs
-[2020-07-09 17:55:37.867] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
-[2020-07-09 17:55:37.868] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
-[2020-07-09 17:55:37.868] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
-[2020-07-09 17:55:37.869] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
-[2020-07-09 17:55:37.869] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
-[2020-07-09 17:55:37.869] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
-[2020-07-09 17:55:37.869] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
-[2020-07-09 17:55:37.869] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
-[2020-07-09 17:55:37.871] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
-[2020-07-09 17:55:37.871] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
-[2020-07-09 17:55:37.872] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/blinn_phong.vs,/Resources/Shaders/blinn_phong.fs loaded correctly.
-[2020-07-09 17:55:37.872] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/blinn_phong.vs,/Resources/Shaders/lightmap.fs
-[2020-07-09 17:55:37.872] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
-[2020-07-09 17:55:37.872] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
-[2020-07-09 17:55:37.872] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
-[2020-07-09 17:55:37.873] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
-[2020-07-09 17:55:37.873] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
-[2020-07-09 17:55:37.873] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
-[2020-07-09 17:55:37.873] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
-[2020-07-09 17:55:37.873] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
-[2020-07-09 17:55:37.875] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
-[2020-07-09 17:55:37.875] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
-[2020-07-09 17:55:37.875] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/blinn_phong.vs,/Resources/Shaders/lightmap.fs loaded correctly.
-[2020-07-09 17:55:37.875] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/billboard.vs,/Resources/Shaders/billboard.fs
-[2020-07-09 17:55:37.876] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
-[2020-07-09 17:55:37.876] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
-[2020-07-09 17:55:37.876] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
-[2020-07-09 17:55:37.877] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
-[2020-07-09 17:55:37.877] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
-[2020-07-09 17:55:37.877] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
-[2020-07-09 17:55:37.878] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
-[2020-07-09 17:55:37.878] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
-[2020-07-09 17:55:37.878] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
-[2020-07-09 17:55:37.879] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
-[2020-07-09 17:55:37.879] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/billboard.vs,/Resources/Shaders/billboard.fs loaded correctly.
-[2020-07-09 17:55:37.879] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/particles.vs,/Resources/Shaders/particles.fs
-[2020-07-09 17:55:37.879] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
-[2020-07-09 17:55:37.879] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
-[2020-07-09 17:55:37.880] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
-[2020-07-09 17:55:37.880] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
-[2020-07-09 17:55:37.881] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
-[2020-07-09 17:55:37.881] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
-[2020-07-09 17:55:37.881] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
-[2020-07-09 17:55:37.881] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
-[2020-07-09 17:55:37.881] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
-[2020-07-09 17:55:37.882] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
-[2020-07-09 17:55:37.882] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/particles.vs,/Resources/Shaders/particles.fs loaded correctly.
-[2020-07-09 17:55:37.882] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/NavMesh.vs,/Resources/Shaders/NavMesh.fs
-[2020-07-09 17:55:37.882] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
-[2020-07-09 17:55:37.882] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
-[2020-07-09 17:55:37.882] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
-[2020-07-09 17:55:37.883] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
-[2020-07-09 17:55:37.883] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
-[2020-07-09 17:55:37.883] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
-[2020-07-09 17:55:37.883] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
-[2020-07-09 17:55:37.883] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
-[2020-07-09 17:55:37.884] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
-[2020-07-09 17:55:37.884] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
-[2020-07-09 17:55:37.884] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/NavMesh.vs,/Resources/Shaders/NavMesh.fs loaded correctly.
-[2020-07-09 17:55:37.884] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/grid.vs,/Resources/Shaders/grid.fs
-[2020-07-09 17:55:37.884] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
-[2020-07-09 17:55:37.884] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
-[2020-07-09 17:55:37.884] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
-[2020-07-09 17:55:37.885] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
-[2020-07-09 17:55:37.885] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
-[2020-07-09 17:55:37.885] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
-[2020-07-09 17:55:37.885] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
-[2020-07-09 17:55:37.885] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
-[2020-07-09 17:55:37.886] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
-[2020-07-09 17:55:37.886] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
-[2020-07-09 17:55:37.886] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/grid.vs,/Resources/Shaders/grid.fs loaded correctly.
-[2020-07-09 17:55:37.886] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/sprite.vs,/Resources/Shaders/sprite.fs
-[2020-07-09 17:55:37.886] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
-[2020-07-09 17:55:37.887] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
-[2020-07-09 17:55:37.887] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
-[2020-07-09 17:55:37.887] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
-[2020-07-09 17:55:37.887] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
-[2020-07-09 17:55:37.888] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
-[2020-07-09 17:55:37.888] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
-[2020-07-09 17:55:37.888] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
-[2020-07-09 17:55:37.888] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
-[2020-07-09 17:55:37.888] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
-[2020-07-09 17:55:37.888] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/sprite.vs,/Resources/Shaders/sprite.fs loaded correctly.
-[2020-07-09 17:55:37.888] [LittleOrionEngine] [info] moduleprogram.cpp(68) : Loading shader program. With paths: /Resources/Shaders/sprite.vs,/Resources/Shaders/ui_text.fs
-[2020-07-09 17:55:37.888] [LittleOrionEngine] [info] moduleprogram.cpp(93) : Loading vertex shader
-[2020-07-09 17:55:37.889] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Compiling vertex shader
-[2020-07-09 17:55:37.889] [LittleOrionEngine] [info] moduleprogram.cpp(125) : Loading fragment shader
-[2020-07-09 17:55:37.890] [LittleOrionEngine] [info] moduleprogram.cpp(138) : Compiling fragment shader
-[2020-07-09 17:55:37.890] [LittleOrionEngine] [info] moduleprogram.cpp(156) : Creating shader program
-[2020-07-09 17:55:37.890] [LittleOrionEngine] [info] moduleprogram.cpp(163) : Attaching vertex shader to shader program
-[2020-07-09 17:55:37.890] [LittleOrionEngine] [info] moduleprogram.cpp(166) : Attaching fragment shader to shader program
-[2020-07-09 17:55:37.890] [LittleOrionEngine] [info] moduleprogram.cpp(169) : Linking shader program
-[2020-07-09 17:55:37.890] [LittleOrionEngine] [info] moduleprogram.cpp(172) : Deleting vertex shader
-[2020-07-09 17:55:37.890] [LittleOrionEngine] [info] moduleprogram.cpp(175) : Deleting fragment shader
-[2020-07-09 17:55:37.891] [LittleOrionEngine] [info] moduleprogram.cpp(87) : Shader program with paths: /Resources/Shaders/sprite.vs,/Resources/Shaders/ui_text.fs loaded correctly.
-[2020-07-09 17:55:37.891] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 7.
-[2020-07-09 17:55:37.911] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 8.
-[2020-07-09 17:55:37.926] [Resources] [info] moduleresourcemanager.h(119) : Resource 8 loaded correctly.
-[2020-07-09 17:55:37.926] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 9.
-[2020-07-09 17:55:37.945] [Resources] [info] moduleresourcemanager.h(119) : Resource 9 loaded correctly.
-[2020-07-09 17:55:37.945] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 10.
-[2020-07-09 17:55:37.973] [Resources] [info] moduleresourcemanager.h(119) : Resource 10 loaded correctly.
-[2020-07-09 17:55:37.974] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 11.
-[2020-07-09 17:55:37.988] [Resources] [info] moduleresourcemanager.h(119) : Resource 11 loaded correctly.
-[2020-07-09 17:55:37.988] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 12.
-[2020-07-09 17:55:38.010] [Resources] [info] moduleresourcemanager.h(119) : Resource 12 loaded correctly.
-[2020-07-09 17:55:38.011] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 13.
-[2020-07-09 17:55:38.030] [Resources] [info] moduleresourcemanager.h(119) : Resource 13 loaded correctly.
-[2020-07-09 17:55:38.031] [Resources] [info] moduleresourcemanager.h(119) : Resource 7 loaded correctly.
-[2020-07-09 17:55:38.031] [LittleOrionEngine] [info] moduledebug.cpp(30) : Module Debug initialized correctly.
-[2020-07-09 17:55:38.043] [LittleOrionEngine] [info] path.cpp(83) : File /Resources/Scenes/tmp_scene.scene saved!
+[2020-07-12 00:59:42.278] [LittleOrionEngine] [info] modulerender.cpp(121) : Glew initialized correctly.
+[2020-07-12 00:59:42.278] [LittleOrionEngine] [info] moduleeditor.cpp(81) : Initializing IMGUI editor
+[2020-07-12 00:59:42.280] [LittleOrionEngine] [info] moduleeditor.cpp(103) : IMGUI editor initialized correctly.
+[2020-07-12 00:59:42.285] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 7.
+[2020-07-12 00:59:42.287] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 8.
+[2020-07-12 00:59:42.302] [Resources] [info] moduleresourcemanager.h(119) : Resource 8 loaded correctly.
+[2020-07-12 00:59:42.302] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 9.
+[2020-07-12 00:59:42.320] [Resources] [info] moduleresourcemanager.h(119) : Resource 9 loaded correctly.
+[2020-07-12 00:59:42.320] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 10.
+[2020-07-12 00:59:42.333] [Resources] [info] moduleresourcemanager.h(119) : Resource 10 loaded correctly.
+[2020-07-12 00:59:42.333] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 11.
+[2020-07-12 00:59:42.348] [Resources] [info] moduleresourcemanager.h(119) : Resource 11 loaded correctly.
+[2020-07-12 00:59:42.349] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 12.
+[2020-07-12 00:59:42.365] [Resources] [info] moduleresourcemanager.h(119) : Resource 12 loaded correctly.
+[2020-07-12 00:59:42.365] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 13.
+[2020-07-12 00:59:42.380] [Resources] [info] moduleresourcemanager.h(119) : Resource 13 loaded correctly.
+[2020-07-12 00:59:42.382] [Resources] [info] moduleresourcemanager.h(119) : Resource 7 loaded correctly.
+[2020-07-12 00:59:42.382] [LittleOrionEngine] [info] moduledebug.cpp(30) : Module Debug initialized correctly.
+[2020-07-12 00:59:42.388] [LittleOrionEngine] [info] path.cpp(83) : File /Resources/Scenes/tmp_scene.scene saved!
 
-[2020-07-09 17:55:38.380] [LittleOrionEngine] [info] path.cpp(83) : File /Library/Metadata/41/4143578850 saved!
+[2020-07-12 00:59:42.400] [LittleOrionEngine] [info] path.cpp(83) : File /Library/Metadata/83/832987024 saved!
 
-[2020-07-09 17:55:38.439] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 4143578850.
-[2020-07-09 17:55:38.440] [Resources] [info] moduleresourcemanager.h(119) : Resource 4143578850 loaded correctly.
-[2020-07-09 17:55:38.448] [LittleOrionEngine] [info] dllmanager.cpp(101) : Change detected in the Gameplay System, compilation in process.
-[2020-07-09 17:55:38.448] [LittleOrionEngine] [info] cr.h(1640) : unload 'Resources\Scripts\GameplaySystemRelease0.dll' with rollback: 0
+[2020-07-12 00:59:42.402] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 832987024.
+[2020-07-12 00:59:42.405] [Resources] [info] moduleresourcemanager.h(119) : Resource 832987024 loaded correctly.
+[2020-07-12 00:59:42.421] [LittleOrionEngine] [info] dllmanager.cpp(101) : Change detected in the Gameplay System, compilation in process.
+[2020-07-12 00:59:42.422] [LittleOrionEngine] [info] cr.h(1640) : unload 'Resources\Scripts\GameplaySystemRelease0.dll' with rollback: 0
 
-[2020-07-09 17:55:38.541] [LittleOrionEngine] [info] cr.h(1695) : loaded: Resources\Scripts\GameplaySystemRelease1.dll (version: 1)
+[2020-07-12 00:59:42.539] [LittleOrionEngine] [info] cr.h(1695) : loaded: Resources\Scripts\GameplaySystemRelease1.dll (version: 1)
 
-[2020-07-09 17:55:38.559] [LittleOrionEngine] [info] moduledebugdraw.cpp(396) : Module Debug Draw initialized correctly.
-[2020-07-09 17:55:38.559] [LittleOrionEngine] [info] main.cpp(63) : Application Init ends. Elapsed time: 2500.000000 ms
-[2020-07-09 17:55:38.617] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 4045890434.
-[2020-07-09 17:55:38.618] [Resources] [info] moduleresourcemanager.h(119) : Resource 4045890434 loaded correctly.
-[2020-07-09 17:55:59.223] [LittleOrionEngine] [info] cr.h(1640) : unload 'Resources\Scripts\GameplaySystemRelease1.dll' with rollback: 0
+[2020-07-12 00:59:42.584] [LittleOrionEngine] [info] moduledebugdraw.cpp(394) : Module Debug Draw initialized correctly.
+[2020-07-12 00:59:42.584] [LittleOrionEngine] [info] main.cpp(63) : Application Init ends. Elapsed time: 4375.000000 ms
+[2020-07-12 00:59:42.750] [LittleOrionEngine] [info] moduleprogram.cpp(69) : Compiling shader program Skybox
+[2020-07-12 00:59:42.750] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Loading vertex shader
+[2020-07-12 00:59:42.759] [LittleOrionEngine] [info] moduleprogram.cpp(129) : Compiling vertex shader
+[2020-07-12 00:59:42.759] [LittleOrionEngine] [info] moduleprogram.cpp(147) : Loading fragment shader
+[2020-07-12 00:59:42.766] [LittleOrionEngine] [info] moduleprogram.cpp(168) : Compiling fragment shader
+[2020-07-12 00:59:42.766] [LittleOrionEngine] [info] moduleprogram.cpp(186) : Creating shader program
+[2020-07-12 00:59:42.766] [LittleOrionEngine] [info] moduleprogram.cpp(193) : Attaching vertex shader to shader program
+[2020-07-12 00:59:42.766] [LittleOrionEngine] [info] moduleprogram.cpp(196) : Attaching fragment shader to shader program
+[2020-07-12 00:59:42.766] [LittleOrionEngine] [info] moduleprogram.cpp(199) : Linking shader program
+[2020-07-12 00:59:42.767] [LittleOrionEngine] [info] moduleprogram.cpp(202) : Deleting vertex shader
+[2020-07-12 00:59:42.767] [LittleOrionEngine] [info] moduleprogram.cpp(205) : Deleting fragment shader
+[2020-07-12 00:59:42.767] [LittleOrionEngine] [info] moduleprogram.cpp(100) : Shader program Skybox loaded correctly.
+[2020-07-12 00:59:42.823] [LittleOrionEngine] [info] moduleprogram.cpp(69) : Compiling shader program Grid
+[2020-07-12 00:59:42.823] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Loading vertex shader
+[2020-07-12 00:59:42.828] [LittleOrionEngine] [info] moduleprogram.cpp(129) : Compiling vertex shader
+[2020-07-12 00:59:42.828] [LittleOrionEngine] [info] moduleprogram.cpp(147) : Loading fragment shader
+[2020-07-12 00:59:42.831] [LittleOrionEngine] [info] moduleprogram.cpp(168) : Compiling fragment shader
+[2020-07-12 00:59:42.832] [LittleOrionEngine] [info] moduleprogram.cpp(186) : Creating shader program
+[2020-07-12 00:59:42.832] [LittleOrionEngine] [info] moduleprogram.cpp(193) : Attaching vertex shader to shader program
+[2020-07-12 00:59:42.832] [LittleOrionEngine] [info] moduleprogram.cpp(196) : Attaching fragment shader to shader program
+[2020-07-12 00:59:42.832] [LittleOrionEngine] [info] moduleprogram.cpp(199) : Linking shader program
+[2020-07-12 00:59:42.833] [LittleOrionEngine] [info] moduleprogram.cpp(202) : Deleting vertex shader
+[2020-07-12 00:59:42.833] [LittleOrionEngine] [info] moduleprogram.cpp(205) : Deleting fragment shader
+[2020-07-12 00:59:42.833] [LittleOrionEngine] [info] moduleprogram.cpp(100) : Shader program Grid loaded correctly.
+[2020-07-12 00:59:43.371] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 3288442493.
+[2020-07-12 00:59:43.379] [Resources] [info] moduleresourcemanager.h(119) : Resource 3288442493 loaded correctly.
+[2020-07-12 00:59:43.382] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 249539085.
+[2020-07-12 00:59:43.444] [Resources] [info] moduleresourcemanager.h(119) : Resource 249539085 loaded correctly.
+[2020-07-12 00:59:43.445] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 145392767
+[2020-07-12 00:59:43.445] [LittleOrionEngine] [info] modulescene.cpp(266) : 11
+[2020-07-12 00:59:43.445] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 145392767
+[2020-07-12 00:59:43.445] [LittleOrionEngine] [info] modulescene.cpp(266) : 12
+[2020-07-12 00:59:43.445] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 145392767
+[2020-07-12 00:59:43.445] [LittleOrionEngine] [info] modulescene.cpp(266) : 13
+[2020-07-12 00:59:43.445] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 145392767
+[2020-07-12 00:59:43.446] [LittleOrionEngine] [info] modulescene.cpp(266) : 14
+[2020-07-12 00:59:43.446] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 145392767
+[2020-07-12 00:59:43.446] [LittleOrionEngine] [info] modulescene.cpp(266) : 15
+[2020-07-12 00:59:43.446] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4031375053
+[2020-07-12 00:59:43.446] [LittleOrionEngine] [info] modulescene.cpp(266) : 16
+[2020-07-12 00:59:43.446] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4031375053
+[2020-07-12 00:59:43.446] [LittleOrionEngine] [info] modulescene.cpp(266) : 17
+[2020-07-12 00:59:43.446] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1981056088
+[2020-07-12 00:59:43.447] [LittleOrionEngine] [info] modulescene.cpp(266) : 18
+[2020-07-12 00:59:43.447] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 296542632
+[2020-07-12 00:59:43.447] [LittleOrionEngine] [info] modulescene.cpp(266) : 19
+[2020-07-12 00:59:43.447] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4152763998
+[2020-07-12 00:59:43.447] [LittleOrionEngine] [info] modulescene.cpp(266) : 20
+[2020-07-12 00:59:43.447] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3300806217
+[2020-07-12 00:59:43.447] [LittleOrionEngine] [info] modulescene.cpp(266) : 21
+[2020-07-12 00:59:43.447] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3053128562
+[2020-07-12 00:59:43.447] [LittleOrionEngine] [info] modulescene.cpp(266) : 22
+[2020-07-12 00:59:43.448] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 2840217072.
+[2020-07-12 00:59:43.778] [Resources] [info] moduleresourcemanager.h(119) : Resource 2840217072 loaded correctly.
+[2020-07-12 00:59:43.778] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3053128562
+[2020-07-12 00:59:43.778] [LittleOrionEngine] [info] modulescene.cpp(266) : 23
+[2020-07-12 00:59:43.778] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 305535919.
+[2020-07-12 00:59:43.780] [Resources] [info] moduleresourcemanager.h(119) : Resource 305535919 loaded correctly.
+[2020-07-12 00:59:43.781] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3053128562
+[2020-07-12 00:59:43.781] [LittleOrionEngine] [info] modulescene.cpp(266) : 24
+[2020-07-12 00:59:43.781] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 116504881
+[2020-07-12 00:59:43.781] [LittleOrionEngine] [info] modulescene.cpp(266) : 25
+[2020-07-12 00:59:43.781] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 326390154.
+[2020-07-12 00:59:43.783] [Resources] [info] moduleresourcemanager.h(119) : Resource 326390154 loaded correctly.
+[2020-07-12 00:59:43.783] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 116504881
+[2020-07-12 00:59:43.783] [LittleOrionEngine] [info] modulescene.cpp(266) : 26
+[2020-07-12 00:59:43.783] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 326390154.
+[2020-07-12 00:59:43.783] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 326390154 exists in cache.
+[2020-07-12 00:59:43.784] [Resources] [info] moduleresourcemanager.h(97) : Resource 326390154 loaded correctly from cache.
+[2020-07-12 00:59:43.784] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 116504881
+[2020-07-12 00:59:43.784] [LittleOrionEngine] [info] modulescene.cpp(266) : 27
+[2020-07-12 00:59:43.784] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 326390154.
+[2020-07-12 00:59:43.784] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 326390154 exists in cache.
+[2020-07-12 00:59:43.784] [Resources] [info] moduleresourcemanager.h(97) : Resource 326390154 loaded correctly from cache.
+[2020-07-12 00:59:43.784] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 116504881
+[2020-07-12 00:59:43.784] [LittleOrionEngine] [info] modulescene.cpp(266) : 28
+[2020-07-12 00:59:43.784] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 326390154.
+[2020-07-12 00:59:43.785] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 326390154 exists in cache.
+[2020-07-12 00:59:43.785] [Resources] [info] moduleresourcemanager.h(97) : Resource 326390154 loaded correctly from cache.
+[2020-07-12 00:59:43.785] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 116504881
+[2020-07-12 00:59:43.785] [LittleOrionEngine] [info] modulescene.cpp(266) : 29
+[2020-07-12 00:59:43.785] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 326390154.
+[2020-07-12 00:59:43.785] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 326390154 exists in cache.
+[2020-07-12 00:59:43.785] [Resources] [info] moduleresourcemanager.h(97) : Resource 326390154 loaded correctly from cache.
+[2020-07-12 00:59:43.785] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 116504881
+[2020-07-12 00:59:43.785] [LittleOrionEngine] [info] modulescene.cpp(266) : 30
+[2020-07-12 00:59:43.786] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 326390154.
+[2020-07-12 00:59:43.786] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 326390154 exists in cache.
+[2020-07-12 00:59:43.786] [Resources] [info] moduleresourcemanager.h(97) : Resource 326390154 loaded correctly from cache.
+[2020-07-12 00:59:43.786] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 116504881
+[2020-07-12 00:59:43.786] [LittleOrionEngine] [info] modulescene.cpp(266) : 31
+[2020-07-12 00:59:43.786] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 326390154.
+[2020-07-12 00:59:43.786] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 326390154 exists in cache.
+[2020-07-12 00:59:43.786] [Resources] [info] moduleresourcemanager.h(97) : Resource 326390154 loaded correctly from cache.
+[2020-07-12 00:59:43.786] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 116504881
+[2020-07-12 00:59:43.786] [LittleOrionEngine] [info] modulescene.cpp(266) : 32
+[2020-07-12 00:59:43.787] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 326390154.
+[2020-07-12 00:59:43.787] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 326390154 exists in cache.
+[2020-07-12 00:59:43.787] [Resources] [info] moduleresourcemanager.h(97) : Resource 326390154 loaded correctly from cache.
+[2020-07-12 00:59:43.787] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 116504881
+[2020-07-12 00:59:43.787] [LittleOrionEngine] [info] modulescene.cpp(266) : 33
+[2020-07-12 00:59:43.787] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 326390154.
+[2020-07-12 00:59:43.787] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 326390154 exists in cache.
+[2020-07-12 00:59:43.787] [Resources] [info] moduleresourcemanager.h(97) : Resource 326390154 loaded correctly from cache.
+[2020-07-12 00:59:43.788] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 116504881
+[2020-07-12 00:59:43.788] [LittleOrionEngine] [info] modulescene.cpp(266) : 34
+[2020-07-12 00:59:43.788] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 326390154.
+[2020-07-12 00:59:43.788] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 326390154 exists in cache.
+[2020-07-12 00:59:43.788] [Resources] [info] moduleresourcemanager.h(97) : Resource 326390154 loaded correctly from cache.
+[2020-07-12 00:59:43.788] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 116504881
+[2020-07-12 00:59:43.788] [LittleOrionEngine] [info] modulescene.cpp(266) : 35
+[2020-07-12 00:59:43.788] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 326390154.
+[2020-07-12 00:59:43.789] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 326390154 exists in cache.
+[2020-07-12 00:59:43.789] [Resources] [info] moduleresourcemanager.h(97) : Resource 326390154 loaded correctly from cache.
+[2020-07-12 00:59:43.789] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2031867254
+[2020-07-12 00:59:43.789] [LittleOrionEngine] [info] modulescene.cpp(266) : 36
+[2020-07-12 00:59:43.789] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 2985328323.
+[2020-07-12 00:59:44.057] [Resources] [info] moduleresourcemanager.h(119) : Resource 2985328323 loaded correctly.
+[2020-07-12 00:59:44.057] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2031867254
+[2020-07-12 00:59:44.057] [LittleOrionEngine] [info] modulescene.cpp(266) : 37
+[2020-07-12 00:59:44.058] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2227599245
+[2020-07-12 00:59:44.058] [LittleOrionEngine] [info] modulescene.cpp(266) : 38
+[2020-07-12 00:59:44.058] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 1852740625.
+[2020-07-12 00:59:44.346] [Resources] [info] moduleresourcemanager.h(119) : Resource 1852740625 loaded correctly.
+[2020-07-12 00:59:44.346] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2227599245
+[2020-07-12 00:59:44.346] [LittleOrionEngine] [info] modulescene.cpp(266) : 39
+[2020-07-12 00:59:44.346] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 3622854929.
+[2020-07-12 00:59:44.628] [Resources] [info] moduleresourcemanager.h(119) : Resource 3622854929 loaded correctly.
+[2020-07-12 00:59:44.629] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2227599245
+[2020-07-12 00:59:44.629] [LittleOrionEngine] [info] modulescene.cpp(266) : 40
+[2020-07-12 00:59:44.629] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 4224393128.
+[2020-07-12 00:59:44.636] [Resources] [info] moduleresourcemanager.h(119) : Resource 4224393128 loaded correctly.
+[2020-07-12 00:59:44.636] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2227599245
+[2020-07-12 00:59:44.636] [LittleOrionEngine] [info] modulescene.cpp(266) : 41
+[2020-07-12 00:59:44.637] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2227599245
+[2020-07-12 00:59:44.637] [LittleOrionEngine] [info] modulescene.cpp(266) : 42
+[2020-07-12 00:59:44.637] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4143080280
+[2020-07-12 00:59:44.637] [LittleOrionEngine] [info] modulescene.cpp(266) : 43
+[2020-07-12 00:59:44.637] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 401829318.
+[2020-07-12 00:59:44.908] [Resources] [info] moduleresourcemanager.h(119) : Resource 401829318 loaded correctly.
+[2020-07-12 00:59:44.908] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4143080280
+[2020-07-12 00:59:44.909] [LittleOrionEngine] [info] modulescene.cpp(266) : 44
+[2020-07-12 00:59:44.909] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 4224393128.
+[2020-07-12 00:59:44.909] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 4224393128 exists in cache.
+[2020-07-12 00:59:44.909] [Resources] [info] moduleresourcemanager.h(97) : Resource 4224393128 loaded correctly from cache.
+[2020-07-12 00:59:44.909] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4143080280
+[2020-07-12 00:59:44.909] [LittleOrionEngine] [info] modulescene.cpp(266) : 45
+[2020-07-12 00:59:44.909] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 2310594051.
+[2020-07-12 00:59:44.914] [Resources] [info] moduleresourcemanager.h(119) : Resource 2310594051 loaded correctly.
+[2020-07-12 00:59:44.914] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4143080280
+[2020-07-12 00:59:44.914] [LittleOrionEngine] [info] modulescene.cpp(266) : 46
+[2020-07-12 00:59:44.914] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 3909589297.
+[2020-07-12 00:59:44.917] [Resources] [info] moduleresourcemanager.h(119) : Resource 3909589297 loaded correctly.
+[2020-07-12 00:59:44.917] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4143080280
+[2020-07-12 00:59:44.917] [LittleOrionEngine] [info] modulescene.cpp(266) : 47
+[2020-07-12 00:59:44.917] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4143080280
+[2020-07-12 00:59:44.917] [LittleOrionEngine] [info] modulescene.cpp(266) : 48
+[2020-07-12 00:59:44.917] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4143080280
+[2020-07-12 00:59:44.917] [LittleOrionEngine] [info] modulescene.cpp(266) : 49
+[2020-07-12 00:59:44.917] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 3915200310.
+[2020-07-12 00:59:45.179] [Resources] [info] moduleresourcemanager.h(119) : Resource 3915200310 loaded correctly.
+[2020-07-12 00:59:45.179] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4143080280
+[2020-07-12 00:59:45.179] [LittleOrionEngine] [info] modulescene.cpp(266) : 50
+[2020-07-12 00:59:45.180] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 4145521263.
+[2020-07-12 00:59:45.473] [Resources] [info] moduleresourcemanager.h(119) : Resource 4145521263 loaded correctly.
+[2020-07-12 00:59:45.473] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1586329215
+[2020-07-12 00:59:45.473] [LittleOrionEngine] [info] modulescene.cpp(266) : 51
+[2020-07-12 00:59:45.473] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 3543035961.
+[2020-07-12 00:59:45.762] [Resources] [info] moduleresourcemanager.h(119) : Resource 3543035961 loaded correctly.
+[2020-07-12 00:59:45.762] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1586329215
+[2020-07-12 00:59:45.762] [LittleOrionEngine] [info] modulescene.cpp(266) : 52
+[2020-07-12 00:59:45.762] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 4224393128.
+[2020-07-12 00:59:45.763] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 4224393128 exists in cache.
+[2020-07-12 00:59:45.763] [Resources] [info] moduleresourcemanager.h(97) : Resource 4224393128 loaded correctly from cache.
+[2020-07-12 00:59:45.763] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1586329215
+[2020-07-12 00:59:45.763] [LittleOrionEngine] [info] modulescene.cpp(266) : 53
+[2020-07-12 00:59:45.763] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 1024912580.
+[2020-07-12 00:59:45.765] [Resources] [info] moduleresourcemanager.h(119) : Resource 1024912580 loaded correctly.
+[2020-07-12 00:59:45.765] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1586329215
+[2020-07-12 00:59:45.765] [LittleOrionEngine] [info] modulescene.cpp(266) : 54
+[2020-07-12 00:59:45.766] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1586329215
+[2020-07-12 00:59:45.766] [LittleOrionEngine] [info] modulescene.cpp(266) : 55
+[2020-07-12 00:59:45.766] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1586329215
+[2020-07-12 00:59:45.766] [LittleOrionEngine] [info] modulescene.cpp(266) : 56
+[2020-07-12 00:59:45.766] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3701047251
+[2020-07-12 00:59:45.766] [LittleOrionEngine] [info] modulescene.cpp(266) : 57
+[2020-07-12 00:59:45.766] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 1316289112.
+[2020-07-12 00:59:45.772] [Resources] [info] moduleresourcemanager.h(119) : Resource 1316289112 loaded correctly.
+[2020-07-12 00:59:45.772] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3701047251
+[2020-07-12 00:59:45.772] [LittleOrionEngine] [info] modulescene.cpp(266) : 58
+[2020-07-12 00:59:45.772] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 1054203448.
+[2020-07-12 00:59:45.778] [Resources] [info] moduleresourcemanager.h(119) : Resource 1054203448 loaded correctly.
+[2020-07-12 00:59:45.778] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3701047251
+[2020-07-12 00:59:45.778] [LittleOrionEngine] [info] modulescene.cpp(266) : 59
+[2020-07-12 00:59:45.778] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 2365056331.
+[2020-07-12 00:59:45.785] [Resources] [info] moduleresourcemanager.h(119) : Resource 2365056331 loaded correctly.
+[2020-07-12 00:59:45.785] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3701047251
+[2020-07-12 00:59:45.785] [LittleOrionEngine] [info] modulescene.cpp(266) : 60
+[2020-07-12 00:59:45.785] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 2898695895.
+[2020-07-12 00:59:45.791] [Resources] [info] moduleresourcemanager.h(119) : Resource 2898695895 loaded correctly.
+[2020-07-12 00:59:45.791] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3701047251
+[2020-07-12 00:59:45.791] [LittleOrionEngine] [info] modulescene.cpp(266) : 61
+[2020-07-12 00:59:45.791] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 1842383012.
+[2020-07-12 00:59:45.801] [Resources] [info] moduleresourcemanager.h(119) : Resource 1842383012 loaded correctly.
+[2020-07-12 00:59:45.801] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1213442019
+[2020-07-12 00:59:45.802] [LittleOrionEngine] [info] modulescene.cpp(266) : 62
+[2020-07-12 00:59:45.802] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 305535919.
+[2020-07-12 00:59:45.802] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 305535919 exists in cache.
+[2020-07-12 00:59:45.802] [Resources] [info] moduleresourcemanager.h(97) : Resource 305535919 loaded correctly from cache.
+[2020-07-12 00:59:45.802] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3030505552
+[2020-07-12 00:59:45.802] [LittleOrionEngine] [info] modulescene.cpp(266) : 63
+[2020-07-12 00:59:45.802] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 305535919.
+[2020-07-12 00:59:45.802] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 305535919 exists in cache.
+[2020-07-12 00:59:45.802] [Resources] [info] moduleresourcemanager.h(97) : Resource 305535919 loaded correctly from cache.
+[2020-07-12 00:59:45.802] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3739545748
+[2020-07-12 00:59:45.803] [LittleOrionEngine] [info] modulescene.cpp(266) : 64
+[2020-07-12 00:59:45.803] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 305535919.
+[2020-07-12 00:59:45.803] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 305535919 exists in cache.
+[2020-07-12 00:59:45.803] [Resources] [info] moduleresourcemanager.h(97) : Resource 305535919 loaded correctly from cache.
+[2020-07-12 00:59:45.803] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3411494713
+[2020-07-12 00:59:45.803] [LittleOrionEngine] [info] modulescene.cpp(266) : 65
+[2020-07-12 00:59:45.803] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 305535919.
+[2020-07-12 00:59:45.803] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 305535919 exists in cache.
+[2020-07-12 00:59:45.803] [Resources] [info] moduleresourcemanager.h(97) : Resource 305535919 loaded correctly from cache.
+[2020-07-12 00:59:45.803] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2781488634
+[2020-07-12 00:59:45.804] [LittleOrionEngine] [info] modulescene.cpp(266) : 66
+[2020-07-12 00:59:45.804] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 3360746273.
+[2020-07-12 00:59:45.815] [Resources] [info] moduleresourcemanager.h(119) : Resource 3360746273 loaded correctly.
+[2020-07-12 00:59:45.816] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2781488634
+[2020-07-12 00:59:45.816] [LittleOrionEngine] [info] modulescene.cpp(266) : 67
+[2020-07-12 00:59:45.816] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2714169843
+[2020-07-12 00:59:45.816] [LittleOrionEngine] [info] modulescene.cpp(266) : 68
+[2020-07-12 00:59:45.816] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 3360746273.
+[2020-07-12 00:59:45.816] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 3360746273 exists in cache.
+[2020-07-12 00:59:45.816] [Resources] [info] moduleresourcemanager.h(97) : Resource 3360746273 loaded correctly from cache.
+[2020-07-12 00:59:45.816] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2714169843
+[2020-07-12 00:59:45.817] [LittleOrionEngine] [info] modulescene.cpp(266) : 69
+[2020-07-12 00:59:45.817] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 701227345
+[2020-07-12 00:59:45.817] [LittleOrionEngine] [info] modulescene.cpp(266) : 70
+[2020-07-12 00:59:45.817] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 3360746273.
+[2020-07-12 00:59:45.817] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 3360746273 exists in cache.
+[2020-07-12 00:59:45.817] [Resources] [info] moduleresourcemanager.h(97) : Resource 3360746273 loaded correctly from cache.
+[2020-07-12 00:59:45.817] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 701227345
+[2020-07-12 00:59:45.817] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.817] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 19876781
+[2020-07-12 00:59:45.817] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.817] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 572364089
+[2020-07-12 00:59:45.818] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.818] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1481899329
+[2020-07-12 00:59:45.818] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.818] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1227334976
+[2020-07-12 00:59:45.818] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.818] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1981056088
+[2020-07-12 00:59:45.818] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.818] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 296542632
+[2020-07-12 00:59:45.818] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.818] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4152763998
+[2020-07-12 00:59:45.818] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.819] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3053128562
+[2020-07-12 00:59:45.819] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.819] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3838922643
+[2020-07-12 00:59:45.819] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.819] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 621712486
+[2020-07-12 00:59:45.819] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.819] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2281230540
+[2020-07-12 00:59:45.819] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.819] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 116504881
+[2020-07-12 00:59:45.819] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.819] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 285203001
+[2020-07-12 00:59:45.819] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.820] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2031867254
+[2020-07-12 00:59:45.820] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.820] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4031375053
+[2020-07-12 00:59:45.820] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.820] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1213442019
+[2020-07-12 00:59:45.820] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.820] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 285203001
+[2020-07-12 00:59:45.820] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.820] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4031375053
+[2020-07-12 00:59:45.820] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.820] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2227599245
+[2020-07-12 00:59:45.820] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.821] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2143317194
+[2020-07-12 00:59:45.821] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.821] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3698255015
+[2020-07-12 00:59:45.821] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.821] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2722775980
+[2020-07-12 00:59:45.821] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.821] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3633244300
+[2020-07-12 00:59:45.821] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.821] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3030505552
+[2020-07-12 00:59:45.821] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.821] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 285203001
+[2020-07-12 00:59:45.822] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.822] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4143080280
+[2020-07-12 00:59:45.822] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.822] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4031375053
+[2020-07-12 00:59:45.822] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.822] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3300806217
+[2020-07-12 00:59:45.822] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.822] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3739545748
+[2020-07-12 00:59:45.822] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.822] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3621575298
+[2020-07-12 00:59:45.823] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.823] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 285203001
+[2020-07-12 00:59:45.823] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.823] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 652130620
+[2020-07-12 00:59:45.823] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.823] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1399119569
+[2020-07-12 00:59:45.823] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.823] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3292514778
+[2020-07-12 00:59:45.823] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.823] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1972725956
+[2020-07-12 00:59:45.823] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.824] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 677558714
+[2020-07-12 00:59:45.824] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.824] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4095862138
+[2020-07-12 00:59:45.824] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.824] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2413195172
+[2020-07-12 00:59:45.824] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.824] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2944641222
+[2020-07-12 00:59:45.824] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.824] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 374202199
+[2020-07-12 00:59:45.824] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.824] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 157587411
+[2020-07-12 00:59:45.825] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.825] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3411494713
+[2020-07-12 00:59:45.825] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.825] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4152763998
+[2020-07-12 00:59:45.825] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.825] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1586329215
+[2020-07-12 00:59:45.825] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.825] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 285203001
+[2020-07-12 00:59:45.825] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.825] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 172169170
+[2020-07-12 00:59:45.825] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.826] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3311260837
+[2020-07-12 00:59:45.826] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.826] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4056892758
+[2020-07-12 00:59:45.826] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.826] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 953873259
+[2020-07-12 00:59:45.826] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.826] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2302776958
+[2020-07-12 00:59:45.826] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:45.829] [LittleOrionEngine] [info] moduleprogram.cpp(69) : Compiling shader program Sprite
+[2020-07-12 00:59:45.829] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Loading vertex shader
+[2020-07-12 00:59:45.831] [LittleOrionEngine] [info] moduleprogram.cpp(129) : Compiling vertex shader
+[2020-07-12 00:59:45.832] [LittleOrionEngine] [info] moduleprogram.cpp(147) : Loading fragment shader
+[2020-07-12 00:59:45.833] [LittleOrionEngine] [info] moduleprogram.cpp(168) : Compiling fragment shader
+[2020-07-12 00:59:45.833] [LittleOrionEngine] [info] moduleprogram.cpp(186) : Creating shader program
+[2020-07-12 00:59:45.833] [LittleOrionEngine] [info] moduleprogram.cpp(193) : Attaching vertex shader to shader program
+[2020-07-12 00:59:45.833] [LittleOrionEngine] [info] moduleprogram.cpp(196) : Attaching fragment shader to shader program
+[2020-07-12 00:59:45.833] [LittleOrionEngine] [info] moduleprogram.cpp(199) : Linking shader program
+[2020-07-12 00:59:45.834] [LittleOrionEngine] [info] moduleprogram.cpp(202) : Deleting vertex shader
+[2020-07-12 00:59:45.834] [LittleOrionEngine] [info] moduleprogram.cpp(205) : Deleting fragment shader
+[2020-07-12 00:59:45.834] [LittleOrionEngine] [info] moduleprogram.cpp(100) : Shader program Sprite loaded correctly.
+[2020-07-12 00:59:45.835] [LittleOrionEngine] [info] moduleprogram.cpp(69) : Compiling shader program Linepoint
+[2020-07-12 00:59:45.835] [LittleOrionEngine] [info] moduleprogram.cpp(107) : Loading vertex shader
+[2020-07-12 00:59:45.835] [LittleOrionEngine] [info] moduleprogram.cpp(129) : Compiling vertex shader
+[2020-07-12 00:59:45.835] [LittleOrionEngine] [info] moduleprogram.cpp(147) : Loading fragment shader
+[2020-07-12 00:59:45.837] [LittleOrionEngine] [info] moduleprogram.cpp(168) : Compiling fragment shader
+[2020-07-12 00:59:45.837] [LittleOrionEngine] [info] moduleprogram.cpp(186) : Creating shader program
+[2020-07-12 00:59:45.837] [LittleOrionEngine] [info] moduleprogram.cpp(193) : Attaching vertex shader to shader program
+[2020-07-12 00:59:45.837] [LittleOrionEngine] [info] moduleprogram.cpp(196) : Attaching fragment shader to shader program
+[2020-07-12 00:59:45.837] [LittleOrionEngine] [info] moduleprogram.cpp(199) : Linking shader program
+[2020-07-12 00:59:45.838] [LittleOrionEngine] [info] moduleprogram.cpp(202) : Deleting vertex shader
+[2020-07-12 00:59:45.838] [LittleOrionEngine] [info] moduleprogram.cpp(205) : Deleting fragment shader
+[2020-07-12 00:59:45.838] [LittleOrionEngine] [info] moduleprogram.cpp(100) : Shader program Linepoint loaded correctly.
+[2020-07-12 00:59:55.773] [LittleOrionEngine] [info] cr.h(1640) : unload 'Resources\Scripts\GameplaySystemRelease1.dll' with rollback: 0
 
-[2020-07-09 17:55:59.344] [LittleOrionEngine] [info] cr.h(1695) : loaded: Resources\Scripts\GameplaySystemRelease2.dll (version: 2)
+[2020-07-12 00:59:55.838] [LittleOrionEngine] [info] dllmanager.cpp(121) : Compilation was successful
+[2020-07-12 00:59:55.919] [LittleOrionEngine] [info] cr.h(1695) : loaded: Resources\Scripts\GameplaySystemRelease2.dll (version: 2)
 
-[2020-07-09 17:55:59.363] [LittleOrionEngine] [info] dllmanager.cpp(121) : Compilation was successful
-[2020-07-09 17:58:31.124] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 2707508288.
-[2020-07-09 17:58:31.193] [Resources] [info] moduleresourcemanager.h(119) : Resource 2707508288 loaded correctly.
-[2020-07-09 17:59:02.141] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 4208404416.
-[2020-07-09 17:59:02.186] [Resources] [info] moduleresourcemanager.h(119) : Resource 4208404416 loaded correctly.
-[2020-07-09 17:59:05.440] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 249539085.
-[2020-07-09 17:59:05.493] [Resources] [info] moduleresourcemanager.h(119) : Resource 249539085 loaded correctly.
-[2020-07-09 17:59:19.124] [Resources] [info] moduleresourcemanager.h(76) : Saving Resource 4143578850.
-[2020-07-09 17:59:19.124] [LittleOrionEngine] [info] path.cpp(83) : File /Resources/Scenes/tmp_scene.scene saved!
-
-[2020-07-09 17:59:19.393] [LittleOrionEngine] [info] path.cpp(83) : File /Library/Metadata/41/4143578850 saved!
-
-[2020-07-09 17:59:19.469] [Resources] [info] moduleresourcemanager.h(84) : Resource 4143578850 saved corrrectly.
-[2020-07-09 17:59:47.391] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 249539085.
-[2020-07-09 17:59:47.391] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 249539085 exists in cache.
-[2020-07-09 17:59:47.391] [Resources] [info] moduleresourcemanager.h(97) : Resource 249539085 loaded correctly from cache.
-[2020-07-09 18:00:05.008] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 249539085.
-[2020-07-09 18:00:05.008] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 249539085 exists in cache.
-[2020-07-09 18:00:05.008] [Resources] [info] moduleresourcemanager.h(97) : Resource 249539085 loaded correctly from cache.
-[2020-07-09 18:00:05.600] [LittleOrionEngine] [info] moduledebugdraw.cpp(825) : Destroying Module Debug Draw
-[2020-07-09 18:00:05.606] [LittleOrionEngine] [info] modulerender.cpp(137) : Destroying renderer
-[2020-07-09 18:00:05.606] [LittleOrionEngine] [info] moduleinput.cpp(283) : Quitting SDL input event subsystem
-[2020-07-09 18:00:05.606] [LittleOrionEngine] [info] modulewindow.cpp(83) : Destroying SDL window and quitting all SDL systems
-[2020-07-09 18:00:05.629] [LittleOrionEngine] [info] main.cpp(95) : Application CleanUp ends. Elapsed time: 0.000000 ms
+[2020-07-12 00:59:55.960] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 19876781
+[2020-07-12 00:59:55.961] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.961] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 572364089
+[2020-07-12 00:59:55.961] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.961] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1481899329
+[2020-07-12 00:59:55.961] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.961] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1227334976
+[2020-07-12 00:59:55.961] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.961] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1981056088
+[2020-07-12 00:59:55.961] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.962] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 296542632
+[2020-07-12 00:59:55.962] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.962] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4152763998
+[2020-07-12 00:59:55.962] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.962] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3053128562
+[2020-07-12 00:59:55.962] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.962] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3838922643
+[2020-07-12 00:59:55.962] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.962] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 621712486
+[2020-07-12 00:59:55.963] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.963] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2281230540
+[2020-07-12 00:59:55.963] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.963] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 116504881
+[2020-07-12 00:59:55.963] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.963] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 285203001
+[2020-07-12 00:59:55.963] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.963] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2031867254
+[2020-07-12 00:59:55.963] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.963] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4031375053
+[2020-07-12 00:59:55.964] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.964] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1213442019
+[2020-07-12 00:59:55.964] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.964] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 285203001
+[2020-07-12 00:59:55.964] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.964] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4031375053
+[2020-07-12 00:59:55.964] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.964] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2227599245
+[2020-07-12 00:59:55.964] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.964] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2143317194
+[2020-07-12 00:59:55.965] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.965] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3698255015
+[2020-07-12 00:59:55.965] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.965] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2722775980
+[2020-07-12 00:59:55.965] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.965] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3633244300
+[2020-07-12 00:59:55.965] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.965] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3030505552
+[2020-07-12 00:59:55.965] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.965] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 285203001
+[2020-07-12 00:59:55.965] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.966] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4143080280
+[2020-07-12 00:59:55.966] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.966] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4031375053
+[2020-07-12 00:59:55.966] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.966] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3300806217
+[2020-07-12 00:59:55.966] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.966] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3739545748
+[2020-07-12 00:59:55.966] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.966] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3621575298
+[2020-07-12 00:59:55.966] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.966] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 285203001
+[2020-07-12 00:59:55.967] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.967] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 652130620
+[2020-07-12 00:59:55.967] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.967] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1399119569
+[2020-07-12 00:59:55.967] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.967] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3292514778
+[2020-07-12 00:59:55.967] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.967] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1972725956
+[2020-07-12 00:59:55.967] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.967] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 677558714
+[2020-07-12 00:59:55.968] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.968] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4095862138
+[2020-07-12 00:59:55.968] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.968] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2413195172
+[2020-07-12 00:59:55.968] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.968] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2944641222
+[2020-07-12 00:59:55.968] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.968] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 374202199
+[2020-07-12 00:59:55.968] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.968] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 157587411
+[2020-07-12 00:59:55.969] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.969] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3411494713
+[2020-07-12 00:59:55.969] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.969] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4152763998
+[2020-07-12 00:59:55.969] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.969] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 1586329215
+[2020-07-12 00:59:55.969] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.969] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 285203001
+[2020-07-12 00:59:55.969] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.969] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 172169170
+[2020-07-12 00:59:55.970] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.970] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 3311260837
+[2020-07-12 00:59:55.970] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.970] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 4056892758
+[2020-07-12 00:59:55.970] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.970] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 953873259
+[2020-07-12 00:59:55.970] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 00:59:55.970] [LittleOrionEngine] [info] modulescene.cpp(265) : Getting game object 2302776958
+[2020-07-12 00:59:55.970] [LittleOrionEngine] [info] modulescene.cpp(266) : 71
+[2020-07-12 01:00:02.090] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 50505465.
+[2020-07-12 01:00:03.476] [Resources] [info] moduleresourcemanager.h(119) : Resource 50505465 loaded correctly.
+[2020-07-12 01:00:03.476] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 16.
+[2020-07-12 01:00:03.711] [Resources] [info] moduleresourcemanager.h(119) : Resource 16 loaded correctly.
+[2020-07-12 01:00:03.711] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 2904649551.
+[2020-07-12 01:00:03.759] [Resources] [info] moduleresourcemanager.h(119) : Resource 2904649551 loaded correctly.
+[2020-07-12 01:00:03.759] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 3795445151.
+[2020-07-12 01:00:03.762] [Resources] [info] moduleresourcemanager.h(119) : Resource 3795445151 loaded correctly.
+[2020-07-12 01:00:03.762] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 15.
+[2020-07-12 01:00:03.791] [Resources] [info] moduleresourcemanager.h(119) : Resource 15 loaded correctly.
+[2020-07-12 01:00:03.791] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 326390154.
+[2020-07-12 01:00:03.791] [Resources] [info] moduleresourcemanager.cpp(305) : Resource 326390154 exists in cache.
+[2020-07-12 01:00:03.792] [Resources] [info] moduleresourcemanager.h(97) : Resource 326390154 loaded correctly from cache.
+[2020-07-12 01:00:03.792] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 14.
+[2020-07-12 01:00:03.833] [Resources] [info] moduleresourcemanager.h(119) : Resource 14 loaded correctly.
+[2020-07-12 01:00:17.143] [Resources] [info] moduleresourcemanager.h(91) : Loading Resource 879363523.
+[2020-07-12 

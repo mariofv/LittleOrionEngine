@@ -335,6 +335,37 @@ Component * ModuleScene::GetComponent(uint64_t UUID) const
 	return nullptr;
 }
 
+void ModuleScene::SortGameObjectChilds(GameObject *go) const
+{
+	std::list<GameObject*> list;
+	for (auto& game_object : go->children)
+	{
+		list.push_back(game_object);
+	}
+
+	list.sort([](const GameObject *go1, const GameObject *go2)
+	{
+		std::string name = go1->name;
+		transform(name.begin(), name.end(), name.begin(), ::tolower);
+		std::string name2 = go2->name;
+		transform(name2.begin(), name2.end(), name2.begin(), ::tolower);
+		return name <= name2;
+	});
+
+	std::vector <GameObject*> game_objects;
+	for (auto go : list) 
+	{
+		game_objects.push_back(go);
+	}
+
+	go->children.swap(game_objects);
+	for (auto& game_object : go->children)
+	{
+		SortGameObjectChilds(game_object);
+	}
+
+}
+
 void ModuleScene::OpenPendingScene()
 {
 	OpenScene();
