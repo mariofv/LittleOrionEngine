@@ -76,18 +76,11 @@ void Material::Save(Config& config) const
 
 	config.AddFloat(transparency, "Transparency");
 
-	config.AddFloat(tiling_x, "Tiling X");
-	config.AddFloat(tiling_y, "Tiling Y");
+
+	config.AddFloat2(tiling, "Tiling");
 
 	//liquid properties
-
-	config.AddFloat(speed_tiling_x, "Speed Liquid Map X");
-	config.AddFloat(speed_tiling_y, "Speed Liquid Map Y");
-
-	config.AddFloat(tiling_liquid_x_x, "Tiling Liquid Map 1 x");
-	config.AddFloat(tiling_liquid_x_y, "Tiling Liquid Map 1 y");
-	config.AddFloat(tiling_liquid_y_x, "Tiling Liquid Map 2 x");
-	config.AddFloat(tiling_liquid_y_y, "Tiling Liquid Map 2 y");
+	config.AddFloat2(liquid_tiling_speed, "Liquid Tiling Speed");
 
 	//colors
 	config.AddColor(float4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]), "difusseColor");
@@ -115,18 +108,10 @@ void Material::Load(const Config& config)
 	smoothness = config.GetFloat("Smoothness", 1.0F);
 
 
-	tiling_x = config.GetFloat("Tiling X", 1.0f);
-	tiling_y = config.GetFloat("Tiling Y", 1.0f);
+	config.GetFloat2("Tiling", tiling, float2::one);
 
 	//liquid properties
-
-	speed_tiling_x = config.GetFloat("Speed Liquid Map X", 1.0F);
-	speed_tiling_y = config.GetFloat("Speed Liquid Map Y", 1.0F);
-
-	tiling_liquid_x_x = config.GetFloat("Tiling Liquid Map 1 x", 1.0F);
-	tiling_liquid_x_y = config.GetFloat("Tiling Liquid Map 1 y", 1.0F);
-	tiling_liquid_y_x = config.GetFloat("Tiling Liquid Map 2 x", 1.0F);
-	tiling_liquid_y_y = config.GetFloat("Tiling Liquid Map 2 y", 1.0F);
+	config.GetFloat2("Liquid Tiling Speed", liquid_tiling_speed, float2::one);
 
 	//colors
 	float4 diffuse;
@@ -201,13 +186,8 @@ std::string Material::GetMaterialTypeName(const MaterialType material_type)
 
 void Material::UpdateLiquidProperties()
 {
-	//TODO->change it to liquid maps and not hardcoded
-	//tiling_liquid_x_x += speed_tiling_x / 1000 * App->time->delta_time;
-	//tiling_liquid_x_y += speed_tiling_x / 1000 * App->time->delta_time;
-	tiling_liquid_y_x -= speed_tiling_y / 1000 * App->time->delta_time;
-	tiling_liquid_y_y -= speed_tiling_y / 1000 * App->time->delta_time;
-	tiling_liquid_x_x += speed_tiling_x / 1000 * App->time->delta_time;
-	tiling_liquid_x_y += speed_tiling_y / 1000 * App->time->delta_time;
+	liquid_vertical_normals_tiling += float2(liquid_tiling_speed.y * App->time->delta_time * 0.001f);
+	liquid_horizontal_normals_tiling += float2(liquid_tiling_speed.x * App->time->delta_time * 0.001f);
 }
 
 unsigned int Material::GetShaderVariation() const

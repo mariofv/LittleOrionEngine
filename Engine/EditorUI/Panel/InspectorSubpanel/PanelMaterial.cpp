@@ -210,11 +210,7 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 			modified_by_user = true;
 		}
 
-		if (ImGui::DragFloat("Tiling X", &material->tiling_x, 0.f, 10.f))
-		{
-			modified_by_user = true;
-		}
-		if (ImGui::DragFloat("Tiling Y", &material->tiling_y, 0.f, 10.f))
+		if (ImGui::DragFloat2("Tiling", material->tiling.ptr(), 0.1f, 0.f, 10.f))
 		{
 			modified_by_user = true;
 		}
@@ -283,17 +279,11 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 	case Material::MaterialTextureType::LIQUID:
 		ImGui::Text("Liquid");
 
-		if (material->material_type == Material::MaterialType::MATERIAL_LIQUID)
+		if (ImGui::DragFloat2("Liquid Tiling Speed", material->liquid_tiling_speed.ptr(), 0.1f, 0.f, 1.0f))
 		{
-			if (ImGui::SliderFloat("Speed Tiling X", &material->speed_tiling_x, 0.01f, 1.0f))
-			{
-				modified_by_user = true;
-			}
-			if (ImGui::SliderFloat("Speed Tiling Y", &material->speed_tiling_y, 0.01f, 1.0f))
-			{
-				modified_by_user = true;
-			}
+			modified_by_user = true;
 		}
+		
 		break;
 
 	case Material::MaterialTextureType::DISSOLVED_DIFFUSE:

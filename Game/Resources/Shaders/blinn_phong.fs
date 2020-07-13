@@ -39,15 +39,11 @@ struct Material
 	float roughness;
 	float metalness;
 	float transparency;
-	float tiling_x;
-	float tiling_y;
+	vec2 tiling;
 
 	sampler2D liquid_map;
-	float tiling_liquid_x_x;
-	float tiling_liquid_x_y;
-	float tiling_liquid_y_x;
-	float tiling_liquid_y_y;
-	bool use_liquid_map;
+	vec2 liquid_horizontal_normals_tiling;
+	vec2 liquid_vertical_normals_tiling;
 
 	sampler2D dissolved_diffuse;
 	sampler2D dissolved_noise;
@@ -147,12 +143,12 @@ void main()
 	vec3 result = vec3(0);
 	vec3 ambient = ambient_light_color.xyz* ambient_light_strength*ambient_light_intensity;
 	//tiling
-	vec2 tiling = vec2(material.tiling_x, material.tiling_y)*texCoord;
+	vec2 tiling = material.tiling * texCoord;
+
 	//TODO->change it to liquid maps and not hardcoded
-	if(material.use_liquid_map)
-	{
-		tiling += vec2(material.tiling_liquid_x_x, material.tiling_liquid_x_y);
-	}
+#if ENABLE_LIQUID_PROPERTIES
+		tiling += material.liquid_horizontal_normals_tiling;
+#endif
 
 	//computation of colors
 	vec4 diffuse_color  = GetDiffuseColor(material, tiling);

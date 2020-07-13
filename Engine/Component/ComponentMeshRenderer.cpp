@@ -113,8 +113,8 @@ void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 
 	if (material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
 	{
-		AddLiquidMaterialUniforms(shader_program);
 		material_to_render->UpdateLiquidProperties();
+		AddLiquidMaterialUniforms(shader_program);
 	}
 	
 	AddExtraUniforms(shader_program);
@@ -177,10 +177,8 @@ void ComponentMeshRenderer::AddLiquidMaterialUniforms(unsigned int shader_progra
 	glActiveTexture(GL_TEXTURE9);
 	BindTexture(Material::MaterialTextureType::LIQUID);
 	glUniform1i(glGetUniformLocation(shader_program, "material.liquid_map"), 9);
-	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_x_x"), material_to_render->tiling_liquid_x_x);
-	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_x_y"), material_to_render->tiling_liquid_x_y);
-	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_y_x"), material_to_render->tiling_liquid_y_x);
-	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_y_y"), material_to_render->tiling_liquid_y_y);
+	glUniform2fv(glGetUniformLocation(shader_program, "material.liquid_horizontal_normals_tiling"), 1, material_to_render->liquid_horizontal_normals_tiling.ptr());
+	glUniform2fv(glGetUniformLocation(shader_program, "material.liquid_vertical_normals_tiling"), 1, material_to_render->liquid_vertical_normals_tiling.ptr());
 }
 
 void ComponentMeshRenderer::AddDissolveMaterialUniforms(unsigned int shader_program) const
@@ -207,8 +205,7 @@ void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
 		glUniform1f(glGetUniformLocation(shader_program, "material.transparency"), material_to_render->transparency);
 	}
 
-	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_x"), material_to_render->tiling_x);
-	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_y"), material_to_render->tiling_y);
+	glUniform2fv(glGetUniformLocation(shader_program, "material.tiling"), 1, material_to_render->tiling.ptr());
 
 	//Ambient light intesity and color
 	glUniform1f(glGetUniformLocation(shader_program, "ambient_light_intensity"), App->lights->ambient_light_intensity);

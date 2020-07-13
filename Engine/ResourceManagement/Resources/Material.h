@@ -74,20 +74,14 @@ public:
 	float specular_color[4] = { 0.025f, 0.025f, 0.025f, 0.025f };
 	float smoothness = 1.0F;
 
-	float2 coords = float2(1.0f, 1.0f);
-
 	float transparency = 0.5F;
 
-	float tiling_x = 1.0f;
-	float tiling_y = 1.0f;
+	float2 tiling = float2::one;
 
 	//liquid material
-	float speed_tiling_x = 1.0F;
-	float speed_tiling_y = 1.0F;
-	float tiling_liquid_x_x = 1.F;
-	float tiling_liquid_x_y = 1.F;
-	float tiling_liquid_y_x = -1.F;
-	float tiling_liquid_y_y = -1.F;
+	float2 liquid_tiling_speed = float2::one;
+	float2 liquid_horizontal_normals_tiling = float2::one;
+	float2 liquid_vertical_normals_tiling = -float2::one;
 
 	float dissolve_progress = 0.f;
 
