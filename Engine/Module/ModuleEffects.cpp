@@ -2,6 +2,7 @@
 
 #include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentBillboard.h"
+#include "Component/ComponentTrail.h"
 
 #include "Main/GameObject.h"
 #include <Brofiler/Brofiler.h>
@@ -43,8 +44,15 @@ void ModuleEffects::Render()
 	{
 		particles->Render();
 	}
+
+	for (auto &trail : trails)
+	{
+		trail->Render();
+	}
+
 	glDisable(GL_BLEND);
 	glDepthMask(GL_TRUE);
+	
 }
 
 ComponentBillboard* ModuleEffects::CreateComponentBillboard()
@@ -78,5 +86,22 @@ void ModuleEffects::RemoveComponentParticleSystem(ComponentParticleSystem* parti
 	{
 		delete *it;
 		particle_systems.erase(it);
+	}
+}
+
+ComponentTrail* ModuleEffects::CreateComponentTrail(GameObject* owner)
+{
+	ComponentTrail* created_trail = new ComponentTrail(owner);
+	trails.push_back(created_trail);
+	return created_trail;
+}
+
+void ModuleEffects::RemoveComponentTrail(ComponentTrail* trail_to_remove)
+{
+	auto it = std::find(trails.begin(), trails.end(), trail_to_remove);
+	if (it != trails.end())
+	{
+		delete *it;
+		trails.erase(it);
 	}
 }

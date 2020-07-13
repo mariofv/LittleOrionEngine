@@ -14,6 +14,8 @@ public:
 		PLAYING, PAUSED, STOPPED, DISABLED
 	};
 
+	void Clear();
+
 	ENGINE_API TweenSequence* Append(Tween*);
 	ENGINE_API TweenSequence* Join(Tween*);
 	ENGINE_API TweenSequence* Insert(float, Tween*);
@@ -23,6 +25,7 @@ public:
 	ENGINE_API TweenSequence* Pause();
 
 	ENGINE_API TweenSequence* OnCompleted(std::function<void(void)> callback);
+
 
 private:
 	void Update(float);

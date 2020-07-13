@@ -21,6 +21,7 @@
 #include "Component/ComponentSpriteMask.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
+#include "Component/ComponentTrail.h"
 
 #include "EditorUI/Panel/PanelInspector.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelTransform.h"
@@ -168,6 +169,10 @@ void PanelGameObject::Render(GameObject* game_object)
 
 			case Component::ComponentType::PARTICLE_SYSTEM:
 				component_panel.ShowComponentParticleSystem(static_cast<ComponentParticleSystem*>(component));
+				break;
+
+			case Component::ComponentType::TRAIL:
+				component_panel.ShowComponentTrail(static_cast<ComponentTrail*>(component));
 				break;
 
 			case Component::ComponentType::CANVAS:
