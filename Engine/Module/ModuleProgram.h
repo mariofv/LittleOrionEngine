@@ -23,7 +23,10 @@ public:
 		ENABLE_SPRITESHEET = 1 << 3,
 
 		ENABLE_BILLBOARD_VIEWPOINT_ALIGNMENT = 1 << 4,
-		ENABLE_BILLBOARD_AXIAL_ALIGNMENT = 1 << 5
+		ENABLE_BILLBOARD_AXIAL_ALIGNMENT = 1 << 5,
+
+		ENABLE_LIQUID_PROPERTIES = 1 << 6,
+		ENABLE_DISSOLVING_PROPERTIES = 1 << 7
 	};
 
 	struct ShaderProgram
@@ -103,7 +106,7 @@ public:
 
 private:
 	std::unordered_map<std::string, ShaderProgram> loaded_programs;
-	std::array<std::string, 6> defines =
+	std::array<std::string, 8> defines =
 	{
 		"#define NORMAL_MAP 1\n",
 		"#define SPECULAR_MAP 1\n",
@@ -111,7 +114,10 @@ private:
 
 		"#define ENABLE_SPRITESHEET 1\n",
 		"#define ENABLE_BILLBOARD_VIEWPOINT_ALIGNMENT  1\n",
-		"#define ENABLE_BILLBOARD_AXIAL_ALIGNMENT 1\n"
+		"#define ENABLE_BILLBOARD_AXIAL_ALIGNMENT 1\n",
+
+		"#define ENABLE_LIQUID_PROPERTIES 1\n",
+		"#define ENABLE_DISSOLVING_PROPERTIES 1\n"
 	};
 
 	std::vector<const char *> names;

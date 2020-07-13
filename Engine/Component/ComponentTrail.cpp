@@ -26,11 +26,9 @@ ComponentTrail::~ComponentTrail()
 	vertices.empty();
 	if (trail_vbo != 0)
 	{
-		glUnmapBuffer(GL_ARRAY_BUFFER);
 		glDeleteBuffers(1, &trail_vbo);
 		glDeleteBuffers(1, &trail_vao);
 	}
-	App->effects->RemoveComponentTrail(this);
 }
 
 void ComponentTrail::Init()
@@ -167,10 +165,14 @@ void ComponentTrail::Render()
 		glBindVertexArray(trail_vao);
 
 		//use glBufferMap to obtain a pointer to buffer data
-		glBindBuffer(GL_ARRAY_BUFFER, trail_vbo);
-		trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(Vertex) *  vertices.size(), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);// 6 indices
-		memcpy(trail_renderer_vertices, vertices.data(), vertices.size() * sizeof(Vertex));
-		glUnmapBuffer(GL_ARRAY_BUFFER);
+		if (vertices.size() != 0)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, trail_vbo);
+			trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(Vertex) *  vertices.size(), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);// 6 indices
+			memcpy(trail_renderer_vertices, vertices.data(), vertices.size() * sizeof(Vertex));
+			glUnmapBuffer(GL_ARRAY_BUFFER);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+		}
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, trail_texture->opengl_texture);

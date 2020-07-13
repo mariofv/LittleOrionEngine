@@ -820,6 +820,11 @@ void PanelComponent::ShowAddNewComponentButton()
 		{
 			App->editor->selected_game_object->CreateComponent(Component::ComponentType::PARTICLE_SYSTEM);
 		}
+		sprintf_s(tmp_string, "%s Trail", ICON_FA_SHARE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::TRAIL);
+		}
 
 		sprintf_s(tmp_string, "%s Animation", ICON_FA_PLAY_CIRCLE);
 		if (ImGui::Selectable(tmp_string))
