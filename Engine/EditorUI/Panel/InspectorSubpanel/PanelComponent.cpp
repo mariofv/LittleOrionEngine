@@ -36,7 +36,6 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
 #include "Component/ComponentTrail.h"
-#include "Component/ComponentTrailRenderer.h"
 
 #include "Helper/Utils.h"
 
@@ -271,7 +270,7 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 		ImGui::Text("Texture");
 		ImGui::SameLine();
 
-		std::string texture_name = trail->trail_renderer->trail_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(trail->trail_renderer->trail_texture->GetUUID())->resource_name;
+		std::string texture_name = trail->trail_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(trail->trail_texture->GetUUID())->resource_name;
 		ImGuiID element_id = ImGui::GetID((std::to_string(trail->UUID) + "TextureSelector").c_str());
 		if (ImGui::Button(texture_name.c_str()))
 		{

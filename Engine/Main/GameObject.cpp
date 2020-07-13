@@ -38,7 +38,6 @@
 #include "Component/ComponentBillboard.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTrail.h"
-#include "Component/ComponentTrailRenderer.h"
 #include "Component/ComponentTransform.h"
 
 #include <Brofiler/Brofiler.h>
@@ -488,10 +487,6 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 
 	case Component::ComponentType::TRAIL:
 		created_component = App->effects->CreateComponentTrail(this);
-		break;
-
-	case Component::ComponentType::TRAILRENDERER:
-		created_component = App->effects->CreateComponentTrailRenderer(this);
 		break;
 
 	case Component::ComponentType::AUDIO_SOURCE:

@@ -13,7 +13,6 @@
 
 class GameObject;
 class ComponentBillboard;
-class ComponentTrailRenderer;
 class ComponentTransform;
 class Texture;
 
@@ -35,9 +34,10 @@ struct TrailPoint {
 	}
 };
 
-struct Spline
+struct Vertex
 {
-	std::vector<TrailPoint> path;
+	float3 position;
+	float2 uvs;
 };
 
 class ComponentTrail : public Component
@@ -62,23 +62,26 @@ public:
 	void SetTrailTexture(uint32_t texture_uuid);
 	void GetPerpendiculars();
 
+	void Render(std::vector<Vertex>& to_render);
+	void ChangeTexture(uint32_t texture_uuid);
+
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
 public:
 	uint32_t texture_uuid = 0;
-	ComponentTrailRenderer* trail_renderer = nullptr;
 	float3 gameobject_init_position = { 0.0f, 0.0f, 0.0f};
 
 	int total_points = 1;
 	float3 last_point_added;
+
 	//Trail Generation properties
 	float width = 1.0f;
 	float duration = 1000.0f; // in millis
 	float min_distance = 1.0f;
 
 	//Color properties
-	float color_trail[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	//Render properties
 	int blend_mode; //0 for aplha blend, 1 for addition
@@ -94,6 +97,14 @@ public:
 	TrailPoint head_point;
 	TrailPoint last_point;
 	std::vector <std::pair <TrailPoint*, TrailPoint*>> mesh_points; // These are from which we're gonna build the mesh
+
+	//Renderer
+	float* trail_renderer_vertices = nullptr;
+	std::shared_ptr<Texture> trail_texture = nullptr;
+
+private:
+	unsigned int trail_vao, trail_vbo;
+	
 };
 
 #endif

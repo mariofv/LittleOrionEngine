@@ -1,10 +1,16 @@
 #include "ComponentTrail.h"
-#include "Component/ComponentTrailRenderer.h"
 
 #include "Main/Application.h"
 #include "Module/ModuleEffects.h"
+#include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleRender.h"
+#include "Module/ModuleTime.h"
 #include "GL/glew.h"
+
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
+
+namespace { const float MAX_TRAIL_VERTICES = 1000; } //arbitrary number 
 
 ComponentTrail::ComponentTrail() : Component(nullptr, ComponentType::TRAIL)
 {
@@ -17,14 +23,40 @@ ComponentTrail::ComponentTrail(GameObject * owner) : Component(owner, ComponentT
 }
 ComponentTrail::~ComponentTrail()
 {
+	if (trail_vbo != 0)
+	{
+		glUnmapBuffer(GL_ARRAY_BUFFER);
+		glDeleteBuffers(1, &trail_vbo);
+		glDeleteBuffers(1, &trail_vao);
+	}
 	App->effects->RemoveComponentTrail(this);
 }
 
 void ComponentTrail::Init()
 {
-	trail_renderer = new ComponentTrailRenderer(owner);
 	gameobject_init_position = owner->transform.GetGlobalTranslation(); //initial GO position
 	last_point = TrailPoint(gameobject_init_position, width, duration);
+
+	//InitRenderer
+	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
+
+	glGenVertexArrays(1, &trail_vao);
+	glGenBuffers(1, &trail_vbo);
+
+	glBindVertexArray(trail_vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, trail_vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * MAX_TRAIL_VERTICES * 4 * 5, nullptr, GL_DYNAMIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 }
 
 void ComponentTrail::UpdateTrail()
@@ -118,16 +150,55 @@ void  ComponentTrail::GetPerpendiculars()
 			mesh_points.erase(pair);
 		}
 	}
-	trail_renderer->Render(vertices);
-	trail_renderer->owner = owner;
+	Render(vertices);
+}
+
+void ComponentTrail::Render(std::vector<Vertex>& to_render)
+{
+	if (active)
+	{
+
+		GLuint shader_program = App->program->UseProgram("Trail");
+		glUseProgram(shader_program);
+
+		glBindVertexArray(trail_vao);
+
+		//use glBufferMap to obtain a pointer to buffer data
+		glBindBuffer(GL_ARRAY_BUFFER, trail_vbo);
+		trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(Vertex) *  to_render.size(), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);// 6 indices
+		memcpy(trail_renderer_vertices, to_render.data(), to_render.size() * sizeof(Vertex));
+		glUnmapBuffer(GL_ARRAY_BUFFER);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, trail_texture->opengl_texture);
+		glUniform1i(glGetUniformLocation(shader_program, "tex"), 0);
+
+		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		glUniform4fv(glGetUniformLocation(shader_program, "color"), 1, (float*)color);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, to_render.size());
+		glBindVertexArray(0);
+
+		glUseProgram(0);
+	}
 }
 
 void ComponentTrail::SetTrailTexture(uint32_t texture_uuid)
 {
 	this->texture_uuid = texture_uuid;
-	trail_renderer->ChangeTexture(texture_uuid);
+	ChangeTexture(texture_uuid);
 }
 
+void ComponentTrail::ChangeTexture(uint32_t texture_uuid)
+{
+	if (texture_uuid != 0)
+	{
+		this->texture_uuid = texture_uuid;
+		trail_texture = App->resources->Load<Texture>(texture_uuid);
+	}
+}
 
 ComponentTrail& ComponentTrail::operator=(const ComponentTrail& component_to_copy)
 {
@@ -173,5 +244,5 @@ void ComponentTrail::SpecializedLoad(const Config& config)
 	active = config.GetBool("Active", true);
 	texture_uuid = config.GetUInt("TextureUUID", 0);
 
-	trail_renderer->ChangeTexture(texture_uuid);
+	ChangeTexture(texture_uuid);
 }

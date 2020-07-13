@@ -13,7 +13,6 @@
 #include "ModuleWindow.h"
 #include "ModuleLight.h"
 
-#include "Component/ComponentBillboard.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
