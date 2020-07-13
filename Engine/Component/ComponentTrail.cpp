@@ -132,7 +132,7 @@ void  ComponentTrail::GetPerpendiculars()
 
 			float3 top_left, bottom_left;
 			++j;
-			//Commented code is for rendering the last point of path
+			//TODO - Commented code is for rendering the last point of path
 			//if (++pair == mesh_points.end())
 			//{
 			//	/*--pair;
