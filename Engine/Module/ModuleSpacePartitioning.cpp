@@ -104,7 +104,7 @@ void ModuleSpacePartitioning::UpdateAABBTree(GameObject * game_object)
 	ComponentMeshRenderer* object_mesh = static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER));
 	if (object_mesh != nullptr)
 	{
-		ol_abbtree->UpdateObject(game_object);
+		//ol_abbtree->UpdateObject(game_object);
 	}
 }
 
