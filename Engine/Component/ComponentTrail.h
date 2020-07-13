@@ -44,10 +44,9 @@ class ComponentTrail : public Component
 {
 public:
 	ComponentTrail();
-	~ComponentTrail();
-
 	ComponentTrail(GameObject* owner);
 
+	~ComponentTrail();
 
 	void Init();
 

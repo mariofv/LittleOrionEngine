@@ -16,22 +16,25 @@ class Material : public Resource
 public:
 	enum class MaterialType
 	{
-		MATERIAL_OPAQUE,
-		MATERIAL_TRANSPARENT,
-		MATERIAL_LIQUID,
-		UNKNOWN
+		MATERIAL_OPAQUE = 0,
+		MATERIAL_TRANSPARENT = 1,
+		MATERIAL_DISSOLVING = 2,
+		MATERIAL_LIQUID = 3,
+		UNKNOWN = 4
 	};
 
 	enum MaterialTextureType
 	{
-		DIFFUSE,
-		SPECULAR,
-		EMISSIVE,
-		OCCLUSION,
-		NORMAL,
-		LIGHTMAP,
-		LIQUID,
-		UNKNOWN
+		DIFFUSE = 0,
+		SPECULAR = 1,
+		EMISSIVE = 2,
+		OCCLUSION = 3,
+		NORMAL = 4,
+		LIGHTMAP = 5,
+		LIQUID = 6,
+		DISSOLVED_DIFFUSE = 7,
+		NOISE = 8,
+		UNKNOWN = 9
 	};
 
 	Material() = default;
@@ -56,6 +59,8 @@ public:
 	void UpdateLiquidProperties();
 	unsigned int GetShaderVariation() const;
 
+	ENGINE_API void SetDissolveProgress(float progress);
+
 
 public:
 	static const size_t MAX_MATERIAL_TEXTURE_TYPES = static_cast<size_t>(MaterialTextureType::UNKNOWN);
@@ -74,21 +79,16 @@ public:
 	float specular_color[4] = { 0.025f, 0.025f, 0.025f, 0.025f };
 	float smoothness = 1.0F;
 
-	float2 coords = float2(1.0f, 1.0f);
-
 	float transparency = 0.5F;
 
-	float tiling_x = 1.0f;
-	float tiling_y = 1.0f;
+	float2 tiling = float2::one;
 
 	//liquid material
-	float speed_tiling_x = 1.0F;
-	float speed_tiling_y = 1.0F;
-	float tiling_liquid_x_x = 1.F;
-	float tiling_liquid_x_y = 1.F;
-	float tiling_liquid_y_x = -1.F;
-	float tiling_liquid_y_y = -1.F;
-	bool use_liquid_map = false;
+	float2 liquid_tiling_speed = float2::one;
+	float2 liquid_horizontal_normals_tiling = float2::one;
+	float2 liquid_vertical_normals_tiling = -float2::one;
+
+	float dissolve_progress = 0.f;
 
 	bool show_checkerboard_texture = false;
 };
