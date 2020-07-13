@@ -1,5 +1,15 @@
 #include "TweenSequence.h"
 
+void TweenSequence::Clear()
+{
+	for (auto it = tweens.begin(); it != tweens.end(); ++it)
+	{
+		delete *it;
+	}
+
+	tweens.clear();
+}
+
 TweenSequence* TweenSequence::Append(Tween* new_tween)
 {
 	float start_time = 0.0f;

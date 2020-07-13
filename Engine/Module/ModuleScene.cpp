@@ -384,6 +384,7 @@ void ModuleScene::DeleteCurrentScene()
 
 void ModuleScene::OpenScene()
 {
+	App->animations->CleanTweens();
 	DeleteCurrentScene();
 	root = new GameObject(0);
 

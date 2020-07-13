@@ -27,6 +27,7 @@ void LOTween::Reset()
 	for (std::vector<TweenSequence*>::reverse_iterator it = sequences.rbegin(); it != sequences.rend(); ++it)
 	{
 		TweenSequence* sequence = (*it);
+		(*it)->Clear();
 		delete(sequence);
 	}
 
