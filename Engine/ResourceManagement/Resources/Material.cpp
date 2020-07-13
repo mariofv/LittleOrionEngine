@@ -186,8 +186,8 @@ std::string Material::GetMaterialTypeName(const MaterialType material_type)
 
 void Material::UpdateLiquidProperties()
 {
-	liquid_vertical_normals_tiling += float2(liquid_tiling_speed.y * App->time->delta_time * 0.001f);
 	liquid_horizontal_normals_tiling += float2(liquid_tiling_speed.x * App->time->delta_time * 0.001f);
+	liquid_vertical_normals_tiling -= float2(liquid_tiling_speed.y * App->time->delta_time * 0.001f);
 }
 
 unsigned int Material::GetShaderVariation() const
