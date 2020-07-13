@@ -105,17 +105,26 @@ void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 	AddAmbientOclusionUniforms(shader_program);
 	AddNormalUniforms(shader_program);
 	AddLightMapUniforms(shader_program);
-	AddLiquidMaterialUniforms(shader_program);
-	AddDissolveMaterialUniforms(shader_program);
+
+	if (owner->name == "Player1_Mesh")
+	{
+		int x = 3;
+	}
+	
+	if (material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING)
+	{
+		AddDissolveMaterialUniforms(shader_program);
+	}
 
 	if (material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
 	{
+		AddLiquidMaterialUniforms(shader_program);
 		material_to_render->UpdateLiquidProperties();
 	}
+	
 	AddExtraUniforms(shader_program);
 	
 }
-
 
 void ComponentMeshRenderer::AddDiffuseUniforms(unsigned int shader_program) const
 {
@@ -177,7 +186,6 @@ void ComponentMeshRenderer::AddLiquidMaterialUniforms(unsigned int shader_progra
 	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_x_y"), material_to_render->tiling_liquid_x_y);
 	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_y_x"), material_to_render->tiling_liquid_y_x);
 	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_liquid_y_y"), material_to_render->tiling_liquid_y_y);
-	glUniform1i(glGetUniformLocation(shader_program, "material.use_liquid_map"), material_to_render->use_liquid_map);
 }
 
 void ComponentMeshRenderer::AddDissolveMaterialUniforms(unsigned int shader_program) const
@@ -191,7 +199,6 @@ void ComponentMeshRenderer::AddDissolveMaterialUniforms(unsigned int shader_prog
 	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_noise"), 10);
 
 	glUniform1f(glGetUniformLocation(shader_program, "material.dissolve_progress"), material_to_render->dissolve_progress);
-	glUniform1i(glGetUniformLocation(shader_program, "material.use_noise_map"), material_to_render->use_noise_map);
 }
 
 void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const

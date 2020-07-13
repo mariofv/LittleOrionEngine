@@ -75,11 +75,10 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 
 			for (int i = 0; i < Material::MAX_MATERIAL_TYPES; ++i)
 			{
-				bool is_selected = (material->material_type == ((Material::MaterialType)i));
+				bool is_selected = (static_cast<int>(material->material_type) == i);
 				if (ImGui::Selectable(Material::GetMaterialTypeName((Material::MaterialType)i).c_str(), is_selected))
 				{
 					material->ChangeTypeOfMaterial((Material::MaterialType)i);
-					const char* name = Material::GetMaterialTypeName(material->material_type).c_str();
 					if (is_selected)
 					{
 						ImGui::SetItemDefaultFocus();
@@ -211,11 +210,11 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 			modified_by_user = true;
 		}
 
-		if (ImGui::SliderFloat("Tiling X", &material->tiling_x, 0.f, 10.f))
+		if (ImGui::DragFloat("Tiling X", &material->tiling_x, 0.f, 10.f))
 		{
 			modified_by_user = true;
 		}
-		if (ImGui::SliderFloat("Tiling Y", &material->tiling_y, 0.f, 10.f))
+		if (ImGui::DragFloat("Tiling Y", &material->tiling_y, 0.f, 10.f))
 		{
 			modified_by_user = true;
 		}

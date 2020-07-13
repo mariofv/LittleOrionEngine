@@ -48,6 +48,10 @@ struct Material
 	float tiling_liquid_y_x;
 	float tiling_liquid_y_y;
 	bool use_liquid_map;
+
+	sampler2D dissolved_diffuse;
+	sampler2D dissolved_noise;
+	float dissolve_progress;
 };
 uniform Material material;
 
@@ -194,7 +198,22 @@ void main()
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 {
-	vec4 result = texture(mat.diffuse_map, texCoord)*mat.diffuse_color;
+	vec4 result;
+	#if ENABLE_DISSOLVING_PROPERTIES
+			float mapped_noise = 1 - texture(mat.dissolved_noise, texCoord).x;
+			if (mapped_noise < mat.dissolve_progress)
+			{
+				result = texture(mat.diffuse_map, texCoord);
+			}
+			else
+			{
+				result = texture(mat.dissolved_diffuse, texCoord);
+			}
+	#else
+			result = texture(mat.diffuse_map, texCoord);
+	#endif
+
+	result = result * mat.diffuse_color;
 	//alpha testing
 	if(result.a <0.1)
 	{
