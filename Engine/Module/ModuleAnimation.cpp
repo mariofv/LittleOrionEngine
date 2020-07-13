@@ -2,6 +2,7 @@
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTime.h"
 #include "Component/ComponentAnimation.h"
 
@@ -17,7 +18,7 @@ bool ModuleAnimation::Init()
 update_status ModuleAnimation::Update()
 {
 	BROFILER_CATEGORY("Module Animation Update", Profiler::Color::LemonChiffon);
-	if (App->time->isGameRunning())
+	if (App->time->isGameRunning() && !App->resources->loading_thread_communication.loading)
 	{
 		tweener->Update(App->time->delta_time);
 	}
