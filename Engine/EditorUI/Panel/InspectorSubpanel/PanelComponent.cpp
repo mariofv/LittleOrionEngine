@@ -101,9 +101,6 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 			mesh_renderer->modified_by_user = true;
 		}
 
-		ImGui::Checkbox("Shadow caster", &mesh_renderer->shadow_caster);
-
-
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Material");
 		ImGui::SameLine();
@@ -165,6 +162,8 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		}
 
 		ImGui::Checkbox("Is Raycastable", &mesh_renderer->is_raycastable);
+		ImGui::Checkbox("Shadow caster", &mesh_renderer->shadow_caster);
+		ImGui::Checkbox("Shadow receiver", &mesh_renderer->shadow_receiver);
 	}
 }
 

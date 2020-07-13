@@ -101,6 +101,8 @@ public:
 
 private:
 	unsigned int GetParticlesSystemVariation();
+	bool emitting = false;
+	size_t number_emited = 0;
 
 public:
 

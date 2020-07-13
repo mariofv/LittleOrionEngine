@@ -229,7 +229,14 @@ void ComponentParticleSystem::Update()
 				std::iter_swap(particles.begin() + i, particles.begin() + num_of_alive_particles);
 				++num_of_alive_particles;
 			}
-
+			else if(emitting)
+			{
+				++number_emited;
+			}
+		}
+		if (emitting && number_emited >= playing_particles_number)
+		{
+			Stop();
 		}
 	}
 }
@@ -465,6 +472,8 @@ void ComponentParticleSystem::Copy(Component * component_to_copy) const
 void ComponentParticleSystem::Emit(size_t count)
 {
 	playing = true;
+	emitting = true;
+	number_emited = 0;
 	if (count < max_particles_number)
 	{
 		playing_particles_number = count;
@@ -479,6 +488,7 @@ void ComponentParticleSystem::Emit(size_t count)
 void ComponentParticleSystem::Play()
 {
 	playing = true;
+	emitting = false;
 	playing_particles_number = MAX_PARTICLES;
 }
 
@@ -486,6 +496,7 @@ void ComponentParticleSystem::Stop()
 {
 	time_counter = 0.0F;
 	playing_particles_number = max_particles_number;
+	emitting = false;
 	for (unsigned int i = 0; i < max_particles_number; i++)
 	{
 
@@ -500,5 +511,6 @@ void ComponentParticleSystem::Stop()
 ENGINE_API void ComponentParticleSystem::Pause()
 {
 	playing = false;
+	emitting = false;
 }
 

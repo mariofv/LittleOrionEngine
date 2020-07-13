@@ -155,11 +155,11 @@ bool AnimController::IsOnState(const std::string& state)
 	return active_state.get()->name_hash == state_hash;
 }
 
-void AnimController::SetSpeed(float speed) const
+void AnimController::SetSpeed(float speed)
 {
 	if(active_state)
 	{
-		active_state->speed = speed;
+		playing_clips[ClipType::ACTIVE].speed = speed;
 	}
 }
 

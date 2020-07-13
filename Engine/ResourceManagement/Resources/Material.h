@@ -91,7 +91,6 @@ public:
 	bool use_liquid_map = false;
 
 	bool show_checkerboard_texture = false;
-	bool use_shadow_map = true;
 };
 
 namespace ResourceManagement

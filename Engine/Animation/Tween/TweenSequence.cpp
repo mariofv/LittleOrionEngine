@@ -16,7 +16,7 @@ TweenSequence* TweenSequence::Append(Tween* new_tween)
 	return this;
 }
 
-TweenSequence * TweenSequence::Join(Tween* new_tween)
+TweenSequence* TweenSequence::Join(Tween* new_tween)
 {
 	float start_time = 0.0f;
 	
@@ -33,7 +33,7 @@ TweenSequence * TweenSequence::Join(Tween* new_tween)
 	return this;
 }
 
-TweenSequence * TweenSequence::Insert(float insert_time, Tween* new_tween)
+TweenSequence* TweenSequence::Insert(float insert_time, Tween* new_tween)
 {
 	new_tween->start_time = insert_time;
 	tweens.push_back(new_tween);
@@ -56,10 +56,16 @@ TweenSequence* TweenSequence::Stop()
 	return this;
 }
 
-TweenSequence * TweenSequence::Pause()
+TweenSequence* TweenSequence::Pause()
 {
 	state = TweenSequenceState::PAUSED;
 
+	return this;
+}
+
+TweenSequence* TweenSequence::OnCompleted(std::function<void(void)> callback)
+{
+	on_completed_callback = callback;
 	return this;
 }
 
@@ -95,13 +101,16 @@ void TweenSequence::Update(float dt)
 		{
 			current_played_tweens.erase(current_played_tweens.begin() + i);
 			i -= 1;
-
-			delete(the_tween);
 		}
 	}
 
 	if (current_played_tweens.size() <= 0)
 	{
+		if (on_completed_callback != nullptr)
+		{
+			on_completed_callback();
+		}
+
 		Stop();
 	}
 }

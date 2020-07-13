@@ -253,10 +253,6 @@ unsigned int Material::GetShaderVariation() const
 	{
 		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_NORMAL_MAP);
 	}
-	if (use_shadow_map && App->lights->render_shadows) 
-	{
-		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_RECEIVE_SHADOWS);
-	}
 
 	return variation;
 }

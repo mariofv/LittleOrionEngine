@@ -121,7 +121,13 @@ void ComponentMeshRenderer::Render()
 		return;
 	}
 	std::string program_name = material_to_render->shader_program;
-	GLuint program = App->program->UseProgram(program_name, material_to_render->GetShaderVariation());
+	unsigned int shader_variation = material_to_render->GetShaderVariation();
+	if (shadow_receiver && App->lights->render_shadows)
+	{
+		shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_RECEIVE_SHADOWS);
+	}
+
+	GLuint program = App->program->UseProgram(program_name, shader_variation);
 
 	glUniform1i(glGetUniformLocation(program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
 	

@@ -205,6 +205,9 @@ void ComponentBillboard::SpecializedSave(Config& config) const
 	config.AddBool(is_spritesheet, "IsSpriteSheet");
 	config.AddInt(num_sprisheet_rows, "Rows");
 	config.AddInt(num_sprisheet_columns, "Columns");
+
+	float4 billbaord_color(color[0], color[1], color[2], color[3]);
+	config.AddColor(billbaord_color, "Color");
 }
 
 void ComponentBillboard::SpecializedLoad(const Config& config)
@@ -222,6 +225,14 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 	is_spritesheet = config.GetBool("IsSpriteSheet", false);
 	num_sprisheet_rows = config.GetInt("Rows", 1);
 	num_sprisheet_columns = config.GetInt("Columns", 1);
+
+	float4 billbaord_color;
+	config.GetColor("Color", billbaord_color, float4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	color[0] = billbaord_color.x;
+	color[1] = billbaord_color.y;
+	color[2] = billbaord_color.z;
+	color[3] = billbaord_color.w;
 }
 
 void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)
@@ -294,6 +305,10 @@ unsigned int ComponentBillboard::GetBillboardVariation()
 	{
 		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_SPRITESHEET);
 	}
-
 	return variation;
+}
+
+void ComponentBillboard::SetOrientation(bool is_oriented)
+{
+	oriented_to_camera = is_oriented;
 }
