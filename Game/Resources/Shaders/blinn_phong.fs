@@ -113,7 +113,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
 vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
 
-vec3 CalculateNormalMapAndLiquid(const Material material, const vec2 texCoord);
+vec3 GetLiquidNormal(const Material material);
 
 vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel);
 
@@ -150,17 +150,11 @@ void main()
 		tiling += material.liquid_horizontal_normals_tiling;
 #endif
 
-	//computation of colors
-	vec4 diffuse_color  = GetDiffuseColor(material, tiling);
-	vec4 specular_color  = GetSpecularColor(material, tiling);
-	vec3 occlusion_color = GetOcclusionColor(material, tiling);
-	vec3 emissive_color  = GetEmissiveColor(material, tiling);
-
 	vec3 fragment_normal = normalize(normal);
 
 	//Tangent space matrix
-	vec3 T = normalize(vec3(matrices.model * vec4(vertex_tangent_fs,   0.0)));
-	vec3 N = normalize(vec3(matrices.model * vec4(vertex_normal_fs,    0.0)));
+	vec3 T = normalize(vec3(matrices.model * vec4(vertex_tangent_fs, 0.0)));
+	vec3 N = normalize(vec3(matrices.model * vec4(vertex_normal_fs, 0.0)));
 	vec3 ortho_tangent = normalize(T-dot(T, N)*N); // Gram-Schmidt
 	vec3 B = normalize(cross(N, ortho_tangent));
 	mat3 TBN = mat3(T, B, N);
@@ -169,6 +163,17 @@ void main()
 		vec3 normal_from_texture = GetNormalMap(material, tiling);
 		fragment_normal= normalize(TBN * normal_from_texture);
 	#endif
+
+	#if LIQUID_MAP
+		vec3 liquid_normal = GetLiquidNormal(material);
+		fragment_normal = normalize(TBN * liquid_normal);
+	#endif
+
+	//computation of colors
+	vec4 diffuse_color  = GetDiffuseColor(material, tiling);
+	vec4 specular_color  = GetSpecularColor(material, tiling);
+	vec3 occlusion_color = GetOcclusionColor(material, tiling);
+	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)
 	{
@@ -413,34 +418,12 @@ vec3 FrustumsCheck()
 	}
 	return result;
 }
-vec3 CalculateNormalMapAndLiquid(const Material material, const vec2 tiling)
-{
-	vec3 result;
-	//if(material.use_liquid_map && !material.use_normal_map )
-	//{
-	//	vec2 tiling_nm_x = vec2(material.tiling_liquid_x_x, material.tiling_liquid_x_y)+tiling;
-	//	vec2 tiling_nm_y = vec2(material.tiling_liquid_y_x, material.tiling_liquid_y_y)+tiling;
-	//	vec3 normal_texture_x = GetLiquidMap(material, tiling_nm_x);
-	//	vec3 normal_texture_y = GetLiquidMap(material, tiling_nm_y);
-	//	liquid_normal_from_texture =  mix(normal_texture_x, normal_texture_y, 0.5);
-	//	result = normalize(TBN * liquid_normal_from_texture);
-	//}
-	//else if(material.use_normal_map && !material.use_liquid_map)
-	//{
-	//	normal_from_texture = GetNormalMap(material, tiling);
-	//	result = normalize(TBN * normal_from_texture);
-	//}
-	//else if(material.use_normal_map && material.use_liquid_map)
-	//{
-	//	vec2 tiling_nm_x = vec2(material.tiling_liquid_x_x, material.tiling_liquid_x_y)+tiling;
-	//	vec2 tiling_nm_y = vec2(material.tiling_liquid_y_x, material.tiling_liquid_y_y)+tiling;
-	//	vec3 normal_texture_x = GetLiquidMap(material, tiling_nm_x);
-	//	vec3 normal_texture_y = GetLiquidMap(material, tiling_nm_y);
-	//	liquid_normal_from_texture =  mix(normal_texture_x, normal_texture_y, 0.5);
-	//	normal_from_texture = GetNormalMap(material, tiling);
-	//	vec3 final_normal_map = mix(liquid_normal_from_texture, normal_from_texture, 0.5);
-	//	result=normalize(TBN * final_normal_map);
-	//}
-	return result;
 
+vec3 GetLiquidNormal(const Material material)
+{
+	vec2 liquid_horizontal_normal_coord = material.liquid_horizontal_normals_tiling + material.tiling;
+	vec2 liquid_vertical_normal_coord = material.liquid_vertical_normals_tiling + material.tiling;
+	vec3 liquid_horizontal_normal = GetLiquidMap(material, liquid_horizontal_normal_coord);
+	vec3 liquid_vertical_normal = GetLiquidMap(material, liquid_vertical_normal_coord);
+	return  mix(liquid_horizontal_normal, liquid_vertical_normal, 0.5);
 }
