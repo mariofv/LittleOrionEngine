@@ -106,7 +106,7 @@ void PanelProjectExplorer::InitResourceExplorerDockspace()
 
 void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 {
-	if (!App->resources->thread_comunication.finished_loading)
+	if (!App->resources->first_import_completed)
 	{
 		return;
 	}
