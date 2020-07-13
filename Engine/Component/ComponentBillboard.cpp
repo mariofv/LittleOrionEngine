@@ -126,7 +126,7 @@ bool ComponentBillboard::IsPlaying()
 void ComponentBillboard::Render(const float3& global_position)
 {
 	BROFILER_CATEGORY("Render billboard", Profiler::Color::Orange);
-	if(!active || !billboard_texture)
+	if(!active || !billboard_texture || !billboard_texture->initialized)
 	{
 		return;
 	}
