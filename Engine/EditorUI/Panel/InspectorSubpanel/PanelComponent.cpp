@@ -35,6 +35,7 @@
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
+#include "Component/ComponentTrail.h"
 
 #include "Helper/Utils.h"
 
@@ -250,6 +251,42 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 	ImGui::DragFloat("Width:", &billboard->width, 0.2f, 0.f, 10.f);
 	ImGui::DragFloat("Height:", &billboard->height, 0.2f, 0.f, 10.f);
 	ImGui::DragFloat("Transparency:", &billboard->transparency, 0.1f, 0.f, 1.f);
+}
+
+void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
+{
+	ImGui::Checkbox("Active", &trail->active);
+	ImGui::SameLine();
+	if (ImGui::Button("Delete"))
+	{
+		App->actions->DeleteComponentUndo(trail);
+	}
+	ImGui::Separator();
+	if (ImGui::CollapsingHeader(ICON_FA_SHARE " Trail Renderer", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::InputFloat("Width", &trail->width, 0.1f);
+		ImGui::InputFloat("Duration", &trail->duration, 1000.0f);
+		ImGui::Text("Texture");
+		ImGui::SameLine();
+
+		std::string texture_name = trail->trail_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(trail->trail_texture->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(trail->UUID) + "TextureSelector").c_str());
+		if (ImGui::Button(texture_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+		}
+
+		uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource_uuid != 0)
+		{
+			trail->SetTrailTexture(selected_resource_uuid);
+		}
+		selected_resource_uuid = ImGui::ResourceDropper<Texture>();
+		if (selected_resource_uuid != 0)
+		{
+			trail->SetTrailTexture(selected_resource_uuid);
+		}
+	}
 }
 
 void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
