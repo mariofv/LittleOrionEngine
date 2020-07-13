@@ -21,7 +21,6 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton,
 		}
 		float weight = j != ClipType::ACTIVE ? playing_clips[j].current_time / (playing_clips[j].interpolation_time) : 0.0f;
 		float current_percentage = playing_clips[j].current_time / clip->animation_time;
-		//assert(current_percentage <= 1.0f);
 		float current_keyframe = current_percentage * (clip->animation->frames - 1);
 		//Get current Keyframe
 		size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
@@ -119,7 +118,7 @@ bool AnimController::Update()
 
 void AnimController::ApplyAutomaticTransitionIfNeeded()
 {
-	if (!applying_automatic_transition && active_transition->automatic)
+	if (!applying_automatic_transition && active_transition && active_transition->automatic)
 	{
 
 		float animation_time_with_interpolation = playing_clips[ClipType::ACTIVE].current_time + active_transition->interpolation_time;
@@ -129,7 +128,6 @@ void AnimController::ApplyAutomaticTransitionIfNeeded()
 			auto& next_state = state_machine->GetState(active_transition->target_hash);
 			playing_clips[ClipType::NEXT] = { next_state->clip, next_state->speed, 0.0f,true, static_cast<float>(active_transition->interpolation_time) };
 			AdjustInterpolationTimes();
-			APP_LOG_INFO("Interpolation time set to: %f", playing_clips[ClipType::NEXT].interpolation_time);
 			applying_automatic_transition = true;
 		}
 	}
@@ -140,7 +138,8 @@ void AnimController::AdjustInterpolationTimes()
 	if (!playing_clips[ClipType::ACTIVE].clip->loop)
 	{
 		float time_left = playing_clips[ClipType::ACTIVE].clip->animation_time - playing_clips[ClipType::ACTIVE].current_time;	
-		playing_clips[ClipType::NEXT].interpolation_time = min(active_transition->interpolation_time, time_left);
+		playing_clips[ClipType::NEXT].interpolation_time = max(min(active_transition->interpolation_time,  time_left), 0.0f);
+		APP_LOG_INFO("Interpolation time set to: %f", playing_clips[ClipType::NEXT].interpolation_time);
 	}
 
 }
