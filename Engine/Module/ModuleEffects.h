@@ -6,7 +6,10 @@
 
 class ComponentBillboard;
 class ComponentParticleSystem;
+class ComponentTrail;
 class PanelConfiguration;
+
+class GameObject;
 
 class ModuleEffects : public Module
 {
@@ -22,6 +25,9 @@ public:
 	ComponentParticleSystem* CreateComponentParticleSystem();
 	void RemoveComponentParticleSystem(ComponentParticleSystem* particle_system_to_remove);
 
+	ComponentTrail* CreateComponentTrail(GameObject* owner);
+	void RemoveComponentTrail(ComponentTrail* trail_to_remove);
+
 private:
 	bool render_particles = true;
 	std::vector<ComponentBillboard*> billboards;
@@ -29,6 +35,8 @@ private:
 
 	std::vector<ComponentParticleSystem*> particle_systems;
 	std::vector<ComponentParticleSystem*> particle_systems_to_render;
+
+	std::vector<ComponentTrail*> trails;
 	friend PanelConfiguration;
 };
 

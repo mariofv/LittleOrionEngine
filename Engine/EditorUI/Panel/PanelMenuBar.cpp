@@ -172,6 +172,25 @@ void PanelMenuBar::ShowGameObjectMenu()
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Effects"))
+		{
+			if (ImGui::Selectable("Particle System"))
+			{
+				GameObject* created_game_object = App->scene->CreateGameObject();
+				created_game_object->name = "Particle System";
+				created_game_object->CreateComponent(Component::ComponentType::PARTICLE_SYSTEM);
+			}
+
+			if (ImGui::Selectable("Trail"))
+			{
+				GameObject* created_game_object = App->scene->CreateGameObject();
+				created_game_object->name = "Trail";
+				created_game_object->CreateComponent(Component::ComponentType::TRAIL);
+			}
+
+			ImGui::EndMenu();
+		}
+
 		if (ImGui::Selectable("Camera"))
 		{
 			GameObject* created_game_object = App->scene->CreateGameObject();

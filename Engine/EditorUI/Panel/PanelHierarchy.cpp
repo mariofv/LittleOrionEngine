@@ -456,6 +456,13 @@ void PanelHierarchy::ShowComponentObjectCreationMenu(GameObject* game_object) co
 			ComponentParticleSystem* particle_system_component = static_cast<ComponentParticleSystem*>(created_game_object->CreateComponent(Component::ComponentType::PARTICLE_SYSTEM));
 		}
 
+		if (ImGui::Selectable("Trail"))
+		{
+			GameObject* created_game_object = App->scene->CreateGameObject();
+			created_game_object->name = "Trail";
+			created_game_object->CreateComponent(Component::ComponentType::TRAIL);
+		}
+
 		ImGui::EndMenu();
 	}
 

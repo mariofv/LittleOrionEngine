@@ -220,7 +220,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	
 	App->effects->Render();
 
-	
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
 	
@@ -280,7 +279,11 @@ void ModuleRender::SetListOfMeshesToRender(const ComponentCamera* camera)
 			continue;
 		}
 
-		if (mesh_to_render->material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT || mesh_to_render->material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
+		if (
+			mesh_to_render->material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT 
+			|| mesh_to_render->material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID
+			|| mesh_to_render->material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING
+		)
 		{
 			mesh_to_render->owner->aabb.bounding_box;
 			float3 center_bounding_box = (mesh_to_render->owner->aabb.bounding_box.minPoint + mesh_to_render->owner->aabb.bounding_box.maxPoint) / 2;
@@ -288,6 +291,7 @@ void ModuleRender::SetListOfMeshesToRender(const ComponentCamera* camera)
 			transparent_mesh_to_render.push_back(std::make_pair(distance, mesh_to_render));
 			transparent_mesh_to_render.sort([](const ipair & a, const ipair & b) { return a.first > b.first; });
 		}
+
 		if (mesh_to_render->material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)
 		{
 			mesh_to_render->owner->aabb.bounding_box;
