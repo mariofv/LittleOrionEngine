@@ -35,6 +35,11 @@ public:
 
 		float4x4 model;
 		float4x4 geometric_space;
+
+		float inital_random_orbit;
+		float float2;
+		float float3;
+		float float4;
 		/*
 		if you add a parameter here you have to put the equivalent in the shader particles.vs
 		Also you will need to add block of 4 floats, so if you add a float like this
@@ -99,6 +104,8 @@ public:
 	ENGINE_API void Stop();
 	ENGINE_API void Pause();
 
+	void OrbitX(float angle, Particle& particle);
+
 private:
 	unsigned int GetParticlesSystemVariation();
 	bool emitting = false;
@@ -128,8 +135,8 @@ public:
 	bool active = true;
 
 	//size
-	int min_size_of_particle = 2;
-	int max_size_of_particle = 10;
+	float min_size_of_particle = 0.2f;
+	float max_size_of_particle = 0.2f;
 	float2 particles_size = float2(0.2f);
 	bool size_random = false;
 	bool change_size = false;
@@ -167,6 +174,7 @@ public:
 	float color_fade_time = 1.0F;
 
 	bool fade = false;
+	bool orbit = false;
 	float fade_time = 1.0F;
 
 	//Velocity over time
