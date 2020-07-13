@@ -58,11 +58,11 @@ public:
 	void Copy(Component* component_to_copy) const override;
 	void Delete() override;
 
-	void UpdateTrail();
+	void Update() override;
 	void SetTrailTexture(uint32_t texture_uuid);
 	void GetPerpendiculars();
 
-	void Render(std::vector<Vertex>& to_render);
+	void Render();
 	void ChangeTexture(uint32_t texture_uuid);
 
 	void SpecializedSave(Config& config) const override;
@@ -100,6 +100,7 @@ public:
 
 	//Renderer
 	float* trail_renderer_vertices = nullptr;
+	std::vector<Vertex> vertices;
 	std::shared_ptr<Texture> trail_texture = nullptr;
 
 private:

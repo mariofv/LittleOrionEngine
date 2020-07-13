@@ -23,6 +23,7 @@ ComponentTrail::ComponentTrail(GameObject * owner) : Component(owner, ComponentT
 }
 ComponentTrail::~ComponentTrail()
 {
+	vertices.empty();
 	if (trail_vbo != 0)
 	{
 		glUnmapBuffer(GL_ARRAY_BUFFER);
@@ -59,18 +60,22 @@ void ComponentTrail::Init()
 	glBindVertexArray(0);
 }
 
-void ComponentTrail::UpdateTrail()
+void ComponentTrail::Update()
 {
+	if (!active)
+	{
+		return;
+	}
 	float3 gameobject_position = owner->transform.GetGlobalTranslation(); //current GO position
 
 	if (gameobject_init_position.x != gameobject_position.x || gameobject_init_position.y != gameobject_position.y || gameobject_init_position.z != gameobject_position.z)//if user moves Trail GO
 		on_transform_change = true;
-	
+
 	if (on_transform_change)//always gets in this is wrong ! TODO create an event here/ merge with event system
 	{
 		head_point = TrailPoint(gameobject_position, width, duration); //If there is movement, update the head point on the GO's position
 		head_point.life = duration; // If the GO moves, we reset the life of the head point
-		
+
 		if (head_point.position.Distance(last_point.position) >= min_distance) //If the head point is at a greater distance than the distance we specified...
 		{
 			TrailPoint next_point(head_point.position, width, duration);
@@ -114,9 +119,8 @@ void  ComponentTrail::GetPerpendiculars()
 		previous_point = current_point;
 	}
 
-	std::vector<Vertex> vertices;
-	
 	unsigned int j = 0;
+	vertices.clear();
 	mesh_index = 1 / (float)test_points.size(); // to coordinate texture
 	for (auto pair = mesh_points.begin(); pair < mesh_points.end(); ++pair)
 	{
@@ -150,10 +154,9 @@ void  ComponentTrail::GetPerpendiculars()
 			mesh_points.erase(pair);
 		}
 	}
-	Render(vertices);
 }
 
-void ComponentTrail::Render(std::vector<Vertex>& to_render)
+void ComponentTrail::Render()
 {
 	if (active)
 	{
@@ -165,8 +168,8 @@ void ComponentTrail::Render(std::vector<Vertex>& to_render)
 
 		//use glBufferMap to obtain a pointer to buffer data
 		glBindBuffer(GL_ARRAY_BUFFER, trail_vbo);
-		trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(Vertex) *  to_render.size(), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);// 6 indices
-		memcpy(trail_renderer_vertices, to_render.data(), to_render.size() * sizeof(Vertex));
+		trail_renderer_vertices = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, sizeof(Vertex) *  vertices.size(), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);// 6 indices
+		memcpy(trail_renderer_vertices, vertices.data(), vertices.size() * sizeof(Vertex));
 		glUnmapBuffer(GL_ARRAY_BUFFER);
 
 		glActiveTexture(GL_TEXTURE0);
@@ -178,7 +181,7 @@ void ComponentTrail::Render(std::vector<Vertex>& to_render)
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		glUniform4fv(glGetUniformLocation(shader_program, "color"), 1, (float*)color);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, to_render.size());
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size());
 		glBindVertexArray(0);
 
 		glUseProgram(0);

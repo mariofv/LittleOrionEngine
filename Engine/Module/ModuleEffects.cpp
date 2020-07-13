@@ -47,7 +47,7 @@ void ModuleEffects::Render()
 
 	for (auto &trail : trails)
 	{
-		trail->UpdateTrail();
+		trail->Render();
 	}
 
 	glDisable(GL_BLEND);
