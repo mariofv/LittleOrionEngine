@@ -65,6 +65,7 @@ public:
 private:
 	std::shared_ptr<Transition> active_transition;
 	bool apply_transition = false;
+	bool applying_automatic_transition = false;
 	std::shared_ptr<State> active_state = nullptr;
 	friend class PanelComponent;
 	friend class PanelStateMachine;
