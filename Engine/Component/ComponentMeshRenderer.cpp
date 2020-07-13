@@ -105,11 +105,6 @@ void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 	AddAmbientOclusionUniforms(shader_program);
 	AddNormalUniforms(shader_program);
 	AddLightMapUniforms(shader_program);
-
-	if (owner->name == "Player1_Mesh")
-	{
-		int x = 3;
-	}
 	
 	if (material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING)
 	{
