@@ -249,7 +249,9 @@ vec3 GetEmissiveColor(const Material mat, const vec2 texCoord)
 
 vec3 GetNormalMap(const Material mat, const vec2 texCoord)
 {
-	return normalize(texture(mat.normal_map, texCoord).rgb*2.0-1.0);
+	vec3 normal_map = texture(mat.normal_map, texCoord).rgb*2.0-1.0 ;
+	normal_map.g = -normal_map.g;
+	return normalize(normal_map.rgb);
 }
 vec3 GetLiquidMap(const Material mat, const vec2 texCoord)
 {

@@ -161,7 +161,7 @@ void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE7);
 	BindTexture(Material::MaterialTextureType::NORMAL);
-	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 4);
+	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 7);
 }
 
 void ComponentMeshRenderer::AddLightMapUniforms(unsigned int shader_program) const
