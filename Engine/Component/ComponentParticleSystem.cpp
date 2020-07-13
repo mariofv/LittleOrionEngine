@@ -170,7 +170,7 @@ void ComponentParticleSystem::Render()
 
 	BROFILER_CATEGORY("Particle Render", Profiler::Color::OrangeRed);
 
-	if (active && playing && billboard->billboard_texture)
+	if (active && playing && billboard->billboard_texture != nullptr && billboard->billboard_texture->initialized)
 	{
 		unsigned int variation = GetParticlesSystemVariation();
 		shader_program = App->program->UseProgram("Particles", variation);
