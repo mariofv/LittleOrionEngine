@@ -28,6 +28,7 @@ class ComponentParticleSystem;
 class ComponentSphereCollider;
 class ComponentText;
 class ComponentTransform;
+class ComponentTrail;
 class ComponentScript;
 class ComponentSpriteMask;
 class GameObject;
@@ -62,6 +63,7 @@ public:
 	void ShowComponentAudioListenerWindow(ComponentAudioListener* component_audio_listener);
 	void ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source);
 	void ShowComponentParticleSystem(ComponentParticleSystem* particle_system);
+	void ShowComponentTrail(ComponentTrail* trail);
 
 	void ShowAddNewComponentButton();
 	bool ShowCommonComponentWindow(Component* component);

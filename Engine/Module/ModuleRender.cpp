@@ -220,7 +220,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	
 	App->effects->Render();
 
-	
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
 	

@@ -152,7 +152,8 @@ void ComponentImage::SetTextureToRender(uint32_t texture_uuid)
 {
 	this->texture_uuid = texture_uuid;
 	texture_to_render = App->resources->Load<Texture>(texture_uuid);
-	texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
+	if(texture_to_render != nullptr)
+		texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
 }
 
 void ComponentImage::SetColor(float4 color)
