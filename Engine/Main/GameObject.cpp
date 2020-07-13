@@ -259,7 +259,10 @@ void GameObject::PreUpdate()
 void GameObject::Update()
 {
 	BROFILER_CATEGORY("GameObject Update", Profiler::Color::Green);
-
+	if (!active)
+	{
+		return;
+	}
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
 		if (components[i]->type != Component::ComponentType::SCRIPT)

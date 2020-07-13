@@ -312,7 +312,8 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject* game_object)
 				bool belongs_to_list = false;
 				for (auto go : App->editor->selected_game_objects)
 				{
-					if (go->UUID == game_object->UUID) {
+					if (go->UUID == game_object->UUID) 
+					{
 						belongs_to_list = true;
 					}
 				}
@@ -334,10 +335,26 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject* game_object)
 			{
 				game_object->MoveUpInHierarchy();
 			}
+			
+			if (ImGui::Selectable("Sort by name"))
+			{
+				App->scene->SortGameObjectChilds(App->scene->GetRoot());
+			}
+
 			if (ImGui::Selectable("Move Down"))
 			{
 				game_object->MoveDownInHierarchy();
 			}
+
+			if (ImGui::Selectable("Select Children"))
+			{
+				App->editor->selected_game_objects.clear();
+				for (auto go : game_object->children) 
+				{
+					App->editor->selected_game_objects.push_back(go);
+				}
+			}
+
 			if (game_object->prefab_reference != nullptr && ImGui::Selectable("Unpack Prefab"))
 			{
 				GameObject * prefab_parent = game_object->GetPrefabParent();

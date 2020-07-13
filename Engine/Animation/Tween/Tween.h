@@ -50,12 +50,12 @@ public:
 	//void OnUpdate();
 	//void OnComplete();
 
-	ENGINE_API static Tween* LOTranslate(ComponentTransform2D*, float2, float);
-	ENGINE_API static Tween* LORotate(ComponentTransform2D*, float, float);
-	ENGINE_API static Tween* LOScale(ComponentTransform2D*, float, float);
-	ENGINE_API static Tween* LOColor(ComponentImage*, float4, float);
-	ENGINE_API Tween* SetEase(EaseType);
-	ENGINE_API Tween* SetLoops(int, TweenLoop);
+	ENGINE_API static Tween* LOTranslate(ComponentTransform2D* transform, const float2 desired_position, float time);
+	ENGINE_API static Tween* LORotate(ComponentTransform2D* transform, const float desired_rotation, float time);
+	ENGINE_API static Tween* LOScale(ComponentTransform2D* transform, const float3 desired_scale, float time);
+	ENGINE_API static Tween* LOColor(ComponentImage* image, const float4 desired_color, float time);
+	ENGINE_API Tween* SetEase(EaseType ease);
+	ENGINE_API Tween* SetLoops(const int loops, TweenLoop loop_type);
 
 private:
 	float start_time = 0.0f;
@@ -65,6 +65,10 @@ private:
 	float2 initial_vector = float2::zero;
 	float2 tweened_vector = float2::zero;
 	float2 desired_vector = float2::zero;
+	
+	float3 initial_scale = float3::zero;
+	float3 tweened_scale = float3::zero;
+	float3 desired_scale = float3::zero;
 
 	float4 initial_color = float4::zero;
 	float4 tweened_color = float4::zero;
@@ -84,25 +88,24 @@ private:
 	int loops = 0;
 	int played_times = 0;
 
-	void Update(float);
+	void Update(float delta_time);
 	float UpdateTweenByType();
-	void CheckFinishTween(float);
+	void CheckFinishTween(float delta_time);
 
 	float NormalizedElapsedTime();
 	float EasedTime();
 
 	void ResetTween();
-	void IncrementTween();
 
-	float Linear(float) const;
-	float SmoothStep(float) const;
-	float EaseInSine(float) const;
-	float Sine(float) const;
-	float EaseOutSine(float) const;
-	float EaseInOutSine(float) const;
-	float EaseInBack(float) const;
-	float EaseOutBack(float) const;
-	float EaseInOutBack(float) const;
+	float Linear(const float time) const;
+	float SmoothStep(const float time) const;
+	float EaseInSine(const float time) const;
+	float Sine(const float time) const;
+	float EaseOutSine(const float time) const;
+	float EaseInOutSine(const float time) const;
+	float EaseInBack(const float time) const;
+	float EaseOutBack(const float time) const;
+	float EaseInOutBack(const float time) const;
 
 	friend class TweenSequence;
 };

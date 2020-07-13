@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\ComponentAudioListener.h" />
+    <ClInclude Include="Engine\Component\ComponentTrail.h" />
     <ClInclude Include="Engine\Log\EngineSink.h" />
     <ClInclude Include="Engine\Actions\EditorActionAddMultipleGO.h" />
     <ClInclude Include="Engine\Actions\EditorActionDeleteMultipleGO.h" />
@@ -170,7 +171,6 @@
     <ClInclude Include="Engine\Component\ComponentSphereCollider.h" />
     <ClInclude Include="Engine\Component\ComponentAudioSource.h" />
     <ClInclude Include="Engine\Component\ComponentSpriteMask.h" />
-    <ClInclude Include="Engine\Component\ComponentTrail.h" />
     <ClInclude Include="Engine\DLL\DLLManager.h" />
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h" />
