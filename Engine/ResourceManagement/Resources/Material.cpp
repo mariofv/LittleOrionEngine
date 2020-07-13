@@ -232,3 +232,8 @@ unsigned int Material::GetShaderVariation() const
 
 	return variation;
 }
+
+void Material::SetDissolveProgress(float progress)
+{
+	dissolve_progress = progress;
+}

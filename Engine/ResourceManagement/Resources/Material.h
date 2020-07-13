@@ -55,6 +55,8 @@ public:
 	void UpdateLiquidProperties();
 	unsigned int GetShaderVariation() const;
 
+	ENGINE_API void SetDissolveProgress(float progress);
+
 
 public:
 	static const size_t MAX_MATERIAL_TEXTURE_TYPES = static_cast<size_t>(MaterialTextureType::UNKNOWN);
