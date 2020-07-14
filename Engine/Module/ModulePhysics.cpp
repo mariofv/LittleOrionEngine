@@ -78,22 +78,22 @@ update_status ModulePhysics::Update()
 		}
 	}
 
-	//for(auto collider_a : colliders)
-	//{
-	//	std::vector<CollisionInformation> collisions;
-	//	for (auto collider_b : colliders)
-	//	{
-	//		if (collider_a != collider_b && collider_a->body && collider_b->body)
-	//		{
-	//			CollisionInformation collision_info = collider_a->DetectCollisionWith(collider_b);
-	//			if (collision_info.collider)
-	//			{
-	//				collisions.push_back(collision_info);
-	//			}
-	//		}
-	//	}
-	//	App->event_manager->Publish(new CollisionEvent(collider_a->owner, collisions));
-	//}
+	for(auto collider_a : colliders)
+	{
+		std::vector<CollisionInformation> collisions;
+		for (auto collider_b : colliders)
+		{
+			if (collider_a != collider_b && collider_a->body && collider_b->body)
+			{
+				CollisionInformation collision_info = collider_a->DetectCollisionWith(collider_b);
+				if (collision_info.collider)
+				{
+					collisions.push_back(collision_info);
+				}
+			}
+		}
+		App->event_manager->Publish(new CollisionEvent(collider_a->owner, collisions));
+	}
 	
 	float ms2;
 	ms2 = physics_timer->Read();
