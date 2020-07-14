@@ -1,6 +1,8 @@
 #ifndef _MODULERESOURCEMANAGER_H_
 #define _MODULERESOURCEMANAGER_H_
 
+#include "Log/EngineLog.h"
+
 #include "Main/Application.h"
 #include "Module.h"
 #include "ModuleFileSystem.h"

@@ -5,6 +5,7 @@
 #include "Filesystem/PathAtlas.h"
 #include "Helper/BuildOptions.h"
 #include "Helper/Config.h"
+#include "Log/EngineLog.h"
 
 #include "Main/Application.h"
 #include "ModuleActions.h"

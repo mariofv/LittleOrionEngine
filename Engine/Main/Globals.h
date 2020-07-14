@@ -7,8 +7,6 @@
 #define ENGINE_API __declspec(dllimport)
 #endif
 
-#include "Log/EngineLog.h"
-
 #include <imgui.h>
 
 #include <windows.h>

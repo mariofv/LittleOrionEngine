@@ -1,7 +1,7 @@
 #include "Path.h"
 
 #include "File.h"
-
+#include "Log/EngineLog.h"
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 

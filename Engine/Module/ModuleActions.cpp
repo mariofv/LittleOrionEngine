@@ -16,6 +16,7 @@
 
 #include "EditorUI/Panel/PanelPopups.h"
 #include "Filesystem/PathAtlas.h"
+#include "Log/EngineLog.h"
 #include "ModuleEditor.h"
 #include "ModuleInput.h"
 #include "ModuleScene.h"

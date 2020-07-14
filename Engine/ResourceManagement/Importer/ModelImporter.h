@@ -63,25 +63,7 @@ public:
 	AssimpStream(const unsigned int severety) :severety(severety) {}
 	~AssimpStream() = default;
 
-	void write(const char* message)
-	{
-		switch (severety)
-		{
-		case Assimp::Logger::Debugging:
-			MYASSIMP_LOG_DEBUG("%s", message);
-			break;
-		case Assimp::Logger::Info:
-			MYASSIMP_LOG_INFO("%s", message);
-			break;
-		case Assimp::Logger::Err:
-			MYASSIMP_LOG_ERROR("%s", message);
-			break;
-		case Assimp::Logger::Warn:
-			MYASSIMP_LOG_WARNING("%s", message); 
-			break;
-
-		}
-	}
+	void write(const char* message);
 
 public:
 	unsigned int severety = 0;
