@@ -39,17 +39,18 @@ public:
 
 	void Enable();
 
+	std::string awake_event;
+	bool play_on_awake = false;
+
 
 private:
 	AkTransform source_transform;
 	AkGameObjectID gameobject_source = 0;
 	std::shared_ptr<SoundBank> soundbank;
 	std::unordered_map<AkUInt32,AkPlayingID> event_playing_ids;
+	std::string last_played_event;	
 
-	std::string last_played_event;
-	std::string awake_event;
 
-	bool play_on_awake = false;
 	bool sound_3d = false;
 	float volume = 1;
 	friend class PanelComponent;

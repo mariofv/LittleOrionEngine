@@ -1219,7 +1219,7 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 		if (component_audio_source->soundbank)
 		{
 			//static std::string soundbank;
-			ImGui::InputText("Event Name ", &component_audio_source->awake_event);
+			ImGui::InputText("Awake Event Name ", &component_audio_source->awake_event);
 			if (ImGui::Button("Play Event"))
 			{
 				component_audio_source->PlayEvent(component_audio_source->awake_event);
