@@ -106,6 +106,13 @@ update_status ModuleResourceManager::PreUpdate()
 
 
 #if MULTITHREADING
+
+	if(loading_thread_communication.restore_time_scale)
+	{
+		App->time->time_scale = 1.f;
+		loading_thread_communication.restore_time_scale = false;
+	}
+
 	if(!processing_resources_queue.Empty())
 	{
 		LoadingJob load_job;
@@ -140,7 +147,6 @@ update_status ModuleResourceManager::PreUpdate()
 		}
 
 		loading_thread_communication.loading = false;
-		App->time->time_scale = 1.f;
 		
 		if(App->time->isGameRunning())
 		{
@@ -148,6 +154,7 @@ update_status ModuleResourceManager::PreUpdate()
 			App->scene->StopSceneTimer();
 		}
 
+		loading_thread_communication.restore_time_scale = true;
 	}
 
 #endif
