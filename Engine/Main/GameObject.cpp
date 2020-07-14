@@ -1,7 +1,10 @@
 #include "GameObject.h"
+
 #include "Application.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
 #include "Helper/Config.h"
+#include "Log/EngineLog.h"
+
 #include "Module/ModuleAnimation.h"
 #include "Module/ModuleAudio.h"
 #include "Module/ModuleEffects.h"

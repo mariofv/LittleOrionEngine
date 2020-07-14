@@ -9,6 +9,8 @@
 #include <AK/SoundEngine/Common/AkModule.h>  
 
 #include <memory>
+#include <vector>
+
 class SoundBank;
 class ComponentAudioListener;
 class ComponentAudioSource;
