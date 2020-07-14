@@ -80,7 +80,7 @@ void ModuleSpacePartitioning::InsertAABBTree(GameObject* game_object)
 	ComponentMeshRenderer* object_mesh = static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER));
 	if (object_mesh != nullptr)
 	{
-		ol_abbtree->Insert(game_object);
+		//ol_abbtree->Insert(game_object);
 	}
 }
 
@@ -89,7 +89,7 @@ void ModuleSpacePartitioning::RemoveAABBTree(GameObject* game_object)
 	ComponentMeshRenderer* object_mesh = static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER));
 	if (object_mesh != nullptr)
 	{
-		ol_abbtree->Remove(game_object);
+		//ol_abbtree->Remove(game_object);
 	}
 }
 
