@@ -52,6 +52,7 @@ public:
 	void CommonUniforms(const GLuint &shader_program);
 
 	void ChangeTexture(uint32_t texture_uuid);
+	void ChangeTextureEmissive(uint32_t texture_uuid);
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
 
 
@@ -73,12 +74,15 @@ public:
 	int current_sprite_x = 0;
 	int current_sprite_y = 0;
 	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	int emissive_intensity = 1;
 private:
 	GLuint shader_program;
 	GLuint vbo, vao, ebo;
 
     uint32_t texture_uuid = 0;
 	std::shared_ptr<Texture> billboard_texture = nullptr;
+	uint32_t texture_emissive_uuid = 0;
+	std::shared_ptr<Texture> billboard_texture_emissive = nullptr;
 	
 	//color
 
@@ -95,7 +99,7 @@ private:
 	int animation_time = 1000;
 
 	AnimationType animation_type = AnimationType::CONSTANT;
-	bool playing = false;
+	bool playing = true;
 
 	friend class PanelComponent;
 	friend class PanelParticleSystem;

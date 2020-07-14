@@ -11,12 +11,14 @@ layout (std140) uniform Matrices
 struct Billboard
 {
   sampler2D texture;
+  sampler2D texture_emissive;
   vec4 color;
 
   int num_columns;
   int num_rows;
   int current_sprite_x;
   int current_sprite_y;
+  int emissive_intensity;
 };
 uniform Billboard billboard;
 

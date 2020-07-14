@@ -202,6 +202,8 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 		App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
 	}
 
+
+
 	uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
 	if (selected_resource_uuid != 0)
 	{
@@ -211,6 +213,26 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 	if (selected_resource_uuid != 0)
 	{
 		billboard->ChangeTexture(selected_resource_uuid);
+	}
+
+	ImGui::Text("TextureEmissive");
+	ImGui::SameLine();
+	texture_name = billboard->billboard_texture_emissive == nullptr ? "None ( Emissive Texture)" : App->resources->resource_DB->GetEntry(billboard->billboard_texture_emissive->GetUUID())->resource_name;
+	element_id = ImGui::GetID((std::to_string(billboard->UUID) + "TextureEmissiveSelector").c_str());
+	if (ImGui::Button(texture_name.c_str()))
+	{
+		App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+	}
+
+	selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+	if (selected_resource_uuid != 0)
+	{
+		billboard->ChangeTextureEmissive(selected_resource_uuid);
+	}
+	selected_resource_uuid = ImGui::ResourceDropper<Texture>();
+	if (selected_resource_uuid != 0)
+	{
+		billboard->ChangeTextureEmissive(selected_resource_uuid);
 	}
 
 	ImGui::ColorEdit4("Color", billboard->color);

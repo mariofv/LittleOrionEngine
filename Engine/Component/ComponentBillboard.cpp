@@ -89,6 +89,7 @@ void ComponentBillboard::Update()
 		float loop_progress = (float)time_since_start / animation_time;
 
 		ComputeAnimationFrame(loop_progress);
+		//emissive_intensity = sin(time_since_start);
 	}
 }
 
@@ -158,6 +159,11 @@ void ComponentBillboard::CommonUniforms(const GLuint &shader_program)
 	glBindTexture(GL_TEXTURE_2D, billboard_texture->opengl_texture);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.texture"), 0);
 
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, billboard_texture_emissive->opengl_texture);
+	glUniform1i(glGetUniformLocation(shader_program, "billboard.texture_emissive"), 1);
+	glUniform1i(glGetUniformLocation(shader_program, "billboard.emissive_intensity"), emissive_intensity);
+
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.num_rows"), num_sprisheet_rows);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.num_columns"), num_sprisheet_columns);
 }
@@ -192,6 +198,7 @@ void ComponentBillboard::Delete()
 void ComponentBillboard::SpecializedSave(Config& config) const
 {
 	config.AddUInt(texture_uuid, "TextureUUID");
+	config.AddUInt(texture_emissive_uuid, "TextureEmissiveUUID");
 	config.AddFloat(width, "Width");
 	config.AddFloat(height, "Height");
 
@@ -210,6 +217,9 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 {
 	texture_uuid = config.GetUInt32("TextureUUID", 0);
 	ChangeTexture(texture_uuid);
+
+	texture_emissive_uuid = config.GetUInt32("TextureEmissiveUUID", 0);
+	ChangeTextureEmissive(texture_emissive_uuid);
 	
 	width = config.GetFloat("Width", 1.0f);
 	height = config.GetFloat("Height", 1.0f);
@@ -239,6 +249,16 @@ void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)
 		billboard_texture = App->resources->Load<Texture>(texture_uuid);
 	}
 }
+
+void ComponentBillboard::ChangeTextureEmissive(uint32_t texture_uuid)
+{
+	if (texture_uuid != 0)
+	{
+		this->texture_emissive_uuid = texture_uuid;
+		billboard_texture_emissive = App->resources->Load<Texture>(texture_uuid);
+	}
+}
+
 
 unsigned int ComponentBillboard::GetBillboardVariation()
 {
