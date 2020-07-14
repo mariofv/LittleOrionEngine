@@ -15,9 +15,6 @@ public:
 	void ShowMaterialTextureMap(std::shared_ptr<Material> material, Material::MaterialTextureType type);
 
 private:
-	std::string GetTypeName(Material::MaterialTextureType type);
-
-private:
 	bool modified_by_user = false;
 };
 

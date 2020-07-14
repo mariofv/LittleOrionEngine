@@ -75,7 +75,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Libraries/include/spdlog;./Engine/;./Libraries/include/cr;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/recast;./Libraries/include/par_shapes;./Libraries/include/BlueprintUtilities;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PreprocessorDefinitions>_MBCS;WINDOWS_IGNORE_PACKING_MISMATCH;DEBUG;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;ENGINE_EXPORTS;WINDOWS_IGNORE_PACKING_MISMATCH;DEBUG;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeaderFile />
@@ -136,7 +136,7 @@
       <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Libraries/include/spdlog;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/recast;./Libraries/include/cr;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include/BlueprintUtilities;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>_MBCS;GAME;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;ENGINE_EXPORTS;GAME;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
