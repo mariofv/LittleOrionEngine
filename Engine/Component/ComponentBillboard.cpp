@@ -32,6 +32,7 @@ ComponentBillboard::~ComponentBillboard()
 void ComponentBillboard::InitData()
 {
 	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
+	ChangeTextureEmissive(texture_emissive_uuid);
 
 	float vertices[20] =
 	{
@@ -272,6 +273,12 @@ void ComponentBillboard::ChangeTextureEmissive(uint32_t texture_uuid)
 	{
 		this->texture_emissive_uuid = texture_uuid;
 		billboard_texture_emissive = App->resources->Load<Texture>(texture_uuid);
+		emissive_intensity = 1;
+	}
+	else
+	{
+		billboard_texture_emissive = App->resources->Load<Texture>(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
+		emissive_intensity = 0;
 	}
 }
 
