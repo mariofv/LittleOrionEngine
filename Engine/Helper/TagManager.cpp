@@ -3,6 +3,7 @@
 #include "Filesystem/File.h"
 #include "Filesystem/PathAtlas.h"
 #include "Helper/Config.h"
+#include "Log/EngineLog.h"
 
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"

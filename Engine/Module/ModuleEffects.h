@@ -3,6 +3,7 @@
 
 #include "Module.h"
 
+#include <vector>
 
 class ComponentBillboard;
 class ComponentParticleSystem;

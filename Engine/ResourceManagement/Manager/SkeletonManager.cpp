@@ -33,6 +33,8 @@ std::shared_ptr<Skeleton> SkeletonManager::Load(uint32_t uuid, const FileData& r
 		cursor += name_size;
 		memcpy(&joint.transform_global, cursor, sizeof(float4x4));
 		cursor += sizeof(float4x4);
+		memcpy(&joint.transform_local, cursor, sizeof(float4x4));
+		cursor += sizeof(float4x4);
 		memcpy(&joint.parent_index, cursor,sizeof(uint32_t));
 		cursor += sizeof(uint32_t);
 	}

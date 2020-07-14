@@ -59,6 +59,10 @@ StateMachine & StateMachine::operator=(const StateMachine & state_machine_to_cop
 
 std::shared_ptr<State> StateMachine::GetDefaultState() const
 {
+	if (states.size() == 0)
+	{
+		return nullptr;
+	}
 	if (default_state == 0)
 	{
 		return states[0];

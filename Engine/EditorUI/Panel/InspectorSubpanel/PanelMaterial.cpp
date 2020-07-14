@@ -102,6 +102,7 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 		if (material->material_type == Material::MaterialType::MATERIAL_DISSOLVING)
 		{
 			ShowMaterialTextureMap(material, Material::MaterialTextureType::DISSOLVED_DIFFUSE);
+			ShowMaterialTextureMap(material, Material::MaterialTextureType::DISSOLVED_EMISSIVE);
 			ShowMaterialTextureMap(material, Material::MaterialTextureType::NOISE);
 			ImGui::DragFloat("Dissolve Progress", &material->dissolve_progress, 0.01f, 0.f, 1.f);
 		}
@@ -290,6 +291,10 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Text("Dissolved Diffuse");
 		break;
 
+	case Material::MaterialTextureType::DISSOLVED_EMISSIVE:
+		ImGui::Text("Dissolved Emissive");
+		break;
+
 	case Material::MaterialTextureType::NOISE:
 		ImGui::Text("Noise Map");
 		break;
@@ -304,28 +309,4 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 	ImGui::SameLine();
 	ImGui::Text("Remove Texture");
 	ImGui::PopID();
-}
-
-std::string PanelMaterial::GetTypeName(Material::MaterialTextureType type)
-{
-	switch (type)
-	{
-	case  Material::MaterialTextureType::DIFFUSE:
-		return "Difusse";
-	case  Material::MaterialTextureType::SPECULAR:
-		return "Specular";
-	case  Material::MaterialTextureType::EMISSIVE:
-		return "Emissive";
-	case  Material::MaterialTextureType::OCCLUSION:
-		return "Oclusion";
-	case  Material::MaterialTextureType::NORMAL:
-		return "Normal";
-	case  Material::MaterialTextureType::LIGHTMAP:
-		return "Lightmap";
-	case  Material::MaterialTextureType::LIQUID:
-		return "Liquid";
-
-	default:
-		return "";
-	}
 }

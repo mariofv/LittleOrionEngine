@@ -1,6 +1,7 @@
 #include "ModuleTexture.h"
 
 #include "Filesystem/Path.h"
+#include "Log/EngineLog.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"

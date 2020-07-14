@@ -35,7 +35,6 @@ FileData MaterialImporter::ExtractMaterialFromAssimp(const aiMaterial* assimp_me
 			assimp_mesh_material->GetTexture(type, j, &file, &mapping, 0);
 			uint32_t material_texture_uuid = ImportMaterialTexture(file.data, material_file_folder_path);
 
-			Metafile* metafile = App->resources->resource_DB->GetEntry(material_texture_uuid);
 			if (material_texture_uuid != 0)
 			{
 				switch (type)
@@ -116,6 +115,11 @@ uint32_t MaterialImporter::ImportMaterialTexture(const std::string& texture_desc
 	while ((pos = sanitazed_string.find("\\", pos)) != std::string::npos) {
 		sanitazed_string.replace(pos, std::string("\\").length(), "/");
 		pos += std::string("/").length();
+	}
+
+	if (sanitazed_string.empty())
+	{
+		return 0;
 	}
 
 	RESOURCES_LOG_INFO("Loading material texture in described path %s.", sanitazed_string.c_str());

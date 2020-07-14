@@ -1,5 +1,6 @@
 #include "ComponentAudioSource.h"
 
+#include "Log/EngineLog.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleAudio.h"

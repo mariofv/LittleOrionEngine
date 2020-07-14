@@ -119,6 +119,10 @@ void PanelProjectExplorer::InitResourceExplorerDockspace()
 
 void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 {
+	if (!App->resources->first_import_completed)
+	{
+		return;
+	}
 	for (auto & path_child : path.children)
 	{
 		if (path_child->IsDirectory())
@@ -615,12 +619,12 @@ void PanelProjectExplorer::FilesDrop() const
 bool PanelProjectExplorer::IsOneOfMyChildrens(Path* path) const
 {
 	bool found = false;
-	for (auto& path : path->children)
+	for (auto& child : path->children)
 	{
-		found = std::find(path->children.begin(), path->children.end(), selected_folder) != path->children.end() || path == selected_folder;
-		if (!found && path->children.size() > 0)
+		found = std::find(child->children.begin(), child->children.end(), selected_folder) != child->children.end() || child == selected_folder;
+		if (!found && child->children.size() > 0)
 		{
-			found = IsOneOfMyChildrens(path);
+			found = IsOneOfMyChildrens(child);
 		}
 		if (found)
 		{

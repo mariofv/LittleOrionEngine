@@ -1,6 +1,8 @@
 #ifndef _MODULERESOURCEMANAGER_H_
 #define _MODULERESOURCEMANAGER_H_
 
+#include "Log/EngineLog.h"
+
 #include "Main/Application.h"
 #include "Module.h"
 #include "ModuleFileSystem.h"
@@ -138,6 +140,7 @@ private:
 	std::shared_ptr<Resource> RetrieveFromCacheIfExist(uint32_t uuid) const;
 
 public:
+	bool first_import_completed = false;
 	struct ThreadComunication
 	{
 		mutable std::mutex thread_mutex;
@@ -174,6 +177,7 @@ private:
 	float cache_time = 0;
 	const size_t cache_interval_millis = 15* 1000 ;
 	mutable std::vector<std::shared_ptr<Resource>> resource_cache;
+
 
 	friend class MaterialImporter;
 };

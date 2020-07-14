@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <map>
+#include <vector>
 #include <GL/glew.h>
 
 class Component;
