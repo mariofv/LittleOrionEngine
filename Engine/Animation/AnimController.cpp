@@ -8,11 +8,13 @@
 #include "Helper/Utils.h"
 
 #include <math.h>
-void AnimController::GetClipTransform(uint32_t skeleton_uuid, std::vector<math::float4x4>& pose)
+void AnimController::GetClipTransform(const std::shared_ptr<Skeleton>& skeleton, std::vector<math::float4x4>& pose)
 {
+	pose.resize(skeleton->skeleton.size());
 	for (size_t j = 0; j < playing_clips.size(); j++)
 	{
 		const std::shared_ptr<Clip> clip = playing_clips[j].clip;
+		uint32_t skeleton_uuid = skeleton->GetUUID();
 		if (!clip || clip->skeleton_channels_joints_map.find(skeleton_uuid) == clip->skeleton_channels_joints_map.end())
 		{
 			continue;
@@ -20,47 +22,83 @@ void AnimController::GetClipTransform(uint32_t skeleton_uuid, std::vector<math::
 		float weight = j != ClipType::ACTIVE ? playing_clips[j].current_time / (playing_clips[j].interpolation_time) : 0.0f;
 		float current_percentage = playing_clips[j].current_time / clip->animation_time;
 		float current_keyframe = current_percentage * (clip->animation->frames - 1);
-
+		//Get current Keyframe
 		size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
 		size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
-		if (second_keyframe_index >= clip->animation->frames)
+		if (second_keyframe_index >= clip->animation->frames || first_keyframe_index >= clip->animation->frames)
 		{
 			second_keyframe_index = clip->loop ? 0 : clip->animation->frames - 1;
+			first_keyframe_index = clip->loop ? 0 : clip->animation->frames - 1;
 		}
 		float interpolation_lambda = current_keyframe - std::floor(current_keyframe);
 		const std::vector<Animation::Channel>& current_pose = clip->animation->keyframes[first_keyframe_index].channels;
 		const std::vector<Animation::Channel>& next_pose = clip->animation->keyframes[second_keyframe_index].channels;
+		assert(current_pose.size() == next_pose.size());
 
+
+
+		//Calculate interpolated position
 		auto& joint_channels_map = clip->skeleton_channels_joints_map[skeleton_uuid];
+		assert(joint_channels_map.size() == skeleton->skeleton.size());
 		for (size_t i = 0; i < joint_channels_map.size(); ++i)
 		{
-			size_t joint_index = joint_channels_map[i];
-			if (joint_index < pose.size())
+			float4x4 current_transform = skeleton->skeleton[i].transform_local;
+			
+			size_t channel_index = joint_channels_map[i];
+			if (channel_index < current_pose.size())
 			{
-				const float3& last_translation = current_pose[i].translation;
-				const float3& next_translation = next_pose[i].translation;
+				const float3& last_translation = current_pose[channel_index].translation;
+				const float3& next_translation = next_pose[channel_index].translation;
 
-				const Quat& last_rotation = current_pose[i].rotation;
-				const Quat& next_rotation = next_pose[i].rotation;
+				const Quat& last_rotation = current_pose[channel_index].rotation;
+				const Quat& next_rotation = next_pose[channel_index].rotation;
 
 				float3 position = Utils::Interpolate(last_translation, next_translation, interpolation_lambda);
 				Quat rotation = Utils::Interpolate(last_rotation, next_rotation, interpolation_lambda);
+				current_transform = float4x4::FromTRS(position, rotation, float3::one);
 				if (j != ClipType::ACTIVE)
 				{
-					pose[joint_index] = Utils::Interpolate(pose[joint_index], float4x4::FromTRS(position, rotation, float3::one), weight);
+					pose[i] = Utils::Interpolate(pose[i], current_transform, weight);
 				}
 				else
 				{
-					pose[joint_index] = float4x4::FromTRS(position, rotation, float3::one);
+					pose[i] = current_transform;
 
 				}	
 			}
+			else
+			{
+				pose[i] = current_transform;
+			}
 		}
-
 		if (weight >= 1.0f)
 		{
 			apply_transition = true;
 		}
+	}
+
+}
+
+void AnimController::UpdateAttachedBones(const std::shared_ptr<Skeleton>& skeleton, const std::vector<math::float4x4>& pose)
+{
+	if (attached_bones.empty())
+	{
+		return;
+	}
+	const auto& joint_channels_map = playing_clips[ClipType::ACTIVE].clip->skeleton_channels_joints_map[skeleton->GetUUID()];
+	for (size_t i = 0; i < joint_channels_map.size(); ++i)
+	{
+		size_t joint_index = joint_channels_map[i];
+		for (AttachedBone attached_bones : attached_bones)
+		{
+			if (attached_bones.first == joint_index)
+			{
+				const float4x4& new_model_matrix = pose[joint_index];
+				attached_bones.second->transform.SetTranslation(new_model_matrix.TranslatePart());
+				attached_bones.second->transform.SetRotation(new_model_matrix.TranslatePart());
+			}
+		}
+
 	}
 }
 
@@ -80,7 +118,7 @@ bool AnimController::Update()
 
 void AnimController::ApplyAutomaticTransitionIfNeeded()
 {
-	if (active_transition && active_transition->automatic)
+	if (!applying_automatic_transition && active_transition && active_transition->automatic)
 	{
 
 		float animation_time_with_interpolation = playing_clips[ClipType::ACTIVE].current_time + active_transition->interpolation_time;
@@ -90,6 +128,7 @@ void AnimController::ApplyAutomaticTransitionIfNeeded()
 			auto& next_state = state_machine->GetState(active_transition->target_hash);
 			playing_clips[ClipType::NEXT] = { next_state->clip, next_state->speed, 0.0f,true, static_cast<float>(active_transition->interpolation_time) };
 			AdjustInterpolationTimes();
+			applying_automatic_transition = true;
 		}
 	}
 }
@@ -98,9 +137,11 @@ void AnimController::AdjustInterpolationTimes()
 {
 	if (!playing_clips[ClipType::ACTIVE].clip->loop)
 	{
-		float time_left = playing_clips[ClipType::ACTIVE].clip->animation_time - playing_clips[ClipType::ACTIVE].current_time* playing_clips[ClipType::ACTIVE].speed;	
-		playing_clips[ClipType::NEXT].interpolation_time = min(active_transition->interpolation_time, time_left);
+		float time_left = playing_clips[ClipType::ACTIVE].clip->animation_time - playing_clips[ClipType::ACTIVE].current_time;	
+		playing_clips[ClipType::NEXT].interpolation_time = max(min(active_transition->interpolation_time,  time_left), 0.0f);
+		APP_LOG_INFO("Interpolation time set to: %f", playing_clips[ClipType::NEXT].interpolation_time);
 	}
+
 }
 
 void AnimController::SetStateMachine(uint32_t state_machine_uuid)
@@ -170,6 +211,7 @@ void AnimController::FinishActiveState()
 	playing_clips[ClipType::ACTIVE] = playing_clips[ClipType::NEXT];
 	playing_clips[ClipType::NEXT] = {};
 	apply_transition = false;
+	applying_automatic_transition = false;
 }
 
 void PlayingClip::Update()
@@ -191,3 +233,4 @@ void PlayingClip::Update()
 		}
 	}
 }
+

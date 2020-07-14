@@ -292,7 +292,7 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	}
 
 	//animation 
-	if (billboard->is_spritesheet)
+	if (billboard->is_spritesheet && !tile_random)
 	{
 		float progress = particle.time_passed * 0.001f / particles_life_time;
 		billboard->ComputeAnimationFrame(progress);

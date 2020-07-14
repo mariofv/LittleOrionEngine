@@ -41,7 +41,7 @@ public:
 	void SetMaterial(uint32_t material_uuid);
 	void SetSkeleton(uint32_t skeleton_uuid);
 
-	void UpdatePalette(const std::vector<float4x4> & pose);
+	void UpdatePalette(std::vector<float4x4> & pose);
 
 private:
 	void AddDiffuseUniforms(unsigned int shader_program) const;

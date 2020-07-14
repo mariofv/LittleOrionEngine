@@ -61,6 +61,8 @@ public:
 	void InteractionCreation();
 	void OpenStateMachine(uint32_t state_machine_uuid);
 
+	AnimController* GetHierarchyAnimation();
+
 	void RenderStates();
 	void LeftPanel();
 	void CreateNodeMenu();
@@ -70,7 +72,6 @@ public:
 
 	//debug playing animation
 	AnimController* animation_controller = nullptr;
-	AnimController* animation_controller_in_hierarchy = nullptr;
 
 private:
 	std::vector<NodeInfo*> GetSelectedNodes();
