@@ -81,7 +81,7 @@ public:
 
 	//Color properties
 	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
+	float bloom_intensity = 1.0f;
 	//Render properties
 	int blend_mode; //0 for aplha blend, 1 for addition
 	

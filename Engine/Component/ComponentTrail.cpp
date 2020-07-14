@@ -183,6 +183,8 @@ void ComponentTrail::Render()
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		glUniform4fv(glGetUniformLocation(shader_program, "color"), 1, (float*)color);
+		glUniform1f(glGetUniformLocation(shader_program, "bloom_intensity"), bloom_intensity);
+
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size());
 		glBindVertexArray(0);
 
@@ -242,6 +244,9 @@ void ComponentTrail::Delete()
 void ComponentTrail::SpecializedSave(Config& config) const
 {
 	config.AddUInt(texture_uuid, "TextureUUID");
+	float4 trail_color(color[0], color[1], color[2], color[3]);
+	config.AddColor(trail_color, "Color");
+	config.AddFloat(bloom_intensity, "Bloom_Intensity");
 }
 void ComponentTrail::SpecializedLoad(const Config& config)
 {
@@ -250,4 +255,16 @@ void ComponentTrail::SpecializedLoad(const Config& config)
 	texture_uuid = config.GetUInt("TextureUUID", 0);
 
 	ChangeTexture(texture_uuid);
+
+	float4 trail_color;
+	config.GetColor("Color", trail_color, float4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	color[0] = trail_color.x;
+	color[1] = trail_color.y;
+	color[2] = trail_color.z;
+	color[3] = trail_color.w;
+
+	float bloom;
+	config.GetFloat("Bloom_Intensity", 1.0f);
+	bloom_intensity = bloom;
 }

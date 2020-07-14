@@ -286,6 +286,9 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 		{
 			trail->SetTrailTexture(selected_resource_uuid);
 		}
+		ImGui::ColorEdit4("Color", trail->color);
+		ImGui::DragFloat("Intensity", &trail->bloom_intensity, 0.05f, 0.01f, 10.0f);
+		
 	}
 }
 
