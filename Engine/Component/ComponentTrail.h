@@ -80,7 +80,8 @@ public:
 	float min_distance = 1.0f;
 
 	//Color properties
-	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	//float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float bloom_intensity = 1.0f;
 	//Render properties
 	int blend_mode; //0 for aplha blend, 1 for addition

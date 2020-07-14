@@ -266,6 +266,7 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 	{
 		ImGui::InputFloat("Width", &trail->width, 0.1f);
 		ImGui::InputFloat("Duration", &trail->duration, 1000.0f);
+		ImGui::InputFloat("Distance", &trail->min_distance, 1.0f);
 		ImGui::Text("Texture");
 		ImGui::SameLine();
 
@@ -286,7 +287,7 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 		{
 			trail->SetTrailTexture(selected_resource_uuid);
 		}
-		ImGui::ColorEdit4("Color", trail->color);
+		ImGui::ColorEdit4("Color", trail->color.ptr());
 		ImGui::DragFloat("Intensity", &trail->bloom_intensity, 0.05f, 0.01f, 10.0f);
 		
 	}
