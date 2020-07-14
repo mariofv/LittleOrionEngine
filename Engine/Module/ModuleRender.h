@@ -10,6 +10,7 @@
 #include <MathGeoLib/Geometry/LineSegment.h>
 #include <GL/glew.h>
 #include <list>
+#include <vector>
 
 class ComponentMeshRenderer;
 class ComponentCamera;

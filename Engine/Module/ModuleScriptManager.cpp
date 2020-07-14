@@ -5,6 +5,7 @@
 #include "Filesystem/Path.h"
 #include "Filesystem/PathAtlas.h"
 #include "Helper/Utils.h"
+#include "Log/EngineLog.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleFileSystem.h"

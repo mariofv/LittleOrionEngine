@@ -284,3 +284,23 @@ uint32_t ModelImporter::ExtractAnimationFromNode(const aiAnimation* assimp_anima
 	node.resource_name = animation_name + ".anim";
 	return SaveDataInLibrary(node, animation_data);
 }
+
+void AssimpStream::write(const char* message)
+{
+	switch (severety)
+	{
+	case Assimp::Logger::Debugging:
+		MYASSIMP_LOG_DEBUG("%s", message);
+		break;
+	case Assimp::Logger::Info:
+		MYASSIMP_LOG_INFO("%s", message);
+		break;
+	case Assimp::Logger::Err:
+		MYASSIMP_LOG_ERROR("%s", message);
+		break;
+	case Assimp::Logger::Warn:
+		MYASSIMP_LOG_WARNING("%s", message);
+		break;
+
+	}
+}

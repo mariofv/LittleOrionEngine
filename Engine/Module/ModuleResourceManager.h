@@ -1,6 +1,8 @@
 #ifndef _MODULERESOURCEMANAGER_H_
 #define _MODULERESOURCEMANAGER_H_
 
+#include "Log/EngineLog.h"
+
 #include "Main/Application.h"
 #include "Module.h"
 #include "ModuleFileSystem.h"
@@ -186,6 +188,7 @@ private:
 
 
 public:
+	bool first_import_completed = false;
 	//Multithreading
 	struct ThreadComunication
 	{

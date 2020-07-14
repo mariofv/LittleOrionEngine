@@ -1,6 +1,7 @@
 #include "Scene.h"
 
 #include "Helper/Config.h"
+#include "Log/EngineLog.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -123,14 +124,13 @@ void Scene::Load(bool from_file)
 		}
 	}
 
+
 	std::vector<Config> prefabs_modified_components;
 	scene_config.GetChildrenConfig("PrefabsComponents", prefabs_modified_components);
 	for (unsigned int i = 0; i < prefabs_modified_components.size(); ++i)
 	{
 		LoadPrefabModifiedComponents(prefabs_modified_components[i]);
 	}
-
-
 	std::vector<Config> game_objects_config;
 	scene_config.GetChildrenConfig("GameObjects", game_objects_config);
 	for (unsigned int i = 0; i < game_objects_config.size(); ++i)

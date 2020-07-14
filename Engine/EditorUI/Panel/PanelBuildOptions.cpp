@@ -1,6 +1,7 @@
 #include "PanelBuildOptions.h"
 
 #include "EditorUI/Panel/PanelPopups.h"
+#include "Log/EngineLog.h"
 
 #include "Main/Application.h"
 

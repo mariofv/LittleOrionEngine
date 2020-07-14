@@ -12,6 +12,7 @@
 #include "EditorUI/Helper/Grid.h"
 #include "EditorUI/Panel/PanelNavMesh.h"
 
+#include "Log/EngineLog.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 

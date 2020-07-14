@@ -250,10 +250,13 @@ void ComponentMeshRenderer::AddDissolveMaterialUniforms(unsigned int shader_prog
 	glActiveTexture(GL_TEXTURE9);
 	BindTexture(Material::MaterialTextureType::DISSOLVED_DIFFUSE);
 	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_diffuse"), 9);
-
 	glActiveTexture(GL_TEXTURE10);
+	BindTexture(Material::MaterialTextureType::DISSOLVED_EMISSIVE);
+	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_emissive"), 10);
+
+	glActiveTexture(GL_TEXTURE11);
 	BindTexture(Material::MaterialTextureType::NOISE);
-	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_noise"), 10);
+	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_noise"), 11);
 
 	glUniform1f(glGetUniformLocation(shader_program, "material.dissolve_progress"), material_to_render->dissolve_progress);
 }
@@ -290,7 +293,7 @@ bool ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const
 	}
 	else
 	{
-		if (id == Material::MaterialTextureType::EMISSIVE)
+		if (id == Material::MaterialTextureType::EMISSIVE || id == Material::MaterialTextureType::DISSOLVED_EMISSIVE)
 		{
 			texture_id = App->texture->blackfall_texture_id;
 		}
@@ -392,20 +395,17 @@ void ComponentMeshRenderer::SetSkeleton(uint32_t skeleton_uuid)
 	}
 }
 
-void ComponentMeshRenderer::UpdatePalette(const std::vector<float4x4>& pose)
+void ComponentMeshRenderer::UpdatePalette(std::vector<float4x4>& pose)
 {
 	assert(pose.size() == palette.size());
 	const auto &  joints = skeleton->skeleton;
 	for (size_t i = 0; i < pose.size(); ++i)
 	{
-		size_t joint_index = i;
-		float4x4 global_transform = float4x4::identity;
-		while (joints[joint_index].parent_index != -1)
+		size_t parent_index = joints[i].parent_index;
+		if (parent_index <= pose.size())
 		{
-			joint_index = joints[joint_index].parent_index;
-			global_transform = pose[joint_index] * global_transform;
-
+			pose[i] = pose[parent_index] * pose[i];
 		}
-		palette[i] =  global_transform * pose[i] * joints[i].transform_global;
+		palette[i] = pose[i] * joints[i].transform_global;
 	}
 }

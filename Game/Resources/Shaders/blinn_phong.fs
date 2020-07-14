@@ -46,6 +46,7 @@ struct Material
 	vec2 liquid_vertical_normals_tiling;
 
 	sampler2D dissolved_diffuse;
+	sampler2D dissolved_emissive;
 	sampler2D dissolved_noise;
 	float dissolve_progress;
 };
@@ -201,8 +202,8 @@ vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 {
 	vec4 result;
 	#if ENABLE_DISSOLVING_PROPERTIES
-			float mapped_noise = 1 - texture(mat.dissolved_noise, texCoord).x;
-			if (mapped_noise < mat.dissolve_progress)
+			float mapped_noise = texture(mat.dissolved_noise, texCoord).x;
+			if (mapped_noise > mat.dissolve_progress)
 			{
 				result = texture(mat.diffuse_map, texCoord);
 			}
@@ -244,7 +245,24 @@ vec3 GetOcclusionColor(const Material mat, const vec2 texCoord)
 
 vec3 GetEmissiveColor(const Material mat, const vec2 texCoord)
 {
-	return (texture(mat.emissive_map, texCoord)*mat.emissive_color).rgb;
+	vec4 result;
+	#if ENABLE_DISSOLVING_PROPERTIES
+			float mapped_noise = texture(mat.dissolved_noise, texCoord).x;
+			if (mapped_noise > mat.dissolve_progress)
+			{
+				result = texture(mat.emissive_map, texCoord);
+			}
+			else
+			{
+				result = texture(mat.dissolved_emissive, texCoord);
+			}
+	#else
+			result = texture(mat.emissive_map, texCoord);
+	#endif
+
+	result = result * mat.emissive_color;
+	result.rgb = pow(result.rgb, vec3(2.2));
+	return result.rgb;
 }
 
 vec3 GetNormalMap(const Material mat, const vec2 texCoord)

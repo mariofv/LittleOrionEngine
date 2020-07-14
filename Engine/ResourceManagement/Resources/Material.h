@@ -33,8 +33,9 @@ public:
 		LIGHTMAP = 5,
 		LIQUID = 6,
 		DISSOLVED_DIFFUSE = 7,
-		NOISE = 8,
-		UNKNOWN = 9
+		DISSOLVED_EMISSIVE = 8,
+		NOISE = 9,
+		UNKNOWN = 10
 	};
 
 	Material() = default;

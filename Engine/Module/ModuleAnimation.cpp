@@ -1,12 +1,15 @@
 #include "ModuleAnimation.h"
 
+#include "Component/ComponentAnimation.h"
+
+#include "Log/EngineLog.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTime.h"
-#include "Component/ComponentAnimation.h"
 
 #include <Brofiler/Brofiler.h>
+
 bool ModuleAnimation::Init()
 {
 	APP_LOG_SECTION("************ Module Animation Init ************");

@@ -4,6 +4,7 @@
 #include "Component/ComponentBillboard.h"
 #include "Component/ComponentTrail.h"
 
+#include "Log/EngineLog.h"
 #include "Main/GameObject.h"
 #include <Brofiler/Brofiler.h>
 

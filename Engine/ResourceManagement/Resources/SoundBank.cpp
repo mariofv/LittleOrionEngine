@@ -1,4 +1,6 @@
 #include "SoundBank.h"
+
+#include "Log/EngineLog.h"
 #include "Main/Application.h"
 
 #include <AK/SoundEngine/Platforms/Windows/AkTypes.h>

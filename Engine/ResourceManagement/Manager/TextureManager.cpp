@@ -1,5 +1,6 @@
 #include "TextureManager.h"
 
+#include "Log/EngineLog.h"
 #include "Helper/Config.h"
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
