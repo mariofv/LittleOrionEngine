@@ -71,9 +71,11 @@ public:
 	float transparency = 1.f;
 	bool oriented_to_camera;
 	bool loop = false;
+	bool pulse = false;
 	int current_sprite_x = 0;
 	int current_sprite_y = 0;
 	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float color_emissive[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	int emissive_intensity = 1;
 private:
 	GLuint shader_program;
@@ -99,7 +101,7 @@ private:
 	int animation_time = 1000;
 
 	AnimationType animation_type = AnimationType::CONSTANT;
-	bool playing = true;
+	bool playing = false;
 
 	friend class PanelComponent;
 	friend class PanelParticleSystem;

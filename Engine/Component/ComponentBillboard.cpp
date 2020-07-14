@@ -89,7 +89,10 @@ void ComponentBillboard::Update()
 		float loop_progress = (float)time_since_start / animation_time;
 
 		ComputeAnimationFrame(loop_progress);
-		//emissive_intensity = sin(time_since_start);
+		if (pulse)
+		{
+			emissive_intensity = sin(time_since_start);
+		}
 	}
 }
 
@@ -137,6 +140,7 @@ void ComponentBillboard::Render(const float3& global_position)
 
 	CommonUniforms(shader_program);
 	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color"),1, (float*)color);
+	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color_emissive"), 1, (float*)color_emissive);
 
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_x"), current_sprite_x);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_y"), current_sprite_y);
@@ -201,7 +205,7 @@ void ComponentBillboard::SpecializedSave(Config& config) const
 	config.AddUInt(texture_emissive_uuid, "TextureEmissiveUUID");
 	config.AddFloat(width, "Width");
 	config.AddFloat(height, "Height");
-
+	config.AddBool( pulse, "Pulse");
 	config.AddInt(static_cast<int>(alignment_type), "BillboardType");
 
 	config.AddInt(animation_time, "AnimationTime");
@@ -211,6 +215,9 @@ void ComponentBillboard::SpecializedSave(Config& config) const
 
 	float4 billbaord_color(color[0], color[1], color[2], color[3]);
 	config.AddColor(billbaord_color, "Color");
+
+	float4 billbaord_color_emissive(color_emissive[0], color_emissive[1], color_emissive[2], color_emissive[3]);
+	config.AddColor(billbaord_color_emissive, "ColorEmissive");
 }
 
 void ComponentBillboard::SpecializedLoad(const Config& config)
@@ -223,6 +230,7 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 	
 	width = config.GetFloat("Width", 1.0f);
 	height = config.GetFloat("Height", 1.0f);
+	pulse = config.GetBool("Pulse", false);
 
 	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::WORLD)));
 	ChangeBillboardType(alignment_type);
@@ -239,6 +247,14 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 	color[1] = billbaord_color.y;
 	color[2] = billbaord_color.z;
 	color[3] = billbaord_color.w;
+
+	float4 billbaord_color_emissive;
+	config.GetColor("ColorEmissive", billbaord_color_emissive, float4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	color_emissive[0] = billbaord_color_emissive.x;
+	color_emissive[1] = billbaord_color_emissive.y;
+	color_emissive[2] = billbaord_color_emissive.z;
+	color_emissive[3] = billbaord_color_emissive.w;
 }
 
 void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)

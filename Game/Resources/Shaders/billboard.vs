@@ -13,6 +13,7 @@ struct Billboard
   sampler2D texture;
   sampler2D texture_emissive;
   vec4 color;
+   vec4 color_emissive;
 
   int num_columns;
   int num_rows;
