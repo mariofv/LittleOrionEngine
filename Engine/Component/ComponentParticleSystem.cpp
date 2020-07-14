@@ -534,3 +534,12 @@ void ComponentParticleSystem::OrbitX(float angle, Particle& particle)
 	particle.position.x = position.x;
 	particle.position.z = position.z;
 }
+void ComponentParticleSystem::Disable()
+{
+	active = false;
+	Stop();
+}
+void ComponentParticleSystem::Enable()
+{
+	active = true;
+}
