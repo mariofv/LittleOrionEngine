@@ -1,9 +1,11 @@
+#include "ModuleWindow.h"
+
+#include "Log/EngineLog.h"
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleRender.h"
-#include "ModuleWindow.h"
 
 #include <SDL_image/SDL_image.h>
 

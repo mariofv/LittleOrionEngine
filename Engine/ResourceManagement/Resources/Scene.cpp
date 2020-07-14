@@ -1,6 +1,7 @@
 #include "Scene.h"
 
 #include "Helper/Config.h"
+#include "Log/EngineLog.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
