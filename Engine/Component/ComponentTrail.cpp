@@ -131,17 +131,17 @@ void  ComponentTrail::GetPerpendiculars()
 			float3 top_left, bottom_left;
 			++j;
 			//TODO - Commented code is for rendering the last point of path
-			//if (++pair == mesh_points.end())
-			//{
-			//	/*--pair;
-			//	top_left = pair->second->position + perpendicular;
-			//	bottom_left = (pair->second->position - perpendicular);*/
-			//}
-			//else
-			//{
-			//	top_left = pair->first->position + perpendicular;
-			//	bottom_left = (pair->first->position - perpendicular);
-			//}
+			/*if (++pair == mesh_points.end())
+			{
+				--pair;
+				top_left = pair->second->position + perpendicular;
+				bottom_left = (pair->second->position - perpendicular);
+			}
+			else
+			{
+				top_left = pair->first->position + perpendicular;
+				bottom_left = (pair->first->position - perpendicular);
+			}*/
 			top_left = pair->first->position + perpendicular;
 			bottom_left = (pair->first->position - perpendicular);
 			vertices.push_back({ top_left, float2(mesh_index * j,1.0f) }); //uv[i]
@@ -182,7 +182,9 @@ void ComponentTrail::Render()
 		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-		glUniform4fv(glGetUniformLocation(shader_program, "color"), 1, (float*)color);
+		glUniform4fv(glGetUniformLocation(shader_program, "color"), 1, color.ptr());
+		glUniform1f(glGetUniformLocation(shader_program, "bloom_intensity"), bloom_intensity);
+
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size());
 		glBindVertexArray(0);
 
@@ -241,13 +243,22 @@ void ComponentTrail::Delete()
 
 void ComponentTrail::SpecializedSave(Config& config) const
 {
+	config.AddFloat(width, "Width");
+	config.AddFloat(duration, "Duration");
+	config.AddFloat(min_distance, "Min_Distance");
 	config.AddUInt(texture_uuid, "TextureUUID");
+	config.AddColor(color, "Color");
+	config.AddFloat(bloom_intensity, "Bloom_Intensity");
 }
 void ComponentTrail::SpecializedLoad(const Config& config)
 {
+	width = config.GetFloat("Width", 1.0f);
+	duration = config.GetFloat("Duration", 1000.0f);
+	min_distance = config.GetFloat("Distance", 1.0f);
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
 	texture_uuid = config.GetUInt("TextureUUID", 0);
-
 	ChangeTexture(texture_uuid);
+	config.GetColor("Color", color, float4(1.0f, 1.0f, 1.0f, 1.0f));
+	bloom_intensity = config.GetFloat("Bloom_Intensity", 1.0f);
 }
