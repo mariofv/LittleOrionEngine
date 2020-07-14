@@ -32,6 +32,11 @@ ComponentMeshCollider::ComponentMeshCollider(GameObject* owner) : ComponentColli
 		}
 
 	}
+	else
+	{
+		CreateMeshBody();
+		AddBody();
+	}
 }
 
 
