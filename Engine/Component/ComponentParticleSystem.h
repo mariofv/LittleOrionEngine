@@ -84,6 +84,8 @@ public:
 	void SetParticleTexture(uint32_t texture_uuid);
 
 	void Delete() override;
+	void Disable() override;
+	void Enable() override;
 
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
