@@ -110,6 +110,7 @@ update_status ModuleResourceManager::PreUpdate()
 	if(loading_thread_communication.restore_time_scale)
 	{
 		App->time->time_scale = 1.f;
+		loading_thread_communication.loading = false;
 		loading_thread_communication.restore_time_scale = false;
 	}
 
@@ -145,8 +146,6 @@ update_status ModuleResourceManager::PreUpdate()
 			//We have reassigned some prefabs resources that should be loaded
 			return update_status::UPDATE_CONTINUE;
 		}
-
-		loading_thread_communication.loading = false;
 		
 		if(App->time->isGameRunning())
 		{
