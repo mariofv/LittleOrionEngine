@@ -215,6 +215,7 @@ public:
 		std::vector<std::thread> loader_threads;
 		bool normal_loading_flag = false;
 		bool load_scene_asyncronously = true;
+		bool restore_time_scale = false;
 		//We change this value to the component that calls Load for textures
 		Component* current_component_loading = nullptr;
 		ResourceType current_type = ResourceType::TEXTURE;
