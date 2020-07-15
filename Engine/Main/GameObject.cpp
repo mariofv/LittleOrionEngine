@@ -37,6 +37,7 @@
 #include "Component/ComponentSpriteMask.h"
 #include "Component/ComponentBillboard.h"
 #include "Component/ComponentText.h"
+#include "Component/ComponentTrail.h"
 #include "Component/ComponentTransform.h"
 
 #include <Brofiler/Brofiler.h>
@@ -258,7 +259,10 @@ void GameObject::PreUpdate()
 void GameObject::Update()
 {
 	BROFILER_CATEGORY("GameObject Update", Profiler::Color::Green);
-
+	if (!active)
+	{
+		return;
+	}
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
 		if (components[i]->type != Component::ComponentType::SCRIPT)
@@ -482,6 +486,10 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 
 	case Component::ComponentType::PARTICLE_SYSTEM:
 		created_component = App->effects->CreateComponentParticleSystem();
+		break;
+
+	case Component::ComponentType::TRAIL:
+		created_component = App->effects->CreateComponentTrail(this);
 		break;
 
 	case Component::ComponentType::AUDIO_SOURCE:

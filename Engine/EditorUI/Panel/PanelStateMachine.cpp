@@ -12,6 +12,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleAnimation.h"
+#include "Module/ModuleTime.h"
 
 #include "ResourceManagement/Resources/StateMachine.h"
 
@@ -46,7 +47,6 @@ PanelStateMachine::~PanelStateMachine()
 
 void PanelStateMachine::Render()
 {
-	modified_by_user = false;
 	//initialize GO to get corresponding animation controller
 	if (App->editor->selected_game_object)
 	{
@@ -54,11 +54,11 @@ void PanelStateMachine::Render()
 
 		AnimController* controller = animation_component ? animation_component->GetAnimController() : nullptr;
 		bool valid = IsElegibleStateMachine(controller);
-		animation_controller = valid ? animation_component->GetAnimController() : animation_controller_in_hierarchy;
+		animation_controller = valid ? animation_component->GetAnimController() : GetHierarchyAnimation();
 	}
 	else
 	{
-		animation_controller = animation_controller_in_hierarchy;
+		animation_controller = GetHierarchyAnimation();
 	}
 	if (ImGui::Begin(window_name.c_str(), &opened, ImGuiWindowFlags_MenuBar))
 	{
@@ -88,6 +88,7 @@ void PanelStateMachine::Render()
 	if (modified_by_user)
 	{
 		App->resources->Save<StateMachine>(state_machine);
+		modified_by_user = false;
 	}
 }
 bool PanelStateMachine::IsElegibleStateMachine(AnimController * controller)
@@ -99,10 +100,6 @@ void PanelStateMachine::RenderStates()
 	ImGuiIO& io = ImGui::GetIO();
 
 	draw_list = ImGui::GetWindowDrawList();
-	if (modified_by_user)
-	{
-		App->resources->Save<StateMachine>(state_machine);
-	}
 	for (auto & node : nodes)
 	{
 		assert(!node->id.Invalid);
@@ -175,7 +172,7 @@ void PanelStateMachine::RenderStates()
 			modified_by_user = true;
 		}
 		
-		if (ImGui::InputFloat("Speed", &node->speed, 0.5f, 0.0f, "%.2f", 0))
+		if (ImGui::InputFloat("Speed", &node->speed, 0.1f, 0.0f, "%.2f", 0))
 		{
 			node->state->speed = node->speed;
 			modified_by_user = true;
@@ -435,7 +432,7 @@ void PanelStateMachine::LeftPanel()
 		ImGui::Separator();
 		if (ImGui::Button("Save"))
 		{
-			modified_by_user = true;
+			modified_by_user = false;
 			App->resources->Save<StateMachine>(state_machine);
 		}
 		ImGui::SameLine();
@@ -472,6 +469,7 @@ void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 		node->output = uniqueid++;
 		node->input = uniqueid++;
 		node->position = ImVec2(state->position.x, state->position.y);
+		node->speed = state->speed;
 		nodes.push_back(node);
 	}
 
@@ -498,16 +496,19 @@ void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 	}
 	delete[] state_machine_data.buffer;
 	firstFrame = true;
+}
 
+AnimController* PanelStateMachine::GetHierarchyAnimation()
+{
 	for (auto & animation_component : App->animations->animations)
 	{
 		AnimController* controller = animation_component->GetAnimController();
 		if (IsElegibleStateMachine(controller))
 		{
-			animation_controller_in_hierarchy = animation_component->GetAnimController();
-			break;
+			return animation_component->GetAnimController();
 		}
 	}
+	return nullptr;
 }
 
 

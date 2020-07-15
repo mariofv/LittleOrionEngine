@@ -6,6 +6,7 @@
 #include "Component.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "ResourceManagement/Resources/Skeleton.h"
 
 #include <GL/glew.h>
 #include <memory>
@@ -46,6 +47,7 @@ public:
 	ENGINE_API bool IsOnState(const std::string & trigger);
 	ENGINE_API float GetCurrentClipPercentatge() const;
 	ENGINE_API int GetTotalAnimationTime() const;
+	ENGINE_API void SetAnimationSpeed(float speed) const;
 
 	void Update() override;
 	void UpdateMeshes();
@@ -59,7 +61,7 @@ public:
 private:
 	void GetChildrenMeshes(GameObject * current_mesh);
 	void GenerateJointChannelMaps();
-
+	void GenerateAttachedBones(GameObject* mesh, std::vector<Skeleton::Joint> & skeleton);
 private:
 	std::vector<ComponentMeshRenderer*> skinned_meshes;
 	AnimController* animation_controller = nullptr;

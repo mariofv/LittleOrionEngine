@@ -11,6 +11,7 @@ public:
 	ENGINE_API TweenSequence* CreateSequence();
 	void Update(float);
 	void Reset();
+	void CleanSequences();
 
 private:
 	std::vector<TweenSequence*> sequences;

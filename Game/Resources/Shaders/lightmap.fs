@@ -61,7 +61,6 @@ layout (std140) uniform Matrices
 
 //COLOR TEXTURES
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord);
-vec4 GetSpecularColor(const Material mat, const vec2 texCoord);
 vec3 GetOcclusionColor(const Material mat, const vec2 texCoord);
 vec3 GetEmissiveColor(const Material mat, const vec2 texCoord);
 
@@ -75,18 +74,16 @@ void main()
 	vec3 result = vec3(0);
 	vec3 ambient = ambient_light_color.xyz* ambient_light_strength*ambient_light_intensity;
 	//tiling
-	vec2 tiling = vec2(material.tiling_x, material.tiling_y)*texCoord;
 
 	//computation of colors
-	vec4 diffuse_color  = GetDiffuseColor(material, tiling);
-	vec4 specular_color  = GetSpecularColor(material, tiling);
-	vec3 occlusion_color = GetOcclusionColor(material, tiling);
-	vec3 emissive_color  = GetEmissiveColor(material, tiling);
+	vec4 diffuse_color  = GetDiffuseColor(material, texCoord);
+	vec3 occlusion_color = GetOcclusionColor(material, texCoord);
+	vec3 emissive_color  = GetEmissiveColor(material, texCoord);
 
 
-	result += texture(material.light_map, texCoordLightmap).rgb;
-	result += emissive_color;
-	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
+	//result += emissive_color;
+	result +=diffuse_color.rgb + ambient + emissive_color;
+	result *= texture(material.light_map, texCoordLightmap).rgb;
 	FragColor = vec4(result,1.0);
 	FragColor.a=material.transparency;
 }
@@ -94,23 +91,9 @@ void main()
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 {
 	vec4 result = texture(mat.diffuse_map, texCoord)*mat.diffuse_color;
-	//alpha testing
-	if(result.a <0.1)
-	{
-		discard;
-	}
-	result.rgb = pow(result.rgb, vec3(2.2));
 	return result;
 }
 
-vec4 GetSpecularColor(const Material mat, const vec2 texCoord)
-{
-
-	vec4 result = texture(mat.specular_map, texCoord)*mat.specular_color;
-	result.rgb = pow(result.rgb, vec3(2.2));
-	result.a *= mat.smoothness;
-	return result;
-}
 vec3 GetOcclusionColor(const Material mat, const vec2 texCoord)
 {
 	return texture(mat.occlusion_map, texCoord).rgb;

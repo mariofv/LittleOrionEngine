@@ -54,10 +54,12 @@ public:
 	void ChangeTexture(uint32_t texture_uuid);
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
 
+
 	void ComputeAnimationFrame(float progress);
 
 	ENGINE_API void Play();
 	ENGINE_API bool IsPlaying();
+	ENGINE_API void SetOrientation(bool is_oriented);
 
 private:
 	unsigned int GetBillboardVariation();
@@ -66,11 +68,11 @@ public:
 	float width = 5.f;
 	float height = 5.f;
 	float transparency = 1.f;
-
+	bool oriented_to_camera;
 	bool loop = false;
 	int current_sprite_x = 0;
 	int current_sprite_y = 0;
-
+	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 private:
 	GLuint shader_program;
 	GLuint vbo, vao, ebo;
@@ -79,9 +81,9 @@ private:
 	std::shared_ptr<Texture> billboard_texture = nullptr;
 	
 	//color
-	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	AlignmentType alignment_type = ComponentBillboard::AlignmentType::WORLD;
+
 
 	//Spritesheet params
 	bool is_spritesheet = false;
@@ -98,6 +100,7 @@ private:
 	friend class PanelComponent;
 	friend class PanelParticleSystem;
 	friend class ComponentParticleSystem;
+	
 };
 
 #endif //_COMPONENTBILLBOARD_H_

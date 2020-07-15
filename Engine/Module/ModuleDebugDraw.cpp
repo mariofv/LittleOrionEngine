@@ -3,6 +3,8 @@
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
+#include "Component/ComponentTrail.h"
+
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentParticleSystem.h"
@@ -446,6 +448,11 @@ void ModuleDebugDraw::RenderLine(const float3& a, const float3& b, const float3&
 	dd::line(a, b, color);
 }
 
+void ModuleDebugDraw::RenderSphere(float3& position, float3& color, float radius) const
+{
+	dd::sphere(position, color, radius);
+}
+
 void ModuleDebugDraw::RenderCameraFrustum() const
 {
 	BROFILER_CATEGORY("Render Selected GameObject Camera Frustum", Profiler::Color::Lavender);
@@ -804,6 +811,11 @@ void ModuleDebugDraw::RenderPoint(const float3& point, float size, const float3&
 void ModuleDebugDraw::RenderCircle(const float3& center, float radius, const float3& normal, const float3 & color) const
 {
 	dd::circle(center, normal, color, radius, 20.f);
+}
+
+void ModuleDebugDraw::RenderSphere(const float3& center, float radius, const float3& color) const
+{
+	dd::sphere(center, color, radius);
 }
 
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)

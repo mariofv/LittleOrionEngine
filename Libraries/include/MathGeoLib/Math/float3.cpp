@@ -787,6 +787,16 @@ float3 &float3::operator *=(float scalar)
 	return *this;
 }
 
+bool float3::operator ==(const float3 &v)
+{
+	return x == v.x && y == v.y && z == v.z;
+}
+
+bool float3::operator !=(const float3 &v)
+{
+	return x != v.x || y != v.y || z != v.z;
+}
+
 float3 float3::Add(float scalar) const
 {
 	return float3(x + scalar, y + scalar, z + scalar);

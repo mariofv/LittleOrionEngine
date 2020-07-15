@@ -16,6 +16,7 @@
 #include "Component/ComponentMeshCollider.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentParticleSystem.h"
+#include "Component/ComponentBillboard.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentSphereCollider.h"
 
@@ -160,6 +161,9 @@ void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameO
 		case Component::ComponentType::PARTICLE_SYSTEM:
 			created_component = new ComponentParticleSystem();
 			break;
+		case Component::ComponentType::BILLBOARD:
+			created_component = new ComponentBillboard();
+			break;
 		case Component::ComponentType::COLLIDER:
 			ComponentCollider::ColliderType collider_type = static_cast<ComponentCollider::ColliderType>(gameobject_components_config[i].GetUInt("ColliderType", 0));
 			switch (collider_type)
@@ -183,6 +187,7 @@ void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameO
 			break;
 		}
 		created_component->owner = loaded_gameObject.get();
+		created_component->Init();
 		created_component->Load(gameobject_components_config[i]);
 		loaded_gameObject->components.push_back(created_component);
 	}

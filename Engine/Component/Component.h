@@ -31,8 +31,8 @@ public:
 		UI_IMAGE = 12,
 		UI_SPRITE_MASK = 18,
 		UI_TEXT = 13,
-		PARTICLE_SYSTEM = 17
-		
+		PARTICLE_SYSTEM = 17,
+		TRAIL = 19
 	};
 
 	Component() = default;

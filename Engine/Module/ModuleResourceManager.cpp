@@ -117,6 +117,7 @@ bool ModuleResourceManager::CleanUp()
 	 thread_comunication.finished_loading = true;
 	 last_imported_time = thread_timer->Read();
 	 cache_time = thread_timer->Read();
+	 first_import_completed = true;
  }
 
 void ModuleResourceManager::CleanMetafilesInDirectory(const Path& directory_path)

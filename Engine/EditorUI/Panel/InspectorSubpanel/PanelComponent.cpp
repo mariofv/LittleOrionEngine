@@ -35,6 +35,7 @@
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
+#include "Component/ComponentTrail.h"
 
 #include "Helper/Utils.h"
 
@@ -101,9 +102,6 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 			mesh_renderer->modified_by_user = true;
 		}
 
-		ImGui::Checkbox("Shadow caster", &mesh_renderer->shadow_caster);
-
-
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Material");
 		ImGui::SameLine();
@@ -165,6 +163,8 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		}
 
 		ImGui::Checkbox("Is Raycastable", &mesh_renderer->is_raycastable);
+		ImGui::Checkbox("Shadow caster", &mesh_renderer->shadow_caster);
+		ImGui::Checkbox("Shadow receiver", &mesh_renderer->shadow_receiver);
 	}
 }
 
@@ -251,6 +251,46 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 	ImGui::DragFloat("Width:", &billboard->width, 0.2f, 0.f, 10.f);
 	ImGui::DragFloat("Height:", &billboard->height, 0.2f, 0.f, 10.f);
 	ImGui::DragFloat("Transparency:", &billboard->transparency, 0.1f, 0.f, 1.f);
+}
+
+void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
+{
+	ImGui::Checkbox("Active", &trail->active);
+	ImGui::SameLine();
+	if (ImGui::Button("Delete"))
+	{
+		App->actions->DeleteComponentUndo(trail);
+	}
+	ImGui::Separator();
+	if (ImGui::CollapsingHeader(ICON_FA_SHARE " Trail Renderer", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::InputFloat("Width", &trail->width, 0.1f);
+		ImGui::InputFloat("Duration", &trail->duration, 1000.0f);
+		ImGui::InputFloat("Distance", &trail->min_distance, 1.0f);
+		ImGui::Text("Texture");
+		ImGui::SameLine();
+
+		std::string texture_name = trail->trail_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(trail->trail_texture->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(trail->UUID) + "TextureSelector").c_str());
+		if (ImGui::Button(texture_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+		}
+
+		uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource_uuid != 0)
+		{
+			trail->SetTrailTexture(selected_resource_uuid);
+		}
+		selected_resource_uuid = ImGui::ResourceDropper<Texture>();
+		if (selected_resource_uuid != 0)
+		{
+			trail->SetTrailTexture(selected_resource_uuid);
+		}
+		ImGui::ColorEdit4("Color", trail->color.ptr());
+		ImGui::DragFloat("Intensity", &trail->bloom_intensity, 0.05f, 0.01f, 10.0f);
+		
+	}
 }
 
 void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
@@ -783,6 +823,11 @@ void PanelComponent::ShowAddNewComponentButton()
 		if (ImGui::Selectable(tmp_string))
 		{
 			App->editor->selected_game_object->CreateComponent(Component::ComponentType::PARTICLE_SYSTEM);
+		}
+		sprintf_s(tmp_string, "%s Trail", ICON_FA_SHARE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::TRAIL);
 		}
 
 		sprintf_s(tmp_string, "%s Animation", ICON_FA_PLAY_CIRCLE);

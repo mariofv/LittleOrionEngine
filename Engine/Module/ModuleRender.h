@@ -115,8 +115,7 @@ private:
 	friend class ModuleSpacePartitioning;
 	friend class PanelConfiguration;
 	friend class PanelScene;
-	friend class NavMesh;
-	friend class ComponentParticleSystem;
+	friend class NavMesh; 
 };
 
 #endif //_MODULERENDER_H_
