@@ -161,3 +161,8 @@ void ComponentAudioSource::Enable()
 	}
 
 }
+
+void ComponentAudioSource::SetListener(const AkGameObjectID listener_AkId)
+{
+	AK::SoundEngine::SetListeners(gameobject_source, &listener_AkId, 1);
+}
