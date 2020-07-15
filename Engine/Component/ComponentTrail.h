@@ -67,6 +67,9 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
+	void Disable() override;
+	void Enable() override;
+
 public:
 	uint32_t texture_uuid = 0;
 	float3 gameobject_init_position = { 0.0f, 0.0f, 0.0f};

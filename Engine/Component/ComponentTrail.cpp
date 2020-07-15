@@ -205,6 +205,7 @@ void ComponentTrail::ChangeTexture(uint32_t texture_uuid)
 		this->texture_uuid = texture_uuid;
 		trail_texture = App->resources->Load<Texture>(texture_uuid);
 	}
+	
 }
 
 ComponentTrail& ComponentTrail::operator=(const ComponentTrail& component_to_copy)
@@ -254,11 +255,19 @@ void ComponentTrail::SpecializedLoad(const Config& config)
 {
 	width = config.GetFloat("Width", 1.0f);
 	duration = config.GetFloat("Duration", 1000.0f);
-	min_distance = config.GetFloat("Distance", 1.0f);
+	min_distance = config.GetFloat("Min_Distance", 1.0f);
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
 	texture_uuid = config.GetUInt("TextureUUID", 0);
 	ChangeTexture(texture_uuid);
 	config.GetColor("Color", color, float4(1.0f, 1.0f, 1.0f, 1.0f));
 	bloom_intensity = config.GetFloat("Bloom_Intensity", 1.0f);
+}
+void ComponentTrail::Disable()
+{
+	active = false;
+}
+void ComponentTrail::Enable()
+{
+	active = true;
 }
