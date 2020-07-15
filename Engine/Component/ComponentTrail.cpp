@@ -200,11 +200,13 @@ void ComponentTrail::SetTrailTexture(uint32_t texture_uuid)
 
 void ComponentTrail::ChangeTexture(uint32_t texture_uuid)
 {
+	App->resources->loading_thread_communication.normal_loading_flag = true;
 	if (texture_uuid != 0)
 	{
 		this->texture_uuid = texture_uuid;
 		trail_texture = App->resources->Load<Texture>(texture_uuid);
 	}
+	App->resources->loading_thread_communication.normal_loading_flag = false;
 }
 
 ComponentTrail& ComponentTrail::operator=(const ComponentTrail& component_to_copy)
