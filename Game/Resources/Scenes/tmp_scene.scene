@@ -125,8 +125,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    0.0,
-                    0.0
+                    944.0,
+                    457.0
                 ],
                 "Rotation": [
                     0.0,
@@ -147,8 +147,8 @@
                     0.5
                 ],
                 "SizeDelta": [
-                    1144.0,
-                    675.0
+                    1888.0,
+                    914.0
                 ],
                 "Pivot": [
                     0.5,
@@ -18462,7 +18462,7 @@
                     "ComponentType": 2,
                     "Active": true,
                     "Mesh": 2682571150,
-                    "Material": 946675333,
+                    "Material": 2975293779,
                     "Skeleton": 0
                 }
             ]
