@@ -19,9 +19,6 @@ out vec4 FragColor;
 
 const float ambient_light_strength = 0.1;
 
-vec3 normal_from_texture;
-vec3 liquid_normal_from_texture;
-
 struct Material
 {
 	sampler2D diffuse_map;
