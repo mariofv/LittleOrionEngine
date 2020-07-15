@@ -63,7 +63,7 @@ void Material::Save(Config& config) const
 			break;
 
 		case MaterialTextureType::DISSOLVED_EMISSIVE:
-			config.AddUInt(textures_uuid[i], "Dissolved Emmisive");
+			config.AddUInt(textures_uuid[i], "Dissolved Emissive");
 			break;
 		default:
 			break;
