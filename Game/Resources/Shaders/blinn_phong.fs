@@ -148,7 +148,7 @@ void main()
 
 	//TODO->change it to liquid maps and not hardcoded
 #if ENABLE_LIQUID_PROPERTIES
-		tiling += material.liquid_horizontal_normals_tiling;
+		tiling -= vec2(0, material.liquid_vertical_normals_tiling.y);
 #endif
 
 	vec3 fragment_normal = normalize(normal);

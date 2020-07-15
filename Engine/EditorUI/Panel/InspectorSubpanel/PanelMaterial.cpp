@@ -99,7 +99,7 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 		ImGui::Spacing();
 
 		ShowMaterialTextureMap(material, Material::MaterialTextureType::DIFFUSE);
-		if (material->material_type == Material::MaterialType::MATERIAL_DISSOLVING)
+		if (material->material_type == Material::MaterialType::MATERIAL_DISSOLVING || material->material_type == Material::MaterialType::MATERIAL_LIQUID)
 		{
 			ShowMaterialTextureMap(material, Material::MaterialTextureType::DISSOLVED_DIFFUSE);
 			ShowMaterialTextureMap(material, Material::MaterialTextureType::DISSOLVED_EMISSIVE);
