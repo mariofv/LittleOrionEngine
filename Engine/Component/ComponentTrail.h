@@ -70,6 +70,9 @@ public:
 	void Disable() override;
 	void Enable() override;
 
+private:
+	void ClearTrail();
+
 public:
 	uint32_t texture_uuid = 0;
 	float3 gameobject_init_position = { 0.0f, 0.0f, 0.0f};
