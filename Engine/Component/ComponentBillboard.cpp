@@ -32,6 +32,7 @@ ComponentBillboard::~ComponentBillboard()
 void ComponentBillboard::InitData()
 {
 	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
+	ChangeTextureEmissive(texture_emissive_uuid);
 
 	float vertices[20] =
 	{
@@ -89,6 +90,10 @@ void ComponentBillboard::Update()
 		float loop_progress = (float)time_since_start / animation_time;
 
 		ComputeAnimationFrame(loop_progress);
+		if (pulse)
+		{
+			emissive_intensity = sin(time_since_start);
+		}
 	}
 }
 
@@ -136,6 +141,7 @@ void ComponentBillboard::Render(const float3& global_position)
 
 	CommonUniforms(shader_program);
 	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color"),1, (float*)color);
+	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color_emissive"), 1, (float*)color_emissive);
 
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_x"), current_sprite_x);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_y"), current_sprite_y);
@@ -157,6 +163,11 @@ void ComponentBillboard::CommonUniforms(const GLuint &shader_program)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, billboard_texture->opengl_texture);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.texture"), 0);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, billboard_texture_emissive->opengl_texture);
+	glUniform1i(glGetUniformLocation(shader_program, "billboard.texture_emissive"), 1);
+	glUniform1i(glGetUniformLocation(shader_program, "billboard.emissive_intensity"), emissive_intensity);
 
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.num_rows"), num_sprisheet_rows);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.num_columns"), num_sprisheet_columns);
@@ -192,9 +203,10 @@ void ComponentBillboard::Delete()
 void ComponentBillboard::SpecializedSave(Config& config) const
 {
 	config.AddUInt(texture_uuid, "TextureUUID");
+	config.AddUInt(texture_emissive_uuid, "TextureEmissiveUUID");
 	config.AddFloat(width, "Width");
 	config.AddFloat(height, "Height");
-
+	config.AddBool( pulse, "Pulse");
 	config.AddInt(static_cast<int>(alignment_type), "BillboardType");
 
 	config.AddInt(animation_time, "AnimationTime");
@@ -204,15 +216,22 @@ void ComponentBillboard::SpecializedSave(Config& config) const
 
 	float4 billbaord_color(color[0], color[1], color[2], color[3]);
 	config.AddColor(billbaord_color, "Color");
+
+	float4 billbaord_color_emissive(color_emissive[0], color_emissive[1], color_emissive[2], color_emissive[3]);
+	config.AddColor(billbaord_color_emissive, "ColorEmissive");
 }
 
 void ComponentBillboard::SpecializedLoad(const Config& config)
 {
 	texture_uuid = config.GetUInt32("TextureUUID", 0);
 	ChangeTexture(texture_uuid);
+
+	texture_emissive_uuid = config.GetUInt32("TextureEmissiveUUID", 0);
+	ChangeTextureEmissive(texture_emissive_uuid);
 	
 	width = config.GetFloat("Width", 1.0f);
 	height = config.GetFloat("Height", 1.0f);
+	pulse = config.GetBool("Pulse", false);
 
 	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::WORLD)));
 	ChangeBillboardType(alignment_type);
@@ -229,6 +248,14 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 	color[1] = billbaord_color.y;
 	color[2] = billbaord_color.z;
 	color[3] = billbaord_color.w;
+
+	float4 billbaord_color_emissive;
+	config.GetColor("ColorEmissive", billbaord_color_emissive, float4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	color_emissive[0] = billbaord_color_emissive.x;
+	color_emissive[1] = billbaord_color_emissive.y;
+	color_emissive[2] = billbaord_color_emissive.z;
+	color_emissive[3] = billbaord_color_emissive.w;
 }
 
 void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)
@@ -239,6 +266,22 @@ void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)
 		billboard_texture = App->resources->Load<Texture>(texture_uuid);
 	}
 }
+
+void ComponentBillboard::ChangeTextureEmissive(uint32_t texture_uuid)
+{
+	if (texture_uuid != 0)
+	{
+		this->texture_emissive_uuid = texture_uuid;
+		billboard_texture_emissive = App->resources->Load<Texture>(texture_uuid);
+		emissive_intensity = 1;
+	}
+	else
+	{
+		billboard_texture_emissive = App->resources->Load<Texture>(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
+		emissive_intensity = 0;
+	}
+}
+
 
 unsigned int ComponentBillboard::GetBillboardVariation()
 {

@@ -125,10 +125,10 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			if (particle_system->size_random)
 			{
 				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragInt("Initial Min size", &particle_system->min_size_of_particle, 10, 0, 999);
+				ImGui::DragFloat("Initial Min size", &particle_system->min_size_of_particle, 0.1f, 0, 999);
 				ImGui::SameLine();
 				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragInt("Initial Max size", &particle_system->max_size_of_particle, 100, 1, 1000);
+				ImGui::DragFloat("Initial Max size", &particle_system->max_size_of_particle, 0.1f, 0, 999);
 			}
 			else
 			{
@@ -296,6 +296,13 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 
 		}
 
+		ImGui::Checkbox("###Orbit", &particle_system->orbit);
+		ImGui::SameLine();
+
+		if (ImGui::CollapsingHeader("Orbit"))
+		{
+			ImGui::Text("WIP");
+		}
 		ImGui::Checkbox("###Fade", &particle_system->fade);
 		ImGui::SameLine();
 		if (ImGui::CollapsingHeader("Alpha Over Lifetime"))
@@ -326,10 +333,10 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			
 			ImGui::Spacing();
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-			ImGui::DragInt("Min size", &particle_system->min_size_of_particle, 10, 0, 999);
+			ImGui::DragFloat("Min size", &particle_system->min_size_of_particle, 0.1f, 0, 999);
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-			ImGui::DragInt("Max size", &particle_system->max_size_of_particle, 100, 1, 1000);
+			ImGui::DragFloat("Max size", &particle_system->max_size_of_particle, 0.1f, 0, 999);
 			
 			ImGui::DragFloat("Speed", &particle_system->size_change_speed, 0.01f, 0.0f, 10.0F);
 
