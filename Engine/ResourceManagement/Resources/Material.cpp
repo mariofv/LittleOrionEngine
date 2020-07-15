@@ -234,7 +234,7 @@ std::string Material::GetMaterialTypeName(const MaterialType material_type)
 void Material::UpdateLiquidProperties()
 {
 	liquid_horizontal_normals_tiling += float2(liquid_tiling_speed.x * App->time->delta_time * 0.001f);
-	liquid_vertical_normals_tiling -= float2(liquid_tiling_speed.y * App->time->delta_time * 0.001f);
+	liquid_vertical_normals_tiling += float2(liquid_tiling_speed.y * App->time->delta_time * 0.001f);
 }
 
 unsigned int Material::GetShaderVariation() const
@@ -251,6 +251,7 @@ unsigned int Material::GetShaderVariation() const
 	if (material_type == MaterialType::MATERIAL_LIQUID)
 	{
 		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_LIQUID_PROPERTIES);
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_DISSOLVING_PROPERTIES);
 	}
 	if (material_type == MaterialType::MATERIAL_DISSOLVING)
 	{

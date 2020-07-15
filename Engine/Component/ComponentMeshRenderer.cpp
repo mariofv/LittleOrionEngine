@@ -170,7 +170,7 @@ void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 	AddNormalUniforms(shader_program);
 	AddLightMapUniforms(shader_program);
 	
-	if (material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING)
+	if (material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING || material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
 	{
 		AddDissolveMaterialUniforms(shader_program);
 	}
@@ -238,9 +238,9 @@ void ComponentMeshRenderer::AddLightMapUniforms(unsigned int shader_program) con
 
 void ComponentMeshRenderer::AddLiquidMaterialUniforms(unsigned int shader_program) const
 {
-	glActiveTexture(GL_TEXTURE9);
+	glActiveTexture(GL_TEXTURE12);
 	BindTexture(Material::MaterialTextureType::LIQUID);
-	glUniform1i(glGetUniformLocation(shader_program, "material.liquid_map"), 9);
+	glUniform1i(glGetUniformLocation(shader_program, "material.liquid_map"), 12);
 	glUniform2fv(glGetUniformLocation(shader_program, "material.liquid_horizontal_normals_tiling"), 1, material_to_render->liquid_horizontal_normals_tiling.ptr());
 	glUniform2fv(glGetUniformLocation(shader_program, "material.liquid_vertical_normals_tiling"), 1, material_to_render->liquid_vertical_normals_tiling.ptr());
 }
