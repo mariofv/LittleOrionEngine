@@ -33,9 +33,6 @@ ComponentTrail::~ComponentTrail()
 
 void ComponentTrail::Init()
 {
-	gameobject_init_position = owner->transform.GetGlobalTranslation(); //initial GO position
-	last_point = TrailPoint(gameobject_init_position, width, duration);
-
 	//InitRenderer
 	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
 
@@ -56,6 +53,8 @@ void ComponentTrail::Init()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+
+	ClearTrail();
 }
 
 void ComponentTrail::Update()
@@ -65,9 +64,7 @@ void ComponentTrail::Update()
 		return;
 	}
 	float3 gameobject_position = owner->transform.GetGlobalTranslation(); //current GO position
-
-	if (gameobject_init_position.x != gameobject_position.x || gameobject_init_position.y != gameobject_position.y || gameobject_init_position.z != gameobject_position.z)//if user moves Trail GO
-		on_transform_change = true;
+	on_transform_change = gameobject_init_position != gameobject_position;
 
 	if (on_transform_change)//always gets in this is wrong ! TODO create an event here/ merge with event system
 	{
@@ -192,6 +189,13 @@ void ComponentTrail::Render()
 	}
 }
 
+void ComponentTrail::ClearTrail()
+{
+	gameobject_init_position = owner->transform.GetGlobalTranslation(); //initial GO position
+	last_point = TrailPoint(gameobject_init_position, width, duration);
+	test_points.empty();
+}
+
 void ComponentTrail::SetTrailTexture(uint32_t texture_uuid)
 {
 	this->texture_uuid = texture_uuid;
@@ -205,6 +209,7 @@ void ComponentTrail::ChangeTexture(uint32_t texture_uuid)
 		this->texture_uuid = texture_uuid;
 		trail_texture = App->resources->Load<Texture>(texture_uuid);
 	}
+	
 }
 
 ComponentTrail& ComponentTrail::operator=(const ComponentTrail& component_to_copy)
@@ -254,11 +259,22 @@ void ComponentTrail::SpecializedLoad(const Config& config)
 {
 	width = config.GetFloat("Width", 1.0f);
 	duration = config.GetFloat("Duration", 1000.0f);
-	min_distance = config.GetFloat("Distance", 1.0f);
+	min_distance = config.GetFloat("Min_Distance", 1.0f);
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
 	texture_uuid = config.GetUInt("TextureUUID", 0);
 	ChangeTexture(texture_uuid);
 	config.GetColor("Color", color, float4(1.0f, 1.0f, 1.0f, 1.0f));
 	bloom_intensity = config.GetFloat("Bloom_Intensity", 1.0f);
+}
+
+void ComponentTrail::Disable()
+{
+	active = false;
+}
+
+void ComponentTrail::Enable()
+{
+	active = true;
+	ClearTrail();
 }

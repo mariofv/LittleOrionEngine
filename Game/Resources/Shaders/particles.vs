@@ -41,6 +41,12 @@ struct Particle
 
     mat4 model;
     mat4 geometric_space;
+
+	
+	float orbit_random;
+    float float2;
+    float float3;
+    float float4;
 };
 
 

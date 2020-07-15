@@ -202,6 +202,8 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 		App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
 	}
 
+
+
 	uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
 	if (selected_resource_uuid != 0)
 	{
@@ -212,8 +214,28 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 	{
 		billboard->ChangeTexture(selected_resource_uuid);
 	}
-
 	ImGui::ColorEdit4("Color", billboard->color);
+
+	ImGui::Text("TextureEmissive");
+	ImGui::SameLine();
+	texture_name = billboard->billboard_texture_emissive == nullptr ? "None ( Emissive Texture)" : App->resources->resource_DB->GetEntry(billboard->billboard_texture_emissive->GetUUID())->resource_name;
+	element_id = ImGui::GetID((std::to_string(billboard->UUID) + "TextureEmissiveSelector").c_str());
+	if (ImGui::Button(texture_name.c_str()))
+	{
+		App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+	}
+
+	selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+	if (selected_resource_uuid != 0)
+	{
+		billboard->ChangeTextureEmissive(selected_resource_uuid);
+	}
+	selected_resource_uuid = ImGui::ResourceDropper<Texture>();
+	if (selected_resource_uuid != 0)
+	{
+		billboard->ChangeTextureEmissive(selected_resource_uuid);
+	}
+	ImGui::ColorEdit4("Color Emissive", billboard->color_emissive);
 
 	int alignment_type = static_cast<int>(billboard->alignment_type);
 	if (ImGui::Combo("Billboard type", &alignment_type, "World\0View point\0Axial")) {
@@ -1201,6 +1223,7 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 
 		//ImGui::AlignTextToFramePadding();
 		ImGui::Checkbox("3D Sound", &component_audio_source->sound_3d);
+		ImGui::Checkbox("Play on Awake", &component_audio_source->play_on_awake);
 		std::string soundbank_name = component_audio_source->soundbank == nullptr ? "None (Sound Bank)" : App->resources->resource_DB->GetEntry(component_audio_source->soundbank->GetUUID())->resource_name;
 		ImGuiID element_id = ImGui::GetID((std::to_string(component_audio_source->UUID) + "SoundBankSelector").c_str());
 		if (ImGui::Button(soundbank_name.c_str()))
@@ -1221,11 +1244,11 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 		}
 		if (component_audio_source->soundbank)
 		{
-			static std::string soundbank;
-			ImGui::InputText("SoundBank ", &soundbank);
-			if (ImGui::Button("Play"))
+			//static std::string soundbank;
+			ImGui::InputText("Awake Event Name ", &component_audio_source->awake_event);
+			if (ImGui::Button("Play Event"))
 			{
-				component_audio_source->PlayEvent(soundbank);
+				component_audio_source->PlayEvent(component_audio_source->awake_event);
 			}
 		}
 		if (ImGui::SliderFloat("Volume", &component_audio_source->volume, 0, 30))
