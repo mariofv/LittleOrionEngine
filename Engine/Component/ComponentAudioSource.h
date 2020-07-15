@@ -39,6 +39,8 @@ public:
 
 	void Enable();
 
+	void SetListener(const AkGameObjectID listener_name);
+
 	std::string awake_event;
 	bool play_on_awake = false;
 

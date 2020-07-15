@@ -124,12 +124,17 @@ void ComponentAudioSource::SpecializedSave(Config& config) const
 	uint32_t soundbank_uuid = soundbank ? soundbank->GetUUID() : 0;
 	config.AddUInt(soundbank_uuid, "SoundBank");
 	config.AddBool(sound_3d, "3DSound");
+	config.AddBool(play_on_awake, "PlayOnAwake");
+	config.AddString(awake_event, "AwakeEvent");
 }
 
 void ComponentAudioSource::SpecializedLoad(const Config& config)
 {
 	volume = config.GetFloat("Volume", 1);
 	sound_3d = config.GetBool("3DSound", false);
+	play_on_awake = config.GetBool("PlayOnAwake", false);
+	config.GetString("AwakeEvent", awake_event, "");
+
 	uint32_t soundbank_uuid = config.GetUInt32("SoundBank", 0);
 	if (soundbank_uuid != 0)
 	{
@@ -155,4 +160,9 @@ void ComponentAudioSource::Enable()
 		PlayEvent(last_played_event);
 	}
 
+}
+
+void ComponentAudioSource::SetListener(const AkGameObjectID listener_AkId)
+{
+	AK::SoundEngine::SetListeners(gameobject_source, &listener_AkId, 1);
 }
