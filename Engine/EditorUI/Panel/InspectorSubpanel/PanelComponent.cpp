@@ -1223,6 +1223,7 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 
 		//ImGui::AlignTextToFramePadding();
 		ImGui::Checkbox("3D Sound", &component_audio_source->sound_3d);
+		ImGui::Checkbox("Play on Awake", &component_audio_source->play_on_awake);
 		std::string soundbank_name = component_audio_source->soundbank == nullptr ? "None (Sound Bank)" : App->resources->resource_DB->GetEntry(component_audio_source->soundbank->GetUUID())->resource_name;
 		ImGuiID element_id = ImGui::GetID((std::to_string(component_audio_source->UUID) + "SoundBankSelector").c_str());
 		if (ImGui::Button(soundbank_name.c_str()))
@@ -1243,11 +1244,11 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 		}
 		if (component_audio_source->soundbank)
 		{
-			static std::string soundbank;
-			ImGui::InputText("SoundBank ", &soundbank);
-			if (ImGui::Button("Play"))
+			//static std::string soundbank;
+			ImGui::InputText("Awake Event Name ", &component_audio_source->awake_event);
+			if (ImGui::Button("Play Event"))
 			{
-				component_audio_source->PlayEvent(soundbank);
+				component_audio_source->PlayEvent(component_audio_source->awake_event);
 			}
 		}
 		if (ImGui::SliderFloat("Volume", &component_audio_source->volume, 0, 30))
