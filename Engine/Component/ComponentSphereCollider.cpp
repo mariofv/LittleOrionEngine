@@ -10,6 +10,7 @@ ComponentSphereCollider::ComponentSphereCollider() : ComponentCollider(Component
 
 ComponentSphereCollider::ComponentSphereCollider(GameObject* owner) : ComponentCollider(owner, ComponentCollider::ColliderType::SPHERE)
 {
+	//box_size = btVector3(1.0F / 55.f, 1.0F / 55.f, 1.0F / 55.f);
 	InitData();
 }
 
