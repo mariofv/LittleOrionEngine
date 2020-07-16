@@ -23,7 +23,7 @@ ComponentTrail::ComponentTrail(GameObject * owner) : Component(owner, ComponentT
 }
 ComponentTrail::~ComponentTrail()
 {
-	vertices.empty();
+	vertices.clear();
 	if (trail_vbo != 0)
 	{
 		glDeleteBuffers(1, &trail_vbo);
@@ -64,19 +64,14 @@ void ComponentTrail::Update()
 		return;
 	}
 	float3 gameobject_position = owner->transform.GetGlobalTranslation(); //current GO position
-	on_transform_change = gameobject_init_position != gameobject_position;
+	bool on_transform_change = last_gameobject_position.Distance(gameobject_position) >= min_distance;
 
 	if (on_transform_change)//always gets in this is wrong ! TODO create an event here/ merge with event system
 	{
-		head_point = TrailPoint(gameobject_position, width, duration); //If there is movement, update the head point on the GO's position
-		head_point.life = duration; // If the GO moves, we reset the life of the head point
-
-		if (head_point.position.Distance(last_point.position) >= min_distance) //If the head point is at a greater distance than the distance we specified...
-		{
-			TrailPoint next_point(head_point.position, width, duration);
-			test_points.push_back(next_point);	//create another Trail point and add it to the pool		
-			last_point = next_point; // So we're gonna calculate, on the next iteration how far we are from the last point created, and so on
-		}
+		TrailPoint next_point(gameobject_position, width, duration);
+		test_points.push_back(next_point);	//create another Trail point and add it to the pool		
+		last_point = next_point; // So we're gonna calculate, on the next iteration how far we are from the last point created, and so on
+		last_gameobject_position = gameobject_position;
 	}
 
 	GetPerpendiculars();
@@ -98,11 +93,9 @@ void ComponentTrail::Update()
 
 void  ComponentTrail::GetPerpendiculars()
 {
-	unsigned int destroy_point_vertice = 0;
 	TrailPoint* previous_point = nullptr;
 	TrailPoint* current_point = nullptr;
 	mesh_points.clear();
-	float mesh_index = 0.0f;
 	
 	for (int i = 0; i < test_points.size(); ++i)
 	{
@@ -116,7 +109,7 @@ void  ComponentTrail::GetPerpendiculars()
 
 	unsigned int j = 0;
 	vertices.clear();
-	mesh_index = 1 / (float)test_points.size(); // to coordinate texture
+	float trail_segment_uv = 1.f / test_points.size(); // to coordinate texture
 	for (auto pair = mesh_points.begin(); pair < mesh_points.end(); ++pair)
 	{
 		if (pair->first->life > 0 && pair->second->life > 0)
@@ -141,8 +134,8 @@ void  ComponentTrail::GetPerpendiculars()
 			}*/
 			top_left = pair->first->position + perpendicular;
 			bottom_left = (pair->first->position - perpendicular);
-			vertices.push_back({ top_left, float2(mesh_index * j,1.0f) }); //uv[i]
-			vertices.push_back({ bottom_left, float2(mesh_index * j,0.0f) });//uv[++i]
+			vertices.push_back({ top_left, float2(trail_segment_uv * j, 1.0f) }); //uv[i]
+			vertices.push_back({ bottom_left, float2(trail_segment_uv * j, 0.0f) });//uv[++i]
 		}
 		else
 		{
@@ -191,9 +184,9 @@ void ComponentTrail::Render()
 
 void ComponentTrail::ClearTrail()
 {
-	gameobject_init_position = owner->transform.GetGlobalTranslation(); //initial GO position
-	last_point = TrailPoint(gameobject_init_position, width, duration);
-	test_points.empty();
+	last_gameobject_position = owner->transform.GetGlobalTranslation(); //initial GO position
+	last_point = TrailPoint(last_gameobject_position, width, duration);
+	test_points.clear();
 }
 
 void ComponentTrail::SetTrailTexture(uint32_t texture_uuid)

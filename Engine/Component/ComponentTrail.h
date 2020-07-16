@@ -75,7 +75,7 @@ private:
 
 public:
 	uint32_t texture_uuid = 0;
-	float3 gameobject_init_position = { 0.0f, 0.0f, 0.0f};
+	float3 last_gameobject_position;
 
 	int total_points = 1;
 	float3 last_point_added;
@@ -94,13 +94,11 @@ public:
 	
 	//Standard parameters
 	bool active = true;
-	bool on_transform_change = false;
 	//time
 	float time_counter = 0.0f;
 
 	//Toni tests stuff
 	std::vector<TrailPoint> test_points; // These are individual points that define the path
-	TrailPoint head_point;
 	TrailPoint last_point;
 	std::vector <std::pair <TrailPoint*, TrailPoint*>> mesh_points; // These are from which we're gonna build the mesh
 

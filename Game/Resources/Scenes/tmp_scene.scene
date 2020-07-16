@@ -125,8 +125,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    497.5,
-                    337.5
+                    944.0,
+                    457.0
                 ],
                 "Rotation": [
                     0.0,
@@ -147,8 +147,8 @@
                     0.5
                 ],
                 "SizeDelta": [
-                    995.0,
-                    675.0
+                    1888.0,
+                    914.0
                 ],
                 "Pivot": [
                     0.5,
@@ -7700,7 +7700,7 @@
                     "ComponentType": 2,
                     "Active": true,
                     "Mesh": 3930480532,
-                    "Material": 5235081,
+                    "Material": 946675333,
                     "Skeleton": 0
                 }
             ]
@@ -7774,7 +7774,7 @@
                     "ComponentType": 2,
                     "Active": true,
                     "Mesh": 1876158983,
-                    "Material": 1641130214,
+                    "Material": 946675333,
                     "Skeleton": 0
                 }
             ]
@@ -7848,7 +7848,7 @@
                     "ComponentType": 2,
                     "Active": true,
                     "Mesh": 3082066272,
-                    "Material": 2633208847,
+                    "Material": 946675333,
                     "Skeleton": 0
                 }
             ]
@@ -7922,7 +7922,7 @@
                     "ComponentType": 2,
                     "Active": true,
                     "Mesh": 3299614797,
-                    "Material": 102503090,
+                    "Material": 946675333,
                     "Skeleton": 0
                 }
             ]
@@ -15476,7 +15476,7 @@
                     "ComponentType": 2,
                     "Active": true,
                     "Mesh": 2400912641,
-                    "Material": 1947475380,
+                    "Material": 2931716130,
                     "Skeleton": 0
                 }
             ]
@@ -15624,7 +15624,7 @@
                     "ComponentType": 2,
                     "Active": true,
                     "Mesh": 3266862701,
-                    "Material": 2931716130,
+                    "Material": 1154660620,
                     "Skeleton": 0
                 }
             ]
@@ -15920,7 +15920,7 @@
                     "ComponentType": 2,
                     "Active": true,
                     "Mesh": 2483905149,
-                    "Material": 2931716130,
+                    "Material": 2136545985,
                     "Skeleton": 0
                 }
             ]
@@ -18462,7 +18462,7 @@
                     "ComponentType": 2,
                     "Active": true,
                     "Mesh": 2682571150,
-                    "Material": 912852549,
+                    "Material": 2975293779,
                     "Skeleton": 0
                 }
             ]
@@ -18684,7 +18684,7 @@
                     "ComponentType": 2,
                     "Active": true,
                     "Mesh": 2059350153,
-                    "Material": 806478049,
+                    "Material": 3150306390,
                     "Skeleton": 0
                 }
             ]
@@ -21330,7 +21330,7 @@
                     "ComponentType": 2,
                     "Active": true,
                     "Mesh": 2558649193,
-                    "Material": 3563125747,
+                    "Material": 1698783083,
                     "Skeleton": 0
                 },
                 {
