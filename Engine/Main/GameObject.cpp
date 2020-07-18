@@ -1,7 +1,10 @@
 #include "GameObject.h"
+
 #include "Application.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
 #include "Helper/Config.h"
+#include "Log/EngineLog.h"
+
 #include "Module/ModuleAnimation.h"
 #include "Module/ModuleAudio.h"
 #include "Module/ModuleEffects.h"
@@ -259,10 +262,6 @@ void GameObject::PreUpdate()
 void GameObject::Update()
 {
 	BROFILER_CATEGORY("GameObject Update", Profiler::Color::Green);
-	if (!active)
-	{
-		return;
-	}
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
 		if (components[i]->type != Component::ComponentType::SCRIPT)

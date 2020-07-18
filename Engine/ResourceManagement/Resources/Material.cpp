@@ -61,6 +61,10 @@ void Material::Save(Config& config) const
 		case MaterialTextureType::DISSOLVED_DIFFUSE:
 			config.AddUInt(textures_uuid[i], "Dissolved Diffuse");
 			break;
+
+		case MaterialTextureType::DISSOLVED_EMISSIVE:
+			config.AddUInt(textures_uuid[i], "Dissolved Emissive");
+			break;
 		default:
 			break;
 			
@@ -97,6 +101,7 @@ void Material::Load(const Config& config)
 	SetMaterialTexture(MaterialTextureType::NORMAL, config.GetUInt32("Normal", 0));
 	SetMaterialTexture(MaterialTextureType::LIGHTMAP, config.GetUInt32("Lightmap", 0));
 	SetMaterialTexture(MaterialTextureType::DISSOLVED_DIFFUSE, config.GetUInt32("Dissolved Diffuse", 0));
+	SetMaterialTexture(MaterialTextureType::DISSOLVED_EMISSIVE, config.GetUInt32("Dissolved Emissive", 0));
 	SetMaterialTexture(MaterialTextureType::NOISE, config.GetUInt32("Noise", 0));
 
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
@@ -187,7 +192,7 @@ std::string Material::GetMaterialTypeName(const MaterialType material_type)
 void Material::UpdateLiquidProperties()
 {
 	liquid_horizontal_normals_tiling += float2(liquid_tiling_speed.x * App->time->delta_time * 0.001f);
-	liquid_vertical_normals_tiling -= float2(liquid_tiling_speed.y * App->time->delta_time * 0.001f);
+	liquid_vertical_normals_tiling += float2(liquid_tiling_speed.y * App->time->delta_time * 0.001f);
 }
 
 unsigned int Material::GetShaderVariation() const
@@ -204,6 +209,7 @@ unsigned int Material::GetShaderVariation() const
 	if (material_type == MaterialType::MATERIAL_LIQUID)
 	{
 		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_LIQUID_PROPERTIES);
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_DISSOLVING_PROPERTIES);
 	}
 	if (material_type == MaterialType::MATERIAL_DISSOLVING)
 	{

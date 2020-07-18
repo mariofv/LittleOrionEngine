@@ -106,7 +106,7 @@ void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 	AddNormalUniforms(shader_program);
 	AddLightMapUniforms(shader_program);
 	
-	if (material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING)
+	if (material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING || material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
 	{
 		AddDissolveMaterialUniforms(shader_program);
 	}
@@ -174,9 +174,9 @@ void ComponentMeshRenderer::AddLightMapUniforms(unsigned int shader_program) con
 
 void ComponentMeshRenderer::AddLiquidMaterialUniforms(unsigned int shader_program) const
 {
-	glActiveTexture(GL_TEXTURE9);
+	glActiveTexture(GL_TEXTURE12);
 	BindTexture(Material::MaterialTextureType::LIQUID);
-	glUniform1i(glGetUniformLocation(shader_program, "material.liquid_map"), 9);
+	glUniform1i(glGetUniformLocation(shader_program, "material.liquid_map"), 12);
 	glUniform2fv(glGetUniformLocation(shader_program, "material.liquid_horizontal_normals_tiling"), 1, material_to_render->liquid_horizontal_normals_tiling.ptr());
 	glUniform2fv(glGetUniformLocation(shader_program, "material.liquid_vertical_normals_tiling"), 1, material_to_render->liquid_vertical_normals_tiling.ptr());
 }
@@ -186,10 +186,13 @@ void ComponentMeshRenderer::AddDissolveMaterialUniforms(unsigned int shader_prog
 	glActiveTexture(GL_TEXTURE9);
 	BindTexture(Material::MaterialTextureType::DISSOLVED_DIFFUSE);
 	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_diffuse"), 9);
-
 	glActiveTexture(GL_TEXTURE10);
+	BindTexture(Material::MaterialTextureType::DISSOLVED_EMISSIVE);
+	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_emissive"), 10);
+
+	glActiveTexture(GL_TEXTURE11);
 	BindTexture(Material::MaterialTextureType::NOISE);
-	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_noise"), 10);
+	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_noise"), 11);
 
 	glUniform1f(glGetUniformLocation(shader_program, "material.dissolve_progress"), material_to_render->dissolve_progress);
 }
@@ -226,7 +229,7 @@ bool ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const
 	}
 	else
 	{
-		if (id == Material::MaterialTextureType::EMISSIVE)
+		if (id == Material::MaterialTextureType::EMISSIVE || id == Material::MaterialTextureType::DISSOLVED_EMISSIVE)
 		{
 			texture_id = App->texture->blackfall_texture_id;
 		}

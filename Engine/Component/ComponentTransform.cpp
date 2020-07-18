@@ -90,7 +90,7 @@ void ComponentTransform::Translate(const float3& translation)
 void ComponentTransform::SetGlobalMatrixTranslation(const float3& translation)
 {
 	global_model_matrix.SetTranslatePart(translation);
-	SetGlobalModelMatrix(global_model_matrix);
+ 	SetGlobalModelMatrix(global_model_matrix);
 }
 
 Quat ComponentTransform::GetGlobalRotation() const

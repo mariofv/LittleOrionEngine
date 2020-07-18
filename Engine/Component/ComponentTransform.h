@@ -67,7 +67,7 @@ public:
 	float4x4 GetModelMatrix() const;
 
 	void GenerateGlobalModelMatrix();
-	float4x4 GetGlobalModelMatrix() const;
+	ENGINE_API float4x4 GetGlobalModelMatrix() const;
 	virtual void SetGlobalModelMatrix(const float4x4& new_global_matrix);
 
 protected:

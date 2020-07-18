@@ -3,6 +3,7 @@
 
 #include "EditorUI/Panel/Panel.h"
 #include "Main/Globals.h"
+#include "Log/EngineLog.h"
 
 #include <imgui.h>
 #include <vector>

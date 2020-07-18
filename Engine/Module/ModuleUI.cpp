@@ -8,6 +8,7 @@
 #include "Component/ComponentText.h"
 #include "Component/ComponentButton.h"
 
+#include "Log/EngineLog.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
 

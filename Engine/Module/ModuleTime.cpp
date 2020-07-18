@@ -1,6 +1,7 @@
 #include "ModuleTime.h"
 
 #include "Filesystem/PathAtlas.h"
+#include "Log/EngineLog.h"
 #include "Helper/Timer.h"
 #include "Main/Application.h"
 #include "ModuleEditor.h"
