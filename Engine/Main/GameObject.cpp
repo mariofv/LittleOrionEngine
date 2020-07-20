@@ -10,6 +10,7 @@
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScriptManager.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleLight.h"
@@ -99,6 +100,8 @@ GameObject& GameObject::operator<<(const GameObject& gameobject_to_copy)
 	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
 	this->original_UUID = gameobject_to_copy.original_UUID;
+	this->transform_2d_enabled = gameobject_to_copy.transform_2d_enabled;
+
 	return *this;
 }
 
@@ -381,6 +384,7 @@ void GameObject::AddChild(GameObject* child)
 {
 	if (child->parent != nullptr)
 	{
+		//Potencial lock
 		child->parent->RemoveChild(child);
 	}
 
@@ -752,6 +756,14 @@ void GameObject::UnpackPrefab()
 	}
 }
 
+void GameObject::Reassign()
+{
+	for(const auto& component : components)
+	{
+		component->ReassignResource();
+	}
+}
+
 void GameObject::CopyComponentsPrefabs(const GameObject& gameobject_to_copy)
 {
 	this->components.reserve(gameobject_to_copy.components.size());
@@ -776,6 +788,7 @@ void GameObject::CopyComponentsPrefabs(const GameObject& gameobject_to_copy)
 				copy = component->Clone(this->original_prefab);
 			}
 			copy->owner = this;
+			my_component = copy;
 			this->components.push_back(copy);
 		}
 	}

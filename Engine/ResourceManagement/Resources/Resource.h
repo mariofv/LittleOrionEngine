@@ -8,6 +8,7 @@
 
 class Path;
 class Metafile;
+class TextureLoadData;
 
 enum class ResourceType
 {
@@ -42,8 +43,12 @@ public:
 
 	static std::string GetResourceTypeName(ResourceType resource_type);
 
-private:
+public:
+	bool initialized = false;
+
+protected:
 	uint32_t uuid = 0;
+
 };
 
 namespace ResourceManagement
@@ -56,7 +61,7 @@ namespace ResourceManagement
 	};
 
 	template<typename T>
-	static std::shared_ptr<T> Load(uint32_t uuid, const FileData& resource_data)
+	static std::shared_ptr<T> Load(uint32_t uuid, const FileData& resource_data, bool async = false)
 	{
 		return nullptr;
 	};

@@ -130,7 +130,7 @@ ENGINE_API float ComponentAnimation::GetCurrentClipPercentatge() const
 	return 0.0f;
 }
 
-ENGINE_API int ComponentAnimation::GetTotalAnimationTime() const
+ENGINE_API float ComponentAnimation::GetTotalAnimationTime() const
 {
 	for (auto& playing_clip : animation_controller->playing_clips)
 	{
@@ -142,7 +142,7 @@ ENGINE_API int ComponentAnimation::GetTotalAnimationTime() const
 		return playing_clip.clip->animation_time;
 
 	}
-	return 0;
+	return 0.0f;
 }
 
 void ComponentAnimation::SetAnimationSpeed(float speed) const

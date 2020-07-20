@@ -17,6 +17,8 @@ Font::Font(uint32_t uuid, std::map<GLchar, Character> characters) : Resource(uui
 			max_advance = character.second.advance;
 		}
 	}
+
+	Resource(initialized) = true;
 }
 
 Font::Character Font::GetCharacter(const char& c)

@@ -143,17 +143,59 @@ void Material::Load(const Config& config)
 	specular_color[3] = specular.w;
 }
 
+void Material::LoadResource(uint32_t uuid, unsigned texture_type)
+{
+	MaterialTextureType type = static_cast<MaterialTextureType>(texture_type);
+	textures[type] = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(uuid));
+
+
+	if (textures[type])
+	{
+		return;
+	}
+
+	FileData file_data;
+	bool succes = App->resources->RetrieveFileDataByUUID(uuid, file_data);
+	if (succes)
+	{
+		//THINK WHAT TO DO IF IS IN CACHE
+		textures[type] = ResourceManagement::Load<Texture>(uuid, file_data, true);
+
+		//Delete file data buffer
+		delete[] file_data.buffer;
+		App->resources->AddResourceToCache(textures[type]);
+
+	}
+
+}
+
+void Material::InitResource(uint32_t uuid, unsigned texture_type)
+{
+	if (uuid == 814689362)
+	{
+		int i = 0;
+	}
+
+	MaterialTextureType type = static_cast<MaterialTextureType>(texture_type);
+	if (textures[type] && !textures[type].get()->initialized)
+	{
+		textures[type].get()->LoadInMemory();
+	}
+}
+
 void Material::RemoveMaterialTexture(MaterialTextureType type)
 {
 	textures[type] = nullptr;
-	
 }
 
 void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uuid)
 {
 	textures_uuid[type] = texture_uuid;
+
 	if (textures_uuid[type] != 0)
 	{
+		App->resources->loading_thread_communication.texture_type = type;
+		App->resources->loading_thread_communication.current_type = ResourceType::TEXTURE;
 		textures[type] = App->resources->Load<Texture>(texture_uuid);
 	}
 }

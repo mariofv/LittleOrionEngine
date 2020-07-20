@@ -25,8 +25,11 @@
 #include "ResourceManagement/Resources/Scene.h"
 
 #include <algorithm>
-#include <stack>
 #include <Brofiler/Brofiler.h>
+#include <functional> 
+#include <future> 
+#include <stack>
+#include <thread>
 
 bool ModuleScene::Init()
 {
@@ -387,7 +390,8 @@ void ModuleScene::OpenScene()
 {
 	App->animations->CleanTweens();
 	DeleteCurrentScene();
-	root = new GameObject(0);
+	root = new GameObject(0);	
+	
 
 	LoadSceneResource();
 
@@ -418,8 +422,16 @@ inline void ModuleScene::LoadSceneResource()
 	}
 	else
 	{
+		if(MULTITHREADING && App->time->isGameRunning())
+		{
+			timer.Start();
+			LoadLoadingScreen();
+		}
+			
 		current_scene = App->resources->Load<Scene>(pending_scene_uuid);
 		current_scene.get()->Load();
+
+		App->resources->loading_thread_communication.load_scene_asyncronously = true;
 	}
 }
 
@@ -441,6 +453,10 @@ void ModuleScene::LoadScene(unsigned position)
 	if (build_options->is_imported)
 	{
 		pending_scene_uuid = build_options->GetSceneUUID(position);
+		if(position == 0)
+		{
+			App->resources->loading_thread_communication.load_scene_asyncronously = false;
+		}
 		if (pending_scene_uuid == 0)
 		{
 			OpenNewScene();
@@ -483,6 +499,38 @@ void ModuleScene::SaveTmpScene()
 	last_scene = current_scene;
 }
 
+void ModuleScene::LoadLoadingScreen()
+{
+	App->resources->loading_thread_communication.normal_loading_flag = true;
+	App->resources->Load<Scene>(GetSceneUUIDFromPath(LOADING_SCREEN_PATH)).get()->Load();
+	loading_screen_canvas = GetGameObjectByName("Canvas");
+	GameObject* light = GetGameObjectByName("Light");
+	GameObject* main_camera = GetGameObjectByName("Main Camera");
+	if(light)
+	{
+		RemoveGameObject(light);
+	}
+
+	if(main_camera)
+	{
+		RemoveGameObject(main_camera);
+	}
+
+	App->resources->loading_thread_communication.normal_loading_flag = false;
+
+	App->resources->loading_thread_communication.loading = true;
+	App->time->time_scale = 0.f;
+}
+
+void ModuleScene::DeleteLoadingScreen()
+{
+	if(loading_screen_canvas)
+	{
+		RemoveGameObject(loading_screen_canvas);
+		loading_screen_canvas = nullptr;
+	}
+}
+
 void ModuleScene::LoadTmpScene()
 {
 	LoadScene(TMP_SCENE_PATH);
@@ -497,3 +545,9 @@ bool ModuleScene::CurrentSceneIsSaved() const
 {
 	return current_scene != nullptr;
 }
+
+void ModuleScene::StopSceneTimer()
+{
+	APP_LOG_INFO("TOTAL TIME LOADING SCENE: %.3f", timer.Stop());
+}
+

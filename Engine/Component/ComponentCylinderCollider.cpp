@@ -5,14 +5,12 @@
 
 ComponentCylinderCollider::ComponentCylinderCollider() : ComponentCollider(ComponentCollider::ColliderType::CYLINDER)
 {
-	col_shape = new btCylinderShape(btVector3(box_size));
-	AddBody();
+	InitData();
 }
 
 ComponentCylinderCollider::ComponentCylinderCollider(GameObject* owner) : ComponentCollider(owner, ComponentCollider::ColliderType::CYLINDER)
 {
-	col_shape = new btCylinderShape(btVector3(box_size));
-	AddBody();
+	InitData();
 }
 
 Component* ComponentCylinderCollider::Clone(GameObject* owner, bool original_prefab) const
@@ -50,4 +48,10 @@ void ComponentCylinderCollider::Scale()
 	float3 global_scale = owner->transform.GetGlobalScale();
 	body->getCollisionShape()->setLocalScaling(btVector3(max(global_scale.x, global_scale.z) * scale.x, global_scale.y * scale.y, scale.z));
 	box_size = btVector3(scale.x, scale.y, scale.z);
+}
+
+void ComponentCylinderCollider::InitData()
+{
+	col_shape = new btCylinderShape(btVector3(box_size));
+	AddBody();
 }

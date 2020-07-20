@@ -115,6 +115,9 @@ Component* ComponentImage::Clone(bool original_prefab) const
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->ReassignResource();
+
 	return created_component;
 };
 
@@ -148,12 +151,64 @@ void ComponentImage::SpecializedLoad(const Config& config)
 	}
 }
 
+void ComponentImage::LoadResource(uint32_t uuid, ResourceType resource)
+{
+
+	texture_to_render = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(uuid));
+
+	if(texture_to_render)
+	{
+		return;
+	}
+
+	FileData file_data;
+	bool succes = App->resources->RetrieveFileDataByUUID(uuid, file_data);
+	if(succes)
+	{
+		//THINK WHAT TO DO IF IS IN CACHE
+		texture_to_render = ResourceManagement::Load<Texture>(uuid, file_data, true);
+		//Delete file data buffer
+		delete[] file_data.buffer;
+		App->resources->AddResourceToCache(std::static_pointer_cast<Resource>(texture_to_render));
+	}
+
+}
+
+void ComponentImage::InitResource(uint32_t uuid, ResourceType resource)
+{
+	if(texture_to_render && !texture_to_render.get()->initialized)
+	{
+		texture_to_render.get()->LoadInMemory();
+	}
+}
+
+void ComponentImage::ReassignResource()
+{
+	if(texture_uuid != 0)
+	{
+		SetTextureToRender(texture_uuid);
+	}
+}
+
 void ComponentImage::SetTextureToRender(uint32_t texture_uuid)
 {
+	//Prepare multithreading loading
+	App->resources->loading_thread_communication.current_component_loading = this;
+	App->resources->loading_thread_communication.current_type = ResourceType::TEXTURE;
 	this->texture_uuid = texture_uuid;
 	texture_to_render = App->resources->Load<Texture>(texture_uuid);
-	if(texture_to_render != nullptr)
-		texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
+
+	//Set to default loading component
+	App->resources->loading_thread_communication.current_component_loading = nullptr;
+}
+
+void ComponentImage::SetTextureToRenderFromInspector(uint32_t texture_uuid)
+{
+	this->texture_uuid = texture_uuid;
+
+	App->resources->loading_thread_communication.normal_loading_flag = true;
+	texture_to_render = App->resources->Load<Texture>(texture_uuid);
+	App->resources->loading_thread_communication.normal_loading_flag = false;
 }
 
 void ComponentImage::SetColor(float4 color)
@@ -163,5 +218,8 @@ void ComponentImage::SetColor(float4 color)
 
 void ComponentImage::SetNativeSize() const
 {
-	owner->transform_2d.SetSize(float2((float)texture_to_render->width, (float)texture_to_render->height));
+	if(texture_to_render)
+	{
+		owner->transform_2d.SetSize(float2(texture_to_render->width, texture_to_render->height));
+	}
 }
