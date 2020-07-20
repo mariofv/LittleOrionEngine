@@ -137,7 +137,7 @@ void GameObject::Duplicate(const GameObject& gameobject_to_copy)
 	if (!is_prefab_parent && gameobject_to_copy.transform.modified_by_user)
 	{
 		transform.SetTranslation(gameobject_to_copy.transform.GetTranslation());
-		transform.SetRotation(gameobject_to_copy.transform.GetRotationRadiants());
+		transform.SetRotation(math::RadToDeg(gameobject_to_copy.transform.GetRotationRadiants()));
 		//gameobject_to_copy.transform.modified_by_user = false;
 	}
 	transform.SetScale(gameobject_to_copy.transform.GetScale());
@@ -164,7 +164,7 @@ void GameObject::Duplicate(const GameObject& gameobject_to_copy)
 void GameObject::SetTransform(GameObject* game_object)
 {
 	transform.SetTranslation(game_object->transform.GetTranslation());
-	transform.SetRotation(game_object->transform.GetRotationRadiants());
+	transform.SetRotation(math::RadToDeg(game_object->transform.GetRotationRadiants()));
 	transform.SetScale(game_object->transform.GetScale());
 }
 
