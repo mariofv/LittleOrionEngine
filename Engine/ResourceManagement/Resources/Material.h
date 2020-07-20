@@ -48,6 +48,10 @@ public:
 	void SetMaterialTexture(MaterialTextureType type, uint32_t texture_id);
 	const std::shared_ptr<Texture>& GetMaterialTexture(MaterialTextureType type) const;
 
+	//Asyncronous loading
+	void LoadResource(uint32_t uuid, unsigned texture_type);
+	void InitResource(uint32_t uuid, unsigned texture_type);
+
 	void RemoveMaterialTexture(MaterialTextureType type);
 
 	void ChangeTypeOfMaterial(const MaterialType new_material_type);
@@ -69,6 +73,7 @@ public:
 	
 	std::vector<uint32_t> textures_uuid;
 	std::vector<std::shared_ptr<Texture>> textures;
+
 
 	float diffuse_color[4] = { 1.0f, 1.0f,1.0f,1.0f };
 	float emissive_color[4] = { 1.0f, 1.0f, 1.0f , 1.0f };
@@ -98,7 +103,7 @@ namespace ResourceManagement
 	};
 
 	template<>
-	static std::shared_ptr<Material> Load(uint32_t uuid, const FileData& resource_data)
+	static std::shared_ptr<Material> Load(uint32_t uuid, const FileData& resource_data, bool async)
 	{
 		return MaterialManager::Load(uuid, resource_data);
 	}

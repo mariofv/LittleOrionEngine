@@ -375,7 +375,9 @@ size_t PanelProjectExplorer::GetResourcePreviewImage(uint32_t uuid)
 	size_t opengl_id = 0;
 	if (project_explorer_icon_cache.find(uuid) == project_explorer_icon_cache.end())
 	{
+		App->resources->loading_thread_communication.normal_loading_flag = true;
 		opengl_id = (project_explorer_icon_cache[uuid] = App->resources->Load<Texture>(uuid))->opengl_texture;
+		App->resources->loading_thread_communication.normal_loading_flag = false;
 	}
 	else
 	{

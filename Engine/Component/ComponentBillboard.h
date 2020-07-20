@@ -52,6 +52,11 @@ public:
 	void CommonUniforms(const GLuint &shader_program);
 
 	void ChangeTexture(uint32_t texture_uuid);
+	void LoadResource(uint32_t uuid, ResourceType resource) override;
+	void InitResource(uint32_t uuid, ResourceType resource) override;
+
+	void ReassignResource() override;
+
 	void ChangeTextureEmissive(uint32_t texture_uuid);
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
 

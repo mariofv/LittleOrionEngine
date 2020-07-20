@@ -85,6 +85,7 @@ public:
 	//Prefabs
 	GameObject * GetPrefabParent();
 	void UnpackPrefab();
+	void Reassign();
 
 private:
 	void SetHierarchyStatic(bool is_static);

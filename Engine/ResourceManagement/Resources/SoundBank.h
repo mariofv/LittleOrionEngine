@@ -22,7 +22,7 @@ private:
 namespace ResourceManagement
 {
 	template<>
-	static std::shared_ptr<SoundBank> Load(uint32_t uuid, const FileData& resource_data)
+	static std::shared_ptr<SoundBank> Load(uint32_t uuid, const FileData& resource_data, bool async)
 	{
 		return SoundManager::Load(uuid, resource_data);
 	}

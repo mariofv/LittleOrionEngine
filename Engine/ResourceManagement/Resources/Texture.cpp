@@ -1,18 +1,29 @@
 #include "Texture.h"
 
+#include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Metafile/TextureMetafile.h"
 
 #include <IL/il.h>
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
-Texture::Texture(uint32_t uuid, char* data, size_t image_size, int width, int height, int num_channels, TextureOptions& options)
-	: width(width), height(height)
+Texture::Texture(uint32_t uuid, char* data, size_t image_size, int width, int height, int num_channels, TextureOptions& options, bool async)
+	: width(width), height(height), num_channels(num_channels)
 	, Resource(uuid)
 {
 	this->data.resize(image_size);
 	memcpy(&this->data.front(), data, image_size);
-	LoadInMemory(options, num_channels);
+
+	this->texture_options.filter_mode = texture_options.filter_mode;
+	this->texture_options.generate_mipmaps = texture_options.generate_mipmaps;
+	this->texture_options.texture_type = texture_options.texture_type;
+	this->texture_options.wrap_mode = texture_options.wrap_mode;
+
+	if(!async)
+	{
+		LoadInMemory();
+	}
+
 }
 
 
@@ -21,17 +32,23 @@ Texture::~Texture()
 	glDeleteTextures(1, &opengl_texture);
 }
 
-void Texture::LoadInMemory(TextureOptions& options, int num_channels)
+void Texture::LoadInMemory()
 {
+	if(initialized)
+	{
+		return;
+	}
+
+
 	glGenTextures(1, &opengl_texture);
 	glBindTexture(GL_TEXTURE_2D, opengl_texture);
 
 	// set the texture wrapping/filtering options (on the currently bound texture object)
-	SetWrap(options.wrap_mode);
-	SetFilter(options.filter_mode);
+	SetWrap(texture_options.wrap_mode);
+	SetFilter(texture_options.filter_mode);
 	
 	GLint channels = num_channels > 3 ? GL_RGBA : GL_RGB;
-	if (options.texture_type == TextureType::NORMAL)
+	if (texture_options.texture_type == TextureType::NORMAL)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, channels, width, height, 0, channels, GL_UNSIGNED_BYTE, data.data());
 	}
@@ -41,10 +58,13 @@ void Texture::LoadInMemory(TextureOptions& options, int num_channels)
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-	if (options.generate_mipmaps)
+	if (texture_options.generate_mipmaps)
 	{
 		GenerateMipMap();
 	}
+
+	initialized = true;
+	++App->resources->loading_thread_communication.number_of_textures_loaded;
 }
 
 void Texture::GenerateMipMap()

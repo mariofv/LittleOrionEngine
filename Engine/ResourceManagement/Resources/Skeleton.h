@@ -33,7 +33,7 @@ public:
 namespace ResourceManagement
 {
 	template<>
-	static std::shared_ptr<Skeleton> Load(uint32_t uuid, const FileData& resource_data)
+	static std::shared_ptr<Skeleton> Load(uint32_t uuid, const FileData& resource_data, bool async)
 	{
 		return SkeletonManager::Load(uuid, resource_data);
 	}

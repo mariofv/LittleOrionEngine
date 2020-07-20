@@ -3,6 +3,7 @@
 
 #include "ComponentCollider.h"
 
+class Mesh;
 
 class ComponentMeshCollider : public ComponentCollider
 {
@@ -17,12 +18,15 @@ public:
 
 	void UpdateDimensions();
 	void Scale();
+	void InitMeshCollider();
+
 private:
 	void InitData();
 	void CreateMeshBody();
 private:
 	std::vector<float> vertices;
 	std::vector<int> indices;
+	std::shared_ptr<Mesh> mesh;
 };
 
 #endif

@@ -130,7 +130,8 @@ bool ComponentBillboard::IsPlaying()
 
 void ComponentBillboard::Render(const float3& global_position)
 {
-	if(!active)
+	BROFILER_CATEGORY("Render billboard", Profiler::Color::Orange);
+	if(!active || !billboard_texture || !billboard_texture->initialized)
 	{
 		return;
 	}
@@ -185,6 +186,9 @@ Component* ComponentBillboard::Clone(bool original_prefab) const
 		created_component = App->effects->CreateComponentBillboard();
 	}
 	*created_component = *this;
+
+	created_component->ReassignResource();
+
 	return created_component;
 };
 
@@ -262,13 +266,57 @@ void ComponentBillboard::ChangeTexture(uint32_t texture_uuid)
 {
 	if (texture_uuid != 0)
 	{
+		//Prepare multithreading loading
+		App->resources->loading_thread_communication.current_component_loading = this;
+		App->resources->loading_thread_communication.current_type = ResourceType::TEXTURE;
 		this->texture_uuid = texture_uuid;
 		billboard_texture = App->resources->Load<Texture>(texture_uuid);
+
+		//Set to default loading component
+		App->resources->loading_thread_communication.current_component_loading = nullptr;
 	}
+}
+
+
+void ComponentBillboard::LoadResource(uint32_t uuid, ResourceType resource)
+{
+	billboard_texture = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(uuid));
+
+	if (billboard_texture)
+	{
+		return;
+	}
+
+	FileData file_data;
+	bool succes = App->resources->RetrieveFileDataByUUID(uuid, file_data);
+	if (succes)
+	{
+		//THINK WHAT TO DO IF IS IN CACHE
+		billboard_texture = ResourceManagement::Load<Texture>(uuid, file_data, true);
+		//Delete file data buffer
+		delete[] file_data.buffer;
+		App->resources->AddResourceToCache(std::static_pointer_cast<Resource>(billboard_texture));
+	}
+
+}
+
+void ComponentBillboard::InitResource(uint32_t uuid, ResourceType resource)
+{
+	if (billboard_texture && !billboard_texture.get()->initialized)
+	{
+		billboard_texture.get()->LoadInMemory();
+	}
+}
+
+void ComponentBillboard::ReassignResource()
+{
+	ChangeTexture(texture_uuid);
 }
 
 void ComponentBillboard::ChangeTextureEmissive(uint32_t texture_uuid)
 {
+	App->resources->loading_thread_communication.normal_loading_flag = true;
+
 	if (texture_uuid != 0)
 	{
 		this->texture_emissive_uuid = texture_uuid;
@@ -280,6 +328,7 @@ void ComponentBillboard::ChangeTextureEmissive(uint32_t texture_uuid)
 		billboard_texture_emissive = App->resources->Load<Texture>(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
 		emissive_intensity = 0;
 	}
+	App->resources->loading_thread_communication.normal_loading_flag = false;
 }
 
 

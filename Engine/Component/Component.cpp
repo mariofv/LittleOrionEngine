@@ -21,6 +21,7 @@ void Component::CloneBase(Component* component) const
 {
 	*component = *this;
 }
+
 bool Component::Is2DComponent() const
 {
 	return

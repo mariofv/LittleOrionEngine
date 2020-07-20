@@ -7,6 +7,8 @@
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleResourceManager.h"
+#include "Module/ModuleScene.h"
 #include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleWindow.h"
@@ -317,7 +319,6 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::SliderFloat("Shadows Fov Factor", &App->lights->main_camera_fov_increment_factor, 0, 4, "%.2f");
 
 		ImGui::Checkbox("Render Particles", &App->effects->render_particles);
-
 
 	}
 }

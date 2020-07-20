@@ -5,6 +5,7 @@
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleResourceManager.h"
+#include "Helper/Timer.h"
 #include "Helper/Utils.h"
 
 #include "ResourceManagement/Metafile/Metafile.h"
@@ -19,9 +20,21 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
+Timer TextureManager::timer = Timer();
+
 constexpr size_t extension_size = 3; //3 characters: DDS, TGA, JPG..
-std::shared_ptr<Texture> TextureManager::Load(uint32_t uuid, const FileData& resource_data)
+std::shared_ptr<Texture> TextureManager::Load(uint32_t uuid, const FileData& resource_data, bool async)
 {
+
+	if(timer.IsPaused())
+	{
+		timer.Resume();
+	}
+	else
+	{
+		timer.Start();
+	}
+	BROFILER_CATEGORY("Load Texture Manager", Profiler::Color::PaleGoldenRod);
 	std::string extension;
 	TextureOptions texture_options;
 	char* cursor = (char*)resource_data.buffer;
@@ -52,11 +65,12 @@ std::shared_ptr<Texture> TextureManager::Load(uint32_t uuid, const FileData& res
 	std::shared_ptr<Texture> loaded_texture;
 	if (data.size())
 	{
-		loaded_texture = std::make_shared<Texture>(uuid, data.data(), data.size(), width, height, num_channels, texture_options);
+		loaded_texture = std::make_shared<Texture>(uuid, data.data(), data.size(), width, height, num_channels, texture_options, async);
 	}
+	RESOURCES_LOG_INFO("Time Loading Texture Manager: %.3f", timer.Pause());
+
 	return loaded_texture;
 }
-
 
 std::vector<char> TextureManager::LoadImageData(const FileData& resource_data, size_t offset, const std::string& extension, int & width, int & height, int & num_channels)
 {

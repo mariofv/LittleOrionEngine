@@ -2,7 +2,8 @@
 #define _COMPONENT_H_
 
 #include "Helper/Config.h"
-
+//UGLY but needed for the moment
+#include "ResourceManagement/Resources/Resource.h"
 #include <pcg_basic.h>
 
 class GameObject;
@@ -80,6 +81,13 @@ public:
 
 	virtual void SpecializedSave(Config& config) const = 0;
 	virtual void SpecializedLoad(const Config &config) = 0;
+
+	virtual void LoadResource(uint32_t uuid, ResourceType resource) {}
+	virtual void LoadResource(uint32_t uuid, ResourceType resource, unsigned type) {}
+	virtual void InitResource(uint32_t uuid, ResourceType resource) {}
+	virtual void InitResource(uint32_t uuid, ResourceType resource, unsigned type) {}
+
+	virtual void ReassignResource() {}
 
 	virtual ComponentType GetType() const { return type; };
 	bool Is2DComponent() const;
