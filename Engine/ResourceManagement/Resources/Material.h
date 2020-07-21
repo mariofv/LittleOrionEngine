@@ -47,6 +47,7 @@ public:
 
 	void SetMaterialTexture(MaterialTextureType type, uint32_t texture_id);
 	const std::shared_ptr<Texture>& GetMaterialTexture(MaterialTextureType type) const;
+	bool UseLightmap() const;
 
 	void RemoveMaterialTexture(MaterialTextureType type);
 

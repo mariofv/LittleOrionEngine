@@ -81,13 +81,16 @@ void main()
 	//result += emissive_color;
 	result +=diffuse_color.rgb + ambient + emissive_color;
 	result *= texture(material.light_map, texCoordLightmap).rgb;
-	FragColor = vec4(result,1.0);
-	FragColor.a=material.transparency;
+	FragColor = vec4(result,diffuse_color.a);
 }
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 {
 	vec4 result = texture(mat.diffuse_map, texCoord)*mat.diffuse_color;
+	if(result.a <0.5)
+	{
+		discard;
+	}
 	return result;
 }
 

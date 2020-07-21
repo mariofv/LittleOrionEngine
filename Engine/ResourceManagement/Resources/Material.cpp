@@ -163,6 +163,11 @@ const std::shared_ptr<Texture>& Material::GetMaterialTexture(MaterialTextureType
 	return textures[type];
 }
 
+bool Material::UseLightmap() const
+{
+	return  textures[MaterialTextureType::LIGHTMAP] != nullptr;
+}
+
 void Material::ChangeTypeOfMaterial(const MaterialType new_material_type)
 {
 	material_type = new_material_type;

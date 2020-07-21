@@ -77,7 +77,10 @@ void ComponentMeshRenderer::Render()
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	App->lights->Render(owner->transform.GetGlobalTranslation(), program);
+	if (!material_to_render->UseLightmap())
+	{
+		App->lights->Render(owner->transform.GetGlobalTranslation(), program);
+	}
 
 	RenderMaterial(program);
 	RenderModel();
@@ -167,9 +170,9 @@ void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
 void ComponentMeshRenderer::AddLightMapUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE8);
-	bool has_lightmap =  BindTexture(Material::MaterialTextureType::LIGHTMAP);
+	BindTexture(Material::MaterialTextureType::LIGHTMAP);
 	glUniform1i(glGetUniformLocation(shader_program, "material.light_map"), 8);
-	glUniform1i(glGetUniformLocation(shader_program, "use_light_map"), has_lightmap ? 1 : 0);
+	glUniform1i(glGetUniformLocation(shader_program, "use_light_map"), material_to_render->UseLightmap() ? 1 : 0);
 }
 
 void ComponentMeshRenderer::AddLiquidMaterialUniforms(unsigned int shader_program) const
