@@ -36,6 +36,8 @@ void ComponentMeshRenderer::SpecializedSave(Config& config) const
 	config.AddUInt(mesh_uuid, "Mesh");
 	config.AddUInt(material_uuid, "Material");
 	config.AddUInt(skeleton_uuid, "Skeleton");
+	config.AddBool(shadow_caster, "ShadowCaster");
+	config.AddBool(shadow_receiver, "ShadowReceiver");
 }
 
 void ComponentMeshRenderer::SpecializedLoad(const Config& config)
@@ -48,6 +50,9 @@ void ComponentMeshRenderer::SpecializedLoad(const Config& config)
 
 	skeleton_uuid =	config.GetUInt32("Skeleton", 0);
 	SetSkeleton(skeleton_uuid);
+
+	shadow_caster = config.GetBool("ShadowCaster", shadow_caster);
+	shadow_receiver = config.GetBool("ShadowReceiver", shadow_receiver);
 }
 
 void ComponentMeshRenderer::Render()

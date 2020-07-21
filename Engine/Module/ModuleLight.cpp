@@ -113,7 +113,6 @@ void ModuleLight::RenderDirectionalLight(const ComponentLight& light)
 
 void ModuleLight::RenderSpotLights(const ComponentLight& light, GLuint program)
 {
-
 	if (light.light_type == ComponentLight::LightType::SPOT_LIGHT && current_number_spot_lights_rendered < MAX_SPOT_LIGHTS_RENDERED && light.active)
 	{
 		float3 light_color_scaled = light.light_intensity * float3(light.light_color);
@@ -172,6 +171,7 @@ void ModuleLight::RemoveComponentLight(ComponentLight* light_to_remove)
 
 void ModuleLight::SortClosestLights(const float3& position)
 {
+	BROFILER_CATEGORY("Module Light Sort ligths", Profiler::Color::MediumTurquoise);
 	std::sort(lights.begin(), lights.end(), [position](const  ComponentLight* lhs, const ComponentLight* rhs)
 	{
 		float distance1 = position.Distance(lhs->owner->transform.GetGlobalTranslation());
