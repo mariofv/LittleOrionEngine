@@ -188,9 +188,12 @@ void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameO
 			}
 			break;
 		}
-		created_component->owner = loaded_gameObject.get();
-		created_component->Init();
-		created_component->Load(gameobject_components_config[i]);
-		loaded_gameObject->components.push_back(created_component);
+		if (component_type != Component::ComponentType::AABB && created_component)
+		{
+			created_component->owner = loaded_gameObject.get();
+			created_component->Init();
+			created_component->Load(gameobject_components_config[i]);
+			loaded_gameObject->components.push_back(created_component);
+		}
 	}
 }

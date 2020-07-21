@@ -92,14 +92,14 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		if (dropped_texture_uuid != 0)
 		{
 			particle_system->billboard->ChangeTexture(dropped_texture_uuid);
-			modified_by_user = true;
+			particle_system->modified_by_user = true;
 		}
 
 		uint32_t resource_selector_texture = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
 		if (resource_selector_texture != 0)
 		{
 			particle_system->billboard->ChangeTexture(resource_selector_texture);
-			modified_by_user = true;
+			particle_system->modified_by_user = true;
 		}
 		ImGui::SameLine();
 
@@ -107,8 +107,8 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		{
 			ImGui::Spacing();
 
-			ImGui::DragFloat("Lifetime (s)", &particle_system->particles_life_time, 1.0F, 0.0F, 100.0F);
-			ImGui::DragInt("Max particles", &particle_system->max_particles_number, 1.f, 0, MAX_PARTICLES);
+			particle_system->modified_by_user |= ImGui::DragFloat("Lifetime (s)", &particle_system->particles_life_time, 1.0F, 0.0F, 100.0F);
+			particle_system->modified_by_user |= ImGui::DragInt("Max particles", &particle_system->max_particles_number, 1.f, 0, MAX_PARTICLES);
 			
 			ImGui::Spacing();
 			ImGui::Separator();
@@ -119,13 +119,14 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			int random_size = particle_system->size_random ? 1 : 0;
 			if (ImGui::Combo("Initial Size Type", &random_size, "Constant\0Random\0"))
 			{
-				particle_system->size_random = random_size == 1;	
+				particle_system->size_random = random_size == 1;
+				particle_system->modified_by_user = true;
 			}
 
 			if (particle_system->size_random)
 			{
 				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragFloat("Initial Min size", &particle_system->min_size_of_particle, 0.1f, 0, 999);
+				particle_system->modified_by_user |= ImGui::DragFloat("Initial Min size", &particle_system->min_size_of_particle, 0.1f, 0, 999);
 				ImGui::SameLine();
 				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
 				ImGui::DragFloat("Initial Max size", &particle_system->max_size_of_particle, 0.1f, 0, 999);
@@ -140,19 +141,19 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			ImGui::Spacing();
 
 			ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "Velocity");
-			ImGui::DragFloat("Initial Velocity", &particle_system->velocity_particles_start, 0.01f, 0.0f, 100.0F);
+			particle_system->modified_by_user |= ImGui::DragFloat("Initial Velocity", &particle_system->velocity_particles_start, 0.01f, 0.0f, 100.0F);
 
 			ImGui::Spacing();
 			ImGui::Separator();
 			ImGui::Spacing();
 
-			ImGui::DragFloat("Gravity Modifier", &particle_system->gravity_modifier, 0.01f, 0.0f);
+			particle_system->modified_by_user |= ImGui::DragFloat("Gravity Modifier", &particle_system->gravity_modifier, 0.01f, 0.0f);
 
 			ImGui::Spacing();
 			ImGui::Separator();
 			ImGui::Spacing();
 
-			ImGui::Checkbox("Local Space", &particle_system->follow_owner);
+			particle_system->modified_by_user |= ImGui::Checkbox("Local Space", &particle_system->follow_owner);
 			ImGui::Spacing();
 
 		}
@@ -160,7 +161,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		if (ImGui::CollapsingHeader("Emission"))
 		{
 			ImGui::Spacing();
-			ImGui::DragFloat("Time Between Particles", &particle_system->time_between_particles, 0.1F, 0.0F, 10.0f);
+			particle_system->modified_by_user |= ImGui::DragFloat("Time Between Particles", &particle_system->time_between_particles, 0.1F, 0.0F, 10.0f);
 			ImGui::Spacing();
 		}
 
@@ -189,35 +190,35 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			{
 				if (particle_system->enabled_random_x)
 				{
-					ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 10000);
-					ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -10000, 0);
+					particle_system->modified_by_user |= ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 10000);
+					particle_system->modified_by_user |= ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -10000, 0);
 				}
 				else
 				{
-					ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -100, 10000);
+					particle_system->modified_by_user |= ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -100, 10000);
 				}
 				ImGui::SameLine();
-				ImGui::Checkbox("Rand X", &particle_system->enabled_random_x);
+				particle_system->modified_by_user |= ImGui::Checkbox("Rand X", &particle_system->enabled_random_x);
 
 				ImGui::Spacing();
 
 				if (particle_system->enabled_random_z)
 				{
-					ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 10000);
-					ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -10000, 0);
+					particle_system->modified_by_user |= ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 10000);
+					particle_system->modified_by_user |= ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -10000, 0);
 				}
 				else
 				{
-					ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -100, 10000);
+					particle_system->modified_by_user |= ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -100, 10000);
 				}
 				ImGui::SameLine();
-				ImGui::Checkbox("Rand Z", &particle_system->enabled_random_z);
+				particle_system->modified_by_user |= ImGui::Checkbox("Rand Z", &particle_system->enabled_random_z);
 
 			}
 			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::CONE)
 			{
-				ImGui::DragFloat("Outer radius", &particle_system->outer_radius, 0.1F, 0.1F, 10);
-				ImGui::DragFloat("Inner radius", &particle_system->inner_radius, 0.1F, 0.1F, 10);
+				particle_system->modified_by_user |= ImGui::DragFloat("Outer radius", &particle_system->outer_radius, 0.1F, 0.1F, 10);
+				particle_system->modified_by_user |= ImGui::DragFloat("Inner radius", &particle_system->inner_radius, 0.1F, 0.1F, 10);
 			}
 		}
 
@@ -225,17 +226,17 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 
 		if (ImGui::CollapsingHeader("Color"))
 		{
-			ImGui::ColorEdit4("Particle Color##2f", particle_system->initial_color.ptr(), ImGuiColorEditFlags_Float);
+			particle_system->modified_by_user |= ImGui::ColorEdit4("Particle Color##2f", particle_system->initial_color.ptr(), ImGuiColorEditFlags_Float);
 			ImGui::Text("Fade Between Colors");
-			ImGui::Checkbox("###Fade Between Colors", &particle_system->fade_between_colors);
+			particle_system->modified_by_user |= ImGui::Checkbox("###Fade Between Colors", &particle_system->fade_between_colors);
 			ImGui::SameLine();
 			if (!particle_system->fade_between_colors)
 			{
 				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
 			}
-			ImGui::ColorEdit4("Particle Color To Fade##2f", particle_system->color_to_fade.ptr(), ImGuiColorEditFlags_Float);
-			ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
+			particle_system->modified_by_user |= ImGui::ColorEdit4("Particle Color To Fade##2f", particle_system->color_to_fade.ptr(), ImGuiColorEditFlags_Float);
+			particle_system->modified_by_user |= ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
 			if (!particle_system->fade_between_colors)
 			{
 				ImGui::PopItemFlag();
@@ -261,12 +262,15 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				{
 				case 0:
 					particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::CONSTANT;
+					particle_system->modified_by_user = true;
 					break;
 				case 1:
 					particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::LINEAR;
+					particle_system->modified_by_user = true;
 					break;
 				case 2:
 					particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::RANDOM_BETWEEN_TWO_CONSTANTS;
+					particle_system->modified_by_user = true;
 					break;
 				}
 			}
@@ -275,16 +279,16 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			{
 			case ComponentParticleSystem::TypeOfVelocityOverTime::CONSTANT:
 				particle_system->velocity_over_time_speed_modifier;
-				ImGui::DragFloat("Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
+				particle_system->modified_by_user |= ImGui::DragFloat("Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
 				break;
 			case ComponentParticleSystem::TypeOfVelocityOverTime::LINEAR:
-				ImGui::DragFloat("Start Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
-				ImGui::DragFloat("End Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
+				particle_system->modified_by_user |= ImGui::DragFloat("Start Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
+				particle_system->modified_by_user |= ImGui::DragFloat("End Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
 				break;
 			case ComponentParticleSystem::TypeOfVelocityOverTime::RANDOM_BETWEEN_TWO_CONSTANTS:
 				particle_system->velocity_over_time_speed_modifier;
-				ImGui::DragFloat("Min Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
-				ImGui::DragFloat("Max Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
+				particle_system->modified_by_user |= ImGui::DragFloat("Min Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
+				particle_system->modified_by_user |= ImGui::DragFloat("Max Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
 				break;
 			}
 
@@ -303,7 +307,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		{
 			ImGui::Text("WIP");
 		}
-		ImGui::Checkbox("###Fade", &particle_system->fade);
+		particle_system->modified_by_user |= ImGui::Checkbox("###Fade", &particle_system->fade);
 		ImGui::SameLine();
 		if (ImGui::CollapsingHeader("Alpha Over Lifetime"))
 		{
@@ -312,7 +316,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
 			}
-			ImGui::DragFloat("Fade time", &particle_system->fade_time, 0.01f, 0.0f, 10.0F);
+			particle_system->modified_by_user |= ImGui::DragFloat("Fade time", &particle_system->fade_time, 0.01f, 0.0f, 10.0F);
 			if (!particle_system->fade)
 			{
 				ImGui::PopItemFlag();
@@ -320,7 +324,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			}
 		}
 
-		ImGui::Checkbox("###Size change over time", &particle_system->change_size);
+		particle_system->modified_by_user |= ImGui::Checkbox("###Size change over time", &particle_system->change_size);
 		ImGui::SameLine();
 		if (ImGui::CollapsingHeader("Size Over Lifetime"))
 		{
@@ -333,12 +337,12 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			
 			ImGui::Spacing();
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-			ImGui::DragFloat("Min size", &particle_system->min_size_of_particle, 0.1f, 0, 999);
+			particle_system->modified_by_user |= ImGui::DragFloat("Min size", &particle_system->min_size_of_particle, 0.1f, 0, 999);
 			ImGui::SameLine();
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-			ImGui::DragFloat("Max size", &particle_system->max_size_of_particle, 0.1f, 0, 999);
+			particle_system->modified_by_user |= ImGui::DragFloat("Max size", &particle_system->max_size_of_particle, 0.1f, 0, 999);
 			
-			ImGui::DragFloat("Speed", &particle_system->size_change_speed, 0.01f, 0.0f, 10.0F);
+			particle_system->modified_by_user |= ImGui::DragFloat("Speed", &particle_system->size_change_speed, 0.01f, 0.0f, 10.0F);
 
 			if (!particle_system->change_size)
 			{
@@ -357,14 +361,14 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
 			}
 
-			ImGui::Checkbox("Tile random", &particle_system->tile_random);
+			particle_system->modified_by_user |= ImGui::Checkbox("Tile random", &particle_system->tile_random);
 			if (particle_system->tile_random)
 			{
-				ImGui::InputFloat("Max", &particle_system->max_tile_value);
-				ImGui::InputFloat("Min", &particle_system->min_tile_value);
+				particle_system->modified_by_user |= ImGui::InputFloat("Max", &particle_system->max_tile_value);
+				particle_system->modified_by_user |= ImGui::InputFloat("Min", &particle_system->min_tile_value);
 			}
-			ImGui::DragInt("Columns", &particle_system->billboard->num_sprisheet_columns);
-			ImGui::DragInt("Rows", &particle_system->billboard->num_sprisheet_rows);
+			particle_system->modified_by_user |= ImGui::DragInt("Columns", &particle_system->billboard->num_sprisheet_columns);
+			particle_system->modified_by_user |= ImGui::DragInt("Rows", &particle_system->billboard->num_sprisheet_rows);
 			
 			if (!particle_system->billboard->is_spritesheet)
 			{
@@ -380,12 +384,15 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				{
 				case 0:
 					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::WORLD);
+					particle_system->modified_by_user = true;
 					break;
 				case 1:
 					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
+					particle_system->modified_by_user = true;
 					break;
 				case 2:
 					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
+					particle_system->modified_by_user = true;
 					break;
 				}
 			}
