@@ -213,7 +213,7 @@ void ComponentParticleSystem::Update()
 		}
 
 
-		gravity_vector = float4(0, gravity_modifier *0.000001f, 0, 0);
+		CalculateGravityVector();
 
 		// update all particles
 		num_of_alive_particles = 0;
@@ -393,7 +393,6 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 
 void ComponentParticleSystem::SpecializedLoad(const Config& config)
 {
-
 	billboard->SpecializedLoad(config);
 	type_of_particle_system = static_cast<TypeOfParticleSystem>(config.GetInt("Type of particle system", static_cast<int>(TypeOfParticleSystem::BOX)));
 	
@@ -521,7 +520,6 @@ ENGINE_API void ComponentParticleSystem::Pause()
 	emitting = false;
 }
 
-
 void ComponentParticleSystem::OrbitX(float angle, Particle& particle)
 {
 	float3 focus_vector = owner->transform.GetTranslation() - owner->transform.GetTranslation();
@@ -534,11 +532,20 @@ void ComponentParticleSystem::OrbitX(float angle, Particle& particle)
 	particle.position.x = position.x;
 	particle.position.z = position.z;
 }
+
+void ComponentParticleSystem::CalculateGravityVector()
+{
+	float4x4 gravity_rotation = float4x4::FromTRS(float3::one, owner->transform.GetGlobalRotation(), float3::one);
+	gravity_rotation.Transpose();
+	gravity_vector = gravity_rotation * float4(0, gravity_modifier * 0.000001f, 0, 0);
+}
+
 void ComponentParticleSystem::Disable()
 {
 	active = false;
 	Stop();
 }
+
 void ComponentParticleSystem::Enable()
 {
 	active = true;

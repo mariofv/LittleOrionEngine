@@ -107,6 +107,7 @@ public:
 	ENGINE_API void Pause();
 
 	void OrbitX(float angle, Particle& particle);
+	void CalculateGravityVector();
 
 private:
 	unsigned int GetParticlesSystemVariation();
