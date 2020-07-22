@@ -444,7 +444,7 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	orbit = config.GetBool("Orbit", false);
 }
 
-Component* ComponentParticleSystem::Clone(bool original_prefab) const
+Component* ComponentParticleSystem::Clone(GameObject* owner, bool original_prefab)
 {
 
 	ComponentParticleSystem* created_component;
@@ -462,7 +462,7 @@ Component* ComponentParticleSystem::Clone(bool original_prefab) const
 	*created_component = *this;
 	*original_billboard = *this->billboard;
 	created_component->billboard = original_billboard;
-	CloneBase(static_cast<Component*>(created_component));
+		CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 };
 

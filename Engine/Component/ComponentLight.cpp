@@ -14,7 +14,7 @@ ComponentLight::ComponentLight(GameObject * owner) : Component(owner, ComponentT
 
 }
 
-Component* ComponentLight::Clone(bool original_prefab) const
+Component* ComponentLight::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentLight * created_component;
 	if (original_prefab)
@@ -26,7 +26,7 @@ Component* ComponentLight::Clone(bool original_prefab) const
 		created_component = App->lights->CreateComponentLight();
 	}
 	*created_component = *this;
-	CloneBase(static_cast<Component*>(created_component));
+		CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 };
 

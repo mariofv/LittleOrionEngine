@@ -53,8 +53,6 @@ public:
 		this->UUID = component_to_move.UUID;
 		component_to_move.UUID = 0;
 
-		this->owner = component_to_move.owner;
-		component_to_move.owner = nullptr;
 		this->type = component_to_move.type;
 		return *this;
 	}
@@ -68,11 +66,7 @@ public:
 	virtual void PostUpdate() {};
 
 	virtual void Delete() = 0;
-	virtual Component* Clone(bool create_on_module = true) const = 0;
-	virtual Component* Clone(GameObject* owner, bool create_on_module = false) const
-	{
-		return nullptr;
-	}
+	virtual Component* Clone(GameObject* owner, bool original_prefab) = 0;
 	void CloneBase(Component* component) const;
 	virtual void Copy(Component * component_to_copy) const = 0;
 

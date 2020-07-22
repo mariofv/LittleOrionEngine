@@ -20,7 +20,7 @@ void ComponentButton::PostUpdate()
 	clicked = false;
 }
 
-Component* ComponentButton::Clone(bool original_prefab) const
+Component* ComponentButton::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentButton * created_component;
 	if (original_prefab)
@@ -33,10 +33,12 @@ Component* ComponentButton::Clone(bool original_prefab) const
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
+	this->owner = owner;
+	this->owner->components.push_back(created_component);
 	return created_component;
 };
 
-void ComponentButton::Copy(Component* component_to_copy) const
+void ComponentButton::Copy(Component * component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentButton*>(component_to_copy) = *this;

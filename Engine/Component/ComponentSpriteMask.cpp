@@ -15,7 +15,7 @@ ComponentSpriteMask::ComponentSpriteMask(GameObject * owner) : Component(owner, 
 {
 }
 
-Component* ComponentSpriteMask::Clone(bool original_prefab) const
+Component* ComponentSpriteMask::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentSpriteMask * created_component;
 	if (original_prefab)
@@ -27,11 +27,11 @@ Component* ComponentSpriteMask::Clone(bool original_prefab) const
 		created_component = App->ui->CreateComponentUI<ComponentSpriteMask>();
 	}
 	*created_component = *this;
-	CloneBase(static_cast<Component*>(created_component));
+		CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 };
 
-void ComponentSpriteMask::Copy(Component* component_to_copy) const
+void ComponentSpriteMask::Copy(Component * component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentSpriteMask*>(component_to_copy) = *this;

@@ -102,7 +102,7 @@ void ComponentImage::Render(float4x4* projection)
 	}
 }
 
-Component* ComponentImage::Clone(bool original_prefab) const
+Component* ComponentImage::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentImage * created_component;
 	if (original_prefab)
@@ -114,14 +114,14 @@ Component* ComponentImage::Clone(bool original_prefab) const
 		created_component = App->ui->CreateComponentUI<ComponentImage>();
 	}
 	*created_component = *this;
-	CloneBase(static_cast<Component*>(created_component));
+		CloneBase(static_cast<Component*>(created_component));
 
 	created_component->ReassignResource();
 
 	return created_component;
 };
 
-void ComponentImage::Copy(Component* component_to_copy) const
+void ComponentImage::Copy(Component * component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentImage*>(component_to_copy) = *this;

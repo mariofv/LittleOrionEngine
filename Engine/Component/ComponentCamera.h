@@ -50,8 +50,8 @@ public:
 
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
-	Component* Clone(bool original_prefab = false) const override;
-	void Copy(Component* component_to_copy) const override;
+	Component* Clone(GameObject* owner, bool original_prefab) override;
+	void Copy(Component * component_to_copy) const override;
 
 	float GetWidth() const;
 	float GetHeight() const;

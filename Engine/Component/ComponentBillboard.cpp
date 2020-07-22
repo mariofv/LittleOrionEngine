@@ -174,7 +174,7 @@ void ComponentBillboard::CommonUniforms(const GLuint &shader_program)
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.num_columns"), num_sprisheet_columns);
 }
 
-Component* ComponentBillboard::Clone(bool original_prefab) const
+Component* ComponentBillboard::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentBillboard* created_component;
 	if (original_prefab)
@@ -192,7 +192,7 @@ Component* ComponentBillboard::Clone(bool original_prefab) const
 	return created_component;
 };
 
-void ComponentBillboard::Copy(Component* component_to_copy) const
+void ComponentBillboard::Copy(Component * component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentBillboard*>(component_to_copy) = *this;

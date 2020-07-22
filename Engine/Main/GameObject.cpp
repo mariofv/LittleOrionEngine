@@ -80,6 +80,7 @@ GameObject::GameObject(const GameObject& gameobject_to_copy) :
 	transform_2d.owner = this;
 	aabb.owner = this;
 	*this << gameobject_to_copy;
+
 }
 
 GameObject& GameObject::operator<<(const GameObject& gameobject_to_copy)
@@ -773,23 +774,12 @@ void GameObject::CopyComponentsPrefabs(const GameObject& gameobject_to_copy)
 		Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
 		if (my_component != nullptr && !my_component->modified_by_user)
 		{
-			component->Copy(my_component);
 			my_component->owner = this;
+			component->Copy(my_component);
 		}
 		else if (my_component == nullptr)
 		{
-			Component *copy = nullptr;
-		 if (component->type == Component::ComponentType::COLLIDER)
-			{
-				copy = component->Clone(this, this->original_prefab);
-			}
-			else
-			{
-				copy = component->Clone(this->original_prefab);
-			}
-			copy->owner = this;
-			my_component = copy;
-			this->components.push_back(copy);
+			my_component = component->Clone(this, this->original_prefab);
 		}
 	}
 	RemoveComponentsCopying(gameobject_to_copy);
@@ -803,22 +793,8 @@ void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 		component->modified_by_user = false;
 		//Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
 		Component* copy = nullptr;
-		if(component->type == Component::ComponentType::SCRIPT)
-		{
-			copy = new ComponentScript(this, static_cast<ComponentScript*>(component)->name);
-			ComponentScript* copied_script = static_cast<ComponentScript*>(copy);
-			copied_script->name = static_cast<ComponentScript*>(component)->name;
-		}
-		else if (component->type == Component::ComponentType::COLLIDER)
-		{
-			copy = component->Clone(this, this->original_prefab);
-		}
-		else
-		{
-			copy = component->Clone(this->original_prefab);
-		}
-		copy->owner = this;
-		this->components.push_back(copy);
+		copy = component->Clone(this, this->original_prefab);
+
 	}
 
 	RemoveComponentsCopying(gameobject_to_copy);

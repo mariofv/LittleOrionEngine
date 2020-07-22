@@ -208,9 +208,7 @@ void ModuleActions::PasteComponent(Component* component)
 {
 	if (copied_component != nullptr && copied_component->type != Component::ComponentType::SCRIPT && component->type != Component::ComponentType::TRANSFORM && component->type != Component::ComponentType::TRANSFORM2D)
 	{
-		SetCopyComponent(copied_component);
-		copied_component->owner = component->owner;
-		component->owner->components.push_back(copied_component);		
+		SetCopyComponent(copied_component);	
 	}
 	
 }
@@ -241,33 +239,22 @@ void ModuleActions::PasteComponentValues(Component * component)
 
 void ModuleActions::SetCopyComponent(Component * component)
 {
-	
-	if (component->type == Component::ComponentType::COLLIDER)
+
+	if (component->type == Component::ComponentType::TRANSFORM)
 	{
-		copied_component = component->Clone(component->owner, component->owner->original_prefab);
-	}
-	else
-	{
-		if (component->type == Component::ComponentType::TRANSFORM)
-		{
-			Config conf;
-			component->Save(conf);
-			transform_config = conf;
-			copied_component = component;
+		Config conf;
+		component->Save(conf);
+		transform_config = conf;
 			
-		}
-		else if(component->type == Component::ComponentType::TRANSFORM2D)
-		{
-			Config conf;
-			component->Save(conf);
-			transform_2D_config = conf;
-			copied_component = component;
-		}
-		else
-		{
-			copied_component = component->Clone(component->owner->original_prefab);
-		}
 	}
+	else if(component->type == Component::ComponentType::TRANSFORM2D)
+	{
+		Config conf;
+		component->Save(conf);
+		transform_2D_config = conf;
+	}
+
+	copied_component = component->Clone(component->owner, true);
 }
 
 

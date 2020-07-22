@@ -28,7 +28,7 @@ public:
 
 	ComponentAABB & operator=(const ComponentAABB& component_to_copy) = default;
 	ComponentAABB & operator=(ComponentAABB&& component_to_move) = default;
-	void Copy(Component* component_to_copy) const override;
+	void Copy(Component * component_to_copy) const override;
 
 	void Delete() override {};
 	void GenerateBoundingBox();
@@ -42,7 +42,7 @@ private:
 	void GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex>& vertices);
 	void GenerateBoundingBoxFromParticleSystem(const ComponentParticleSystem& particle_system);
 	void GenerateGlobalBoundingBox();
-	Component* Clone(bool original_prefab = true) const override;
+	Component* Clone(GameObject* owner, bool original_prefab) override;
 public:
 	AABB bounding_box;
 	AABB global_bounding_box;

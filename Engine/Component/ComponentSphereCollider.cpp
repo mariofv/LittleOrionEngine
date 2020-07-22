@@ -14,7 +14,7 @@ ComponentSphereCollider::ComponentSphereCollider(GameObject* owner) : ComponentC
 	InitData();
 }
 
-Component* ComponentSphereCollider::Clone(GameObject* owner, bool original_prefab) const
+Component* ComponentSphereCollider::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentSphereCollider* created_component;
 	if (original_prefab)
@@ -27,7 +27,7 @@ Component* ComponentSphereCollider::Clone(GameObject* owner, bool original_prefa
 	}
 	*created_component = *this;
 	created_component->SetConfiguration();
-	CloneBase(static_cast<Component*>(created_component));
+		CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 }
 

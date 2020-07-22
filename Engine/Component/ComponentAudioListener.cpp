@@ -62,7 +62,7 @@ AkGameObjectID ComponentAudioListener::GetAkID()
 	return gameobject_listener;
 }
 
-Component* ComponentAudioListener::Clone(bool original_prefab) const
+Component* ComponentAudioListener::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentAudioListener* created_component;
 	if (original_prefab)
@@ -74,11 +74,13 @@ Component* ComponentAudioListener::Clone(bool original_prefab) const
 		created_component = App->audio->CreateComponentAudioListener();
 	}
 	*created_component = *this;
-	CloneBase(static_cast<Component*>(created_component));
+		CloneBase(static_cast<Component*>(created_component));
+	this->owner = owner;
+	this->owner->components.push_back(created_component);
 	return created_component;
 };
 
-void ComponentAudioListener::Copy(Component* component_to_copy) const
+void ComponentAudioListener::Copy(Component * component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentAudioListener*>(component_to_copy) = *this;

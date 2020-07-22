@@ -57,7 +57,7 @@ ComponentAnimation & ComponentAnimation::operator=(const ComponentAnimation & co
 	return *this;
 }
 
-Component* ComponentAnimation::Clone(bool original_prefab) const
+Component* ComponentAnimation::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentAnimation * created_component;
 	if (original_prefab)
@@ -70,10 +70,13 @@ Component* ComponentAnimation::Clone(bool original_prefab) const
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
+
+	this->owner = owner;
+	this->owner->components.push_back(created_component);
 	return created_component;
 };
 
-void ComponentAnimation::Copy(Component* component_to_copy) const
+void ComponentAnimation::Copy(Component * component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentAnimation*>(component_to_copy) = *this;

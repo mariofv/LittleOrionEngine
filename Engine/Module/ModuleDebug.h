@@ -43,7 +43,7 @@ public:
 	bool show_physics = false;
 
 #if !GAME
-	bool culling_scene_mode = false;
+	bool culling_scene_mode = true;
 #else
 	bool culling_scene_mode = true;
 #endif

@@ -58,7 +58,7 @@ public:
 	ComponentTransform2D & operator=(const ComponentTransform2D & component_to_copy);
 	ComponentTransform2D & operator=(ComponentTransform2D && component_to_move) = default;
 
-	Component * Clone(bool create_on_module = true) const override;
+	Component * Clone(GameObject* owner, bool original_prefab) override;
 	void Copy(Component * component_to_copy) const override;
 
 	void Delete() override;

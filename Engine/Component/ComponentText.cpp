@@ -222,7 +222,7 @@ float ComponentText::GetLineStartPosition(float line_size) const
 	}
 }
 
-Component* ComponentText::Clone(bool original_prefab) const
+Component* ComponentText::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentText* created_component;
 	if (original_prefab)
@@ -234,14 +234,14 @@ Component* ComponentText::Clone(bool original_prefab) const
 		created_component = App->ui->CreateComponentUI<ComponentText>();
 	}
 	*created_component = *this;
-	CloneBase(static_cast<Component*>(created_component));
+		CloneBase(static_cast<Component*>(created_component));
 
 	created_component->ReassignResource();
 
 	return created_component;
 };
 
-void ComponentText::Copy(Component* component_to_copy) const
+void ComponentText::Copy(Component * component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentText*>(component_to_copy) = *this;
