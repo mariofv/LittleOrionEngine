@@ -166,6 +166,9 @@ private:
 	GLuint msfbo = 0;
 	GLuint msfb_color = 0;
 
+	GLuint hdr_fbo = 0;
+	GLuint hdr_color_buffer_texture = 0;
+
 	float last_height = 0;
 	float last_width = 0;
 

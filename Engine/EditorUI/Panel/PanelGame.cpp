@@ -48,7 +48,7 @@ void PanelGame::Render()
 			
 			App->lights->RecordShadowsFrameBuffers((GLsizei)game_window_content_area_width, (GLsizei)game_window_content_area_height);
 			App->cameras->main_camera->RecordFrame((GLsizei)game_window_content_area_width, (GLsizei)game_window_content_area_height);
-			App->cameras->main_camera->RecordDebugDraws();
+			App->cameras->main_camera->RecordDebugDraws(false);
 
 
 			ImGui::Image(

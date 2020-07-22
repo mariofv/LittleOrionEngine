@@ -56,6 +56,8 @@ public:
 	ENGINE_API int GetRenderedTris() const;
 	ENGINE_API int GetRenderedVerts() const;
 
+	void RenderHDR(const ComponentCamera & camera);
+
 	ENGINE_API RaycastHit* GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* cam);
 	ENGINE_API void SetDrawMode(DrawMode draw_mode);
 
@@ -82,6 +84,7 @@ public:
 	bool toggle_directional_light_aabb = true;
 	bool toggle_perspective_sub_frustums = false;
 	bool bloom = false;
+	float exposure = 1.0f;
 private:
 	void* context = nullptr;
 
@@ -99,6 +102,13 @@ private:
 	bool gl_dither = false;
 	bool gl_minmax = false;
 
+	float quadVertices[20] = {
+		// positions        // texture Coords
+		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+		 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+	};
 	DrawMode draw_mode = DrawMode::SHADED;
 
 	std::vector<ComponentMeshRenderer*> meshes;

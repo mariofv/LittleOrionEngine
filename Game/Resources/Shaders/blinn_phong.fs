@@ -97,6 +97,7 @@ uniform PointLight point_lights[10];
 
 uniform int use_light_map;
 
+uniform sampler2D scene_texture;
 
 //COLOR TEXTURES
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord);
@@ -190,11 +191,10 @@ void main()
 	{
 		result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
-
+	vec3 hdrColor = texture(scene_texture, texCoord).rgb;
 	result += emissive_color;
 	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
 	FragColor = vec4(result,1.0);
-	FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
 	FragColor.a=material.transparency;
 }
 

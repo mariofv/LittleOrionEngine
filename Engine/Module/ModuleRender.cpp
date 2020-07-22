@@ -156,7 +156,7 @@ void ModuleRender::Render() const
 
 		App->cameras->main_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
 
-		App->cameras->main_camera->RecordDebugDraws();
+		App->cameras->main_camera->RecordDebugDraws(false);
 	}
 #endif
 
@@ -225,7 +225,10 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	glDisable(GL_BLEND);
 	
 	App->effects->Render();
-
+	if (bloom)
+	{
+		RenderHDR(camera);
+	}
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
 	
@@ -485,4 +488,33 @@ int ModuleRender::GetRenderedTris() const
 int ModuleRender::GetRenderedVerts() const
 {
 	return num_rendered_verts;
+}
+
+void ModuleRender::RenderHDR(const ComponentCamera &camera)
+{
+
+	GLuint program = App->program->UseProgram("HDR", 0);
+	unsigned int quadVAO = 0;
+	unsigned int quadVBO;
+	if (quadVAO == 0)
+	{
+		// setup plane VAO
+		glGenVertexArrays(1, &quadVAO);
+		glGenBuffers(1, &quadVBO);
+		glBindVertexArray(quadVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, camera.last_recorded_frame_texture);
+		glUniform1i(glGetUniformLocation(program, "scene_texture"), 0);
+		glUniform1f(glGetUniformLocation(program, "exposure"), exposure);
+
+	}
+	glBindVertexArray(quadVAO);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glBindVertexArray(0);
 }

@@ -36,8 +36,9 @@ private:
 	void SetDirectionalLightFrustums();
 	void SendShadowUniformsToShader(GLuint program);
 
-	void SortClosestLights(const float3& position);
 
+	void SortClosestLights(const float3& position);
+	
 
 public:
 	static const unsigned int MAX_DIRECTIONAL_LIGHTS_RENDERED = 1;

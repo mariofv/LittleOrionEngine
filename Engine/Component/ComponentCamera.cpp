@@ -266,12 +266,11 @@ void ComponentCamera::RecordZBufferFrame(GLsizei width, GLsizei height)
 
 void ComponentCamera::SetWidthAndHeight(const GLsizei &width, const GLsizei &height)
 {
-	if (last_width != width || last_height != height || toggle_msaa || last_bloom != App->renderer->bloom)
+	if (last_width != width || last_height != height || toggle_msaa )
 	{
 		last_width = static_cast<float>(width);
 		last_height = static_cast<float>(height);
 		SetAspectRatio(last_width / last_height);
-		last_bloom = App->renderer->bloom;
 		GenerateFrameBuffers(width, height);
 		toggle_msaa = false;
 	}
@@ -335,7 +334,14 @@ void ComponentCamera::GenerateFrameBuffers(GLsizei width, GLsizei height)
 		glDeleteRenderbuffers(1, &depth_rbo);
 	}
 
-	App->renderer->anti_aliasing ? CreateMssaFramebuffer(width, height) : CreateFramebuffer(width, height);
+	if(App->renderer->anti_aliasing)
+	{
+		CreateMssaFramebuffer(width, height);
+	}
+	else
+	{
+		CreateFramebuffer(width, height);
+	}
 }
 
 void ComponentCamera::CreateFramebuffer(GLsizei width, GLsizei height)
@@ -343,20 +349,25 @@ void ComponentCamera::CreateFramebuffer(GLsizei width, GLsizei height)
 
 	if (camera_frustum.type == FrustumType::PerspectiveFrustum) //Scene and game cameras render this way
 	{
+		App->engine_log->Log("perspective");
+		//render buffer (depth buffer)
 		glGenRenderbuffers(1, &rbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
+		//floating point color buffer
 		glBindTexture(GL_TEXTURE_2D, last_recorded_frame_texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
+		//attach buffers
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
@@ -417,7 +428,7 @@ void ComponentCamera::CreateMssaFramebuffer(GLsizei width, GLsizei height)
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		glBindTexture(GL_TEXTURE_2D, last_recorded_frame_texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glBindTexture(GL_TEXTURE_2D, 0);

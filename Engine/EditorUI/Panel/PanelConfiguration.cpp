@@ -269,6 +269,7 @@ void PanelConfiguration::ShowRenderOptions()
 		if (ImGui::TreeNode("Post Processing"))
 		{
 			ImGui::Checkbox("Boom", &App->renderer->bloom);
+			ImGui::DragFloat("Exposure", &App->renderer->exposure, 0.1f, 0.0f, 10.0f);
 		}
 		ImGui::Separator();
 		HelpMarker("This settings have no visual impact, WIP.");

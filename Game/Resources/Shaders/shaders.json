@@ -77,6 +77,12 @@
       "Vertex": "/Resources/Shaders/trail.vs",
       "Fragment": "/Resources/Shaders/trail.fs",
       "Selectable": false
+    },
+    {
+      "Name": "HDR",
+      "Vertex": "/Resources/Shaders/hdr.vs",
+      "Fragment": "/Resources/Shaders/hdr.fs",
+      "Selectable": false
     }
   ]
 }
