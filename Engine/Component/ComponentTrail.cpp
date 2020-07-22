@@ -184,7 +184,10 @@ void ComponentTrail::Render()
 
 void ComponentTrail::ClearTrail()
 {
-	last_gameobject_position = owner->transform.GetGlobalTranslation(); //initial GO position
+	if (owner)
+	{
+		last_gameobject_position = owner->transform.GetGlobalTranslation(); //initial GO position
+	}
 	last_point = TrailPoint(last_gameobject_position, width, duration);
 	test_points.clear();
 }
@@ -224,7 +227,10 @@ Component* ComponentTrail::Clone(GameObject* owner, bool original_prefab)
 		created_component = App->effects->CreateComponentTrail(owner);
 	}
 	*created_component = *this;
-		CloneBase(static_cast<Component*>(created_component));
+	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 };
 

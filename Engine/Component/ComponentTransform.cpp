@@ -280,6 +280,7 @@ Component* ComponentTransform::Clone(GameObject* owner, bool original_prefab)
 	ComponentTransform * created_component;
 	created_component = new ComponentTransform(nullptr);
 	*created_component = *this;
-		CloneBase(static_cast<Component*>(created_component));
+	CloneBase(static_cast<Component*>(created_component));	
+	created_component->owner = owner;
 	return created_component;
 }

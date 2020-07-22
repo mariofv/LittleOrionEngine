@@ -38,8 +38,8 @@ Component* ComponentScript::Clone(GameObject* owner, bool original_prefab)
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
-	this->owner = owner;
-	this->owner->components.push_back(created_component);
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	created_component->script->owner = owner;
 	assert(created_component->script->owner);
 	return created_component;

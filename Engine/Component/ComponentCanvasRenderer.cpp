@@ -37,7 +37,10 @@ Component* ComponentCanvasRenderer::Clone(GameObject* owner, bool original_prefa
 		created_component = App->ui->CreateComponentCanvasRenderer();
 	}
 	*created_component = *this;
-		CloneBase(static_cast<Component*>(created_component));
+	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 };
 

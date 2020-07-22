@@ -108,9 +108,10 @@ Component* ComponentAudioSource::Clone(GameObject* owner, bool original_prefab)
 		created_component = App->audio->CreateComponentAudioSource();
 	}
 	*created_component = *this;
-		CloneBase(static_cast<Component*>(created_component));
-	this->owner = owner;
-	this->owner->components.push_back(created_component);
+	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 };
 

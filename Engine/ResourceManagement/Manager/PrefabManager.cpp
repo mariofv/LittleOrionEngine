@@ -3,6 +3,7 @@
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentAudioListener.h"
 #include "Component/ComponentAudioSource.h"
+#include "Component/ComponentBillboard.h"
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCapsuleCollider.h"
@@ -11,14 +12,16 @@
 #include "Component/ComponentCanvasRenderer.h"
 #include "Component/ComponentCollider.h"
 #include "Component/ComponentCylinderCollider.h"
+#include "Component/ComponentEventSystem.h"
 #include "Component/ComponentImage.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshCollider.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentParticleSystem.h"
-#include "Component/ComponentBillboard.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentSphereCollider.h"
+#include "Component/ComponentTrail.h"
+#include "Component/ComponentText.h"
 
 #include "Helper/Config.h"
 
@@ -165,6 +168,15 @@ void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameO
 			break;
 		case Component::ComponentType::BILLBOARD:
 			created_component = new ComponentBillboard();
+			break;
+		case Component::ComponentType::EVENT_SYSTEM:
+			created_component = new ComponentEventSystem();
+			break;
+		case Component::ComponentType::TRAIL:
+			created_component = new ComponentTrail();
+			break;
+		case Component::ComponentType::UI_TEXT:
+			created_component = new ComponentText();
 			break;
 		case Component::ComponentType::COLLIDER:
 			ComponentCollider::ColliderType collider_type = static_cast<ComponentCollider::ColliderType>(gameobject_components_config[i].GetUInt("ColliderType", 0));

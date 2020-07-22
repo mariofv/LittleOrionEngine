@@ -134,7 +134,8 @@ Component* ComponentAABB::Clone(GameObject* owner, bool original_prefab)
 	ComponentAABB * created_component;
 	created_component = new ComponentAABB();
 	*created_component = *this;
-		CloneBase(static_cast<Component*>(created_component));
+	CloneBase(static_cast<Component*>(created_component));
+
 	created_component->owner = owner;
 	return created_component;
 }

@@ -456,13 +456,16 @@ Component* ComponentParticleSystem::Clone(GameObject* owner, bool original_prefa
 	{
 		created_component = App->effects->CreateComponentParticleSystem();
 	}
+	CloneBase(static_cast<Component*>(created_component));
 
-	created_component->Init();
-	auto original_billboard = created_component->billboard;
 	*created_component = *this;
+	auto original_billboard = created_component->billboard;
+	created_component->Init();
 	*original_billboard = *this->billboard;
 	created_component->billboard = original_billboard;
-		CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 };
 

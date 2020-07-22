@@ -26,7 +26,10 @@ Component* ComponentCylinderCollider::Clone(GameObject* owner, bool original_pre
 	}
 	*created_component = *this;
 	created_component->SetConfiguration();
-		CloneBase(static_cast<Component*>(created_component));
+	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 }
 
