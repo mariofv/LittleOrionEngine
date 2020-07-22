@@ -81,7 +81,7 @@ public:
 	bool toggle_ortho_frustum = false;
 	bool toggle_directional_light_aabb = true;
 	bool toggle_perspective_sub_frustums = false;
-
+	bool bloom = false;
 private:
 	void* context = nullptr;
 

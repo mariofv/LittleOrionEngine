@@ -266,11 +266,12 @@ void ComponentCamera::RecordZBufferFrame(GLsizei width, GLsizei height)
 
 void ComponentCamera::SetWidthAndHeight(const GLsizei &width, const GLsizei &height)
 {
-	if (last_width != width || last_height != height || toggle_msaa)
+	if (last_width != width || last_height != height || toggle_msaa || last_bloom != App->renderer->bloom)
 	{
 		last_width = static_cast<float>(width);
 		last_height = static_cast<float>(height);
 		SetAspectRatio(last_width / last_height);
+		last_bloom = App->renderer->bloom;
 		GenerateFrameBuffers(width, height);
 		toggle_msaa = false;
 	}

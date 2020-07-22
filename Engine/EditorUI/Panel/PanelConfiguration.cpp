@@ -266,6 +266,10 @@ void PanelConfiguration::ShowRenderOptions()
 				break;
 			}
 		}
+		if (ImGui::TreeNode("Post Processing"))
+		{
+			ImGui::Checkbox("Boom", &App->renderer->bloom);
+		}
 		ImGui::Separator();
 		HelpMarker("This settings have no visual impact, WIP.");
 		ImGui::SameLine();

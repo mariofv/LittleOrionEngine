@@ -143,7 +143,6 @@ public:
 	const float CAMERA_ROTATION_SPEED = 0.000625f;
 
 	float camera_clear_color[3] = {0.0f, 0.0f, 0.0f};
-
 	int depth = 0;
 
 	float4x4 proj;
@@ -153,6 +152,7 @@ public:
 	GLuint last_recorded_frame_texture = 0;
 	GLuint fbo = 0;
 
+	bool last_bloom = false;
 	OrthoIndex ortho_index; //Only for orthographic cameras
 
 
