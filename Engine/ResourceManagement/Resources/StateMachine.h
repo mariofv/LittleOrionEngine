@@ -82,6 +82,7 @@ public:
 	void Save(Config& config) const;
 	void Load(const Config& config);
 	void LoadNames(const Config& config);
+	void SetFloatVariables(std::unordered_map<uint64_t, float>& map);
 
 private:
 	void RemoveState(const std::shared_ptr<State> & state);

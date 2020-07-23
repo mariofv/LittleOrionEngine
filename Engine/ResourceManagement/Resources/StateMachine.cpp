@@ -369,3 +369,8 @@ void StateMachine::LoadNames(const Config & config)
 	}
 
 }
+
+void StateMachine::SetFloatVariables(std::unordered_map<uint64_t, float>& map)
+{
+	this->float_variables = map;
+}
