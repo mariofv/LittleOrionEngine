@@ -46,6 +46,7 @@ public:
 	void Copy(Component * component_to_copy) const override;
 
 	void InitData();
+	void InitQuad();
 	void Update() override;
 
 	void Render(const float3& global_position);

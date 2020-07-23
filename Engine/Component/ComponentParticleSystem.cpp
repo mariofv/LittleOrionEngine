@@ -21,6 +21,7 @@ ComponentParticleSystem::ComponentParticleSystem(GameObject* owner) : Component(
 ComponentParticleSystem::~ComponentParticleSystem()
 {
 	delete billboard;
+	billboard = nullptr;
 }
 
 void ComponentParticleSystem::Init() 
@@ -459,13 +460,13 @@ Component* ComponentParticleSystem::Clone(GameObject* owner, bool original_prefa
 	CloneBase(static_cast<Component*>(created_component));
 
 	*created_component = *this;
-	auto original_billboard = created_component->billboard;
 	created_component->Init();
-	*original_billboard = *this->billboard;
-	created_component->billboard = original_billboard;
-
 	created_component->owner = owner;
 	created_component->owner->components.push_back(created_component);
+	assert(billboard->emissive_intensity>-1);
+	*created_component->billboard = *this->billboard;
+	created_component->billboard->owner = owner;
+	assert(!created_component->owner->original_prefab);
 	return created_component;
 };
 

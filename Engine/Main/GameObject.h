@@ -92,7 +92,6 @@ private:
 
 	void LoadTransforms(Config config);
 	void CreateTransforms();
-	void CopyComponentsPrefabs(const GameObject & gameobject_to_copy);
 	void CopyComponents(const GameObject& gameobject_to_copy);
 	void RemoveComponentsCopying(const GameObject& gameobject_to_copy);
 

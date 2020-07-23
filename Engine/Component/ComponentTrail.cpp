@@ -76,7 +76,7 @@ void ComponentTrail::Update()
 
 	GetPerpendiculars();
 
-	for (auto it = test_points.begin(); it < test_points.end(); ++it)
+	for (auto it = test_points.begin(); it != test_points.end(); ++it)
 	{
 		if (it->life >= 0) // If life is positive, all good
 		{
@@ -86,7 +86,7 @@ void ComponentTrail::Update()
 
 		else // But if not, we delete these points
 		{
-			it = test_points.erase(it);
+			//it = test_points.erase(it);
 		}
 	}
 }

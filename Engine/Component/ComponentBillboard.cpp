@@ -33,13 +33,18 @@ void ComponentBillboard::InitData()
 {
 	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
 	ChangeTextureEmissive(texture_emissive_uuid);
+	InitQuad();
+}
+
+void ComponentBillboard::InitQuad()
+{
 
 	float vertices[20] =
 	{
-			0.5f,  0.5f, 0.0f,		1.0f, 1.0f,
-			0.5f, -0.5f, 0.0f,		1.0f, 0.0f,
-		   -0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
-		   -0.5f,  0.5f, 0.0f,		0.0f, 1.0f
+		0.5f,  0.5f, 0.0f,		1.0f, 1.0f,
+		0.5f, -0.5f, 0.0f,		1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
+		-0.5f,  0.5f, 0.0f,		0.0f, 1.0f
 	};
 	unsigned int indices[6] =
 	{
@@ -186,17 +191,17 @@ Component* ComponentBillboard::Clone(GameObject* owner, bool original_prefab)
 		created_component = App->effects->CreateComponentBillboard();
 	}
 	*created_component = *this;
-
+	created_component->InitQuad();
 	created_component->owner = owner;
 	created_component->owner->components.push_back(created_component);
-	created_component->ReassignResource();
 	return created_component;
-};
+}
 
 void ComponentBillboard::Copy(Component * component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentBillboard*>(component_to_copy) = *this;
+	static_cast<ComponentBillboard*>(component_to_copy)->InitQuad();
 }
 
 

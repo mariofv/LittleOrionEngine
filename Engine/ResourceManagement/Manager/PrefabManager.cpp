@@ -76,6 +76,11 @@ std::shared_ptr<Prefab> PrefabManager::Load(uint32_t uuid, const FileData& resou
 		created_game_object->original_UUID = game_objects_config[i].GetUInt("UUID", 0);
 		created_game_object->original_prefab = true;
 		gameObjects.emplace_back(std::move(created_game_object));
+		auto particles = gameObjects.back()->GetComponent(Component::ComponentType::PARTICLE_SYSTEM);
+		if (particles)
+		{
+			assert(static_cast<ComponentParticleSystem*>(particles)->billboard->emissive_intensity > -1);
+		}
 	}
 
 
