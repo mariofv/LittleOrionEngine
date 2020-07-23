@@ -91,6 +91,7 @@ private:
 	std::vector<NodeInfo*> selected_nodes;
 	NodeInfo* selected_node = nullptr ;
 	bool modified_by_user = false;
+	std::string auxiliar_variable;
 
 };
 #endif // !_PANELSTATEMACHINE_H_

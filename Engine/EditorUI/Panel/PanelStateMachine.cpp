@@ -430,6 +430,28 @@ void PanelStateMachine::LeftPanel()
 			ImGui::PopID();
 		}
 		ImGui::Separator();
+		ImGui::Text("Parameters: ");
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Floats");
+		ImGui::Separator();
+		for(auto variable : state_machine->float_variables)
+		{
+			ImGui::DragFloat(variable.first.c_str(), &variable.second, 0.01f, 0.f, 100.f);
+			state_machine->float_variables[variable.first] = variable.second;
+			ImGui::SameLine();
+			if(ImGui::Button("X"))
+			{
+				state_machine->float_variables.erase(variable.first);
+			}
+		}
+		ImGui::Separator();
+		ImGui::InputText("###Float Name", &auxiliar_variable);
+		ImGui::SameLine();
+		if(ImGui::Button("Add float variable"))
+		{
+			state_machine->float_variables[auxiliar_variable] = 0.f;
+		}
+
+		ImGui::Separator();
 		if (ImGui::Button("Save"))
 		{
 			modified_by_user = false;
