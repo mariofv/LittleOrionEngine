@@ -312,7 +312,7 @@ void ComponentCamera::RecordDebugDraws(bool scene_mode)
 
 GLuint ComponentCamera::GetLastRecordedFrame() const
 {
-	return last_recorded_frame_texture;
+	return color_buffers[0];
 }
 
 void ComponentCamera::GenerateFrameBuffers(GLsizei width, GLsizei height)
@@ -321,8 +321,12 @@ void ComponentCamera::GenerateFrameBuffers(GLsizei width, GLsizei height)
 	{
 		glDeleteTextures(1, &last_recorded_frame_texture);
 	}
-
+	if (color_buffers != 0)
+	{
+		glDeleteTextures(2, color_buffers);
+	}
 	glGenTextures(1, &last_recorded_frame_texture);
+	glGenTextures(2, color_buffers);
 
 	if (rbo != 0)
 	{
@@ -349,7 +353,6 @@ void ComponentCamera::CreateFramebuffer(GLsizei width, GLsizei height)
 
 	if (camera_frustum.type == FrustumType::PerspectiveFrustum) //Scene and game cameras render this way
 	{
-		App->engine_log->Log("perspective");
 		//render buffer (depth buffer)
 		glGenRenderbuffers(1, &rbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
@@ -357,18 +360,29 @@ void ComponentCamera::CreateFramebuffer(GLsizei width, GLsizei height)
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 		//floating point color buffer
-		glBindTexture(GL_TEXTURE_2D, last_recorded_frame_texture);
+		glBindTexture(GL_TEXTURE_2D, color_buffers[0]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		//floating point color buffer
+		glBindTexture(GL_TEXTURE_2D, color_buffers[1]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
+
 		//attach buffers
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_buffers[0], 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, color_buffers[1], 0);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
+		unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+		glDrawBuffers(2, attachments);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		
 	}
 
 	if (camera_frustum.type == FrustumType::OrthographicFrustum) //Light cameras render this way

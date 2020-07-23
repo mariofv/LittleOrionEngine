@@ -150,6 +150,7 @@ public:
 
 	GLuint depth_map = 0;
 	GLuint last_recorded_frame_texture = 0;
+	unsigned int color_buffers[2];
 	GLuint fbo = 0;
 
 	bool last_bloom = false;
