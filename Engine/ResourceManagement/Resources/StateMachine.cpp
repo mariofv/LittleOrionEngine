@@ -218,7 +218,7 @@ void StateMachine::Save(Config& config) const
 	for (auto& variable : float_variables)
 	{
 		Config float_variable_config;
-		float_variable_config.AddString(variable.first, "Name");
+		float_variable_config.AddString(variable.first, "FloatName");
 		float_variable_config.AddFloat(variable.second, "FloatValue");
 		float_variables_config.push_back(float_variable_config);
 	}
@@ -230,6 +230,7 @@ void StateMachine::Load(const Config& config)
 	this->clips.clear();
 	this->transitions.clear();
 	this->states.clear();
+	this->float_variables.clear();
 	std::vector<Config> clips_config;
 	config.GetChildrenConfig("Clips", clips_config);
 	for (auto& clip_config : clips_config)
@@ -285,19 +286,10 @@ void StateMachine::Load(const Config& config)
 		this->transitions.back()->priority = transition_config.GetUInt("Priority", 0);
 	}
 
-	//Float variables
-	std::vector<Config> float_variables_config;
-	config.GetChildrenConfig("FloatVariables", float_variables_config);
-	for (auto& float_variable_config : float_variables_config)
-	{
-		std::string name;
-		float_variable_config.GetString("Name", name, "");
-
-		float value = float_variable_config.GetFloat("FloatValue", 0.f);
-		float_variables[name] = value;
-	}
-
 	default_state = config.GetUInt("Default", 0);
+
+
+
 }
 
 void StateMachine::LoadNames(const Config & config)
@@ -355,6 +347,18 @@ void StateMachine::LoadNames(const Config & config)
 				transition->trigger = trigger;
 			}
 		}
+	}
+
+	//Float variables
+	std::vector<Config> float_variables_config;
+	config.GetChildrenConfig("FloatVariables", float_variables_config);
+	for (auto& float_variable_config : float_variables_config)
+	{
+		std::string name;
+		float_variable_config.GetString("FloatName", name, "");
+
+		float value = float_variable_config.GetFloat("FloatValue", 0.f);
+		float_variables[name] = value;
 	}
 
 }
