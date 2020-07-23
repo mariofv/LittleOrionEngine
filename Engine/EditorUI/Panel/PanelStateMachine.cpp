@@ -439,7 +439,9 @@ void PanelStateMachine::LeftPanel()
 			ImGui::DragFloat(state_machine->float_variables_names[i].c_str(), &variable.second, 0.01f, 0.f, 100.f);
 			state_machine->float_variables[variable.first] = variable.second;
 			ImGui::SameLine();
-			if(ImGui::Button("X"))
+			std::string x_id("X###");
+			x_id += std::to_string(i);
+			if(ImGui::Button(x_id.c_str()))
 			{
 				state_machine->float_variables.erase(variable.first);
 				state_machine->float_variables_names.erase(state_machine->float_variables_names.begin() + i);
