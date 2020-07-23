@@ -25,7 +25,7 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(uint32_t uuid, const Fil
 	char * data = (char*)resource_data.buffer;
 	char* cursor = data;
 
-	uint32_t ranges[3];
+	uint32_t ranges[4];
 	//Get ranges
 	size_t bytes = sizeof(ranges);
 	memcpy(ranges, cursor, bytes);
@@ -117,7 +117,26 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(uint32_t uuid, const Fil
 		memcpy(&transition->automatic, cursor, bytes);
 		cursor += bytes;
 	}
+	std::unordered_map<uint64_t, float> float_variables;
+	for(size_t i = 0; i < ranges[3]; ++i)
+	{
+		uint64_t name_hash;
+		bytes = sizeof(uint64_t);
+		memcpy(&name_hash, cursor, bytes);
+		cursor += bytes;
+
+		float value_float;
+		bytes = sizeof(float);
+		memcpy(&value_float, cursor, bytes);
+		cursor += bytes;
+
+		float_variables[name_hash] = value_float;
+	}
+
 	std::shared_ptr<StateMachine> new_state_machine = std::make_shared<StateMachine>(uuid, std::move(clips), std::move(states), std::move(transitions));
+	
+	new_state_machine->SetFloatVariables(float_variables);
+	
 	bytes = sizeof(uint64_t);
 	memcpy(&new_state_machine->default_state, cursor, bytes);
 	cursor += bytes;
