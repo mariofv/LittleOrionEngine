@@ -512,9 +512,38 @@ void ModuleRender::RenderHDR(const ComponentCamera &camera)
 		glBindTexture(GL_TEXTURE_2D, camera.last_recorded_frame_texture);
 		glUniform1i(glGetUniformLocation(program, "scene_texture"), 0);
 		glUniform1f(glGetUniformLocation(program, "exposure"), exposure);
+		glUniform1i(glGetUniformLocation(program, "hdr_type"), static_cast<int>(hdr_type));
 
 	}
 	glBindVertexArray(quadVAO);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glBindVertexArray(0);
+}
+
+void ModuleRender::SetHDRType(const HDRType type)
+{
+	switch (type)
+	{
+		case HDRType::REINHARD:
+			hdr_type = HDRType::REINHARD;
+		break;	
+		case HDRType::FILMIC:
+			hdr_type = HDRType::FILMIC;
+		break;
+		case HDRType::EXPOSURE:
+			hdr_type = HDRType::EXPOSURE;
+		break;
+	}
+}
+std::string ModuleRender::GetHDRType(const HDRType type) const
+{
+	switch (type)
+	{
+		case HDRType::REINHARD:
+			return "Reinhard";
+		case HDRType::FILMIC:
+			return "Filmic";
+		case HDRType::EXPOSURE:
+			return "Exposure";
+	}
 }

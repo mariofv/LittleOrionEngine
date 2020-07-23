@@ -268,8 +268,28 @@ void PanelConfiguration::ShowRenderOptions()
 		}
 		if (ImGui::TreeNode("Post Processing"))
 		{
-			ImGui::Checkbox("Boom", &App->renderer->bloom);
-			ImGui::DragFloat("Exposure", &App->renderer->exposure, 0.1f, 0.0f, 10.0f);
+			ImGui::Checkbox("Bloom", &App->renderer->bloom);
+			if (ImGui::BeginCombo("Tonemapping Type", App->renderer->GetHDRType(App->renderer->hdr_type).c_str()))
+			{
+
+				for (int i = 0; i < static_cast<int>(ModuleRender::HDRType::MAX_HDR_TYPE); ++i)
+				{
+					bool is_selected = (static_cast<int>(App->renderer->hdr_type) == i);
+					if (ImGui::Selectable(App->renderer->GetHDRType((ModuleRender::HDRType)i).c_str(), is_selected))
+					{
+						App->renderer->SetHDRType((ModuleRender::HDRType)i);
+						if (is_selected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+				}
+				ImGui::EndCombo();
+			}
+			if (App->renderer->hdr_type == ModuleRender::HDRType::FILMIC || App->renderer->hdr_type == ModuleRender::HDRType::EXPOSURE)
+			{
+				ImGui::DragFloat("Exposure", &App->renderer->exposure, 0.1f, 0.0f, 10.0f);
+			}
 		}
 		ImGui::Separator();
 		HelpMarker("This settings have no visual impact, WIP.");

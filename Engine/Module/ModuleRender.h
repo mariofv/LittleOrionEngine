@@ -36,6 +36,13 @@ public:
 		SHADED,
 		WIREFRAME
 	};
+	enum class HDRType
+	{
+		REINHARD = 0,
+		FILMIC = 1,
+		EXPOSURE = 2,
+		MAX_HDR_TYPE = 3
+	};
 
 	ModuleRender() = default;
 	~ModuleRender() = default;
@@ -73,7 +80,8 @@ private:
 	void SetFrontFaces(GLenum front_faces) const;
 	void SetDithering(bool gl_dither);
 	void SetMinMaxing(bool gl_minmax);
-
+	void SetHDRType(const HDRType type);
+	std::string GetHDRType(const HDRType type) const;
 	std::string GetDrawMode() const;
 
 	void SetListOfMeshesToRender(const ComponentCamera* camera);
@@ -87,7 +95,7 @@ public:
 	float exposure = 1.0f;
 private:
 	void* context = nullptr;
-
+	HDRType hdr_type = HDRType::FILMIC;
 
 	bool vsync = false;
 	bool gl_alpha_test = false;
