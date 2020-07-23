@@ -30,7 +30,7 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 	uint32_t num_states = states_config.size();
 	uint32_t num_transitions = transitions_config.size();
 	uint32_t num_variables_config = float_variables_config.size();
-	uint32_t ranges[3] = { num_clips, num_states, num_transitions };
+	uint32_t ranges[4] = { num_clips, num_states, num_transitions, num_variables_config};
 
 	uint32_t size_of_clip = sizeof(uint64_t) + sizeof(uint32_t) + sizeof(bool);
 	uint32_t size_of_state = sizeof(uint64_t) * 2 + sizeof(float);
@@ -125,6 +125,20 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 		bytes = sizeof(bool);
 		memcpy(cursor, &automatic, bytes);
 
+		cursor += bytes;
+	}
+
+	for(auto& float_variable : float_variables_config)
+	{
+		uint64_t name_hash = float_variable.GetUInt("FloatNameHash", 0);
+		float value = float_variable.GetFloat("FloatValue", 0.f);
+
+		bytes = sizeof(uint64_t);
+		memcpy(cursor, &name_hash, bytes);
+		cursor += bytes;
+
+		bytes = sizeof(float);
+		memcpy(cursor, &value, bytes);
 		cursor += bytes;
 	}
 

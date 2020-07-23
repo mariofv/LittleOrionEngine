@@ -211,7 +211,6 @@ void StateMachine::Save(Config& config) const
 	}
 	config.AddChildrenConfig(transitions_config, "Transitions");
 
-	config.AddUInt(default_state, "Default");
 
 	//Float variables
 	std::vector<Config> float_variables_config;
@@ -226,6 +225,8 @@ void StateMachine::Save(Config& config) const
 		++i;
 	}
 	config.AddChildrenConfig(float_variables_config, "FloatVariables");
+
+	config.AddUInt(default_state, "Default");
 }
 
 void StateMachine::Load(const Config& config)
