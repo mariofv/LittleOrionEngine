@@ -110,7 +110,7 @@ void ComponentAnimation::Stop()
 	playing = false;
 }
 
-void ComponentAnimation::ActiveAnimation(const std::string & trigger)
+void ComponentAnimation::ActiveAnimation(const std::string& trigger)
 {
 	animation_controller->StartNextState(trigger);
 }
@@ -250,7 +250,7 @@ void ComponentAnimation::GenerateJointChannelMaps()
 	}
 }
 
-void ComponentAnimation::GenerateAttachedBones(GameObject* mesh, std::vector<Skeleton::Joint> & skeleton)
+void ComponentAnimation::GenerateAttachedBones(GameObject* mesh, std::vector<Skeleton::Joint>& skeleton)
 {
 	if (mesh->children.empty())
 	{
@@ -264,7 +264,7 @@ void ComponentAnimation::GenerateAttachedBones(GameObject* mesh, std::vector<Ske
 		{
 			if (skeleton[j].name == child->name)
 			{
-				animation_controller->attached_bones.push_back({ j,child });
+				animation_controller->attached_bones.push_back({ j, child });
 			}
 		}
 	}
