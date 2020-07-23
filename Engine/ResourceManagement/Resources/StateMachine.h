@@ -96,7 +96,8 @@ public:
 	uint64_t default_state = 0;
 
 	//Set float
-	std::unordered_map<std::string, float> float_variables;
+	std::unordered_map<uint64_t, float> float_variables;
+	std::vector<std::string> float_variables_names;
 
 	friend class PanelStateMachine;
 	

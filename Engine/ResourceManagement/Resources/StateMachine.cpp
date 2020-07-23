@@ -215,12 +215,15 @@ void StateMachine::Save(Config& config) const
 
 	//Float variables
 	std::vector<Config> float_variables_config;
+	size_t i = 0;
 	for (auto& variable : float_variables)
 	{
 		Config float_variable_config;
-		float_variable_config.AddString(variable.first, "FloatName");
+		float_variable_config.AddUInt(variable.first, "FloatNameHash");
 		float_variable_config.AddFloat(variable.second, "FloatValue");
+		float_variable_config.AddString(float_variables_names[i], "FloatName");
 		float_variables_config.push_back(float_variable_config);
+		++i;
 	}
 	config.AddChildrenConfig(float_variables_config, "FloatVariables");
 }
@@ -354,11 +357,14 @@ void StateMachine::LoadNames(const Config & config)
 	config.GetChildrenConfig("FloatVariables", float_variables_config);
 	for (auto& float_variable_config : float_variables_config)
 	{
-		std::string name;
-		float_variable_config.GetString("FloatName", name, "");
-
+		uint64_t name_hash = float_variable_config.GetUInt("FloatNameHash", 0);
 		float value = float_variable_config.GetFloat("FloatValue", 0.f);
-		float_variables[name] = value;
+
+		float_variables[name_hash] = value;
+		
+		std::string auxiliar_name;
+		float_variable_config.GetString("FloatName", auxiliar_name, "");
+		float_variables_names.push_back(auxiliar_name);
 	}
 
 }

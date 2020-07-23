@@ -433,22 +433,29 @@ void PanelStateMachine::LeftPanel()
 		ImGui::Text("Parameters: ");
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Floats");
 		ImGui::Separator();
+		size_t i = 0;
 		for(auto variable : state_machine->float_variables)
 		{
-			ImGui::DragFloat(variable.first.c_str(), &variable.second, 0.01f, 0.f, 100.f);
+			ImGui::DragFloat(state_machine->float_variables_names[i].c_str(), &variable.second, 0.01f, 0.f, 100.f);
 			state_machine->float_variables[variable.first] = variable.second;
 			ImGui::SameLine();
 			if(ImGui::Button("X"))
 			{
 				state_machine->float_variables.erase(variable.first);
+				state_machine->float_variables_names.erase(state_machine->float_variables_names.begin() + i);
+				break;
 			}
+
+			++i;
 		}
 		ImGui::Separator();
 		ImGui::InputText("###Float Name", &auxiliar_variable);
 		ImGui::SameLine();
 		if(ImGui::Button("Add float variable"))
 		{
-			state_machine->float_variables[auxiliar_variable] = 0.f;
+			uint64_t name_hash = std::hash<std::string>{}(auxiliar_variable);
+			state_machine->float_variables[name_hash] = 0.f;
+			state_machine->float_variables_names.push_back(auxiliar_variable);
 		}
 
 		ImGui::Separator();

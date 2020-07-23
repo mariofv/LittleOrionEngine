@@ -22,9 +22,14 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 	std::vector<Config> transitions_config;
 	state_machine_config.GetChildrenConfig("Transitions", transitions_config);
 
+	//Set float
+	std::vector<Config> float_variables_config;
+	state_machine_config.GetChildrenConfig("FloatVariables", float_variables_config);
+
 	uint32_t num_clips = clips_config.size();
 	uint32_t num_states = states_config.size();
 	uint32_t num_transitions = transitions_config.size();
+	uint32_t num_variables_config = float_variables_config.size();
 	uint32_t ranges[3] = { num_clips, num_states, num_transitions };
 
 	uint32_t size_of_clip = sizeof(uint64_t) + sizeof(uint32_t) + sizeof(bool);
