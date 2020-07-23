@@ -49,7 +49,7 @@ struct Parameter {
 struct Transition
 {
 	Transition() = default;
-	Transition(uint64_t source, uint64_t target, std::string & trigger, uint64_t interpolation);
+	Transition(uint64_t source, uint64_t target, std::string& trigger, uint64_t interpolation);
 	uint64_t source_hash = 0;
 	uint64_t target_hash = 0;
 	uint64_t trigger_hash = 0;
@@ -94,6 +94,10 @@ public:
 	std::vector<std::shared_ptr<Transition>> transitions;
 	std::vector<std::shared_ptr<Parameter<int>>> parameters;
 	uint64_t default_state = 0;
+
+	//Set float
+	std::unordered_map<std::string, float> float_variables;
+
 	friend class PanelStateMachine;
 	
 };
