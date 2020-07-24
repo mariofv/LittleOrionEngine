@@ -125,7 +125,7 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(uint32_t uuid, const Fil
 		memcpy(&name_hash, cursor, bytes);
 		cursor += bytes;
 
-		float value_float;
+		float value_float = 0.f;
 		bytes = sizeof(float);
 		memcpy(&value_float, cursor, bytes);
 		cursor += bytes;

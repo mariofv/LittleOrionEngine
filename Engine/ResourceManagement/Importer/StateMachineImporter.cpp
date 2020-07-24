@@ -35,7 +35,8 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 	uint32_t size_of_clip = sizeof(uint64_t) + sizeof(uint32_t) + sizeof(bool);
 	uint32_t size_of_state = sizeof(uint64_t) * 2 + sizeof(float);
 	uint32_t size_of_transitions = sizeof(uint64_t) * 5 + sizeof(bool);
-	uint32_t size = sizeof(ranges) + size_of_clip * num_clips + size_of_transitions * num_transitions + size_of_state * num_states + sizeof(uint64_t)/*Default state*/;
+	uint32_t size_of_float_variables = sizeof(uint64_t) + sizeof(float);
+	uint32_t size = sizeof(ranges) + size_of_clip * num_clips + size_of_transitions * num_transitions + size_of_state * num_states + size_of_float_variables * num_variables_config + sizeof(uint64_t)/*Default state*/;
 
 	char* data = new char[size]; // Allocate
 	char* cursor = data;
