@@ -530,7 +530,7 @@ void PanelStateMachine::LeftPanel()
 		size_t i = 0;
 		for(auto variable : state_machine->float_variables)
 		{
-			ImGui::DragFloat(state_machine->float_variables_names[i].c_str(), &variable.second, 0.01f, 0.f, 100.f);
+			ImGui::DragFloat(state_machine->GetNameOfVariable(variable.first).c_str(), &variable.second, 0.01f, 0.f, 100.f);
 			state_machine->float_variables[variable.first] = variable.second;
 			ImGui::SameLine();
 			std::string x_id("X###");
