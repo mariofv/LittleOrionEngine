@@ -25,6 +25,14 @@ struct Condition
 	std::function<bool(float, float)> comparator_function = std::greater();
 
 	float value = 0.f;
+
+	Condition() = default;
+	Condition(uint64_t name_hash, std::function<bool(float, float)> func, float value)
+	{
+		this->name_hash_variable = name_hash;
+		this->comparator_function = func;
+		this->value = value;
+	}
 };
 
 struct Clip
@@ -105,6 +113,7 @@ public:
 	void Load(const Config& config);
 	void LoadNames(const Config& config);
 	void SetFloatVariables(std::unordered_map<uint64_t, float>& map);
+	std::string GetNameOfVariable(uint64_t name_hash);
 
 private:
 	void RemoveState(const std::shared_ptr<State> & state);

@@ -404,3 +404,19 @@ void StateMachine::SetFloatVariables(std::unordered_map<uint64_t, float>& map)
 {
 	this->float_variables = map;
 }
+
+std::string StateMachine::GetNameOfVariable(uint64_t name_hash)
+{
+	std::string name;
+
+	for(auto variable_name : float_variables_names)
+	{
+		uint64_t variable_hash = std::hash<std::string>{}(variable_name);
+		if(variable_hash == name_hash)
+		{
+			return variable_name;
+		}
+	}
+
+	return name;
+}
