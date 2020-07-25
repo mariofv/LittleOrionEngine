@@ -48,6 +48,7 @@ public:
 	ENGINE_API float GetCurrentClipPercentatge() const;
 	ENGINE_API float GetTotalAnimationTime() const;
 	ENGINE_API void SetAnimationSpeed(float speed) const;
+	ENGINE_API void SetFloat(std::string name, float value);
 
 	void Update() override;
 	void UpdateMeshes();

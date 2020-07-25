@@ -152,6 +152,12 @@ void ComponentAnimation::SetAnimationSpeed(float speed) const
 	return;
 }
 
+ENGINE_API void ComponentAnimation::SetFloat(std::string name, float value)
+{
+	uint64_t name_hash = std::hash<std::string>{}(name);
+	animation_controller->SetFloat(name_hash, value);
+}
+
 
 void ComponentAnimation::Update()
 {

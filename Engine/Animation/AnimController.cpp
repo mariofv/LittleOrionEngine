@@ -205,6 +205,15 @@ void AnimController::SetSpeed(float speed)
 	}
 }
 
+void AnimController::SetFloat(uint64_t name_hash, float value)
+{
+	//Check if Keyval exist and then change value
+	if(state_machine->float_variables.find(name_hash) != state_machine->float_variables.end())
+	{
+		state_machine->float_variables[name_hash] = value;
+	}
+}
+
 void AnimController::CheckConditions()
 {
 	if (!active_state)

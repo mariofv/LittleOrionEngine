@@ -50,7 +50,7 @@ public:
 	void StartNextState(const std::string& trigger);
 	bool IsOnState(const std::string& state);
 	void SetSpeed(float speed);
-
+	void SetFloat(uint64_t name_hash, float value);
 
 
 private:
