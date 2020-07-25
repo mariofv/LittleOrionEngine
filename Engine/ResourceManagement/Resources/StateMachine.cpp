@@ -358,11 +358,6 @@ void StateMachine::LoadNames(const Config & config)
 	config.GetChildrenConfig("FloatVariables", float_variables_config);
 	for (auto& float_variable_config : float_variables_config)
 	{
-		uint64_t name_hash = float_variable_config.GetUInt("FloatNameHash", 0);
-		float value = float_variable_config.GetFloat("FloatValue", 0.f);
-
-		float_variables[name_hash] = value;
-		
 		std::string auxiliar_name;
 		float_variable_config.GetString("FloatName", auxiliar_name, "");
 		float_variables_names.push_back(auxiliar_name);
