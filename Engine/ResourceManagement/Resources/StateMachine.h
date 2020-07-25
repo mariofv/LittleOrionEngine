@@ -5,9 +5,28 @@
 #include "Animation.h"
 #include "ResourceManagement/Manager/StateMachineManager.h"
 #include "EditorUI/Panel/PanelStateMachine.h"
+#include <functional>
 #include <unordered_map>
 
 class File;
+
+enum class Comparator
+{
+	GREATER,
+	LESSER,
+	EQUAL,
+	NOT_EQUAL
+};
+
+struct Condition
+{
+	uint64_t name_hash_variable = 0;
+	Comparator comparator = Comparator::GREATER;
+	std::function<bool(float, float)> comparator_function = std::greater();
+
+	float value = 0.f;
+};
+
 struct Clip
 {
 	Clip() = default;
@@ -61,6 +80,8 @@ struct Transition
 	bool automatic = false;
 	uint64_t priority = 0;
 
+	std::vector<Condition> conditions;
+
 	std::vector<std::shared_ptr<Parameter<int>>> parameters;
 };
 
@@ -78,6 +99,7 @@ public:
 	std::shared_ptr<State> GetState(uint64_t state_hash) const;
 	std::shared_ptr<Transition> GetTriggerTransition(const std::string & trigger, uint64_t state_hash) const;
 	std::shared_ptr<Transition> GetAutomaticTransition(uint64_t state_hash) const;
+	std::shared_ptr<Transition> GetTransitionIfConditions(uint64_t state_hash) const;
 
 	void Save(Config& config) const;
 	void Load(const Config& config);
@@ -88,6 +110,7 @@ private:
 	void RemoveState(const std::shared_ptr<State> & state);
 	void RemoveClip(const std::shared_ptr<Clip> & state);
 	void AddClipToState(std::shared_ptr<State> & state, uint32_t animation_uuid);
+	bool CheckTransitionConditions(std::shared_ptr<Transition>& transition) const;
 
 public:
 	std::vector<std::shared_ptr<Clip>> clips;

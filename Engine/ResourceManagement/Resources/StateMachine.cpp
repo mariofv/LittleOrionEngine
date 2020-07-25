@@ -115,6 +115,19 @@ std::shared_ptr<Transition> StateMachine::GetAutomaticTransition(uint64_t state_
 	return automatic_transition;
 }
 
+std::shared_ptr<Transition> StateMachine::GetTransitionIfConditions(uint64_t state_hash) const
+{
+	for(auto transition : transitions)
+	{
+		if(transition->source_hash == state_hash && CheckTransitionConditions(transition))
+		{
+			return transition;
+		}
+	}
+
+	return nullptr;
+}
+
 
 void StateMachine::RemoveState(const std::shared_ptr<State>& state)
 {
@@ -166,6 +179,28 @@ void StateMachine::AddClipToState(std::shared_ptr<State>& state, uint32_t animat
 		RemoveClip(old_clip);
 	}
 	clips.push_back(new_clip);
+}
+
+bool StateMachine::CheckTransitionConditions(std::shared_ptr<Transition>& transition) const
+{
+	size_t counter = 0;
+	size_t goal = transition->conditions.size();
+
+	for(auto condition : transition->conditions)
+	{
+		float value_of_variable = float_variables.at(condition.name_hash_variable);
+		if(condition.comparator_function(value_of_variable, condition.value))
+		{
+			++counter;
+		}
+	}
+
+	if(counter == goal)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 void StateMachine::Save(Config& config) const
