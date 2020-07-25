@@ -10,12 +10,12 @@
 
 #include "NodeEditor/imgui_node_editor.h"
 
-#include <vector>
-#include <string>
-#include <vector>
-#include <map>
 #include <algorithm>
+#include <array>
+#include <map>
+#include <string>
 #include <utility>
+#include <vector>
 
 using namespace ax;
 using ax::Widgets::IconType;
@@ -92,6 +92,8 @@ private:
 	NodeInfo* selected_node = nullptr ;
 	bool modified_by_user = false;
 	std::string auxiliar_variable;
+
+	std::array<const char* , 4> comparator_name {"Greater", "Lesser", "Equal", "Not Equal"};
 
 };
 #endif // !_PANELSTATEMACHINE_H_

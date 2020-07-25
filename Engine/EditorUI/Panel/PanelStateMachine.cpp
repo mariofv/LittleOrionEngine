@@ -427,8 +427,102 @@ void PanelStateMachine::LeftPanel()
 			}
 			ImGui::BulletText("Trigger Name:");
 			ImGui::InputText("###Trigger Name", &(link->transition->trigger));
+
+			ImGui::Separator();
+			ImGui::Text("Conditions: ");
+			size_t i = 0;
+			for (auto& condition : link->transition->conditions)
+			{
+				std::string variable_id("###VariableChosen");
+				variable_id += std::to_string(i);
+				const float window_width = ImGui::GetWindowWidth();
+				float combo_width = window_width * 0.40f;
+				ImGui::SetNextItemWidth(combo_width);
+				if (ImGui::BeginCombo(variable_id.c_str(), state_machine->GetNameOfVariable(condition.name_hash_variable).c_str()))
+				{
+					for(auto variable : state_machine->float_variables_names)
+					{
+						if (ImGui::Selectable(variable.c_str()))
+						{
+							condition.name_hash_variable = std::hash<std::string>{}(variable);
+						}
+					}
+
+					ImGui::EndCombo();
+				}
+
+
+				ImGui::SameLine();
+				std::string comparator_id("###Comparator");
+				comparator_id += std::to_string(i);
+				size_t index = static_cast<size_t>(condition.comparator);
+				combo_width = window_width * 0.25f;
+				ImGui::SetNextItemWidth(combo_width);
+				if (ImGui::BeginCombo(comparator_id.c_str(), comparator_name[index]))
+				{
+					//Greater
+					if (ImGui::Selectable(comparator_name[0]))
+					{
+						condition.comparator = Comparator::GREATER;
+						condition.comparator_function = std::greater();
+					}
+					
+					//Lesser
+					if (ImGui::Selectable(comparator_name[1]))
+					{
+						condition.comparator = Comparator::LESSER;
+						condition.comparator_function = std::less();
+					}
+
+					//Equal
+					if (ImGui::Selectable(comparator_name[2]))
+					{
+						condition.comparator = Comparator::EQUAL;
+						condition.comparator_function = std::equal_to();
+					}
+
+					//NotEqual
+					if (ImGui::Selectable(comparator_name[3]))
+					{
+						condition.comparator = Comparator::NOT_EQUAL;
+						condition.comparator_function = std::not_equal_to();
+					}
+
+					ImGui::EndCombo();
+				}
+				ImGui::SameLine();
+				std::string x_id("###Value");
+				x_id += std::to_string(i);
+				combo_width = window_width * 0.20f;
+				ImGui::SetNextItemWidth(combo_width);
+				ImGui::DragFloat(x_id.c_str(), &condition.value, 0.01f, 0.f, 100.f);
+
+				ImGui::SameLine();
+				std::string delete_id("X###Deletethis");
+				delete_id += std::to_string(i);
+				combo_width = window_width * 0.15f;
+				ImGui::SetNextItemWidth(combo_width);
+				if(ImGui::Button(delete_id.c_str()))
+				{
+					link->transition->conditions.erase(link->transition->conditions.begin() + i);
+					break;
+				}
+
+				++i;
+			}
+
+			ImGui::Separator();
+		
+			if (ImGui::Button("+"))
+			{
+				Condition condition(state_machine->float_variables.begin()->first, std::greater(), 0.f);
+				link->transition->conditions.push_back(condition);
+			}
 			ImGui::PopID();
 		}
+
+
+		
 		ImGui::Separator();
 		ImGui::Text("Parameters: ");
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Floats");
