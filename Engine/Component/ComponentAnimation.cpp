@@ -75,7 +75,7 @@ Component* ComponentAnimation::Clone(GameObject* owner, bool original_prefab)
 	return created_component;
 };
 
-void ComponentAnimation::Copy(Component * component_to_copy) const
+void ComponentAnimation::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentAnimation*>(component_to_copy) = *this;

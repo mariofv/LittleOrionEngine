@@ -25,7 +25,7 @@ public:
 	ComponentTransform& operator=(ComponentTransform&& component_to_move) = default;
 
 	Component* Clone(GameObject* owner, bool original_prefab) override;
-	void Copy(Component * component_to_copy) const override;
+	void CopyTo(Component* component_to_copy) const override;
 
 	void Delete() override {};
 

@@ -45,7 +45,7 @@ Component* ComponentScript::Clone(GameObject* owner, bool original_prefab)
 	return created_component;
 }
 
-void ComponentScript::Copy(Component * component_to_copy) const
+void ComponentScript::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	auto component_script = *static_cast<ComponentScript*>(component_to_copy);

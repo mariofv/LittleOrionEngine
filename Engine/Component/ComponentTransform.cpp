@@ -26,7 +26,7 @@ ComponentTransform::ComponentTransform(GameObject* owner, const float3 translati
 	OnTransformChange();
 }
 
-void ComponentTransform::Copy(Component * component_to_copy) const
+void ComponentTransform::CopyTo(Component* component_to_copy) const
 { 
 	*component_to_copy = *this;
 	*static_cast<ComponentTransform*>(component_to_copy) = *this; 
@@ -277,6 +277,6 @@ void ComponentTransform::ChangeLocalSpace(const float4x4& new_local_space)
 
 Component* ComponentTransform::Clone(GameObject* owner, bool /*original_prefab*/)
 {
-	owner->transform.Copy(this);
+	CopyTo(&owner->transform);
 	return &owner->transform;
 }

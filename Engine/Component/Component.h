@@ -45,7 +45,11 @@ public:
 	Component(const Component& component_to_copy) = default;
 	Component(Component&& component_to_move) = default;
 
-	virtual Component& operator=(const Component& component_to_copy) = default;
+	virtual Component& operator=(const Component& component_to_copy)
+	{
+		this->active = component_to_copy.active;
+		return *this;
+	};
 	virtual Component& operator=(Component&& component_to_move)
 	{
 
@@ -53,6 +57,8 @@ public:
 		this->UUID = component_to_move.UUID;
 		component_to_move.UUID = 0;
 
+		this->owner = component_to_move.owner;
+		component_to_move.owner = nullptr;
 		this->type = component_to_move.type;
 		return *this;
 	}
@@ -68,7 +74,7 @@ public:
 	virtual void Delete() = 0;
 	virtual Component* Clone(GameObject* owner, bool original_prefab) = 0;
 	void CloneBase(Component* component) const;
-	virtual void Copy(Component * component_to_copy) const = 0;
+	virtual void CopyTo(Component* component_to_copy) const = 0;
 
 	void Save(Config& config) const;
 	void Load(const Config &config);

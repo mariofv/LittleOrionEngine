@@ -24,10 +24,14 @@ ComponentBillboard::ComponentBillboard(GameObject* owner) : Component(owner, Com
 
 ComponentBillboard::~ComponentBillboard()
 {
+	CleanUp();
+}
+
+void ComponentBillboard::CleanUp()
+{
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ebo);
 	glDeleteVertexArrays(1, &vao);
-	vao = 0;
 }
 
 void ComponentBillboard::InitData()
@@ -39,7 +43,6 @@ void ComponentBillboard::InitData()
 
 void ComponentBillboard::InitQuad()
 {
-
 	float vertices[20] =
 	{
 		0.5f,  0.5f, 0.0f,		1.0f, 1.0f,
@@ -190,19 +193,21 @@ Component* ComponentBillboard::Clone(GameObject* owner, bool original_prefab)
 	else
 	{
 		created_component = App->effects->CreateComponentBillboard();
+	
 	}
 	*created_component = *this;
-	InitQuad();
+	created_component->InitQuad();
 	created_component->owner = owner;
 	created_component->owner->components.push_back(created_component);
 	return created_component;
 }
 
-void ComponentBillboard::Copy(Component * component_to_copy) const
+void ComponentBillboard::CopyTo(Component* component_to_copy) const
 {
-	*component_to_copy = *this;
-	*static_cast<ComponentBillboard*>(component_to_copy) = *this;
-	static_cast<ComponentBillboard*>(component_to_copy)->InitQuad();
+	ComponentBillboard* billboard = static_cast<ComponentBillboard*>(component_to_copy);
+	billboard->CleanUp();
+	*billboard = *this;
+	billboard->InitQuad();
 }
 
 

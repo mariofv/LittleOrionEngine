@@ -44,7 +44,7 @@ Component* ComponentCanvasRenderer::Clone(GameObject* owner, bool original_prefa
 	return created_component;
 };
 
-void ComponentCanvasRenderer::Copy(Component * component_to_copy) const
+void ComponentCanvasRenderer::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentCanvasRenderer*>(component_to_copy) = *this;

@@ -28,7 +28,7 @@ public:
 
 	ComponentAABB & operator=(const ComponentAABB& component_to_copy) = default;
 	ComponentAABB & operator=(ComponentAABB&& component_to_move) = default;
-	void Copy(Component * component_to_copy) const override;
+	void CopyTo(Component* component_to_copy) const override;
 
 	void Delete() override {};
 	void GenerateBoundingBox();

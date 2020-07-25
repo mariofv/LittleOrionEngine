@@ -218,7 +218,7 @@ void ModuleActions::PasteComponentValues(Component * component)
 {
 	if (copied_component != nullptr && component->type == copied_component->type) 
 	{
-		copied_component->Copy(component);
+		copied_component->CopyTo(component);
 	}
 }
 

@@ -92,7 +92,7 @@ public:
 	//Copy and move
 	
 	Component* Clone(GameObject* owner, bool original_prefab) override;
-	void Copy(Component * component_to_copy) const override;
+	void CopyTo(Component* component_to_copy) const override;
 
 	ComponentParticleSystem(const ComponentParticleSystem& component_to_copy) = default;
 	ComponentParticleSystem(ComponentParticleSystem&& component_to_move) = default;

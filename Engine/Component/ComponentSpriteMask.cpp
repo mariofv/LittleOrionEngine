@@ -34,7 +34,7 @@ Component* ComponentSpriteMask::Clone(GameObject* owner, bool original_prefab)
 	return created_component;
 };
 
-void ComponentSpriteMask::Copy(Component * component_to_copy) const
+void ComponentSpriteMask::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentSpriteMask*>(component_to_copy) = *this;

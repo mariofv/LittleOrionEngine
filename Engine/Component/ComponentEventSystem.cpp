@@ -49,7 +49,7 @@ Component* ComponentEventSystem::Clone(GameObject* owner, bool original_prefab)
 	return created_component;
 };
 
-void ComponentEventSystem::Copy(Component * component_to_copy) const
+void ComponentEventSystem::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentEventSystem*>(component_to_copy) = *this;

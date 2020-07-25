@@ -53,7 +53,7 @@ public:
 	ComponentCollider(GameObject* owner, ColliderType collider_type);
 	~ComponentCollider() = default;
 
-	void Copy(Component * component_to_copy) const override;
+	void CopyTo(Component* component_to_copy) const override;
 	void Delete() override;
 
 	void SpecializedSave(Config& config) const override;

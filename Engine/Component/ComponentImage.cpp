@@ -124,7 +124,7 @@ Component* ComponentImage::Clone(GameObject* owner, bool original_prefab)
 	return created_component;
 };
 
-void ComponentImage::Copy(Component * component_to_copy) const
+void ComponentImage::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentImage*>(component_to_copy) = *this;

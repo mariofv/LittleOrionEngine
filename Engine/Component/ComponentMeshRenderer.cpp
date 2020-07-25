@@ -341,7 +341,7 @@ Component* ComponentMeshRenderer::Clone(GameObject* owner, bool original_prefab)
 	return created_component;
 }
 
-void ComponentMeshRenderer::Copy(Component * component_to_copy) const
+void ComponentMeshRenderer::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentMeshRenderer*>(component_to_copy) = *this;

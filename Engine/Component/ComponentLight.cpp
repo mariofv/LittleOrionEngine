@@ -33,7 +33,7 @@ Component* ComponentLight::Clone(GameObject* owner, bool original_prefab)
 	return created_component;
 };
 
-void ComponentLight::Copy(Component * component_to_copy) const
+void ComponentLight::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentLight*>(component_to_copy) = *this;

@@ -14,9 +14,9 @@ ComponentAABB::ComponentAABB(GameObject* owner) : Component(owner, ComponentType
 
 }
 
-void ComponentAABB::Copy(Component * component_to_copy) const
+void ComponentAABB::CopyTo(Component* component_to_copy) const
 { 
-	*static_cast<ComponentAABB*>(component_to_copy) = *this; 
+	*static_cast<ComponentAABB*>(component_to_copy) = *this;
 };
 
 void ComponentAABB::SpecializedSave(Config& config) const
@@ -131,7 +131,7 @@ bool ComponentAABB::IsEmpty() const
 
 Component* ComponentAABB::Clone(GameObject* owner, bool /*original_prefab*/) 
 {
-	owner->aabb.Copy(this);
+	CopyTo(&owner->aabb);
 	return &owner->aabb;
 }
 

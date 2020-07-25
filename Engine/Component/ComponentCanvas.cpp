@@ -54,7 +54,7 @@ Component* ComponentCanvas::Clone(GameObject* owner, bool original_prefab)
 	return created_component;
 };
 
-void ComponentCanvas::Copy(Component * component_to_copy) const
+void ComponentCanvas::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentCanvas*>(component_to_copy) = *this;

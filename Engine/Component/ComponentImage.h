@@ -16,7 +16,7 @@ public:
 	~ComponentImage();
 
 	Component* Clone(GameObject* owner, bool original_prefab) override;
-	void Copy(Component * component_to_copy) const override;
+	void CopyTo(Component* component_to_copy) const override;
 
 	void Delete() override;
 	void SpecializedSave(Config& config) const override;

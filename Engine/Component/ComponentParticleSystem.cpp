@@ -464,12 +464,12 @@ Component* ComponentParticleSystem::Clone(GameObject* owner, bool original_prefa
 	created_component->owner = owner;
 	created_component->owner->components.push_back(created_component);
 	assert(billboard->emissive_intensity>-1);
-	created_component->billboard->Copy(this->billboard);
+	this->billboard->CopyTo(created_component->billboard);
 	created_component->billboard->owner = owner;
 	return created_component;
 };
 
-void ComponentParticleSystem::Copy(Component * component_to_copy) const
+void ComponentParticleSystem::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	ComponentParticleSystem* component_particle_system = static_cast<ComponentParticleSystem*>(component_to_copy);

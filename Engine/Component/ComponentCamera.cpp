@@ -64,7 +64,7 @@ Component* ComponentCamera::Clone(GameObject* owner, bool original_prefab)
 	created_component->owner->components.push_back(created_component);
 	return created_component;
 };
-void ComponentCamera::Copy(Component * component_to_copy) const
+void ComponentCamera::CopyTo(Component* component_to_copy) const
 {  
 	*component_to_copy = *this;
 	*static_cast<ComponentCamera*>(component_to_copy) = *this;

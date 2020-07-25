@@ -115,7 +115,7 @@ Component* ComponentAudioSource::Clone(GameObject* owner, bool original_prefab)
 	return created_component;
 };
 
-void ComponentAudioSource::Copy(Component * component_to_copy) const
+void ComponentAudioSource::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentAudioSource*>(component_to_copy) = *this;

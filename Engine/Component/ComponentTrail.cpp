@@ -237,7 +237,7 @@ Component* ComponentTrail::Clone(GameObject* owner, bool original_prefab)
 	return created_component;
 };
 
-void ComponentTrail::Copy(Component * component_to_copy) const
+void ComponentTrail::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentTrail*>(component_to_copy) = *this;
