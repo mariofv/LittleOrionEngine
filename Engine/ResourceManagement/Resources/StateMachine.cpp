@@ -242,6 +242,19 @@ void StateMachine::Save(Config& config) const
 		transition_config.AddUInt(transition->interpolation_time, "Interpolation");
 		transition_config.AddBool(transition->automatic, "Automatic");
 		transition_config.AddUInt(transition->priority, "Priority");
+
+		//Conditions
+		std::vector<Config> conditions_config;
+		for(auto& condition : transition->conditions)
+		{
+			Config condition_config;
+			condition_config.AddUInt(condition.name_hash_variable, "VariableNameHash");
+			condition_config.AddUInt(static_cast<unsigned>(condition.comparator), "Comparator");
+			condition_config.AddFloat(condition.value, "Value");
+			conditions_config.emplace_back(condition_config);
+		}
+		transition_config.AddChildrenConfig(conditions_config, "Conditions");
+
 		transitions_config.push_back(transition_config);
 	}
 	config.AddChildrenConfig(transitions_config, "Transitions");
