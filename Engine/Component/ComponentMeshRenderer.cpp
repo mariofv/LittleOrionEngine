@@ -336,10 +336,8 @@ Component* ComponentMeshRenderer::Clone(GameObject* owner, bool original_prefab)
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
 
-	created_component->ReassignResource();
 	created_component->owner = owner;
 	created_component->owner->components.push_back(created_component);
-	created_component->ReassignResource();
 	return created_component;
 }
 

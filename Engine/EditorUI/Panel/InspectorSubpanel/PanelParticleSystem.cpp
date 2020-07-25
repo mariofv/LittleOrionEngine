@@ -29,6 +29,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		if (ImGui::Button("Delete"))
 		{
 			App->actions->DeleteComponentUndo(particle_system);
+			return;
 		}
 		if (ImGui::Button("Copy"))
 		{

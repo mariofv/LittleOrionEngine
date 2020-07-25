@@ -110,7 +110,7 @@ void  ComponentTrail::GetPerpendiculars()
 	unsigned int j = 0;
 	vertices.clear();
 	float trail_segment_uv = 1.f / test_points.size(); // to coordinate texture
-	for (auto pair = mesh_points.begin(); pair < mesh_points.end(); ++pair)
+	for (auto pair = mesh_points.begin(); pair != mesh_points.end(); ++pair)
 	{
 		if (pair->first->life > 0 && pair->second->life > 0)
 		{
@@ -139,7 +139,7 @@ void  ComponentTrail::GetPerpendiculars()
 		}
 		else
 		{
-			mesh_points.erase(pair);
+			//pair = mesh_points.erase(pair);
 		}
 	}
 }

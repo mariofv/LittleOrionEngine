@@ -27,6 +27,7 @@ ComponentBillboard::~ComponentBillboard()
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ebo);
 	glDeleteVertexArrays(1, &vao);
+	vao = 0;
 }
 
 void ComponentBillboard::InitData()
@@ -191,7 +192,7 @@ Component* ComponentBillboard::Clone(GameObject* owner, bool original_prefab)
 		created_component = App->effects->CreateComponentBillboard();
 	}
 	*created_component = *this;
-	created_component->InitQuad();
+	InitQuad();
 	created_component->owner = owner;
 	created_component->owner->components.push_back(created_component);
 	return created_component;

@@ -773,14 +773,11 @@ void GameObject::Reassign()
 
 void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 {
+	this->components.clear();
 	this->components.reserve(gameobject_to_copy.components.size());
 	for (const auto& component : gameobject_to_copy.components)
 	{
 		component->modified_by_user = false;
-		if (this->original_prefab)
-		{
-			int x = 0;
-		}
 		component->Clone(this, this->original_prefab);
 	}
 	RemoveComponentsCopying(gameobject_to_copy);

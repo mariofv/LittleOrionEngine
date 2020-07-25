@@ -18,7 +18,7 @@ Component* ComponentCapsuleCollider::Clone(GameObject* owner, bool original_pref
 	ComponentCapsuleCollider* created_component;
 	if (original_prefab)
 	{
-		created_component = new ComponentCapsuleCollider();
+		created_component = new ComponentCapsuleCollider(owner);
 	}
 	else
 	{

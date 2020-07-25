@@ -18,7 +18,7 @@ Component* ComponentCylinderCollider::Clone(GameObject* owner, bool original_pre
 	ComponentCylinderCollider* created_component;
 	if (original_prefab)
 	{
-		created_component = new ComponentCylinderCollider();
+		created_component = new ComponentCylinderCollider(owner);
 	}
 	else
 	{

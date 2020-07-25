@@ -464,9 +464,8 @@ Component* ComponentParticleSystem::Clone(GameObject* owner, bool original_prefa
 	created_component->owner = owner;
 	created_component->owner->components.push_back(created_component);
 	assert(billboard->emissive_intensity>-1);
-	*created_component->billboard = *this->billboard;
+	created_component->billboard->Copy(this->billboard);
 	created_component->billboard->owner = owner;
-	assert(!created_component->owner->original_prefab);
 	return created_component;
 };
 

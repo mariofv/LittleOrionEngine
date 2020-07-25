@@ -45,7 +45,7 @@ Component* ComponentMeshCollider::Clone(GameObject* owner, bool original_prefab)
 	ComponentMeshCollider* created_component;
 	if (original_prefab)
 	{
-		created_component = new ComponentMeshCollider();
+		created_component = new ComponentMeshCollider(owner);
 	}
 	else
 	{
