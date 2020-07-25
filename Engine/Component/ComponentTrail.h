@@ -48,9 +48,13 @@ public:
 
 	~ComponentTrail();
 
+	void CleanUp();
+
 	void Init();
 
-	ComponentTrail & operator=(const ComponentTrail& component_to_copy);
+	void InitBuffers();
+
+	ComponentTrail & operator=(const ComponentTrail& component_to_copy) = default;
 	ComponentTrail & operator=(ComponentTrail&& component_to_move) = default;
 
 	Component* Clone(GameObject* owner, bool original_prefab) override;

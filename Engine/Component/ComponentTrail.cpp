@@ -23,6 +23,11 @@ ComponentTrail::ComponentTrail(GameObject * owner) : Component(owner, ComponentT
 }
 ComponentTrail::~ComponentTrail()
 {
+	CleanUp();
+}
+
+void ComponentTrail::CleanUp()
+{
 	vertices.clear();
 	if (trail_vbo != 0)
 	{
@@ -36,6 +41,13 @@ void ComponentTrail::Init()
 	//InitRenderer
 	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
 
+	InitBuffers();
+
+	ClearTrail();
+}
+
+void ComponentTrail::InitBuffers()
+{
 	glGenVertexArrays(1, &trail_vao);
 	glGenBuffers(1, &trail_vbo);
 
@@ -53,8 +65,6 @@ void ComponentTrail::Init()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-
-	ClearTrail();
 }
 
 void ComponentTrail::Update()
@@ -212,12 +222,6 @@ void ComponentTrail::ChangeTexture(uint32_t texture_uuid)
 	App->resources->loading_thread_communication.normal_loading_flag = false;
 }
 
-ComponentTrail& ComponentTrail::operator=(const ComponentTrail& component_to_copy)
-{
-	Component::operator = (component_to_copy);
-	return *this;
-}
-
 Component* ComponentTrail::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentTrail* created_component;
@@ -230,6 +234,7 @@ Component* ComponentTrail::Clone(GameObject* owner, bool original_prefab)
 		created_component = App->effects->CreateComponentTrail(owner);
 	}
 	*created_component = *this;
+	created_component->InitBuffers();
 	CloneBase(static_cast<Component*>(created_component));
 
 	created_component->owner = owner;
@@ -240,7 +245,10 @@ Component* ComponentTrail::Clone(GameObject* owner, bool original_prefab)
 void ComponentTrail::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
-	*static_cast<ComponentTrail*>(component_to_copy) = *this;
+	ComponentTrail* trail = static_cast<ComponentTrail*>(component_to_copy);
+	trail->CleanUp();
+	*trail = *this;
+	trail->InitBuffers();
 }
 
 void ComponentTrail::Delete()

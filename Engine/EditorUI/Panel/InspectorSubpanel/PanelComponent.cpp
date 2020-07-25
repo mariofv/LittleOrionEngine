@@ -282,11 +282,9 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 
 void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 {
-	ImGui::Checkbox("Active", &trail->active);
-	ImGui::SameLine();
-	if (ImGui::Button("Delete"))
+	if (!ShowCommonComponentWindow(trail))
 	{
-		App->actions->DeleteComponentUndo(trail);
+		return;
 	}
 	ImGui::Separator();
 	if (ImGui::CollapsingHeader(ICON_FA_SHARE " Trail Renderer", ImGuiTreeNodeFlags_DefaultOpen))
