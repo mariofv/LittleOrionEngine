@@ -105,6 +105,7 @@ void AnimController::UpdateAttachedBones(const std::shared_ptr<Skeleton>& skelet
 bool AnimController::Update()
 {
 	ApplyAutomaticTransitionIfNeeded();
+	CheckConditions();
 	for (auto & playing_clip : playing_clips)
 	{
 		playing_clip.Update();	 
@@ -201,6 +202,32 @@ void AnimController::SetSpeed(float speed)
 	if(active_state)
 	{
 		playing_clips[ClipType::ACTIVE].speed = speed;
+	}
+}
+
+void AnimController::CheckConditions()
+{
+	if (!active_state)
+	{
+		return;
+	}
+	std::shared_ptr<Transition> next_transition = state_machine->GetTransitionIfConditions(active_state->name_hash);
+	if (!next_transition || next_transition == active_transition)
+	{
+		return;
+	}
+	std::shared_ptr<State> next_state;
+	active_transition = next_transition;
+	next_state = state_machine->GetState(active_transition->target_hash);
+	playing_clips[ClipType::NEXT] = { next_state->clip, next_state->speed, 0.0f, true,  static_cast<float>(active_transition->interpolation_time) };
+
+	if (!playing_clips[ClipType::ACTIVE].playing)
+	{
+		FinishActiveState();
+	}
+	else
+	{
+		AdjustInterpolationTimes();
 	}
 }
 

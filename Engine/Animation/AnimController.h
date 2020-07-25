@@ -52,11 +52,14 @@ public:
 	void SetSpeed(float speed);
 
 
+
 private:
 	void SetActiveState(std::shared_ptr<State> & state);
 	void FinishActiveState();
 	void AdjustInterpolationTimes();
 	void ApplyAutomaticTransitionIfNeeded();
+	//Variables
+	void CheckConditions();
 public:
 	std::shared_ptr<StateMachine> state_machine = nullptr;
 	std::vector<PlayingClip> playing_clips;
