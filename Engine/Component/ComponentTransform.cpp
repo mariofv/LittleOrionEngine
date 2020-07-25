@@ -275,12 +275,8 @@ void ComponentTransform::ChangeLocalSpace(const float4x4& new_local_space)
 	OnTransformChange();
 }
 
-Component* ComponentTransform::Clone(GameObject* owner, bool original_prefab)
+Component* ComponentTransform::Clone(GameObject* owner, bool /*original_prefab*/)
 {
-	ComponentTransform * created_component;
-	created_component = new ComponentTransform(nullptr);
-	*created_component = *this;
-	CloneBase(static_cast<Component*>(created_component));	
-	created_component->owner = owner;
-	return created_component;
+	owner->transform.Copy(this);
+	return &owner->transform;
 }

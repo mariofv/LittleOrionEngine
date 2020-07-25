@@ -76,17 +76,18 @@ void ComponentTrail::Update()
 
 	GetPerpendiculars();
 
-	for (auto it = test_points.begin(); it != test_points.end(); ++it)
+	auto it = test_points.begin();
+	while (it != test_points.end())
 	{
 		if (it->life >= 0) // If life is positive, all good
 		{
 			it->is_rendered = true;
 			it->life -= App->time->real_time_delta_time; // Update time left
+			++it;
 		}
-
 		else // But if not, we delete these points
 		{
-			//it = test_points.erase(it);
+			test_points.erase(it);
 		}
 	}
 }
@@ -110,7 +111,8 @@ void  ComponentTrail::GetPerpendiculars()
 	unsigned int j = 0;
 	vertices.clear();
 	float trail_segment_uv = 1.f / test_points.size(); // to coordinate texture
-	for (auto pair = mesh_points.begin(); pair != mesh_points.end(); ++pair)
+	auto pair = mesh_points.begin();
+	while (pair != mesh_points.end())
 	{
 		if (pair->first->life > 0 && pair->second->life > 0)
 		{
@@ -136,10 +138,11 @@ void  ComponentTrail::GetPerpendiculars()
 			bottom_left = (pair->first->position - perpendicular);
 			vertices.push_back({ top_left, float2(trail_segment_uv * j, 1.0f) }); //uv[i]
 			vertices.push_back({ bottom_left, float2(trail_segment_uv * j, 0.0f) });//uv[++i]
+			++pair;
 		}
 		else
 		{
-			//pair = mesh_points.erase(pair);
+			mesh_points.erase(pair);
 		}
 	}
 }

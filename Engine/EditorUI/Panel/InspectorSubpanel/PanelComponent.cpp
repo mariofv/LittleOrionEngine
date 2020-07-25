@@ -1040,7 +1040,7 @@ bool PanelComponent::ShowCommonComponentWindow(Component* component)
 	{
 		if (ImGui::Button("Paste component as new"))
 		{
-			App->actions->PasteComponent(component);
+			App->actions->PasteComponent(component->owner);
 		}
 	}
 	if (ImGui::Button("Paste component values"))
@@ -1051,89 +1051,89 @@ bool PanelComponent::ShowCommonComponentWindow(Component* component)
 	return true;
 }
 
-bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
+bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* component)
 {
-	if (ImGui::Checkbox("Active", &collider->active))
+	if (ImGui::Checkbox("Active", &component->active))
 	{
 		//UndoRedo
-		collider->SwitchPhysics();
-		App->actions->action_component = collider;
+		component->SwitchPhysics();
+		App->actions->action_component = component;
 		App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Delete"))
 	{
-		App->actions->DeleteComponentUndo(collider);
+		App->actions->DeleteComponentUndo(component);
 		return false;
 	}
 	if (ImGui::Button("Copy")) 
 	{
-		App->actions->SetCopyComponent(collider);
+		App->actions->SetCopyComponent(component);
 	}
 	if (ImGui::Button("Paste component as new"))
 	{
-		App->actions->PasteComponent(collider);
+		App->actions->PasteComponent(component->owner);
 	}
 	if (ImGui::Button("Paste component values"))
 	{
-		App->actions->PasteComponentValues(collider);
+		App->actions->PasteComponentValues(component);
 	}
 	ImGui::Separator();
 
-	if (ImGui::DragFloat("Mass", &collider->mass, 1.0F, 0.1F, 1000.F))
+	if (ImGui::DragFloat("Mass", &component->mass, 1.0F, 0.1F, 1000.F))
 	{
-		collider->SetMass(collider->mass);
-		collider->modified_by_user = true;
+		component->SetMass(component->mass);
+		component->modified_by_user = true;
 	}
-	if (ImGui::DragFloat("Friction", &collider->friction, 0.1F, 0.1F, 1.F)) {
-		collider->UpdateFriction();
-		collider->modified_by_user = true;
+	if (ImGui::DragFloat("Friction", &component->friction, 0.1F, 0.1F, 1.F)) {
+		component->UpdateFriction();
+		component->modified_by_user = true;
 	}
-	if (ImGui::DragFloat("Rolling friction", &collider->rolling_friction, 1.0F, 0.1F, 2000.F))
+	if (ImGui::DragFloat("Rolling friction", &component->rolling_friction, 1.0F, 0.1F, 2000.F))
 	{
-		collider->SetRollingFriction();
-		collider->modified_by_user = true;
+		component->SetRollingFriction();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Visualize", &collider->visualize))
+	if (ImGui::Checkbox("Visualize", &component->visualize))
 	{
-		collider->SetVisualization();
-		collider->modified_by_user = true;
+		component->SetVisualization();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Static", &collider->is_static))
+	if (ImGui::Checkbox("Static", &component->is_static))
 	{
-		collider->SetStatic();
-		collider->modified_by_user = true;
+		component->SetStatic();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Collision Detection", &collider->detect_collision))
+	if (ImGui::Checkbox("Collision Detection", &component->detect_collision))
 	{
-		collider->SetCollisionDetection();
-		collider->modified_by_user = true;
+		component->SetCollisionDetection();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Active Physics", &collider->active_physics))
+	if (ImGui::Checkbox("Active Physics", &component->active_physics))
 	{
-		collider->SwitchPhysics();
-		collider->modified_by_user = true;
+		component->SwitchPhysics();
+		component->modified_by_user = true;
 	}
 	ImGui::Text("Freeze Axis Rotation");
-	if (ImGui::Checkbox("X Axis", &collider->freeze_rotation_x))
+	if (ImGui::Checkbox("X Axis", &component->freeze_rotation_x))
 	{
-		collider->SetRotationAxis();
-		collider->modified_by_user = true;
+		component->SetRotationAxis();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Y Axis", &collider->freeze_rotation_y))
+	if (ImGui::Checkbox("Y Axis", &component->freeze_rotation_y))
 	{
-		collider->SetRotationAxis();
-		collider->modified_by_user = true;
+		component->SetRotationAxis();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Z Axis", &collider->freeze_rotation_z))
+	if (ImGui::Checkbox("Z Axis", &component->freeze_rotation_z))
 	{
-		collider->SetRotationAxis();
-		collider->modified_by_user = true;
+		component->SetRotationAxis();
+		component->modified_by_user = true;
 	}
-	if (ImGui::DragFloat3("Center", collider->center.ptr(), 0.01F))
+	if (ImGui::DragFloat3("Center", component->center.ptr(), 0.01F))
 	{
-		collider->SetColliderCenter(collider->center);
-		collider->modified_by_user = true;
+		component->SetColliderCenter(component->center);
+		component->modified_by_user = true;
 	}
 	return true;
 }

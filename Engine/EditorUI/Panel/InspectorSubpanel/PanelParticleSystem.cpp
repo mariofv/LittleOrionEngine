@@ -37,7 +37,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		}
 		if (ImGui::Button("Paste component as new"))
 		{
-			App->actions->PasteComponent(particle_system);
+			App->actions->PasteComponent(particle_system->owner);
 		}
 		if (ImGui::Button("Paste component values"))
 		{

@@ -47,7 +47,7 @@ public:
 	
 	void AddUndoAction(UndoActionType type);
 	void DeleteComponentUndo(Component* component);
-	void PasteComponent(Component* component);
+	void PasteComponent(GameObject* gameobject);
 	void PasteComponentValues(Component* component);
 	void SetCopyComponent(Component* component);
 	void ClearUndoRedoStacks();
