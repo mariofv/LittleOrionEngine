@@ -53,7 +53,6 @@ ComponentAnimation & ComponentAnimation::operator=(const ComponentAnimation & co
 {
 	Component::operator = (component_to_copy);
 	*this->animation_controller = *component_to_copy.animation_controller;
-	Init();
 	return *this;
 }
 
@@ -62,7 +61,7 @@ Component* ComponentAnimation::Clone(GameObject* owner, bool original_prefab)
 	ComponentAnimation * created_component;
 	if (original_prefab)
 	{
-		created_component = new ComponentAnimation();
+		created_component = new ComponentAnimation(owner);
 	}
 	else
 	{
@@ -72,6 +71,7 @@ Component* ComponentAnimation::Clone(GameObject* owner, bool original_prefab)
 	CloneBase(static_cast<Component*>(created_component));
 	created_component->owner = owner;
 	created_component->owner->components.push_back(created_component);
+	created_component->Init();
 	return created_component;
 };
 
@@ -79,6 +79,7 @@ void ComponentAnimation::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentAnimation*>(component_to_copy) = *this;
+	static_cast<ComponentAnimation*>(component_to_copy) ->Init();
 }
 
 void ComponentAnimation::Disable()
