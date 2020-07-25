@@ -260,7 +260,7 @@ bool Scene::SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_
 	std::vector<Config> gameobject_components_config;
 	for (auto & component : gameobject_to_save->components)
 	{
-		if (component->modified_by_user || component->added_by_user)
+		if (component->modified_by_user || component->added_by_user || component->type == Component::ComponentType::SCRIPT)
 		{
 			Config component_config;
 			component->Save(component_config);

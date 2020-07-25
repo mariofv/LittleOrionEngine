@@ -48,6 +48,7 @@ public:
 	virtual Component& operator=(const Component& component_to_copy)
 	{
 		this->active = component_to_copy.active;
+		this->UUID = component_to_copy.UUID;
 		return *this;
 	};
 	virtual Component& operator=(Component&& component_to_move)
