@@ -61,14 +61,13 @@ void ComponentMeshRenderer::Render()
 	{
 		return;
 	}
-	std::string program_name = material_to_render->shader_program;
 	unsigned int shader_variation = material_to_render->GetShaderVariation();
 	if (shadow_receiver && App->lights->render_shadows)
 	{
 		shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_RECEIVE_SHADOWS);
 	}
 
-	GLuint program = App->program->UseProgram(program_name, shader_variation);
+	GLuint program = App->program->UseProgram(material_to_render->shader_program, shader_variation);
 
 	glUniform1i(glGetUniformLocation(program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
 	
@@ -95,6 +94,7 @@ void ComponentMeshRenderer::Render()
 
 void ComponentMeshRenderer::RenderModel() const
 {
+	BROFILER_CATEGORY("Draw call", Profiler::Color::LawnGreen);
 	if (mesh_to_render == nullptr)
 	{
 		return;
@@ -106,6 +106,7 @@ void ComponentMeshRenderer::RenderModel() const
 
 void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 {
+	BROFILER_CATEGORY("Render material", Profiler::Color::ForestGreen);
 	AddDiffuseUniforms(shader_program);
 	AddEmissiveUniforms(shader_program);
 	AddSpecularUniforms(shader_program);

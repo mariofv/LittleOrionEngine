@@ -141,6 +141,7 @@ void Material::Load(const Config& config)
 	specular_color[1] = specular.y;
 	specular_color[2] = specular.z;
 	specular_color[3] = specular.w;
+
 }
 
 void Material::RemoveMaterialTexture(MaterialTextureType type)

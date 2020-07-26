@@ -267,8 +267,6 @@ void ModuleRender::GetMeshesToRender(const ComponentCamera* camera)
 
 void ModuleRender::SetListOfMeshesToRender(const ComponentCamera* camera)
 {
-
-	BROFILER_CATEGORY("Set list meshes to render", Profiler::Color::MediumAquaMarine);
 	opaque_mesh_to_render.clear();
 	transparent_mesh_to_render.clear();
 	float3 camera_pos = camera->camera_frustum.pos;
