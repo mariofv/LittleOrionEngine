@@ -143,14 +143,10 @@ void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 }
 void GameObject::Duplicate(const GameObject& gameobject_to_copy)
 {
-	if (!is_prefab_parent && gameobject_to_copy.transform.modified_by_user)
-	{
-		transform.SetTranslation(gameobject_to_copy.transform.GetTranslation());
-		transform.SetRotation(gameobject_to_copy.transform.GetRotationRadiants());
-		//gameobject_to_copy.transform.modified_by_user = false;
-	}
-	transform.SetScale(gameobject_to_copy.transform.GetScale());
-	transform_2d = gameobject_to_copy.transform_2d;
+
+	gameobject_to_copy.transform.CopyTo(&transform);
+	gameobject_to_copy.transform_2d.CopyTo(&transform_2d);
+
 	CopyComponents(gameobject_to_copy);
 	this->name = gameobject_to_copy.name;
 	this->active = gameobject_to_copy.active;

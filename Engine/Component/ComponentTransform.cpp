@@ -30,6 +30,7 @@ void ComponentTransform::CopyTo(Component* component_to_copy) const
 { 
 	*component_to_copy = *this;
 	*static_cast<ComponentTransform*>(component_to_copy) = *this; 
+	static_cast<ComponentTransform*>(component_to_copy)->OnTransformChange();
 };
 
 ComponentTransform & ComponentTransform::operator=(const ComponentTransform & component_to_copy)
