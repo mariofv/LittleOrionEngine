@@ -29,6 +29,7 @@ public:
 
 	GameObject& operator=(const GameObject& gameobject_to_copy) = default;
 	GameObject& operator<<(const GameObject& gameobject_to_copy);
+	void CopyParameters(const GameObject & gameobject_to_copy);
 	GameObject& operator=(GameObject&& gameobject_to_move) = default;
 
 	void Duplicate(const GameObject& gameobject_to_copy);
