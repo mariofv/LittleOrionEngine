@@ -18,6 +18,9 @@ public:
 		TRANSLATION,
 		ROTATION,
 		SCALE,
+		MULTIPLE_TRANSLATION,
+		MULTIPLE_ROTATION,
+		MULTIPLE_SCALE,
 		ADD_GAMEOBJECT,
 		DELETE_GAMEOBJECT,
 		ADD_COMPONENT,
@@ -70,6 +73,7 @@ public:
 	std::vector<EditorAction*> undoStack;
 	std::vector<EditorAction*> redoStack;
 	float3 previous_transform = float3::zero;
+	
 	GameObject* action_game_object = nullptr;
 	Component* action_component = nullptr;
 	Component* copied_component = nullptr;
