@@ -225,7 +225,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	glDisable(GL_BLEND);
 	
 	App->effects->Render();
-	if (bloom)
+	if (hdr_active)
 	{
 		RenderHDR(camera);
 	}
@@ -509,7 +509,7 @@ void ModuleRender::RenderHDR(const ComponentCamera &camera)
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, camera.last_recorded_frame_texture);
+		glBindTexture(GL_TEXTURE_2D, camera.color_buffers[0]);
 		glUniform1i(glGetUniformLocation(program, "scene_texture"), 0);
 		glUniform1f(glGetUniformLocation(program, "exposure"), exposure);
 		glUniform1i(glGetUniformLocation(program, "hdr_type"), static_cast<int>(hdr_type));

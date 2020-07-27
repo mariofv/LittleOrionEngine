@@ -6,6 +6,7 @@
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleRender.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleTime.h"
 
@@ -256,6 +257,10 @@ unsigned int Material::GetShaderVariation() const
 	if (material_type == MaterialType::MATERIAL_DISSOLVING)
 	{
 		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_DISSOLVING_PROPERTIES);
+	}
+	if (App->renderer->hdr_active)
+	{
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_HDR);
 	}
 
 	return variation;

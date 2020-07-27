@@ -196,6 +196,12 @@ void main()
 	result += emissive_color;
 	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
 	FragColor = vec4(result,1.0);
+
+	//hdr computes gamma on the shader, so there is no need to put it here aswell
+#if	!ENABLE_HDR
+		FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); 
+#endif
+
 	FragColor.a=material.transparency;
 	float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
     if(brightness > 1.0)

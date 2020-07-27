@@ -93,6 +93,7 @@ public:
 	bool toggle_perspective_sub_frustums = false;
 	bool bloom = false;
 	float exposure = 1.0f;
+	bool hdr_active = false;
 private:
 	void* context = nullptr;
 	HDRType hdr_type = HDRType::FILMIC;

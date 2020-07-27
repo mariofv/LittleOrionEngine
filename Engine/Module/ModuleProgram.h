@@ -26,7 +26,8 @@ public:
 		ENABLE_BILLBOARD_AXIAL_ALIGNMENT = 1 << 5,
 
 		ENABLE_LIQUID_PROPERTIES = 1 << 6,
-		ENABLE_DISSOLVING_PROPERTIES = 1 << 7
+		ENABLE_DISSOLVING_PROPERTIES = 1 << 7,
+		ENABLE_HDR = 1 << 8
 	};
 
 	struct ShaderProgram
@@ -106,7 +107,7 @@ public:
 
 private:
 	std::unordered_map<std::string, ShaderProgram> loaded_programs;
-	std::array<std::string, 8> defines =
+	std::array<std::string, 9> defines =
 	{
 		"#define NORMAL_MAP 1\n",
 		"#define SPECULAR_MAP 1\n",
@@ -117,7 +118,8 @@ private:
 		"#define ENABLE_BILLBOARD_AXIAL_ALIGNMENT 1\n",
 
 		"#define ENABLE_LIQUID_PROPERTIES 1\n",
-		"#define ENABLE_DISSOLVING_PROPERTIES 1\n"
+		"#define ENABLE_DISSOLVING_PROPERTIES 1\n",
+		"#define ENABLE_HDR 1\n"
 	};
 
 	std::vector<const char *> names;

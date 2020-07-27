@@ -268,6 +268,7 @@ void PanelConfiguration::ShowRenderOptions()
 		}
 		if (ImGui::TreeNode("Post Processing"))
 		{
+			ImGui::Checkbox("HDR", &App->renderer->hdr_active);
 			ImGui::Checkbox("Bloom", &App->renderer->bloom);
 			if (ImGui::BeginCombo("Tonemapping Type", App->renderer->GetHDRType(App->renderer->hdr_type).c_str()))
 			{
