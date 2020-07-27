@@ -22,7 +22,7 @@ struct Condition
 {
 	uint64_t name_hash_variable = 0;
 	Comparator comparator = Comparator::GREATER;
-	std::function<bool(float, float)> comparator_function = std::greater();
+	std::function<bool(float, float)> comparator_function;
 
 	float value = 0.f;
 
