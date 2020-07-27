@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 
 class Texture;
+struct TextureLoadData;
 
 class ComponentImage : public Component
 {
@@ -21,7 +22,14 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
+	void LoadResource(uint32_t uuid, ResourceType resource) override;
+	void InitResource(uint32_t uuid, ResourceType resource) override;
+
+	void ReassignResource() override;
+
 	void SetTextureToRender(uint32_t texture_uuid);
+	void SetTextureToRenderFromInspector(uint32_t texture_uuid);
+
 	ENGINE_API void SetColor(float4 color);
 
 	void Render(float4x4* projection);
@@ -34,6 +42,7 @@ private:
 public:
 	uint32_t texture_uuid = 0;
 	std::shared_ptr<Texture> texture_to_render;
+
 	bool preserve_aspect_ratio = false;
 
 	float4 color = float4::one;

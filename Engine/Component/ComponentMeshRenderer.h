@@ -31,6 +31,10 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
+	void LoadResource(uint32_t uuid, ResourceType resource, unsigned texture_type) override;
+	void InitResource(uint32_t uuid, ResourceType resource, unsigned texture_type) override;
+	void ReassignResource() override;
+
 	void Delete() override;
 
 	void Render();
@@ -70,6 +74,7 @@ public:
 	std::vector<float4x4> palette;
 
 	bool is_raycastable = true;
+	ComponentMeshCollider* mesh_collider = nullptr;
 	bool shadow_caster = false;
 	bool shadow_receiver = false;
 private:

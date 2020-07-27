@@ -7,6 +7,9 @@
 #include "Helper/BuildOptions.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
+#include <thread>
+#include <atomic>
+#include <mutex>
 
 class Scene;
 
@@ -55,8 +58,13 @@ public:
 	void LoadTmpScene();
 	void SaveTmpScene();
 
+	void LoadLoadingScreen();
+	void DeleteLoadingScreen();
+
 	bool HasPendingSceneToLoad() const;
 	bool CurrentSceneIsSaved() const;
+
+	void StopSceneTimer();
 
 private:
 	void OpenScene();
@@ -78,6 +86,10 @@ private:
 	std::shared_ptr<Scene> last_scene = 0;
 
 	std::unique_ptr<BuildOptions> build_options = nullptr;
+
+	GameObject* loading_screen_canvas = nullptr;
+
+	Timer timer;
 
 	friend class PanelScene;
 	friend class PanelBuildOptions;

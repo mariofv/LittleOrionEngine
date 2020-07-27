@@ -470,6 +470,7 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 		if(selected_camera->camera_frustum.type == FrustumType::PerspectiveFrustum)
 			dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
 
+
 		if (selected_camera->camera_frustum.type == FrustumType::OrthographicFrustum)
 		{
 			float3 points[8];

@@ -219,7 +219,7 @@ void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode
 		case ComponentCamera::ClearMode::SKYBOX:
 			glStencilMask(0xFF);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-			if (skybox_uuid != 0)
+			if (skybox_uuid != 0 && camera_skybox)
 			{
 				camera_skybox->Render(*this);
 			}

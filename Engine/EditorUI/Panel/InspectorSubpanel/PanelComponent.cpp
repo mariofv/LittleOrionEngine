@@ -663,12 +663,12 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image)
 		uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
 		if (selected_resource != 0)
 		{
-			component_image->SetTextureToRender(selected_resource);
+			component_image->SetTextureToRenderFromInspector(selected_resource);
 		}
 		selected_resource = ImGui::ResourceDropper<Texture>();
 		if (selected_resource != 0)
 		{
-			component_image->SetTextureToRender(selected_resource);
+			component_image->SetTextureToRenderFromInspector(selected_resource);
 		}
 
 		ImGui::ColorEdit3("Color", component_image->color.ptr());

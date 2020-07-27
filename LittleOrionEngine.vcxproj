@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="Engine\Component\ComponentAudioListener.h" />
     <ClInclude Include="Engine\Component\ComponentTrail.h" />
+    <ClInclude Include="Engine\Helper\ThreadSafeQueue.h" />
     <ClInclude Include="Engine\Log\EngineSink.h" />
     <ClInclude Include="Engine\Actions\EditorActionAddMultipleGO.h" />
     <ClInclude Include="Engine\Actions\EditorActionDeleteMultipleGO.h" />

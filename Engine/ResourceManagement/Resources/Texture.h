@@ -3,19 +3,33 @@
 
 #include "Resource.h"
 #include "ResourceManagement/Manager/TextureManager.h"
+#include "ResourceManagement/Metafile/TextureMetafile.h"
 
 #include <GL/glew.h>
 #include <string>
 
 class Metafile;
-struct TextureOptions;
 enum WrapMode;
 enum FilterMode;
+
+struct TextureLoadData
+{
+	std::string path;
+	int width = 0;
+	int height = 0;
+	int num_channels = 0;
+	TextureOptions texture_options;
+	std::vector<char> data;
+	uint32_t uuid = 0;
+
+	//For material type enum
+	unsigned texture_type = 0;
+};
 
 class Texture : public Resource
 {
 public:
-	Texture(uint32_t uuid, char* data, size_t image_size, int width, int height, int num_channels, TextureOptions& options);
+	Texture(uint32_t uuid, char* data, size_t image_size, int width, int height, int num_channels, TextureOptions& options, bool async = false);
 
 	~Texture();
 
@@ -28,10 +42,10 @@ public:
 	char* GetFilter_C_Str() const;
 
 
+	void LoadInMemory();
 
 private:
 	void GenerateMipMap();
-	void LoadInMemory(TextureOptions& options, int num_channels);
 	char* GLEnumToString(GLenum gl_enum) const;
 
 public:
@@ -39,6 +53,8 @@ public:
 
 	int width = 0;
 	int height = 0;
+	int num_channels = 0;
+	TextureOptions texture_options;
 
 private:
 
@@ -52,10 +68,11 @@ private:
 namespace ResourceManagement
 {
 	template<>
-	static std::shared_ptr<Texture> Load(uint32_t uuid, const FileData& resource_data)
+	static std::shared_ptr<Texture> Load(uint32_t uuid, const FileData& resource_data, bool async)
 	{
-		return TextureManager::Load(uuid, resource_data);
+		return TextureManager::Load(uuid, resource_data, async);
 	}
+	
 }
 
 
