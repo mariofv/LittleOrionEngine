@@ -100,6 +100,7 @@ void PrefabManager::LoadBasicParameters(const Config& config, std::unique_ptr<Ga
 	loaded_gameObject->UUID = config.GetUInt("UUID", 0);
 
 	config.GetString("Name", loaded_gameObject->name, "GameObject");
+	config.GetString("Tag", loaded_gameObject->tag, "");
 
 	loaded_gameObject->SetStatic(config.GetBool("IsStatic", false));
 	loaded_gameObject->SetEnabled(config.GetBool("Active", true));

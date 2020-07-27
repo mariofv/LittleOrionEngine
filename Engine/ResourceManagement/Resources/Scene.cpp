@@ -332,8 +332,8 @@ void Scene::LoadPrefabModifiedComponents(const Config& config) const
 
 		uint64_t UUID = component_config.GetUInt("UUID", 0);
 
-		Component * component = prefab_child->GetComponent(component_type_uint);
-		if (component != nullptr && component->UUID == UUID)
+		Component * component = prefab_child->GetComponent(UUID);
+		if (component != nullptr)
 		{
 			component->Load(component_config);
 			component->modified_by_user = true;
