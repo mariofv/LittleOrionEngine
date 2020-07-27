@@ -147,7 +147,6 @@ void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 }
 void GameObject::Duplicate(const GameObject& gameobject_to_copy)
 {
-
 	gameobject_to_copy.transform.CopyTo(&transform);
 	gameobject_to_copy.transform_2d.CopyTo(&transform_2d);
 
@@ -166,7 +165,7 @@ void GameObject::Duplicate(const GameObject& gameobject_to_copy)
 void GameObject::SetTransform(GameObject* game_object)
 {
 	transform.SetTranslation(game_object->transform.GetTranslation());
-	transform.SetRotation(game_object->transform.GetRotationRadiants());
+	transform.SetRotation(math::RadToDeg(game_object->transform.GetRotationRadiants()));
 	transform.SetScale(game_object->transform.GetScale());
 }
 
