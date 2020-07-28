@@ -3,6 +3,7 @@
 #include "Main/Application.h"
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleCamera.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleTime.h"
@@ -126,7 +127,17 @@ void  ComponentTrail::GetPerpendiculars()
 		{
 			//Get the vector that links every two points
 			float3 vector_adjacent = (pair->second->position - pair->first->position).Normalized();//vector between each pair -> Normalized to get vector with magnitutde = 1 but same direction
-			float3 perpendicular = vector_adjacent.Cross(owner->transform.GetFrontVector()) * width; //Front is currently local
+			float3 perpendicular;
+			if (App->cameras->scene_camera)
+			{
+				perpendicular = vector_adjacent.Cross((App->cameras->scene_camera->camera_frustum.pos - owner->transform.GetFrontVector())) * width; //Front is currently local
+
+			}
+			else
+			{
+				perpendicular = vector_adjacent.Cross(owner->transform.GetFrontVector()) * width; //Front is currently local
+			}
+			
 
 			float3 top_left, bottom_left;
 			++j;
@@ -252,7 +263,7 @@ void ComponentTrail::SpecializedSave(Config& config) const
 }
 void ComponentTrail::SpecializedLoad(const Config& config)
 {
-	width = config.GetFloat("Width", 1.0f);
+	width = config.GetFloat("Width", 0.1f);
 	duration = config.GetFloat("Duration", 1000.0f);
 	min_distance = config.GetFloat("Distance", 1.0f);
 	UUID = config.GetUInt("UUID", 0);

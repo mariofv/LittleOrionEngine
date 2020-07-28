@@ -75,7 +75,7 @@ public:
 	float3 last_point_added;
 
 	//Trail Generation properties
-	float width = 1.0f;
+	float width = 0.1f;
 	float duration = 1000.0f; // in millis
 	float min_distance = 1.0f;
 
