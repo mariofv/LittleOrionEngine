@@ -91,6 +91,7 @@ public:
 	void SpecializedLoad(const Config& config) override;
 	//Copy and move
 	
+	void ReassignResource() override;
 	Component* Clone(GameObject* owner, bool original_prefab) override;
 	void CopyTo(Component* component_to_copy) const override;
 

@@ -445,6 +445,14 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	orbit = config.GetBool("Orbit", false);
 }
 
+void ComponentParticleSystem::ReassignResource()
+{
+	if (billboard)
+	{
+		billboard->ReassignResource();
+	}
+}
+
 Component* ComponentParticleSystem::Clone(GameObject* owner, bool original_prefab)
 {
 
