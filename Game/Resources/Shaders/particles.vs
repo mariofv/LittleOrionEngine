@@ -26,7 +26,6 @@ struct Particle
     vec4 position_initial;
     vec4 position;
     vec4 velocity_initial;
-    vec4 velocity;
     vec4 color;
 
     float particle_scale;
@@ -44,7 +43,7 @@ struct Particle
 
 	
 	float orbit_random;
-    float float2;
+    float random_velocity_percentage;
     float float3;
     float float4;
 };

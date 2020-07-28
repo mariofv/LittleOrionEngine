@@ -20,10 +20,7 @@ public:
 	struct Particle {
 		float4 position_initial;
 		float4 position;
-
 		float4 velocity_initial;
-		float4 velocity;
-
 		float4 color;
 
 		float particle_scale;
@@ -37,7 +34,7 @@ public:
 		float4x4 geometric_space;
 
 		float inital_random_orbit;
-		float float2;
+		float random_velocity_percentage;
 		float float3;
 		float float4;
 		/*
@@ -125,8 +122,10 @@ public:
 
 	//Basic values
 	float velocity_particles_start = 1.0F;
-	float gravity_modifier = 0.f;
+	float gravity_modifier = 0.F;
 	float4 gravity_vector;
+	float velocity_factor_mod = 0.001F;
+	float gravity_factor_mod = 0.000001F;
 
 	//Spritesheet
 	float max_tile_value = 0;

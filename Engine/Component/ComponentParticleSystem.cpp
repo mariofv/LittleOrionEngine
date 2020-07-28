@@ -67,7 +67,6 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 {
 	particle.position_initial = float4(0.0f, 0.0f, 0.0f,0.0f);
 
-
 	if (tile_random)
 	{
 		particle.current_sprite_x = (rand() % static_cast<int>((max_tile_value - min_tile_value) + 1) + min_tile_value);
@@ -91,7 +90,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	switch (type_of_particle_system)
 	{
 		case SPHERE:
-			particle.velocity_initial = float4(float3::RandomDir(LCG(), velocity_particles_start) / 1000, 0.0f);
+			particle.velocity_initial = float4(float3::RandomDir(LCG(), 1), 0.0f);
 		break;
 		case BOX:
 		{
@@ -99,7 +98,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 			float random_z = (rand() % ((max_range_random_z - min_range_random_z) + 1) + min_range_random_z) / 100.f;
 
-			particle.velocity_initial.y = velocity_particles_start / 1000;
+			particle.velocity_initial.y = 1;
 			if (enabled_random_x)
 			{
 				particle.position_initial.x = random_x;
@@ -129,38 +128,19 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 			float height = sqrt((distance*distance) - ((radius*proportion) - radius)*((radius*proportion) - radius));
 			float4 final_local_position = float4(particle.position_initial.x*proportion, height, particle.position_initial.z*proportion,0.0f);
 			particle.velocity_initial = (final_local_position - particle.position_initial);
-			particle.velocity_initial = particle.velocity_initial.ScaledToLength3(velocity_particles_start) / 1000;
 		break;
+	}
 
-	}
-	
-	//Velocity over time setup
-	if (velocity_over_time)
-	{
-		switch (type_of_velocity_over_time)
-		{
-		case CONSTANT:
-			particle.velocity_initial *= velocity_over_time_speed_modifier;
-			break;
-		case LINEAR:
-			particle.velocity = particle.velocity_initial * velocity_over_time_speed_modifier_second;
-			particle.velocity_initial *= velocity_over_time_speed_modifier;
-			break;
-		case RANDOM_BETWEEN_TWO_CONSTANTS:
-			float random_velocity_modifier = LCG().Float(velocity_over_time_speed_modifier, velocity_over_time_speed_modifier_second);
-			particle.velocity_initial *= random_velocity_modifier;
-			break;
-		}
-	}
+	particle.velocity_initial.Normalize3();
 	
 	particle.color = initial_color;
-	particle.life = particles_life_time*1000;
+	particle.life = particles_life_time * 1000;
 	particle.time_counter = particle.life;
 	particle.time_passed = 0.0F;
-	particle.velocity_initial = particle.velocity_initial;
 
 	particle.geometric_space = float4x4::FromTRS(owner->transform.GetGlobalTranslation(), owner->transform.GetRotation(), float3::one);
 	particle.inital_random_orbit = rand();
+	particle.random_velocity_percentage = (float)rand() / RAND_MAX;
 }
 
 void ComponentParticleSystem::Render()
@@ -244,22 +224,32 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	particle.life -= App->time->real_time_delta_time; // reduce life
 	particle.time_passed += App->time->real_time_delta_time;
 
+	//velocity over time
+	float vel_mod = velocity_particles_start * velocity_factor_mod;
+	float4 accel_mod = gravity_vector;
+	if (velocity_over_time)
+	{
+		switch (type_of_velocity_over_time)
+		{
+		case CONSTANT:
+			vel_mod *= velocity_over_time_speed_modifier;
+			break;
+		case LINEAR:
+		{
+			vel_mod *= velocity_over_time_speed_modifier;
+			float accel = (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * velocity_factor_mod / particles_life_time / 1000;
+			accel_mod += particle.velocity_initial * accel;
+			break;
+		}
+		case RANDOM_BETWEEN_TWO_CONSTANTS:
+			vel_mod *= velocity_over_time_speed_modifier + (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * particle.random_velocity_percentage;
+			break;
+		}
+	}
+
 	//update position
-	if (velocity_over_time && type_of_velocity_over_time == LINEAR)
-	{
-		float4 acceleration = (particle.velocity - particle.velocity_initial) / particles_life_time / 1000;
-		acceleration += gravity_vector;
-
-		particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
-			(acceleration * Pow(particle.time_passed, 2) / 2);
-	}
-	else
-	{
-		particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
-			(gravity_vector * Pow(particle.time_passed, 2) / 2);
-
-
-	}
+	particle.position = particle.position_initial + (particle.velocity_initial * vel_mod * particle.time_passed) +
+		(accel_mod * Pow(particle.time_passed, 2) / 2);
 
 	if (orbit)
 	{
@@ -272,7 +262,6 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 		float progress = particle.time_passed * 0.001f / fade_time;
 		particle.color.w = math::Lerp(0.f, 1.f, 1 - progress);
 	}
-
 
 	//fade color
 	if (fade_between_colors)
@@ -537,7 +526,7 @@ void ComponentParticleSystem::CalculateGravityVector()
 {
 	float4x4 gravity_rotation = float4x4::FromTRS(float3::one, owner->transform.GetGlobalRotation(), float3::one);
 	gravity_rotation.Transpose();
-	gravity_vector = gravity_rotation * float4(0, gravity_modifier * 0.000001f, 0, 0);
+	gravity_vector = gravity_rotation * float4(0, gravity_modifier * gravity_factor_mod, 0, 0);
 }
 
 void ComponentParticleSystem::Disable()
