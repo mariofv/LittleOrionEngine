@@ -46,7 +46,7 @@ ComponentCamera & ComponentCamera::operator=(const ComponentCamera & component_t
 	GenerateMatrices();
 	return *this;
 }
-Component* ComponentCamera::Clone(bool original_prefab) const
+Component* ComponentCamera::Clone(GameObject* owner, bool original_prefab)
 { 
 	ComponentCamera * created_component;
 	if (original_prefab)
@@ -59,9 +59,12 @@ Component* ComponentCamera::Clone(bool original_prefab) const
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 };
-void ComponentCamera::Copy(Component* component_to_copy) const
+void ComponentCamera::CopyTo(Component* component_to_copy) const
 {  
 	*component_to_copy = *this;
 	*static_cast<ComponentCamera*>(component_to_copy) = *this;

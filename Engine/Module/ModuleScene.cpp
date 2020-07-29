@@ -209,7 +209,6 @@ GameObject* ModuleScene::DuplicateGO(GameObject* game_object, GameObject* parent
 	aux_copy_pointer.get()->Duplicate(*game_object);
 	GameObject* duplicated_go = App->scene->AddGameObject(aux_copy_pointer);
 	duplicated_go->SetParent(parent_go);
-	duplicated_go->SetTransform(game_object);
 	duplicated_go->name += "(1)";
 
 	if (game_object->is_prefab_parent)

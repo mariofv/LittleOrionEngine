@@ -7,6 +7,7 @@
 class Metafile;
 class ModelMetafile;
 class Texture;
+class GameObject;
 class PanelProjectExplorer : public Panel
 {
 
@@ -29,6 +30,8 @@ public:
 	void ShowFileSystemActionsMenu(Path* path);
 
 	void FilesDrop() const;
+
+	void CreatePrefabInSelectedFolder(GameObject * incoming_game_object) const;
 
 	void ResourceDragSource(const Metafile* file) const;
 	void ResourceDropTarget(Path* folder_path) const;
