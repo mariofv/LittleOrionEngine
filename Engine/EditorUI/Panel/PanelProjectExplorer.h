@@ -22,6 +22,7 @@ public:
 	void ProcessMouseInput(Path* file_path);
 	void ProcessResourceMouseInput(Path* metafile_path, Metafile* metafile);
 	void ShowFilesInExplorer();
+	void SearchFilesInExplorer(Path* file);
 	
 
 	void CalculateNextLinePosition(int& current_file_in_line, int files_per_line, int& current_line);

@@ -65,14 +65,7 @@ void PanelProjectExplorer::Render()
 		if (ImGui::Begin("Project Folder Explorer"))
 		{
 			hovered =  ImGui::IsWindowHovered();
-			if (searching_file == "")
-			{
-				ShowFoldersHierarchy(*App->filesystem->assets_folder_path);
-			}
-			else
-			{
-				ShowFoldersHierarchySearch(*App->filesystem->assets_folder_path);
-			}
+			ShowFoldersHierarchy(*App->filesystem->assets_folder_path);
 		}
 		ImGui::End();
 
@@ -81,7 +74,14 @@ void PanelProjectExplorer::Render()
 		{
 			ImGui::BeginChild("Project File Explorer Drop Target");
 			hovered = ImGui::IsWindowHovered() ? true : hovered;
-			ShowFilesInExplorer();
+			if (searching_file == "")
+			{
+				ShowFilesInExplorer();
+			}
+			else
+			{
+				SearchFilesInExplorer(App->filesystem->assets_folder_path);
+			}
 			ImGui::EndChild();
 			FilesDrop();
 		}
@@ -239,6 +239,45 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 					CalculateNextLinePosition(current_file_in_line, files_per_line, current_line);
 				}
 			}
+		}
+	}
+}
+
+void PanelProjectExplorer::SearchFilesInExplorer(Path* path)
+{
+	transform(searching_file.begin(), searching_file.end(), searching_file.begin(), ::tolower);
+	ImVec2 available_region = ImGui::GetContentRegionAvail();
+	int files_per_line = static_cast<int>(available_region.x / file_size_width);
+
+	int current_line = 0;
+	int current_file_in_line = 0;
+
+	for (auto & child_path : path->children)
+	{
+		std::string name = child_path->GetFilename();
+		transform(name.begin(), name.end(), name.begin(), ::tolower);
+		if (child_path != nullptr && child_path->IsMeta() && name.find(searching_file) != std::string::npos)
+		{
+			ImGui::PushID(current_line * files_per_line + current_file_in_line);
+			Metafile* metafile = App->resources->metafile_manager->GetMetafile(*child_path);
+			std::string filename = child_path->GetFilenameWithoutExtension();
+			ShowMetafile(child_path, metafile, filename);
+			ImGui::PopID();
+			CalculateNextLinePosition(current_file_in_line, files_per_line, current_line);
+			if (opened_model && metafile->uuid == opened_model->uuid)
+			{
+				for (auto & meta : opened_model->nodes)
+				{
+					ImGui::PushID(meta->resource_name.c_str());
+					ShowMetafile(App->filesystem->GetPath(meta->exported_file_path), meta.get(), meta->resource_name);
+					ImGui::PopID();
+					CalculateNextLinePosition(current_file_in_line, files_per_line, current_line);
+				}
+			}
+		}
+		if (child_path->IsDirectory())
+		{
+			SearchFilesInExplorer(child_path);
 		}
 	}
 }
