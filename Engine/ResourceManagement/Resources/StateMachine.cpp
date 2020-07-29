@@ -184,12 +184,21 @@ void StateMachine::AddClipToState(std::shared_ptr<State>& state, uint32_t animat
 bool StateMachine::CheckTransitionConditions(std::shared_ptr<Transition>& transition) const
 {
 	size_t counter = 0;
-	size_t goal = transition->conditions.size();
+	size_t goal = transition->float_conditions.size() + transition->int_conditions.size();
 
-	for(auto condition : transition->conditions)
+	for(auto condition : transition->float_conditions)
 	{
 		float value_of_variable = float_variables.at(condition.name_hash_variable);
 		if(condition.comparator_function(value_of_variable, condition.value))
+		{
+			++counter;
+		}
+	}
+
+	for (auto condition : transition->int_conditions)
+	{
+		float value_of_variable = int_variables.at(condition.name_hash_variable);
+		if (condition.comparator_function(value_of_variable, condition.value))
 		{
 			++counter;
 		}
@@ -244,16 +253,27 @@ void StateMachine::Save(Config& config) const
 		transition_config.AddUInt(transition->priority, "Priority");
 
 		//Conditions
-		std::vector<Config> conditions_config;
-		for(auto& condition : transition->conditions)
+		std::vector<Config> float_conditions_config;
+		for(auto& condition : transition->float_conditions)
 		{
 			Config condition_config;
 			condition_config.AddUInt(condition.name_hash_variable, "VariableNameHash");
 			condition_config.AddUInt(static_cast<unsigned>(condition.comparator), "Comparator");
 			condition_config.AddFloat(condition.value, "Value");
-			conditions_config.emplace_back(condition_config);
+			float_conditions_config.emplace_back(condition_config);
 		}
-		transition_config.AddChildrenConfig(conditions_config, "Conditions");
+		transition_config.AddChildrenConfig(float_conditions_config, "FloatConditions");
+
+		std::vector<Config> int_conditions_config;
+		for (auto& condition : transition->int_conditions)
+		{
+			Config condition_config;
+			condition_config.AddUInt(condition.name_hash_variable, "VariableNameHash");
+			condition_config.AddUInt(static_cast<unsigned>(condition.comparator), "Comparator");
+			condition_config.AddInt(condition.value, "Value");
+			int_conditions_config.emplace_back(condition_config);
+		}
+		transition_config.AddChildrenConfig(int_conditions_config, "IntConditions");
 
 		transitions_config.push_back(transition_config);
 	}
@@ -273,6 +293,20 @@ void StateMachine::Save(Config& config) const
 		++i;
 	}
 	config.AddChildrenConfig(float_variables_config, "FloatVariables");
+
+	//Int variables
+	std::vector<Config> int_variables_config;
+	i = 0;
+	for (auto& variable : int_variables)
+	{
+		Config int_variable_config;
+		int_variable_config.AddUInt(variable.first, "IntNameHash");
+		int_variable_config.AddInt(variable.second, "IntValue");
+		int_variable_config.AddString(int_variables_names[i], "IntName");
+		int_variables_config.push_back(int_variable_config);
+		++i;
+	}
+	config.AddChildrenConfig(int_variables_config, "IntVariables");
 
 	config.AddUInt(default_state, "Default");
 }
@@ -411,6 +445,16 @@ void StateMachine::LoadNames(const Config & config)
 		float_variables_names.push_back(auxiliar_name);
 	}
 
+	//Int variables
+	std::vector<Config> int_variables_config;
+	config.GetChildrenConfig("IntVariables", int_variables_config);
+	for (auto& int_variable_config : int_variables_config)
+	{
+		std::string auxiliar_name;
+		int_variable_config.GetString("IntName", auxiliar_name, "");
+		int_variables_names.push_back(auxiliar_name);
+	}
+
 }
 
 void StateMachine::SetFloatVariables(std::unordered_map<uint64_t, float>& map)
@@ -418,16 +462,30 @@ void StateMachine::SetFloatVariables(std::unordered_map<uint64_t, float>& map)
 	this->float_variables = map;
 }
 
+void StateMachine::SetIntVariables(std::unordered_map<uint64_t, int>& map)
+{
+	this->int_variables = map;
+}
+
 std::string StateMachine::GetNameOfVariable(uint64_t name_hash)
 {
 	std::string name;
 
-	for(auto variable_name : float_variables_names)
+	for(auto float_variable_name : float_variables_names)
 	{
-		uint64_t variable_hash = std::hash<std::string>{}(variable_name);
+		uint64_t variable_hash = std::hash<std::string>{}(float_variable_name);
 		if(variable_hash == name_hash)
 		{
-			return variable_name;
+			return float_variable_name;
+		}
+	}
+
+	for (auto int_variable_name : int_variables_names)
+	{
+		uint64_t variable_hash = std::hash<std::string>{}(int_variable_name);
+		if (variable_hash == name_hash)
+		{
+			return int_variable_name;
 		}
 	}
 

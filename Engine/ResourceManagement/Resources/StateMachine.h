@@ -18,16 +18,17 @@ enum class Comparator
 	NOT_EQUAL
 };
 
+template<typename T>
 struct Condition
 {
 	uint64_t name_hash_variable = 0;
 	Comparator comparator = Comparator::GREATER;
-	std::function<bool(float, float)> comparator_function;
+	std::function<bool(T, T)> comparator_function;
 
-	float value = 0.f;
+	T value = 0;
 
 	Condition() = default;
-	Condition(uint64_t name_hash, std::function<bool(float, float)> func, float value)
+	Condition(uint64_t name_hash, std::function<bool(T, T)> func, T value)
 	{
 		this->name_hash_variable = name_hash;
 		this->comparator_function = func;
@@ -88,7 +89,8 @@ struct Transition
 	bool automatic = false;
 	uint64_t priority = 0;
 
-	std::vector<Condition> conditions;
+	std::vector<Condition<int>> int_conditions;
+	std::vector<Condition<float>> float_conditions;
 
 	std::vector<std::shared_ptr<Parameter<int>>> parameters;
 };
@@ -113,6 +115,7 @@ public:
 	void Load(const Config& config);
 	void LoadNames(const Config& config);
 	void SetFloatVariables(std::unordered_map<uint64_t, float>& map);
+	void SetIntVariables(std::unordered_map<uint64_t, int>& map);
 	std::string GetNameOfVariable(uint64_t name_hash);
 
 private:
@@ -130,7 +133,10 @@ public:
 
 	//Set float
 	std::unordered_map<uint64_t, float> float_variables;
-	std::vector<std::string> float_variables_names;
+	std::vector<std::string> float_variables_names;	
+
+	std::unordered_map<uint64_t, int> int_variables;
+	std::vector<std::string> int_variables_names;
 
 	friend class PanelStateMachine;
 	
