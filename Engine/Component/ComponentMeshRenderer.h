@@ -77,7 +77,6 @@ public:
 	ComponentMeshCollider* mesh_collider = nullptr;
 	bool shadow_caster = false;
 	bool shadow_receiver = false;
-
 private:
 	friend class PanelComponent;
 };
