@@ -4,6 +4,8 @@
 #include "Panel.h"
 #include <MathGeoLib.h>
 
+class GameObject;
+
 class PanelScene : public Panel
 {
 public:
@@ -30,6 +32,8 @@ private:
 	void RenderCameraPreview() const;
 
 	void RenderDebugMetrics() const;
+	bool HasParent(GameObject* go) const;
+	bool BelongsToList(GameObject* go) const;
 
 private:
 	bool scene_camera_gizmo_hovered = false;

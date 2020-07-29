@@ -15,7 +15,8 @@ public:
 	void Undo();
 	void Redo();
 
-
+	bool HasParent(GameObject* go) const;
+	bool BelongsToList(GameObject* go) const;
 
 private:
 	std::vector<uint64_t> game_objects_UUID;
