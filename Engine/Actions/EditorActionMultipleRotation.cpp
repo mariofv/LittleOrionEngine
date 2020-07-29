@@ -56,7 +56,8 @@ bool EditorActionMultipleRotate::HasParent(GameObject * go) const
 
 	GameObject *game_object = go;
 
-	while (depth >= 2) {
+	while (depth >= 2) 
+	{
 		if (BelongsToList(game_object->parent))
 		{
 			return true;

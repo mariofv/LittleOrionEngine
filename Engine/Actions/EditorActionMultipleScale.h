@@ -19,6 +19,7 @@ public:
 	bool BelongsToList(GameObject* go) const;
 
 private:
+
 	std::vector<uint64_t> game_objects_UUID;
 	float3 previous_scale = float3::one;
 	float3 current_scale = float3::one;

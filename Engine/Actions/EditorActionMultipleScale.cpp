@@ -7,7 +7,6 @@
 #include "Module/ModuleScene.h"
 
 
-
 EditorActionMultipleScale::EditorActionMultipleScale(float3 &previous, float3 &current) : previous_scale(previous),
 current_scale(current)
 {

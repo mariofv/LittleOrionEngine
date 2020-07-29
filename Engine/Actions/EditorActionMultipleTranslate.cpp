@@ -7,7 +7,6 @@
 #include "Module/ModuleScene.h"
 
 
-
 EditorActionMultipleTranslate::EditorActionMultipleTranslate(float3 &previous, float3 &current): previous_position(previous),
 current_position(current)
 {
@@ -59,7 +58,8 @@ bool EditorActionMultipleTranslate::HasParent(GameObject * go) const
 
 	GameObject *game_object = go;
 
-	while (depth >= 2) {
+	while (depth >= 2) 
+	{
 		if (BelongsToList(game_object->parent))
 		{
 			return true;

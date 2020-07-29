@@ -19,6 +19,7 @@ public:
 	bool BelongsToList(GameObject* go) const;
 
 private:
+
 	std::vector<uint64_t> game_objects_UUID;
 	float3 previous_position = float3::zero;
 	float3 current_position = float3::zero;

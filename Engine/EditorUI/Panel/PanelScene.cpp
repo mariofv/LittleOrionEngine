@@ -246,7 +246,6 @@ void PanelScene::RenderGizmo()
 					go->transform.SetTranslation(trans);
 				}
 			}
-			
 		}
 		if (!scale_factor.Equals(float3::one))
 		{
@@ -378,7 +377,8 @@ bool PanelScene::HasParent(GameObject * go) const
 
 	GameObject *game_object = go;
 
-	while (depth >= 2) {
+	while (depth >= 2) 
+	{
 		if (BelongsToList(game_object->parent))
 		{
 			return true;
