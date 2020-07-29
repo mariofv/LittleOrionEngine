@@ -429,9 +429,9 @@ void PanelStateMachine::LeftPanel()
 			ImGui::InputText("###Trigger Name", &(link->transition->trigger));
 
 			ImGui::Separator();
-			ImGui::Text("Conditions: ");
+			ImGui::Text("Float Conditions: ");
 			size_t i = 0;
-			for (auto& condition : link->transition->conditions)
+			for (auto& condition : link->transition->float_conditions)
 			{
 				std::string variable_id("###VariableChosen");
 				variable_id += std::to_string(i);
@@ -504,7 +504,7 @@ void PanelStateMachine::LeftPanel()
 				ImGui::SetNextItemWidth(combo_width);
 				if(ImGui::Button(delete_id.c_str()))
 				{
-					link->transition->conditions.erase(link->transition->conditions.begin() + i);
+					link->transition->float_conditions.erase(link->transition->float_conditions.begin() + i);
 					break;
 				}
 
@@ -515,8 +515,8 @@ void PanelStateMachine::LeftPanel()
 		
 			if (ImGui::Button("+"))
 			{
-				Condition condition(state_machine->float_variables.begin()->first, std::greater(), 0.f);
-				link->transition->conditions.push_back(condition);
+				Condition<float> condition(state_machine->float_variables.begin()->first, std::greater(), 0.f);
+				link->transition->float_conditions.push_back(condition);
 			}
 			ImGui::PopID();
 		}
