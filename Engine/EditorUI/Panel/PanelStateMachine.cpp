@@ -180,7 +180,7 @@ void PanelStateMachine::RenderStates()
 
 		ImGui::BeginGroup();
 		ax::NodeEditor::BeginPin(node->input, ax::NodeEditor::PinKind::Input);
-		Widgets::Icon(node->Size/5, ax::Drawing::IconType::Diamond, true, ImVec4(255, 127, 80, 255), ImVec4(255, 127, 80, 255));
+		ax::Widgets::Icon(node->Size/5, ax::Drawing::IconType::Diamond, true, ImVec4(255, 127, 80, 255), ImVec4(255, 127, 80, 255));
 		ax::NodeEditor::EndPin();
 		ImGui::EndGroup();
 
@@ -188,7 +188,7 @@ void PanelStateMachine::RenderStates()
 
 		ImGui::BeginGroup();
 		ax::NodeEditor::BeginPin(node->output, ax::NodeEditor::PinKind::Output);
-		Widgets::Icon(node->Size / 5, ax::Drawing::IconType::Flow, true, ImVec4(0, 0, 255, 255), ImVec4(0, 0, 255, 255));
+		ax::Widgets::Icon(node->Size / 5, ax::Drawing::IconType::Flow, true, ImVec4(0, 0, 255, 255), ImVec4(0, 0, 255, 255));
 		ax::NodeEditor::EndPin();
 		ImGui::EndGroup();
 	

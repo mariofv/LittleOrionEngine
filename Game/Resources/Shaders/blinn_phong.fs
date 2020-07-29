@@ -16,7 +16,7 @@ in mat3 TBN;
 out vec4 FragColor;
 
 //constants
-const float gamma = 2.2;
+float gamma = 2.2;
 const float ambient_light_strength = 0.1;
 
 vec3 normal_from_texture;
@@ -190,7 +190,8 @@ void main()
 	{
 		result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
-
+	
+	result += GetLightMapColor(material,texCoordLightmap) * use_light_map;
 	result += emissive_color;
 	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
 	FragColor = vec4(result,1.0);
@@ -227,7 +228,11 @@ vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 
 vec3 GetLightMapColor(const Material mat, const vec2 texCoord)
 {
-	return texture(mat.light_map, texCoord).rgb;
+	if(use_light_map == 1)
+	{
+		gamma = 1.0;
+	}
+	return texture(mat.light_map, texCoord).rgb * use_light_map;
 }
 
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord)
