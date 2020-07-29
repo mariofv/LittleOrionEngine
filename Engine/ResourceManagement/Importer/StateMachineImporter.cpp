@@ -26,29 +26,47 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 	std::vector<Config> float_variables_config;
 	state_machine_config.GetChildrenConfig("FloatVariables", float_variables_config);
 
+	std::vector<Config> int_variables_config;
+	state_machine_config.GetChildrenConfig("IntVariables", int_variables_config);
+
 	//GetConditions size
-	uint32_t number_of_conditions = 0;
+	uint32_t number_of_float_conditions = 0;
 	for(auto& transition_config : transitions_config)
 	{
 		//Conditions
 		std::vector<Config> conditions_config;
-		transition_config.GetChildrenConfig("Conditions", conditions_config);
+		transition_config.GetChildrenConfig("FloatConditions", conditions_config);
 
-		number_of_conditions += conditions_config.size();
+		number_of_float_conditions += conditions_config.size();
+	}
+
+	uint32_t number_of_int_conditions = 0;
+	for (auto& transition_config : transitions_config)
+	{
+		//Conditions
+		std::vector<Config> conditions_config;
+		transition_config.GetChildrenConfig("IntConditions", conditions_config);
+
+		number_of_int_conditions += conditions_config.size();
 	}
 
 	uint32_t num_clips = clips_config.size();
 	uint32_t num_states = states_config.size();
 	uint32_t num_transitions = transitions_config.size();
-	uint32_t num_variables_config = float_variables_config.size();
-	uint32_t ranges[4] = { num_clips, num_states, num_transitions, num_variables_config};
+	uint32_t num_float_variables_config = float_variables_config.size();
+	uint32_t num_int_variables_config = int_variables_config.size();
+	uint32_t ranges[5] = { num_clips, num_states, num_transitions, num_float_variables_config, num_int_variables_config};
 
 	uint32_t size_of_clip = sizeof(uint64_t) + sizeof(uint32_t) + sizeof(bool);
 	uint32_t size_of_state = sizeof(uint64_t) * 2 + sizeof(float);
 	uint32_t size_of_transitions = sizeof(uint64_t) * 5 + sizeof(bool) + sizeof(uint32_t);// number of conditions
+	
+	//Conditions size
 	uint32_t size_of_float_variables = sizeof(uint64_t) + sizeof(float);
-	uint32_t size_of_condition = sizeof(uint64_t) * 2 + sizeof(float);
-	uint32_t size = sizeof(ranges) + size_of_clip * num_clips + size_of_transitions * num_transitions + size_of_state * num_states + size_of_float_variables * num_variables_config + number_of_conditions * size_of_condition + sizeof(uint64_t)/*Default state*/;
+	uint32_t size_of_int_variables = sizeof(uint64_t) + sizeof(int);
+	uint32_t size_of_float_condition = sizeof(uint64_t) * 2 + sizeof(float);
+	uint32_t size_of_int_condition = sizeof(uint64_t) * 2 + sizeof(int);
+	uint32_t size = sizeof(ranges) + size_of_clip * num_clips + size_of_transitions * num_transitions + size_of_state * num_states + size_of_float_variables * num_float_variables_config + size_of_int_variables * num_int_variables_config +  number_of_float_conditions * size_of_float_condition + number_of_int_conditions * size_of_int_condition + sizeof(uint64_t)/*Default state*/;
 
 	char* data = new char[size]; // Allocate
 	char* cursor = data;
@@ -140,17 +158,17 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 		cursor += bytes;
 
 
-		//Conditions
-		std::vector<Config> conditions_config;
-		transition.GetChildrenConfig("Conditions", conditions_config);
+		//Float Conditions
+		std::vector<Config> float_conditions_config;
+		transition.GetChildrenConfig("FloatConditions", float_conditions_config);
 
-		uint32_t number_of_conditions = conditions_config.size();
+		uint32_t number_of_float_conditions = float_conditions_config.size();
 
 		bytes = sizeof(uint32_t);
-		memcpy(cursor, &number_of_conditions, bytes);
+		memcpy(cursor, &number_of_float_conditions, bytes);
 		cursor += bytes;
 
-		for(auto& condition : conditions_config)
+		for(auto& condition : float_conditions_config)
 		{
 			uint64_t name_hash = condition.GetUInt("VariableNameHash", 0);
 			uint64_t comparator = condition.GetUInt("Comparator", 0);
@@ -169,6 +187,35 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 			cursor += bytes;
 		}
 
+		//Int Conditions
+		std::vector<Config> int_conditions_config;
+		transition.GetChildrenConfig("IntConditions", int_conditions_config);
+
+		uint32_t number_of_int_conditions = int_conditions_config.size();
+
+		bytes = sizeof(uint32_t);
+		memcpy(cursor, &number_of_int_conditions, bytes);
+		cursor += bytes;
+
+		for (auto& condition : int_conditions_config)
+		{
+			uint64_t name_hash = condition.GetUInt("VariableNameHash", 0);
+			uint64_t comparator = condition.GetUInt("Comparator", 0);
+			int value = condition.GetInt("Value", 0);
+
+			bytes = sizeof(uint64_t);
+			memcpy(cursor, &name_hash, bytes);
+			cursor += bytes;
+
+			bytes = sizeof(uint64_t);
+			memcpy(cursor, &comparator, bytes);
+			cursor += bytes;
+
+			bytes = sizeof(int);
+			memcpy(cursor, &value, bytes);
+			cursor += bytes;
+		}
+
 
 	}
 
@@ -182,6 +229,20 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 		cursor += bytes;
 
 		bytes = sizeof(float);
+		memcpy(cursor, &value, bytes);
+		cursor += bytes;
+	}
+
+	for (auto& int_variable : int_variables_config)
+	{
+		uint64_t name_hash = int_variable.GetUInt("IntNameHash", 0);
+		int value = int_variable.GetInt("IntValue", 0);
+
+		bytes = sizeof(uint64_t);
+		memcpy(cursor, &name_hash, bytes);
+		cursor += bytes;
+
+		bytes = sizeof(int);
 		memcpy(cursor, &value, bytes);
 		cursor += bytes;
 	}

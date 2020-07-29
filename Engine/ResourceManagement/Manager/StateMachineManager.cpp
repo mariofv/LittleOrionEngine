@@ -117,14 +117,15 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(uint32_t uuid, const Fil
 		memcpy(&transition->automatic, cursor, bytes);
 		cursor += bytes;
 
-		uint32_t number_of_conditions = 0;
+		//Float conditions
+		uint32_t number_of_float_conditions = 0;
 		bytes = sizeof(uint32_t);
-		memcpy(&number_of_conditions, cursor, bytes);
+		memcpy(&number_of_float_conditions, cursor, bytes);
 		cursor += bytes;
 
-		for(size_t i = 0; i < number_of_conditions; ++i)
+		for(size_t i = 0; i < number_of_float_conditions; ++i)
 		{
-			Condition condition;
+			Condition<float> condition;
 
 			bytes = sizeof(uint64_t);
 			memcpy(&condition.name_hash_variable, cursor, bytes);
@@ -159,7 +160,7 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(uint32_t uuid, const Fil
 			memcpy(&condition.value, cursor, bytes);
 			cursor += bytes;
 
-			transition->conditions.push_back(condition);
+			transition->float_conditions.push_back(condition);
 		}
 	}
 	std::unordered_map<uint64_t, float> float_variables;
