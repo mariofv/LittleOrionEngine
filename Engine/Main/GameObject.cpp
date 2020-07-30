@@ -43,6 +43,7 @@
 #include "Component/ComponentText.h"
 #include "Component/ComponentTrail.h"
 #include "Component/ComponentTransform.h"
+#include "Component/ComponentVideo.h"
 
 #include <Brofiler/Brofiler.h>
 #include <pcg_basic.h>
@@ -483,6 +484,9 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 		created_component = App->ui->CreateComponentUI<ComponentText>();
 		break;
 
+	case Component::ComponentType::VIDEO:
+		created_component = App->ui->CreateComponentUI<ComponentVideo>();
+		break;
 	case Component::ComponentType::BILLBOARD:
 		created_component = App->effects->CreateComponentBillboard();
 		break;
