@@ -91,7 +91,8 @@ private:
 	std::vector<NodeInfo*> selected_nodes;
 	NodeInfo* selected_node = nullptr ;
 	bool modified_by_user = false;
-	std::string auxiliar_variable;
+	std::string float_auxiliar_variable;
+	std::string int_auxiliar_variable;
 
 	std::array<const char* , 4> comparator_name {"Greater", "Lesser", "Equal", "Not Equal"};
 

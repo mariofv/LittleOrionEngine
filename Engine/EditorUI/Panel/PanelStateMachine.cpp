@@ -513,11 +513,105 @@ void PanelStateMachine::LeftPanel()
 
 			ImGui::Separator();
 		
-			if (ImGui::Button("+"))
+			if (ImGui::Button("+###float"))
 			{
 				Condition<float> condition(state_machine->float_variables.begin()->first, std::greater(), 0.f);
 				link->transition->float_conditions.push_back(condition);
 			}
+
+
+			//IntConditions
+			ImGui::Text("Int Conditions: ");
+			i = 0;
+			for (auto& condition : link->transition->int_conditions)
+			{
+				std::string variable_id("###IntVariableChosen");
+				variable_id += std::to_string(i);
+				const float window_width = ImGui::GetWindowWidth();
+				float combo_width = window_width * 0.40f;
+				ImGui::SetNextItemWidth(combo_width);
+				if (ImGui::BeginCombo(variable_id.c_str(), state_machine->GetNameOfVariable(condition.name_hash_variable).c_str()))
+				{
+					for (auto variable : state_machine->int_variables_names)
+					{
+						if (ImGui::Selectable(variable.c_str()))
+						{
+							condition.name_hash_variable = std::hash<std::string>{}(variable);
+						}
+					}
+
+					ImGui::EndCombo();
+				}
+
+
+				ImGui::SameLine();
+				std::string comparator_id("###IntComparator");
+				comparator_id += std::to_string(i);
+				size_t index = static_cast<size_t>(condition.comparator);
+				combo_width = window_width * 0.25f;
+				ImGui::SetNextItemWidth(combo_width);
+				if (ImGui::BeginCombo(comparator_id.c_str(), comparator_name[index]))
+				{
+					//Greater
+					if (ImGui::Selectable(comparator_name[0]))
+					{
+						condition.comparator = Comparator::GREATER;
+						condition.comparator_function = std::greater();
+					}
+
+					//Lesser
+					if (ImGui::Selectable(comparator_name[1]))
+					{
+						condition.comparator = Comparator::LESSER;
+						condition.comparator_function = std::less();
+					}
+
+					//Equal
+					if (ImGui::Selectable(comparator_name[2]))
+					{
+						condition.comparator = Comparator::EQUAL;
+						condition.comparator_function = std::equal_to();
+					}
+
+					//NotEqual
+					if (ImGui::Selectable(comparator_name[3]))
+					{
+						condition.comparator = Comparator::NOT_EQUAL;
+						condition.comparator_function = std::not_equal_to();
+					}
+
+					ImGui::EndCombo();
+				}
+				ImGui::SameLine();
+				std::string x_id("###IntValue");
+				x_id += std::to_string(i);
+				combo_width = window_width * 0.20f;
+				ImGui::SetNextItemWidth(combo_width);
+				ImGui::DragInt(x_id.c_str(), &condition.value, 0.01f, 0.f, 10000.f);
+
+				ImGui::SameLine();
+				std::string delete_id("X###IntDeletethis");
+				delete_id += std::to_string(i);
+				combo_width = window_width * 0.15f;
+				ImGui::SetNextItemWidth(combo_width);
+				if (ImGui::Button(delete_id.c_str()))
+				{
+					link->transition->int_conditions.erase(link->transition->int_conditions.begin() + i);
+					break;
+				}
+
+				++i;
+			}
+
+			ImGui::Separator();
+
+			if (ImGui::Button("+###int"))
+			{
+				Condition<int> condition(state_machine->int_variables.begin()->first, std::greater(), 0);
+				link->transition->int_conditions.push_back(condition);
+			}
+
+
 			ImGui::PopID();
 		}
 
@@ -528,16 +622,16 @@ void PanelStateMachine::LeftPanel()
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Floats");
 		ImGui::Separator();
 		size_t i = 0;
-		for(auto variable : state_machine->float_variables)
+		for(auto float_variable : state_machine->float_variables)
 		{
-			ImGui::DragFloat(state_machine->GetNameOfVariable(variable.first).c_str(), &variable.second, 0.01f, 0.f, 100.f);
-			state_machine->float_variables[variable.first] = variable.second;
+			ImGui::DragFloat(state_machine->GetNameOfVariable(float_variable.first).c_str(), &float_variable.second, 0.01f, 0.f, 100.f);
+			state_machine->float_variables[float_variable.first] = float_variable.second;
 			ImGui::SameLine();
 			std::string x_id("X###");
 			x_id += std::to_string(i);
 			if(ImGui::Button(x_id.c_str()))
 			{
-				state_machine->float_variables.erase(variable.first);
+				state_machine->float_variables.erase(float_variable.first);
 				state_machine->float_variables_names.erase(state_machine->float_variables_names.begin() + i);
 				break;
 			}
@@ -545,13 +639,43 @@ void PanelStateMachine::LeftPanel()
 			++i;
 		}
 		ImGui::Separator();
-		ImGui::InputText("###Float Name", &auxiliar_variable);
+		ImGui::InputText("###Float Name", &float_auxiliar_variable);
 		ImGui::SameLine();
 		if(ImGui::Button("Add float variable"))
 		{
-			uint64_t name_hash = std::hash<std::string>{}(auxiliar_variable);
+			uint64_t name_hash = std::hash<std::string>{}(float_auxiliar_variable);
 			state_machine->float_variables[name_hash] = 0.f;
-			state_machine->float_variables_names.push_back(auxiliar_variable);
+			state_machine->float_variables_names.push_back(float_auxiliar_variable);
+		}
+
+		ImGui::Separator();
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Ints");
+		ImGui::Separator();
+		i = 0;
+		for (auto int_variable : state_machine->int_variables)
+		{
+			ImGui::DragInt(state_machine->GetNameOfVariable(int_variable.first).c_str(), &int_variable.second, 1, 0, 10000);
+			state_machine->int_variables[int_variable.first] = int_variable.second;
+			ImGui::SameLine();
+			std::string x_id("X###Int");
+			x_id += std::to_string(i);
+			if (ImGui::Button(x_id.c_str()))
+			{
+				state_machine->int_variables.erase(int_variable.first);
+				state_machine->int_variables_names.erase(state_machine->int_variables_names.begin() + i);
+				break;
+			}
+
+			++i;
+		}
+		ImGui::Separator();
+		ImGui::InputText("###Int Name", &int_auxiliar_variable);
+		ImGui::SameLine();
+		if (ImGui::Button("Add int variable"))
+		{
+			uint64_t name_hash = std::hash<std::string>{}(int_auxiliar_variable);
+			state_machine->int_variables[name_hash] = 0;
+			state_machine->int_variables_names.push_back(int_auxiliar_variable);
 		}
 
 		ImGui::Separator();
