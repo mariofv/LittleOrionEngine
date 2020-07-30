@@ -186,13 +186,6 @@ void ComponentParticleSystem::Update()
 			}
 		}
 
-		//update velocity over time
-		if (velocity_over_time && type_of_velocity_over_time == LINEAR)
-		{
-			acceleration = velocity_particles_start * (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) / particles_life_time;
-		}
-
-
 		CalculateGravityVector();
 
 		// update all particles
@@ -378,6 +371,11 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddBool(fade_between_colors, "Fade between Colors");
 	config.AddColor(color_to_fade, "Color to fade");
 	config.AddBool(orbit, "Orbit");
+
+	config.AddBool(velocity_over_time, "Velocity Over Time");
+	config.AddInt(type_of_velocity_over_time, "Type of Velocity");
+	config.AddFloat(velocity_over_time_speed_modifier, "Velocity Initial");
+	config.AddFloat(velocity_over_time_speed_modifier_second, "Velocity Final");
 }
 
 void ComponentParticleSystem::SpecializedLoad(const Config& config)
@@ -430,6 +428,11 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	config.GetColor("Color to fade", color_to_fade, float4::one);
 
 	orbit = config.GetBool("Orbit", false);
+
+	velocity_over_time = config.GetBool("Velocity Over Time", false);
+	type_of_velocity_over_time = static_cast<TypeOfVelocityOverTime>(config.GetInt("Type of Velocity", CONSTANT));
+	velocity_over_time_speed_modifier = config.GetFloat("Velocity Initial", 1.0F);
+	velocity_over_time_speed_modifier_second = config.GetFloat("Velocity Final", 2.0F);
 }
 
 Component* ComponentParticleSystem::Clone(bool original_prefab) const

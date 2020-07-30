@@ -181,12 +181,9 @@ public:
 
 	//Velocity over time
 	bool velocity_over_time = false;
-	TypeOfVelocityOverTime type_of_velocity_over_time = RANDOM_BETWEEN_TWO_CONSTANTS;
+	TypeOfVelocityOverTime type_of_velocity_over_time = CONSTANT;
 	float velocity_over_time_speed_modifier = 1.0F;
 	float velocity_over_time_speed_modifier_second = 2.0F;
-	float acceleration = 0.0F;
-	float3 velocity_over_time_acceleration;
-
 	
 	//Runtime values
 	size_t playing_particles_number = MAX_PARTICLES;
@@ -195,7 +192,6 @@ public:
 	bool playing = true;
 	GLuint ssbo;
 	GLuint shader_program;
-
 };
 
 #endif
