@@ -204,7 +204,7 @@ bool StateMachine::CheckTransitionConditions(std::shared_ptr<Transition>& transi
 		}
 	}
 
-	if(counter == goal)
+	if(counter == goal && goal != 0)
 	{
 		return true;
 	}
