@@ -59,7 +59,7 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 
 	uint32_t size_of_clip = sizeof(uint64_t) + sizeof(uint32_t) + sizeof(bool);
 	uint32_t size_of_state = sizeof(uint64_t) * 2 + sizeof(float);
-	uint32_t size_of_transitions = sizeof(uint64_t) * 5 + sizeof(bool) + sizeof(uint32_t);// number of conditions
+	uint32_t size_of_transitions = sizeof(uint64_t) * 5 + sizeof(bool) + 2 * sizeof(uint32_t);// number of conditions
 	
 	//Conditions size
 	uint32_t size_of_float_variables = sizeof(uint64_t) + sizeof(float);
