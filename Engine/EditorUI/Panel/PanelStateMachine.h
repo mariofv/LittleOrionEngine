@@ -17,9 +17,6 @@
 #include <algorithm>
 #include <utility>
 
-using namespace ax;
-using ax::Widgets::IconType;
-
 class StateMachine;
 struct Transition;
 struct State;
