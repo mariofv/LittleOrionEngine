@@ -23,7 +23,7 @@ ComponentVideo::~ComponentVideo()
 
 void ComponentVideo::Init()
 {
-	video_capture = new cv::VideoCapture("assets/video/twinlight_souls.mp4");
+	video_capture = new cv::VideoCapture("Assets/Video/twinlight_souls.mp4");
 	// Check if video opened successfully
 	if (!video_capture->isOpened()) {
 		APP_LOG_ERROR("Error opening video");
@@ -42,7 +42,7 @@ void ComponentVideo::Update()
 		{
 			return;
 		}
-		imshow("Frame", frame);
+		cv::imshow("Frame", frame);
 	}
 }
 void ComponentVideo::Play()

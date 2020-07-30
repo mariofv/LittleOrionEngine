@@ -22,6 +22,7 @@
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTrail.h"
+#include "Component/ComponentVideo.h"
 
 #include "EditorUI/Panel/PanelInspector.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelTransform.h"
@@ -210,7 +211,9 @@ void PanelGameObject::Render(GameObject* game_object)
 			case Component::ComponentType::AUDIO_LISTENER:
 				component_panel.ShowComponentAudioListenerWindow(static_cast<ComponentAudioListener*>(component));
 				break;
-
+			case Component::ComponentType::VIDEO:
+				component_panel.ShowComponentVideoWindow(static_cast<ComponentVideo*>(component));
+				break;
 			default:
 				break;
 		}

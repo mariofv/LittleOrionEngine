@@ -31,6 +31,7 @@ class ComponentTransform;
 class ComponentTrail;
 class ComponentScript;
 class ComponentSpriteMask;
+class ComponentVideo;
 class GameObject;
 class PanelParticleSystem;
 
@@ -52,6 +53,7 @@ public:
 	void ShowComponentScriptWindow(ComponentScript* component_script);
 
 	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
+	void ShowComponentVideoWindow(ComponentVideo * video);
 	void ShowComponentImageWindow(ComponentImage* image);
 	void ShowComponentSpriteMaskWindow(ComponentSpriteMask* component_mask);
 	void ShowComponentTextWindow(ComponentText* text);

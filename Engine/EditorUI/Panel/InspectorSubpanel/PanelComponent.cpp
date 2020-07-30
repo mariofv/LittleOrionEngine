@@ -36,6 +36,7 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
 #include "Component/ComponentTrail.h"
+#include "Component/ComponentVideo.h"
 
 #include "Helper/Utils.h"
 
@@ -603,6 +604,21 @@ void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
 	}
 }
 
+void PanelComponent::ShowComponentVideoWindow(ComponentVideo* video)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_FILM " Video", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (!ShowCommonComponentWindow(video))
+		{
+			return;
+		}
+		if (ImGui::Button("Play"))
+		{
+			video->Play();
+		}
+	}
+}
+
 void PanelComponent::ShowComponentColliderWindow(ComponentCollider* collider)
 {
 	switch (collider->collider_type)
@@ -948,7 +964,12 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::AUDIO_LISTENER);
 
 		}
+		sprintf_s(tmp_string, "%s Video ", ICON_FA_FILM);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::VIDEO);
 
+		}
 
 		ImGui::EndPopup();
 	}
