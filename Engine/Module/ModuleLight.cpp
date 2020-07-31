@@ -63,9 +63,9 @@ void ModuleLight::Render(const float3& mesh_position, GLuint program)
 	}
 
 
-	SendShadowUniformsToShader(program);
 	BROFILER_CATEGORY("Module Light Render", Profiler::Color::White);
 	SortClosestLights(mesh_position);
+	SendShadowUniformsToShader(program);
 
 	current_number_directional_lights_rendered = 0;
 	current_number_spot_lights_rendered = 0;
@@ -85,11 +85,11 @@ void ModuleLight::Render(const float3& mesh_position, GLuint program)
 
 	glUniform1i(glGetUniformLocation(program, "num_spot_lights"), current_number_spot_lights_rendered);
 	glUniform1i(glGetUniformLocation(program, "num_point_lights"), current_number_point_lights_rendered);
-	SendShadowUniformsToShader(program);
 }
 
 void ModuleLight::RenderDirectionalLight(const ComponentLight& light)
 {
+	BROFILER_CATEGORY("Module Light Render Directional lights", Profiler::Color::YellowGreen);
 	if (light.light_type == ComponentLight::LightType::DIRECTIONAL_LIGHT && current_number_directional_lights_rendered < MAX_DIRECTIONAL_LIGHTS_RENDERED && light.active)
 	{
 
@@ -113,7 +113,7 @@ void ModuleLight::RenderDirectionalLight(const ComponentLight& light)
 
 void ModuleLight::RenderSpotLights(const ComponentLight& light, GLuint program)
 {
-
+	BROFILER_CATEGORY("Module Light Render spot lights", Profiler::Color::PaleTurquoise);
 	if (light.light_type == ComponentLight::LightType::SPOT_LIGHT && current_number_spot_lights_rendered < MAX_SPOT_LIGHTS_RENDERED && light.active)
 	{
 		float3 light_color_scaled = light.light_intensity * float3(light.light_color);
@@ -136,7 +136,7 @@ void ModuleLight::RenderSpotLights(const ComponentLight& light, GLuint program)
 
 void ModuleLight::RenderPointLights(const ComponentLight& light, GLuint program)
 {
-
+	BROFILER_CATEGORY("Module Light Render point lights", Profiler::Color::AliceBlue);
 	if (light.light_type == ComponentLight::LightType::POINT_LIGHT && current_number_point_lights_rendered < MAX_POINT_LIGHTS_RENDERED && light.active)
 	{
 		float3 light_color_scaled = light.light_intensity * float3(light.light_color);
@@ -172,6 +172,7 @@ void ModuleLight::RemoveComponentLight(ComponentLight* light_to_remove)
 
 void ModuleLight::SortClosestLights(const float3& position)
 {
+	BROFILER_CATEGORY("Module Light Sort ligths", Profiler::Color::Magenta);
 	std::sort(lights.begin(), lights.end(), [position](const  ComponentLight* lhs, const ComponentLight* rhs)
 	{
 		float distance1 = position.Distance(lhs->owner->transform.GetGlobalTranslation());
@@ -237,6 +238,7 @@ void ModuleLight::RecordShadowsFrameBuffers(int width, int height)
 	{
 		return;
 	}
+	glCullFace(GL_FRONT);
 	rendering_shadows = true;
 	float old_fov = App->cameras->main_camera->camera_frustum.verticalFov;
 	App->cameras->main_camera->SetFOV(old_fov * main_camera_fov_increment_factor);
@@ -247,6 +249,7 @@ void ModuleLight::RecordShadowsFrameBuffers(int width, int height)
 	directional_light_mid->RecordZBufferFrame(width, height);
 	directional_light_far->RecordZBufferFrame(width / 4, height / 4);
 	rendering_shadows = false;
+	glCullFace(GL_BACK);
 }
 
 void ModuleLight::UpdateDirectionalLightFrustums(float3 max, float3 min)
@@ -274,6 +277,7 @@ void ModuleLight::UpdateDirectionalLightFrustums(float3 max, float3 min)
 
 void ModuleLight::SendShadowUniformsToShader(GLuint program)
 {
+	BROFILER_CATEGORY("Module Light shadow uniforms", Profiler::Color::MediumTurquoise);
 	glUniform1i(glGetUniformLocation(program, "render_shadows"), render_shadows);
 
 	glActiveTexture(GL_TEXTURE0);

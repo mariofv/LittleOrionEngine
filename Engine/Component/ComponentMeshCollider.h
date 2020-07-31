@@ -13,7 +13,7 @@ public:
 	ComponentMeshCollider(GameObject* owner);
 	~ComponentMeshCollider() = default;
 
-	Component* Clone(GameObject* owner, bool original_prefab = false) const;
+	Component* Clone(GameObject* owner, bool original_prefab = false);
 	ComponentMeshCollider& operator=(const ComponentMeshCollider& component_to_copy);
 
 	void UpdateDimensions();

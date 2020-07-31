@@ -13,12 +13,12 @@ ComponentCylinderCollider::ComponentCylinderCollider(GameObject* owner) : Compon
 	InitData();
 }
 
-Component* ComponentCylinderCollider::Clone(GameObject* owner, bool original_prefab) const
+Component* ComponentCylinderCollider::Clone(GameObject* owner, bool original_prefab) 
 {
 	ComponentCylinderCollider* created_component;
 	if (original_prefab)
 	{
-		created_component = new ComponentCylinderCollider();
+		created_component = new ComponentCylinderCollider(owner);
 	}
 	else
 	{
@@ -27,6 +27,9 @@ Component* ComponentCylinderCollider::Clone(GameObject* owner, bool original_pre
 	*created_component = *this;
 	created_component->SetConfiguration();
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 }
 

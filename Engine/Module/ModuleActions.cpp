@@ -204,13 +204,12 @@ void ModuleActions::DeleteComponentUndo(Component * component)
 	component->owner->RemoveComponent(component);
 }
 
-void ModuleActions::PasteComponent(Component* component)
+void ModuleActions::PasteComponent(GameObject* gameobject)
 {
-	if (copied_component != nullptr && copied_component->type != Component::ComponentType::SCRIPT && component->type != Component::ComponentType::TRANSFORM && component->type != Component::ComponentType::TRANSFORM2D)
+	assert(gameobject);
+	if (copied_component != nullptr)
 	{
-		SetCopyComponent(copied_component);
-		copied_component->owner = component->owner;
-		component->owner->components.push_back(copied_component);		
+		copied_component->Clone(gameobject, gameobject->original_prefab);
 	}
 	
 }
@@ -219,55 +218,13 @@ void ModuleActions::PasteComponentValues(Component * component)
 {
 	if (copied_component != nullptr && component->type == copied_component->type) 
 	{
-		if (component->type == Component::ComponentType::TRANSFORM) 
-		{	
-			component->Load(transform_config);		
-		}
-		else if (component->type == Component::ComponentType::TRANSFORM2D)
-		{
-			component->Load(transform_2D_config);
-		}
-		else 
-		{
-			if (copied_component->type != Component::ComponentType::SCRIPT)
-			{
-				Config configuration;
-				copied_component->Save(configuration);
-				component->Load(configuration);
-			}
-		}
+		copied_component->CopyTo(component);
 	}
 }
 
 void ModuleActions::SetCopyComponent(Component * component)
 {
-	
-	if (component->type == Component::ComponentType::COLLIDER)
-	{
-		copied_component = component->Clone(component->owner, component->owner->original_prefab);
-	}
-	else
-	{
-		if (component->type == Component::ComponentType::TRANSFORM)
-		{
-			Config conf;
-			component->Save(conf);
-			transform_config = conf;
-			copied_component = component;
-			
-		}
-		else if(component->type == Component::ComponentType::TRANSFORM2D)
-		{
-			Config conf;
-			component->Save(conf);
-			transform_2D_config = conf;
-			copied_component = component;
-		}
-		else
-		{
-			copied_component = component->Clone(component->owner->original_prefab);
-		}
-	}
+	copied_component = component;
 }
 
 

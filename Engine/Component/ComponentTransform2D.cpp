@@ -43,16 +43,13 @@ void ComponentTransform2D::Delete()
 {
 }
 
-Component * ComponentTransform2D::Clone(bool create_on_module) const
+Component * ComponentTransform2D::Clone(GameObject* owner, bool /*original_prefab*/)
 {
-	ComponentTransform2D * created_component;
-	created_component = new ComponentTransform2D(nullptr);
-	*created_component = *this;
-	CloneBase(static_cast<Component*>(created_component));
-	return created_component;
+	CopyTo(&owner->transform_2d);
+	return &owner->transform_2d;
 }
 
-void ComponentTransform2D::Copy(Component * component_to_copy) const
+void ComponentTransform2D::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentTransform2D*>(component_to_copy) = *this;

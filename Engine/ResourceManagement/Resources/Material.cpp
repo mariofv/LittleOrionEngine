@@ -142,6 +142,7 @@ void Material::Load(const Config& config)
 	specular_color[1] = specular.y;
 	specular_color[2] = specular.z;
 	specular_color[3] = specular.w;
+
 }
 
 void Material::LoadResource(uint32_t uuid, unsigned texture_type)
@@ -204,6 +205,11 @@ void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uui
 const std::shared_ptr<Texture>& Material::GetMaterialTexture(MaterialTextureType type) const
 {
 	return textures[type];
+}
+
+bool Material::UseLightmap() const
+{
+	return  textures[MaterialTextureType::LIGHTMAP] != nullptr;
 }
 
 void Material::ChangeTypeOfMaterial(const MaterialType new_material_type)
