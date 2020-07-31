@@ -38,7 +38,6 @@ public:
 
 	GLuint GetVAO() const;
 	GLuint GetEBO() const;
-	void ChangeTiling();
 	int GetNumTriangles() const;
 	int GetNumVerts() const;
 	std::vector<Triangle> GetTriangles() const;

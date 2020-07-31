@@ -244,7 +244,6 @@ vec3 GetLightMapColor(const Material mat, const vec2 texCoord)
 
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord)
 {
-
 	vec4 result = texture(mat.specular_map, texCoord)*mat.specular_color;
 	result.rgb = pow(result.rgb, vec3(2.2));
 	result.a *= mat.smoothness;

@@ -270,6 +270,7 @@ void PanelConfiguration::ShowRenderOptions()
 		{
 			ImGui::Checkbox("HDR", &App->renderer->hdr_active);
 			ImGui::Checkbox("Bloom", &App->renderer->bloom);
+			ImGui::Checkbox("Blur", &App->renderer->blur);
 			if (ImGui::BeginCombo("Tonemapping Type", App->renderer->GetHDRType(App->renderer->hdr_type).c_str()))
 			{
 

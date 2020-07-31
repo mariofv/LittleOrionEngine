@@ -83,6 +83,12 @@
       "Vertex": "/Resources/Shaders/hdr.vs",
       "Fragment": "/Resources/Shaders/hdr.fs",
       "Selectable": false
+    },
+    {
+      "Name": "Blur",
+      "Vertex": "/Resources/Shaders/blur_effect.vs",
+      "Fragment": "/Resources/Shaders/blur_effect.fs",
+      "Selectable": false
     }
   ]
 }

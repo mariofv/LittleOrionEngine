@@ -107,6 +107,10 @@ void PanelScene::RenderSceneBar()
 			{
 				App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
 			}
+			if (ImGui::MenuItem("Brightness", NULL, draw_mode == "Brightness"))
+			{
+				App->renderer->SetDrawMode(ModuleRender::DrawMode::BRIGHTNESS);
+			}
 
 			ImGui::EndMenu();
 		}

@@ -166,7 +166,8 @@ private:
 	GLuint depth_rbo = 0;
 	GLuint msfbo = 0;
 	GLuint msfb_color = 0;
-
+	unsigned int pingpongFBO[2];
+	unsigned int pingpongColorbuffers[2];
 	GLuint hdr_fbo = 0;
 	GLuint hdr_color_buffer_texture = 0;
 

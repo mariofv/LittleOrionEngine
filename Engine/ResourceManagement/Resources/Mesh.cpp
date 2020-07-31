@@ -71,35 +71,39 @@ void Mesh::LoadInMemory()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint32_t), indices.data(), GL_STATIC_DRAW);
 
-	// VERTEX POSITION
+	// VERTEX POSITION -- vertex_position
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)0);
 
-	// VERTEX TEXTURE COORDS
+	// VERTEX TEXTURE COORDS -- vertex_uv0
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tex_coords[0]));
 
-	// VERTEX NORMALS
+	// vertex_uv1
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, normals));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tex_coords[1]));
 
-	// VERTEX TANGENT
+	// VERTEX NORMALS -- vertex_normal
 	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tangent));
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, normals));
 
-	// VERTEX JOINTS
+	// VERTEX TANGENT -- vertex_tangent
 	glEnableVertexAttribArray(4);
-	glVertexAttribIPointer(4, 4, GL_UNSIGNED_INT, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, joints));
+	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tangent));
 
-	// VERTEX WEIGHTS
+	// VERTEX JOINTS -- vertex_joints
 	glEnableVertexAttribArray(5);
-	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, weights));
+	glVertexAttribIPointer(5, 4, GL_UNSIGNED_INT, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, joints));
 
+	// VERTEX NUM JOINTS -- vertex_num_joints
 	glEnableVertexAttribArray(6);
 	glVertexAttribIPointer(6, 1, GL_UNSIGNED_INT, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, num_joints));
 
+	// VERTEX WEIGHTS -- vertex_weights
 	glEnableVertexAttribArray(7);
-	glVertexAttribPointer(7, 2, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tex_coords[1]));
+	glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, weights));
+
+
 	glBindVertexArray(0);
 
 	initialized = true;

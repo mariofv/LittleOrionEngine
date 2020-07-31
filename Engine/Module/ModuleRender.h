@@ -34,7 +34,8 @@ public:
 	enum class DrawMode
 	{
 		SHADED,
-		WIREFRAME
+		WIREFRAME, 
+		BRIGHTNESS
 	};
 	enum class HDRType
 	{
@@ -63,7 +64,7 @@ public:
 	ENGINE_API int GetRenderedTris() const;
 	ENGINE_API int GetRenderedVerts() const;
 
-	void RenderHDR(const ComponentCamera & camera);
+	void RenderQuad();
 
 	ENGINE_API RaycastHit* GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* cam);
 	ENGINE_API void SetDrawMode(DrawMode draw_mode);
@@ -92,8 +93,10 @@ public:
 	bool toggle_directional_light_aabb = true;
 	bool toggle_perspective_sub_frustums = false;
 	bool bloom = false;
+	bool blur = false;
+	bool threshold_brightness = false;
 	float exposure = 1.0f;
-	bool hdr_active = false;
+	bool hdr_active = true;
 private:
 	void* context = nullptr;
 	HDRType hdr_type = HDRType::FILMIC;

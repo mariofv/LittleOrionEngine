@@ -79,12 +79,14 @@ ComponentCamera::~ComponentCamera()
 
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteFramebuffers(1, &msfbo);
+	glDeleteFramebuffers(2, pingpongFBO);
 }
 
 void ComponentCamera::InitCamera()
 {
 	glGenFramebuffers(1, &fbo);
 	glGenFramebuffers(1, &msfbo);
+	glGenFramebuffers(2, pingpongFBO);
 
 
 	aspect_ratio = 1.F;
@@ -312,7 +314,14 @@ void ComponentCamera::RecordDebugDraws(bool scene_mode)
 
 GLuint ComponentCamera::GetLastRecordedFrame() const
 {
-	return color_buffers[0];
+	if (App->renderer->threshold_brightness)
+	{
+		return color_buffers[1];
+	}
+	else
+	{
+		return color_buffers[0];
+	}
 }
 
 void ComponentCamera::GenerateFrameBuffers(GLsizei width, GLsizei height)
@@ -325,8 +334,13 @@ void ComponentCamera::GenerateFrameBuffers(GLsizei width, GLsizei height)
 	{
 		glDeleteTextures(2, color_buffers);
 	}
+	if (pingpongColorbuffers != 0)
+	{
+		glDeleteTextures(2, pingpongColorbuffers);
+	}
 	glGenTextures(1, &last_recorded_frame_texture);
 	glGenTextures(2, color_buffers);
+	glGenTextures(2, pingpongColorbuffers);
 
 	if (rbo != 0)
 	{
@@ -365,6 +379,7 @@ void ComponentCamera::CreateFramebuffer(GLsizei width, GLsizei height)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glBindTexture(GL_TEXTURE_2D, 0);
+
 		//floating point color buffer
 		glBindTexture(GL_TEXTURE_2D, color_buffers[1]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
@@ -372,6 +387,22 @@ void ComponentCamera::CreateFramebuffer(GLsizei width, GLsizei height)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
+		//blur effect textures
+		glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[0]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		
+		glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[1]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 		//attach buffers
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -382,6 +413,23 @@ void ComponentCamera::CreateFramebuffer(GLsizei width, GLsizei height)
 		unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
 		glDrawBuffers(2, attachments);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+		//blur effect framebuffer
+		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[0]);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongColorbuffers[0], 0);
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
+		{
+			App->engine_log->Log("Ping pong FBO 0 succes");
+		}
+
+		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[1]);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongColorbuffers[1], 0);
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
+		{
+			App->engine_log->Log("Ping pong FBO 1 succes");
+		}
+		
 		
 	}
 

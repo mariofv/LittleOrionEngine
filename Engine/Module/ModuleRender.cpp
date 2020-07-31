@@ -225,9 +225,34 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	glDisable(GL_BLEND);
 	
 	App->effects->Render();
+	
 	if (hdr_active)
 	{
-		RenderHDR(camera);
+		GLuint program = App->program->UseProgram("HDR", 0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, camera.color_buffers[0]);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, camera.color_buffers[1]);
+		glUniform1f(glGetUniformLocation(program, "exposure"), exposure);
+		glUniform1f(glGetUniformLocation(program, "bloom"), bloom);
+		glUniform1i(glGetUniformLocation(program, "hdr_type"), static_cast<int>(hdr_type));
+		RenderQuad();
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		if (blur)
+		{
+			bool horizontal = true, first_iteration = true;
+			int amount = 10;
+			GLuint blur = App->program->UseProgram("Blur", 0);
+			for (unsigned int i = 0; i < amount; i++)
+			{
+				glBindFramebuffer(GL_FRAMEBUFFER, camera.pingpongFBO[horizontal]);
+				glBindTexture(GL_TEXTURE_2D, first_iteration ? camera.color_buffers[1] : camera.pingpongColorbuffers[!horizontal]);
+				RenderQuad();
+				horizontal = !horizontal;
+				if (first_iteration)
+					first_iteration = false;
+			}
+		}
 	}
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
@@ -383,10 +408,15 @@ void ModuleRender::SetDrawMode(DrawMode draw_mode)
 	switch (draw_mode)
 	{
 	case ModuleRender::DrawMode::SHADED:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			threshold_brightness = false;
 		break;
 	case ModuleRender::DrawMode::WIREFRAME:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			threshold_brightness = false;
+		break;
+	case ModuleRender::DrawMode::BRIGHTNESS:
+			threshold_brightness = true;
 		break;
 	default:
 		break;
@@ -402,6 +432,9 @@ std::string ModuleRender::GetDrawMode() const
 		break;
 	case ModuleRender::DrawMode::WIREFRAME:
 		return "Wireframe";
+		break;
+	case ModuleRender::DrawMode::BRIGHTNESS:
+		return "Brightness";
 		break;
 	default:
 		return "Unknown";
@@ -490,10 +523,10 @@ int ModuleRender::GetRenderedVerts() const
 	return num_rendered_verts;
 }
 
-void ModuleRender::RenderHDR(const ComponentCamera &camera)
+void ModuleRender::RenderQuad()
 {
-
-	GLuint program = App->program->UseProgram("HDR", 0);
+	BROFILER_CATEGORY("Post Processing", Profiler::Color::MediumAquaMarine);
+	
 	unsigned int quadVAO = 0;
 	unsigned int quadVBO;
 	if (quadVAO == 0)
@@ -508,11 +541,6 @@ void ModuleRender::RenderHDR(const ComponentCamera &camera)
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, camera.color_buffers[0]);
-		glUniform1i(glGetUniformLocation(program, "scene_texture"), 0);
-		glUniform1f(glGetUniformLocation(program, "exposure"), exposure);
-		glUniform1i(glGetUniformLocation(program, "hdr_type"), static_cast<int>(hdr_type));
 
 	}
 	glBindVertexArray(quadVAO);

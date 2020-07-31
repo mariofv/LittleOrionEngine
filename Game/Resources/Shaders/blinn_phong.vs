@@ -1,11 +1,11 @@
 layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec2 vertex_uv0;
-layout(location = 7) in vec2 vertex_uv1;
-layout(location = 2) in vec3 vertex_normal;
-layout(location = 3) in vec3 vertex_tangent;
-layout(location = 4) in uvec4 vertex_joints;
-layout(location = 5) in vec3 vertex_weights;
+layout(location = 2) in vec2 vertex_uv1;
+layout(location = 3) in vec3 vertex_normal;
+layout(location = 4) in vec3 vertex_tangent;
+layout(location = 5) in uvec4 vertex_joints;
 layout(location = 6) in uint vertex_num_joints;
+layout(location = 7) in vec3 vertex_weights;
 
 
 layout (std140) uniform Matrices
