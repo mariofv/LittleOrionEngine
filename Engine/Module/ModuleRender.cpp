@@ -240,7 +240,8 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		if (blur)
 		{
-			bool horizontal = true, first_iteration = true;
+			horizontal = true;
+			bool first_iteration = true;
 			int amount = 10;
 			GLuint blur = App->program->UseProgram("Blur", 0);
 			for (unsigned int i = 0; i < amount; i++)

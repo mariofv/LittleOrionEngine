@@ -317,13 +317,20 @@ void ComponentCamera::RecordDebugDraws(bool scene_mode)
 
 GLuint ComponentCamera::GetLastRecordedFrame() const
 {
-	if (App->renderer->threshold_brightness)
+	if (!App->renderer->blur)
 	{
-		return color_buffers[1];
+		if (App->renderer->threshold_brightness)
+		{
+			return color_buffers[1];
+		}
+		else
+		{
+			return color_buffers[0];
+		}
 	}
 	else
 	{
-		return color_buffers[0];
+		return pingpongColorbuffers[!App->renderer->horizontal];
 	}
 }
 
