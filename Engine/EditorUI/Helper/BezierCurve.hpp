@@ -53,15 +53,16 @@ namespace ImGui
 	int Bezier(const char *label, float P[5]) {
 		// visuals
 		enum { SMOOTHNESS = 64 }; // curve smoothness: the higher number of segments, the smoother curve
-		enum { CURVE_WIDTH = 4 }; // main curved line width
+		enum { CURVE_WIDTH = 3 }; // main curved line width
 		enum { LINE_WIDTH = 1 }; // handlers: small lines width
-		enum { GRAB_RADIUS = 8 }; // handlers: circle radius
-		enum { GRAB_BORDER = 2 }; // handlers: circle border width
+		enum { GRAB_RADIUS = 6 }; // handlers: circle radius
+		enum { GRAB_BORDER = 1 }; // handlers: circle border width
 		enum { AREA_CONSTRAINED = true }; // should grabbers be constrained to grid area?
-		enum { AREA_WIDTH = 128 }; // area width in pixels. 0 for adaptive size (will use max avail width)
+		enum { AREA_WIDTH = 0 }; // area width in pixels. 0 for adaptive size (will use max avail width)
 
 		// curve presets
 		static struct { const char *name; float points[4]; } presets[] = {
+			{ "Custom", 0.000f, 0.000f, 1.000f, 1.000f },
 			{ "Linear", 0.000f, 0.000f, 1.000f, 1.000f },
 
 			{ "In Sine", 0.470f, 0.000f, 0.745f, 0.715f },
@@ -99,43 +100,7 @@ namespace ImGui
 			// easeInOutBounce: not a bezier
 		};
 
-
-		// preset selector
-
-		bool reload = 0;
-		ImGui::PushID(label);
-		if (ImGui::ArrowButton("##lt", ImGuiDir_Left)) { // ImGui::ArrowButton(ImGui::GetCurrentWindow()->GetID("##lt"), ImGuiDir_Left, ImVec2(0, 0), 0)
-			if (--P[4] >= 0) reload = 1; else ++P[4];
-		}
-		ImGui::SameLine();
-
-		if (ImGui::Button("Presets")) {
-			ImGui::OpenPopup("!Presets");
-		}
-		if (ImGui::BeginPopup("!Presets")) {
-			for (int i = 0; i < IM_ARRAYSIZE(presets); ++i) {
-				if (i == 1 || i == 9 || i == 17) ImGui::Separator();
-				if (ImGui::MenuItem(presets[i].name, NULL, P[4] == i)) {
-					P[4] = i;
-					reload = 1;
-				}
-			}
-			ImGui::EndPopup();
-		}
-		ImGui::SameLine();
-
-		if (ImGui::ArrowButton("##rt", ImGuiDir_Right)) { // ImGui::ArrowButton(ImGui::GetCurrentWindow()->GetID("##rt"), ImGuiDir_Right, ImVec2(0, 0), 0)
-			if (++P[4] < IM_ARRAYSIZE(presets)) reload = 1; else --P[4];
-		}
-		ImGui::SameLine();
-		ImGui::PopID();
-
-		if (reload) {
-			memcpy(P, presets[(int)P[4]].points, sizeof(float) * 4);
-		}
-
 		// bezier widget
-
 		const ImGuiStyle& Style = GetStyle();
 		const ImGuiIO& IO = GetIO();
 		ImDrawList* DrawList = GetWindowDrawList();
@@ -145,13 +110,16 @@ namespace ImGui
 
 		// header and spacing
 		int changed = SliderFloat4(label, P, 0, 1, "%.3f", 1.0f);
+		ImGui::Spacing();
+		ImGui::Spacing();
+
 		int hovered = IsItemActive() || IsItemHovered(); // IsItemDragged() ?
 		Dummy(ImVec2(0, 3));
 
 		// prepare canvas
 		const float avail = GetContentRegionAvailWidth();
 		const float dim = AREA_WIDTH > 0 ? AREA_WIDTH : avail;
-		ImVec2 Canvas(dim, dim);
+		ImVec2 Canvas(dim, dim / 2);
 
 		ImRect bb(Window->DC.CursorPos, Window->DC.CursorPos + Canvas);
 		ItemSize(bb);
@@ -159,7 +127,7 @@ namespace ImGui
 			return changed;
 
 		const ImGuiID id = Window->GetID(label);
-		hovered |= 0 != ItemHoverable(ImRect(bb.Min, bb.Min + ImVec2(avail, dim)), id);
+		hovered |= 0 != ItemHoverable(ImRect(bb.Min, bb.Min + ImVec2(avail, dim / 2)), id);
 
 		RenderFrame(bb.Min, bb.Max, GetColorU32(ImGuiCol_FrameBg, 1), true, Style.FrameRounding);
 
@@ -204,7 +172,7 @@ namespace ImGui
 
 					if (AREA_CONSTRAINED) {
 						px = (px < 0 ? 0 : (px > 1 ? 1 : px));
-						py = (py < 0 ? 0 : (py > 1 ? 1 : py));
+						//py = (py < 0 ? 0 : (py > 1 ? 1 : py));
 					}
 
 					changed = true;
@@ -248,14 +216,55 @@ namespace ImGui
 		ImVec4 pink(1.00f, 0.00f, 0.75f, luma), cyan(0.00f, 0.75f, 1.00f, luma);
 		ImVec2 p1 = ImVec2(P[0], 1 - P[1]) * (bb.Max - bb.Min) + bb.Min;
 		ImVec2 p2 = ImVec2(P[2], 1 - P[3]) * (bb.Max - bb.Min) + bb.Min;
-		DrawList->AddLine(ImVec2(bb.Min.x, bb.Max.y), p1, ImColor(white), LINE_WIDTH);
-		DrawList->AddLine(ImVec2(bb.Max.x, bb.Min.y), p2, ImColor(white), LINE_WIDTH);
+		DrawList->AddLine(ImVec2(bb.Min.x, bb.Max.y), p1, ImColor(white), LINE_WIDTH / 2);
+		DrawList->AddLine(ImVec2(bb.Max.x, bb.Min.y), p2, ImColor(white), LINE_WIDTH / 2);
 		DrawList->AddCircleFilled(p1, GRAB_RADIUS, ImColor(white));
 		DrawList->AddCircleFilled(p1, GRAB_RADIUS - GRAB_BORDER, ImColor(pink));
 		DrawList->AddCircleFilled(p2, GRAB_RADIUS, ImColor(white));
 		DrawList->AddCircleFilled(p2, GRAB_RADIUS - GRAB_BORDER, ImColor(cyan));
 
 		// if (hovered || changed) DrawList->PopClipRect();
+
+		// preset selector
+		ImGui::Spacing();
+		ImGui::Spacing();
+		ImGui::Spacing();
+
+		bool reload = 0;
+		ImGui::PushID(label);
+		if (ImGui::ArrowButton("##lt", ImGuiDir_Left)) { // ImGui::ArrowButton(ImGui::GetCurrentWindow()->GetID("##lt"), ImGuiDir_Left, ImVec2(0, 0), 0)
+			if (--P[4] >= 1) reload = 1; else ++P[4];
+		}
+		ImGui::SameLine();
+
+		if (ImGui::Button(presets[(int)P[4]].name, ImVec2(100, 0))) {
+			ImGui::OpenPopup("!Presets");
+		}
+		
+		if (ImGui::BeginPopup("!Presets")) {
+			for (int i = 0; i < IM_ARRAYSIZE(presets); ++i) {
+				if (i == 1 || i == 9 || i == 17) ImGui::Separator();
+				if (ImGui::MenuItem(presets[i].name, NULL, P[4] == i)) {
+					P[4] = i;
+					reload = 1;
+				}
+			}
+			ImGui::EndPopup();
+		}
+		ImGui::SameLine();
+
+		if (ImGui::ArrowButton("##rt", ImGuiDir_Right)) { // ImGui::ArrowButton(ImGui::GetCurrentWindow()->GetID("##rt"), ImGuiDir_Right, ImVec2(0, 0), 0)
+			if (++P[4] < IM_ARRAYSIZE(presets)) reload = 1; else --P[4];
+		}
+		ImGui::PopID();
+
+		if (reload) {
+			memcpy(P, presets[(int)P[4]].points, sizeof(float) * 4);
+		}
+
+		if (changed) {
+			P[4] = 0;
+		}
 
 		return changed;
 	}
