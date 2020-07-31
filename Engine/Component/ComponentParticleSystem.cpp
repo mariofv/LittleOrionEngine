@@ -3,11 +3,11 @@
 #include "Main/Application.h"
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleResourceManager.h"
 
 #include "Component/ComponentBillboard.h"
-#include "Module/ModuleResourceManager.h"
+#include "EditorUI/Helper/BezierCurve.hpp"
 #include "GL/glew.h"
-
 
 ComponentParticleSystem::ComponentParticleSystem() : Component(nullptr, ComponentType::PARTICLE_SYSTEM)
 {
@@ -218,34 +218,38 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	particle.time_passed += App->time->real_time_delta_time;
 
 	//velocity over time
-	float vel_mod = velocity_particles_start * velocity_factor_mod;
-	float4 accel_mod = gravity_vector;
+	float4 velocity = particle.velocity_initial * velocity_particles_start * velocity_factor_mod;
+	float4 vel_curve_interpolated = float4::zero;
+	float4 acceleration = gravity_vector;
 	if (velocity_over_time)
 	{
 		switch (type_of_velocity_over_time)
 		{
 		case CONSTANT:
-			vel_mod *= velocity_over_time_speed_modifier;
+			velocity *= velocity_over_time_speed_modifier;
 			break;
 		case LINEAR:
 		{
-			vel_mod *= velocity_over_time_speed_modifier;
+			velocity *= velocity_over_time_speed_modifier;
 			float accel = (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * velocity_factor_mod / particles_life_time / 1000;
-			accel_mod += particle.velocity_initial * accel;
+			acceleration += particle.velocity_initial * accel;
 			break;
 		}
 		case RANDOM_BETWEEN_TWO_CONSTANTS:
-			vel_mod *= velocity_over_time_speed_modifier + (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * particle.random_velocity_percentage;
+			velocity *= velocity_over_time_speed_modifier + (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * particle.random_velocity_percentage;
 			break;
 		case CURVE:
-
+			velocity *= velocity_over_time_speed_modifier;
+			float percentage = ImGui::BezierValue(particle.time_passed / particles_life_time / 1000, velocity_bezier_curve);
+			float vel_perc = (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * percentage;
+			vel_curve_interpolated = particle.velocity_initial * vel_perc * velocity_factor_mod;
 			break;
 		}
 	}
 
 	//update position
-	particle.position = particle.position_initial + (particle.velocity_initial * vel_mod * particle.time_passed) +
-		(accel_mod * particle.time_passed * particle.time_passed / 2);
+	particle.position = particle.position_initial + ((velocity + vel_curve_interpolated ) * particle.time_passed) +
+		(acceleration * particle.time_passed * particle.time_passed / 2);
 
 	if (orbit)
 	{

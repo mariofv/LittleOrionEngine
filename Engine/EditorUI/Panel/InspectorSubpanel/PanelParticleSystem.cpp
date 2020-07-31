@@ -289,7 +289,9 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				ImGui::DragFloat("Max Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
 				break;
 			case ComponentParticleSystem::TypeOfVelocityOverTime::CURVE:
-				ImGui::ShowBezierDemo();
+				ImGui::DragFloat("Start", &particle_system->velocity_over_time_speed_modifier, 0.01F);
+				ImGui::DragFloat("End", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
+				ImGui::Bezier("Bezier Velocity", particle_system->velocity_bezier_curve);
 				break;
 			}
 

@@ -13,6 +13,9 @@
 //    float y = ImGui::BezierValue( 0.5f, v ); // x delta in [0..1] range
 // }
 
+#ifndef _BEZIERCURVE_HPP
+#define _BEZIERCURVE_HPP
+
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -42,7 +45,7 @@ namespace ImGui
 		}
 	}
 
-	float BezierValue(float dt01, float P[4]) {
+	static float BezierValue(float dt01, float P[4]) {
 		enum { STEPS = 256 };
 		ImVec2 Q[4] = { { 0, 0 }, { P[0], P[1] }, { P[2], P[3] }, { 1, 1 } };
 		ImVec2 results[STEPS + 1];
@@ -50,7 +53,7 @@ namespace ImGui
 		return results[(int)((dt01 < 0 ? 0 : dt01 > 1 ? 1 : dt01) * STEPS)].y;
 	}
 
-	int Bezier(const char *label, float P[5]) {
+	static int Bezier(const char *label, float P[5]) {
 		// visuals
 		enum { SMOOTHNESS = 64 }; // curve smoothness: the higher number of segments, the smoother curve
 		enum { CURVE_WIDTH = 3 }; // main curved line width
@@ -222,14 +225,13 @@ namespace ImGui
 		DrawList->AddCircleFilled(p1, GRAB_RADIUS - GRAB_BORDER, ImColor(pink));
 		DrawList->AddCircleFilled(p2, GRAB_RADIUS, ImColor(white));
 		DrawList->AddCircleFilled(p2, GRAB_RADIUS - GRAB_BORDER, ImColor(cyan));
+		ImGui::Spacing();
+		ImGui::Spacing();
+		ImGui::Spacing();
 
 		// if (hovered || changed) DrawList->PopClipRect();
 
 		// preset selector
-		ImGui::Spacing();
-		ImGui::Spacing();
-		ImGui::Spacing();
-
 		bool reload = 0;
 		ImGui::PushID(label);
 		if (ImGui::ArrowButton("##lt", ImGuiDir_Left)) { // ImGui::ArrowButton(ImGui::GetCurrentWindow()->GetID("##lt"), ImGuiDir_Left, ImVec2(0, 0), 0)
@@ -269,7 +271,8 @@ namespace ImGui
 		return changed;
 	}
 
-	void ShowBezierDemo() {
+	/*void ShowBezierDemo() {
 		{ static float v[5] = { 0.950f, 0.050f, 0.795f, 0.035f }; Bezier("easeInExpo", v); }
-	}
+	}*/
 }
+#endif //_BEZIERCURVE_HPP
