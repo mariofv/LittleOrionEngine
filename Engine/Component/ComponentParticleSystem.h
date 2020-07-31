@@ -61,7 +61,7 @@ public:
 		CONSTANT,
 		LINEAR,
 		RANDOM_BETWEEN_TWO_CONSTANTS,
-		//CURVE
+		CURVE
 	};
 
 	ComponentParticleSystem();

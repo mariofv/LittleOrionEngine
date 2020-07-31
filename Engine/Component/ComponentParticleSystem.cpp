@@ -237,12 +237,15 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 		case RANDOM_BETWEEN_TWO_CONSTANTS:
 			vel_mod *= velocity_over_time_speed_modifier + (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * particle.random_velocity_percentage;
 			break;
+		case CURVE:
+
+			break;
 		}
 	}
 
 	//update position
 	particle.position = particle.position_initial + (particle.velocity_initial * vel_mod * particle.time_passed) +
-		(accel_mod * Pow(particle.time_passed, 2) / 2);
+		(accel_mod * particle.time_passed * particle.time_passed / 2);
 
 	if (orbit)
 	{

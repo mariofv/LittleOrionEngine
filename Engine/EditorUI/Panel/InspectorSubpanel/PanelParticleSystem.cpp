@@ -7,6 +7,7 @@
 #include "EditorUI/Panel/PopupsPanel/PanelPopupResourceSelector.h"
 #include "Module/ModuleActions.h"
 #include "Module/ModuleEditor.h"
+#include "EditorUI/Helper/BezierCurve.hpp"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -255,7 +256,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			}
 
 			int velocity_type = static_cast<int>(particle_system->type_of_velocity_over_time);
-			if (ImGui::Combo("Speed", &velocity_type, "Constant\0Linear\0Random Between Two Constants\0"))
+			if (ImGui::Combo("Speed", &velocity_type, "Constant\0Linear\0Random Between Two Constants\0Curve\0"))
 			{
 				switch (velocity_type)
 				{
@@ -268,13 +269,15 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				case 2:
 					particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::RANDOM_BETWEEN_TWO_CONSTANTS;
 					break;
+				case 3:
+					particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::CURVE;
+					break;
 				}
 			}
 
 			switch (velocity_type)
 			{
 			case ComponentParticleSystem::TypeOfVelocityOverTime::CONSTANT:
-				particle_system->velocity_over_time_speed_modifier;
 				ImGui::DragFloat("Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
 				break;
 			case ComponentParticleSystem::TypeOfVelocityOverTime::LINEAR:
@@ -282,9 +285,11 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				ImGui::DragFloat("End Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
 				break;
 			case ComponentParticleSystem::TypeOfVelocityOverTime::RANDOM_BETWEEN_TWO_CONSTANTS:
-				particle_system->velocity_over_time_speed_modifier;
 				ImGui::DragFloat("Min Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
 				ImGui::DragFloat("Max Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
+				break;
+			case ComponentParticleSystem::TypeOfVelocityOverTime::CURVE:
+				ImGui::ShowBezierDemo();
 				break;
 			}
 
