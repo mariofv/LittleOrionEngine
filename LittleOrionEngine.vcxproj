@@ -190,12 +190,10 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
     <ClInclude Include="Engine\Module\ModuleEffects.h" />
-    <ClInclude Include="Engine\ResourceManagement\Importer\FontImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\FontManager.h" />
     <ClInclude Include="Engine\Module\ModulePhysics.h" />
     <ClInclude Include="Engine\Module\ModuleAudio.h" />
     <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h" />
-    <ClInclude Include="Engine\ResourceManagement\Importer\SceneImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Metafile\ModelMetafile.h" />
     <ClInclude Include="Engine\ResourceManagement\Metafile\TextureMetafile.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h" />
@@ -241,7 +239,6 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\MaterialImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\PrefabImporter.h" />
-    <ClInclude Include="Engine\ResourceManagement\Importer\SkyboxImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\SceneManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\SkyboxManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Metafile\Metafile.h" />
@@ -396,14 +393,11 @@
     <ClCompile Include="Engine\Module\ModuleAudio.cpp" />
     <ClCompile Include="Engine\Module\ModuleResourceManager.cpp" />
     <ClCompile Include="Engine\Module\ModuleScriptManager.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Importer\FontImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\PrefabImporter.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Importer\SceneImporter.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Importer\SkyboxImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\FontManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\SoundImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\SceneManager.cpp" />

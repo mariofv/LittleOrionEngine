@@ -18,7 +18,7 @@ public:
 	virtual ~Importer() = default;
 
 	Metafile* Import(Path& assets_file_path);
-	virtual FileData ExtractData(Path& assets_file_path, const Metafile& metafile) const = 0;
+	virtual FileData ExtractData(Path& assets_file_path, const Metafile& metafile) const;
 
 	static bool ImportRequired(const Path& file_path);
 

@@ -304,9 +304,6 @@
     <ClCompile Include="Engine\ResourceManagement\Manager\SkyboxManager.cpp">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\SkyboxImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
@@ -364,9 +361,6 @@
     <ClCompile Include="Engine\ResourceManagement\Manager\StateMachineManager.cpp">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\SceneImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Resources\Scene.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
@@ -390,9 +384,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Component\Component.cpp">
       <Filter>Engine\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\FontImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Manager\FontManager.cpp">
       <Filter>Engine\ResourceManagement\Manager</Filter>
@@ -858,9 +849,6 @@
     <ClInclude Include="Engine\ResourceManagement\Manager\SkyboxManager.h">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\SkyboxImporter.h">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
@@ -900,9 +888,6 @@
     <ClInclude Include="Engine\ResourceManagement\Manager\StateMachineManager.h">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\SceneImporter.h">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\Scene.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
@@ -923,9 +908,6 @@
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\FontImporter.h">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Manager\FontManager.h">
       <Filter>Engine\ResourceManagement\Manager</Filter>

@@ -77,3 +77,7 @@ bool Importer::ImportRequired(const Path& file_path)
 
 	return true;
 }
+
+FileData Importer::ExtractData(Path& assets_file_path, const Metafile& metafile) const {
+	return assets_file_path.GetFile()->Load();
+}
