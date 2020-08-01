@@ -1,7 +1,9 @@
 #ifndef _MODULESCENE_H_
 #define _MODULESCENE_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Module.h"
 #include "Helper/BuildOptions.h"

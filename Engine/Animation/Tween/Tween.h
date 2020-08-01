@@ -1,6 +1,8 @@
 #ifndef _TWEEN_H_
 #define _TWEEN_H_
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 
 #include "Component/ComponentTransform2D.h"

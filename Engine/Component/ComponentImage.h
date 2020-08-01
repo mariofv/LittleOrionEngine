@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 
 class Texture;
+class Video;
 struct TextureLoadData;
 
 class ComponentImage : public Component
@@ -30,6 +31,9 @@ public:
 	void SetTextureToRender(uint32_t texture_uuid);
 	void SetTextureToRenderFromInspector(uint32_t texture_uuid);
 
+	void SetVideoToRender(uint32_t video_uuid);
+	void SetVideoToRenderFromInspector(uint32_t video_uuid);
+
 	ENGINE_API void SetColor(float4 color);
 
 	void Render(float4x4* projection);
@@ -42,6 +46,8 @@ private:
 public:
 	uint32_t texture_uuid = 0;
 	std::shared_ptr<Texture> texture_to_render;
+	uint32_t video_uuid = 0;
+	std::shared_ptr<Video> video_to_render;
 
 	bool preserve_aspect_ratio = false;
 

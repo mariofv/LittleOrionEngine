@@ -1,7 +1,9 @@
 #ifndef _COMPONENTPARTICLESYSTEM_H
 #define _COMPONENTPARTICLESYSTEM_H
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Component.h"
 #include "MathGeoLib.h"

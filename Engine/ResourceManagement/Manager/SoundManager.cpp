@@ -5,7 +5,7 @@
 #include "ResourceManagement/Resources/SoundBank.h"
 
 static std::shared_ptr<SoundBank> init_sound_bank = nullptr;
-std::shared_ptr<SoundBank>  SoundManager::Init()
+std::shared_ptr<SoundBank> SoundManager::Init()
 {
 	//LOAD WWISE INIT
 	Path* resource_exported_file_path = App->filesystem->GetPath(WWISE_INIT_PATH +std::string("/")+ WWISE_INIT_NAME);

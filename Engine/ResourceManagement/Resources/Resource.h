@@ -8,7 +8,7 @@
 
 class Path;
 class Metafile;
-class TextureLoadData;
+struct TextureLoadData;
 
 enum class ResourceType
 {

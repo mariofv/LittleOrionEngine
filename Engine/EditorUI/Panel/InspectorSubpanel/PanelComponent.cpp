@@ -36,7 +36,6 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
 #include "Component/ComponentTrail.h"
-#include "Component/ComponentVideo.h"
 
 #include "Helper/Utils.h"
 
@@ -604,21 +603,6 @@ void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
 	}
 }
 
-void PanelComponent::ShowComponentVideoWindow(ComponentVideo* video)
-{
-	if (ImGui::CollapsingHeader(ICON_FA_FILM " Video", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		if (!ShowCommonComponentWindow(video))
-		{
-			return;
-		}
-		if (ImGui::Button("Play"))
-		{
-			video->Play();
-		}
-	}
-}
-
 void PanelComponent::ShowComponentColliderWindow(ComponentCollider* collider)
 {
 	switch (collider->collider_type)
@@ -694,6 +678,35 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image)
 		if (ImGui::Button("Set Native Size"))
 		{
 			component_image->SetNativeSize();
+		}
+
+		//VIDEO
+
+		static bool video_enable = false;
+		video_enable |= component_image->video_to_render != nullptr;
+		ImGui::Checkbox("Enable Video", &video_enable);
+
+		if (video_enable)
+		{
+			ImGui::Separator();
+			ImGui::Text("Video");
+			std::string video_name = component_image->video_to_render == nullptr ? "None (Video)" : App->resources->resource_DB->GetEntry(component_image->video_to_render->GetUUID())->resource_name;
+			element_id = ImGui::GetID((std::to_string(component_image->UUID) + "VideoSelector").c_str());
+			if (ImGui::Button(video_name.c_str()))
+			{
+				App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::VIDEO);
+			}
+
+			selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+			if (selected_resource != 0)
+			{
+				component_image->SetVideoToRenderFromInspector(selected_resource);
+			}
+			selected_resource = ImGui::ResourceDropper<Video>();
+			if (selected_resource != 0)
+			{
+				component_image->SetVideoToRenderFromInspector(selected_resource);
+			}
 		}
 	}
 }
@@ -964,13 +977,6 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::AUDIO_LISTENER);
 
 		}
-		sprintf_s(tmp_string, "%s Video ", ICON_FA_FILM);
-		if (ImGui::Selectable(tmp_string))
-		{
-			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::VIDEO);
-
-		}
-
 		ImGui::EndPopup();
 	}
 

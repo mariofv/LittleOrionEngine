@@ -19,7 +19,6 @@
 #include "Component/ComponentBillboard.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentSphereCollider.h"
-#include "Component/ComponentVideo.h"
 
 #include "Helper/Config.h"
 
@@ -145,9 +144,6 @@ void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameO
 			break;
 		case Component::ComponentType::UI_IMAGE:
 			created_component = new ComponentImage();
-			break;
-		case Component::ComponentType::VIDEO:
-			created_component = new ComponentVideo();
 			break;
 		case Component::ComponentType::CANVAS:
 			created_component = new ComponentCanvas();

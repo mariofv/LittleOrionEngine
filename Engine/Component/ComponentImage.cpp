@@ -137,6 +137,7 @@ void ComponentImage::SpecializedSave(Config& config) const
 {
 	config.AddColor(color, "ImageColor");
 	config.AddUInt(texture_uuid, "TextureUUID");
+	config.AddUInt(video_uuid, "VideoUUID");
 	config.AddBool(preserve_aspect_ratio, "PreserveAspectRatio");
 }
 
@@ -144,10 +145,15 @@ void ComponentImage::SpecializedLoad(const Config& config)
 {
 	config.GetColor("ImageColor", color, float4::one);
 	texture_uuid = config.GetUInt32("TextureUUID", 0);
+	video_uuid = config.GetUInt32("VideoUUID", 0);
 	preserve_aspect_ratio = config.GetBool("PreserveAspectRatio", false);
 	if (texture_uuid != 0)
 	{
 		SetTextureToRender(texture_uuid);
+	}
+	if (video_uuid != 0)
+	{
+		SetVideoToRender(video_uuid);
 	}
 }
 
@@ -188,6 +194,10 @@ void ComponentImage::ReassignResource()
 	{
 		SetTextureToRender(texture_uuid);
 	}
+	if (video_uuid != 0)
+	{
+		SetVideoToRender(texture_uuid);
+	}
 }
 
 void ComponentImage::SetTextureToRender(uint32_t texture_uuid)
@@ -208,6 +218,26 @@ void ComponentImage::SetTextureToRenderFromInspector(uint32_t texture_uuid)
 
 	App->resources->loading_thread_communication.normal_loading_flag = true;
 	texture_to_render = App->resources->Load<Texture>(texture_uuid);
+	App->resources->loading_thread_communication.normal_loading_flag = false;
+}
+
+void ComponentImage::SetVideoToRender(uint32_t video_uuid)
+{
+	//Prepare multithreading loading
+	App->resources->loading_thread_communication.current_component_loading = this;
+	App->resources->loading_thread_communication.current_type = ResourceType::TEXTURE;
+	this->video_uuid = video_uuid;
+	video_to_render = App->resources->Load<Video>(video_uuid);
+
+	//Set to default loading component
+	App->resources->loading_thread_communication.current_component_loading = nullptr;
+}
+
+void ComponentImage::SetVideoToRenderFromInspector(uint32_t video_uuid)
+{
+	this->video_uuid = video_uuid;
+	App->resources->loading_thread_communication.normal_loading_flag = true;
+	video_to_render = App->resources->Load<Video>(video_uuid);
 	App->resources->loading_thread_communication.normal_loading_flag = false;
 }
 
