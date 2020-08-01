@@ -89,6 +89,12 @@
       "Vertex": "/Resources/Shaders/blur_effect.vs",
       "Fragment": "/Resources/Shaders/blur_effect.fs",
       "Selectable": false
+    },
+    {
+      "Name": "Bloom",
+      "Vertex": "/Resources/Shaders/bloom.vs",
+      "Fragment": "/Resources/Shaders/bloom.fs",
+      "Selectable": false
     }
   ]
 }
