@@ -4,6 +4,8 @@
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleEditor.h"
+#include "Module/ModuleDebug.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleTime.h"
@@ -130,7 +132,7 @@ void  ComponentTrail::GetPerpendiculars()
 			float3 perpendicular;
 			if (App->cameras->scene_camera)
 			{
-				perpendicular = vector_adjacent.Cross((App->cameras->scene_camera->camera_frustum.pos - owner->transform.GetFrontVector())) * width; //Front is currently local
+				perpendicular = vector_adjacent.Cross((App->cameras->scene_camera->camera_frustum.pos - owner->transform.GetFrontVector() )) * width; //Front is currently local
 
 			}
 			else
@@ -141,20 +143,18 @@ void  ComponentTrail::GetPerpendiculars()
 
 			float3 top_left, bottom_left;
 			++j;
-			//TODO - Commented code is for rendering the last point of path
-			/*if (++pair == mesh_points.end())
+			if (++pair == mesh_points.end())
 			{
 				--pair;
-				top_left = pair->second->position + perpendicular;
-				bottom_left = (pair->second->position - perpendicular);
+				top_left = pair->first->position + perpendicular;
+				bottom_left = (pair->first->position - perpendicular);
+				
 			}
 			else
 			{
-				top_left = pair->first->position + perpendicular;
-				bottom_left = (pair->first->position - perpendicular);
-			}*/
-			top_left = pair->first->position + perpendicular;
-			bottom_left = (pair->first->position - perpendicular);
+				top_left = pair->second->position + perpendicular;
+				bottom_left = (pair->second->position - perpendicular);
+			}
 			vertices.push_back({ top_left, float2(mesh_index * j,1.0f) }); //uv[i]
 			vertices.push_back({ bottom_left, float2(mesh_index * j,0.0f) });//uv[++i]
 		}
