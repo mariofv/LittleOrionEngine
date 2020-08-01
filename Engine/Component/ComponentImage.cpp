@@ -56,50 +56,59 @@ void ComponentImage::Render(float4x4* projection)
 		return;
 	}
 
-	if (texture_to_render != nullptr)
+	if (playing_video)
 	{
-		ScaleOp aspect_ratio_scaling;
-
-		if (preserve_aspect_ratio)
-		{
-			if (owner->transform_2d.size.x / texture_aspect_ratio > owner->transform_2d.size.y)
-			{
-				aspect_ratio_scaling = float4x4::Scale(float3(owner->transform_2d.size.y * texture_aspect_ratio, owner->transform_2d.size.y, 1.f));
-			}
-			else
-			{
-				aspect_ratio_scaling = float4x4::Scale(float3(owner->transform_2d.size.x, owner->transform_2d.size.x / texture_aspect_ratio, 1.f));
-			}
-		}
-		else
-		{
-			aspect_ratio_scaling = float4x4::Scale(float3(owner->transform_2d.size, 1.f));
-		}
-		float4x4 model = owner->transform_2d.GetGlobalModelMatrix()  * aspect_ratio_scaling;
-
-		if (program == 0)
-		{
-			program = App->program->UseProgram("Sprite");
-		}
-		else
-		{
-			glUseProgram(program);
-		}
-
-		glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
-		glUniform1i(glGetUniformLocation(program, "image"), 0);
-		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, model.ptr());
-		glUniform4fv(glGetUniformLocation(program, "spriteColor"), 1, color.ptr());
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture_to_render->opengl_texture);
-
-		glBindVertexArray(vao);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glUseProgram(0);
-
+		playing_video = !video_to_render->Update() ? false : true;
+		RenderTexture(projection,video_to_render->opengl_texture);
 	}
+	else if (texture_to_render != nullptr)
+	{
+		RenderTexture(projection, texture_to_render->opengl_texture);
+	}
+}
+
+void ComponentImage::RenderTexture(math::float4x4 * projection, GLuint texture)
+{
+	ScaleOp aspect_ratio_scaling;
+
+	if (preserve_aspect_ratio)
+	{
+		if (owner->transform_2d.size.x / texture_aspect_ratio > owner->transform_2d.size.y)
+		{
+			aspect_ratio_scaling = float4x4::Scale(float3(owner->transform_2d.size.y * texture_aspect_ratio, owner->transform_2d.size.y, 1.f));
+		}
+		else
+		{
+			aspect_ratio_scaling = float4x4::Scale(float3(owner->transform_2d.size.x, owner->transform_2d.size.x / texture_aspect_ratio, 1.f));
+		}
+	}
+	else
+	{
+		aspect_ratio_scaling = float4x4::Scale(float3(owner->transform_2d.size, 1.f));
+	}
+	float4x4 model = owner->transform_2d.GetGlobalModelMatrix()  * aspect_ratio_scaling;
+
+	if (program == 0)
+	{
+		program = App->program->UseProgram("Sprite");
+	}
+	else
+	{
+		glUseProgram(program);
+	}
+
+	glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
+	glUniform1i(glGetUniformLocation(program, "image"), 0);
+	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, model.ptr());
+	glUniform4fv(glGetUniformLocation(program, "spriteColor"), 1, color.ptr());
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glBindVertexArray(vao);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUseProgram(0);
 }
 
 Component* ComponentImage::Clone(bool original_prefab) const
@@ -196,7 +205,7 @@ void ComponentImage::ReassignResource()
 	}
 	if (video_uuid != 0)
 	{
-		SetVideoToRender(texture_uuid);
+		SetVideoToRender(video_uuid);
 	}
 }
 
@@ -244,6 +253,11 @@ void ComponentImage::SetVideoToRenderFromInspector(uint32_t video_uuid)
 void ComponentImage::SetColor(float4 color)
 {
 	this->color = color;
+}
+
+void ComponentImage::PlayVideo()
+{
+	playing_video = video_to_render != nullptr;
 }
 
 void ComponentImage::SetNativeSize() const

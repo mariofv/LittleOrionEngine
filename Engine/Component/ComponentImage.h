@@ -35,13 +35,16 @@ public:
 	void SetVideoToRenderFromInspector(uint32_t video_uuid);
 
 	ENGINE_API void SetColor(float4 color);
+	ENGINE_API void PlayVideo();
 
 	void Render(float4x4* projection);
+
 
 	void SetNativeSize() const;
 
 private:
 	virtual void InitData();
+	void RenderTexture(math::float4x4 * projection, GLuint texture);
 
 public:
 	uint32_t texture_uuid = 0;
@@ -58,5 +61,6 @@ private:
 	GLuint vao, vbo;
 
 	float texture_aspect_ratio = 0.f;
+	bool playing_video = false;
 };
 #endif //_COMPONENTIMAGE_H_

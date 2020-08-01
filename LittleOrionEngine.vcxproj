@@ -157,7 +157,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\Component\ComponentVideo.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Video.h" />
     <ClInclude Include="Engine\Component\ComponentAudioListener.h" />
     <ClInclude Include="Engine\Component\ComponentTrail.h" />
     <ClInclude Include="Engine\Helper\ThreadSafeQueue.h" />
@@ -326,7 +326,7 @@
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\Component\ComponentVideo.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Video.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddMultipleGO.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionDeleteMultipleGO.cpp" />
     <ClCompile Include="Engine\Animation\Tween\LOTween.cpp" />

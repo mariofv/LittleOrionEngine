@@ -1,12 +1,14 @@
 #ifndef _COMPONENVIDEO_H_
 #define _Video_H_
 
+#include <GL/glew.h>
 #include "Resource.h"
 
 namespace cv
 {
 	class VideoCapture;
 }
+
 class Video : public Resource
 {
 
@@ -16,13 +18,11 @@ public:
 
 	void Init();
 
-	void Update();
-
-	void Play();
+	bool Update();
+	GLuint opengl_texture = 0;
 
 private:
 	cv::VideoCapture* video_capture = nullptr;
-	bool playing = false;
 	std::string file_path;
 };
 

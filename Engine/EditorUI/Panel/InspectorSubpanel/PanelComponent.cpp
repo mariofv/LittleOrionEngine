@@ -707,6 +707,11 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image)
 			{
 				component_image->SetVideoToRenderFromInspector(selected_resource);
 			}
+
+			if (ImGui::Button("Play Video"))
+			{
+				component_image->PlayVideo();
+			}
 		}
 	}
 }
