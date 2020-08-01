@@ -10,6 +10,14 @@
 
 #include <pcg_basic.h>
 
+Metafile * Importer::GenericImport(Path & assets_file_path, ResourceType resource_type)
+{
+	m_resource_type = resource_type;
+	Metafile* metafile = Import(assets_file_path);
+	m_resource_type = ResourceType::UNKNOWN;
+	return metafile;
+}
+
 Metafile* Importer::Import(Path& assets_file_path)
 {
 	Metafile* metafile;
@@ -27,11 +35,11 @@ Metafile* Importer::Import(Path& assets_file_path)
 	{
 		if (core_resources_uuid_mapping.find(assets_file_path.GetFullPath()) != core_resources_uuid_mapping.end())
 		{
-			metafile = App->resources->metafile_manager->CreateMetafile(assets_file_path, resource_type, (uint32_t)core_resources_uuid_mapping[assets_file_path.GetFullPath()]);
+			metafile = App->resources->metafile_manager->CreateMetafile(assets_file_path, m_resource_type, (uint32_t)core_resources_uuid_mapping[assets_file_path.GetFullPath()]);
 		}
 		else
 		{
-			metafile = App->resources->metafile_manager->CreateMetafile(assets_file_path, resource_type);
+			metafile = App->resources->metafile_manager->CreateMetafile(assets_file_path, m_resource_type);
 		}
 	}
 

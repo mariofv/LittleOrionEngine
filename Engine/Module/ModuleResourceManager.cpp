@@ -293,19 +293,19 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path, bool force) cons
 		switch (file_path.GetFile()->GetFileType())
 		{
 		case FileType::ANIMATION:
-			asset_metafile = generic_importer->Import(file_path);
+			asset_metafile = animation_importer->Import(file_path);
 			break;
 
 		case FileType::FONT:
-			asset_metafile = generic_importer->Import(file_path);
+			asset_metafile = generic_importer->GenericImport(file_path, ResourceType::FONT);
 			break;
 		
 		case FileType::MATERIAL:
-			asset_metafile = generic_importer->Import(file_path);
+			asset_metafile = material_importer->Import(file_path);
 			break;
 
 		case FileType::MESH:
-			asset_metafile = generic_importer->Import(file_path);
+			asset_metafile = mesh_importer->Import(file_path);
 			break;
 
 		case FileType::MODEL:
@@ -313,19 +313,19 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path, bool force) cons
 			break;
 
 		case FileType::PREFAB:
-			asset_metafile = generic_importer->Import(file_path);
+			asset_metafile = prefab_importer->Import(file_path);
 			break;
 		
 		case FileType::SCENE:
-			asset_metafile = generic_importer->Import(file_path);
+			asset_metafile = generic_importer->GenericImport(file_path, ResourceType::SCENE);
 			break;
 
 		case FileType::SKELETON:
-			asset_metafile = generic_importer->Import(file_path);
+			asset_metafile = skeleton_importer->Import(file_path);
 			break;
 
 		case FileType::SKYBOX:
-			asset_metafile = generic_importer->Import(file_path);
+			asset_metafile = generic_importer->GenericImport(file_path, ResourceType::SKYBOX);
 			break;
 
 		case FileType::STATE_MACHINE:
@@ -339,7 +339,7 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path, bool force) cons
 			asset_metafile = sound_importer->Import(file_path);
 			break;
 		case FileType::VIDEO:
-			asset_metafile = generic_importer->Import(file_path);
+			asset_metafile = generic_importer->GenericImport(file_path, ResourceType::VIDEO);
 			break;
 		}
 	}

@@ -25,6 +25,7 @@ enum class ResourceType
 	STATE_MACHINE = 11,
 	FONT = 12,
 	SOUND = 1,
+	VIDEO = 14,
 	UNKNOWN = 13
 };
 

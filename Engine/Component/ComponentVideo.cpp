@@ -23,7 +23,7 @@ ComponentVideo::~ComponentVideo()
 
 void ComponentVideo::Init()
 {
-	video_capture = new cv::VideoCapture("Assets/Video/twinlight_souls.mp4");
+	video_capture = new cv::VideoCapture("Library/Metadata/13/1330808618");
 	// Check if video opened successfully
 	if (!video_capture->isOpened()) {
 		APP_LOG_ERROR("Error opening video");
