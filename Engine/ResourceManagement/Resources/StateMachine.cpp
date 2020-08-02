@@ -184,7 +184,7 @@ void StateMachine::AddClipToState(std::shared_ptr<State>& state, uint32_t animat
 bool StateMachine::CheckTransitionConditions(std::shared_ptr<Transition>& transition) const
 {
 	size_t counter = 0;
-	size_t goal = transition->float_conditions.size() + transition->int_conditions.size();
+	size_t goal = transition->float_conditions.size() + transition->int_conditions.size() + transition->bool_conditions.size();
 
 	for(auto condition : transition->float_conditions)
 	{
