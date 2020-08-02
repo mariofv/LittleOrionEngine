@@ -26,8 +26,13 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 	std::vector<Config> float_variables_config;
 	state_machine_config.GetChildrenConfig("FloatVariables", float_variables_config);
 
+	//Set int
 	std::vector<Config> int_variables_config;
 	state_machine_config.GetChildrenConfig("IntVariables", int_variables_config);
+
+	//Set bool
+	std::vector<Config> bool_variables_config;
+	state_machine_config.GetChildrenConfig("BoolVariables", bool_variables_config);
 
 	//GetConditions size
 	uint32_t number_of_float_conditions = 0;
@@ -50,23 +55,36 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 		number_of_int_conditions += conditions_config.size();
 	}
 
+	uint32_t number_of_bool_conditions = 0;
+	for (auto& transition_config : transitions_config)
+	{
+		//Conditions
+		std::vector<Config> conditions_config;
+		transition_config.GetChildrenConfig("BoolConditions", conditions_config);
+
+		number_of_int_conditions += conditions_config.size();
+	}
+
 	uint32_t num_clips = clips_config.size();
 	uint32_t num_states = states_config.size();
 	uint32_t num_transitions = transitions_config.size();
 	uint32_t num_float_variables_config = float_variables_config.size();
 	uint32_t num_int_variables_config = int_variables_config.size();
-	uint32_t ranges[5] = { num_clips, num_states, num_transitions, num_float_variables_config, num_int_variables_config};
+	uint32_t num_bool_variables_config = bool_variables_config.size();
+	uint32_t ranges[6] = { num_clips, num_states, num_transitions, num_float_variables_config, num_int_variables_config, num_bool_variables_config };
 
 	uint32_t size_of_clip = sizeof(uint64_t) + sizeof(uint32_t) + sizeof(bool);
 	uint32_t size_of_state = sizeof(uint64_t) * 2 + sizeof(float);
-	uint32_t size_of_transitions = sizeof(uint64_t) * 5 + sizeof(bool) + 2 * sizeof(uint32_t);// number of conditions
+	uint32_t size_of_transitions = sizeof(uint64_t) * 5 + sizeof(bool) + 3 * sizeof(uint32_t);// number of conditions
 	
 	//Conditions size
 	uint32_t size_of_float_variables = sizeof(uint64_t) + sizeof(float);
 	uint32_t size_of_int_variables = sizeof(uint64_t) + sizeof(int);
+	uint32_t size_of_bool_variables = sizeof(uint64_t) + sizeof(bool);
 	uint32_t size_of_float_condition = sizeof(uint64_t) * 2 + sizeof(float);
 	uint32_t size_of_int_condition = sizeof(uint64_t) * 2 + sizeof(int);
-	uint32_t size = sizeof(ranges) + size_of_clip * num_clips + size_of_transitions * num_transitions + size_of_state * num_states + size_of_float_variables * num_float_variables_config + size_of_int_variables * num_int_variables_config +  number_of_float_conditions * size_of_float_condition + number_of_int_conditions * size_of_int_condition + sizeof(uint64_t)/*Default state*/;
+	uint32_t size_of_bool_condition = sizeof(uint64_t) * 2 + sizeof(bool);
+	uint32_t size = sizeof(ranges) + size_of_clip * num_clips + size_of_transitions * num_transitions + size_of_state * num_states + size_of_float_variables * num_float_variables_config + size_of_int_variables * num_int_variables_config + size_of_bool_variables * num_bool_variables_config +  number_of_float_conditions * size_of_float_condition + number_of_int_conditions * size_of_int_condition + number_of_bool_conditions * size_of_bool_condition + sizeof(uint64_t)/*Default state*/;
 
 	char* data = new char[size]; // Allocate
 	char* cursor = data;
@@ -216,6 +234,34 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 			cursor += bytes;
 		}
 
+		//Bool Conditions
+		std::vector<Config> bool_conditions_config;
+		transition.GetChildrenConfig("BoolConditions", bool_conditions_config);
+
+		uint32_t number_of_bool_conditions = bool_conditions_config.size();
+
+		bytes = sizeof(uint32_t);
+		memcpy(cursor, &number_of_bool_conditions, bytes);
+		cursor += bytes;
+
+		for (auto& condition : bool_conditions_config)
+		{
+			uint64_t name_hash = condition.GetUInt("VariableNameHash", 0);
+			uint64_t comparator = condition.GetUInt("Comparator", 0);
+			bool value = condition.GetBool("Value", false);
+
+			bytes = sizeof(uint64_t);
+			memcpy(cursor, &name_hash, bytes);
+			cursor += bytes;
+
+			bytes = sizeof(uint64_t);
+			memcpy(cursor, &comparator, bytes);
+			cursor += bytes;
+
+			bytes = sizeof(bool);
+			memcpy(cursor, &value, bytes);
+			cursor += bytes;
+		}
 
 	}
 
@@ -243,6 +289,20 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 		cursor += bytes;
 
 		bytes = sizeof(int);
+		memcpy(cursor, &value, bytes);
+		cursor += bytes;
+	}
+
+	for (auto& bool_variable : bool_variables_config)
+	{
+		uint64_t name_hash = bool_variable.GetUInt("BoolNameHash", 0);
+		bool value = bool_variable.GetBool("BoolValue", false);
+
+		bytes = sizeof(uint64_t);
+		memcpy(cursor, &name_hash, bytes);
+		cursor += bytes;
+
+		bytes = sizeof(bool);
 		memcpy(cursor, &value, bytes);
 		cursor += bytes;
 	}
