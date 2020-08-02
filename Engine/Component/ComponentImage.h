@@ -36,6 +36,7 @@ public:
 
 	ENGINE_API void SetColor(float4 color);
 	ENGINE_API void PlayVideo();
+	ENGINE_API void StopVideo();
 
 	void Render(float4x4* projection);
 

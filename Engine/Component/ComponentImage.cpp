@@ -58,8 +58,9 @@ void ComponentImage::Render(float4x4* projection)
 
 	if (playing_video)
 	{
-		playing_video = !video_to_render->Update() ? false : true;
-		RenderTexture(projection,video_to_render->opengl_texture);
+		GLuint opengl_video_frame = video_to_render->GenerateFrame();
+		playing_video = opengl_video_frame > 0 ? true : false;
+		RenderTexture(projection, opengl_video_frame);
 	}
 	else if (texture_to_render != nullptr)
 	{
@@ -258,6 +259,12 @@ void ComponentImage::SetColor(float4 color)
 void ComponentImage::PlayVideo()
 {
 	playing_video = video_to_render != nullptr;
+}
+
+ENGINE_API void ComponentImage::StopVideo()
+{
+	playing_video = false;
+	video_to_render->Stop();
 }
 
 void ComponentImage::SetNativeSize() const

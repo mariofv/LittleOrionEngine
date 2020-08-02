@@ -18,12 +18,16 @@ public:
 
 	void Init();
 
-	bool Update();
-	GLuint opengl_texture = 0;
+	GLuint GenerateFrame();
+	void Stop();
 
 private:
+	GLuint opengl_texture = 0;
 	cv::VideoCapture* video_capture = nullptr;
 	std::string file_path;
+
+	float frame_time;
+	float frame_timer = 0.0f;
 };
 
 namespace ResourceManagement
