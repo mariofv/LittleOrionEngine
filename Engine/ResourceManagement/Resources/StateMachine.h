@@ -91,6 +91,8 @@ struct Transition
 
 	std::vector<Condition<int>> int_conditions;
 	std::vector<Condition<float>> float_conditions;
+	std::vector<Condition<bool>> bool_conditions;
+
 
 	std::vector<std::shared_ptr<Parameter<int>>> parameters;
 };
@@ -116,6 +118,7 @@ public:
 	void LoadNames(const Config& config);
 	void SetFloatVariables(std::unordered_map<uint64_t, float>& map);
 	void SetIntVariables(std::unordered_map<uint64_t, int>& map);
+	void SetBoolVariables(std::unordered_map<uint64_t, bool>& map);
 	std::string GetNameOfVariable(uint64_t name_hash);
 
 private:
@@ -137,6 +140,9 @@ public:
 
 	std::unordered_map<uint64_t, int> int_variables;
 	std::vector<std::string> int_variables_names;
+
+	std::unordered_map<uint64_t, bool> bool_variables;
+	std::vector<std::string> bool_variables_names;
 
 	friend class PanelStateMachine;
 	

@@ -197,7 +197,16 @@ bool StateMachine::CheckTransitionConditions(std::shared_ptr<Transition>& transi
 
 	for (auto condition : transition->int_conditions)
 	{
-		float value_of_variable = int_variables.at(condition.name_hash_variable);
+		int value_of_variable = int_variables.at(condition.name_hash_variable);
+		if (condition.comparator_function(value_of_variable, condition.value))
+		{
+			++counter;
+		}
+	}
+
+	for (auto condition : transition->bool_conditions)
+	{
+		bool value_of_variable = bool_variables.at(condition.name_hash_variable);
 		if (condition.comparator_function(value_of_variable, condition.value))
 		{
 			++counter;
@@ -275,6 +284,17 @@ void StateMachine::Save(Config& config) const
 		}
 		transition_config.AddChildrenConfig(int_conditions_config, "IntConditions");
 
+		std::vector<Config> bool_conditions_config;
+		for (auto& condition : transition->bool_conditions)
+		{
+			Config condition_config;
+			condition_config.AddUInt(condition.name_hash_variable, "VariableNameHash");
+			condition_config.AddUInt(static_cast<unsigned>(condition.comparator), "Comparator");
+			condition_config.AddBool(condition.value, "Value");
+			bool_conditions_config.emplace_back(condition_config);
+		}
+		transition_config.AddChildrenConfig(bool_conditions_config, "BoolConditions");
+
 		transitions_config.push_back(transition_config);
 	}
 	config.AddChildrenConfig(transitions_config, "Transitions");
@@ -308,6 +328,20 @@ void StateMachine::Save(Config& config) const
 	}
 	config.AddChildrenConfig(int_variables_config, "IntVariables");
 
+	//Bool variables
+	std::vector<Config> bool_variables_config;
+	i = 0;
+	for (auto& variable : bool_variables)
+	{
+		Config bool_variable_config;
+		bool_variable_config.AddUInt(variable.first, "BoolNameHash");
+		bool_variable_config.AddBool(variable.second, "BoolValue");
+		bool_variable_config.AddString(bool_variables_names[i], "BoolName");
+		bool_variables_config.push_back(bool_variable_config);
+		++i;
+	}
+	config.AddChildrenConfig(bool_variables_config, "BoolVariables");
+
 	config.AddUInt(default_state, "Default");
 }
 
@@ -317,6 +351,8 @@ void StateMachine::Load(const Config& config)
 	this->transitions.clear();
 	this->states.clear();
 	this->float_variables.clear();
+	this->int_variables.clear();
+	this->bool_variables.clear();
 	std::vector<Config> clips_config;
 	config.GetChildrenConfig("Clips", clips_config);
 	for (auto& clip_config : clips_config)
@@ -455,6 +491,16 @@ void StateMachine::LoadNames(const Config & config)
 		int_variables_names.push_back(auxiliar_name);
 	}
 
+	//Bool variables
+	std::vector<Config> bool_variables_config;
+	config.GetChildrenConfig("BoolVariables", bool_variables_config);
+	for (auto& bool_variable_config : bool_variables_config)
+	{
+		std::string auxiliar_name;
+		bool_variable_config.GetString("BoolName", auxiliar_name, "");
+		bool_variables_names.push_back(auxiliar_name);
+	}
+
 }
 
 void StateMachine::SetFloatVariables(std::unordered_map<uint64_t, float>& map)
@@ -465,6 +511,11 @@ void StateMachine::SetFloatVariables(std::unordered_map<uint64_t, float>& map)
 void StateMachine::SetIntVariables(std::unordered_map<uint64_t, int>& map)
 {
 	this->int_variables = map;
+}
+
+void StateMachine::SetBoolVariables(std::unordered_map<uint64_t, bool>& map)
+{
+	this->bool_variables = map;
 }
 
 std::string StateMachine::GetNameOfVariable(uint64_t name_hash)
@@ -486,6 +537,15 @@ std::string StateMachine::GetNameOfVariable(uint64_t name_hash)
 		if (variable_hash == name_hash)
 		{
 			return int_variable_name;
+		}
+	}
+
+	for (auto bool_variable_name : bool_variables_names)
+	{
+		uint64_t variable_hash = std::hash<std::string>{}(bool_variable_name);
+		if (variable_hash == name_hash)
+		{
+			return bool_variable_name;
 		}
 	}
 
