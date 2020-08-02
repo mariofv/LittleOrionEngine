@@ -93,8 +93,10 @@ private:
 	bool modified_by_user = false;
 	std::string float_auxiliar_variable;
 	std::string int_auxiliar_variable;
+	std::string bool_auxiliar_variable;
 
 	std::array<const char* , 4> comparator_name {"Greater", "Lesser", "Equal", "Not Equal"};
+	std::array<const char* , 2> bool_conditions {"false", "true"};
 
 };
 #endif // !_PANELSTATEMACHINE_H_
