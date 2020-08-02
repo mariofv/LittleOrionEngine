@@ -51,6 +51,8 @@ public:
 	bool IsOnState(const std::string& state);
 	void SetSpeed(float speed);
 	void SetFloat(uint64_t name_hash, float value);
+	void SetInt(uint64_t name_hash, int value);
+	void SetBool(uint64_t name_hash, bool value);
 
 
 private:

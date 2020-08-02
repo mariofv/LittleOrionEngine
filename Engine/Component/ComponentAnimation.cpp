@@ -158,6 +158,18 @@ ENGINE_API void ComponentAnimation::SetFloat(std::string name, float value)
 	animation_controller->SetFloat(name_hash, value);
 }
 
+ENGINE_API void ComponentAnimation::SetInt(std::string name, int value)
+{
+	uint64_t name_hash = std::hash<std::string>{}(name);
+	animation_controller->SetInt(name_hash, value);
+}
+
+ENGINE_API void ComponentAnimation::SetBool(std::string name, bool value)
+{
+	uint64_t name_hash = std::hash<std::string>{}(name);
+	animation_controller->SetBool(name_hash, value);
+}
+
 
 void ComponentAnimation::Update()
 {

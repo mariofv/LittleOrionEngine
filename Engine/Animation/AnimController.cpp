@@ -214,6 +214,24 @@ void AnimController::SetFloat(uint64_t name_hash, float value)
 	}
 }
 
+void AnimController::SetInt(uint64_t name_hash, int value)
+{
+	//Check if Keyval exist and then change value
+	if (state_machine->int_variables.find(name_hash) != state_machine->int_variables.end())
+	{
+		state_machine->int_variables[name_hash] = value;
+	}
+}
+
+void AnimController::SetBool(uint64_t name_hash, bool value)
+{
+	//Check if Keyval exist and then change value
+	if (state_machine->bool_variables.find(name_hash) != state_machine->bool_variables.end())
+	{
+		state_machine->bool_variables[name_hash] = value;
+	}
+}
+
 void AnimController::CheckConditions()
 {
 	if (!active_state)
