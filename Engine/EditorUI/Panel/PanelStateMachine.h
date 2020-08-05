@@ -76,6 +76,9 @@ public:
 private:
 	std::vector<NodeInfo*> GetSelectedNodes();
 	std::vector<LinkInfo*> GetSelectedLinks();
+
+	void EraseNameFromVariables(std::vector<std::string>& names, uint64_t name_to_delete_hash);
+
 private:
 	ax::NodeEditor::EditorContext* editor_context = nullptr;
 	std::shared_ptr<StateMachine> state_machine;

@@ -400,6 +400,19 @@ std::vector<LinkInfo*> PanelStateMachine::GetSelectedLinks()
 	return selected_links;
 }
 
+void PanelStateMachine::EraseNameFromVariables(std::vector<std::string>& names, uint64_t name_to_delete_hash)
+{
+	for(auto it = names.begin(); it != names.end(); ++it)
+	{
+		uint64_t variable_hash = std::hash<std::string>{}(*it);
+		if(variable_hash == name_to_delete_hash)
+		{
+			names.erase(it);
+			break;
+		}
+	}
+}
+
 void PanelStateMachine::LeftPanel()
 {
 	float window_size = ImGui::GetWindowSize().x / 3;
@@ -724,7 +737,7 @@ void PanelStateMachine::LeftPanel()
 			if(ImGui::Button(x_id.c_str()))
 			{
 				state_machine->float_variables.erase(float_variable.first);
-				state_machine->float_variables_names.erase(state_machine->float_variables_names.begin() + i);
+				EraseNameFromVariables(state_machine->float_variables_names, float_variable.first);
 				break;
 			}
 
@@ -757,7 +770,7 @@ void PanelStateMachine::LeftPanel()
 			if (ImGui::Button(x_id.c_str()))
 			{
 				state_machine->int_variables.erase(int_variable.first);
-				state_machine->int_variables_names.erase(state_machine->int_variables_names.begin() + i);
+				EraseNameFromVariables(state_machine->int_variables_names, int_variable.first);
 				break;
 			}
 
@@ -805,7 +818,7 @@ void PanelStateMachine::LeftPanel()
 			if (ImGui::Button(x_id.c_str()))
 			{
 				state_machine->bool_variables.erase(bool_variable.first);
-				state_machine->bool_variables_names.erase(state_machine->bool_variables_names.begin() + i);
+				EraseNameFromVariables(state_machine->bool_variables_names, bool_variable.first);
 				break;
 			}
 
