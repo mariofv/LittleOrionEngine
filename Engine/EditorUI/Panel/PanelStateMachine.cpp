@@ -736,8 +736,11 @@ void PanelStateMachine::LeftPanel()
 		if(ImGui::Button("Add float variable"))
 		{
 			uint64_t name_hash = std::hash<std::string>{}(float_auxiliar_variable);
-			state_machine->float_variables[name_hash] = 0.f;
-			state_machine->float_variables_names.push_back(float_auxiliar_variable);
+			if (state_machine->float_variables.find(name_hash) == state_machine->float_variables.end())
+			{
+				state_machine->float_variables[name_hash] = 0.f;
+				state_machine->float_variables_names.push_back(float_auxiliar_variable);			
+			}
 		}
 
 		ImGui::Separator();
@@ -766,8 +769,11 @@ void PanelStateMachine::LeftPanel()
 		if (ImGui::Button("Add int variable"))
 		{
 			uint64_t name_hash = std::hash<std::string>{}(int_auxiliar_variable);
-			state_machine->int_variables[name_hash] = 0;
-			state_machine->int_variables_names.push_back(int_auxiliar_variable);
+			if (state_machine->int_variables.find(name_hash) == state_machine->int_variables.end())
+			{
+				state_machine->int_variables[name_hash] = 0;
+				state_machine->int_variables_names.push_back(int_auxiliar_variable);			
+			}
 		}
 
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Bools");
@@ -811,8 +817,11 @@ void PanelStateMachine::LeftPanel()
 		if (ImGui::Button("Add bool variable"))
 		{
 			uint64_t name_hash = std::hash<std::string>{}(bool_auxiliar_variable);
-			state_machine->bool_variables[name_hash] = false;
-			state_machine->bool_variables_names.push_back(bool_auxiliar_variable);
+			if(state_machine->bool_variables.find(name_hash) == state_machine->bool_variables.end())
+			{
+				state_machine->bool_variables[name_hash] = false;
+				state_machine->bool_variables_names.push_back(bool_auxiliar_variable);			
+			}
 		}
 
 		ImGui::Separator();
