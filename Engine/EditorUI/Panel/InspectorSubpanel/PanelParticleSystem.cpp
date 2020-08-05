@@ -7,7 +7,7 @@
 #include "EditorUI/Panel/PopupsPanel/PanelPopupResourceSelector.h"
 #include "Module/ModuleActions.h"
 #include "Module/ModuleEditor.h"
-#include "EditorUI/Helper/BezierCurve.hpp"
+#include "EditorUI/Helper/BezierCurveDraw.hpp"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -289,9 +289,17 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				ImGui::DragFloat("Max Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
 				break;
 			case ComponentParticleSystem::TypeOfVelocityOverTime::CURVE:
-				ImGui::DragFloat("Start", &particle_system->velocity_over_time_speed_modifier, 0.01F);
-				ImGui::DragFloat("End", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
-				ImGui::Bezier("Bezier Velocity", particle_system->velocity_bezier_curve);
+				//ImGui::DragFloat("Start", &particle_system->velocity_over_time_speed_modifier, 0.01F);
+				//ImGui::DragFloat("End", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
+				//ImGui::Bezier("Bezier Velocity", particle_system->velocity_bezier_curve);
+
+
+				ImGui::Bezier(&particle_system->vel_curve);
+
+
+
+
+
 				break;
 			}
 

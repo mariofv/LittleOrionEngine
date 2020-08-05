@@ -550,6 +550,9 @@
     <ClCompile Include="Engine\Component\ComponentTrail.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Helper\BezierCurve.cpp">
+      <Filter>Engine\Helper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1096,6 +1099,12 @@
       <Filter>Engine\Helper</Filter>
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Helper\BezierCurve.hpp">
+      <Filter>Engine\EditorUI\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helper\BezierCurve.h">
+      <Filter>Engine\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Helper\BezierCurveDraw.hpp">
       <Filter>Engine\EditorUI\Helper</Filter>
     </ClInclude>
   </ItemGroup>

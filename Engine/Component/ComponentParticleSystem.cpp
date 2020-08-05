@@ -6,7 +6,6 @@
 #include "Module/ModuleResourceManager.h"
 
 #include "Component/ComponentBillboard.h"
-#include "EditorUI/Helper/BezierCurve.hpp"
 #include "GL/glew.h"
 
 ComponentParticleSystem::ComponentParticleSystem() : Component(nullptr, ComponentType::PARTICLE_SYSTEM)
@@ -39,6 +38,8 @@ void ComponentParticleSystem::Init()
 		particles[i].time_counter = particles[i].life;
 		particles[i].time_passed = 0.0F;
 	}
+
+	vel_curve = BezierCurve();
 }
 
 unsigned int ComponentParticleSystem::FirstUnusedParticle()
@@ -239,10 +240,11 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 			velocity *= velocity_over_time_speed_modifier + (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * particle.random_velocity_percentage;
 			break;
 		case CURVE:
-			velocity *= velocity_over_time_speed_modifier;
-			float percentage = ImGui::BezierValue(particle.time_passed / particles_life_time / 1000, velocity_bezier_curve);
-			float vel_perc = (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * percentage;
-			vel_curve_interpolated = particle.velocity_initial * vel_perc * velocity_factor_mod;
+			//velocity *= velocity_over_time_speed_modifier;
+			//float percentage = ImGui::BezierValue(particle.time_passed / particles_life_time / 1000, velocity_bezier_curve);
+			//float vel_perc = (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * percentage;
+			//vel_curve_interpolated = particle.velocity_initial * vel_perc * velocity_factor_mod;
+
 			break;
 		}
 	}

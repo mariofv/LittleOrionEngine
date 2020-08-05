@@ -160,6 +160,8 @@
     <ClInclude Include="Engine\Component\ComponentAudioListener.h" />
     <ClInclude Include="Engine\Component\ComponentTrail.h" />
     <ClInclude Include="Engine\EditorUI\Helper\BezierCurve.hpp" />
+    <ClInclude Include="Engine\EditorUI\Helper\BezierCurveDraw.hpp" />
+    <ClInclude Include="Engine\Helper\BezierCurve.h" />
     <ClInclude Include="Engine\Helper\ThreadSafeQueue.h" />
     <ClInclude Include="Engine\Log\EngineSink.h" />
     <ClInclude Include="Engine\Actions\EditorActionAddMultipleGO.h" />
@@ -379,6 +381,7 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp" />
     <ClCompile Include="Engine\Filesystem\File.cpp" />
+    <ClCompile Include="Engine\Helper\BezierCurve.cpp" />
     <ClCompile Include="Engine\Helper\BuildOptions.cpp" />
     <ClCompile Include="Engine\Helper\Config.cpp" />
     <ClCompile Include="Engine\Helper\TemplatedGameObjectCreator.cpp" />
