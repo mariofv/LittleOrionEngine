@@ -104,6 +104,11 @@ void AnimController::UpdateAttachedBones(const std::shared_ptr<Skeleton>& skelet
 
 bool AnimController::Update()
 {
+	if (!App->time->isGameRunning())
+	{
+		return false;
+	}
+
 	ApplyAutomaticTransitionIfNeeded();
 	CheckConditions();
 	for (auto & playing_clip : playing_clips)
