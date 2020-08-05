@@ -12,7 +12,7 @@ public:
 	~SoundBank();
 
 private:
-	AkBankID banck_id = 0;
+	AkBankID bank_id = 0;
 	AkGameObjectID game_obj = 0;
 	char * aligned_buffer;
 	char * cursor;
