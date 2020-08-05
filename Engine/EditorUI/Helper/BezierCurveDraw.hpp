@@ -87,9 +87,6 @@ namespace ImGui
 				float &px = (bezier->points[0].right_pivot.x += GetIO().MouseDelta.x / Canvas.x);
 				float &py = (bezier->points[0].right_pivot.y -= GetIO().MouseDelta.y / Canvas.y);
 
-				px = (px < 0 ? 0 : (px > 1 ? 1 : px));
-				//py = (py < 0 ? 0 : (py > 1 ? 1 : py));
-
 				changed = true;
 			}
 		}
@@ -110,6 +107,9 @@ namespace ImGui
 				changed = true;
 			}
 		}
+
+		if (changed)
+			bezier->CheckAllPointsAndPivots();
 
 		// draw curve
 		{
