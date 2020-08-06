@@ -12,9 +12,6 @@ struct BezierPoint
 
 class BezierCurve
 {
-private:
-	static const unsigned int MAXIMUM_POINTS = 10;
-
 public:
 	BezierCurve();
 	~BezierCurve();
@@ -28,12 +25,14 @@ public:
 	void CheckAllPointsAndPivots();
 
 private:
-	float2 BezierValueIndexPoints(const float percentage, const int first_index) const;
+	float2 BezierValueIndexPoints(const float percentage, const int last_index) const;
 
 
 public:
+	static const unsigned int MAXIMUM_POINTS = 10;
+
 	BezierPoint points[MAXIMUM_POINTS];
-	int current_points = 2;
+	int num_points = 2;
 };
 
 #endif //_BEZIER_CURVE_H

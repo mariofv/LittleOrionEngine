@@ -76,68 +76,84 @@ namespace ImGui
 		}
 
 		// handle and point grabbers
-		ImVec2 mouse = GetIO().MousePos, pos;
-			//int point_num = bezier.current_points * 3 - 2;
-
-		float distance;
-		pos = ImVec2(bezier->points[0].right_pivot.x, 1 - bezier->points[0].right_pivot.y) * (bb.Max - bb.Min) + bb.Min;
-		distance = (pos.x - mouse.x) * (pos.x - mouse.x) + (pos.y - mouse.y) * (pos.y - mouse.y);
-		if (distance < (4 * GRAB_RADIUS * 4 * GRAB_RADIUS))
 		{
-			//SetTooltip("(%4.3f, %4.3f)", P[selected * 2 + 0], P[selected * 2 + 1]);
-			if (IsMouseClicked(0) || IsMouseDragging(0))
-			{
-				float &px = (bezier->points[0].right_pivot.x += GetIO().MouseDelta.x / Canvas.x);
-				float &py = (bezier->points[0].right_pivot.y -= GetIO().MouseDelta.y / Canvas.y);
+			ImVec2 mouse = GetIO().MousePos, pos[3 * bezier->MAXIMUM_POINTS];
+			float total_points_and_pivots = bezier->num_points * 3 - 2;
 
-				changed = true;
+			for (int i = 0; i < bezier->num_points; i++)
+			{
+				if (i == 0)
+				{
+					pos[0] = ImVec2(bezier->points[i].curve_point.x, 1 - bezier->points[i].curve_point.y) * (bb.Max - bb.Min) + bb.Min;
+					pos[1] = ImVec2(bezier->points[i].right_pivot.x, 1 - bezier->points[i].right_pivot.y) * (bb.Max - bb.Min) + bb.Min;
+				}
+
+				else if (i == bezier->num_points - 1)
+				{
+					pos[2 + (i - 1) * 3 + 0] = ImVec2(bezier->points[i].left_pivot.x, 1 - bezier->points[i].left_pivot.y) * (bb.Max - bb.Min) + bb.Min;
+					pos[2 + (i - 1) * 3 + 1] = ImVec2(bezier->points[i].curve_point.x, 1 - bezier->points[i].curve_point.y) * (bb.Max - bb.Min) + bb.Min;
+				}
+
+				else
+				{
+					pos[2 + (i - 1) * 3 + 0] = ImVec2(bezier->points[i].left_pivot.x, 1 - bezier->points[i].left_pivot.y) * (bb.Max - bb.Min) + bb.Min;
+					pos[2 + (i - 1) * 3 + 1] = ImVec2(bezier->points[i].curve_point.x, 1 - bezier->points[i].curve_point.y) * (bb.Max - bb.Min) + bb.Min;
+					pos[2 + (i - 1) * 3 + 2] = ImVec2(bezier->points[i].right_pivot.x, 1 - bezier->points[i].right_pivot.y) * (bb.Max - bb.Min) + bb.Min;
+				}
+			}
+
+			float min_distance = 1000000;
+			int point_clicked = 0, point_side = 0; //side: 0=center, -1=left, 1=right
+			for (int i = 0; i < total_points_and_pivots; i++)
+			{
+				float distance = (pos[i].x - mouse.x) * (pos[i].x - mouse.x) + (pos[i].y - mouse.y) * (pos[i].y - mouse.y);
+				if (distance < min_distance)
+				{
+					min_distance = distance;
+
+					if (i < 2)
+					{
+						point_clicked = 0;
+						point_side = i;
+					}
+					else if (i > total_points_and_pivots - 2)
+					{
+						point_clicked = bezier->num_points - 1;
+						point_side = (i + 1) - total_points_and_pivots;
+					}
+					else
+					{
+						point_clicked = (i - ((i - 2) % 3)) / 3 + 1;
+						point_side = (i - 2) % 3 - 1;
+					}
+				}
+			}
+			
+			if (min_distance < (4 * GRAB_RADIUS * 4 * GRAB_RADIUS))
+			{
+				if (IsMouseClicked(0) || IsMouseDragging(0))
+				{
+					if (point_side == -1)
+					{
+						bezier->points[point_clicked].left_pivot.x += GetIO().MouseDelta.x / Canvas.x;
+						bezier->points[point_clicked].left_pivot.y -= GetIO().MouseDelta.y / Canvas.y;
+					}
+					else if (point_side == 0)
+					{
+						bezier->points[point_clicked].curve_point.x += GetIO().MouseDelta.x / Canvas.x;
+						bezier->points[point_clicked].curve_point.y -= GetIO().MouseDelta.y / Canvas.y;
+					}
+					else
+					{
+						bezier->points[point_clicked].right_pivot.x += GetIO().MouseDelta.x / Canvas.x;
+						bezier->points[point_clicked].right_pivot.y -= GetIO().MouseDelta.y / Canvas.y;
+					}
+
+					bezier->CheckAllPointsAndPivots();
+					changed = true;
+				}
 			}
 		}
-
-		pos = ImVec2(bezier->points[1].left_pivot.x, 1 - bezier->points[1].left_pivot.y) * (bb.Max - bb.Min) + bb.Min;
-		distance = (pos.x - mouse.x) * (pos.x - mouse.x) + (pos.y - mouse.y) * (pos.y - mouse.y);
-		if (distance < (4 * GRAB_RADIUS * 4 * GRAB_RADIUS))
-		{
-			//SetTooltip("(%4.3f, %4.3f)", P[selected * 2 + 0], P[selected * 2 + 1]);
-			if (IsMouseClicked(0) || IsMouseDragging(0))
-			{
-				float &px = (bezier->points[1].left_pivot.x += GetIO().MouseDelta.x / Canvas.x);
-				float &py = (bezier->points[1].left_pivot.y -= GetIO().MouseDelta.y / Canvas.y);
-
-				changed = true;
-			}
-		}
-
-		pos = ImVec2(bezier->points[0].curve_point.x, 1 - bezier->points[0].curve_point.y) * (bb.Max - bb.Min) + bb.Min;
-		distance = (pos.x - mouse.x) * (pos.x - mouse.x) + (pos.y - mouse.y) * (pos.y - mouse.y);
-		if (distance < (4 * GRAB_RADIUS * 4 * GRAB_RADIUS))
-		{
-			//SetTooltip("(%4.3f, %4.3f)", P[selected * 2 + 0], P[selected * 2 + 1]);
-			if (IsMouseClicked(0) || IsMouseDragging(0))
-			{
-				float &px = (bezier->points[0].curve_point.x += GetIO().MouseDelta.x / Canvas.x);
-				float &py = (bezier->points[0].curve_point.y -= GetIO().MouseDelta.y / Canvas.y);
-
-				changed = true;
-			}
-		}
-
-		pos = ImVec2(bezier->points[1].curve_point.x, 1 - bezier->points[1].curve_point.y) * (bb.Max - bb.Min) + bb.Min;
-		distance = (pos.x - mouse.x) * (pos.x - mouse.x) + (pos.y - mouse.y) * (pos.y - mouse.y);
-		if (distance < (4 * GRAB_RADIUS * 4 * GRAB_RADIUS))
-		{
-			//SetTooltip("(%4.3f, %4.3f)", P[selected * 2 + 0], P[selected * 2 + 1]);
-			if (IsMouseClicked(0) || IsMouseDragging(0))
-			{
-				float &px = (bezier->points[1].curve_point.x += GetIO().MouseDelta.x / Canvas.x);
-				float &py = (bezier->points[1].curve_point.y -= GetIO().MouseDelta.y / Canvas.y);
-
-				changed = true;
-			}
-		}
-
-		if (changed)
-			bezier->CheckAllPointsAndPivots();
 
 		// draw curve
 		{
@@ -154,22 +170,22 @@ namespace ImGui
 		//draw curve points and grabbers
 		ImVec4 white(GetStyle().Colors[ImGuiCol_Text]);
 		ImVec4 blue(0.15f, 0.23f, 0.40f, 0.7f);
-		for (int i = 0; i < bezier->current_points; i++)
+		for (int i = 0; i < bezier->num_points; i++)
 		{
 			ImVec2 p = ImVec2(bezier->points[i].curve_point.x, 1 - bezier->points[i].curve_point.y) * (bb.Max - bb.Min) + bb.Min;
 			DrawList->AddNgonFilled(p, POINT_RADIUS, ImColor(white), POINT_VERTEXS);
 
 			if (i == 0)
 			{
-				ImVec2 h = ImVec2(bezier->points[i].right_pivot.x, 1 - bezier->points[0].right_pivot.y) * (bb.Max - bb.Min) + bb.Min;
+				ImVec2 h = ImVec2(bezier->points[i].right_pivot.x, 1 - bezier->points[i].right_pivot.y) * (bb.Max - bb.Min) + bb.Min;
 				DrawList->AddLine(p, h, ImColor(white), LINE_WIDTH / 2);
 				DrawList->AddCircleFilled(h, GRAB_RADIUS, ImColor(white));
 				DrawList->AddCircleFilled(h, GRAB_RADIUS - GRAB_BORDER, ImColor(blue));
 			}
 
-			else if (i == bezier->current_points - 1)
+			else if (i == bezier->num_points - 1)
 			{
-				ImVec2 h = ImVec2(bezier->points[i].left_pivot.x, 1 - bezier->points[0].left_pivot.y) * (bb.Max - bb.Min) + bb.Min;
+				ImVec2 h = ImVec2(bezier->points[i].left_pivot.x, 1 - bezier->points[i].left_pivot.y) * (bb.Max - bb.Min) + bb.Min;
 				DrawList->AddLine(p, h, ImColor(white), LINE_WIDTH / 2);
 				DrawList->AddCircleFilled(h, GRAB_RADIUS, ImColor(white));
 				DrawList->AddCircleFilled(h, GRAB_RADIUS - GRAB_BORDER, ImColor(blue));

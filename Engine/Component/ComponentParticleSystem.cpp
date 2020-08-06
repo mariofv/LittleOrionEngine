@@ -40,6 +40,7 @@ void ComponentParticleSystem::Init()
 	}
 
 	vel_curve = BezierCurve();
+	vel_curve.AddPoint();
 }
 
 unsigned int ComponentParticleSystem::FirstUnusedParticle()
