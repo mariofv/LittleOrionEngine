@@ -14,10 +14,10 @@ Texture::Texture(uint32_t uuid, char* data, size_t image_size, int width, int he
 	this->data.resize(image_size);
 	memcpy(&this->data.front(), data, image_size);
 
-	this->texture_options.filter_mode = texture_options.filter_mode;
-	this->texture_options.generate_mipmaps = texture_options.generate_mipmaps;
-	this->texture_options.texture_type = texture_options.texture_type;
-	this->texture_options.wrap_mode = texture_options.wrap_mode;
+	this->texture_options.filter_mode = options.filter_mode;
+	this->texture_options.generate_mipmaps = options.generate_mipmaps;
+	this->texture_options.texture_type = options.texture_type;
+	this->texture_options.wrap_mode = options.wrap_mode;
 
 	if(!async)
 	{

@@ -13,12 +13,12 @@ ComponentCapsuleCollider::ComponentCapsuleCollider(GameObject* owner) : Componen
 	InitData();
 }
 
-Component* ComponentCapsuleCollider::Clone(GameObject* owner, bool original_prefab) const
+Component* ComponentCapsuleCollider::Clone(GameObject* owner, bool original_prefab) 
 {
 	ComponentCapsuleCollider* created_component;
 	if (original_prefab)
 	{
-		created_component = new ComponentCapsuleCollider();
+		created_component = new ComponentCapsuleCollider(owner);
 	}
 	else
 	{
@@ -28,6 +28,9 @@ Component* ComponentCapsuleCollider::Clone(GameObject* owner, bool original_pref
 	created_component->SetConfiguration();
 	created_component->center = center;
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 }
 

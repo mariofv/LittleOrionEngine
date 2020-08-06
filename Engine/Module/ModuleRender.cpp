@@ -187,7 +187,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	GetMeshesToRender(&camera);
 	for (auto &mesh : opaque_mesh_to_render)
 	{
-		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
+		BROFILER_CATEGORY("Render Mesh Opaque", Profiler::Color::Aquamarine);
 		if (mesh.second->mesh_uuid != 0 && mesh.second->IsEnabled())
 		{
 			mesh.second->Render();
@@ -207,7 +207,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	glBlendEquation(GL_FUNC_ADD);
 	for (auto &mesh : transparent_mesh_to_render)
 	{
-		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
+		BROFILER_CATEGORY("Render Mesh Transparent", Profiler::Color::Aquamarine);
 		if (mesh.second->mesh_uuid != 0 && mesh.second->IsEnabled())
 		{
 			mesh.second->Render();
@@ -273,8 +273,6 @@ void ModuleRender::GetMeshesToRender(const ComponentCamera* camera)
 
 void ModuleRender::SetListOfMeshesToRender(const ComponentCamera* camera)
 {
-
-	BROFILER_CATEGORY("Set list meshes to render", Profiler::Color::MediumAquaMarine);
 	opaque_mesh_to_render.clear();
 	transparent_mesh_to_render.clear();
 	float3 camera_pos = camera->camera_frustum.pos;

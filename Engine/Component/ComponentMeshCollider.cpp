@@ -40,12 +40,12 @@ ComponentMeshCollider::ComponentMeshCollider(GameObject* owner) : ComponentColli
 }
 
 
-Component* ComponentMeshCollider::Clone(GameObject* owner, bool original_prefab) const
+Component* ComponentMeshCollider::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentMeshCollider* created_component;
 	if (original_prefab)
 	{
-		created_component = new ComponentMeshCollider();
+		created_component = new ComponentMeshCollider(owner);
 	}
 	else
 	{
@@ -54,6 +54,9 @@ Component* ComponentMeshCollider::Clone(GameObject* owner, bool original_prefab)
 	*created_component = *this;
 	created_component->SetConfiguration();
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 }
 
