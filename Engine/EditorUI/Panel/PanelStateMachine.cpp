@@ -408,7 +408,7 @@ void PanelStateMachine::EraseNameFromVariables(std::vector<std::string>& names, 
 		if(variable_hash == name_to_delete_hash)
 		{
 			names.erase(it);
-			break;
+			return;
 		}
 	}
 }

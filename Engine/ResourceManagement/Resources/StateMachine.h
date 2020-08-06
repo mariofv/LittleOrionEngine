@@ -119,7 +119,7 @@ public:
 	void SetFloatVariables(std::unordered_map<uint64_t, float>& map);
 	void SetIntVariables(std::unordered_map<uint64_t, int>& map);
 	void SetBoolVariables(std::unordered_map<uint64_t, bool>& map);
-	std::string GetNameOfVariable(uint64_t name_hash);
+	std::string GetNameOfVariable(uint64_t name_hash) const;
 
 private:
 	void RemoveState(const std::shared_ptr<State> & state);

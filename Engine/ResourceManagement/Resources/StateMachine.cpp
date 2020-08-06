@@ -302,43 +302,37 @@ void StateMachine::Save(Config& config) const
 
 	//Float variables
 	std::vector<Config> float_variables_config;
-	size_t i = 0;
 	for (auto& variable : float_variables)
 	{
 		Config float_variable_config;
 		float_variable_config.AddUInt(variable.first, "FloatNameHash");
 		float_variable_config.AddFloat(variable.second, "FloatValue");
-		float_variable_config.AddString(float_variables_names[i], "FloatName");
+		float_variable_config.AddString(GetNameOfVariable(variable.first), "FloatName");
 		float_variables_config.push_back(float_variable_config);
-		++i;
 	}
 	config.AddChildrenConfig(float_variables_config, "FloatVariables");
 
 	//Int variables
 	std::vector<Config> int_variables_config;
-	i = 0;
 	for (auto& variable : int_variables)
 	{
 		Config int_variable_config;
 		int_variable_config.AddUInt(variable.first, "IntNameHash");
 		int_variable_config.AddInt(variable.second, "IntValue");
-		int_variable_config.AddString(int_variables_names[i], "IntName");
+		int_variable_config.AddString(GetNameOfVariable(variable.first), "IntName");
 		int_variables_config.push_back(int_variable_config);
-		++i;
 	}
 	config.AddChildrenConfig(int_variables_config, "IntVariables");
 
 	//Bool variables
 	std::vector<Config> bool_variables_config;
-	i = 0;
 	for (auto& variable : bool_variables)
 	{
 		Config bool_variable_config;
 		bool_variable_config.AddUInt(variable.first, "BoolNameHash");
 		bool_variable_config.AddBool(variable.second, "BoolValue");
-		bool_variable_config.AddString(bool_variables_names[i], "BoolName");
+		bool_variable_config.AddString(GetNameOfVariable(variable.first), "BoolName");
 		bool_variables_config.push_back(bool_variable_config);
-		++i;
 	}
 	config.AddChildrenConfig(bool_variables_config, "BoolVariables");
 
@@ -518,7 +512,7 @@ void StateMachine::SetBoolVariables(std::unordered_map<uint64_t, bool>& map)
 	this->bool_variables = map;
 }
 
-std::string StateMachine::GetNameOfVariable(uint64_t name_hash)
+std::string StateMachine::GetNameOfVariable(uint64_t name_hash) const
 {
 	std::string name;
 
