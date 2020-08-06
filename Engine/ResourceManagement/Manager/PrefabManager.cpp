@@ -3,6 +3,7 @@
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentAudioListener.h"
 #include "Component/ComponentAudioSource.h"
+#include "Component/ComponentBillboard.h"
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCapsuleCollider.h"
@@ -11,14 +12,16 @@
 #include "Component/ComponentCanvasRenderer.h"
 #include "Component/ComponentCollider.h"
 #include "Component/ComponentCylinderCollider.h"
+#include "Component/ComponentEventSystem.h"
 #include "Component/ComponentImage.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshCollider.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentParticleSystem.h"
-#include "Component/ComponentBillboard.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentSphereCollider.h"
+#include "Component/ComponentTrail.h"
+#include "Component/ComponentText.h"
 
 #include "Helper/Config.h"
 
@@ -73,6 +76,11 @@ std::shared_ptr<Prefab> PrefabManager::Load(uint32_t uuid, const FileData& resou
 		created_game_object->original_UUID = game_objects_config[i].GetUInt("UUID", 0);
 		created_game_object->original_prefab = true;
 		gameObjects.emplace_back(std::move(created_game_object));
+		auto particles = gameObjects.back()->GetComponent(Component::ComponentType::PARTICLE_SYSTEM);
+		if (particles)
+		{
+			assert(static_cast<ComponentParticleSystem*>(particles)->billboard->emissive_intensity > -1);
+		}
 	}
 
 
@@ -92,6 +100,7 @@ void PrefabManager::LoadBasicParameters(const Config& config, std::unique_ptr<Ga
 	loaded_gameObject->UUID = config.GetUInt("UUID", 0);
 
 	config.GetString("Name", loaded_gameObject->name, "GameObject");
+	config.GetString("Tag", loaded_gameObject->tag, "");
 
 	loaded_gameObject->SetStatic(config.GetBool("IsStatic", false));
 	loaded_gameObject->SetEnabled(config.GetBool("Active", true));
@@ -166,6 +175,15 @@ void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameO
 		case Component::ComponentType::BILLBOARD:
 			created_component = new ComponentBillboard();
 			break;
+		case Component::ComponentType::EVENT_SYSTEM:
+			created_component = new ComponentEventSystem();
+			break;
+		case Component::ComponentType::TRAIL:
+			created_component = new ComponentTrail();
+			break;
+		case Component::ComponentType::UI_TEXT:
+			created_component = new ComponentText();
+			break;
 		case Component::ComponentType::COLLIDER:
 			ComponentCollider::ColliderType collider_type = static_cast<ComponentCollider::ColliderType>(gameobject_components_config[i].GetUInt("ColliderType", 0));
 			switch (collider_type)
@@ -188,7 +206,7 @@ void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameO
 			}
 			break;
 		}
-		if (created_component)
+		if (component_type != Component::ComponentType::AABB && created_component)
 		{
 			created_component->owner = loaded_gameObject.get();
 			created_component->Init();

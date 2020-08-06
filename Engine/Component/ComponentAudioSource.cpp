@@ -96,7 +96,7 @@ void ComponentAudioSource::StopAll()
 	AK::SoundEngine::StopAll(gameobject_source);
 }
 
-Component* ComponentAudioSource::Clone(bool original_prefab) const
+Component* ComponentAudioSource::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentAudioSource * created_component;
 	if (original_prefab)
@@ -109,10 +109,13 @@ Component* ComponentAudioSource::Clone(bool original_prefab) const
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 };
 
-void ComponentAudioSource::Copy(Component* component_to_copy) const
+void ComponentAudioSource::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentAudioSource*>(component_to_copy) = *this;

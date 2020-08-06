@@ -31,6 +31,8 @@ public:
 	ComponentBillboard(GameObject* owner);
 	~ComponentBillboard();
 
+	void CleanUp();
+
 	//Copy and move
 	ComponentBillboard(const ComponentBillboard& component_to_copy) = default;
 	ComponentBillboard(ComponentBillboard&& component_to_move) = default;
@@ -42,10 +44,11 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
-	Component* Clone(bool original_prefab = false) const override;
-	void Copy(Component* component_to_copy) const override;
+	Component* Clone(GameObject* owner, bool original_prefab) override;
+	void CopyTo(Component* component_to_copy) const override;
 
 	void InitData();
+	void InitQuad();
 	void Update() override;
 
 	void Render(const float3& global_position);
