@@ -78,6 +78,7 @@ namespace ImGui
 		// handle and point grabbers
 		ImVec2 mouse = GetIO().MousePos, pos;
 			//int point_num = bezier.current_points * 3 - 2;
+
 		float distance;
 		pos = ImVec2(bezier->points[0].right_pivot.x, 1 - bezier->points[0].right_pivot.y) * (bb.Max - bb.Min) + bb.Min;
 		distance = (pos.x - mouse.x) * (pos.x - mouse.x) + (pos.y - mouse.y) * (pos.y - mouse.y);
@@ -150,27 +151,44 @@ namespace ImGui
 			}
 		}
 
-		//draw curve points
+		//draw curve points and grabbers
 		ImVec4 white(GetStyle().Colors[ImGuiCol_Text]);
-		ImVec2 p1 = ImVec2(bezier->points[0].curve_point.x, 1 - bezier->points[0].curve_point.y) * (bb.Max - bb.Min) + bb.Min;
-		ImVec2 p2 = ImVec2(bezier->points[1].curve_point.x, 1 - bezier->points[1].curve_point.y) * (bb.Max - bb.Min) + bb.Min;
-		DrawList->AddNgonFilled(p1, POINT_RADIUS, ImColor(white), POINT_VERTEXS);
-		DrawList->AddNgonFilled(p2, POINT_RADIUS, ImColor(white), POINT_VERTEXS);
-
-		// draw lines and grabbers
 		ImVec4 blue(0.15f, 0.23f, 0.40f, 0.7f);
-		ImVec2 h1 = ImVec2(bezier->points[0].right_pivot.x, 1 - bezier->points[0].right_pivot.y) * (bb.Max - bb.Min) + bb.Min;
-		ImVec2 h2 = ImVec2(bezier->points[1].left_pivot.x, 1 - bezier->points[1].left_pivot.y) * (bb.Max - bb.Min) + bb.Min;
-		DrawList->AddLine(p1, h1, ImColor(white), LINE_WIDTH / 2);
-		DrawList->AddLine(p2, h2, ImColor(white), LINE_WIDTH / 2);
-		DrawList->AddCircleFilled(h1, GRAB_RADIUS, ImColor(white));
-		DrawList->AddCircleFilled(h1, GRAB_RADIUS - GRAB_BORDER, ImColor(blue));
-		DrawList->AddCircleFilled(h2, GRAB_RADIUS, ImColor(white));
-		DrawList->AddCircleFilled(h2, GRAB_RADIUS - GRAB_BORDER, ImColor(blue));
+		for (int i = 0; i < bezier->current_points; i++)
+		{
+			ImVec2 p = ImVec2(bezier->points[i].curve_point.x, 1 - bezier->points[i].curve_point.y) * (bb.Max - bb.Min) + bb.Min;
+			DrawList->AddNgonFilled(p, POINT_RADIUS, ImColor(white), POINT_VERTEXS);
 
+			if (i == 0)
+			{
+				ImVec2 h = ImVec2(bezier->points[i].right_pivot.x, 1 - bezier->points[0].right_pivot.y) * (bb.Max - bb.Min) + bb.Min;
+				DrawList->AddLine(p, h, ImColor(white), LINE_WIDTH / 2);
+				DrawList->AddCircleFilled(h, GRAB_RADIUS, ImColor(white));
+				DrawList->AddCircleFilled(h, GRAB_RADIUS - GRAB_BORDER, ImColor(blue));
+			}
+
+			else if (i == bezier->current_points - 1)
+			{
+				ImVec2 h = ImVec2(bezier->points[i].left_pivot.x, 1 - bezier->points[0].left_pivot.y) * (bb.Max - bb.Min) + bb.Min;
+				DrawList->AddLine(p, h, ImColor(white), LINE_WIDTH / 2);
+				DrawList->AddCircleFilled(h, GRAB_RADIUS, ImColor(white));
+				DrawList->AddCircleFilled(h, GRAB_RADIUS - GRAB_BORDER, ImColor(blue));
+			}
+
+			else
+			{
+				ImVec2 h2 = ImVec2(bezier->points[i].left_pivot.x, 1 - bezier->points[i].left_pivot.y) * (bb.Max - bb.Min) + bb.Min;
+				ImVec2 h1 = ImVec2(bezier->points[i].right_pivot.x, 1 - bezier->points[i].right_pivot.y) * (bb.Max - bb.Min) + bb.Min;
+				DrawList->AddLine(p, h1, ImColor(white), LINE_WIDTH / 2);
+				DrawList->AddLine(p, h2, ImColor(white), LINE_WIDTH / 2);
+				DrawList->AddCircleFilled(h1, GRAB_RADIUS, ImColor(white));
+				DrawList->AddCircleFilled(h1, GRAB_RADIUS - GRAB_BORDER, ImColor(blue));
+				DrawList->AddCircleFilled(h2, GRAB_RADIUS, ImColor(white));
+				DrawList->AddCircleFilled(h2, GRAB_RADIUS - GRAB_BORDER, ImColor(blue));
+			}
+		}
 
 		return changed;
 	}
-
 }
 #endif //_BEZIER_CURVE_DRAW_HPP

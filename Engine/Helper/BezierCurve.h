@@ -27,6 +27,10 @@ public:
 	void CheckPointsAndPivots(const int index);
 	void CheckAllPointsAndPivots();
 
+private:
+	float2 BezierValueIndexPoints(const float percentage, const int first_index) const;
+
+
 public:
 	BezierPoint points[MAXIMUM_POINTS];
 	int current_points = 2;

@@ -24,10 +24,27 @@ float2 BezierCurve::BezierValue(const float t) const
 {
 	assert(t >= 0 && t <= 1);
 
-	float2 val_point = pow((1 - t), 3) * points[0].curve_point + 3 * pow((1 - t), 2) * t * points[0].right_pivot
-		+ 3 * (1 - t) * pow(t, 2)* points[1].left_pivot + pow(t, 3) * points[1].curve_point;
-	
-	return val_point;
+	if (current_points == 2)
+	{
+		return BezierValueIndexPoints(t, 1);
+	}
+
+	for (int i = 1; i < MAXIMUM_POINTS; i++)
+	{
+		if (points[i].curve_point.x >= t)
+		{
+			float mapped_val = (t - points[i - 1].curve_point.x) / (points[i].curve_point.x - points[i - 1].curve_point.x);
+			return BezierValueIndexPoints(mapped_val, i);
+		}
+	}
+	return float2::zero;
+}
+
+
+float2 BezierCurve::BezierValueIndexPoints(const float t, const int i) const
+{
+	return pow((1 - t), 3) * points[i - 1].curve_point + 3 * pow((1 - t), 2) * t * points[i - 1].right_pivot
+		+ 3 * (1 - t) * pow(t, 2)* points[i].left_pivot + pow(t, 3) * points[i].curve_point;
 }
 
 bool BezierCurve::AddPoint()
@@ -41,12 +58,12 @@ bool BezierCurve::AddPoint()
 	points[current_points].left_pivot = points[last_point].left_pivot;
 	points[current_points].right_pivot = points[last_point].right_pivot;
 
-	points[last_point].curve_point = (points[current_points].curve_point - points[last_point - 1].curve_point) / 2 + points[last_point - 1].curve_point;
+	points[last_point].curve_point = (points[last_point].curve_point - points[last_point - 1].curve_point) / 2 + points[last_point - 1].curve_point;
 	points[last_point].left_pivot = points[last_point].curve_point - float2(0.2f, 0.0f);
-	points[last_point].right_pivot = points[last_point].right_pivot + float2(0.2f, 0.0f);
+	points[last_point].right_pivot = points[last_point].curve_point + float2(0.2f, 0.0f);
 	
-	CheckPointsAndPivots(last_point);
 	current_points++;
+	CheckPointsAndPivots(last_point);
 
 	return true;
 }
@@ -63,6 +80,7 @@ bool BezierCurve::RemovePoint()
 	points[last_point - 1].right_pivot = points[last_point].right_pivot;
 
 	current_points--;
+	//CheckPointsAndPivots(current_points - 1);
 
 	return true;
 }
@@ -86,8 +104,8 @@ void BezierCurve::CheckPointsAndPivots(const int index)
 	else
 	{
 		points[index].left_pivot.x = points[index].left_pivot.x < 0 ? 0 : (points[index].left_pivot.x > 1 ? 1 : points[index].left_pivot.x);
-		points[index].curve_point.x = points[index].curve_point.x < points[index - 1].curve_point.x ? points[index - 1].curve_point.x
-			: (points[index].curve_point.x > points[index + 1].curve_point.x ? points[index + 1].curve_point.x : points[index].curve_point.x);
+		points[index].curve_point.x = points[index].curve_point.x < points[index - 1].curve_point.x ? points[index - 1].curve_point.x + 0.01f
+			: (points[index].curve_point.x > points[index + 1].curve_point.x ? points[index + 1].curve_point.x - 0.01f : points[index].curve_point.x);
 		points[index].right_pivot.x = points[index].right_pivot.x < 0 ? 0 : (points[index].right_pivot.x > 1 ? 1 : points[index].right_pivot.x);
 	}
 }
