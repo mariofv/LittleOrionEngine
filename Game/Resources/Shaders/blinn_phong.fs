@@ -193,8 +193,8 @@ void main()
 		result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
 	result += GetLightMapColor(material,texCoordLightmap) * use_light_map;
-	result += emissive_color;
 	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
+	result += emissive_color * 3.0;
 	FragColor = vec4(result,1.0);
 
 	//hdr computes gamma on the shader, so there is no need to put it here aswell
@@ -203,9 +203,9 @@ void main()
 #endif
 
 	FragColor.a=material.transparency;
-	float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+	float brightness = dot(result.rgb, vec3(0.2126, 0.7152, 0.0722));
     if(brightness > 1.0)
-        BrightColor = vec4(FragColor.rgb, 1.0);
+        BrightColor = vec4(result.rgb, 1.0);
     else
         BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
 }

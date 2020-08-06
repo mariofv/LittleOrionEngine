@@ -415,6 +415,7 @@ void ModuleRender::SetDrawMode(DrawMode draw_mode)
 			threshold_brightness = false;
 		break;
 	case ModuleRender::DrawMode::BRIGHTNESS:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			threshold_brightness = true;
 		break;
 	default:

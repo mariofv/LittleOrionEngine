@@ -205,7 +205,6 @@ float ComponentCamera::GetHeight() const
 
 void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode)
 {
-
 	SetWidthAndHeight(width, height);
 
 #if !GAME
@@ -381,21 +380,18 @@ void ComponentCamera::CreateFramebuffer(GLsizei width, GLsizei height)
 		glGenRenderbuffers(1, &rbo);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 		//floating point color buffer
 		glBindTexture(GL_TEXTURE_2D, color_buffers[0]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glBindTexture(GL_TEXTURE_2D, 0);
 
 		//floating point color buffer
 		glBindTexture(GL_TEXTURE_2D, color_buffers[1]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glBindTexture(GL_TEXTURE_2D, 0);
 
 		//blur effect textures
 		glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[0]);
@@ -428,17 +424,10 @@ void ComponentCamera::CreateFramebuffer(GLsizei width, GLsizei height)
 		//blur effect framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[0]);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongColorbuffers[0], 0);
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
-		{
-			App->engine_log->Log("Ping pong FBO 0 succes");
-		}
+		
 
 		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[1]);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongColorbuffers[1], 0);
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
-		{
-			App->engine_log->Log("Ping pong FBO 1 succes");
-		}
 		
 		
 	}
