@@ -34,10 +34,10 @@ Application::Application()
 	// Order matters: they will Init/start/update in this order
 	modules.emplace_back(window = new ModuleWindow());
 	modules.emplace_back(filesystem = new ModuleFileSystem());
+	modules.emplace_back(time = new ModuleTime());
 	modules.emplace_back(resources = new ModuleResourceManager());
 	modules.emplace_back(input = new ModuleInput());
 	modules.emplace_back(ui = new ModuleUI());
-	modules.emplace_back(time = new ModuleTime());
 	modules.emplace_back(texture = new ModuleTexture());
 	modules.emplace_back(renderer = new ModuleRender());
 	modules.emplace_back(effects = new ModuleEffects());

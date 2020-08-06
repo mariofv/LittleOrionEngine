@@ -113,7 +113,7 @@ void ComponentAnimation::Stop()
 	playing = false;
 }
 
-void ComponentAnimation::ActiveAnimation(const std::string & trigger)
+void ComponentAnimation::ActiveAnimation(const std::string& trigger)
 {
 	animation_controller->StartNextState(trigger);
 }
@@ -153,6 +153,24 @@ void ComponentAnimation::SetAnimationSpeed(float speed) const
 	animation_controller->SetSpeed(speed);
 
 	return;
+}
+
+ENGINE_API void ComponentAnimation::SetFloat(std::string name, float value)
+{
+	uint64_t name_hash = std::hash<std::string>{}(name);
+	animation_controller->SetFloat(name_hash, value);
+}
+
+ENGINE_API void ComponentAnimation::SetInt(std::string name, int value)
+{
+	uint64_t name_hash = std::hash<std::string>{}(name);
+	animation_controller->SetInt(name_hash, value);
+}
+
+ENGINE_API void ComponentAnimation::SetBool(std::string name, bool value)
+{
+	uint64_t name_hash = std::hash<std::string>{}(name);
+	animation_controller->SetBool(name_hash, value);
 }
 
 
@@ -253,7 +271,7 @@ void ComponentAnimation::GenerateJointChannelMaps()
 	}
 }
 
-void ComponentAnimation::GenerateAttachedBones(GameObject* mesh, std::vector<Skeleton::Joint> & skeleton)
+void ComponentAnimation::GenerateAttachedBones(GameObject* mesh, std::vector<Skeleton::Joint>& skeleton)
 {
 	if (mesh->children.empty())
 	{
@@ -267,7 +285,7 @@ void ComponentAnimation::GenerateAttachedBones(GameObject* mesh, std::vector<Ske
 		{
 			if (skeleton[j].name == child->name)
 			{
-				animation_controller->attached_bones.push_back({ j,child });
+				animation_controller->attached_bones.push_back({ j, child });
 			}
 		}
 	}

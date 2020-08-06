@@ -104,7 +104,13 @@ void AnimController::UpdateAttachedBones(const std::shared_ptr<Skeleton>& skelet
 
 bool AnimController::Update()
 {
+	if (!App->time->isGameRunning())
+	{
+		return false;
+	}
+
 	ApplyAutomaticTransitionIfNeeded();
+	CheckConditions();
 	for (auto & playing_clip : playing_clips)
 	{
 		playing_clip.Update();	 
@@ -201,6 +207,59 @@ void AnimController::SetSpeed(float speed)
 	if(active_state)
 	{
 		playing_clips[ClipType::ACTIVE].speed = speed;
+	}
+}
+
+void AnimController::SetFloat(uint64_t name_hash, float value)
+{
+	//Check if Keyval exist and then change value
+	if(state_machine->float_variables.find(name_hash) != state_machine->float_variables.end())
+	{
+		state_machine->float_variables[name_hash] = value;
+	}
+}
+
+void AnimController::SetInt(uint64_t name_hash, int value)
+{
+	//Check if Keyval exist and then change value
+	if (state_machine->int_variables.find(name_hash) != state_machine->int_variables.end())
+	{
+		state_machine->int_variables[name_hash] = value;
+	}
+}
+
+void AnimController::SetBool(uint64_t name_hash, bool value)
+{
+	//Check if Keyval exist and then change value
+	if (state_machine->bool_variables.find(name_hash) != state_machine->bool_variables.end())
+	{
+		state_machine->bool_variables[name_hash] = value;
+	}
+}
+
+void AnimController::CheckConditions()
+{
+	if (!active_state)
+	{
+		return;
+	}
+	std::shared_ptr<Transition> next_transition = state_machine->GetTransitionIfConditions(active_state->name_hash);
+	if (!next_transition || next_transition == active_transition)
+	{
+		return;
+	}
+	std::shared_ptr<State> next_state;
+	active_transition = next_transition;
+	next_state = state_machine->GetState(active_transition->target_hash);
+	playing_clips[ClipType::NEXT] = { next_state->clip, next_state->speed, 0.0f, true,  static_cast<float>(active_transition->interpolation_time) };
+
+	if (!playing_clips[ClipType::ACTIVE].playing)
+	{
+		FinishActiveState();
+	}
+	else
+	{
+		AdjustInterpolationTimes();
 	}
 }
 
