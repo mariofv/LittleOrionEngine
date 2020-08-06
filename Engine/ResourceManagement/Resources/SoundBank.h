@@ -9,6 +9,7 @@ class SoundBank : public Resource
 {
 public:
 	SoundBank(uint32_t uuid, const void* data, size_t image_size);
+	SoundBank(uint32_t uuid, const void* data, size_t image_size, std::vector<std::string> events);
 	~SoundBank();
 
 private:
@@ -17,6 +18,7 @@ private:
 	char * aligned_buffer;
 	char * cursor;
 	size_t aligned_buffer_size = 0;
+	std::vector<std::string> events;
 };
 
 namespace ResourceManagement
