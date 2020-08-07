@@ -69,8 +69,8 @@ namespace ImGui
 		}
 
 		// build curve
-		float2 results[SMOOTHNESS];
-		for (int i = 0; i < SMOOTHNESS; i++)
+		float2 results[SMOOTHNESS + 1];
+		for (int i = 0; i <= SMOOTHNESS; i++)
 		{
 			results[i] = bezier->BezierValue(float(i) / (float)SMOOTHNESS);
 		}
@@ -129,7 +129,18 @@ namespace ImGui
 				}
 			}
 			
-			if (min_distance < (4 * GRAB_RADIUS * 4 * GRAB_RADIUS))
+			//add or remove points
+			int detection_distance = 4 * GRAB_RADIUS * 4 * GRAB_RADIUS;
+			if (IsMouseDoubleClicked(0))
+			{
+				if (min_distance < detection_distance && point_side == 0)
+					bezier->RemovePointWithIndex(point_clicked);
+				else
+					bezier->AddPointAtCurve((mouse.x - bb.Min.x) / (bb.Max.x - bb.Min.x));
+			}
+
+			//drag and move points
+			if (min_distance < detection_distance)
 			{
 				if (IsMouseClicked(0) || IsMouseDragging(0))
 				{
@@ -158,7 +169,7 @@ namespace ImGui
 		// draw curve
 		{
 			ImColor color(GetStyle().Colors[ImGuiCol_PlotLines]);
-			for (int i = 0; i < SMOOTHNESS - 1; i++) {
+			for (int i = 0; i <= SMOOTHNESS - 1; i++) {
 				ImVec2 p = { results[i + 0].x, 1 - results[i + 0].y };
 				ImVec2 q = { results[i + 1].x, 1 - results[i + 1].y };
 				ImVec2 r(p.x * (bb.Max.x - bb.Min.x) + bb.Min.x, p.y * (bb.Max.y - bb.Min.y) + bb.Min.y);

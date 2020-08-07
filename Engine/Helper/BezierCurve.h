@@ -18,14 +18,14 @@ public:
 
 	float2 BezierValue(const float percentage) const;
 	
-	bool AddPoint();
-	bool RemovePoint();
+	bool AddPointAtCurve(const float point_x);
+	bool RemovePointWithIndex(const int point_index);
 
-	void CheckPointsAndPivots(const int index);
 	void CheckAllPointsAndPivots();
 
 private:
 	float2 BezierValueIndexPoints(const float percentage, const int last_index) const;
+	void CheckPointsAndPivots(const int index);
 
 
 public:
