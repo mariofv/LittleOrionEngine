@@ -43,7 +43,7 @@ public:
 
 
 public:
-	std::string awake_event;
+	std::string selected_event;
 	bool play_on_awake = false;
 	std::shared_ptr<SoundBank> soundbank;
 
