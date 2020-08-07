@@ -41,14 +41,16 @@ public:
 
 	void SetListener(const AkGameObjectID listener_name);
 
+
+public:
 	std::string awake_event;
 	bool play_on_awake = false;
+	std::shared_ptr<SoundBank> soundbank;
 
 
 private:
 	AkTransform source_transform;
 	AkGameObjectID gameobject_source = 0;
-	std::shared_ptr<SoundBank> soundbank;
 	std::unordered_map<AkUInt32,AkPlayingID> event_playing_ids;
 	std::string last_played_event;	
 

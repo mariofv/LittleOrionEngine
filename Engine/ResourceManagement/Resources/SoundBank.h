@@ -12,13 +12,15 @@ public:
 	SoundBank(uint32_t uuid, const void* data, size_t image_size, std::vector<std::string> events);
 	~SoundBank();
 
+public:
+	std::vector<std::string> events;
+
 private:
 	AkBankID bank_id = 0;
 	AkGameObjectID game_obj = 0;
 	char * aligned_buffer;
 	char * cursor;
 	size_t aligned_buffer_size = 0;
-	std::vector<std::string> events;
 };
 
 namespace ResourceManagement

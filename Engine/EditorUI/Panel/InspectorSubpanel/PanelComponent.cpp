@@ -1256,31 +1256,51 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 		if (ImGui::Button(soundbank_name.c_str()))
 		{
 			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::SOUND);
+			//component_audio_source->awake_event = "";
 		}
 		uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
 		if (selected_resource != 0)
 		{
 			component_audio_source->SetSoundBank(selected_resource);
 			component_audio_source->modified_by_user = true;
+			component_audio_source->awake_event = "";
 		}
 		selected_resource = ImGui::ResourceDropper<SoundBank>();
 		if (selected_resource != 0)
 		{
 			component_audio_source->SetSoundBank(selected_resource);
 			component_audio_source->modified_by_user = true;
+			component_audio_source->awake_event = "";
 		}
 		if (component_audio_source->soundbank)
 		{
-			//static std::string soundbank;
-			ImGui::InputText("Awake Event Name ", &component_audio_source->awake_event);
+			std::string event_name = component_audio_source->awake_event != "" ? component_audio_source->awake_event : "-";
+			if (ImGui::BeginCombo("Event Name", event_name.c_str()))
+			{
+				for (auto& event_name : component_audio_source->soundbank->events)
+				{
+					if (ImGui::Selectable(event_name.c_str()))
+					{
+						component_audio_source->awake_event = event_name;
+						component_audio_source->modified_by_user = true;
+					}
+				}
+				ImGui::Separator();
+				ImGui::EndCombo();
+			}
+
 			if (ImGui::Button("Play Event"))
 			{
-				component_audio_source->PlayEvent(component_audio_source->awake_event);
+				if (event_name != "-")
+				{
+					component_audio_source->PlayEvent(component_audio_source->awake_event);
+				}
 			}
 		}
 		if (ImGui::SliderFloat("Volume", &component_audio_source->volume, 0, 30))
 		{
 			component_audio_source->SetVolume(component_audio_source->volume);
+			component_audio_source->modified_by_user = true;
 		}
 	}
 }
