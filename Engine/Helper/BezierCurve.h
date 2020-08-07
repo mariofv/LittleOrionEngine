@@ -21,12 +21,12 @@ public:
 	bool AddPointAtCurve(const float point_x);
 	bool RemovePointWithIndex(const int point_index);
 
-	void CheckAllPointsAndPivots();
+	void MovePivotByIncrement(float2& handle, float2& increment);
+	void MovePointByIncrement(BezierPoint& point, float2& increment);
 
 private:
 	float2 BezierValueIndexPoints(const float percentage, const int last_index) const;
-	void CheckPointsAndPivots(const int index);
-
+	void CheckAllPoints();
 
 public:
 	static const unsigned int MAXIMUM_POINTS = 10;

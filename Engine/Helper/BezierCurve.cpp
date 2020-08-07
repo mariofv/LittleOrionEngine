@@ -78,7 +78,6 @@ bool BezierCurve::AddPointAtCurve(const float point_x)
 	points[new_point_index].right_pivot = points[new_point_index].curve_point + float2(0.05f, 0.0f);
 
 	num_points++;
-	CheckPointsAndPivots(new_point_index);
 
 	return true;
 }
@@ -103,32 +102,44 @@ bool BezierCurve::RemovePointWithIndex(const int point_index)
 	return true;
 }
 
-void BezierCurve::CheckAllPointsAndPivots()
+void BezierCurve::MovePivotByIncrement(float2& handle, float2& increment)
+{
+	float2 change = handle;
+
+	handle += increment;
+	handle.x = handle.x < 0 ? 0 : (handle.x > 1 ? 1 : handle.x);
+	handle.y = handle.y < 0 ? 0 : (handle.y > 1 ? 1 : handle.y);
+
+	change = handle - change;
+	increment = change;
+}
+
+void BezierCurve::MovePointByIncrement(BezierPoint& point, float2& increment)
+{
+	float2 change = point.curve_point;
+
+	point.curve_point += increment;
+	CheckAllPoints();
+
+	change = point.curve_point - change;
+	
+	MovePivotByIncrement(point.left_pivot, change);
+	MovePivotByIncrement(point.right_pivot, change);
+	increment = change;
+}
+
+void BezierCurve::CheckAllPoints()
 {
 	for (int i = 0; i < num_points; i++)
 	{
-		CheckPointsAndPivots(i);
-	}
-}
+		if (i == 0)
+			points[i].curve_point.x = 0;
 
-void BezierCurve::CheckPointsAndPivots(const int index)
-{
-	points[index].left_pivot.x = points[index].left_pivot.x < 0 ? 0 : (points[index].left_pivot.x > 1 ? 1 : points[index].left_pivot.x);
-	points[index].right_pivot.x = points[index].right_pivot.x < 0 ? 0 : (points[index].right_pivot.x > 1 ? 1 : points[index].right_pivot.x);
-
-	if (index == 0)
-	{
-		points[index].left_pivot.x = 0;
-		points[index].curve_point.x = 0;
-	}
-	else if (index == num_points - 1)
-	{
-		points[index].curve_point.x = 1;
-		points[index].right_pivot.x = 1;
-	}
-	else
-	{
-		points[index].curve_point.x = points[index].curve_point.x < points[index - 1].curve_point.x ? points[index - 1].curve_point.x + 0.01f
-			: (points[index].curve_point.x > points[index + 1].curve_point.x ? points[index + 1].curve_point.x - 0.01f : points[index].curve_point.x);
+		else if (i == num_points - 1)
+			points[i].curve_point.x = 1;
+			
+		else
+			points[i].curve_point.x = points[i].curve_point.x < points[i - 1].curve_point.x ? points[i - 1].curve_point.x + 0.01f
+				: (points[i].curve_point.x > points[i + 1].curve_point.x ? points[i + 1].curve_point.x - 0.01f : points[i].curve_point.x);
 	}
 }

@@ -145,22 +145,14 @@ namespace ImGui
 				if (IsMouseClicked(0) || IsMouseDragging(0))
 				{
 					if (point_side == -1)
-					{
-						bezier->points[point_clicked].left_pivot.x += GetIO().MouseDelta.x / Canvas.x;
-						bezier->points[point_clicked].left_pivot.y -= GetIO().MouseDelta.y / Canvas.y;
-					}
+						bezier->MovePivotByIncrement(bezier->points[point_clicked].left_pivot, float2(GetIO().MouseDelta.x / Canvas.x, -GetIO().MouseDelta.y / Canvas.y));
+					
 					else if (point_side == 0)
-					{
-						bezier->points[point_clicked].curve_point.x += GetIO().MouseDelta.x / Canvas.x;
-						bezier->points[point_clicked].curve_point.y -= GetIO().MouseDelta.y / Canvas.y;
-					}
+						bezier->MovePointByIncrement(bezier->points[point_clicked], float2(GetIO().MouseDelta.x / Canvas.x, -GetIO().MouseDelta.y / Canvas.y));
+					
 					else
-					{
-						bezier->points[point_clicked].right_pivot.x += GetIO().MouseDelta.x / Canvas.x;
-						bezier->points[point_clicked].right_pivot.y -= GetIO().MouseDelta.y / Canvas.y;
-					}
-
-					bezier->CheckAllPointsAndPivots();
+						bezier->MovePivotByIncrement(bezier->points[point_clicked].right_pivot, float2(GetIO().MouseDelta.x / Canvas.x, -GetIO().MouseDelta.y / Canvas.y));
+					
 					changed = true;
 				}
 			}
