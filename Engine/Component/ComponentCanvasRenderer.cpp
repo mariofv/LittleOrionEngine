@@ -1,6 +1,7 @@
 #include "ComponentCanvasRenderer.h"
 
 #include "ComponentImage.h"
+#include "ComponentVideoPlayer.h"
 #include "ComponentSpriteMask.h"
 #include "ComponentText.h"
 
@@ -64,6 +65,12 @@ void ComponentCanvasRenderer::Render(float4x4* projection)
 	if (component_text != nullptr)
 	{
 		static_cast<ComponentText*>(component_text)->Render(projection);
+	}
+
+	Component* component_video_player = owner->GetComponent(Component::ComponentType::VIDEO_PLAYER);
+	if (component_video_player != nullptr)
+	{
+		static_cast<ComponentVideoPlayer*>(component_video_player)->Render(projection);
 	}
 }
 

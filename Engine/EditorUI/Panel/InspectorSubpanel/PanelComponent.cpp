@@ -36,6 +36,7 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
 #include "Component/ComponentTrail.h"
+#include "Component/ComponentVideoPlayer.h"
 
 #include "Helper/Utils.h"
 
@@ -679,40 +680,35 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image)
 		{
 			component_image->SetNativeSize();
 		}
+	}
+}
 
-		//VIDEO
+void PanelComponent::ShowComponentVideoPlayerWindow(ComponentVideoPlayer* video_player)
+{
 
-		static bool video_enable = false;
-		video_enable |= component_image->video_to_render != nullptr;
-		ImGui::Checkbox("Enable Video", &video_enable);
+	ImGui::Separator();
+	ImGui::Text("Video");
+	std::string video_name = video_player->video_to_render == nullptr ? "None (Video)" : App->resources->resource_DB->GetEntry(video_player->video_to_render->GetUUID())->resource_name;
+	ImGuiID element_id = ImGui::GetID((std::to_string(video_player->UUID) + "VideoSelector").c_str());
+	if (ImGui::Button(video_name.c_str()))
+	{
+		App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::VIDEO);
+	}
 
-		if (video_enable)
-		{
-			ImGui::Separator();
-			ImGui::Text("Video");
-			std::string video_name = component_image->video_to_render == nullptr ? "None (Video)" : App->resources->resource_DB->GetEntry(component_image->video_to_render->GetUUID())->resource_name;
-			element_id = ImGui::GetID((std::to_string(component_image->UUID) + "VideoSelector").c_str());
-			if (ImGui::Button(video_name.c_str()))
-			{
-				App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::VIDEO);
-			}
+	uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+	if (selected_resource != 0)
+	{
+		video_player->SetVideoToRenderFromInspector(selected_resource);
+	}
+	selected_resource = ImGui::ResourceDropper<Video>();
+	if (selected_resource != 0)
+	{
+		video_player->SetVideoToRenderFromInspector(selected_resource);
+	}
 
-			selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
-			if (selected_resource != 0)
-			{
-				component_image->SetVideoToRenderFromInspector(selected_resource);
-			}
-			selected_resource = ImGui::ResourceDropper<Video>();
-			if (selected_resource != 0)
-			{
-				component_image->SetVideoToRenderFromInspector(selected_resource);
-			}
-
-			if (ImGui::Button("Play Video"))
-			{
-				component_image->PlayVideo();
-			}
-		}
+	if (ImGui::Button("Play Video"))
+	{
+		video_player->PlayVideo();
 	}
 }
 
@@ -948,6 +944,12 @@ void PanelComponent::ShowAddNewComponentButton()
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_IMAGE);
+		}
+
+		sprintf_s(tmp_string, "%s Video Player", ICON_FA_FILM);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::VIDEO_PLAYER);
 		}
 
 		sprintf_s(tmp_string, "%s Sprite Mask", ICON_FA_THEATER_MASKS);

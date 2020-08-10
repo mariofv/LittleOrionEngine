@@ -1,5 +1,5 @@
-#ifndef _COMPONENVIDEO_H_
-#define _Video_H_
+#ifndef _VIDEO_H_
+#define _VIDEO_H_
 
 #include <GL/glew.h>
 #include "Resource.h"

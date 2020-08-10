@@ -31,12 +31,7 @@ public:
 	void SetTextureToRender(uint32_t texture_uuid);
 	void SetTextureToRenderFromInspector(uint32_t texture_uuid);
 
-	void SetVideoToRender(uint32_t video_uuid);
-	void SetVideoToRenderFromInspector(uint32_t video_uuid);
-
 	ENGINE_API void SetColor(float4 color);
-	ENGINE_API void PlayVideo();
-	ENGINE_API void StopVideo();
 
 	void Render(float4x4* projection);
 
@@ -45,13 +40,10 @@ public:
 
 private:
 	virtual void InitData();
-	void RenderTexture(math::float4x4 * projection, GLuint texture);
 
 public:
 	uint32_t texture_uuid = 0;
 	std::shared_ptr<Texture> texture_to_render;
-	uint32_t video_uuid = 0;
-	std::shared_ptr<Video> video_to_render;
 
 	bool preserve_aspect_ratio = false;
 
@@ -62,6 +54,5 @@ private:
 	GLuint vao, vbo;
 
 	float texture_aspect_ratio = 0.f;
-	bool playing_video = false;
 };
 #endif //_COMPONENTIMAGE_H_

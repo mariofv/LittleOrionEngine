@@ -55,21 +55,6 @@ void ComponentImage::Render(float4x4* projection)
 	{
 		return;
 	}
-
-	if (playing_video)
-	{
-		GLuint opengl_video_frame = video_to_render->GenerateFrame();
-		playing_video = opengl_video_frame > 0 ? true : false;
-		RenderTexture(projection, opengl_video_frame);
-	}
-	else if (texture_to_render != nullptr)
-	{
-		RenderTexture(projection, texture_to_render->opengl_texture);
-	}
-}
-
-void ComponentImage::RenderTexture(math::float4x4 * projection, GLuint texture)
-{
 	ScaleOp aspect_ratio_scaling;
 
 	if (preserve_aspect_ratio)
@@ -103,7 +88,7 @@ void ComponentImage::RenderTexture(math::float4x4 * projection, GLuint texture)
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, model.ptr());
 	glUniform4fv(glGetUniformLocation(program, "spriteColor"), 1, color.ptr());
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, texture_to_render->opengl_texture);
 
 	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -147,7 +132,6 @@ void ComponentImage::SpecializedSave(Config& config) const
 {
 	config.AddColor(color, "ImageColor");
 	config.AddUInt(texture_uuid, "TextureUUID");
-	config.AddUInt(video_uuid, "VideoUUID");
 	config.AddBool(preserve_aspect_ratio, "PreserveAspectRatio");
 }
 
@@ -155,15 +139,10 @@ void ComponentImage::SpecializedLoad(const Config& config)
 {
 	config.GetColor("ImageColor", color, float4::one);
 	texture_uuid = config.GetUInt32("TextureUUID", 0);
-	video_uuid = config.GetUInt32("VideoUUID", 0);
 	preserve_aspect_ratio = config.GetBool("PreserveAspectRatio", false);
 	if (texture_uuid != 0)
 	{
 		SetTextureToRender(texture_uuid);
-	}
-	if (video_uuid != 0)
-	{
-		SetVideoToRender(video_uuid);
 	}
 }
 
@@ -204,10 +183,6 @@ void ComponentImage::ReassignResource()
 	{
 		SetTextureToRender(texture_uuid);
 	}
-	if (video_uuid != 0)
-	{
-		SetVideoToRender(video_uuid);
-	}
 }
 
 void ComponentImage::SetTextureToRender(uint32_t texture_uuid)
@@ -231,40 +206,9 @@ void ComponentImage::SetTextureToRenderFromInspector(uint32_t texture_uuid)
 	App->resources->loading_thread_communication.normal_loading_flag = false;
 }
 
-void ComponentImage::SetVideoToRender(uint32_t video_uuid)
-{
-	//Prepare multithreading loading
-	App->resources->loading_thread_communication.current_component_loading = this;
-	App->resources->loading_thread_communication.current_type = ResourceType::TEXTURE;
-	this->video_uuid = video_uuid;
-	video_to_render = App->resources->Load<Video>(video_uuid);
-
-	//Set to default loading component
-	App->resources->loading_thread_communication.current_component_loading = nullptr;
-}
-
-void ComponentImage::SetVideoToRenderFromInspector(uint32_t video_uuid)
-{
-	this->video_uuid = video_uuid;
-	App->resources->loading_thread_communication.normal_loading_flag = true;
-	video_to_render = App->resources->Load<Video>(video_uuid);
-	App->resources->loading_thread_communication.normal_loading_flag = false;
-}
-
 void ComponentImage::SetColor(float4 color)
 {
 	this->color = color;
-}
-
-void ComponentImage::PlayVideo()
-{
-	playing_video = video_to_render != nullptr;
-}
-
-ENGINE_API void ComponentImage::StopVideo()
-{
-	playing_video = false;
-	video_to_render->Stop();
 }
 
 void ComponentImage::SetNativeSize() const
