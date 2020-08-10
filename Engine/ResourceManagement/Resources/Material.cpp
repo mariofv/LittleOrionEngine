@@ -268,6 +268,10 @@ unsigned int Material::GetShaderVariation() const
 	{
 		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_HDR);
 	}
+	if (App->renderer->bloom)
+	{
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_BLOOM);
+	}
 
 	return variation;
 }

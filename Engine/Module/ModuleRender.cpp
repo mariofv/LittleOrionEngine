@@ -238,6 +238,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		glUniform1i(glGetUniformLocation(program, "hdr_type"), static_cast<int>(hdr_type));
 		RenderQuad();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 		if (blur)
 		{
 			horizontal = true;
@@ -415,7 +416,7 @@ void ModuleRender::SetDrawMode(DrawMode draw_mode)
 			threshold_brightness = false;
 		break;
 	case ModuleRender::DrawMode::BRIGHTNESS:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			threshold_brightness = true;
 		break;
 	default:

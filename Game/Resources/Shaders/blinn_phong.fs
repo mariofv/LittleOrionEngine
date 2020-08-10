@@ -23,6 +23,9 @@ const float ambient_light_strength = 0.1;
 vec3 normal_from_texture;
 vec3 liquid_normal_from_texture;
 
+//bloom
+uniform float emisive_exposure;
+
 struct Material
 {
 	sampler2D diffuse_map;
@@ -194,7 +197,12 @@ void main()
 	}
 	result += GetLightMapColor(material,texCoordLightmap) * use_light_map;
 	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
-	result += emissive_color * 3.0;
+
+#if	ENABLE_BLOOM
+	result += emissive_color * emisive_exposure;
+#else
+	result += emissive_color;
+#endif
 	FragColor = vec4(result,1.0);
 
 	//hdr computes gamma on the shader, so there is no need to put it here aswell

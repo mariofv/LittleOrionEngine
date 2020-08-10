@@ -97,7 +97,8 @@ public:
 	bool threshold_brightness = false;
 	float exposure = 1.0f;
 	bool horizontal = true;
-	bool hdr_active = true;
+	bool hdr_active = false;
+	float emisive_exposure = 1.0f;
 private:
 	void* context = nullptr;
 	HDRType hdr_type = HDRType::FILMIC;

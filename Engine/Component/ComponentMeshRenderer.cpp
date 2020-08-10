@@ -134,6 +134,7 @@ void ComponentMeshRenderer::Render()
 	GLuint program = App->program->UseProgram(material_to_render->shader_program, shader_variation);
 
 	glUniform1i(glGetUniformLocation(program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
+	glUniform1f(glGetUniformLocation(program, "emisive_exposure"), App->renderer->emisive_exposure);
 	
 	if (palette.size() > 0)
 	{
