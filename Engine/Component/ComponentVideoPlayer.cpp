@@ -21,6 +21,13 @@ ComponentVideoPlayer::ComponentVideoPlayer(GameObject * owner) : Component(owner
 	Init();
 }
 
+ComponentVideoPlayer::~ComponentVideoPlayer()
+{
+	StopVideo();
+	AK::SoundEngine::UnregisterGameObj(gameobject_source);
+}
+
+
 void ComponentVideoPlayer::Init()
 {
 	quad = App->ui->quad.get();
@@ -37,7 +44,14 @@ void ComponentVideoPlayer::Render(float4x4* projection)
 	{
 		GLuint opengl_video_frame = video_to_render->GenerateFrame();
 		playing_video = opengl_video_frame > 0 ? true : false;
-		RenderTexture(projection, opengl_video_frame);
+		if (playing_video)
+		{
+			RenderTexture(projection, opengl_video_frame);
+		}
+		else
+		{
+			StopVideo();
+		}
 	}
 }
 

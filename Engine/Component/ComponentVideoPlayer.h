@@ -13,7 +13,7 @@ class ComponentVideoPlayer : public Component
 public:
 	ComponentVideoPlayer();
 	ComponentVideoPlayer(GameObject * owner);
-	~ComponentVideoPlayer() = default;
+	~ComponentVideoPlayer();
 
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;

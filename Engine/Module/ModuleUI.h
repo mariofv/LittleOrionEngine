@@ -3,7 +3,7 @@
 
 #include "Module.h"
 #include "Main/Globals.h"
-#include "Helper/Quad.h"6
+#include "Helper/Quad.h"
 
 #include <iostream>
 #include <map>

@@ -3,18 +3,17 @@
 
 #include "Component/Component.h"
 
-#include <GL/glew.h>
-
 class Texture;
-class Video;
 struct TextureLoadData;
+class Quad;
+class Video;
 
 class ComponentImage : public Component
 {
 public:
 	ComponentImage();
 	ComponentImage(GameObject * owner);
-	~ComponentImage();
+	~ComponentImage() = default;
 
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
@@ -50,8 +49,8 @@ public:
 	float4 color = float4::one;
 
 private:
-	GLuint program = 0;
-	GLuint vao, vbo;
+	size_t program = 0;
+	Quad* quad = nullptr;
 
 	float texture_aspect_ratio = 0.f;
 };
