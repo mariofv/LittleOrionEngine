@@ -688,6 +688,8 @@ void PanelComponent::ShowComponentVideoPlayerWindow(ComponentVideoPlayer* video_
 
 	ImGui::Separator();
 	ImGui::Text("Video");
+	ImGui::Checkbox("Preserve Aspect Ratio", &video_player->preserve_aspect_ratio);
+
 	std::string video_name = video_player->video_to_render == nullptr ? "None (Video)" : App->resources->resource_DB->GetEntry(video_player->video_to_render->GetUUID())->resource_name;
 	ImGuiID element_id = ImGui::GetID((std::to_string(video_player->UUID) + "VideoSelector").c_str());
 	if (ImGui::Button(video_name.c_str()))
@@ -705,6 +707,26 @@ void PanelComponent::ShowComponentVideoPlayerWindow(ComponentVideoPlayer* video_
 	{
 		video_player->SetVideoToRenderFromInspector(selected_resource);
 	}
+
+	std::string soundbank_name = video_player->soundbank == nullptr ? "None (Sound Bank)" : App->resources->resource_DB->GetEntry(video_player->soundbank->GetUUID())->resource_name;
+	element_id = ImGui::GetID((std::to_string(video_player->UUID) + "SoundBankSelector").c_str());
+	if (ImGui::Button(soundbank_name.c_str()))
+	{
+		App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::SOUND);
+	}
+	selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+	if (selected_resource != 0)
+	{
+		video_player->SetSoundBank(selected_resource);
+		video_player->modified_by_user = true;
+	}
+	selected_resource = ImGui::ResourceDropper<SoundBank>();
+	if (selected_resource != 0)
+	{
+		video_player->SetSoundBank(selected_resource);
+		video_player->modified_by_user = true;
+	}
+	ImGui::InputText("Sound Event Name ", &video_player->sound_event);
 
 	if (ImGui::Button("Play Video"))
 	{

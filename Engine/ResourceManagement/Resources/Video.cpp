@@ -6,9 +6,12 @@
 #include "Module/ModuleTime.h"
 #include "opencv2/opencv.hpp"
 
-Video::Video(uint32_t uuid) : Resource(uuid)
+Video::Video(uint32_t uuid, bool async) : Resource(uuid)
 {
-	Init();
+	if (!async)
+	{
+		LoadInMemory();
+	}
 }
 
 Video::~Video()
@@ -17,7 +20,7 @@ Video::~Video()
 
 }
 
-void Video::Init()
+void Video::LoadInMemory()
 {
 	file_path = MetafileManager::GetUUIDExportedFile(uuid);
 	file_path = file_path.substr(file_path.find_first_of("/") + 1, file_path.size());

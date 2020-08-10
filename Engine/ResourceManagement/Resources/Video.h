@@ -13,10 +13,10 @@ class Video : public Resource
 {
 
 public:
-	Video(uint32_t uuid);
+	Video(uint32_t uuid, bool async = false);
 	~Video();
 
-	void Init();
+	void LoadInMemory();
 
 	GLuint GenerateFrame();
 	void Stop();
@@ -35,7 +35,7 @@ namespace ResourceManagement
 	template<>
 	static std::shared_ptr<Video> Load(uint32_t uuid, const FileData& resource_data, bool async)
 	{
-		return std::make_shared<Video>(uuid);
+		return std::make_shared<Video>(uuid, async);
 	}
 
 }

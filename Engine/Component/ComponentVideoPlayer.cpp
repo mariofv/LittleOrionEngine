@@ -6,6 +6,7 @@
 #include "Module/ModuleUI.h"
 
 #include "ResourceManagement/Resources/Video.h"
+#include "ResourceManagement/Resources/SoundBank.h"
 
 
 ComponentVideoPlayer::ComponentVideoPlayer() : Component(ComponentType::VIDEO_PLAYER)
@@ -99,6 +100,14 @@ void ComponentVideoPlayer::Copy(Component* component_to_copy) const
 	*static_cast<ComponentVideoPlayer*>(component_to_copy) = *this;
 }
 
+void ComponentVideoPlayer::InitResource(uint32_t uuid, ResourceType resource)
+{
+	if (video_to_render && !video_to_render.get()->initialized)
+	{
+		video_to_render.get()->LoadInMemory();
+	}
+}
+
 
 void ComponentVideoPlayer::Delete()
 {
@@ -109,17 +118,26 @@ void ComponentVideoPlayer::SpecializedSave(Config& config) const
 {
 	config.AddColor(color, "ImageColor");
 	config.AddUInt(video_uuid, "VideoUUID");
+	config.AddUInt(soundbank->GetUUID(), "AudioUUID");
+	config.AddString(sound_event, "SoundEvent");
 	config.AddBool(preserve_aspect_ratio, "PreserveAspectRatio");
 }
 
 void ComponentVideoPlayer::SpecializedLoad(const Config& config)
 {
 	config.GetColor("ImageColor", color, float4::one);
-	video_uuid = config.GetUInt32("VideoUUID", 0);
 	preserve_aspect_ratio = config.GetBool("PreserveAspectRatio", false);
+	config.GetString("SoundEvent", sound_event, {});
+	video_uuid = config.GetUInt32("VideoUUID", 0);
 	if (video_uuid != 0)
 	{
 		SetVideoToRender(video_uuid);
+	}
+
+	uint32_t soundbank_uuid = config.GetUInt32("AudioUUID", 0);
+	if (soundbank_uuid != 0)
+	{
+		SetSoundBank(soundbank_uuid);
 	}
 }
 
@@ -134,8 +152,8 @@ void ComponentVideoPlayer::LoadResource(uint32_t uuid, ResourceType resource)
 	}
 
 	FileData file_data;
-	bool succes = App->resources->RetrieveFileDataByUUID(uuid, file_data);
-	if (succes)
+	bool success = App->resources->RetrieveFileDataByUUID(uuid, file_data);
+	if (success)
 	{
 		//THINK WHAT TO DO IF IS IN CACHE
 		video_to_render = ResourceManagement::Load<Video>(uuid, file_data, true);
@@ -158,7 +176,7 @@ void ComponentVideoPlayer::SetVideoToRender(uint32_t video_uuid)
 {
 	//Prepare multithreading loading
 	App->resources->loading_thread_communication.current_component_loading = this;
-	App->resources->loading_thread_communication.current_type = ResourceType::TEXTURE;
+	App->resources->loading_thread_communication.current_type = ResourceType::VIDEO;
 	this->video_uuid = video_uuid;
 	video_to_render = App->resources->Load<Video>(video_uuid);
 
@@ -174,14 +192,25 @@ void ComponentVideoPlayer::SetVideoToRenderFromInspector(uint32_t video_uuid)
 	App->resources->loading_thread_communication.normal_loading_flag = false;
 }
 
+void ComponentVideoPlayer::SetSoundBank(uint32_t uuid)
+{
+	soundbank = App->resources->Load<SoundBank>(uuid);
+}
+
 void ComponentVideoPlayer::PlayVideo()
 {
+	StopVideo();
 	playing_video = video_to_render != nullptr;
+	if (soundbank)
+	{
+		playing_id = AK::SoundEngine::PostEvent(sound_event.c_str(), gameobject_source);
+	}
 }
 
 ENGINE_API void ComponentVideoPlayer::StopVideo()
 {
 	playing_video = false;
 	video_to_render->Stop();
+	AK::SoundEngine::StopPlayingID(playing_id);
 }
 

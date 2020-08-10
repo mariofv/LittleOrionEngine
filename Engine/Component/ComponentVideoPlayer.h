@@ -2,10 +2,11 @@
 #define _COMPONENTVIDEOPLAYER_H_
 
 #include "Component/Component.h"
-
+#include <AK/SoundEngine/Common/AkTypes.h>
 #include "Helper/Quad.h"
 
 class Video;
+class SoundBank;
 class ComponentVideoPlayer : public Component
 {
 public:
@@ -15,6 +16,8 @@ public:
 
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
+
+	void InitResource(uint32_t uuid, ResourceType resource);
 
 	void Delete() override;
 	void SpecializedSave(Config& config) const override;
@@ -26,6 +29,7 @@ public:
 
 	void SetVideoToRender(uint32_t video_uuid);
 	void SetVideoToRenderFromInspector(uint32_t video_uuid);
+	void SetSoundBank(uint32_t uuid);
 
 	ENGINE_API void PlayVideo();
 	ENGINE_API void StopVideo();
@@ -38,16 +42,21 @@ private:
 public:
 	uint32_t video_uuid = 0;
 	std::shared_ptr<Video> video_to_render;
+	std::shared_ptr<SoundBank> soundbank;
+	std::string sound_event = {};
 
 	bool preserve_aspect_ratio = false;
 
-	float4 color = float4::one;
 
 private:
 	GLuint program = 0;
+	float4 color = float4::one;
 	Quad quad;
 	float texture_aspect_ratio = 0.f;
 	bool playing_video = false;
+
+	AkGameObjectID gameobject_source = 0;
+	AkPlayingID playing_id = 0;
 };
 #endif //_COMPONENTVIDEOPLAYER_H_
 
