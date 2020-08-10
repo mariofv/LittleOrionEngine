@@ -50,8 +50,6 @@ class TextureImporter;
 
 class SceneManager;
 
-
-
 struct LoadingJob
 {
 	uint32_t uuid = 0;

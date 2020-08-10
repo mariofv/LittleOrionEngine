@@ -1,5 +1,7 @@
 #include "ComponentVideoPlayer.h"
 
+#include "Helper/Quad.h"
+
 #include "Main/GameObject.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleProgram.h"
@@ -11,13 +13,19 @@
 
 ComponentVideoPlayer::ComponentVideoPlayer() : Component(ComponentType::VIDEO_PLAYER)
 {
+	Init();
 }
 
 ComponentVideoPlayer::ComponentVideoPlayer(GameObject * owner) : Component(owner, ComponentType::VIDEO_PLAYER)
 {
+	Init();
 }
 
-
+void ComponentVideoPlayer::Init()
+{
+	quad = App->ui->quad.get();
+	AK::SoundEngine::RegisterGameObj(gameobject_source);
+}
 void ComponentVideoPlayer::Render(float4x4* projection)
 {
 	if (!active)
@@ -70,7 +78,7 @@ void ComponentVideoPlayer::RenderTexture(math::float4x4 * projection, GLuint tex
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
-	quad.Render();
+	quad->Render();
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
 }
@@ -199,11 +207,14 @@ void ComponentVideoPlayer::SetSoundBank(uint32_t uuid)
 
 void ComponentVideoPlayer::PlayVideo()
 {
-	StopVideo();
-	playing_video = video_to_render != nullptr;
-	if (soundbank)
+	if (App->time->isGameRunning())
 	{
-		playing_id = AK::SoundEngine::PostEvent(sound_event.c_str(), gameobject_source);
+		StopVideo();
+		playing_video = video_to_render != nullptr;
+		if (soundbank)
+		{
+			playing_id = AK::SoundEngine::PostEvent(sound_event.c_str(), gameobject_source);
+		}
 	}
 }
 

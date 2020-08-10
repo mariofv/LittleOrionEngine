@@ -3,11 +3,11 @@
 
 #include "Module.h"
 #include "Main/Globals.h"
+#include "Helper/Quad.h"6
 
 #include <iostream>
 #include <map>
 #include <vector>
-#include <GL/glew.h>
 
 class Component;
 class ComponentButton;
@@ -52,7 +52,7 @@ public:
 
 public:
 	ComponentCanvas* main_canvas = nullptr;
-
+	std::unique_ptr<Quad> quad = nullptr;
 private:
 	std::vector<ComponentEventSystem*> event_systems;
 	std::vector<ComponentCanvas*> canvases;

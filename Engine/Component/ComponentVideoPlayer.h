@@ -3,10 +3,11 @@
 
 #include "Component/Component.h"
 #include <AK/SoundEngine/Common/AkTypes.h>
-#include "Helper/Quad.h"
 
+#include <GL/glew.h>
 class Video;
 class SoundBank;
+class Quad;
 class ComponentVideoPlayer : public Component
 {
 public:
@@ -34,6 +35,8 @@ public:
 	ENGINE_API void PlayVideo();
 	ENGINE_API void StopVideo();
 
+	void Init() override;
+
 	void Render(float4x4* projection);
 
 private:
@@ -49,9 +52,9 @@ public:
 
 
 private:
+	Quad* quad = nullptr;
 	GLuint program = 0;
 	float4 color = float4::one;
-	Quad quad;
 	float texture_aspect_ratio = 0.f;
 	bool playing_video = false;
 

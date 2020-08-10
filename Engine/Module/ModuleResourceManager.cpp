@@ -59,6 +59,7 @@ bool ModuleResourceManager::Init()
 	metafile_manager = std::make_unique<MetafileManager>();
 	scene_manager = std::make_unique<SceneManager>();
 
+
 #if !GAME
 	ImportAssetsInDirectory(*App->filesystem->resources_folder_path); // Import all assets in folder Resources. All metafiles in Resources are correct"
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
