@@ -140,9 +140,12 @@ void ComponentVideoPlayer::SpecializedSave(Config& config) const
 {
 	config.AddColor(color, "ImageColor");
 	config.AddUInt(video_uuid, "VideoUUID");
-	config.AddUInt(soundbank->GetUUID(), "AudioUUID");
 	config.AddString(sound_event, "SoundEvent");
 	config.AddBool(preserve_aspect_ratio, "PreserveAspectRatio");
+	if (soundbank)
+	{
+		config.AddUInt(soundbank->GetUUID(), "AudioUUID");
+	}
 }
 
 void ComponentVideoPlayer::SpecializedLoad(const Config& config)
