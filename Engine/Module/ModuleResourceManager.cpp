@@ -89,13 +89,14 @@ update_status ModuleResourceManager::PreUpdate()
 		importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
 	}
 #endif
-
 	float t = thread_timer->Read();
 	if(cache_time > 0.0f && (thread_timer->Read() - cache_time) >= cache_interval_millis)
 	{
 		cache_time = thread_timer->Read();
 		if(!loading_thread_communication.loading)
 		{
+
+			APP_LOG_INFO("Refresh resources");
 			RefreshResourceCache();
 		}
 	}

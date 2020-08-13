@@ -15,7 +15,7 @@
 #include "ResourceManagement/Resources/Mesh.h"
 #include "ResourceManagement/Resources/Skeleton.h"
 
-#include <stack>
+#include <queue>
 
 FileData PrefabImporter::ExtractFromModel(const Config& model_config, const ModelMetafile& metafile, bool animated_model) const
 {
@@ -55,12 +55,12 @@ FileData PrefabImporter::ExtractFromModel(const Config& model_config, const Mode
 FileData PrefabImporter::ExtractFromGameObject(GameObject* gameobject, bool overwritable) const
 {
 	std::vector<Config> gameobjects_config;
-	std::stack<GameObject*> pending_gameobjects;
+	std::queue<GameObject*> pending_gameobjects;
 	pending_gameobjects.push(gameobject);
 
 	while (!pending_gameobjects.empty())
 	{
-		GameObject* current_gameobject = pending_gameobjects.top();
+		GameObject* current_gameobject = pending_gameobjects.front();
 		pending_gameobjects.pop();
 
 		Config current_gameobject_config;

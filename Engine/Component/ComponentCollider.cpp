@@ -38,7 +38,7 @@ ComponentCollider::ComponentCollider(GameObject* owner, ColliderType collider_ty
 }
 
 
-void ComponentCollider::Copy(Component* component_to_copy) const
+void ComponentCollider::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentCollider*>(component_to_copy) = *this;

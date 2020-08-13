@@ -203,19 +203,19 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 		App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
 	}
 
-
-
 	uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
 	if (selected_resource_uuid != 0)
 	{
 		billboard->ChangeTexture(selected_resource_uuid);
+		billboard->modified_by_user = true;
 	}
 	selected_resource_uuid = ImGui::ResourceDropper<Texture>();
 	if (selected_resource_uuid != 0)
 	{
 		billboard->ChangeTexture(selected_resource_uuid);
+		billboard->modified_by_user = true;
 	}
-	ImGui::ColorEdit4("Color", billboard->color);
+	billboard->modified_by_user |= ImGui::ColorEdit4("Color", billboard->color);
 
 	ImGui::Text("TextureEmissive");
 	ImGui::SameLine();
@@ -230,13 +230,15 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 	if (selected_resource_uuid != 0)
 	{
 		billboard->ChangeTextureEmissive(selected_resource_uuid);
+		billboard->modified_by_user = true;
 	}
 	selected_resource_uuid = ImGui::ResourceDropper<Texture>();
 	if (selected_resource_uuid != 0)
 	{
 		billboard->ChangeTextureEmissive(selected_resource_uuid);
+		billboard->modified_by_user = true;
 	}
-	ImGui::ColorEdit4("Color Emissive", billboard->color_emissive);
+	billboard->modified_by_user |= ImGui::ColorEdit4("Color Emissive", billboard->color_emissive);
 
 	int alignment_type = static_cast<int>(billboard->alignment_type);
 	if (ImGui::Combo("Billboard type", &alignment_type, "World\0View point\0Axial")) {
@@ -244,12 +246,15 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 		{
 		case 0:
 			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::WORLD);
+			billboard->modified_by_user = true;
 			break;
 		case 1:
 			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
+			billboard->modified_by_user = true;
 			break;
 		case 2:
 			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
+			billboard->modified_by_user = true;
 			break;
 		}
 	}
@@ -258,10 +263,10 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 
 	if (billboard->is_spritesheet) 
 	{
-		ImGui::DragInt("Columns", &billboard->num_sprisheet_columns);
-		ImGui::DragInt("Rows", &billboard->num_sprisheet_rows);
-		ImGui::DragInt("Animation Time", &billboard->animation_time, 10.f, 0);
-		ImGui::Checkbox("Loop", &billboard->loop);
+		billboard->modified_by_user |= ImGui::DragInt("Columns", &billboard->num_sprisheet_columns);
+		billboard->modified_by_user |= ImGui::DragInt("Rows", &billboard->num_sprisheet_rows);
+		billboard->modified_by_user |= ImGui::DragInt("Animation Time", &billboard->animation_time, 10.f, 0);
+		billboard->modified_by_user |= ImGui::Checkbox("Loop", &billboard->loop);
 
 		if (ImGui::Button("Play"))
 		{
@@ -271,25 +276,23 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 
 	ImGui::Separator();
 	ImGui::Text("Custom");
-	ImGui::DragFloat("Width:", &billboard->width, 0.2f, 0.f, 10.f);
-	ImGui::DragFloat("Height:", &billboard->height, 0.2f, 0.f, 10.f);
-	ImGui::DragFloat("Transparency:", &billboard->transparency, 0.1f, 0.f, 1.f);
+	billboard->modified_by_user |= ImGui::DragFloat("Width:", &billboard->width, 0.2f, 0.f, 10.f);
+	billboard->modified_by_user |= ImGui::DragFloat("Height:", &billboard->height, 0.2f, 0.f, 10.f);
+	billboard->modified_by_user |= ImGui::DragFloat("Transparency:", &billboard->transparency, 0.1f, 0.f, 1.f);
 }
 
 void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 {
-	ImGui::Checkbox("Active", &trail->active);
-	ImGui::SameLine();
-	if (ImGui::Button("Delete"))
+	if (!ShowCommonComponentWindow(trail))
 	{
-		App->actions->DeleteComponentUndo(trail);
+		return;
 	}
 	ImGui::Separator();
 	if (ImGui::CollapsingHeader(ICON_FA_SHARE " Trail Renderer", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::InputFloat("Width", &trail->width, 0.1f);
-		ImGui::InputFloat("Duration", &trail->duration, 1000.0f);
-		ImGui::InputFloat("Distance", &trail->min_distance, 1.0f);
+		trail->modified_by_user |= ImGui::InputFloat("Width", &trail->width, 0.1f);
+		trail->modified_by_user |= ImGui::InputFloat("Duration", &trail->duration, 1000.0f);
+		trail->modified_by_user |= ImGui::InputFloat("Distance", &trail->min_distance, 1.0f);
 		ImGui::Text("Texture");
 		ImGui::SameLine();
 
@@ -304,14 +307,16 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 		if (selected_resource_uuid != 0)
 		{
 			trail->SetTrailTexture(selected_resource_uuid);
+			trail->modified_by_user = true;
 		}
 		selected_resource_uuid = ImGui::ResourceDropper<Texture>();
 		if (selected_resource_uuid != 0)
 		{
 			trail->SetTrailTexture(selected_resource_uuid);
+			trail->modified_by_user = true;
 		}
-		ImGui::ColorEdit4("Color", trail->color.ptr());
-		ImGui::DragFloat("Intensity", &trail->bloom_intensity, 0.05f, 0.01f, 10.0f);
+		trail->modified_by_user |= ImGui::ColorEdit4("Color", trail->color.ptr());
+		trail->modified_by_user |= ImGui::DragFloat("Intensity", &trail->bloom_intensity, 0.05f, 0.01f, 10.0f);
 		
 	}
 }
@@ -326,12 +331,12 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		}
 		ImGui::Separator();
 
-		if (ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; }
-		if (ImGui::InputFloat3("Up", &camera->camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; }
+		camera->modified_by_user |= ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly);
+		camera->modified_by_user |= ImGui::InputFloat3("Up", &camera->camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly);
 
 		ImGui::Separator();
 
-		if (ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED)) { camera->modified_by_user = true; }
+		camera->modified_by_user |= ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
 
 		//UndoRedo
 		CheckClickedCamera(camera);
@@ -390,7 +395,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 				break;
 			}
 		}
-		if (ImGui::ColorEdit3("Clear Color", camera->camera_clear_color)) { camera->modified_by_user = true; }
+		camera->modified_by_user |= ImGui::ColorEdit3("Clear Color", camera->camera_clear_color);
 		ImGui::Separator();
 
 		if (ImGui::DragFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0.01f, 0, 100))
@@ -416,7 +421,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		}
 		ImGui::Separator();
 
-		if (ImGui::DragInt("Depth", &camera->depth, 0.05f)) { camera->modified_by_user = true; }
+		camera->modified_by_user |= ImGui::DragInt("Depth", &camera->depth, 0.05f);
 
 		//UndoRedo
 		CheckClickedCamera(camera);
@@ -433,11 +438,11 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 		}
 		ImGui::Separator();
 
-		if (ImGui::ColorEdit3("Color", light->light_color)) { light->modified_by_user = true; }
+		light->modified_by_user |= ImGui::ColorEdit3("Color", light->light_color);
 
 		App->actions->CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
-		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 100.f)) { light->modified_by_user = true; }
+		light->modified_by_user |= ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 100.f);
 
 		App->actions->CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
@@ -449,12 +454,15 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 			{
 			case 0:
 				light->light_type = ComponentLight::LightType::POINT_LIGHT;
+				light->modified_by_user = true;
 				break;
 			case 1:
 				light->light_type = ComponentLight::LightType::SPOT_LIGHT;
+				light->modified_by_user = true;
 				break;
 			case 2:
 				light->light_type = ComponentLight::LightType::DIRECTIONAL_LIGHT;
+				light->modified_by_user = true;
 				break;
 			default:
 				break;
@@ -1025,6 +1033,7 @@ void PanelComponent::ShowScriptsCreated(ComponentScript* component_script)
 			if (ImGui::Selectable(script_name.c_str()))
 			{
 				component_script->LoadName(script_name);
+				component_script->modified_by_user = true;
 
 			}
 		}
@@ -1085,7 +1094,7 @@ bool PanelComponent::ShowCommonComponentWindow(Component* component)
 	{
 		if (ImGui::Button("Paste component as new"))
 		{
-			App->actions->PasteComponent(component);
+			App->actions->PasteComponent(component->owner);
 		}
 	}
 	if (ImGui::Button("Paste component values"))
@@ -1096,78 +1105,89 @@ bool PanelComponent::ShowCommonComponentWindow(Component* component)
 	return true;
 }
 
-bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
+bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* component)
 {
-	if (ImGui::Checkbox("Active", &collider->active))
+	if (ImGui::Checkbox("Active", &component->active))
 	{
 		//UndoRedo
-		collider->SwitchPhysics();
-		App->actions->action_component = collider;
+		component->SwitchPhysics();
+		App->actions->action_component = component;
 		App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Delete"))
 	{
-		App->actions->DeleteComponentUndo(collider);
+		App->actions->DeleteComponentUndo(component);
 		return false;
 	}
 	if (ImGui::Button("Copy")) 
 	{
-		App->actions->SetCopyComponent(collider);
+		App->actions->SetCopyComponent(component);
 	}
 	if (ImGui::Button("Paste component as new"))
 	{
-		App->actions->PasteComponent(collider);
+		App->actions->PasteComponent(component->owner);
 	}
 	if (ImGui::Button("Paste component values"))
 	{
-		App->actions->PasteComponentValues(collider);
+		App->actions->PasteComponentValues(component);
 	}
 	ImGui::Separator();
 
-	if (ImGui::DragFloat("Mass", &collider->mass, 1.0F, 0.1F, 1000.F))
+	if (ImGui::DragFloat("Mass", &component->mass, 1.0F, 0.1F, 1000.F))
 	{
-		collider->SetMass(collider->mass);
+		component->SetMass(component->mass);
+		component->modified_by_user = true;
 	}
-	if (ImGui::DragFloat("Friction", &collider->friction, 0.1F, 0.1F, 1.F)) {
-		collider->UpdateFriction();
+	if (ImGui::DragFloat("Friction", &component->friction, 0.1F, 0.1F, 1.F)) {
+		component->UpdateFriction();
+		component->modified_by_user = true;
 	}
-	if (ImGui::DragFloat("Rolling friction", &collider->rolling_friction, 1.0F, 0.1F, 2000.F))
+	if (ImGui::DragFloat("Rolling friction", &component->rolling_friction, 1.0F, 0.1F, 2000.F))
 	{
-		collider->SetRollingFriction();
+		component->SetRollingFriction();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Visualize", &collider->visualize))
+	if (ImGui::Checkbox("Visualize", &component->visualize))
 	{
-		collider->SetVisualization();
+		component->SetVisualization();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Static", &collider->is_static))
+	if (ImGui::Checkbox("Static", &component->is_static))
 	{
-		collider->SetStatic();
+		component->SetStatic();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Collision Detection", &collider->detect_collision))
+	if (ImGui::Checkbox("Collision Detection", &component->detect_collision))
 	{
-		collider->SetCollisionDetection();
+		component->SetCollisionDetection();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Active Physics", &collider->active_physics))
+	if (ImGui::Checkbox("Active Physics", &component->active_physics))
 	{
-		collider->SwitchPhysics();
+		component->SwitchPhysics();
+		component->modified_by_user = true;
 	}
 	ImGui::Text("Freeze Axis Rotation");
-	if (ImGui::Checkbox("X Axis", &collider->freeze_rotation_x))
+	if (ImGui::Checkbox("X Axis", &component->freeze_rotation_x))
 	{
-		collider->SetRotationAxis();
+		component->SetRotationAxis();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Y Axis", &collider->freeze_rotation_y))
+	if (ImGui::Checkbox("Y Axis", &component->freeze_rotation_y))
 	{
-		collider->SetRotationAxis();
+		component->SetRotationAxis();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Z Axis", &collider->freeze_rotation_z))
+	if (ImGui::Checkbox("Z Axis", &component->freeze_rotation_z))
 	{
-		collider->SetRotationAxis();
+		component->SetRotationAxis();
+		component->modified_by_user = true;
 	}
-	if (ImGui::DragFloat3("Center", collider->center.ptr(), 0.01F))
+	if (ImGui::DragFloat3("Center", component->center.ptr(), 0.01F))
 	{
-		collider->SetColliderCenter(collider->center);
+		component->SetColliderCenter(component->center);
+		component->modified_by_user = true;
 	}
 	return true;
 }
@@ -1182,6 +1202,7 @@ void PanelComponent::ShowComponentBoxColliderWindow(ComponentBoxCollider* box_co
 			if (ImGui::DragFloat3("Scale", box_collider->scale.ptr(), 0.01F, 0.1F, 10.0F))
 			{
 				box_collider->Scale();
+				box_collider->modified_by_user = true;
 			}
 		}
 	}
@@ -1196,10 +1217,12 @@ void PanelComponent::ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider
 			if (ImGui::DragFloat("Radius", &capsule_collider->scale.x, 0.01F, 0.1F, 10.0F))
 			{
 				capsule_collider->Scale();
+				capsule_collider->modified_by_user = true;
 			}
 			if (ImGui::DragFloat("Height", &capsule_collider->scale.y, 0.01F, 0.1F, 10.0F))
 			{
 				capsule_collider->Scale();
+				capsule_collider->modified_by_user = true;
 			}
 		}
 	}
@@ -1214,6 +1237,7 @@ void PanelComponent::ShowComponentSphereColliderWindow(ComponentSphereCollider* 
 			if (ImGui::DragFloat("Radius", &sphere_collider->scale.x, 0.01F, 0.01F, 10.0F))
 			{
 				sphere_collider->Scale();
+				sphere_collider->modified_by_user = true;
 			}
 		}
 	}
@@ -1228,10 +1252,12 @@ void PanelComponent::ShowComponentCylinderColliderWindow(ComponentCylinderCollid
 			if (ImGui::DragFloat("Radius", &cylinder_collider->scale.x, 0.01F, 0.1F, 10.0F))
 			{
 				cylinder_collider->Scale();
+				cylinder_collider->modified_by_user = true;
 			}
 			if (ImGui::DragFloat("Height", &cylinder_collider->scale.y, 0.01F, 0.1F, 10.0F))
 			{
 				cylinder_collider->Scale();
+				cylinder_collider->modified_by_user = true;
 			}
 		}
 	}
@@ -1246,6 +1272,7 @@ void PanelComponent::ShowComponentMeshColliderWindow(ComponentMeshCollider* mesh
 			if (ImGui::DragFloat3("Scale", mesh_collider->scale.ptr(), 0.01F))
 			{
 				mesh_collider->Scale();
+				mesh_collider->modified_by_user = true;
 			}
 		}
 	}

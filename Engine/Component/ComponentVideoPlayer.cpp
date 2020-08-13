@@ -97,7 +97,7 @@ void ComponentVideoPlayer::RenderTexture(math::float4x4 * projection, GLuint tex
 	glUseProgram(0);
 }
 
-Component* ComponentVideoPlayer::Clone(bool original_prefab) const
+Component* ComponentVideoPlayer::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentVideoPlayer * created_component;
 	if (original_prefab)
@@ -116,7 +116,7 @@ Component* ComponentVideoPlayer::Clone(bool original_prefab) const
 	return created_component;
 };
 
-void ComponentVideoPlayer::Copy(Component* component_to_copy) const
+void ComponentVideoPlayer::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentVideoPlayer*>(component_to_copy) = *this;

@@ -14,9 +14,9 @@ ComponentAABB::ComponentAABB(GameObject* owner) : Component(owner, ComponentType
 
 }
 
-void ComponentAABB::Copy(Component* component_to_copy) const
+void ComponentAABB::CopyTo(Component* component_to_copy) const
 { 
-	*static_cast<ComponentAABB*>(component_to_copy) = *this; 
+	*static_cast<ComponentAABB*>(component_to_copy) = *this;
 };
 
 void ComponentAABB::SpecializedSave(Config& config) const
@@ -129,12 +129,9 @@ bool ComponentAABB::IsEmpty() const
 	return bounding_box.Size().Length() == 0;
 }
 
-Component* ComponentAABB::Clone(bool original_prefab) const
+Component* ComponentAABB::Clone(GameObject* owner, bool /*original_prefab*/) 
 {
-	ComponentAABB * created_component;
-	created_component = new ComponentAABB();
-	*created_component = *this;
-	CloneBase(static_cast<Component*>(created_component));
-	return created_component;
+	CopyTo(&owner->aabb);
+	return &owner->aabb;
 }
 

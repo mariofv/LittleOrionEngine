@@ -47,7 +47,7 @@ public:
 	
 	void AddUndoAction(UndoActionType type);
 	void DeleteComponentUndo(Component* component);
-	void PasteComponent(Component* component);
+	void PasteComponent(GameObject* gameobject);
 	void PasteComponentValues(Component* component);
 	void SetCopyComponent(Component* component);
 	void ClearUndoRedoStacks();
@@ -73,9 +73,6 @@ public:
 	GameObject* action_game_object = nullptr;
 	Component* action_component = nullptr;
 	Component* copied_component = nullptr;
-	Config script_config;
-	Config transform_config;
-	Config transform_2D_config;
 
 	float previous_light_color[3];
 	float previous_light_intensity;

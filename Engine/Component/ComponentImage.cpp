@@ -69,7 +69,7 @@ void ComponentImage::Render(float4x4* projection)
 	glUseProgram(0);
 }
 
-Component* ComponentImage::Clone(bool original_prefab) const
+Component* ComponentImage::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentImage * created_component;
 	if (original_prefab)
@@ -83,12 +83,15 @@ Component* ComponentImage::Clone(bool original_prefab) const
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
 
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
+
 	created_component->ReassignResource();
 
 	return created_component;
 };
 
-void ComponentImage::Copy(Component* component_to_copy) const
+void ComponentImage::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentImage*>(component_to_copy) = *this;

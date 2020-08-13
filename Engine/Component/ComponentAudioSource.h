@@ -32,8 +32,8 @@ public:
 	ENGINE_API void StopEvent(unsigned long playing_id_to_stop);
 	ENGINE_API void StopAll();
 
-	Component* Clone(bool original_prefab = false) const override;
-	void Copy(Component* component_to_copy) const override;
+	Component* Clone(GameObject* owner, bool original_prefab) override;
+	void CopyTo(Component* component_to_copy) const override;
 
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
