@@ -38,7 +38,6 @@ float2 BezierCurve::BezierValue(const float percentage) const
 	return float2::zero;
 }
 
-
 float2 BezierCurve::BezierValueIndexPoints(const float percentage, const int last_index) const
 {
 	assert(percentage >= 0 && percentage <= 1);
@@ -68,6 +67,8 @@ bool BezierCurve::AddPointAtCurve(const float point_x)
 	float2 new_point = BezierValue(point_x);
 	for (int i = num_points - 1; i >= new_point_index; i--)
 	{
+		assert(i + 1 < MAXIMUM_POINTS);
+		assert(i >= 0);
 		points[i + 1].left_pivot = points[i].left_pivot;
 		points[i + 1].curve_point = points[i].curve_point;
 		points[i + 1].right_pivot = points[i].right_pivot;
@@ -92,6 +93,8 @@ bool BezierCurve::RemovePointWithIndex(const int point_index)
 
 	for (int i = point_index; i < num_points; i++)
 	{
+		assert(i + 1 < MAXIMUM_POINTS);
+		assert(i >= 0);
 		points[i].left_pivot = points[i + 1].left_pivot;
 		points[i].curve_point = points[i + 1].curve_point;
 		points[i].right_pivot = points[i + 1].right_pivot;

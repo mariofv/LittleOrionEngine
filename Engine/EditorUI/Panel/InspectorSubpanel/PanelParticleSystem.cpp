@@ -294,7 +294,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				//ImGui::Bezier("Bezier Velocity", particle_system->velocity_bezier_curve);
 
 
-				ImGui::Bezier(&particle_system->vel_curve);
+				ImGui::DrawBezierCubic(&particle_system->vel_curve);
 
 
 
