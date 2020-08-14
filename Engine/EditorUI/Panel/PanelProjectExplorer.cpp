@@ -119,6 +119,10 @@ void PanelProjectExplorer::InitResourceExplorerDockspace()
 
 void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 {
+	if (!App->resources->first_import_completed)
+	{
+		return;
+	}
 	for (auto & path_child : path.children)
 	{
 		if (path_child->IsDirectory())
@@ -371,7 +375,9 @@ size_t PanelProjectExplorer::GetResourcePreviewImage(uint32_t uuid)
 	size_t opengl_id = 0;
 	if (project_explorer_icon_cache.find(uuid) == project_explorer_icon_cache.end())
 	{
+		App->resources->loading_thread_communication.normal_loading_flag = true;
 		opengl_id = (project_explorer_icon_cache[uuid] = App->resources->Load<Texture>(uuid))->opengl_texture;
+		App->resources->loading_thread_communication.normal_loading_flag = false;
 	}
 	else
 	{
@@ -600,27 +606,33 @@ void PanelProjectExplorer::FilesDrop() const
 		{
 			assert(payload->DataSize == sizeof(GameObject*));
 			GameObject *incoming_game_object = *(GameObject**)payload->Data;
-			uint32_t prefab_uuid = PrefabManager::CreateFromGameObject(*selected_folder, *incoming_game_object);
-			if (prefab_uuid != 0)
-			{
-				App->scene->RemoveGameObject(incoming_game_object);
-				std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(prefab_uuid);
-				App->editor->selected_game_object = prefab->Instantiate(App->scene->GetRoot());
-			}
+			CreatePrefabInSelectedFolder(incoming_game_object);
 		}
 		ImGui::EndDragDropTarget();
+	}
+}
+
+void PanelProjectExplorer::CreatePrefabInSelectedFolder(GameObject * incoming_game_object) const
+{
+	Path* destination_folder = selected_folder ? selected_folder : App->filesystem->GetRootPath();
+	uint32_t prefab_uuid = PrefabManager::CreateFromGameObject(*destination_folder, *incoming_game_object);
+	if (prefab_uuid != 0)
+	{
+		std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(prefab_uuid);
+		App->editor->selected_game_object = prefab->Instantiate(incoming_game_object->parent ? incoming_game_object->parent : App->scene->GetRoot());
+		App->scene->RemoveGameObject(incoming_game_object);
 	}
 }
 
 bool PanelProjectExplorer::IsOneOfMyChildrens(Path* path) const
 {
 	bool found = false;
-	for (auto& path : path->children)
+	for (auto& child : path->children)
 	{
-		found = std::find(path->children.begin(), path->children.end(), selected_folder) != path->children.end() || path == selected_folder;
-		if (!found && path->children.size() > 0)
+		found = std::find(child->children.begin(), child->children.end(), selected_folder) != child->children.end() || child == selected_folder;
+		if (!found && child->children.size() > 0)
 		{
-			found = IsOneOfMyChildrens(path);
+			found = IsOneOfMyChildrens(child);
 		}
 		if (found)
 		{

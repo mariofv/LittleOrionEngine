@@ -1,6 +1,7 @@
 ﻿#include "ComponentMeshRenderer.h"
 
 #include "ComponentAnimation.h"
+#include "Component/ComponentMeshCollider.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 
@@ -36,6 +37,8 @@ void ComponentMeshRenderer::SpecializedSave(Config& config) const
 	config.AddUInt(mesh_uuid, "Mesh");
 	config.AddUInt(material_uuid, "Material");
 	config.AddUInt(skeleton_uuid, "Skeleton");
+	config.AddBool(shadow_caster, "ShadowCaster");
+	config.AddBool(shadow_receiver, "ShadowReceiver");
 }
 
 void ComponentMeshRenderer::SpecializedLoad(const Config& config)
@@ -48,6 +51,72 @@ void ComponentMeshRenderer::SpecializedLoad(const Config& config)
 
 	skeleton_uuid =	config.GetUInt32("Skeleton", 0);
 	SetSkeleton(skeleton_uuid);
+
+	shadow_caster = config.GetBool("ShadowCaster", shadow_caster);
+	shadow_receiver = config.GetBool("ShadowReceiver", shadow_receiver);
+}
+
+void ComponentMeshRenderer::LoadResource(uint32_t uuid, ResourceType resource, unsigned texture_type)
+{
+	APP_LOG_INFO("GO Loading Resource: %s", std::to_string(owner->UUID).c_str());
+
+	if(resource == ResourceType::TEXTURE)
+	{
+		material_to_render->LoadResource(uuid, texture_type);
+		APP_LOG_INFO("INITIALAZING TEXTURE: %s on component %s", std::to_string(uuid).c_str(), std::to_string(this->UUID).c_str());
+	}
+	else if(resource == ResourceType::MESH)
+	{
+		mesh_to_render = std::static_pointer_cast<Mesh>(App->resources->RetrieveFromCacheIfExist(uuid));
+		APP_LOG_INFO("INITIALAZING MESH: %s on component %s", std::to_string(uuid).c_str(), std::to_string(this->UUID).c_str());
+		if (mesh_to_render)
+		{
+			if(mesh_collider)
+			{
+				mesh_collider->InitMeshCollider();
+			}
+
+			return;
+		}
+
+		FileData file_data;
+		bool succes = App->resources->RetrieveFileDataByUUID(uuid, file_data);
+		if (succes)
+		{
+			//THINK WHAT TO DO IF IS IN CACHE
+			mesh_to_render = ResourceManagement::Load<Mesh>(uuid, file_data, true);
+			//Delete file data buffer
+			delete[] file_data.buffer;
+			App->resources->AddResourceToCache(std::static_pointer_cast<Resource>(mesh_to_render));
+		
+			if (mesh_collider)
+			{
+				mesh_collider->InitMeshCollider();
+			}
+		}
+	}
+}
+
+void ComponentMeshRenderer::InitResource(uint32_t uuid, ResourceType resource, unsigned texture_type)
+{
+	if (resource == ResourceType::TEXTURE)
+	{
+		material_to_render->InitResource(uuid, texture_type);
+	}
+	else if (resource == ResourceType::MESH)
+	{
+		if (mesh_to_render && !mesh_to_render.get()->initialized)
+		{
+			mesh_to_render.get()->LoadInMemory();
+			owner->aabb.GenerateBoundingBox();
+		}
+	}
+}
+
+void ComponentMeshRenderer::ReassignResource()
+{
+	SetMesh(mesh_uuid);
+	SetMaterial(material_uuid);
 }
 
 void ComponentMeshRenderer::Render()
@@ -56,14 +125,13 @@ void ComponentMeshRenderer::Render()
 	{
 		return;
 	}
-	std::string program_name = material_to_render->shader_program;
 	unsigned int shader_variation = material_to_render->GetShaderVariation();
 	if (shadow_receiver && App->lights->render_shadows)
 	{
 		shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_RECEIVE_SHADOWS);
 	}
 
-	GLuint program = App->program->UseProgram(program_name, shader_variation);
+	GLuint program = App->program->UseProgram(material_to_render->shader_program, shader_variation);
 
 	glUniform1i(glGetUniformLocation(program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
 	
@@ -77,7 +145,10 @@ void ComponentMeshRenderer::Render()
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	App->lights->Render(owner->transform.GetGlobalTranslation(), program);
+	if (!material_to_render->UseLightmap())
+	{
+		App->lights->Render(owner->transform.GetGlobalTranslation(), program);
+	}
 
 	RenderMaterial(program);
 	RenderModel();
@@ -87,7 +158,8 @@ void ComponentMeshRenderer::Render()
 
 void ComponentMeshRenderer::RenderModel() const
 {
-	if (mesh_to_render == nullptr)
+	BROFILER_CATEGORY("Draw call", Profiler::Color::LawnGreen);
+	if (mesh_to_render == nullptr || !mesh_to_render->initialized)
 	{
 		return;
 	}	
@@ -98,6 +170,7 @@ void ComponentMeshRenderer::RenderModel() const
 
 void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 {
+	BROFILER_CATEGORY("Render material", Profiler::Color::ForestGreen);
 	AddDiffuseUniforms(shader_program);
 	AddEmissiveUniforms(shader_program);
 	AddSpecularUniforms(shader_program);
@@ -106,7 +179,7 @@ void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 	AddNormalUniforms(shader_program);
 	AddLightMapUniforms(shader_program);
 	
-	if (material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING)
+	if (material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING || material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
 	{
 		AddDissolveMaterialUniforms(shader_program);
 	}
@@ -167,16 +240,16 @@ void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
 void ComponentMeshRenderer::AddLightMapUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE8);
-	bool has_lightmap =  BindTexture(Material::MaterialTextureType::LIGHTMAP);
+	BindTexture(Material::MaterialTextureType::LIGHTMAP);
 	glUniform1i(glGetUniformLocation(shader_program, "material.light_map"), 8);
-	glUniform1i(glGetUniformLocation(shader_program, "use_light_map"), has_lightmap ? 1 : 0);
+	glUniform1i(glGetUniformLocation(shader_program, "use_light_map"), material_to_render->UseLightmap() ? 1 : 0);
 }
 
 void ComponentMeshRenderer::AddLiquidMaterialUniforms(unsigned int shader_program) const
 {
-	glActiveTexture(GL_TEXTURE9);
+	glActiveTexture(GL_TEXTURE12);
 	BindTexture(Material::MaterialTextureType::LIQUID);
-	glUniform1i(glGetUniformLocation(shader_program, "material.liquid_map"), 9);
+	glUniform1i(glGetUniformLocation(shader_program, "material.liquid_map"), 12);
 	glUniform2fv(glGetUniformLocation(shader_program, "material.liquid_horizontal_normals_tiling"), 1, material_to_render->liquid_horizontal_normals_tiling.ptr());
 	glUniform2fv(glGetUniformLocation(shader_program, "material.liquid_vertical_normals_tiling"), 1, material_to_render->liquid_vertical_normals_tiling.ptr());
 }
@@ -186,10 +259,13 @@ void ComponentMeshRenderer::AddDissolveMaterialUniforms(unsigned int shader_prog
 	glActiveTexture(GL_TEXTURE9);
 	BindTexture(Material::MaterialTextureType::DISSOLVED_DIFFUSE);
 	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_diffuse"), 9);
-
 	glActiveTexture(GL_TEXTURE10);
+	BindTexture(Material::MaterialTextureType::DISSOLVED_EMISSIVE);
+	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_emissive"), 10);
+
+	glActiveTexture(GL_TEXTURE11);
 	BindTexture(Material::MaterialTextureType::NOISE);
-	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_noise"), 10);
+	glUniform1i(glGetUniformLocation(shader_program, "material.dissolved_noise"), 11);
 
 	glUniform1f(glGetUniformLocation(shader_program, "material.dissolve_progress"), material_to_render->dissolve_progress);
 }
@@ -226,7 +302,7 @@ bool ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const
 	}
 	else
 	{
-		if (id == Material::MaterialTextureType::EMISSIVE)
+		if (id == Material::MaterialTextureType::EMISSIVE || id == Material::MaterialTextureType::DISSOLVED_EMISSIVE)
 		{
 			texture_id = App->texture->blackfall_texture_id;
 		}
@@ -255,7 +331,7 @@ bool ComponentMeshRenderer::BindTextureNormal(Material::MaterialTextureType id) 
 	}
 }
 
-Component* ComponentMeshRenderer::Clone(bool original_prefab) const
+Component* ComponentMeshRenderer::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentMeshRenderer * created_component;
 	if (original_prefab)
@@ -268,10 +344,13 @@ Component* ComponentMeshRenderer::Clone(bool original_prefab) const
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 }
 
-void ComponentMeshRenderer::Copy(Component* component_to_copy) const
+void ComponentMeshRenderer::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentMeshRenderer*>(component_to_copy) = *this;
@@ -279,16 +358,24 @@ void ComponentMeshRenderer::Copy(Component* component_to_copy) const
 
 void ComponentMeshRenderer::SetMesh(uint32_t mesh_uuid)
 {
+	//Prepare multithreading loading
+	App->resources->loading_thread_communication.current_component_loading = this;
 	this->mesh_uuid = mesh_uuid;
 	if (mesh_uuid != 0)
 	{
+		App->resources->loading_thread_communication.current_type = ResourceType::MESH;
 		this->mesh_to_render = App->resources->Load<Mesh>(mesh_uuid);
 		owner->aabb.GenerateBoundingBox();
 	}
+	
+	App->resources->loading_thread_communication.current_component_loading = nullptr;
 }
 
 void ComponentMeshRenderer::SetMaterial(uint32_t material_uuid)
 {
+	//Prepare multithreading loading
+	App->resources->loading_thread_communication.current_component_loading = this;
+
 	this->material_uuid = material_uuid;
 	if (material_uuid != 0)
 	{
@@ -298,6 +385,9 @@ void ComponentMeshRenderer::SetMaterial(uint32_t material_uuid)
 	{
 		material_to_render = App->resources->Load<Material>((uint32_t)CoreResource::DEFAULT_MATERIAL);
 	}
+
+	//Set to default loading component
+	App->resources->loading_thread_communication.current_component_loading = nullptr;
 }
 
 void ComponentMeshRenderer::SetSkeleton(uint32_t skeleton_uuid)
@@ -314,20 +404,17 @@ void ComponentMeshRenderer::SetSkeleton(uint32_t skeleton_uuid)
 	}
 }
 
-void ComponentMeshRenderer::UpdatePalette(const std::vector<float4x4>& pose)
+void ComponentMeshRenderer::UpdatePalette(std::vector<float4x4>& pose)
 {
 	assert(pose.size() == palette.size());
 	const auto &  joints = skeleton->skeleton;
 	for (size_t i = 0; i < pose.size(); ++i)
 	{
-		size_t joint_index = i;
-		float4x4 global_transform = float4x4::identity;
-		while (joints[joint_index].parent_index != -1)
+		size_t parent_index = joints[i].parent_index;
+		if (parent_index <= pose.size())
 		{
-			joint_index = joints[joint_index].parent_index;
-			global_transform = pose[joint_index] * global_transform;
-
+			pose[i] = pose[parent_index] * pose[i];
 		}
-		palette[i] =  global_transform * pose[i] * joints[i].transform_global;
+		palette[i] = pose[i] * joints[i].transform_global;
 	}
 }

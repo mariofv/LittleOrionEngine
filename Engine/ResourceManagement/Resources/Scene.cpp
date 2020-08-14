@@ -1,6 +1,7 @@
 #include "Scene.h"
 
 #include "Helper/Config.h"
+#include "Log/EngineLog.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -17,7 +18,9 @@
 #include "ResourceManagement/Resources/Prefab.h"
 #include "ResourceManagement/Resources/Scene.h"
 
+#include <functional> 
 #include <queue>
+#include <thread>
 #include <unordered_map>
 
 Scene::Scene() : Resource(0)
@@ -99,6 +102,15 @@ void Scene::Load(bool from_file)
 		Config scene_config(serialized_scene_string);
 	}
 
+	timer.Start();
+
+#if MULTITHREADING
+	App->resources->loading_thread_communication.number_of_textures_loaded = 0;
+	App->resources->loading_thread_communication.current_number_of_resources_loaded = 0;
+	App->resources->loading_thread_communication.total_number_of_resources_to_load = 0;
+	App->resources->loading_thread_communication.loading = true;
+#endif
+
 	std::unordered_map<int64_t, std::vector<GameObject*>> prefab_parents;
 	std::vector<Config> prefabs_config;
 	scene_config.GetChildrenConfig("Prefabs", prefabs_config);
@@ -112,20 +124,20 @@ void Scene::Load(bool from_file)
 		}
 	}
 
+
 	std::vector<Config> prefabs_modified_components;
 	scene_config.GetChildrenConfig("PrefabsComponents", prefabs_modified_components);
 	for (unsigned int i = 0; i < prefabs_modified_components.size(); ++i)
 	{
 		LoadPrefabModifiedComponents(prefabs_modified_components[i]);
 	}
-
-
 	std::vector<Config> game_objects_config;
 	scene_config.GetChildrenConfig("GameObjects", game_objects_config);
 	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
 	{
 		GameObject* created_game_object = App->scene->CreateGameObject();
 		created_game_object->Load(game_objects_config[i]);
+
 
 		if (!created_game_object->IsStatic())
 		{
@@ -142,6 +154,9 @@ void Scene::Load(bool from_file)
 
 		}
 	}
+
+	float time_loading = timer.Stop();
+	APP_LOG_INFO("Time loading scene: %.3f ms", time_loading);
 
 	App->lights->ambient_light_intensity = scene_config.GetFloat("Ambiental Light Intensity", 1.f);
 	float4 ambiental_light_color;
@@ -214,10 +229,13 @@ GameObject* Scene::LoadPrefab(const Config & config) const
 		return missing_prefab;
 	}
 
-	GameObject * instance = prefab->Instantiate(App->scene->GetRoot(), &UUIDS_pairs);
+	GameObject* instance = prefab->Instantiate(App->scene->GetRoot(), &UUIDS_pairs);
 	Config transform_config;
 	config.GetChildConfig("Transform", transform_config);
 	instance->transform.Load(transform_config);
+
+	App->resources->prefabs_to_reassign.push_back(prefab);
+
 	return instance;
 }
 
@@ -242,7 +260,7 @@ bool Scene::SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_
 	std::vector<Config> gameobject_components_config;
 	for (auto & component : gameobject_to_save->components)
 	{
-		if (component->modified_by_user || component->added_by_user)
+		if (component->modified_by_user || component->added_by_user || component->type == Component::ComponentType::SCRIPT)
 		{
 			Config component_config;
 			component->Save(component_config);
@@ -283,7 +301,7 @@ bool Scene::SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_
 
 void Scene::LoadPrefabModifiedComponents(const Config& config) const
 {
-	GameObject * prefab_child = App->scene->GetGameObject(config.GetUInt("UUID", 0));
+	GameObject* prefab_child = App->scene->GetGameObject(config.GetUInt("UUID", 0));
 	if (!prefab_child)
 	{
 		RESOURCES_LOG_ERROR("Missing prefab");
@@ -314,8 +332,8 @@ void Scene::LoadPrefabModifiedComponents(const Config& config) const
 
 		uint64_t UUID = component_config.GetUInt("UUID", 0);
 
-		Component * component = prefab_child->GetComponent(component_type_uint);
-		if (component != nullptr && component->UUID == UUID)
+		Component * component = prefab_child->GetComponent(UUID);
+		if (component != nullptr)
 		{
 			component->Load(component_config);
 			component->modified_by_user = true;

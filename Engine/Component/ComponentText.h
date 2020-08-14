@@ -24,12 +24,16 @@ public:
 	ComponentText(GameObject * owner);
 	~ComponentText();
 
-	Component* Clone(bool original_prefab = false) const override;
-	void Copy(Component* component_to_copy) const override;
+	Component* Clone(GameObject* owner, bool original_prefab) override;
+	void CopyTo(Component* component_to_copy) const override;
 
 	void Delete() override;
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
+
+	void InitResource(uint32_t uuid, ResourceType resource) override;
+
+	void ReassignResource() override;
 
 	void Update() override;
 	void Render(float4x4* projection);

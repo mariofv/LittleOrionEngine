@@ -81,8 +81,8 @@ public:
 	ComponentLight & operator=(ComponentLight && component_to_move) = default;
 
 
-	Component* Clone(bool original_prefab = false) const override;
-	void Copy(Component* component_to_copy) const override;
+	Component* Clone(GameObject* owner, bool original_prefab) override;
+	void CopyTo(Component* component_to_copy) const override;
 
 	void Delete() override;
 	void SpecializedSave(Config& config) const override;

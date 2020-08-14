@@ -1,5 +1,6 @@
 #include "ComponentAudioListener.h"
 
+#include "Log/EngineLog.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleAudio.h"
@@ -61,7 +62,7 @@ AkGameObjectID ComponentAudioListener::GetAkID()
 	return gameobject_listener;
 }
 
-Component* ComponentAudioListener::Clone(bool original_prefab) const
+Component* ComponentAudioListener::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentAudioListener* created_component;
 	if (original_prefab)
@@ -74,10 +75,13 @@ Component* ComponentAudioListener::Clone(bool original_prefab) const
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 };
 
-void ComponentAudioListener::Copy(Component* component_to_copy) const
+void ComponentAudioListener::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentAudioListener*>(component_to_copy) = *this;

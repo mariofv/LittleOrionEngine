@@ -5,22 +5,20 @@
 
 ComponentCylinderCollider::ComponentCylinderCollider() : ComponentCollider(ComponentCollider::ColliderType::CYLINDER)
 {
-	col_shape = new btCylinderShape(btVector3(box_size));
-	AddBody();
+	InitData();
 }
 
 ComponentCylinderCollider::ComponentCylinderCollider(GameObject* owner) : ComponentCollider(owner, ComponentCollider::ColliderType::CYLINDER)
 {
-	col_shape = new btCylinderShape(btVector3(box_size));
-	AddBody();
+	InitData();
 }
 
-Component* ComponentCylinderCollider::Clone(GameObject* owner, bool original_prefab) const
+Component* ComponentCylinderCollider::Clone(GameObject* owner, bool original_prefab) 
 {
 	ComponentCylinderCollider* created_component;
 	if (original_prefab)
 	{
-		created_component = new ComponentCylinderCollider();
+		created_component = new ComponentCylinderCollider(owner);
 	}
 	else
 	{
@@ -29,6 +27,9 @@ Component* ComponentCylinderCollider::Clone(GameObject* owner, bool original_pre
 	*created_component = *this;
 	created_component->SetConfiguration();
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 }
 
@@ -50,4 +51,10 @@ void ComponentCylinderCollider::Scale()
 	float3 global_scale = owner->transform.GetGlobalScale();
 	body->getCollisionShape()->setLocalScaling(btVector3(max(global_scale.x, global_scale.z) * scale.x, global_scale.y * scale.y, scale.z));
 	box_size = btVector3(scale.x, scale.y, scale.z);
+}
+
+void ComponentCylinderCollider::InitData()
+{
+	col_shape = new btCylinderShape(btVector3(box_size));
+	AddBody();
 }

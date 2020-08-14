@@ -16,7 +16,7 @@ in mat3 TBN;
 out vec4 FragColor;
 
 //constants
-const float gamma = 2.2;
+float gamma = 2.2;
 const float ambient_light_strength = 0.1;
 
 vec3 normal_from_texture;
@@ -46,6 +46,7 @@ struct Material
 	vec2 liquid_vertical_normals_tiling;
 
 	sampler2D dissolved_diffuse;
+	sampler2D dissolved_emissive;
 	sampler2D dissolved_noise;
 	float dissolve_progress;
 };
@@ -147,7 +148,7 @@ void main()
 
 	//TODO->change it to liquid maps and not hardcoded
 #if ENABLE_LIQUID_PROPERTIES
-		tiling += material.liquid_horizontal_normals_tiling;
+		tiling -= vec2(0, material.liquid_vertical_normals_tiling.y);
 #endif
 
 	vec3 fragment_normal = normalize(normal);
@@ -189,7 +190,8 @@ void main()
 	{
 		result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
-
+	
+	result += GetLightMapColor(material,texCoordLightmap) * use_light_map;
 	result += emissive_color;
 	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
 	FragColor = vec4(result,1.0);
@@ -201,8 +203,8 @@ vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 {
 	vec4 result;
 	#if ENABLE_DISSOLVING_PROPERTIES
-			float mapped_noise = 1 - texture(mat.dissolved_noise, texCoord).x;
-			if (mapped_noise < mat.dissolve_progress)
+			float mapped_noise = texture(mat.dissolved_noise, texCoord).x;
+			if (mapped_noise > mat.dissolve_progress)
 			{
 				result = texture(mat.diffuse_map, texCoord);
 			}
@@ -226,7 +228,11 @@ vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 
 vec3 GetLightMapColor(const Material mat, const vec2 texCoord)
 {
-	return texture(mat.light_map, texCoord).rgb;
+	if(use_light_map == 1)
+	{
+		gamma = 1.0;
+	}
+	return texture(mat.light_map, texCoord).rgb * use_light_map;
 }
 
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord)
@@ -244,7 +250,24 @@ vec3 GetOcclusionColor(const Material mat, const vec2 texCoord)
 
 vec3 GetEmissiveColor(const Material mat, const vec2 texCoord)
 {
-	return (texture(mat.emissive_map, texCoord)*mat.emissive_color).rgb;
+	vec4 result;
+	#if ENABLE_DISSOLVING_PROPERTIES
+			float mapped_noise = texture(mat.dissolved_noise, texCoord).x;
+			if (mapped_noise > mat.dissolve_progress)
+			{
+				result = texture(mat.emissive_map, texCoord);
+			}
+			else
+			{
+				result = texture(mat.dissolved_emissive, texCoord);
+			}
+	#else
+			result = texture(mat.emissive_map, texCoord);
+	#endif
+
+	result = result * mat.emissive_color;
+	result.rgb = pow(result.rgb, vec3(2.2));
+	return result.rgb;
 }
 
 vec3 GetNormalMap(const Material mat, const vec2 texCoord)

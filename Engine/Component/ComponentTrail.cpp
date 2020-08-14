@@ -26,7 +26,12 @@ ComponentTrail::ComponentTrail(GameObject * owner) : Component(owner, ComponentT
 }
 ComponentTrail::~ComponentTrail()
 {
-	vertices.empty();
+	CleanUp();
+}
+
+void ComponentTrail::CleanUp()
+{
+	vertices.clear();
 	if (trail_vbo != 0)
 	{
 		glDeleteBuffers(1, &trail_vbo);
@@ -36,12 +41,16 @@ ComponentTrail::~ComponentTrail()
 
 void ComponentTrail::Init()
 {
-	gameobject_init_position = owner->transform.GetGlobalTranslation(); //initial GO position
-	last_point = TrailPoint(gameobject_init_position, width, duration);
-
 	//InitRenderer
 	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
 
+	InitBuffers();
+
+	ClearTrail();
+}
+
+void ComponentTrail::InitBuffers()
+{
 	glGenVertexArrays(1, &trail_vao);
 	glGenBuffers(1, &trail_vbo);
 
@@ -68,33 +77,27 @@ void ComponentTrail::Update()
 		return;
 	}
 	float3 gameobject_position = owner->transform.GetGlobalTranslation(); //current GO position
-
-	if (gameobject_init_position.x != gameobject_position.x || gameobject_init_position.y != gameobject_position.y || gameobject_init_position.z != gameobject_position.z)//if user moves Trail GO
-		on_transform_change = true;
+	bool on_transform_change = last_gameobject_position.Distance(gameobject_position) >= min_distance;
 
 	if (on_transform_change)//always gets in this is wrong ! TODO create an event here/ merge with event system
 	{
-		head_point = TrailPoint(gameobject_position, width, duration); //If there is movement, update the head point on the GO's position
-		head_point.life = duration; // If the GO moves, we reset the life of the head point
-
-		if (head_point.position.Distance(last_point.position) >= min_distance) //If the head point is at a greater distance than the distance we specified...
-		{
-			TrailPoint next_point(head_point.position, width, duration);
-			test_points.push_back(next_point);	//create another Trail point and add it to the pool		
-			last_point = next_point; // So we're gonna calculate, on the next iteration how far we are from the last point created, and so on
-		}
+		TrailPoint next_point(gameobject_position, width, duration);
+		test_points.push_back(next_point);	//create another Trail point and add it to the pool		
+		last_point = next_point; // So we're gonna calculate, on the next iteration how far we are from the last point created, and so on
+		last_gameobject_position = gameobject_position;
 	}
 
 	GetPerpendiculars();
 
-	for (auto it = test_points.begin(); it < test_points.end(); ++it)
+	auto it = test_points.begin();
+	while (it != test_points.end())
 	{
 		if (it->life >= 0) // If life is positive, all good
 		{
 			it->is_rendered = true;
 			it->life -= App->time->real_time_delta_time; // Update time left
+			++it;
 		}
-
 		else // But if not, we delete these points
 		{
 			it = test_points.erase(it);
@@ -104,11 +107,9 @@ void ComponentTrail::Update()
 
 void  ComponentTrail::GetPerpendiculars()
 {
-	unsigned int destroy_point_vertice = 0;
 	TrailPoint* previous_point = nullptr;
 	TrailPoint* current_point = nullptr;
 	mesh_points.clear();
-	float mesh_index = 0.0f;
 	
 	for (int i = 0; i < test_points.size(); ++i)
 	{
@@ -122,8 +123,9 @@ void  ComponentTrail::GetPerpendiculars()
 
 	unsigned int j = 0;
 	vertices.clear();
-	mesh_index = 1 / (float)test_points.size(); // to coordinate texture
-	for (auto pair = mesh_points.begin(); pair < mesh_points.end(); ++pair)
+	float trail_segment_uv = 1.f / test_points.size(); // to coordinate texture
+	auto pair = mesh_points.begin();
+	while (pair != mesh_points.end())
 	{
 		if (pair->first->life > 0 && pair->second->life > 0)
 		{
@@ -148,15 +150,12 @@ void  ComponentTrail::GetPerpendiculars()
 				--pair;
 				top_left = pair->first->position + perpendicular;
 				bottom_left = (pair->first->position - perpendicular);
-				
 			}
-			else
-			{
-				top_left = pair->second->position + perpendicular;
-				bottom_left = (pair->second->position - perpendicular);
-			}
-			vertices.push_back({ top_left, float2(mesh_index * j,1.0f) }); //uv[i]
-			vertices.push_back({ bottom_left, float2(mesh_index * j,0.0f) });//uv[++i]
+			top_left = pair->first->position + perpendicular;
+			bottom_left = (pair->first->position - perpendicular);
+			vertices.push_back({ top_left, float2(trail_segment_uv * j, 1.0f) }); //uv[i]
+			vertices.push_back({ bottom_left, float2(trail_segment_uv * j, 0.0f) });//uv[++i]
+			++pair;
 		}
 		else
 		{
@@ -203,6 +202,16 @@ void ComponentTrail::Render()
 	}
 }
 
+void ComponentTrail::ClearTrail()
+{
+	if (owner)
+	{
+		last_gameobject_position = owner->transform.GetGlobalTranslation(); //initial GO position
+	}
+	last_point = TrailPoint(last_gameobject_position, width, duration);
+	test_points.clear();
+}
+
 void ComponentTrail::SetTrailTexture(uint32_t texture_uuid)
 {
 	this->texture_uuid = texture_uuid;
@@ -211,20 +220,16 @@ void ComponentTrail::SetTrailTexture(uint32_t texture_uuid)
 
 void ComponentTrail::ChangeTexture(uint32_t texture_uuid)
 {
+	App->resources->loading_thread_communication.normal_loading_flag = true;
 	if (texture_uuid != 0)
 	{
 		this->texture_uuid = texture_uuid;
 		trail_texture = App->resources->Load<Texture>(texture_uuid);
 	}
+	App->resources->loading_thread_communication.normal_loading_flag = false;
 }
 
-ComponentTrail& ComponentTrail::operator=(const ComponentTrail& component_to_copy)
-{
-	Component::operator = (component_to_copy);
-	return *this;
-}
-
-Component* ComponentTrail::Clone(bool original_prefab) const
+Component* ComponentTrail::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentTrail* created_component;
 	if (original_prefab)
@@ -236,14 +241,21 @@ Component* ComponentTrail::Clone(bool original_prefab) const
 		created_component = App->effects->CreateComponentTrail(owner);
 	}
 	*created_component = *this;
+	created_component->InitBuffers();
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 };
 
-void ComponentTrail::Copy(Component* component_to_copy) const
+void ComponentTrail::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
-	*static_cast<ComponentTrail*>(component_to_copy) = *this;
+	ComponentTrail* trail = static_cast<ComponentTrail*>(component_to_copy);
+	trail->CleanUp();
+	*trail = *this;
+	trail->InitBuffers();
 }
 
 void ComponentTrail::Delete()
@@ -265,11 +277,22 @@ void ComponentTrail::SpecializedLoad(const Config& config)
 {
 	width = config.GetFloat("Width", 0.1f);
 	duration = config.GetFloat("Duration", 1000.0f);
-	min_distance = config.GetFloat("Distance", 1.0f);
+	min_distance = config.GetFloat("Min_Distance", 1.0f);
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
 	texture_uuid = config.GetUInt("TextureUUID", 0);
 	ChangeTexture(texture_uuid);
 	config.GetColor("Color", color, float4(1.0f, 1.0f, 1.0f, 1.0f));
 	bloom_intensity = config.GetFloat("Bloom_Intensity", 1.0f);
+}
+
+void ComponentTrail::Disable()
+{
+	active = false;
+}
+
+void ComponentTrail::Enable()
+{
+	active = true;
+	ClearTrail();
 }

@@ -187,13 +187,16 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	GetMeshesToRender(&camera);
 	for (auto &mesh : opaque_mesh_to_render)
 	{
-		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
+		BROFILER_CATEGORY("Render Mesh Opaque", Profiler::Color::Aquamarine);
 		if (mesh.second->mesh_uuid != 0 && mesh.second->IsEnabled())
 		{
 			mesh.second->Render();
-			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
-			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
-			App->lights->UpdateLightAABB(*mesh.second->owner);
+			if(mesh.second->mesh_to_render)
+			{
+				num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
+				num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
+				App->lights->UpdateLightAABB(*mesh.second->owner);			
+			}
 			glUseProgram(0);
 
 		}
@@ -204,13 +207,16 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	glBlendEquation(GL_FUNC_ADD);
 	for (auto &mesh : transparent_mesh_to_render)
 	{
-		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
+		BROFILER_CATEGORY("Render Mesh Transparent", Profiler::Color::Aquamarine);
 		if (mesh.second->mesh_uuid != 0 && mesh.second->IsEnabled())
 		{
 			mesh.second->Render();
-			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
-			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
-			App->lights->UpdateLightAABB(*mesh.second->owner);
+			if(mesh.second->mesh_to_render)
+			{
+				num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
+				num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
+				App->lights->UpdateLightAABB(*mesh.second->owner);			
+			}
 
 			glUseProgram(0);
 			
@@ -267,8 +273,6 @@ void ModuleRender::GetMeshesToRender(const ComponentCamera* camera)
 
 void ModuleRender::SetListOfMeshesToRender(const ComponentCamera* camera)
 {
-
-	BROFILER_CATEGORY("Set list meshes to render", Profiler::Color::MediumAquaMarine);
 	opaque_mesh_to_render.clear();
 	transparent_mesh_to_render.clear();
 	float3 camera_pos = camera->camera_frustum.pos;

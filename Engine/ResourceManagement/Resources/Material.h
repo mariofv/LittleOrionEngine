@@ -33,8 +33,9 @@ public:
 		LIGHTMAP = 5,
 		LIQUID = 6,
 		DISSOLVED_DIFFUSE = 7,
-		NOISE = 8,
-		UNKNOWN = 9
+		DISSOLVED_EMISSIVE = 8,
+		NOISE = 9,
+		UNKNOWN = 10
 	};
 
 	Material() = default;
@@ -46,6 +47,11 @@ public:
 
 	void SetMaterialTexture(MaterialTextureType type, uint32_t texture_id);
 	const std::shared_ptr<Texture>& GetMaterialTexture(MaterialTextureType type) const;
+	bool UseLightmap() const;
+
+	//Asyncronous loading
+	void LoadResource(uint32_t uuid, unsigned texture_type);
+	void InitResource(uint32_t uuid, unsigned texture_type);
 
 	void RemoveMaterialTexture(MaterialTextureType type);
 
@@ -57,7 +63,6 @@ public:
 
 	ENGINE_API void SetDissolveProgress(float progress);
 
-
 public:
 	static const size_t MAX_MATERIAL_TEXTURE_TYPES = static_cast<size_t>(MaterialTextureType::UNKNOWN);
 	static const size_t MAX_MATERIAL_TYPES = static_cast<size_t>(MaterialType::UNKNOWN);
@@ -68,6 +73,7 @@ public:
 	
 	std::vector<uint32_t> textures_uuid;
 	std::vector<std::shared_ptr<Texture>> textures;
+
 
 	float diffuse_color[4] = { 1.0f, 1.0f,1.0f,1.0f };
 	float emissive_color[4] = { 1.0f, 1.0f, 1.0f , 1.0f };
@@ -97,7 +103,7 @@ namespace ResourceManagement
 	};
 
 	template<>
-	static std::shared_ptr<Material> Load(uint32_t uuid, const FileData& resource_data)
+	static std::shared_ptr<Material> Load(uint32_t uuid, const FileData& resource_data, bool async)
 	{
 		return MaterialManager::Load(uuid, resource_data);
 	}

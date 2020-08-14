@@ -48,13 +48,17 @@ public:
 
 	~ComponentTrail();
 
+	void CleanUp();
+
 	void Init();
 
-	ComponentTrail & operator=(const ComponentTrail& component_to_copy);
+	void InitBuffers();
+
+	ComponentTrail & operator=(const ComponentTrail& component_to_copy) = default;
 	ComponentTrail & operator=(ComponentTrail&& component_to_move) = default;
 
-	Component* Clone(bool original_prefab = false) const override;
-	void Copy(Component* component_to_copy) const override;
+	Component* Clone(GameObject* owner, bool original_prefab) override;
+	void CopyTo(Component* component_to_copy) const override;
 	void Delete() override;
 
 	void Update() override;
@@ -67,9 +71,15 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
+	void Disable() override;
+	void Enable() override;
+
+private:
+	void ClearTrail();
+
 public:
 	uint32_t texture_uuid = 0;
-	float3 gameobject_init_position = { 0.0f, 0.0f, 0.0f};
+	float3 last_gameobject_position;
 
 	int total_points = 1;
 	float3 last_point_added;
@@ -88,13 +98,11 @@ public:
 	
 	//Standard parameters
 	bool active = true;
-	bool on_transform_change = false;
 	//time
 	float time_counter = 0.0f;
 
 	//Toni tests stuff
 	std::vector<TrailPoint> test_points; // These are individual points that define the path
-	TrailPoint head_point;
 	TrailPoint last_point;
 	std::vector <std::pair <TrailPoint*, TrailPoint*>> mesh_points; // These are from which we're gonna build the mesh
 

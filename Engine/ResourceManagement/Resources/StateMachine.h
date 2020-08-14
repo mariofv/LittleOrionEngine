@@ -5,10 +5,36 @@
 #include "Animation.h"
 #include "ResourceManagement/Manager/StateMachineManager.h"
 #include "EditorUI/Panel/PanelStateMachine.h"
-
+#include <functional>
 #include <unordered_map>
 
 class File;
+
+enum class Comparator
+{
+	GREATER,
+	LESSER,
+	EQUAL,
+	NOT_EQUAL
+};
+
+template<typename T>
+struct Condition
+{
+	uint64_t name_hash_variable = 0;
+	Comparator comparator = Comparator::GREATER;
+	std::function<bool(T, T)> comparator_function;
+
+	T value = 0;
+
+	Condition() = default;
+	Condition(uint64_t name_hash, std::function<bool(T, T)> func, T value)
+	{
+		this->name_hash_variable = name_hash;
+		this->comparator_function = func;
+		this->value = value;
+	}
+};
 
 struct Clip
 {
@@ -16,14 +42,13 @@ struct Clip
 	Clip(std::string& name, std::shared_ptr<Animation>& animation, bool loop);
 
 	void SetAnimation(const std::shared_ptr<Animation>& animation);
-
 	std::string name;
 	uint64_t name_hash = 0;
 	std::shared_ptr<Animation> animation = nullptr;
 	bool loop = false;
 
 	//RunTime only
-	std::unordered_map<uint32_t,std::vector<size_t>> skeleton_channels_joints_map;
+	std::unordered_map<uint32_t, std::vector<size_t>> skeleton_channels_joints_map;
 	float animation_time = 0.0f;
 };
 
@@ -52,7 +77,7 @@ struct Parameter {
 struct Transition
 {
 	Transition() = default;
-	Transition(uint64_t source, uint64_t target, std::string & trigger, uint64_t interpolation);
+	Transition(uint64_t source, uint64_t target, std::string& trigger, uint64_t interpolation);
 	uint64_t source_hash = 0;
 	uint64_t target_hash = 0;
 	uint64_t trigger_hash = 0;
@@ -63,6 +88,11 @@ struct Transition
 
 	bool automatic = false;
 	uint64_t priority = 0;
+
+	std::vector<Condition<int>> int_conditions;
+	std::vector<Condition<float>> float_conditions;
+	std::vector<Condition<bool>> bool_conditions;
+
 
 	std::vector<std::shared_ptr<Parameter<int>>> parameters;
 };
@@ -81,15 +111,21 @@ public:
 	std::shared_ptr<State> GetState(uint64_t state_hash) const;
 	std::shared_ptr<Transition> GetTriggerTransition(const std::string & trigger, uint64_t state_hash) const;
 	std::shared_ptr<Transition> GetAutomaticTransition(uint64_t state_hash) const;
+	std::shared_ptr<Transition> GetTransitionIfConditions(uint64_t state_hash) const;
 
 	void Save(Config& config) const;
 	void Load(const Config& config);
 	void LoadNames(const Config& config);
+	void SetFloatVariables(std::unordered_map<uint64_t, float>& map);
+	void SetIntVariables(std::unordered_map<uint64_t, int>& map);
+	void SetBoolVariables(std::unordered_map<uint64_t, bool>& map);
+	std::string GetNameOfVariable(uint64_t name_hash) const;
 
 private:
 	void RemoveState(const std::shared_ptr<State> & state);
 	void RemoveClip(const std::shared_ptr<Clip> & state);
 	void AddClipToState(std::shared_ptr<State> & state, uint32_t animation_uuid);
+	bool CheckTransitionConditions(std::shared_ptr<Transition>& transition) const;
 
 public:
 	std::vector<std::shared_ptr<Clip>> clips;
@@ -97,6 +133,17 @@ public:
 	std::vector<std::shared_ptr<Transition>> transitions;
 	std::vector<std::shared_ptr<Parameter<int>>> parameters;
 	uint64_t default_state = 0;
+
+	//Set float
+	std::unordered_map<uint64_t, float> float_variables;
+	std::vector<std::string> float_variables_names;	
+
+	std::unordered_map<uint64_t, int> int_variables;
+	std::vector<std::string> int_variables_names;
+
+	std::unordered_map<uint64_t, bool> bool_variables;
+	std::vector<std::string> bool_variables_names;
+
 	friend class PanelStateMachine;
 	
 };
@@ -110,7 +157,7 @@ namespace ResourceManagement
 	};
 
 	template<>
-	static std::shared_ptr<StateMachine> Load(uint32_t uuid, const FileData& resource_data)
+	static std::shared_ptr<StateMachine> Load(uint32_t uuid, const FileData& resource_data, bool async)
 	{
 		return StateMachineManager::Load(uuid, resource_data);
 	}

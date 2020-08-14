@@ -1,12 +1,13 @@
 #include "ModuleResourceManager.h"
 
+#include "Component/ComponentMeshRenderer.h"
 #include "Filesystem/PathAtlas.h"
 
 #include "Helper/Config.h"
 #include "Helper/Timer.h"
 
 #include "Main/GameObject.h"
-#include "Module/ModuleTime.h"
+#include "Module/ModuleScene.h"
 
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Importer/FontImporter.h"
@@ -36,6 +37,7 @@
 #include <algorithm>
 #include <Brofiler/Brofiler.h>
 #include <functional> //for std::hash
+
 
 ModuleResourceManager::ModuleResourceManager()
 {
@@ -69,6 +71,13 @@ bool ModuleResourceManager::Init()
 	App->filesystem->MountDirectory("Library");
 #endif
 
+#if MULTITHREADING
+	for(size_t i = 0; i < loading_thread_communication.max_threads; ++i)
+	{
+		loading_thread_communication.loader_threads.push_back(std::thread(&ModuleResourceManager::LoaderThread, this));
+	}
+#endif
+
 	thread_timer->Start();
 	return true;
 }
@@ -84,13 +93,71 @@ update_status ModuleResourceManager::PreUpdate()
 		importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
 	}
 #endif
-
 	float t = thread_timer->Read();
 	if(cache_time > 0.0f && (thread_timer->Read() - cache_time) >= cache_interval_millis)
 	{
 		cache_time = thread_timer->Read();
-		RefreshResourceCache();
+		if(!loading_thread_communication.loading)
+		{
+
+			APP_LOG_INFO("Refresh resources");
+			RefreshResourceCache();
+		}
 	}
+
+
+#if MULTITHREADING
+
+	if(loading_thread_communication.restore_time_scale)
+	{
+		App->time->time_scale = 1.f;
+		loading_thread_communication.loading = false;
+		loading_thread_communication.restore_time_scale = false;
+	}
+
+	if(!processing_resources_queue.Empty())
+	{
+		LoadingJob load_job;
+		if(processing_resources_queue.TryPop(load_job))
+		{
+			//Generate OpenGL texture
+			if (load_job.component_to_load->type == Component::ComponentType::MESH_RENDERER)
+			{
+				load_job.component_to_load->InitResource(load_job.uuid, load_job.resource_type, load_job.texture_type);
+			}
+			else
+			{
+				load_job.component_to_load->InitResource(load_job.uuid, load_job.resource_type);
+			}
+
+			++loading_thread_communication.current_number_of_resources_loaded;
+		}
+	}
+
+	if(loading_thread_communication.loading && 
+		loading_thread_communication.current_number_of_resources_loaded == loading_thread_communication.total_number_of_resources_to_load)
+	{
+		for(const auto prefab : prefabs_to_reassign)
+		{
+			prefab->Reassign();
+		}
+
+		if(loading_thread_communication.current_number_of_resources_loaded != loading_thread_communication.total_number_of_resources_to_load)
+		{
+			//We have reassigned some prefabs resources that should be loaded
+			return update_status::UPDATE_CONTINUE;
+		}
+		
+		if(App->time->isGameRunning())
+		{
+			App->scene->DeleteLoadingScreen();
+			App->scene->StopSceneTimer();
+		}
+
+		loading_thread_communication.restore_time_scale = true;
+	}
+
+#endif
 
 	return update_status::UPDATE_CONTINUE;
 }
@@ -102,6 +169,15 @@ bool ModuleResourceManager::CleanUp()
 	 importing_thread.join();
 #endif
 	 CleanResourceCache();
+
+#if MULTITHREADING
+	 loading_thread_communication.loading_threads_active = false;
+	 for(size_t i = 0; i < loading_thread_communication.max_threads; ++i)
+	 {
+		 loading_thread_communication.loader_threads[i].join();
+	 }
+#endif
+
 	return true;
 }
 
@@ -117,6 +193,7 @@ bool ModuleResourceManager::CleanUp()
 	 thread_comunication.finished_loading = true;
 	 last_imported_time = thread_timer->Read();
 	 cache_time = thread_timer->Read();
+	 first_import_completed = true;
  }
 
 void ModuleResourceManager::CleanMetafilesInDirectory(const Path& directory_path)
@@ -292,6 +369,42 @@ uint32_t ModuleResourceManager::CreateFromData(FileData data, const std::string&
 	return InternalImport(*created_asset_file_path);
 }
 
+void ModuleResourceManager::LoaderThread()
+{
+	while(loading_thread_communication.loading_threads_active)
+	{
+		if(!loading_resources_queue.Empty())
+		{
+			LoadingJob load_job;
+			if(loading_resources_queue.TryPop(load_job))
+			{
+				//Check if resource is already on cache
+				if(load_job.component_to_load->type == Component::ComponentType::MESH_RENDERER)
+				{
+					load_job.component_to_load->LoadResource(load_job.uuid, load_job.resource_type, load_job.texture_type);
+				}
+				else
+				{
+					load_job.component_to_load->LoadResource(load_job.uuid, load_job.resource_type);
+				}
+				
+				processing_resources_queue.Push(load_job);
+			}
+
+			unsigned int work_load_size_remaining = loading_resources_queue.Size();
+
+			const int ms_to_wait = work_load_size_remaining > 0 ? 10 : 2000;
+			std::this_thread::sleep_for(std::chrono::milliseconds(ms_to_wait));
+		}
+
+		if(loading_resources_queue.Empty())
+		{
+			int hola = 0;
+		}
+	}
+}
+
+
 std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32_t uuid) const
 {
 	//Check if the resource is already loaded
@@ -305,7 +418,24 @@ std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32
 		RESOURCES_LOG_INFO("Resource %u exists in cache.", uuid);
 		return *it;
 	}
+
+
 	return nullptr;
+}
+
+bool ModuleResourceManager::RetrieveFileDataByUUID(uint32_t uuid, FileData& filedata) const
+{
+	std::string resource_library_file = MetafileManager::GetUUIDExportedFile(uuid);
+	if (!App->filesystem->Exists(resource_library_file))
+	{
+		APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, resource_library_file.c_str());
+		return false;
+	}
+
+	Path* resource_exported_file_path = App->filesystem->GetPath(resource_library_file);
+	filedata = resource_exported_file_path->GetFile()->Load();
+
+	return true;
 }
 
 void ModuleResourceManager::RefreshResourceCache()
@@ -313,9 +443,18 @@ void ModuleResourceManager::RefreshResourceCache()
 	const auto it = std::remove_if(resource_cache.begin(), resource_cache.end(), [](const std::shared_ptr<Resource> & resource) {
 		return resource.use_count() == 1;
 	});
+
 	if (it != resource_cache.end())
 	{
+		//Erase Resource Cache
 		resource_cache.erase(it, resource_cache.end());
+	}
+}
+void ModuleResourceManager::AddResourceToCache(std::shared_ptr<Resource> resource)
+{
+	if (resource != nullptr)
+	{
+		resource_cache.push_back(resource);
 	}
 }
 void ModuleResourceManager::CleanResourceCache()
@@ -334,6 +473,7 @@ bool ModuleResourceManager::CleanResourceFromCache(uint32_t uuid)
 		found = true;
 		resource_cache.erase(it, resource_cache.end());
 	}
+
 
 	return found;
 }

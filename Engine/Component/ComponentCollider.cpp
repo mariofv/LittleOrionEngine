@@ -38,7 +38,7 @@ ComponentCollider::ComponentCollider(GameObject* owner, ColliderType collider_ty
 }
 
 
-void ComponentCollider::Copy(Component* component_to_copy) const
+void ComponentCollider::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentCollider*>(component_to_copy) = *this;
@@ -103,8 +103,12 @@ void ComponentCollider::SpecializedLoad(const Config & config)
 	friction = config.GetFloat("Friction", 1.0F);
 	rolling_friction = config.GetFloat("Rolling_friction", 1.0F);
 	config.GetFloat3("Center", center, float3::zero);
-	AddBody();
-	SetConfiguration();
+
+	if(collider_type != ColliderType::MESH)
+	{
+		AddBody();
+		SetConfiguration();	
+	}
 
 }
 
@@ -202,11 +206,13 @@ void ComponentCollider::UpdateCommonDimensions()
 		btQuaternion::getIdentity(),
 		btVector3(center.x, center.y, center.z)
 	);
-
-	motion_state->setWorldTransform(new_body_transformation * center_of_mass);
-	body->setMotionState(motion_state);
+	if(motion_state)
+	{
+		motion_state->setWorldTransform(new_body_transformation * center_of_mass);
+		body->setMotionState(motion_state);		
+		App->physics->world->updateSingleAabb(body);
+	}
 	
-	App->physics->world->updateSingleAabb(body);
 }
 
 void ComponentCollider::SetMass(float new_mass)
@@ -223,7 +229,7 @@ void ComponentCollider::SetVisualization()
 	flags |= body->CF_DISABLE_VISUALIZE_OBJECT;
 	if (visualize)
 	{
-		flags -= body->CF_DISABLE_VISUALIZE_OBJECT;
+		flags &= ~(body->CF_DISABLE_VISUALIZE_OBJECT);
 		
 	}
 	body->setCollisionFlags(flags);
@@ -344,7 +350,7 @@ void ComponentCollider::SetStatic()
 	float new_mass = 0.0F;
 	if (!is_static)
 	{
-		flags -= body->CF_KINEMATIC_OBJECT;
+		flags &= ~(body->CF_KINEMATIC_OBJECT);
 		new_mass = mass;
 	}
 	mass = new_mass;

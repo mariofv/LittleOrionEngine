@@ -26,10 +26,11 @@ ComponentTransform::ComponentTransform(GameObject* owner, const float3 translati
 	OnTransformChange();
 }
 
-void ComponentTransform::Copy(Component * component_to_copy) const
+void ComponentTransform::CopyTo(Component* component_to_copy) const
 { 
 	*component_to_copy = *this;
 	*static_cast<ComponentTransform*>(component_to_copy) = *this; 
+	static_cast<ComponentTransform*>(component_to_copy)->OnTransformChange();
 };
 
 ComponentTransform & ComponentTransform::operator=(const ComponentTransform & component_to_copy)
@@ -90,7 +91,7 @@ void ComponentTransform::Translate(const float3& translation)
 void ComponentTransform::SetGlobalMatrixTranslation(const float3& translation)
 {
 	global_model_matrix.SetTranslatePart(translation);
-	SetGlobalModelMatrix(global_model_matrix);
+ 	SetGlobalModelMatrix(global_model_matrix);
 }
 
 Quat ComponentTransform::GetGlobalRotation() const
@@ -275,11 +276,8 @@ void ComponentTransform::ChangeLocalSpace(const float4x4& new_local_space)
 	OnTransformChange();
 }
 
-Component* ComponentTransform::Clone(bool original_prefab) const
+Component* ComponentTransform::Clone(GameObject* owner, bool /*original_prefab*/)
 {
-	ComponentTransform * created_component;
-	created_component = new ComponentTransform(nullptr);
-	*created_component = *this;
-	CloneBase(static_cast<Component*>(created_component));
-	return created_component;
+	CopyTo(&owner->transform);
+	return &owner->transform;
 }

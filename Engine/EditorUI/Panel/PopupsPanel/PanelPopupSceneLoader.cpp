@@ -1,5 +1,6 @@
 #include "PanelPopupSceneLoader.h"
 
+#include "Log/EngineLog.h"
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleFileSystem.h"

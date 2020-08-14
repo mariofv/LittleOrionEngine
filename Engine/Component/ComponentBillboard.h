@@ -31,6 +31,8 @@ public:
 	ComponentBillboard(GameObject* owner);
 	~ComponentBillboard();
 
+	void CleanUp();
+
 	//Copy and move
 	ComponentBillboard(const ComponentBillboard& component_to_copy) = default;
 	ComponentBillboard(ComponentBillboard&& component_to_move) = default;
@@ -42,16 +44,23 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
-	Component* Clone(bool original_prefab = false) const override;
-	void Copy(Component* component_to_copy) const override;
+	Component* Clone(GameObject* owner, bool original_prefab) override;
+	void CopyTo(Component* component_to_copy) const override;
 
 	void InitData();
+	void InitQuad();
 	void Update() override;
 
 	void Render(const float3& global_position);
 	void CommonUniforms(const GLuint &shader_program);
 
 	void ChangeTexture(uint32_t texture_uuid);
+	void LoadResource(uint32_t uuid, ResourceType resource) override;
+	void InitResource(uint32_t uuid, ResourceType resource) override;
+
+	void ReassignResource() override;
+
+	void ChangeTextureEmissive(uint32_t texture_uuid);
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
 
 
@@ -70,15 +79,20 @@ public:
 	float transparency = 1.f;
 	bool oriented_to_camera;
 	bool loop = false;
+	bool pulse = false;
 	int current_sprite_x = 0;
 	int current_sprite_y = 0;
 	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float color_emissive[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	int emissive_intensity = 1;
 private:
 	GLuint shader_program;
 	GLuint vbo, vao, ebo;
 
     uint32_t texture_uuid = 0;
 	std::shared_ptr<Texture> billboard_texture = nullptr;
+	uint32_t texture_emissive_uuid = 0;
+	std::shared_ptr<Texture> billboard_texture_emissive = nullptr;
 	
 	//color
 

@@ -10,15 +10,12 @@
 
 #include "NodeEditor/imgui_node_editor.h"
 
-#include <vector>
-#include <string>
-#include <vector>
-#include <map>
 #include <algorithm>
+#include <array>
+#include <map>
+#include <string>
 #include <utility>
-
-using namespace ax;
-using ax::Widgets::IconType;
+#include <vector>
 
 class StateMachine;
 struct Transition;
@@ -61,6 +58,8 @@ public:
 	void InteractionCreation();
 	void OpenStateMachine(uint32_t state_machine_uuid);
 
+	AnimController* GetHierarchyAnimation();
+
 	void RenderStates();
 	void LeftPanel();
 	void CreateNodeMenu();
@@ -70,11 +69,13 @@ public:
 
 	//debug playing animation
 	AnimController* animation_controller = nullptr;
-	AnimController* animation_controller_in_hierarchy = nullptr;
 
 private:
 	std::vector<NodeInfo*> GetSelectedNodes();
 	std::vector<LinkInfo*> GetSelectedLinks();
+
+	void EraseNameFromVariables(std::vector<std::string>& names, uint64_t name_to_delete_hash);
+
 private:
 	ax::NodeEditor::EditorContext* editor_context = nullptr;
 	std::shared_ptr<StateMachine> state_machine;
@@ -90,6 +91,12 @@ private:
 	std::vector<NodeInfo*> selected_nodes;
 	NodeInfo* selected_node = nullptr ;
 	bool modified_by_user = false;
+	std::string float_auxiliar_variable;
+	std::string int_auxiliar_variable;
+	std::string bool_auxiliar_variable;
+
+	std::array<const char* , 4> comparator_name {"Greater", "Lesser", "Equal", "Not Equal"};
+	std::array<const char* , 2> bool_conditions {"false", "true"};
 
 };
 #endif // !_PANELSTATEMACHINE_H_

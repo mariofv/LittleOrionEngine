@@ -24,8 +24,8 @@ public:
 	ComponentTransform& operator=(const ComponentTransform& component_to_copy);
 	ComponentTransform& operator=(ComponentTransform&& component_to_move) = default;
 
-	Component* Clone(bool create_on_module = true) const override;
-	void Copy(Component * component_to_copy) const override;
+	Component* Clone(GameObject* owner, bool original_prefab) override;
+	void CopyTo(Component* component_to_copy) const override;
 
 	void Delete() override {};
 
@@ -67,7 +67,7 @@ public:
 	float4x4 GetModelMatrix() const;
 
 	void GenerateGlobalModelMatrix();
-	float4x4 GetGlobalModelMatrix() const;
+	ENGINE_API float4x4 GetGlobalModelMatrix() const;
 	virtual void SetGlobalModelMatrix(const float4x4& new_global_matrix);
 
 protected:

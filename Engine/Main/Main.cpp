@@ -2,6 +2,7 @@
 #include <ctime>
 
 #include "Application.h"
+#include "Log/EngineLog.h"
 #include "Globals.h"
 #include "Helper/TimerUs.h"
 

@@ -1,5 +1,6 @@
 #include "ComponentAudioSource.h"
 
+#include "Log/EngineLog.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleAudio.h"
@@ -95,7 +96,7 @@ void ComponentAudioSource::StopAll()
 	AK::SoundEngine::StopAll(gameobject_source);
 }
 
-Component* ComponentAudioSource::Clone(bool original_prefab) const
+Component* ComponentAudioSource::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentAudioSource * created_component;
 	if (original_prefab)
@@ -108,10 +109,13 @@ Component* ComponentAudioSource::Clone(bool original_prefab) const
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 };
 
-void ComponentAudioSource::Copy(Component* component_to_copy) const
+void ComponentAudioSource::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentAudioSource*>(component_to_copy) = *this;
@@ -123,12 +127,17 @@ void ComponentAudioSource::SpecializedSave(Config& config) const
 	uint32_t soundbank_uuid = soundbank ? soundbank->GetUUID() : 0;
 	config.AddUInt(soundbank_uuid, "SoundBank");
 	config.AddBool(sound_3d, "3DSound");
+	config.AddBool(play_on_awake, "PlayOnAwake");
+	config.AddString(awake_event, "AwakeEvent");
 }
 
 void ComponentAudioSource::SpecializedLoad(const Config& config)
 {
 	volume = config.GetFloat("Volume", 1);
 	sound_3d = config.GetBool("3DSound", false);
+	play_on_awake = config.GetBool("PlayOnAwake", false);
+	config.GetString("AwakeEvent", awake_event, "");
+
 	uint32_t soundbank_uuid = config.GetUInt32("SoundBank", 0);
 	if (soundbank_uuid != 0)
 	{
@@ -154,4 +163,9 @@ void ComponentAudioSource::Enable()
 		PlayEvent(last_played_event);
 	}
 
+}
+
+void ComponentAudioSource::SetListener(const AkGameObjectID listener_AkId)
+{
+	AK::SoundEngine::SetListeners(gameobject_source, &listener_AkId, 1);
 }

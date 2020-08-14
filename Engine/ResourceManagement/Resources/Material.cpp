@@ -61,6 +61,10 @@ void Material::Save(Config& config) const
 		case MaterialTextureType::DISSOLVED_DIFFUSE:
 			config.AddUInt(textures_uuid[i], "Dissolved Diffuse");
 			break;
+
+		case MaterialTextureType::DISSOLVED_EMISSIVE:
+			config.AddUInt(textures_uuid[i], "Dissolved Emissive");
+			break;
 		default:
 			break;
 			
@@ -97,6 +101,7 @@ void Material::Load(const Config& config)
 	SetMaterialTexture(MaterialTextureType::NORMAL, config.GetUInt32("Normal", 0));
 	SetMaterialTexture(MaterialTextureType::LIGHTMAP, config.GetUInt32("Lightmap", 0));
 	SetMaterialTexture(MaterialTextureType::DISSOLVED_DIFFUSE, config.GetUInt32("Dissolved Diffuse", 0));
+	SetMaterialTexture(MaterialTextureType::DISSOLVED_EMISSIVE, config.GetUInt32("Dissolved Emissive", 0));
 	SetMaterialTexture(MaterialTextureType::NOISE, config.GetUInt32("Noise", 0));
 
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
@@ -136,19 +141,62 @@ void Material::Load(const Config& config)
 	specular_color[1] = specular.y;
 	specular_color[2] = specular.z;
 	specular_color[3] = specular.w;
+
+}
+
+void Material::LoadResource(uint32_t uuid, unsigned texture_type)
+{
+	MaterialTextureType type = static_cast<MaterialTextureType>(texture_type);
+	textures[type] = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(uuid));
+
+
+	if (textures[type])
+	{
+		return;
+	}
+
+	FileData file_data;
+	bool succes = App->resources->RetrieveFileDataByUUID(uuid, file_data);
+	if (succes)
+	{
+		//THINK WHAT TO DO IF IS IN CACHE
+		textures[type] = ResourceManagement::Load<Texture>(uuid, file_data, true);
+
+		//Delete file data buffer
+		delete[] file_data.buffer;
+		App->resources->AddResourceToCache(textures[type]);
+
+	}
+
+}
+
+void Material::InitResource(uint32_t uuid, unsigned texture_type)
+{
+	if (uuid == 814689362)
+	{
+		int i = 0;
+	}
+
+	MaterialTextureType type = static_cast<MaterialTextureType>(texture_type);
+	if (textures[type] && !textures[type].get()->initialized)
+	{
+		textures[type].get()->LoadInMemory();
+	}
 }
 
 void Material::RemoveMaterialTexture(MaterialTextureType type)
 {
 	textures[type] = nullptr;
-	
 }
 
 void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uuid)
 {
 	textures_uuid[type] = texture_uuid;
+
 	if (textures_uuid[type] != 0)
 	{
+		App->resources->loading_thread_communication.texture_type = type;
+		App->resources->loading_thread_communication.current_type = ResourceType::TEXTURE;
 		textures[type] = App->resources->Load<Texture>(texture_uuid);
 	}
 }
@@ -156,6 +204,11 @@ void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uui
 const std::shared_ptr<Texture>& Material::GetMaterialTexture(MaterialTextureType type) const
 {
 	return textures[type];
+}
+
+bool Material::UseLightmap() const
+{
+	return  textures[MaterialTextureType::LIGHTMAP] != nullptr;
 }
 
 void Material::ChangeTypeOfMaterial(const MaterialType new_material_type)
@@ -187,7 +240,7 @@ std::string Material::GetMaterialTypeName(const MaterialType material_type)
 void Material::UpdateLiquidProperties()
 {
 	liquid_horizontal_normals_tiling += float2(liquid_tiling_speed.x * App->time->delta_time * 0.001f);
-	liquid_vertical_normals_tiling -= float2(liquid_tiling_speed.y * App->time->delta_time * 0.001f);
+	liquid_vertical_normals_tiling += float2(liquid_tiling_speed.y * App->time->delta_time * 0.001f);
 }
 
 unsigned int Material::GetShaderVariation() const
@@ -204,6 +257,7 @@ unsigned int Material::GetShaderVariation() const
 	if (material_type == MaterialType::MATERIAL_LIQUID)
 	{
 		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_LIQUID_PROPERTIES);
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_DISSOLVING_PROPERTIES);
 	}
 	if (material_type == MaterialType::MATERIAL_DISSOLVING)
 	{

@@ -6,22 +6,20 @@
 
 ComponentBoxCollider::ComponentBoxCollider() : ComponentCollider(nullptr, ComponentBoxCollider::ColliderType::BOX)
 {
-	col_shape = new btBoxShape(btVector3(box_size));
-	AddBody();
+	InitData();
 }
 
 ComponentBoxCollider::ComponentBoxCollider(GameObject* owner): ComponentCollider(owner, ComponentBoxCollider::ColliderType::BOX)
 {
-	col_shape = new btBoxShape(btVector3(box_size));
-	AddBody();
+	InitData();
 }
 
-Component* ComponentBoxCollider::Clone(GameObject* owner, bool original_prefab) const
+Component* ComponentBoxCollider::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentBoxCollider* created_component;
 	if (original_prefab)
 	{
-		created_component = new ComponentBoxCollider();
+		created_component = new ComponentBoxCollider(owner);
 	}
 	else
 	{
@@ -52,4 +50,10 @@ void ComponentBoxCollider::Scale()
 	float3 global_scale = owner->transform.GetGlobalScale();
 	body->getCollisionShape()->setLocalScaling(btVector3(global_scale.x * scale.x, global_scale.y * scale.y, global_scale.z * scale.z));
 	box_size = btVector3(scale.x, scale.y, scale.z);
+}
+
+void ComponentBoxCollider::InitData()
+{
+	col_shape = new btBoxShape(btVector3(box_size));
+	AddBody();
 }

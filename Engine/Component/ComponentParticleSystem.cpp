@@ -21,6 +21,7 @@ ComponentParticleSystem::ComponentParticleSystem(GameObject* owner) : Component(
 ComponentParticleSystem::~ComponentParticleSystem()
 {
 	delete billboard;
+	billboard = nullptr;
 }
 
 void ComponentParticleSystem::Init() 
@@ -67,15 +68,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 {
 	particle.position_initial = float4(0.0f, 0.0f, 0.0f,0.0f);
 
-	if (size_random)
-	{
-		float scale = (rand() % ((max_size_of_particle - min_size_of_particle) + 1) + min_size_of_particle) / 100.f;
-		particle.particle_scale = scale;
-	}
-	else 
-	{
-		particle.particle_scale = 1.0f;
-	}
+
 	if (tile_random)
 	{
 		particle.current_sprite_x = (rand() % static_cast<int>((max_tile_value - min_tile_value) + 1) + min_tile_value);
@@ -86,9 +79,14 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	{
 		particle.size = float2(min_size_of_particle);
 	}
+	else if (size_random)
+	{
+		float size = min_size_of_particle + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max_size_of_particle - min_size_of_particle)));
+		particle.size = float2(size);
+	}
 	else
 	{
-		particle.size = particle.particle_scale * particles_size;
+		particle.size = particles_size;
 	}
 
 	switch (type_of_particle_system)
@@ -163,6 +161,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	particle.velocity_initial = particle.velocity_initial;
 
 	particle.geometric_space = float4x4::FromTRS(owner->transform.GetGlobalTranslation(), owner->transform.GetRotation(), float3::one);
+	particle.inital_random_orbit = rand();
 }
 
 void ComponentParticleSystem::Render()
@@ -170,7 +169,7 @@ void ComponentParticleSystem::Render()
 
 	BROFILER_CATEGORY("Particle Render", Profiler::Color::OrangeRed);
 
-	if (active && playing) 
+	if (active && playing && billboard->billboard_texture != nullptr && billboard->billboard_texture->initialized)
 	{
 		unsigned int variation = GetParticlesSystemVariation();
 		shader_program = App->program->UseProgram("Particles", variation);
@@ -259,8 +258,15 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	{
 		particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
 			(gravity_vector * Pow(particle.time_passed, 2) / 2);
+
+
 	}
 
+	if (orbit)
+	{
+		particle.position.z += sin((particle.time_passed *0.001f) + particle.inital_random_orbit);
+		particle.position.x += cos((particle.time_passed *0.001f) + particle.inital_random_orbit);
+	}
 	//alpha fade
 	if (fade)
 	{
@@ -282,11 +288,12 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	//size fade
 	if (change_size)
 	{
-		particle.size += float2(size_change_speed * App->time->real_time_delta_time * 0.001f);
+		float progress = particle.time_passed * 0.001f / size_change_speed;
+		particle.size = float2::Lerp(float2(min_size_of_particle), float2(max_size_of_particle), progress);
 	}
 
 	//animation 
-	if (billboard->is_spritesheet)
+	if (billboard->is_spritesheet && !tile_random)
 	{
 		float progress = particle.time_passed * 0.001f / particles_life_time;
 		billboard->ComputeAnimationFrame(progress);
@@ -343,8 +350,8 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddInt(static_cast<int>(type_of_particle_system), "Type of particle system");
 	config.AddBool(loop, "Loop");
 	config.AddBool(active, "Active");
-	config.AddInt(min_size_of_particle, "Max Size Particles");
-	config.AddInt(max_size_of_particle, "Min Size Particles");
+	config.AddFloat(min_size_of_particle, "Max Size Particles");
+	config.AddFloat(max_size_of_particle, "Min Size Particles");
 	config.AddFloat2(particles_size, "Particle Size");
 	config.AddBool(size_random, "Size random");
 	config.AddBool(change_size, "Change size");
@@ -355,7 +362,6 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(velocity_particles_start, "Velocity of particles");
 	config.AddFloat(gravity_modifier, "Gravity modifier");
 
-	config.AddFloat(time_counter, "Time Counter");
 	config.AddFloat(time_between_particles, "Time Between Particles");
 	config.AddFloat(particles_life_time, "Particles Life Time");
 
@@ -383,6 +389,7 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(color_fade_time, "Color Fade Time");
 	config.AddBool(fade_between_colors, "Fade between Colors");
 	config.AddColor(color_to_fade, "Color to fade");
+	config.AddBool(orbit, "Orbit");
 }
 
 void ComponentParticleSystem::SpecializedLoad(const Config& config)
@@ -392,8 +399,8 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	type_of_particle_system = static_cast<TypeOfParticleSystem>(config.GetInt("Type of particle system", static_cast<int>(TypeOfParticleSystem::BOX)));
 	
 	loop = config.GetBool("Loop", true);
-	min_size_of_particle = config.GetInt("Max Size Particles", 10);
-	max_size_of_particle = config.GetInt("Min Size Particles", 2);
+	min_size_of_particle = config.GetFloat("Max Size Particles", 0.2);
+	max_size_of_particle = config.GetFloat("Min Size Particles", 0.2);
 	config.GetFloat2("Particle Size", particles_size, float2(0.2f));
 	size_random = config.GetBool("Size random", false);
 	tile_random = config.GetBool("Tile random", false);
@@ -404,7 +411,6 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	velocity_particles_start = config.GetFloat("Velocity of particles", 1.0F);
 	gravity_modifier = config.GetFloat("Gravity modifier", 0.f);
 
-	time_counter = config.GetFloat("Time Counter", 0.0F);
 	time_between_particles = config.GetFloat("Time Between Particles", 0.2F);
 	particles_life_time = config.GetFloat("Particles Life Time", 3.0F);
 
@@ -435,9 +441,19 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 
 	fade_between_colors = config.GetBool("Fade between Colors", false);
 	config.GetColor("Color to fade", color_to_fade, float4::one);
+
+	orbit = config.GetBool("Orbit", false);
 }
 
-Component* ComponentParticleSystem::Clone(bool original_prefab) const
+void ComponentParticleSystem::ReassignResource()
+{
+	if (billboard)
+	{
+		billboard->ReassignResource();
+	}
+}
+
+Component* ComponentParticleSystem::Clone(GameObject* owner, bool original_prefab)
 {
 
 	ComponentParticleSystem* created_component;
@@ -449,17 +465,19 @@ Component* ComponentParticleSystem::Clone(bool original_prefab) const
 	{
 		created_component = App->effects->CreateComponentParticleSystem();
 	}
-
-	created_component->Init();
-	auto original_billboard = created_component->billboard;
-	*created_component = *this;
-	*original_billboard = *this->billboard;
-	created_component->billboard = original_billboard;
 	CloneBase(static_cast<Component*>(created_component));
+
+	*created_component = *this;
+	created_component->Init();
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
+	assert(billboard->emissive_intensity>-1);
+	this->billboard->CopyTo(created_component->billboard);
+	created_component->billboard->owner = owner;
 	return created_component;
 };
 
-void ComponentParticleSystem::Copy(Component * component_to_copy) const
+void ComponentParticleSystem::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	ComponentParticleSystem* component_particle_system = static_cast<ComponentParticleSystem*>(component_to_copy);
@@ -514,3 +532,25 @@ ENGINE_API void ComponentParticleSystem::Pause()
 	emitting = false;
 }
 
+
+void ComponentParticleSystem::OrbitX(float angle, Particle& particle)
+{
+	float3 focus_vector = owner->transform.GetTranslation() - owner->transform.GetTranslation();
+
+	const float adjusted_angle = App->time->real_time_delta_time  * -angle;
+	Quat rotation = Quat::RotateY(adjusted_angle);
+
+	focus_vector = rotation * focus_vector;
+	auto position = focus_vector + owner->transform.GetTranslation();
+	particle.position.x = position.x;
+	particle.position.z = position.z;
+}
+void ComponentParticleSystem::Disable()
+{
+	active = false;
+	Stop();
+}
+void ComponentParticleSystem::Enable()
+{
+	active = true;
+}

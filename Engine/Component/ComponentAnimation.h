@@ -6,6 +6,7 @@
 #include "Component.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "ResourceManagement/Resources/Skeleton.h"
 
 #include <GL/glew.h>
 #include <memory>
@@ -31,8 +32,8 @@ public:
 	ComponentAnimation & operator=(const ComponentAnimation& component_to_copy);
 	ComponentAnimation & operator=(ComponentAnimation&& component_to_move) = default;
 
-	Component* Clone(bool original_prefab = false) const override;
-	void Copy(Component* component_to_copy) const override;
+	Component* Clone(GameObject* owner, bool original_prefab) override;
+	void CopyTo(Component* component_to_copy) const override;
 
 	void Disable() override;
 
@@ -45,8 +46,11 @@ public:
 	ENGINE_API void ActiveAnimation(const std::string & trigger);
 	ENGINE_API bool IsOnState(const std::string & trigger);
 	ENGINE_API float GetCurrentClipPercentatge() const;
-	ENGINE_API int GetTotalAnimationTime() const;
+	ENGINE_API float GetTotalAnimationTime() const;
 	ENGINE_API void SetAnimationSpeed(float speed) const;
+	ENGINE_API void SetFloat(std::string name, float value);
+	ENGINE_API void SetInt(std::string name, int value);
+	ENGINE_API void SetBool(std::string name, bool value);
 
 	void Update() override;
 	void UpdateMeshes();
@@ -60,7 +64,7 @@ public:
 private:
 	void GetChildrenMeshes(GameObject * current_mesh);
 	void GenerateJointChannelMaps();
-
+	void GenerateAttachedBones(GameObject* mesh, std::vector<Skeleton::Joint> & skeleton);
 private:
 	std::vector<ComponentMeshRenderer*> skinned_meshes;
 	AnimController* animation_controller = nullptr;

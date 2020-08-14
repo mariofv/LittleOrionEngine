@@ -29,6 +29,7 @@ public:
 
 	GameObject& operator=(const GameObject& gameobject_to_copy) = default;
 	GameObject& operator<<(const GameObject& gameobject_to_copy);
+	void CopyParameters(const GameObject & gameobject_to_copy);
 	GameObject& operator=(GameObject&& gameobject_to_move) = default;
 
 	void Duplicate(const GameObject& gameobject_to_copy);
@@ -85,13 +86,13 @@ public:
 	//Prefabs
 	GameObject * GetPrefabParent();
 	void UnpackPrefab();
+	void Reassign();
 
 private:
 	void SetHierarchyStatic(bool is_static);
 
 	void LoadTransforms(Config config);
 	void CreateTransforms();
-	void CopyComponentsPrefabs(const GameObject & gameobject_to_copy);
 	void CopyComponents(const GameObject& gameobject_to_copy);
 	void RemoveComponentsCopying(const GameObject& gameobject_to_copy);
 

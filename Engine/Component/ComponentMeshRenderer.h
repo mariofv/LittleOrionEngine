@@ -25,11 +25,15 @@ public:
 	ComponentMeshRenderer& operator=(const ComponentMeshRenderer& component_to_copy) = default;
 	ComponentMeshRenderer& operator=(ComponentMeshRenderer&& component_to_move) = default;
 
-	Component* Clone(bool original_prefab = false) const override;
-	void Copy(Component* component_to_copy) const override;
+	Component* Clone(GameObject* owner, bool original_prefab) override;
+	void CopyTo(Component* component_to_copy) const override;
 
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
+
+	void LoadResource(uint32_t uuid, ResourceType resource, unsigned texture_type) override;
+	void InitResource(uint32_t uuid, ResourceType resource, unsigned texture_type) override;
+	void ReassignResource() override;
 
 	void Delete() override;
 
@@ -41,7 +45,7 @@ public:
 	void SetMaterial(uint32_t material_uuid);
 	void SetSkeleton(uint32_t skeleton_uuid);
 
-	void UpdatePalette(const std::vector<float4x4> & pose);
+	void UpdatePalette(std::vector<float4x4> & pose);
 
 private:
 	void AddDiffuseUniforms(unsigned int shader_program) const;
@@ -70,9 +74,9 @@ public:
 	std::vector<float4x4> palette;
 
 	bool is_raycastable = true;
+	ComponentMeshCollider* mesh_collider = nullptr;
 	bool shadow_caster = false;
 	bool shadow_receiver = false;
-
 private:
 	friend class PanelComponent;
 };

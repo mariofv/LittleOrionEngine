@@ -12,6 +12,7 @@
 #include "EditorUI/Helper/Grid.h"
 #include "EditorUI/Panel/PanelNavMesh.h"
 
+#include "Log/EngineLog.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 
@@ -468,6 +469,7 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 
 		if(selected_camera->camera_frustum.type == FrustumType::PerspectiveFrustum)
 			dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
+
 
 		if (selected_camera->camera_frustum.type == FrustumType::OrthographicFrustum)
 		{

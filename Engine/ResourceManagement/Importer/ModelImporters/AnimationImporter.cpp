@@ -3,7 +3,6 @@
 #include "Helper/Utils.h"
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
-#include "ResourceManagement/Importer/ModelImporters/SkeletonImporter.h"
 #include "ResourceManagement/Resources/Animation.h"
 
 #include <assimp/scene.h>

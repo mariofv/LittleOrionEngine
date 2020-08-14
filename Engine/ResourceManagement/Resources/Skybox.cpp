@@ -152,6 +152,7 @@ void Skybox::GenerateSkyboxCubeMap()
 	glGenTextures(1, &cubemap);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
 
+	App->resources->loading_thread_communication.normal_loading_flag = true;
 	for (size_t i = 0; i <= (size_t)SkyboxFace::BACK; i++)
 	{
 		uint32_t texture_id = textures_id[i];
@@ -162,6 +163,7 @@ void Skybox::GenerateSkyboxCubeMap()
 			glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, texture->width, texture->height, 0, texture->data.size(), texture->data.data());
 		}
 	}
+	App->resources->loading_thread_communication.normal_loading_flag = false;
 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

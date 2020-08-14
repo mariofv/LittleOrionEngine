@@ -83,6 +83,11 @@ void TweenSequence::Update(float dt)
 {
 	if (state != TweenSequenceState::PLAYING) return;
 
+	if(dt == 0.f)
+	{
+		return;
+	}
+
 	current_time += dt * 0.001f;
 
 	for (size_t i = 0; i < tweens.size(); i++)

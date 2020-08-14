@@ -46,7 +46,7 @@ ComponentCamera & ComponentCamera::operator=(const ComponentCamera & component_t
 	GenerateMatrices();
 	return *this;
 }
-Component* ComponentCamera::Clone(bool original_prefab) const
+Component* ComponentCamera::Clone(GameObject* owner, bool original_prefab)
 { 
 	ComponentCamera * created_component;
 	if (original_prefab)
@@ -59,9 +59,12 @@ Component* ComponentCamera::Clone(bool original_prefab) const
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 };
-void ComponentCamera::Copy(Component* component_to_copy) const
+void ComponentCamera::CopyTo(Component* component_to_copy) const
 {  
 	*component_to_copy = *this;
 	*static_cast<ComponentCamera*>(component_to_copy) = *this;
@@ -204,8 +207,14 @@ void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode
 	SetWidthAndHeight(width, height);
 
 #if !GAME
-		App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 #endif
+
+	if (App->renderer->anti_aliasing)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, msfbo);
+	} 
+	
 	glViewport(0, 0, width, height);
 
 	switch (camera_clear_mode)
@@ -219,7 +228,7 @@ void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode
 		case ComponentCamera::ClearMode::SKYBOX:
 			glStencilMask(0xFF);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-			if (skybox_uuid != 0)
+			if (skybox_uuid != 0 && camera_skybox)
 			{
 				camera_skybox->Render(*this);
 			}
@@ -238,16 +247,18 @@ void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode
 	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
 	App->ui->Render(scene_mode);
 
-#if !GAME
 	if (App->renderer->anti_aliasing)
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
+#if !GAME
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+#else
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+#endif
 		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-#endif
 }
 
 void ComponentCamera::RecordZBufferFrame(GLsizei width, GLsizei height)
@@ -361,9 +372,7 @@ void ComponentCamera::CreateFramebuffer(GLsizei width, GLsizei height)
 
 	if (camera_frustum.type == FrustumType::OrthographicFrustum) //Light cameras render this way
 	{
-		glCullFace(GL_FRONT);
 		CreateOrthographicFramebuffer(width, height);
-		glCullFace(GL_BACK);
 	}
 	
 }
@@ -382,9 +391,9 @@ void ComponentCamera::CreateOrthographicFramebuffer(GLsizei width, GLsizei heigh
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
