@@ -40,6 +40,24 @@ struct Vertex
 	float2 uvs;
 };
 
+struct Spline
+{
+	std::vector<float3> spline_points;
+	float3 GetSplinePoint(float t, float3 p0, float3 p1, float3 p2, float3 p3)
+	{
+		float t2 = t * t;
+		float t3 = t * t*t;
+		float3 v; // Interpolated point
+
+		/* Catmull Rom spline Calculation */
+
+		v.x = ((-t3 + 2 * t2 - t)*(p0.x) + (3 * t3 - 5 * t2 + 2)*(p1.x) + (-3 * t3 + 4 * t2 + t)* (p2.x) + (t3 - t2)*(p3.x)) / 2;
+		v.y = ((-t3 + 2 * t2 - t)*(p0.y) + (3 * t3 - 5 * t2 + 2)*(p1.y) + (-3 * t3 + 4 * t2 + t)* (p2.y) + (t3 - t2)*(p3.y)) / 2;
+		
+		return v;
+	}
+};
+
 class ComponentTrail : public Component
 {
 public:
@@ -110,6 +128,9 @@ public:
 	float* trail_renderer_vertices = nullptr;
 	std::vector<Vertex> vertices;
 	std::shared_ptr<Texture> trail_texture = nullptr;
+
+	//Catmull-rom
+	Spline path_top, path_bottom;
 
 private:
 	unsigned int trail_vao, trail_vbo;
