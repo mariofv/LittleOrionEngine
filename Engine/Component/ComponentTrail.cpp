@@ -128,6 +128,7 @@ void  ComponentTrail::GetPerpendiculars()
 	float trail_segment_uv = 1.f / test_points.size(); // to coordinate texture
 	auto pair = mesh_points.begin();
 	path_top.spline_points.clear();
+	path_bottom.spline_points.clear();
 	while (pair != mesh_points.end())
 	{
 		if (pair->first->life > 0 && pair->second->life > 0)
@@ -154,36 +155,59 @@ void  ComponentTrail::GetPerpendiculars()
 				top_left = pair->first->position + perpendicular;
 				bottom_left = (pair->first->position - perpendicular);
 			}
-			top_left = pair->first->position + perpendicular;
-			bottom_left = (pair->first->position - perpendicular);
-
+			else
+			{
+				top_left = pair->second->position + perpendicular;
+				bottom_left = (pair->second->position - perpendicular);
+			}
+			
+			//Spline points
 			path_top.spline_points.emplace_back(top_left);// add points on the spline
 			path_bottom.spline_points.emplace_back(bottom_left);// add points on the spline
 			float3 spoint_top, spoint_bottom, p0_t, p1_t, p2_t, p3_t, p0_b, p1_b, p2_b, p3_b;
-			auto seg = path_top.spline_points.begin();
-			while (seg <= path_top.spline_points.end() - 3)
+			auto seg_top = path_top.spline_points.begin();
+			auto seg_bottom = path_bottom.spline_points.begin();
+			while (seg_top <= path_top.spline_points.end() - 3 )
 			{
-				auto aux = seg;
-				p0_t = *aux;
-				p1_t = *(++aux);
-				p2_t = *(++aux);
-				p3_t = *(++aux);
-				for (float t = 0; t < 1; t += 0.02)
+				auto aux_top = seg_top;
+				
+				p0_t = *aux_top;
+				p1_t = *(++aux_top);
+				p2_t = *(++aux_top);
+				p3_t = *(++aux_top);
+
+				for (float t = 0; t < 1; t += 0.01)
 				{
 					spoint_top = path_top.GetSplinePoint(t, p0_t, p1_t, p2_t, p3_t);
-					//spoint_bottom = path_bottom.GetSplinePoint(t, p0_b, p1_b, p2_b, p3_b);
 					App->debug_draw->RenderPoint(spoint_top, 10.0F, float3{0, 150, 255});
-					//App->debug_draw->RenderLine(spoint_top, p3_t, float3{ 255, 255, 150});
+
+					//vertices.push_back({ spoint_top, float2(trail_segment_uv * j, 1.0f) }); //uv[i]
 				}
-				++seg;
+				++seg_top;
 			}
-			vertices.push_back({ top_left, float2(trail_segment_uv * j, 1.0f) }); //uv[i]
-			vertices.push_back({ bottom_left, float2(trail_segment_uv * j, 0.0f) });//uv[++i]
+			while (seg_bottom <= path_bottom.spline_points.end() - 3)
+			{
+				auto aux_bottom = seg_bottom;
+
+				p0_b = *aux_bottom;
+				p1_b = *(++aux_bottom);
+				p2_b = *(++aux_bottom);
+				p3_b = *(++aux_bottom);
+				for (float h = 0; h < 1; h += 0.01)
+				{
+					spoint_bottom = path_bottom.GetSplinePoint(h, p0_b, p1_b, p2_b, p3_b);
+					App->debug_draw->RenderPoint(spoint_bottom, 10.0F, float3{ 255, 255, 0 });
+					//vertices.push_back({ spoint_bottom, float2(trail_segment_uv * j, 0.0f) });//uv[++i]
+				}
+				++seg_bottom;
+			}
+			vertices.push_back({ spoint_top, float2(trail_segment_uv * j, 1.0f) }); //uv[i]
+			vertices.push_back({ spoint_bottom, float2(trail_segment_uv * j, 0.0f) });//uv[++i]
 			++pair;
 		}
 		else
 		{
-			mesh_points.erase(pair);
+			pair = mesh_points.erase(pair);
 		}
 	}
 }
