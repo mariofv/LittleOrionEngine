@@ -76,7 +76,7 @@ namespace ImGui
 		ImVec4 white(GetStyle().Colors[ImGuiCol_Text]);
 		ImVec4 blue(0.15f, 0.23f, 0.40f, 0.7f);
 
-		draw_list->AddLine(point, handle, ImColor(white), LINE_WIDTH / 2);
+		draw_list->AddLine(point, handle, ImColor(white), LINE_WIDTH / 3);
 		draw_list->AddCircleFilled(handle, GRAB_RADIUS, ImColor(white));
 		draw_list->AddCircleFilled(handle, GRAB_RADIUS - GRAB_BORDER, ImColor(blue));
 	}
@@ -140,7 +140,7 @@ namespace ImGui
 
 		//add or remove points
 		int detection_distance = 4 * GRAB_RADIUS * 4 * GRAB_RADIUS;
-		if (IsMouseDoubleClicked(0))
+		if (IsMouseDoubleClicked(0) && (rec.Contains(mouse)))
 		{
 			if (min_distance < detection_distance && point_side == 0)
 				bezier->RemovePointWithIndex(point_clicked);
