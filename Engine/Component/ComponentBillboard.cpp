@@ -223,6 +223,7 @@ void ComponentBillboard::SpecializedSave(Config& config) const
 	config.AddFloat(width, "Width");
 	config.AddFloat(height, "Height");
 	config.AddBool( pulse, "Pulse");
+	config.AddBool(loop, "Loop");
 	config.AddInt(static_cast<int>(alignment_type), "BillboardType");
 
 	config.AddInt(animation_time, "AnimationTime");
@@ -248,6 +249,7 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 	width = config.GetFloat("Width", 1.0f);
 	height = config.GetFloat("Height", 1.0f);
 	pulse = config.GetBool("Pulse", false);
+	loop = config.GetBool("Loop", false);
 
 	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::WORLD)));
 	ChangeBillboardType(alignment_type);

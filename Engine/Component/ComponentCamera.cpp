@@ -208,8 +208,14 @@ void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode
 	SetWidthAndHeight(width, height);
 
 #if !GAME
-		App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 #endif
+
+	if (App->renderer->anti_aliasing)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, msfbo);
+	} 
+	
 	glViewport(0, 0, width, height);
 
 	switch (camera_clear_mode)
@@ -242,16 +248,18 @@ void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode
 	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
 	App->ui->Render(scene_mode);
 
-#if !GAME
 	if (App->renderer->anti_aliasing)
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
+#if !GAME
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+#else
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+#endif
 		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-#endif
 }
 
 void ComponentCamera::RecordZBufferFrame(GLsizei width, GLsizei height)
