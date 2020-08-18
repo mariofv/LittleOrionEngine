@@ -139,12 +139,12 @@ void BezierCurve::CheckAllPoints()
 	{
 		if (i == 0)
 			points[i].curve_point.x = 0;
-
 		else if (i == num_points - 1)
 			points[i].curve_point.x = 1;
-			
 		else
 			points[i].curve_point.x = points[i].curve_point.x < points[i - 1].curve_point.x ? points[i - 1].curve_point.x + 0.01f
 				: (points[i].curve_point.x > points[i + 1].curve_point.x ? points[i + 1].curve_point.x - 0.01f : points[i].curve_point.x);
+
+		points[i].curve_point.y = points[i].curve_point.y < 0 ? 0 : (points[i].curve_point.y > 1 ? 1 : points[i].curve_point.y);
 	}
 }
