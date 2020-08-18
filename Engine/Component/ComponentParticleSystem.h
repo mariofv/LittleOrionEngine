@@ -189,6 +189,7 @@ public:
 	float velocity_over_time_speed_modifier_second = 2.0F;
 	float velocity_bezier_curve[5] = { 0.2f, 0.6f, 0.8f, 0.4f };
 	BezierCurve vel_curve;
+	float2 vel_curve_range;
 	
 	//Runtime values
 	size_t playing_particles_number = MAX_PARTICLES;

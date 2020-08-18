@@ -240,17 +240,16 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 			velocity *= velocity_over_time_speed_modifier + (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * particle.random_velocity_percentage;
 			break;
 		case CURVE:
-			//velocity *= velocity_over_time_speed_modifier;
-			//float percentage = ImGui::BezierValue(particle.time_passed / particles_life_time / 1000, velocity_bezier_curve);
-			//float vel_perc = (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * percentage;
-			//vel_curve_interpolated = particle.velocity_initial * vel_perc * velocity_factor_mod;
-
+			velocity *= velocity_over_time_speed_modifier;
+			float curve_value = vel_curve.BezierValue(particle.time_passed / particles_life_time / 1000).y;
+			float vel_in_range = (vel_curve_range.y - vel_curve_range.x) * curve_value + vel_curve_range.x;
+			vel_curve_interpolated = particle.velocity_initial * vel_in_range * velocity_factor_mod;
 			break;
 		}
 	}
 
 	//update position
-	particle.position = particle.position_initial + ((velocity + vel_curve_interpolated ) * particle.time_passed) +
+	particle.position = particle.position_initial + ((velocity + vel_curve_interpolated) * particle.time_passed) +
 		(acceleration * particle.time_passed * particle.time_passed / 2);
 
 	if (orbit)
