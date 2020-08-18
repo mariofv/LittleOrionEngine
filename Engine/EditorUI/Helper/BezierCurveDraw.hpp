@@ -19,6 +19,23 @@ namespace ImGui
 	static int const POINT_VERTEXS = 4;
 	static int const AREA_WIDTH = 0;
 
+	static void DrawRangeGuide(ImVec2& range, ImVec2& canvas, ImDrawList* draw_list, ImRect& rec)
+	{
+		ImVec4 white(GetStyle().Colors[ImGuiCol_Text]);
+		float spacing = canvas.y / 4;
+		char display[10];
+
+		for (int i = 0; i <= 4; i++)
+		{
+			float value = (range.y - range.x) / 4 * (4 - i) + range.x;
+			sprintf(display, "%.2f", value);
+			if (i == 4)
+				draw_list->AddText(ImVec2(rec.Min.x + 3, rec.Max.y - 17), ImColor(white), display);
+			else
+				draw_list->AddText(ImVec2(rec.Min.x + 3, rec.Min.y + spacing * i + 1), ImColor(white), display);
+		}
+	}
+		
 	static void DrawGrid(ImVec2& canvas, ImDrawList* draw_list, ImRect& rec)
 	{
 		for (int i = 0; i <= canvas.x; i += (canvas.x / 4)) {
@@ -150,7 +167,7 @@ namespace ImGui
 		}
 	}
 
-	static bool DrawBezierCubic(BezierCurve* bezier)
+	static bool DrawBezierCubic(BezierCurve* bezier, ImVec2& range)
 	{
 		// bezier widget
 		const ImGuiStyle& Style = GetStyle();
@@ -185,6 +202,9 @@ namespace ImGui
 
 		//draw background grid
 		DrawGrid(Canvas, DrawList, bb);
+
+		//draw range guide
+		DrawRangeGuide(range, Canvas, DrawList, bb);
 
 		// build curve
 		float2 results[SMOOTHNESS + 1];

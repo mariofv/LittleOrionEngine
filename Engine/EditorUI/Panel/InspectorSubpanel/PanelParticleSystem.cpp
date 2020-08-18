@@ -290,7 +290,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				break;
 			case ComponentParticleSystem::TypeOfVelocityOverTime::CURVE:
 				ImGui::DragFloat2("Curve Range", &particle_system->vel_curve_range[0], 0.01F);
-				ImGui::DrawBezierCubic(&particle_system->vel_curve);
+				ImGui::DrawBezierCubic(&particle_system->vel_curve, ImVec2(particle_system->vel_curve_range.x, particle_system->vel_curve_range.y));
 				break;
 			}
 
