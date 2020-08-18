@@ -174,6 +174,7 @@ void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 	BROFILER_CATEGORY("Render material", Profiler::Color::ForestGreen);
 	AddDiffuseUniforms(shader_program);
 	AddEmissiveUniforms(shader_program);
+	AddEmissiveUniforms(shader_program);
 	AddSpecularUniforms(shader_program);
 
 	AddAmbientOclusionUniforms(shader_program);

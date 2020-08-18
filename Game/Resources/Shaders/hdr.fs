@@ -1,6 +1,5 @@
 
-out vec4 FragColor;
-
+layout (location = 0) out vec4 FragColor;
 in vec2 TexCoords;
 
 uniform sampler2D scene_texture;
@@ -21,32 +20,8 @@ vec3 Uncharted2Tonemap(vec3 x)
 void main()
 {    
     vec3 hdrColor = texture(scene_texture, TexCoords).rgb;
-	vec3 result;
-	if(bloom)
-	{
-		vec3 bloomColor = texture(bloom_texture, TexCoords).rgb;
-		hdrColor += bloomColor; // additive blending
-	}
-	switch(hdr_type)
-	{
-		//REINHARD
-		case 0:
-			result = hdrColor / (hdrColor + vec3(1.0));
-			
-		break;
-		//FILMIC
-		case 1:
-			const float W = 11.2;
-			hdrColor *= exposure;
-			vec3 curr = Uncharted2Tonemap(2.0*hdrColor);
-			vec3 whiteScale = 1.0/Uncharted2Tonemap(vec3(W));
-			result = curr*whiteScale;
-		break;
-		//EXPOSURE
-		case 2: 
-			 result = vec3(1.0) - exp(-hdrColor * exposure);
-		break;	
-	}
-	FragColor = vec4(pow(result, vec3(1.0 / gamma)), 1.0);
+	
+	FragColor = vec4(pow(hdrColor, vec3(1.0 / gamma)), 1.0);
+	
 
 }

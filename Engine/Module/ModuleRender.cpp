@@ -248,6 +248,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			for (unsigned int i = 0; i < amount; i++)
 			{
 				glBindFramebuffer(GL_FRAMEBUFFER, camera.pingpongFBO[horizontal]);
+				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, first_iteration ? camera.color_buffers[1] : camera.pingpongColorbuffers[!horizontal]);
 				RenderQuad();
 				horizontal = !horizontal;
