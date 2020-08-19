@@ -180,7 +180,7 @@ void PanelStateMachine::RenderStates()
 
 		ImGui::BeginGroup();
 		ax::NodeEditor::BeginPin(node->input, ax::NodeEditor::PinKind::Input);
-		Widgets::Icon(node->Size/5, ax::Drawing::IconType::Diamond, true, ImVec4(255, 127, 80, 255), ImVec4(255, 127, 80, 255));
+		ax::Widgets::Icon(node->Size/5, ax::Drawing::IconType::Diamond, true, ImVec4(255, 127, 80, 255), ImVec4(255, 127, 80, 255));
 		ax::NodeEditor::EndPin();
 		ImGui::EndGroup();
 
@@ -188,7 +188,7 @@ void PanelStateMachine::RenderStates()
 
 		ImGui::BeginGroup();
 		ax::NodeEditor::BeginPin(node->output, ax::NodeEditor::PinKind::Output);
-		Widgets::Icon(node->Size / 5, ax::Drawing::IconType::Flow, true, ImVec4(0, 0, 255, 255), ImVec4(0, 0, 255, 255));
+		ax::Widgets::Icon(node->Size / 5, ax::Drawing::IconType::Flow, true, ImVec4(0, 0, 255, 255), ImVec4(0, 0, 255, 255));
 		ax::NodeEditor::EndPin();
 		ImGui::EndGroup();
 	
@@ -400,6 +400,19 @@ std::vector<LinkInfo*> PanelStateMachine::GetSelectedLinks()
 	return selected_links;
 }
 
+void PanelStateMachine::EraseNameFromVariables(std::vector<std::string>& names, uint64_t name_to_delete_hash)
+{
+	for(auto it = names.begin(); it != names.end(); ++it)
+	{
+		uint64_t variable_hash = std::hash<std::string>{}(*it);
+		if(variable_hash == name_to_delete_hash)
+		{
+			names.erase(it);
+			return;
+		}
+	}
+}
+
 void PanelStateMachine::LeftPanel()
 {
 	float window_size = ImGui::GetWindowSize().x / 3;
@@ -427,8 +440,403 @@ void PanelStateMachine::LeftPanel()
 			}
 			ImGui::BulletText("Trigger Name:");
 			ImGui::InputText("###Trigger Name", &(link->transition->trigger));
+
+			ImGui::Separator();
+			ImGui::Text("Float Conditions: ");
+			size_t i = 0;
+			for (auto& condition : link->transition->float_conditions)
+			{
+				std::string variable_id("###VariableChosen");
+				variable_id += std::to_string(i);
+				const float window_width = ImGui::GetWindowWidth();
+				float combo_width = window_width * 0.40f;
+				ImGui::SetNextItemWidth(combo_width);
+				if (ImGui::BeginCombo(variable_id.c_str(), state_machine->GetNameOfVariable(condition.name_hash_variable).c_str()))
+				{
+					for(auto variable : state_machine->float_variables_names)
+					{
+						if (ImGui::Selectable(variable.c_str()))
+						{
+							condition.name_hash_variable = std::hash<std::string>{}(variable);
+						}
+					}
+
+					ImGui::EndCombo();
+				}
+
+
+				ImGui::SameLine();
+				std::string comparator_id("###Comparator");
+				comparator_id += std::to_string(i);
+				size_t index = static_cast<size_t>(condition.comparator);
+				combo_width = window_width * 0.25f;
+				ImGui::SetNextItemWidth(combo_width);
+				if (ImGui::BeginCombo(comparator_id.c_str(), comparator_name[index]))
+				{
+					//Greater
+					if (ImGui::Selectable(comparator_name[0]))
+					{
+						condition.comparator = Comparator::GREATER;
+						condition.comparator_function = std::greater();
+					}
+					
+					//Lesser
+					if (ImGui::Selectable(comparator_name[1]))
+					{
+						condition.comparator = Comparator::LESSER;
+						condition.comparator_function = std::less();
+					}
+
+					//Equal
+					if (ImGui::Selectable(comparator_name[2]))
+					{
+						condition.comparator = Comparator::EQUAL;
+						condition.comparator_function = std::equal_to();
+					}
+
+					//NotEqual
+					if (ImGui::Selectable(comparator_name[3]))
+					{
+						condition.comparator = Comparator::NOT_EQUAL;
+						condition.comparator_function = std::not_equal_to();
+					}
+
+					ImGui::EndCombo();
+				}
+				ImGui::SameLine();
+				std::string x_id("###Value");
+				x_id += std::to_string(i);
+				combo_width = window_width * 0.20f;
+				ImGui::SetNextItemWidth(combo_width);
+				ImGui::DragFloat(x_id.c_str(), &condition.value, 0.01f, 0.f, 100.f);
+
+				ImGui::SameLine();
+				std::string delete_id("X###Deletethis");
+				delete_id += std::to_string(i);
+				combo_width = window_width * 0.15f;
+				ImGui::SetNextItemWidth(combo_width);
+				if(ImGui::Button(delete_id.c_str()))
+				{
+					link->transition->float_conditions.erase(link->transition->float_conditions.begin() + i);
+					break;
+				}
+
+				++i;
+			}
+
+			ImGui::Separator();
+		
+			if (ImGui::Button("+###float"))
+			{
+				Condition<float> condition(state_machine->float_variables.begin()->first, std::greater(), 0.f);
+				link->transition->float_conditions.push_back(condition);
+			}
+
+
+			//IntConditions
+			ImGui::Text("Int Conditions: ");
+			i = 0;
+			for (auto& condition : link->transition->int_conditions)
+			{
+				std::string variable_id("###IntVariableChosen");
+				variable_id += std::to_string(i);
+				const float window_width = ImGui::GetWindowWidth();
+				float combo_width = window_width * 0.40f;
+				ImGui::SetNextItemWidth(combo_width);
+				if (ImGui::BeginCombo(variable_id.c_str(), state_machine->GetNameOfVariable(condition.name_hash_variable).c_str()))
+				{
+					for (auto variable : state_machine->int_variables_names)
+					{
+						if (ImGui::Selectable(variable.c_str()))
+						{
+							condition.name_hash_variable = std::hash<std::string>{}(variable);
+						}
+					}
+
+					ImGui::EndCombo();
+				}
+
+
+				ImGui::SameLine();
+				std::string comparator_id("###IntComparator");
+				comparator_id += std::to_string(i);
+				size_t index = static_cast<size_t>(condition.comparator);
+				combo_width = window_width * 0.25f;
+				ImGui::SetNextItemWidth(combo_width);
+				if (ImGui::BeginCombo(comparator_id.c_str(), comparator_name[index]))
+				{
+					//Greater
+					if (ImGui::Selectable(comparator_name[0]))
+					{
+						condition.comparator = Comparator::GREATER;
+						condition.comparator_function = std::greater();
+					}
+
+					//Lesser
+					if (ImGui::Selectable(comparator_name[1]))
+					{
+						condition.comparator = Comparator::LESSER;
+						condition.comparator_function = std::less();
+					}
+
+					//Equal
+					if (ImGui::Selectable(comparator_name[2]))
+					{
+						condition.comparator = Comparator::EQUAL;
+						condition.comparator_function = std::equal_to();
+					}
+
+					//NotEqual
+					if (ImGui::Selectable(comparator_name[3]))
+					{
+						condition.comparator = Comparator::NOT_EQUAL;
+						condition.comparator_function = std::not_equal_to();
+					}
+
+					ImGui::EndCombo();
+				}
+				ImGui::SameLine();
+				std::string x_id("###IntValue");
+				x_id += std::to_string(i);
+				combo_width = window_width * 0.20f;
+				ImGui::SetNextItemWidth(combo_width);
+				ImGui::DragInt(x_id.c_str(), &condition.value, 0.01f, 0.f, 10000.f);
+
+				ImGui::SameLine();
+				std::string delete_id("X###IntDeletethis");
+				delete_id += std::to_string(i);
+				combo_width = window_width * 0.15f;
+				ImGui::SetNextItemWidth(combo_width);
+				if (ImGui::Button(delete_id.c_str()))
+				{
+					link->transition->int_conditions.erase(link->transition->int_conditions.begin() + i);
+					break;
+				}
+
+				++i;
+			}
+
+			ImGui::Separator();
+
+			if (ImGui::Button("+###int"))
+			{
+				Condition<int> condition(state_machine->int_variables.begin()->first, std::greater(), 0);
+				link->transition->int_conditions.push_back(condition);
+			}
+
+			//BoolConditions
+			ImGui::Text("Bool Conditions: ");
+			i = 0;
+			for (auto& condition : link->transition->bool_conditions)
+			{
+				std::string variable_id("###BoolVariableChosen");
+				variable_id += std::to_string(i);
+				const float window_width = ImGui::GetWindowWidth();
+				float combo_width = window_width * 0.40f;
+				ImGui::SetNextItemWidth(combo_width);
+				if (ImGui::BeginCombo(variable_id.c_str(), state_machine->GetNameOfVariable(condition.name_hash_variable).c_str()))
+				{
+					for (auto variable : state_machine->bool_variables_names)
+					{
+						if (ImGui::Selectable(variable.c_str()))
+						{
+							condition.name_hash_variable = std::hash<std::string>{}(variable);
+						}
+					}
+
+					ImGui::EndCombo();
+				}
+
+
+				ImGui::SameLine();
+				std::string comparator_id("###BoolComparator");
+				comparator_id += std::to_string(i);
+				size_t index = static_cast<size_t>(condition.comparator);
+				combo_width = window_width * 0.25f;
+				ImGui::SetNextItemWidth(combo_width);
+				if (ImGui::BeginCombo(comparator_id.c_str(), comparator_name[index]))
+				{
+					//Equal
+					if (ImGui::Selectable(comparator_name[2]))
+					{
+						condition.comparator = Comparator::EQUAL;
+						condition.comparator_function = std::equal_to();
+					}
+
+					//NotEqual
+					if (ImGui::Selectable(comparator_name[3]))
+					{
+						condition.comparator = Comparator::NOT_EQUAL;
+						condition.comparator_function = std::not_equal_to();
+					}
+
+					ImGui::EndCombo();
+				}
+				ImGui::SameLine();
+				std::string x_id("###BoolValue");
+				x_id += std::to_string(i);
+				combo_width = window_width * 0.20f;
+				ImGui::SetNextItemWidth(combo_width);
+				if (ImGui::BeginCombo(x_id.c_str(), bool_conditions[condition.value]))
+				{
+					//false
+					if (ImGui::Selectable(bool_conditions[0]))
+					{
+						condition.value = false;
+					}
+
+					//true
+					if (ImGui::Selectable(bool_conditions[1]))
+					{
+						condition.value = true;
+					}
+
+					ImGui::EndCombo();
+				}
+
+				ImGui::SameLine();
+				std::string delete_id("X###BoolDeletethis");
+				delete_id += std::to_string(i);
+				combo_width = window_width * 0.15f;
+				ImGui::SetNextItemWidth(combo_width);
+				if (ImGui::Button(delete_id.c_str()))
+				{
+					link->transition->bool_conditions.erase(link->transition->bool_conditions.begin() + i);
+					break;
+				}
+
+				++i;
+			}
+
+			ImGui::Separator();
+
+			if (ImGui::Button("+###bool"))
+			{
+				Condition<bool> condition(state_machine->bool_variables.begin()->first, std::equal_to(), false);
+				condition.comparator = Comparator::EQUAL;
+				link->transition->bool_conditions.push_back(condition);
+			}
+
 			ImGui::PopID();
 		}
+
+
+		
+		ImGui::Separator();
+		ImGui::Text("Parameters: ");
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Floats");
+		ImGui::Separator();
+		size_t i = 0;
+		for(auto float_variable : state_machine->float_variables)
+		{
+			ImGui::DragFloat(state_machine->GetNameOfVariable(float_variable.first).c_str(), &float_variable.second, 0.01f, 0.f, 100.f);
+			state_machine->float_variables[float_variable.first] = float_variable.second;
+			ImGui::SameLine();
+			std::string x_id("X###float");
+			x_id += std::to_string(i);
+			if(ImGui::Button(x_id.c_str()))
+			{
+				state_machine->float_variables.erase(float_variable.first);
+				EraseNameFromVariables(state_machine->float_variables_names, float_variable.first);
+				break;
+			}
+
+			++i;
+		}
+		ImGui::Separator();
+		ImGui::InputText("###Float Name", &float_auxiliar_variable);
+		ImGui::SameLine();
+		if(ImGui::Button("Add float variable"))
+		{
+			uint64_t name_hash = std::hash<std::string>{}(float_auxiliar_variable);
+			if (state_machine->float_variables.find(name_hash) == state_machine->float_variables.end())
+			{
+				state_machine->float_variables[name_hash] = 0.f;
+				state_machine->float_variables_names.push_back(float_auxiliar_variable);			
+			}
+		}
+
+		ImGui::Separator();
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Ints");
+		ImGui::Separator();
+		i = 0;
+		for (auto int_variable : state_machine->int_variables)
+		{
+			ImGui::DragInt(state_machine->GetNameOfVariable(int_variable.first).c_str(), &int_variable.second, 1, 0, 10000);
+			state_machine->int_variables[int_variable.first] = int_variable.second;
+			ImGui::SameLine();
+			std::string x_id("X###Int");
+			x_id += std::to_string(i);
+			if (ImGui::Button(x_id.c_str()))
+			{
+				state_machine->int_variables.erase(int_variable.first);
+				EraseNameFromVariables(state_machine->int_variables_names, int_variable.first);
+				break;
+			}
+
+			++i;
+		}
+		ImGui::Separator();
+		ImGui::InputText("###Int Name", &int_auxiliar_variable);
+		ImGui::SameLine();
+		if (ImGui::Button("Add int variable"))
+		{
+			uint64_t name_hash = std::hash<std::string>{}(int_auxiliar_variable);
+			if (state_machine->int_variables.find(name_hash) == state_machine->int_variables.end())
+			{
+				state_machine->int_variables[name_hash] = 0;
+				state_machine->int_variables_names.push_back(int_auxiliar_variable);			
+			}
+		}
+
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Bools");
+		ImGui::Separator();
+		i = 0;
+		for (auto bool_variable : state_machine->bool_variables)
+		{
+			if (ImGui::BeginCombo(state_machine->GetNameOfVariable(bool_variable.first).c_str(), bool_conditions[bool_variable.second]))
+			{
+				//false
+				if (ImGui::Selectable(bool_conditions[0]))
+				{
+					bool_variable.second = false;
+				}
+
+				//true
+				if (ImGui::Selectable(bool_conditions[1]))
+				{
+					bool_variable.second = true;
+				}
+
+				ImGui::EndCombo();
+			}
+			
+			state_machine->bool_variables[bool_variable.first] = bool_variable.second;
+			ImGui::SameLine();
+			std::string x_id("X###Bool");
+			x_id += std::to_string(i);
+			if (ImGui::Button(x_id.c_str()))
+			{
+				state_machine->bool_variables.erase(bool_variable.first);
+				EraseNameFromVariables(state_machine->bool_variables_names, bool_variable.first);
+				break;
+			}
+
+			++i;
+		}
+		ImGui::Separator();
+		ImGui::InputText("###Bool Name", &bool_auxiliar_variable);
+		ImGui::SameLine();
+		if (ImGui::Button("Add bool variable"))
+		{
+			uint64_t name_hash = std::hash<std::string>{}(bool_auxiliar_variable);
+			if(state_machine->bool_variables.find(name_hash) == state_machine->bool_variables.end())
+			{
+				state_machine->bool_variables[name_hash] = false;
+				state_machine->bool_variables_names.push_back(bool_auxiliar_variable);			
+			}
+		}
+
 		ImGui::Separator();
 		if (ImGui::Button("Save"))
 		{

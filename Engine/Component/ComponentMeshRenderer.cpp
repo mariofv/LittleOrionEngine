@@ -37,6 +37,8 @@ void ComponentMeshRenderer::SpecializedSave(Config& config) const
 	config.AddUInt(mesh_uuid, "Mesh");
 	config.AddUInt(material_uuid, "Material");
 	config.AddUInt(skeleton_uuid, "Skeleton");
+	config.AddBool(shadow_caster, "ShadowCaster");
+	config.AddBool(shadow_receiver, "ShadowReceiver");
 }
 
 void ComponentMeshRenderer::SpecializedLoad(const Config& config)
@@ -49,6 +51,9 @@ void ComponentMeshRenderer::SpecializedLoad(const Config& config)
 
 	skeleton_uuid =	config.GetUInt32("Skeleton", 0);
 	SetSkeleton(skeleton_uuid);
+
+	shadow_caster = config.GetBool("ShadowCaster", shadow_caster);
+	shadow_receiver = config.GetBool("ShadowReceiver", shadow_receiver);
 }
 
 void ComponentMeshRenderer::LoadResource(uint32_t uuid, ResourceType resource, unsigned texture_type)
@@ -120,14 +125,13 @@ void ComponentMeshRenderer::Render()
 	{
 		return;
 	}
-	std::string program_name = material_to_render->shader_program;
 	unsigned int shader_variation = material_to_render->GetShaderVariation();
 	if (shadow_receiver && App->lights->render_shadows)
 	{
 		shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_RECEIVE_SHADOWS);
 	}
 
-	GLuint program = App->program->UseProgram(program_name, shader_variation);
+	GLuint program = App->program->UseProgram(material_to_render->shader_program, shader_variation);
 
 	glUniform1i(glGetUniformLocation(program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
 	
@@ -141,7 +145,10 @@ void ComponentMeshRenderer::Render()
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	App->lights->Render(owner->transform.GetGlobalTranslation(), program);
+	if (!material_to_render->UseLightmap())
+	{
+		App->lights->Render(owner->transform.GetGlobalTranslation(), program);
+	}
 
 	RenderMaterial(program);
 	RenderModel();
@@ -151,6 +158,7 @@ void ComponentMeshRenderer::Render()
 
 void ComponentMeshRenderer::RenderModel() const
 {
+	BROFILER_CATEGORY("Draw call", Profiler::Color::LawnGreen);
 	if (mesh_to_render == nullptr || !mesh_to_render->initialized)
 	{
 		return;
@@ -162,6 +170,7 @@ void ComponentMeshRenderer::RenderModel() const
 
 void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 {
+	BROFILER_CATEGORY("Render material", Profiler::Color::ForestGreen);
 	AddDiffuseUniforms(shader_program);
 	AddEmissiveUniforms(shader_program);
 	AddSpecularUniforms(shader_program);
@@ -231,9 +240,9 @@ void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
 void ComponentMeshRenderer::AddLightMapUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE8);
-	bool has_lightmap =  BindTexture(Material::MaterialTextureType::LIGHTMAP);
+	BindTexture(Material::MaterialTextureType::LIGHTMAP);
 	glUniform1i(glGetUniformLocation(shader_program, "material.light_map"), 8);
-	glUniform1i(glGetUniformLocation(shader_program, "use_light_map"), has_lightmap ? 1 : 0);
+	glUniform1i(glGetUniformLocation(shader_program, "use_light_map"), material_to_render->UseLightmap() ? 1 : 0);
 }
 
 void ComponentMeshRenderer::AddLiquidMaterialUniforms(unsigned int shader_program) const
@@ -322,7 +331,7 @@ bool ComponentMeshRenderer::BindTextureNormal(Material::MaterialTextureType id) 
 	}
 }
 
-Component* ComponentMeshRenderer::Clone(bool original_prefab) const
+Component* ComponentMeshRenderer::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentMeshRenderer * created_component;
 	if (original_prefab)
@@ -336,12 +345,12 @@ Component* ComponentMeshRenderer::Clone(bool original_prefab) const
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
 
-	created_component->ReassignResource();
-
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 }
 
-void ComponentMeshRenderer::Copy(Component* component_to_copy) const
+void ComponentMeshRenderer::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentMeshRenderer*>(component_to_copy) = *this;

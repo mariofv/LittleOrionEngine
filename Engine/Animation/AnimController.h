@@ -50,6 +50,9 @@ public:
 	void StartNextState(const std::string& trigger);
 	bool IsOnState(const std::string& state);
 	void SetSpeed(float speed);
+	void SetFloat(uint64_t name_hash, float value);
+	void SetInt(uint64_t name_hash, int value);
+	void SetBool(uint64_t name_hash, bool value);
 
 
 private:
@@ -57,6 +60,8 @@ private:
 	void FinishActiveState();
 	void AdjustInterpolationTimes();
 	void ApplyAutomaticTransitionIfNeeded();
+	//Variables
+	void CheckConditions();
 public:
 	std::shared_ptr<StateMachine> state_machine = nullptr;
 	std::vector<PlayingClip> playing_clips;

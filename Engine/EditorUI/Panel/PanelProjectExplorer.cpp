@@ -606,15 +606,21 @@ void PanelProjectExplorer::FilesDrop() const
 		{
 			assert(payload->DataSize == sizeof(GameObject*));
 			GameObject *incoming_game_object = *(GameObject**)payload->Data;
-			uint32_t prefab_uuid = PrefabManager::CreateFromGameObject(*selected_folder, *incoming_game_object);
-			if (prefab_uuid != 0)
-			{
-				App->scene->RemoveGameObject(incoming_game_object);
-				std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(prefab_uuid);
-				App->editor->selected_game_object = prefab->Instantiate(App->scene->GetRoot());
-			}
+			CreatePrefabInSelectedFolder(incoming_game_object);
 		}
 		ImGui::EndDragDropTarget();
+	}
+}
+
+void PanelProjectExplorer::CreatePrefabInSelectedFolder(GameObject * incoming_game_object) const
+{
+	Path* destination_folder = selected_folder ? selected_folder : App->filesystem->GetRootPath();
+	uint32_t prefab_uuid = PrefabManager::CreateFromGameObject(*destination_folder, *incoming_game_object);
+	if (prefab_uuid != 0)
+	{
+		std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(prefab_uuid);
+		App->editor->selected_game_object = prefab->Instantiate(incoming_game_object->parent ? incoming_game_object->parent : App->scene->GetRoot());
+		App->scene->RemoveGameObject(incoming_game_object);
 	}
 }
 

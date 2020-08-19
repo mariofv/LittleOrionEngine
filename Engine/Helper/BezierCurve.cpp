@@ -157,6 +157,8 @@ void BezierCurve::SpecializedLoad(const Config & config, const std::string& name
 		config.GetFloat2(name + " Left Pivot " + std::to_string(i), points[i].left_pivot, float2::zero);
 		config.GetFloat2(name + " Right Pivot " + std::to_string(i), points[i].right_pivot, float2::zero);
 	}
+
+	CheckAllPoints();
 }
 
 void BezierCurve::CheckAllPoints()

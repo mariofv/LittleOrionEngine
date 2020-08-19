@@ -260,7 +260,7 @@ bool Scene::SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_
 	std::vector<Config> gameobject_components_config;
 	for (auto & component : gameobject_to_save->components)
 	{
-		if (component->modified_by_user || component->added_by_user)
+		if (component->modified_by_user || component->added_by_user || component->type == Component::ComponentType::SCRIPT)
 		{
 			Config component_config;
 			component->Save(component_config);
@@ -332,8 +332,8 @@ void Scene::LoadPrefabModifiedComponents(const Config& config) const
 
 		uint64_t UUID = component_config.GetUInt("UUID", 0);
 
-		Component * component = prefab_child->GetComponent(component_type_uint);
-		if (component != nullptr && component->UUID == UUID)
+		Component * component = prefab_child->GetComponent(UUID);
+		if (component != nullptr)
 		{
 			component->Load(component_config);
 			component->modified_by_user = true;
