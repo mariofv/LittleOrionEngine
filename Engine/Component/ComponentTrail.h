@@ -53,7 +53,7 @@ struct Spline
 
 		v.x = ((-t3 + 2 * t2 - t)*(p0.x) + (3 * t3 - 5 * t2 + 2)*(p1.x) + (-3 * t3 + 4 * t2 + t)* (p2.x) + (t3 - t2)*(p3.x)) / 2;
 		v.y = ((-t3 + 2 * t2 - t)*(p0.y) + (3 * t3 - 5 * t2 + 2)*(p1.y) + (-3 * t3 + 4 * t2 + t)* (p2.y) + (t3 - t2)*(p3.y)) / 2;
-		
+		v.z = (0.0f);
 		return v;
 	}
 };
@@ -102,6 +102,7 @@ public:
 	int total_points = 1;
 	float3 last_point_added;
 
+	
 	//Trail Generation properties
 	float width = 0.1f;
 	float duration = 1000.0f; // in millis

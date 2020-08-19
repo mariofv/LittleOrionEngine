@@ -14,7 +14,7 @@
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
-namespace { const float MAX_TRAIL_VERTICES = 1000; } //arbitrary number 
+namespace { const float MAX_TRAIL_VERTICES = 5000; } //arbitrary number 
 
 ComponentTrail::ComponentTrail() : Component(nullptr, ComponentType::TRAIL)
 {
@@ -78,7 +78,7 @@ void ComponentTrail::Update()
 		return;
 	}
 	float3 gameobject_position = owner->transform.GetGlobalTranslation(); //current GO position
-	bool on_transform_change = last_gameobject_position.Distance(gameobject_position) >= min_distance;
+	bool on_transform_change = last_gameobject_position.Distance(gameobject_position) > 0.0f;
 
 	if (on_transform_change)//always gets in this is wrong ! TODO create an event here/ merge with event system
 	{
@@ -86,10 +86,10 @@ void ComponentTrail::Update()
 		test_points.push_back(next_point);	//create another Trail point and add it to the pool		
 		last_point = next_point; // So we're gonna calculate, on the next iteration how far we are from the last point created, and so on
 		last_gameobject_position = gameobject_position;
+		
 	}
-
+	
 	GetPerpendiculars();
-
 	auto it = test_points.begin();
 	while (it != test_points.end())
 	{
@@ -125,7 +125,7 @@ void  ComponentTrail::GetPerpendiculars()
 
 	unsigned int j = 0;
 	vertices.clear();
-	float trail_segment_uv = 1.f / test_points.size(); // to coordinate texture
+	float trail_segment_uv = 1.f / path_top.spline_points.size(); // to coordinate texture
 	auto pair = mesh_points.begin();
 	path_top.spline_points.clear();
 	path_bottom.spline_points.clear();
@@ -138,12 +138,12 @@ void  ComponentTrail::GetPerpendiculars()
 			float3 perpendicular;
 			if (App->cameras->scene_camera)
 			{
-				perpendicular = vector_adjacent.Cross((App->cameras->scene_camera->camera_frustum.pos - owner->transform.GetFrontVector() )) * width; //Front is currently local
+				perpendicular = vector_adjacent.Cross((App->cameras->scene_camera->camera_frustum.pos - owner->transform.GetGlobalTranslation().Normalized())) * width; //Front is currently local
 
 			}
 			else
 			{
-				perpendicular = vector_adjacent.Cross(owner->transform.GetFrontVector()) * width; //Front is currently local
+				perpendicular = vector_adjacent.Cross(owner->transform.GetRightVector()) * width; //Front is currently local
 			}
 			
 
@@ -160,49 +160,61 @@ void  ComponentTrail::GetPerpendiculars()
 				top_left = pair->second->position + perpendicular;
 				bottom_left = (pair->second->position - perpendicular);
 			}
-			
+
 			//Spline points
 			path_top.spline_points.emplace_back(top_left);// add points on the spline
 			path_bottom.spline_points.emplace_back(bottom_left);// add points on the spline
 			float3 spoint_top, spoint_bottom, p0_t, p1_t, p2_t, p3_t, p0_b, p1_b, p2_b, p3_b;
 			auto seg_top = path_top.spline_points.begin();
 			auto seg_bottom = path_bottom.spline_points.begin();
-			while (seg_top <= path_top.spline_points.end() - 3 )
+			while (seg_top <= path_top.spline_points.end() - 4)
 			{
 				auto aux_top = seg_top;
-				
+				auto aux_bottom = seg_bottom;
 				p0_t = *aux_top;
 				p1_t = *(++aux_top);
 				p2_t = *(++aux_top);
 				p3_t = *(++aux_top);
 
-				for (float t = 0; t < 1; t += 0.01)
-				{
-					spoint_top = path_top.GetSplinePoint(t, p0_t, p1_t, p2_t, p3_t);
-					App->debug_draw->RenderPoint(spoint_top, 10.0F, float3{0, 150, 255});
-
-					//vertices.push_back({ spoint_top, float2(trail_segment_uv * j, 1.0f) }); //uv[i]
-				}
-				++seg_top;
-			}
-			while (seg_bottom <= path_bottom.spline_points.end() - 3)
-			{
-				auto aux_bottom = seg_bottom;
-
 				p0_b = *aux_bottom;
 				p1_b = *(++aux_bottom);
 				p2_b = *(++aux_bottom);
 				p3_b = *(++aux_bottom);
-				for (float h = 0; h < 1; h += 0.01)
+
+				for (float k = 0; k < path_top.spline_points.size() - 2; k++)
 				{
-					spoint_bottom = path_bottom.GetSplinePoint(h, p0_b, p1_b, p2_b, p3_b);
-					App->debug_draw->RenderPoint(spoint_bottom, 10.0F, float3{ 255, 255, 0 });
-					//vertices.push_back({ spoint_bottom, float2(trail_segment_uv * j, 0.0f) });//uv[++i]
+					float t = k * 0.02f;
+					spoint_top = path_top.GetSplinePoint(t, p0_t, p1_t, p2_t, p3_t);
+					App->debug_draw->RenderPoint(spoint_top, 5.0F, float3{0, 150, 255});
+					spoint_bottom = path_bottom.GetSplinePoint(t, p0_b, p1_b, p2_b, p3_b);
+					App->debug_draw->RenderPoint(spoint_bottom, 5.0F, float3{ 255, 255, 0 });
 				}
+				++seg_top;
 				++seg_bottom;
+				
 			}
-			vertices.push_back({ spoint_top, float2(trail_segment_uv * j, 1.0f) }); //uv[i]
-			vertices.push_back({ spoint_bottom, float2(trail_segment_uv * j, 0.0f) });//uv[++i]
+			vertices.push_back({ spoint_top, float2(trail_segment_uv * j , 0.0f) });//uv[++i]
+			vertices.push_back({ spoint_bottom, float2(trail_segment_uv * j, 1.0f) }); //uv[i]
+			//while (seg_bottom <= path_bottom.spline_points.end() - 3)
+			//{
+			//	auto aux_bottom = seg_bottom;
+
+			//	p0_b = *aux_bottom;
+			//	p1_b = *(++aux_bottom);
+			//	p2_b = *(++aux_bottom);
+			//	p3_b = *(++aux_bottom);
+			//	for (float k = 0; k < path_bottom.spline_points.size() - 2; k++)
+			//	{
+			//		float h = k * 0.02f;
+			//		spoint_bottom = path_bottom.GetSplinePoint(h, p0_b, p1_b, p2_b, p3_b);
+			//		App->debug_draw->RenderPoint(spoint_bottom, 5.0F, float3{ 255, 255, 0 });
+			//	}
+			//	vertices.push_back({ spoint_bottom, float2(trail_segment_uv * j, 0.0f) }); //uv[i]
+			//	++seg_bottom;
+			//}
+			//vertices.push_back({ spoint_top, float2(trail_segment_uv * j, 0.0f) });//uv[++i]
+			//vertices.push_back({ spoint_bottom, float2(trail_segment_uv * j, 1.0f) }); //uv[i]
+			
 			++pair;
 		}
 		else
