@@ -3,6 +3,8 @@
 
 #include <MathGeoLib.h>
 
+class Config;
+
 struct BezierPoint
 {
 	float2 curve_point;
@@ -23,6 +25,9 @@ public:
 
 	void MovePivotByIncrement(float2& handle, float2& increment);
 	void MovePointByIncrement(BezierPoint& point, float2& increment);
+
+	void SpecializedSave(Config& config, const std::string& name) const;
+	void SpecializedLoad(const Config& config, const std::string& name);
 
 private:
 	float2 BezierValueIndexPoints(const float percentage, const int last_index) const;

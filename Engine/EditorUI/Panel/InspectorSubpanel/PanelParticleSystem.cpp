@@ -289,8 +289,9 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				ImGui::DragFloat("Max Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
 				break;
 			case ComponentParticleSystem::TypeOfVelocityOverTime::CURVE:
-				ImGui::DragFloat2("Curve Range", &particle_system->vel_curve_range[0], 0.01F);
-				ImGui::DrawBezierCubic(&particle_system->vel_curve, ImVec2(particle_system->vel_curve_range.x, particle_system->vel_curve_range.y));
+				ImGui::DragFloat("Min Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
+				ImGui::DragFloat("Max Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
+				ImGui::DrawBezierCubic(&particle_system->vel_curve, ImVec2(particle_system->velocity_over_time_speed_modifier, particle_system->velocity_over_time_speed_modifier_second));
 				break;
 			}
 
@@ -299,7 +300,6 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				ImGui::PopItemFlag();
 				ImGui::PopStyleVar();
 			}
-
 		}
 
 		ImGui::Checkbox("###Orbit", &particle_system->orbit);

@@ -181,15 +181,11 @@ public:
 	float fade_time = 1.0F;
 
 	//Velocity over time
-	bool velocity_over_time = true;
-	TypeOfVelocityOverTime type_of_velocity_over_time = CURVE;
-	//bool velocity_over_time = false;
-	//TypeOfVelocityOverTime type_of_velocity_over_time = CONSTANT;
+	bool velocity_over_time = false;
+	TypeOfVelocityOverTime type_of_velocity_over_time = CONSTANT;
 	float velocity_over_time_speed_modifier = 1.0F;
 	float velocity_over_time_speed_modifier_second = 2.0F;
-	float velocity_bezier_curve[5] = { 0.2f, 0.6f, 0.8f, 0.4f };
 	BezierCurve vel_curve;
-	float2 vel_curve_range;
 	
 	//Runtime values
 	size_t playing_particles_number = MAX_PARTICLES;

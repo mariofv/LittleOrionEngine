@@ -1,5 +1,7 @@
 #include "BezierCurve.h"
 
+#include "Helper/Config.h"
+
 BezierCurve::BezierCurve()
 {
 	points[0].curve_point = float2(0, 0);
@@ -131,6 +133,30 @@ void BezierCurve::MovePointByIncrement(BezierPoint& point, float2& increment)
 	MovePivotByIncrement(point.left_pivot, change);
 	MovePivotByIncrement(point.right_pivot, change);
 	increment = change;
+}
+
+void BezierCurve::SpecializedSave(Config & config, const std::string& name) const
+{
+	config.AddInt(num_points, name + " Num Points");
+
+	for (int i = 0; i < num_points; i++)
+	{
+		config.AddFloat2(points[i].curve_point, name + " Point " + std::to_string(i));
+		config.AddFloat2(points[i].left_pivot, name + " Left Pivot " + std::to_string(i));
+		config.AddFloat2(points[i].right_pivot, name + " Right Pivot " + std::to_string(i));
+	}
+}
+
+void BezierCurve::SpecializedLoad(const Config & config, const std::string& name)
+{
+	num_points = config.GetInt(name + " Num Points", 2);
+
+	for (int i = 0; i < num_points; i++)
+	{
+		config.GetFloat2(name + " Point " + std::to_string(i), points[i].curve_point, float2::zero);
+		config.GetFloat2(name + " Left Pivot " + std::to_string(i), points[i].left_pivot, float2::zero);
+		config.GetFloat2(name + " Right Pivot " + std::to_string(i), points[i].right_pivot, float2::zero);
+	}
 }
 
 void BezierCurve::CheckAllPoints()

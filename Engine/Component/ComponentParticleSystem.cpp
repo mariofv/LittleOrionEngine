@@ -242,7 +242,7 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 		case CURVE:
 			velocity *= velocity_over_time_speed_modifier;
 			float curve_value = vel_curve.BezierValue(particle.time_passed / particles_life_time / 1000).y;
-			float vel_in_range = (vel_curve_range.y - vel_curve_range.x) * curve_value + vel_curve_range.x;
+			float vel_in_range = (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * curve_value + velocity_over_time_speed_modifier;
 			vel_curve_interpolated = particle.velocity_initial * vel_in_range * velocity_factor_mod;
 			break;
 		}
@@ -334,7 +334,6 @@ unsigned int ComponentParticleSystem::GetParticlesSystemVariation()
 
 void ComponentParticleSystem::SpecializedSave(Config& config) const
 {
-
 	billboard->SpecializedSave(config);
 	config.AddInt(static_cast<int>(type_of_particle_system), "Type of particle system");
 	config.AddBool(loop, "Loop");
@@ -384,6 +383,8 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddInt(type_of_velocity_over_time, "Type of Velocity");
 	config.AddFloat(velocity_over_time_speed_modifier, "Velocity Initial");
 	config.AddFloat(velocity_over_time_speed_modifier_second, "Velocity Final");
+	vel_curve.SpecializedSave(config, "Velocity Curve");
+	
 }
 
 void ComponentParticleSystem::SpecializedLoad(const Config& config)
@@ -441,6 +442,8 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	type_of_velocity_over_time = static_cast<TypeOfVelocityOverTime>(config.GetInt("Type of Velocity", CONSTANT));
 	velocity_over_time_speed_modifier = config.GetFloat("Velocity Initial", 1.0F);
 	velocity_over_time_speed_modifier_second = config.GetFloat("Velocity Final", 2.0F);
+
+	vel_curve.SpecializedLoad(config, "Velocity Curve");
 }
 
 Component* ComponentParticleSystem::Clone(bool original_prefab) const
