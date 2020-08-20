@@ -184,9 +184,9 @@ void  ComponentTrail::GetPerpendiculars()
 				for (float k = 0; k < path_top.spline_points.size() - 2; k++)
 				{
 					float t = k * 0.02f;
-					spoint_top = path_top.GetSplinePoint(t, p0_t, p1_t, p2_t, p3_t);
+					spoint_top = path_top.GetSplinePoint(t, p0_t, p1_t, p2_t, p3_t, alpha);
 					App->debug_draw->RenderPoint(spoint_top, 5.0F, float3{0, 150, 255});
-					spoint_bottom = path_bottom.GetSplinePoint(t, p0_b, p1_b, p2_b, p3_b);
+					spoint_bottom = path_bottom.GetSplinePoint(t, p0_b, p1_b, p2_b, p3_b, alpha);
 					App->debug_draw->RenderPoint(spoint_bottom, 5.0F, float3{ 255, 255, 0 });
 				}
 				++seg_top;

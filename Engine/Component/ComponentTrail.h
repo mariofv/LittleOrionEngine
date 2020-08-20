@@ -43,17 +43,14 @@ struct Vertex
 struct Spline
 {
 	std::vector<float3> spline_points;
-	float3 GetSplinePoint(float t, float3 p0, float3 p1, float3 p2, float3 p3)
+	float3 GetSplinePoint(float t, float3 p0, float3 p1, float3 p2, float3 p3, float alpha)
 	{
 		float t2 = t * t;
 		float t3 = t * t*t;
 		float3 v; // Interpolated point
 
 		/* Catmull Rom spline Calculation */
-
-		v.x = ((-t3 + 2 * t2 - t)*(p0.x) + (3 * t3 - 5 * t2 + 2)*(p1.x) + (-3 * t3 + 4 * t2 + t)* (p2.x) + (t3 - t2)*(p3.x)) / 2;
-		v.y = ((-t3 + 2 * t2 - t)*(p0.y) + (3 * t3 - 5 * t2 + 2)*(p1.y) + (-3 * t3 + 4 * t2 + t)* (p2.y) + (t3 - t2)*(p3.y)) / 2;
-		v.z = (0.0f);
+		v = ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 + (-p0 + 3 * p1 - 3 * p2 + p3) * t3) * alpha;
 		return v;
 	}
 };
@@ -102,12 +99,11 @@ public:
 	int total_points = 1;
 	float3 last_point_added;
 
-	
 	//Trail Generation properties
 	float width = 0.1f;
 	float duration = 1000.0f; // in millis
 	float min_distance = 1.0f;
-
+	float alpha = 0.5f;
 	//Color properties
 	//float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
