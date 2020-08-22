@@ -25,48 +25,53 @@ void ComponentImage::InitData()
 
 void ComponentImage::Render(float4x4* projection)
 {
+
 	if (!active)
 	{
 		return;
 	}
-	ScaleOp aspect_ratio_scaling;
 
-	if (preserve_aspect_ratio)
+	if (texture_to_render != nullptr)
 	{
-		if (owner->transform_2d.size.x / texture_aspect_ratio > owner->transform_2d.size.y)
+		ScaleOp aspect_ratio_scaling;
+
+		if (preserve_aspect_ratio)
 		{
-			aspect_ratio_scaling = float4x4::Scale(float3(owner->transform_2d.size.y * texture_aspect_ratio, owner->transform_2d.size.y, 1.f));
+			if (owner->transform_2d.size.x / texture_aspect_ratio > owner->transform_2d.size.y)
+			{
+				aspect_ratio_scaling = float4x4::Scale(float3(owner->transform_2d.size.y * texture_aspect_ratio, owner->transform_2d.size.y, 1.f));
+			}
+			else
+			{
+				aspect_ratio_scaling = float4x4::Scale(float3(owner->transform_2d.size.x, owner->transform_2d.size.x / texture_aspect_ratio, 1.f));
+			}
 		}
 		else
 		{
-			aspect_ratio_scaling = float4x4::Scale(float3(owner->transform_2d.size.x, owner->transform_2d.size.x / texture_aspect_ratio, 1.f));
+			aspect_ratio_scaling = float4x4::Scale(float3(owner->transform_2d.size, 1.f));
 		}
-	}
-	else
-	{
-		aspect_ratio_scaling = float4x4::Scale(float3(owner->transform_2d.size, 1.f));
-	}
-	float4x4 model = owner->transform_2d.GetGlobalModelMatrix()  * aspect_ratio_scaling;
+		float4x4 model = owner->transform_2d.GetGlobalModelMatrix()  * aspect_ratio_scaling;
 
-	if (program == 0)
-	{
-		program = App->program->UseProgram("Sprite");
-	}
-	else
-	{
-		glUseProgram(program);
-	}
+		if (program == 0)
+		{
+			program = App->program->UseProgram("Sprite");
+		}
+		else
+		{
+			glUseProgram(program);
+		}
 
-	glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
-	glUniform1i(glGetUniformLocation(program, "image"), 0);
-	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, model.ptr());
-	glUniform4fv(glGetUniformLocation(program, "spriteColor"), 1, color.ptr());
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture_to_render->opengl_texture);
+		glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
+		glUniform1i(glGetUniformLocation(program, "image"), 0);
+		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, model.ptr());
+		glUniform4fv(glGetUniformLocation(program, "spriteColor"), 1, color.ptr());
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture_to_render->opengl_texture);
 
-	quad->Render();
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glUseProgram(0);
+		quad->Render();
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glUseProgram(0);
+	}
 }
 
 Component* ComponentImage::Clone(GameObject* owner, bool original_prefab)

@@ -693,52 +693,58 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image)
 
 void PanelComponent::ShowComponentVideoPlayerWindow(ComponentVideoPlayer* video_player)
 {
+	if (ImGui::CollapsingHeader(ICON_FA_FILM " Video Player", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (!ShowCommonComponentWindow(video_player))
+		{
+			return;
+		}
+		ImGui::Separator();
+		ImGui::Text("Video");
+		ImGui::Checkbox("Preserve Aspect Ratio", &video_player->preserve_aspect_ratio);
 
-	ImGui::Separator();
-	ImGui::Text("Video");
-	ImGui::Checkbox("Preserve Aspect Ratio", &video_player->preserve_aspect_ratio);
+		std::string video_name = video_player->video_to_render == nullptr ? "None (Video)" : App->resources->resource_DB->GetEntry(video_player->video_to_render->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(video_player->UUID) + "VideoSelector").c_str());
+		if (ImGui::Button(video_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::VIDEO);
+		}
 
-	std::string video_name = video_player->video_to_render == nullptr ? "None (Video)" : App->resources->resource_DB->GetEntry(video_player->video_to_render->GetUUID())->resource_name;
-	ImGuiID element_id = ImGui::GetID((std::to_string(video_player->UUID) + "VideoSelector").c_str());
-	if (ImGui::Button(video_name.c_str()))
-	{
-		App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::VIDEO);
-	}
+		uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource != 0)
+		{
+			video_player->SetVideoToRenderFromInspector(selected_resource);
+		}
+		selected_resource = ImGui::ResourceDropper<Video>();
+		if (selected_resource != 0)
+		{
+			video_player->SetVideoToRenderFromInspector(selected_resource);
+		}
 
-	uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
-	if (selected_resource != 0)
-	{
-		video_player->SetVideoToRenderFromInspector(selected_resource);
-	}
-	selected_resource = ImGui::ResourceDropper<Video>();
-	if (selected_resource != 0)
-	{
-		video_player->SetVideoToRenderFromInspector(selected_resource);
-	}
+		std::string soundbank_name = video_player->soundbank == nullptr ? "None (Sound Bank)" : App->resources->resource_DB->GetEntry(video_player->soundbank->GetUUID())->resource_name;
+		element_id = ImGui::GetID((std::to_string(video_player->UUID) + "SoundBankSelector").c_str());
+		if (ImGui::Button(soundbank_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::SOUND);
+		}
+		selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource != 0)
+		{
+			video_player->SetSoundBank(selected_resource);
+			video_player->modified_by_user = true;
+		}
+		selected_resource = ImGui::ResourceDropper<SoundBank>();
+		if (selected_resource != 0)
+		{
+			video_player->SetSoundBank(selected_resource);
+			video_player->modified_by_user = true;
+		}
+		ImGui::InputText("Sound Event Name ", &video_player->sound_event);
 
-	std::string soundbank_name = video_player->soundbank == nullptr ? "None (Sound Bank)" : App->resources->resource_DB->GetEntry(video_player->soundbank->GetUUID())->resource_name;
-	element_id = ImGui::GetID((std::to_string(video_player->UUID) + "SoundBankSelector").c_str());
-	if (ImGui::Button(soundbank_name.c_str()))
-	{
-		App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::SOUND);
-	}
-	selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
-	if (selected_resource != 0)
-	{
-		video_player->SetSoundBank(selected_resource);
-		video_player->modified_by_user = true;
-	}
-	selected_resource = ImGui::ResourceDropper<SoundBank>();
-	if (selected_resource != 0)
-	{
-		video_player->SetSoundBank(selected_resource);
-		video_player->modified_by_user = true;
-	}
-	ImGui::InputText("Sound Event Name ", &video_player->sound_event);
-
-	if (ImGui::Button("Play Video"))
-	{
-		video_player->PlayVideo();
+		if (ImGui::Button("Play Video"))
+		{
+			video_player->PlayVideo();
+		}
 	}
 }
 
