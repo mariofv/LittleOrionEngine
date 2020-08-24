@@ -50,7 +50,7 @@ struct Spline
 		float3 v; // Interpolated point
 
 		/* Catmull Rom spline Calculation */
-		v = ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 + (-p0 + 3 * p1 - 3 * p2 + p3) * t3) * alpha;
+		v = ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 + (-p0 + 3 * p1 - 3 * p2 + p3) * t3) * 0.5;
 		return v;
 	}
 };
@@ -128,6 +128,7 @@ public:
 
 	//Catmull-rom
 	Spline path_top, path_bottom;
+	std::vector<float3> spline_top, spline_bottom;
 
 private:
 	unsigned int trail_vao, trail_vbo;

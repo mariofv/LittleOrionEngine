@@ -316,7 +316,27 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 		}
 		trail->modified_by_user |= ImGui::ColorEdit4("Color", trail->color.ptr());
 		trail->modified_by_user |= ImGui::DragFloat("Intensity", &trail->bloom_intensity, 0.05f, 0.01f, 10.0f);
-		
+		if (ImGui::CollapsingHeader("Type"))
+		{
+			ImGui::Spacing();
+
+			int current_type = static_cast<int>(trail->alpha);
+			if (ImGui::Combo("Shape###Combo", &current_type, "Uniform\0Centripetal\0Chordal\0"))
+			{
+				switch (current_type)
+				{
+				case 0:
+					trail->alpha = 0.0f;
+					break;
+				case 1:
+					trail->alpha = 0.5f;
+					break;
+				case 2:
+					trail->alpha = 1.0f;
+					break;
+				}
+			}
+		}
 	}
 }
 
