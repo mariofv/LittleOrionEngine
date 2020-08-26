@@ -62,7 +62,7 @@ public:
 	ENGINE_API float3 GetFrontVector() const;
 	ENGINE_API float3 GetRightVector() const;
 
-	ENGINE_API float3 GetUpGlobalVector() const;
+	ENGINE_API float3 GetGlobalUpVector() const;
 	ENGINE_API float3 GetGlobalFrontVector() const;
 	ENGINE_API float3 GetGlobalRightVector() const;
 

@@ -212,19 +212,19 @@ float3 ComponentTransform::GetRightVector() const
 	return Cross(GetFrontVector(), GetUpVector());
 }
 
-ENGINE_API float3 ComponentTransform::GetUpGlobalVector() const
+ENGINE_API float3 ComponentTransform::GetGlobalUpVector() const
 {
-	return GetUpVector() + GetGlobalTranslation();
+	return global_model_matrix.RotatePart() * float3::unitY;
 }
 
 ENGINE_API float3 ComponentTransform::GetGlobalFrontVector() const
 {
-	return GetFrontVector() + GetGlobalTranslation();
+	return global_model_matrix.RotatePart() * float3::unitZ;
 }
 
 ENGINE_API float3 ComponentTransform::GetGlobalRightVector() const
 {
-	return GetRightVector() + GetGlobalTranslation();
+	return Cross(GetGlobalFrontVector(), GetGlobalUpVector());
 }
 
 void ComponentTransform::OnTransformChange()
