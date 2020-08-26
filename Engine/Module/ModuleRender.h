@@ -93,7 +93,6 @@ public:
 	bool toggle_directional_light_aabb = true;
 	bool toggle_perspective_sub_frustums = false;
 	bool bloom = false;
-	bool blur = false;
 	bool threshold_brightness = false;
 	float exposure = 1.0f;
 	bool horizontal = true;

@@ -228,19 +228,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	
 	if (hdr_active)
 	{
-		GLuint program = App->program->UseProgram("HDR", 0);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, camera.color_buffers[0]);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, camera.color_buffers[1]);
-		glUniform1f(glGetUniformLocation(program, "exposure"), exposure);
-		glUniform1f(glGetUniformLocation(program, "bloom"), bloom);
-		glUniform1i(glGetUniformLocation(program, "hdr_type"), static_cast<int>(hdr_type));
-		RenderQuad();
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-		if (blur)
-		{
 			horizontal = true;
 			bool first_iteration = true;
 			int amount = 10;
@@ -248,14 +235,28 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			for (unsigned int i = 0; i < amount; i++)
 			{
 				glBindFramebuffer(GL_FRAMEBUFFER, camera.pingpongFBO[horizontal]);
-				glActiveTexture(GL_TEXTURE0);
+				glUniform1f(glGetUniformLocation(blur, "horizontal"), horizontal);
 				glBindTexture(GL_TEXTURE_2D, first_iteration ? camera.color_buffers[1] : camera.pingpongColorbuffers[!horizontal]);
 				RenderQuad();
 				horizontal = !horizontal;
 				if (first_iteration)
 					first_iteration = false;
 			}
-		}
+		
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		GLuint program = App->program->UseProgram("HDR", 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, camera.fbo);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, camera.color_buffers[0]);
+		glUniform1i(glGetUniformLocation(program, "hdr_uniform.scene_texture"), 0);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, camera.pingpongColorbuffers[!horizontal]);
+		glUniform1i(glGetUniformLocation(program, "hdr_uniform.bloom_texture"), 1);
+		glUniform1f(glGetUniformLocation(program, "exposure"), exposure);
+		glUniform1f(glGetUniformLocation(program, "bloom"), bloom);
+		glUniform1i(glGetUniformLocation(program, "hdr_type"), static_cast<int>(hdr_type));
+		RenderQuad();
 	}
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();

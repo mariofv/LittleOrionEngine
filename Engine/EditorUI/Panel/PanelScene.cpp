@@ -73,6 +73,7 @@ void PanelScene::Render()
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
+
 		SceneDropTarget();
 
 		AABB2D content_area = AABB2D(scene_window_content_area_pos, scene_window_content_area_max_point);
