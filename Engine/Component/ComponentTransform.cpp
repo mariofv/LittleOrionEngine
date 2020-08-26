@@ -212,6 +212,21 @@ float3 ComponentTransform::GetRightVector() const
 	return Cross(GetFrontVector(), GetUpVector());
 }
 
+ENGINE_API float3 ComponentTransform::GetUpGlobalVector() const
+{
+	return GetUpVector() + GetGlobalTranslation();
+}
+
+ENGINE_API float3 ComponentTransform::GetGlobalFrontVector() const
+{
+	return GetFrontVector() + GetGlobalTranslation();
+}
+
+ENGINE_API float3 ComponentTransform::GetGlobalRightVector() const
+{
+	return GetRightVector() + GetGlobalTranslation();
+}
+
 void ComponentTransform::OnTransformChange()
 {
 	BROFILER_CATEGORY("OnTransformChange", Profiler::Color::Lavender);
