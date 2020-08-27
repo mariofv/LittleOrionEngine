@@ -83,6 +83,7 @@ private:
 	void SetMinMaxing(bool gl_minmax);
 	void SetHDRType(const HDRType type);
 	std::string GetHDRType(const HDRType type) const;
+	void RenderPostProcessingEffects(const ComponentCamera &camera);
 	std::string GetDrawMode() const;
 
 	void SetListOfMeshesToRender(const ComponentCamera* camera);
