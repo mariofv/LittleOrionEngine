@@ -206,9 +206,8 @@ bool ModuleScene::HasParentInList(GameObject * go, std::vector<GameObject*> game
 GameObject* ModuleScene::DuplicateGO(GameObject* game_object, GameObject* parent_go)
 {
 	std::unique_ptr<GameObject> aux_copy_pointer = std::make_unique<GameObject>();
-	aux_copy_pointer.get()->Duplicate(*game_object);
 	GameObject* duplicated_go = App->scene->AddGameObject(aux_copy_pointer);
-	duplicated_go->SetParent(parent_go);
+	duplicated_go->Duplicate(*game_object, parent_go);
 	duplicated_go->name += "(1)";
 
 	if (game_object->is_prefab_parent)
