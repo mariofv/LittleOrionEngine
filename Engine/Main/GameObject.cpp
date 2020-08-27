@@ -145,23 +145,8 @@ void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 		prefab_reference->RemoveInstance(this);
 	}
 }
-void GameObject::Duplicate(const GameObject& gameobject_to_copy)
-{
-	gameobject_to_copy.transform.CopyTo(&transform);
-	gameobject_to_copy.transform_2d.CopyTo(&transform_2d);
 
-	CopyComponents(gameobject_to_copy);
-	CopyParameters(gameobject_to_copy);
-	if(gameobject_to_copy.prefab_reference != nullptr && !gameobject_to_copy.is_prefab_parent)
-	{
-		this->original_UUID = 0;
-		this->prefab_reference = nullptr;
-	}
-
-	return;
-}
-
-void GameObject::Duplicate(const GameObject & gameobject_to_copy, GameObject* parent)
+void GameObject::Duplicate(const GameObject& gameobject_to_copy, GameObject* parent)
 {
 	SetParent(parent);
 
