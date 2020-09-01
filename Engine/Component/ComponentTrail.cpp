@@ -14,7 +14,7 @@
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
-namespace { const float MAX_TRAIL_VERTICES = 50000; } //arbitrary number 
+namespace { const float MAX_TRAIL_VERTICES = 5000; } //arbitrary number 
 
 ComponentTrail::ComponentTrail() : Component(nullptr, ComponentType::TRAIL)
 {
@@ -123,13 +123,11 @@ void  ComponentTrail::GetPerpendiculars()
 		previous_point = current_point;
 	}
 
-	unsigned int j = 0;
-	vertices.clear();
-	float trail_segment_uv = 1.f / path_top.spline_points.size(); // to coordinate texture
 	auto pair = mesh_points.begin();
 	path_top.spline_points.clear();
 	path_bottom.spline_points.clear();
-	
+	float3 top_left, bottom_left;
+
 	while (pair != mesh_points.end())
 	{
 		if (pair->first->life > 0 && pair->second->life > 0)
@@ -146,10 +144,6 @@ void  ComponentTrail::GetPerpendiculars()
 			{
 				perpendicular = vector_adjacent.Cross(owner->transform.GetRightVector()) * width; //Front is currently local
 			}
-			
-
-			float3 top_left, bottom_left;
-			
 			if (++pair == mesh_points.end())
 			{
 				--pair;
@@ -164,43 +158,60 @@ void  ComponentTrail::GetPerpendiculars()
 			//Spline points
 			path_top.spline_points.emplace_back(top_left);// add points on the spline
 			path_bottom.spline_points.emplace_back(bottom_left);// add points on the spline
-			//TODO::seems like the last point is rendered first thats why its tied to beginning
-			float3 spoint_top, spoint_bottom, p0_t, p1_t, p2_t, p3_t, p0_b, p1_b, p2_b, p3_b;
+			
+			float3 spoint_top_s1, spoint_top_s2, spoint_top_s3, spoint_bottom_s1, spoint_bottom_s2, spoint_bottom_s3, p0_t, p1_t, p2_t, p3_t, p0_b, p1_b, p2_b, p3_b;
 			auto seg_top = path_top.spline_points.begin();
 			auto seg_bottom = path_bottom.spline_points.begin();
 			while (seg_top < path_top.spline_points.end() - 3)
 			{
-				
+
 				auto aux_top = seg_top;
-				auto aux_bottom = seg_bottom;
 				p0_t = *aux_top;
-				p1_t = *(++aux_top);
+				p1_t = *(++aux_top); 
 				p2_t = *(++aux_top);
 				p3_t = *(++aux_top);
+
+				auto aux_bottom = seg_bottom;
 
 				p0_b = *aux_bottom;
 				p1_b = *(++aux_bottom);
 				p2_b = *(++aux_bottom);
 				p3_b = *(++aux_bottom);
+				// from 4 points we need to draw 3 splines on top connecting those points
+				//Spline 1t
+				spoint_top_s1 = path_top.GetSplinePoint(0.5, p0_t, p0_t, p1_t, p2_t, alpha);
+				spline_top.push_back(spoint_top_s1);
+				App->debug_draw->RenderPoint(spoint_top_s1, 5.0F, float3{ 0, 150, 255 });
 
-				for (float k = 0; k < path_top.spline_points.size() - 2; k++)
-				{
-					float t = k * 0.02f;
-					spoint_top = path_top.GetSplinePoint(t, p0_t, p1_t, p2_t, p3_t, alpha);
-					spline_top.push_back(spoint_top);
-					App->debug_draw->RenderPoint(spoint_top, 5.0F, float3{ 0, 150, 255 });
-					spoint_bottom = path_bottom.GetSplinePoint(t, p0_b, p1_b, p2_b, p3_b, alpha);
-					App->debug_draw->RenderPoint(spoint_bottom, 5.0F, float3{ 255, 255, 0 });
-					spline_bottom.push_back(spoint_bottom);
+				//Spline 1b
+				spoint_bottom_s1 = path_bottom.GetSplinePoint(0.5, p0_b, p0_b, p1_b, p2_b, alpha);
+				spline_bottom.push_back(spoint_bottom_s1);
+				App->debug_draw->RenderPoint(spoint_bottom_s1, 10.0F, float3{ 255, 0, 255 });
+
+				//Spline 2t
+				spoint_top_s2 = path_top.GetSplinePoint(0.5, p0_t, p1_t, p2_t, p3_t, alpha);
+				spline_top.push_back(spoint_top_s2);
+				App->debug_draw->RenderPoint(spoint_top_s2, 5.0F, float3{ 0, 150, 255 });
+
+				//Spline 2b
+				spoint_bottom_s2 = path_bottom.GetSplinePoint(0.5, p0_b, p1_b, p2_b, p3_b, alpha);
+				spline_bottom.push_back(spoint_bottom_s2);
+				App->debug_draw->RenderPoint(spoint_bottom_s2, 10.0F, float3{ 255, 0, 255 });
 					
-				}
 				++seg_top;
 				++seg_bottom;
 			}
-			++j;
+			float trail_segment_uv = 1.f / spline_top.size(); // to coordinate texture
+			vertices.clear();
+			for (int l = 0; l < spline_top.size(); l++)
+			{
+				vertices.push_back({ spline_top[l], float2(trail_segment_uv * l  , 1.0f) });//uv[++i]
+				vertices.push_back({ spline_bottom[l], float2(trail_segment_uv * l  , 0.0f) });//uv[++i]
+				App->engine_log->Log("%f", trail_segment_uv * l);
+			}
+			spline_top.clear();
+			spline_bottom.clear();
 			++pair;
-			vertices.push_back({ spoint_top, float2(trail_segment_uv * j  , 1.0f) });//uv[++i]
-			vertices.push_back({ spoint_bottom, float2(trail_segment_uv * j, 0.0f) }); //uv[i]
 		}
 		else
 		{
