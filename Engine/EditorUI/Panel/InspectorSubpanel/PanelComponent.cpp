@@ -315,7 +315,6 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 			trail->modified_by_user = true;
 		}
 		trail->modified_by_user |= ImGui::ColorEdit4("Color", trail->color.ptr());
-		trail->modified_by_user |= ImGui::DragFloat("Intensity", &trail->bloom_intensity, 0.05f, 0.01f, 10.0f);
 		
 	}
 }
