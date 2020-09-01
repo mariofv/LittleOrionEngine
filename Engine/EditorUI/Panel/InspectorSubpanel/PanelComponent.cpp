@@ -315,7 +315,7 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 			trail->modified_by_user = true;
 		}
 		trail->modified_by_user |= ImGui::ColorEdit4("Color", trail->color.ptr());
-		
+		trail->modified_by_user |= ImGui::Checkbox("Emissive", &trail->emissive);
 	}
 }
 

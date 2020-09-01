@@ -109,6 +109,7 @@ public:
 	float* trail_renderer_vertices = nullptr;
 	std::vector<Vertex> vertices;
 	std::shared_ptr<Texture> trail_texture = nullptr;
+	bool emissive = false;
 
 private:
 	unsigned int trail_vao, trail_vbo;

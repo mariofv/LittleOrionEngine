@@ -156,7 +156,7 @@ void ComponentBillboard::Render(const float3& global_position)
 
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_x"), current_sprite_x);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_y"), current_sprite_y);
-	glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), App->renderer->emisive_exposure);
+	
 	
 	float4x4 model_matrix = float4x4::FromTRS(global_position, owner->transform.GetGlobalRotation(), float3(width, height, 1.f));
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
@@ -183,6 +183,15 @@ void ComponentBillboard::CommonUniforms(const GLuint &shader_program)
 
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.num_rows"), num_sprisheet_rows);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.num_columns"), num_sprisheet_columns);
+	glUniform1i(glGetUniformLocation(shader_program, "billboard.num_columns"), num_sprisheet_columns);
+	if (App->renderer->bloom)
+	{
+		glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), App->renderer->emisive_exposure);
+	}
+	else
+	{
+		glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), 1.0F);
+	}
 }
 
 Component* ComponentBillboard::Clone(GameObject* owner, bool original_prefab)

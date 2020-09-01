@@ -186,7 +186,17 @@ void ComponentTrail::Render()
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		glUniform4fv(glGetUniformLocation(shader_program, "color"), 1, color.ptr());
-		glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), App->renderer->emisive_exposure);
+		if (emissive)
+		{
+			if (App->renderer->bloom)
+			{
+				glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), App->renderer->emisive_exposure);
+			}
+		}
+		else
+		{
+			glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), 1.0F);
+		}
 
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size());
 		glBindVertexArray(0);
@@ -264,6 +274,7 @@ void ComponentTrail::SpecializedSave(Config& config) const
 	config.AddFloat(min_distance, "Min_Distance");
 	config.AddUInt(texture_uuid, "TextureUUID");
 	config.AddColor(color, "Color");
+	config.AddBool(emissive, "Emissive");
 }
 void ComponentTrail::SpecializedLoad(const Config& config)
 {
@@ -275,6 +286,7 @@ void ComponentTrail::SpecializedLoad(const Config& config)
 	texture_uuid = config.GetUInt("TextureUUID", 0);
 	ChangeTexture(texture_uuid);
 	config.GetColor("Color", color, float4(1.0f, 1.0f, 1.0f, 1.0f));
+	emissive = config.GetBool("Emissive", false);
 }
 
 void ComponentTrail::Disable()

@@ -4,7 +4,7 @@ in vec2 TexCoords;
 
 
 uniform float exposure;
-uniform int hdr_type;uniform bool bloom;const float gamma = 2.2;
+uniform int hdr_type;uniform bool bloom;uniform bool hdr_active;const float gamma = 2.2;
 
 struct HRD_EFFECT
 {
@@ -25,33 +25,38 @@ vec3 Uncharted2Tonemap(vec3 x)
 
 void main()
 {    
-    vec3 hdrColor = texture(hdr_uniform.scene_texture, TexCoords).rgb;
+    vec3 hdr_color = texture(hdr_uniform.scene_texture, TexCoords).rgb;
+	vec3 bloom_color = texture(hdr_uniform.bloom_texture, TexCoords).rgb;
 	vec3 result;
 	if(bloom)
 	{
-		vec3 bloomColor = texture(hdr_uniform.bloom_texture, TexCoords).rgb;
-		hdrColor += bloomColor; // additive blending
+		hdr_color += bloom_color; // additive blending
 	}
-	switch(hdr_type)
+	if(hdr_active)
 	{
-		//REINHARD
-		case 0:
-			result = hdrColor / (hdrColor + vec3(1.0));
+		switch(hdr_type)
+		{
+			//REINHARD
+			case 0:
+				result = hdr_color / (hdr_color + vec3(1.0));
 			
-		break;
-		//FILMIC
-		case 1:
-			const float W = 11.2;
-			hdrColor *= exposure;
-			vec3 curr = Uncharted2Tonemap(2.0*hdrColor);
-			vec3 whiteScale = 1.0/Uncharted2Tonemap(vec3(W));
-			result = curr*whiteScale;
-		break;
-		//EXPOSURE
-		case 2: 
-			 result = vec3(1.0) - exp(-hdrColor * exposure);
-		break;	
+			break;
+			//FILMIC
+			case 1:
+				const float W = 11.2;
+				hdr_color *= exposure;
+				vec3 curr = Uncharted2Tonemap(2.0*hdr_color);
+				vec3 whiteScale = 1.0/Uncharted2Tonemap(vec3(W));
+				result = curr*whiteScale;
+			break;
+			//EXPOSURE
+			case 2: 
+				 result = vec3(1.0) - exp(-hdr_color * exposure);
+			break;	
+		}
 	}
+
+
 	FragColor = vec4(pow(result, vec3(1.0 / gamma)), 1.0);
 
 }

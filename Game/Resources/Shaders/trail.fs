@@ -8,6 +8,7 @@ uniform sampler2D tex;
 uniform vec4 color;
 uniform float emisive_exposure;
 
+
 void main()
 {
 	vec4 texture_color = texture(tex, texCoord) * color *emisive_exposure;
