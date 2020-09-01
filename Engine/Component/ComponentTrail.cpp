@@ -187,6 +187,7 @@ void ComponentTrail::Render()
 
 		glUniform4fv(glGetUniformLocation(shader_program, "color"), 1, color.ptr());
 		glUniform1f(glGetUniformLocation(shader_program, "bloom_intensity"), bloom_intensity);
+		glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), App->renderer->emisive_exposure);
 
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size());
 		glBindVertexArray(0);

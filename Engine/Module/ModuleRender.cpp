@@ -549,7 +549,6 @@ std::string ModuleRender::GetHDRType(const HDRType type) const
 
 void ModuleRender::RenderPostProcessingEffects(const ComponentCamera &camera)
 {
-
 	if (hdr_active)
 	{
 		horizontal = true;
