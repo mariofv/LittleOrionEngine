@@ -179,25 +179,30 @@ void  ComponentTrail::GetPerpendiculars()
 				p3_b = *(++aux_bottom);
 				// from 4 points we need to draw 3 splines on top connecting those points
 				//Spline 1t
+				spline_top.push_back(p0_t);
 				spoint_top_s1 = path_top.GetSplinePoint(0.5, p0_t, p0_t, p1_t, p2_t, alpha);
 				spline_top.push_back(spoint_top_s1);
 				App->debug_draw->RenderPoint(spoint_top_s1, 5.0F, float3{ 0, 150, 255 });
-
+				
 				//Spline 1b
+				spline_bottom.push_back(p0_b);
 				spoint_bottom_s1 = path_bottom.GetSplinePoint(0.5, p0_b, p0_b, p1_b, p2_b, alpha);
 				spline_bottom.push_back(spoint_bottom_s1);
 				App->debug_draw->RenderPoint(spoint_bottom_s1, 10.0F, float3{ 255, 0, 255 });
 
 				//Spline 2t
+				spline_top.push_back(p1_t);
 				spoint_top_s2 = path_top.GetSplinePoint(0.5, p0_t, p1_t, p2_t, p3_t, alpha);
 				spline_top.push_back(spoint_top_s2);
 				App->debug_draw->RenderPoint(spoint_top_s2, 5.0F, float3{ 0, 150, 255 });
-
+				spline_top.push_back(p2_t);
 				//Spline 2b
+				spline_bottom.push_back(p1_b);
 				spoint_bottom_s2 = path_bottom.GetSplinePoint(0.5, p0_b, p1_b, p2_b, p3_b, alpha);
 				spline_bottom.push_back(spoint_bottom_s2);
 				App->debug_draw->RenderPoint(spoint_bottom_s2, 10.0F, float3{ 255, 0, 255 });
-					
+				spline_bottom.push_back(p2_b);
+
 				++seg_top;
 				++seg_bottom;
 			}
