@@ -78,6 +78,23 @@ unsigned long ComponentAudioSource::PlayEvent(const std::string & event_to_play)
 	return playing_id;
 }
 
+unsigned long ComponentAudioSource::PlayAwake()
+{
+	if (!play_on_awake || selected_event == -1)
+	{
+		return 0;
+	}
+	std::string event_to_play = soundbank->events[selected_event];
+	AkPlayingID playing_id = AK::SoundEngine::PostEvent(event_to_play.c_str(), gameobject_source);
+	if (playing_id == AK_INVALID_PLAYING_ID)
+	{
+		APP_LOG_ERROR("Unable to post main event");
+	}
+	AkUInt32 event_id = AK::SoundEngine::GetIDFromString(event_to_play.c_str());
+	event_playing_ids[event_id] = playing_id;
+	return playing_id;
+}
+
 void ComponentAudioSource::StopEvent(const std::string & event_to_stop)
 {
 	AkUInt32 event_id = AK::SoundEngine::GetIDFromString(event_to_stop.c_str());

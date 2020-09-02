@@ -27,6 +27,7 @@ FileData SoundImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 	FileData file_imported_data = App->filesystem->GetPath(soundbank_events_file_path)->GetFile()->Load();
 	std::string file_data;
 	file_data.assign(static_cast <const char*> (file_imported_data.buffer), file_imported_data.size);
+	free((void*)file_imported_data.buffer);
 
 	//Process the file '.txt' from Wwise to a file xxxxx_events which will contain only the names of the events of that soundbank
 	file_data = file_data.substr(file_data.find("\n"), file_data.find("\r\n\r\n") - file_data.find("\n"));

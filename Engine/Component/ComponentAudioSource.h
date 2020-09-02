@@ -25,6 +25,7 @@ public:
 	void SetSoundBank(uint32_t uuid);
 	void SetVolume(float volume);
 	ENGINE_API unsigned long PlayEvent(const std::string & event_to_play);
+	ENGINE_API unsigned long PlayAwake();
 	ENGINE_API void StopEvent(const std::string & event_to_stop);
 	ENGINE_API void StopEvent(unsigned long playing_id_to_stop);
 	ENGINE_API void StopAll();
