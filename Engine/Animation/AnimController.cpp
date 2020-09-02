@@ -143,7 +143,7 @@ void AnimController::AdjustInterpolationTimes()
 {
 	if (!playing_clips[ClipType::ACTIVE].clip->loop)
 	{
-		float time_left = playing_clips[ClipType::ACTIVE].clip->animation_time - playing_clips[ClipType::ACTIVE].current_time;	
+		uint64_t time_left = static_cast<uint64_t>(std::floor(playing_clips[ClipType::ACTIVE].clip->animation_time - playing_clips[ClipType::ACTIVE].current_time));
 		playing_clips[ClipType::NEXT].interpolation_time = max(min(active_transition->interpolation_time,  time_left), 0.0f);
 		APP_LOG_INFO("Interpolation time set to: %f", playing_clips[ClipType::NEXT].interpolation_time);
 	}
