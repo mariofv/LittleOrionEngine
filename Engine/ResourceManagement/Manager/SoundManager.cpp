@@ -1,8 +1,8 @@
 #include "SoundManager.h"
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
-#include "ResourceManagement/Metafile/MetafileManager.h"
 #include "Filesystem/PathAtlas.h"
+#include "ResourceManagement/Metafile/MetafileManager.h"
 #include "ResourceManagement/Resources/SoundBank.h"
 
 static std::shared_ptr<SoundBank> init_sound_bank = nullptr;

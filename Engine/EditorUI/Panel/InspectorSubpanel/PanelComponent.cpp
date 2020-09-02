@@ -1261,29 +1261,28 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 		if (selected_resource != 0)
 		{
 			component_audio_source->SetSoundBank(selected_resource);
-			component_audio_source->modified_by_user = true;
-			component_audio_source->selected_event = "";
+			component_audio_source->modified_by_user = true;		
 		}
 		selected_resource = ImGui::ResourceDropper<SoundBank>();
 		if (selected_resource != 0)
 		{
 			component_audio_source->SetSoundBank(selected_resource);
 			component_audio_source->modified_by_user = true;
-			component_audio_source->selected_event = "";
 		}
 		if (component_audio_source->soundbank)
 		{
-			std::string event_name = component_audio_source->selected_event != "" ? component_audio_source->selected_event : "-";
+			std::string event_name = component_audio_source->GetEventName();
 			if (ImGui::BeginCombo("Event Name", event_name.c_str()))
 			{
-				for (auto& event_name : component_audio_source->soundbank->events)
+				for (int i = 0; i < component_audio_source->soundbank->events.size(); ++i)
 				{
-					if (ImGui::Selectable(event_name.c_str()))
+					if (ImGui::Selectable(component_audio_source->soundbank->events[i].c_str()))
 					{
-						component_audio_source->selected_event = event_name;
+						component_audio_source->selected_event = i;
 						component_audio_source->modified_by_user = true;
 					}
 				}
+				
 				ImGui::Separator();
 				ImGui::EndCombo();
 			}
@@ -1292,7 +1291,7 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 			{
 				if (event_name != "-")
 				{
-					component_audio_source->PlayEvent(component_audio_source->selected_event);
+					component_audio_source->PlayEvent(component_audio_source->soundbank->events[component_audio_source->selected_event]);
 				}
 			}
 		}

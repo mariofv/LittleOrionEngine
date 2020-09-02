@@ -12,6 +12,8 @@ public:
 	SoundBank(uint32_t uuid, const void* data, size_t image_size, std::vector<std::string> events);
 	~SoundBank();
 
+	void InitData(size_t data_size, const void* data);
+
 public:
 	std::vector<std::string> events;
 

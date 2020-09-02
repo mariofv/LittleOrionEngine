@@ -37,7 +37,8 @@ FileData SoundImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 	std::string token;
 	std::string event_list;
 	
-	while ((pos = file_data.find(delimiter)) != std::string::npos) {
+	while ((pos = file_data.find(delimiter)) != std::string::npos) 
+	{
 		token = file_data.substr(0, pos);
 		event_list = event_list.append(token.substr(token.find_last_of("\\") +1, token.length()) + "\n");
 		file_data.erase(0, pos + delimiter.length());

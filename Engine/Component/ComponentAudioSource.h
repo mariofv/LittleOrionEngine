@@ -41,9 +41,11 @@ public:
 
 	void SetListener(const AkGameObjectID listener_name);
 
+	std::string GetEventName();
+
 
 public:
-	std::string selected_event;
+	int selected_event = -1;
 	bool play_on_awake = false;
 	std::shared_ptr<SoundBank> soundbank;
 
