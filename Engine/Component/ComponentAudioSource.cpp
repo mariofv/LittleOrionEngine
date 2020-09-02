@@ -161,7 +161,7 @@ void ComponentAudioSource::SpecializedLoad(const Config& config)
 		SetSoundBank(soundbank_uuid);
 	}
 	SetVolume(volume);
-	selected_event = config.GetInt("AwakeEvent", -1);
+	selected_event = config.GetInt("AwakeEventIndex", -1);
 }
 
 void ComponentAudioSource::Disable() 
