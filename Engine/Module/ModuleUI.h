@@ -52,6 +52,7 @@ public:
 
 public:
 	ComponentCanvas* main_canvas = nullptr;
+	bool disable_ui_render = false;
 
 private:
 	std::vector<ComponentEventSystem*> event_systems;

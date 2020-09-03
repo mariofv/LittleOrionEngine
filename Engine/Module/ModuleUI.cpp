@@ -36,6 +36,11 @@ update_status ModuleUI::Update()
 
 void ModuleUI::Render(bool scene_mode)
 {
+	if(disable_ui_render)
+	{
+		return;
+	}
+
 	BROFILER_CATEGORY("Module UI Render", Profiler::Color::LightSeaGreen);
 	if (main_canvas != nullptr)
 	{
