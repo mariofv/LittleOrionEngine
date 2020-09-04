@@ -7,7 +7,7 @@
 #include "Module/ModuleScene.h"
 
 
-EditorActionMultipleTranslate::EditorActionMultipleTranslate(float3 &previous, float3 &current): previous_position(previous),
+EditorActionMultipleTranslate::EditorActionMultipleTranslate(const float3 &previous, const float3 &current): previous_position(previous),
 current_position(current)
 {
 

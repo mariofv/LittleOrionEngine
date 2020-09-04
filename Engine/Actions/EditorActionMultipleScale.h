@@ -9,7 +9,7 @@ class GameObject;
 class EditorActionMultipleScale : public EditorAction
 {
 public:
-	EditorActionMultipleScale(float3 &previous, float3 &current);
+	EditorActionMultipleScale(const float3 &previous, const float3 &current);
 	~EditorActionMultipleScale() = default;
 
 	void Undo();

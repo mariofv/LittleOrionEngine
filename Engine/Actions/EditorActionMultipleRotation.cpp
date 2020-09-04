@@ -8,7 +8,7 @@
 
 
 
-EditorActionMultipleRotate::EditorActionMultipleRotate(float3 &previous, float3 &current) : previous_rotation(previous),
+EditorActionMultipleRotate::EditorActionMultipleRotate(const float3 &previous, const float3 &current) : previous_rotation(previous),
 current_rotation(current)
 {
 
@@ -45,7 +45,7 @@ void EditorActionMultipleRotate::Redo()
 	return;
 }
 
-bool EditorActionMultipleRotate::HasParent(GameObject * go) const
+bool EditorActionMultipleRotate::HasParent(GameObject* go) const
 {
 	if (go->GetHierarchyDepth() == 1)
 	{
@@ -54,7 +54,7 @@ bool EditorActionMultipleRotate::HasParent(GameObject * go) const
 
 	int depth = go->GetHierarchyDepth();
 
-	GameObject *game_object = go;
+	GameObject* game_object = go;
 
 	while (depth >= 2) 
 	{
@@ -69,7 +69,7 @@ bool EditorActionMultipleRotate::HasParent(GameObject * go) const
 	return false;
 }
 
-bool EditorActionMultipleRotate::BelongsToList(GameObject * game_object) const
+bool EditorActionMultipleRotate::BelongsToList(GameObject* game_object) const
 {
 	for (auto go : App->editor->selected_game_objects)
 	{

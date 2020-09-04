@@ -9,7 +9,7 @@ class GameObject;
 class EditorActionMultipleTranslate : public EditorAction
 {
 public:
-	EditorActionMultipleTranslate(float3 &previous, float3 &current);
+	EditorActionMultipleTranslate(const float3 &previous, const float3 &current);
 	~EditorActionMultipleTranslate() = default;
 
 	void Undo();

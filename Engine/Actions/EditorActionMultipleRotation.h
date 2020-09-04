@@ -9,7 +9,7 @@ class GameObject;
 class EditorActionMultipleRotate : public EditorAction
 {
 public:
-	EditorActionMultipleRotate(float3 &previous, float3 &current);
+	EditorActionMultipleRotate(const float3 &previous, const float3 &current);
 	~EditorActionMultipleRotate() = default;
 
 	void Undo();
