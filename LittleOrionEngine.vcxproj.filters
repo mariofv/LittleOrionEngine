@@ -550,6 +550,15 @@
     <ClCompile Include="Engine\Component\ComponentTrail.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionMultipleTranslate.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionMultipleScale.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionMultipleRotation.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1094,6 +1103,15 @@
     </ClInclude>
     <ClInclude Include="Engine\Helper\ThreadSafeQueue.h">
       <Filter>Engine\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionMultipleTranslate.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionMultipleScale.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionMultipleRotation.h">
+      <Filter>Engine\Actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
