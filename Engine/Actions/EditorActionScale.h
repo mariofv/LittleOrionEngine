@@ -9,7 +9,7 @@ class GameObject;
 class EditorActionScale : public EditorAction 
 {
 public:
-	EditorActionScale(float3 &previous, float3 &current, GameObject* go);
+	EditorActionScale(const float3 &previous, const float3 &current, GameObject* go);
 	~EditorActionScale() = default;
 
 	void Undo();
