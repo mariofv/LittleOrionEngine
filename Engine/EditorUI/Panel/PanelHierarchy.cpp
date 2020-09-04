@@ -7,6 +7,7 @@
 #include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentLight.h"
 
+#include "EditorUI/Panel/PanelProjectExplorer.h"
 #include "Helper/TemplatedGameObjectCreator.h"
 
 #include "Main/Application.h"
@@ -355,10 +356,14 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject* game_object)
 				}
 			}
 
-			if (game_object->prefab_reference != nullptr && ImGui::Selectable("Unpack Prefab"))
+			if (game_object->prefab_reference && ImGui::Selectable("Unpack Prefab"))
 			{
 				GameObject * prefab_parent = game_object->GetPrefabParent();
 				prefab_parent->UnpackPrefab();
+
+			}else if(!game_object->prefab_reference && ImGui::Selectable("Create Prefab"))
+			{
+				App->editor->project_explorer->CreatePrefabInSelectedFolder(game_object);
 			}
 			ImGui::Separator();
 		}

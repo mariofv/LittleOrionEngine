@@ -24,6 +24,11 @@ ComponentBillboard::ComponentBillboard(GameObject* owner) : Component(owner, Com
 
 ComponentBillboard::~ComponentBillboard()
 {
+	CleanUp();
+}
+
+void ComponentBillboard::CleanUp()
+{
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ebo);
 	glDeleteVertexArrays(1, &vao);
@@ -33,13 +38,17 @@ void ComponentBillboard::InitData()
 {
 	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
 	ChangeTextureEmissive(texture_emissive_uuid);
+	InitQuad();
+}
 
+void ComponentBillboard::InitQuad()
+{
 	float vertices[20] =
 	{
-			0.5f,  0.5f, 0.0f,		1.0f, 1.0f,
-			0.5f, -0.5f, 0.0f,		1.0f, 0.0f,
-		   -0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
-		   -0.5f,  0.5f, 0.0f,		0.0f, 1.0f
+		0.5f,  0.5f, 0.0f,		1.0f, 1.0f,
+		0.5f, -0.5f, 0.0f,		1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
+		-0.5f,  0.5f, 0.0f,		0.0f, 1.0f
 	};
 	unsigned int indices[6] =
 	{
@@ -174,7 +183,7 @@ void ComponentBillboard::CommonUniforms(const GLuint &shader_program)
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.num_columns"), num_sprisheet_columns);
 }
 
-Component* ComponentBillboard::Clone(bool original_prefab) const
+Component* ComponentBillboard::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentBillboard* created_component;
 	if (original_prefab)
@@ -184,18 +193,21 @@ Component* ComponentBillboard::Clone(bool original_prefab) const
 	else
 	{
 		created_component = App->effects->CreateComponentBillboard();
+	
 	}
 	*created_component = *this;
-
-	created_component->ReassignResource();
-
+	created_component->InitQuad();
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
-};
+}
 
-void ComponentBillboard::Copy(Component* component_to_copy) const
+void ComponentBillboard::CopyTo(Component* component_to_copy) const
 {
-	*component_to_copy = *this;
-	*static_cast<ComponentBillboard*>(component_to_copy) = *this;
+	ComponentBillboard* billboard = static_cast<ComponentBillboard*>(component_to_copy);
+	billboard->CleanUp();
+	*billboard = *this;
+	billboard->InitQuad();
 }
 
 
@@ -211,6 +223,7 @@ void ComponentBillboard::SpecializedSave(Config& config) const
 	config.AddFloat(width, "Width");
 	config.AddFloat(height, "Height");
 	config.AddBool( pulse, "Pulse");
+	config.AddBool(loop, "Loop");
 	config.AddInt(static_cast<int>(alignment_type), "BillboardType");
 
 	config.AddInt(animation_time, "AnimationTime");
@@ -236,6 +249,7 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 	width = config.GetFloat("Width", 1.0f);
 	height = config.GetFloat("Height", 1.0f);
 	pulse = config.GetBool("Pulse", false);
+	loop = config.GetBool("Loop", false);
 
 	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::WORLD)));
 	ChangeBillboardType(alignment_type);

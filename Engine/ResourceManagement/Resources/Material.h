@@ -47,6 +47,7 @@ public:
 
 	void SetMaterialTexture(MaterialTextureType type, uint32_t texture_id);
 	const std::shared_ptr<Texture>& GetMaterialTexture(MaterialTextureType type) const;
+	bool UseLightmap() const;
 
 	//Asyncronous loading
 	void LoadResource(uint32_t uuid, unsigned texture_type);
@@ -61,7 +62,6 @@ public:
 	unsigned int GetShaderVariation() const;
 
 	ENGINE_API void SetDissolveProgress(float progress);
-
 
 public:
 	static const size_t MAX_MATERIAL_TEXTURE_TYPES = static_cast<size_t>(MaterialTextureType::UNKNOWN);

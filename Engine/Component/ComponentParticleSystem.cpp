@@ -21,6 +21,7 @@ ComponentParticleSystem::ComponentParticleSystem(GameObject* owner) : Component(
 ComponentParticleSystem::~ComponentParticleSystem()
 {
 	delete billboard;
+	billboard = nullptr;
 }
 
 void ComponentParticleSystem::Init() 
@@ -444,7 +445,15 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	orbit = config.GetBool("Orbit", false);
 }
 
-Component* ComponentParticleSystem::Clone(bool original_prefab) const
+void ComponentParticleSystem::ReassignResource()
+{
+	if (billboard)
+	{
+		billboard->ReassignResource();
+	}
+}
+
+Component* ComponentParticleSystem::Clone(GameObject* owner, bool original_prefab)
 {
 
 	ComponentParticleSystem* created_component;
@@ -456,17 +465,19 @@ Component* ComponentParticleSystem::Clone(bool original_prefab) const
 	{
 		created_component = App->effects->CreateComponentParticleSystem();
 	}
-
-	created_component->Init();
-	auto original_billboard = created_component->billboard;
-	*created_component = *this;
-	*original_billboard = *this->billboard;
-	created_component->billboard = original_billboard;
 	CloneBase(static_cast<Component*>(created_component));
+
+	*created_component = *this;
+	created_component->Init();
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
+	assert(billboard->emissive_intensity>-1);
+	this->billboard->CopyTo(created_component->billboard);
+	created_component->billboard->owner = owner;
 	return created_component;
 };
 
-void ComponentParticleSystem::Copy(Component * component_to_copy) const
+void ComponentParticleSystem::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	ComponentParticleSystem* component_particle_system = static_cast<ComponentParticleSystem*>(component_to_copy);

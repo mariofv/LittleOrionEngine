@@ -23,6 +23,11 @@ ComponentTrail::ComponentTrail(GameObject * owner) : Component(owner, ComponentT
 }
 ComponentTrail::~ComponentTrail()
 {
+	CleanUp();
+}
+
+void ComponentTrail::CleanUp()
+{
 	vertices.clear();
 	if (trail_vbo != 0)
 	{
@@ -36,6 +41,13 @@ void ComponentTrail::Init()
 	//InitRenderer
 	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
 
+	InitBuffers();
+
+	ClearTrail();
+}
+
+void ComponentTrail::InitBuffers()
+{
 	glGenVertexArrays(1, &trail_vao);
 	glGenBuffers(1, &trail_vbo);
 
@@ -53,8 +65,6 @@ void ComponentTrail::Init()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-
-	ClearTrail();
 }
 
 void ComponentTrail::Update()
@@ -76,17 +86,18 @@ void ComponentTrail::Update()
 
 	GetPerpendiculars();
 
-	for (auto it = test_points.begin(); it < test_points.end(); ++it)
+	auto it = test_points.begin();
+	while (it != test_points.end())
 	{
 		if (it->life >= 0) // If life is positive, all good
 		{
 			it->is_rendered = true;
 			it->life -= App->time->real_time_delta_time; // Update time left
+			++it;
 		}
-
 		else // But if not, we delete these points
 		{
-			it = test_points.erase(it);
+			test_points.erase(it);
 		}
 	}
 }
@@ -110,7 +121,8 @@ void  ComponentTrail::GetPerpendiculars()
 	unsigned int j = 0;
 	vertices.clear();
 	float trail_segment_uv = 1.f / test_points.size(); // to coordinate texture
-	for (auto pair = mesh_points.begin(); pair < mesh_points.end(); ++pair)
+	auto pair = mesh_points.begin();
+	while (pair != mesh_points.end())
 	{
 		if (pair->first->life > 0 && pair->second->life > 0)
 		{
@@ -136,6 +148,7 @@ void  ComponentTrail::GetPerpendiculars()
 			bottom_left = (pair->first->position - perpendicular);
 			vertices.push_back({ top_left, float2(trail_segment_uv * j, 1.0f) }); //uv[i]
 			vertices.push_back({ bottom_left, float2(trail_segment_uv * j, 0.0f) });//uv[++i]
+			++pair;
 		}
 		else
 		{
@@ -184,7 +197,10 @@ void ComponentTrail::Render()
 
 void ComponentTrail::ClearTrail()
 {
-	last_gameobject_position = owner->transform.GetGlobalTranslation(); //initial GO position
+	if (owner)
+	{
+		last_gameobject_position = owner->transform.GetGlobalTranslation(); //initial GO position
+	}
 	last_point = TrailPoint(last_gameobject_position, width, duration);
 	test_points.clear();
 }
@@ -206,13 +222,7 @@ void ComponentTrail::ChangeTexture(uint32_t texture_uuid)
 	App->resources->loading_thread_communication.normal_loading_flag = false;
 }
 
-ComponentTrail& ComponentTrail::operator=(const ComponentTrail& component_to_copy)
-{
-	Component::operator = (component_to_copy);
-	return *this;
-}
-
-Component* ComponentTrail::Clone(bool original_prefab) const
+Component* ComponentTrail::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentTrail* created_component;
 	if (original_prefab)
@@ -224,14 +234,21 @@ Component* ComponentTrail::Clone(bool original_prefab) const
 		created_component = App->effects->CreateComponentTrail(owner);
 	}
 	*created_component = *this;
+	created_component->InitBuffers();
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 };
 
-void ComponentTrail::Copy(Component* component_to_copy) const
+void ComponentTrail::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
-	*static_cast<ComponentTrail*>(component_to_copy) = *this;
+	ComponentTrail* trail = static_cast<ComponentTrail*>(component_to_copy);
+	trail->CleanUp();
+	*trail = *this;
+	trail->InitBuffers();
 }
 
 void ComponentTrail::Delete()

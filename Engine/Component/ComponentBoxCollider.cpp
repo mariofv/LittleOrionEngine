@@ -14,12 +14,12 @@ ComponentBoxCollider::ComponentBoxCollider(GameObject* owner): ComponentCollider
 	InitData();
 }
 
-Component* ComponentBoxCollider::Clone(GameObject* owner, bool original_prefab) const
+Component* ComponentBoxCollider::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentBoxCollider* created_component;
 	if (original_prefab)
 	{
-		created_component = new ComponentBoxCollider();
+		created_component = new ComponentBoxCollider(owner);
 	}
 	else
 	{

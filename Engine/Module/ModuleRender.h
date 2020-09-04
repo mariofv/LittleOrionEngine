@@ -77,7 +77,7 @@ private:
 	void SetListOfMeshesToRender(const ComponentCamera* camera);
 
 public:
-	bool anti_aliasing = false;
+	bool anti_aliasing = true;
 	bool toggle_ortho_frustum = false;
 	bool toggle_directional_light_aabb = true;
 	bool toggle_perspective_sub_frustums = false;

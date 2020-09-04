@@ -53,16 +53,15 @@ ComponentAnimation & ComponentAnimation::operator=(const ComponentAnimation & co
 {
 	Component::operator = (component_to_copy);
 	*this->animation_controller = *component_to_copy.animation_controller;
-	Init();
 	return *this;
 }
 
-Component* ComponentAnimation::Clone(bool original_prefab) const
+Component* ComponentAnimation::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentAnimation * created_component;
 	if (original_prefab)
 	{
-		created_component = new ComponentAnimation();
+		created_component = new ComponentAnimation(owner);
 	}
 	else
 	{
@@ -70,13 +69,17 @@ Component* ComponentAnimation::Clone(bool original_prefab) const
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
+	created_component->Init();
 	return created_component;
 };
 
-void ComponentAnimation::Copy(Component* component_to_copy) const
+void ComponentAnimation::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentAnimation*>(component_to_copy) = *this;
+	static_cast<ComponentAnimation*>(component_to_copy) ->Init();
 }
 
 void ComponentAnimation::Disable()
@@ -110,7 +113,7 @@ void ComponentAnimation::Stop()
 	playing = false;
 }
 
-void ComponentAnimation::ActiveAnimation(const std::string & trigger)
+void ComponentAnimation::ActiveAnimation(const std::string& trigger)
 {
 	animation_controller->StartNextState(trigger);
 }
@@ -150,6 +153,24 @@ void ComponentAnimation::SetAnimationSpeed(float speed) const
 	animation_controller->SetSpeed(speed);
 
 	return;
+}
+
+ENGINE_API void ComponentAnimation::SetFloat(std::string name, float value)
+{
+	uint64_t name_hash = std::hash<std::string>{}(name);
+	animation_controller->SetFloat(name_hash, value);
+}
+
+ENGINE_API void ComponentAnimation::SetInt(std::string name, int value)
+{
+	uint64_t name_hash = std::hash<std::string>{}(name);
+	animation_controller->SetInt(name_hash, value);
+}
+
+ENGINE_API void ComponentAnimation::SetBool(std::string name, bool value)
+{
+	uint64_t name_hash = std::hash<std::string>{}(name);
+	animation_controller->SetBool(name_hash, value);
 }
 
 
@@ -250,7 +271,7 @@ void ComponentAnimation::GenerateJointChannelMaps()
 	}
 }
 
-void ComponentAnimation::GenerateAttachedBones(GameObject* mesh, std::vector<Skeleton::Joint> & skeleton)
+void ComponentAnimation::GenerateAttachedBones(GameObject* mesh, std::vector<Skeleton::Joint>& skeleton)
 {
 	if (mesh->children.empty())
 	{
@@ -264,7 +285,7 @@ void ComponentAnimation::GenerateAttachedBones(GameObject* mesh, std::vector<Ske
 		{
 			if (skeleton[j].name == child->name)
 			{
-				animation_controller->attached_bones.push_back({ j,child });
+				animation_controller->attached_bones.push_back({ j, child });
 			}
 		}
 	}
