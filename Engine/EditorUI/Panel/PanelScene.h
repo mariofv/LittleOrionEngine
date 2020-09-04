@@ -32,8 +32,6 @@ private:
 	void RenderCameraPreview() const;
 
 	void RenderDebugMetrics() const;
-	bool HasParent(GameObject* go) const;
-	bool BelongsToList(GameObject* go) const;
 
 private:
 	bool scene_camera_gizmo_hovered = false;
