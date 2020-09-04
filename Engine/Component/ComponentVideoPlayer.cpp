@@ -242,3 +242,8 @@ ENGINE_API void ComponentVideoPlayer::StopVideo()
 	AK::SoundEngine::StopPlayingID(playing_id);
 }
 
+ENGINE_API bool ComponentVideoPlayer::IsFinish()
+{
+	return !playing_video;
+}
+

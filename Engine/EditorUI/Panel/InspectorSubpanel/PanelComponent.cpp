@@ -701,8 +701,6 @@ void PanelComponent::ShowComponentVideoPlayerWindow(ComponentVideoPlayer* video_
 		}
 		ImGui::Separator();
 		ImGui::Text("Video");
-		ImGui::Checkbox("Preserve Aspect Ratio", &video_player->preserve_aspect_ratio);
-
 		std::string video_name = video_player->video_to_render == nullptr ? "None (Video)" : App->resources->resource_DB->GetEntry(video_player->video_to_render->GetUUID())->resource_name;
 		ImGuiID element_id = ImGui::GetID((std::to_string(video_player->UUID) + "VideoSelector").c_str());
 		if (ImGui::Button(video_name.c_str()))

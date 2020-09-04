@@ -34,6 +34,7 @@ public:
 
 	ENGINE_API void PlayVideo();
 	ENGINE_API void StopVideo();
+	ENGINE_API bool IsFinish();
 
 	void Init() override;
 
