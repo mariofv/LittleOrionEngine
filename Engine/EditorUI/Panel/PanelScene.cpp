@@ -239,7 +239,7 @@ void PanelScene::RenderGizmo()
 		{
 			for (auto go : App->editor->selected_game_objects)
 			{
-				if (go->UUID != App->editor->selected_game_object->UUID && !HasParent(go))
+				if (go->UUID != App->editor->selected_game_object->UUID && !App->scene->HasParent(go))
 				{
 					float3 trans = go->transform.GetTranslation();
 					trans = trans + translation_vector;
@@ -251,7 +251,7 @@ void PanelScene::RenderGizmo()
 		{
 			for (auto go : App->editor->selected_game_objects)
 			{
-				if (go->UUID != App->editor->selected_game_object->UUID && !HasParent(go))
+				if (go->UUID != App->editor->selected_game_object->UUID && !App->scene->HasParent(go))
 				{
 					go->transform.SetScale(go->transform.GetScale().Mul(scale_factor));
 				}
@@ -262,7 +262,7 @@ void PanelScene::RenderGizmo()
 		{
 			for (auto go : App->editor->selected_game_objects)
 			{
-				if (go->UUID != App->editor->selected_game_object->UUID && !HasParent(go))
+				if (go->UUID != App->editor->selected_game_object->UUID && !App->scene->HasParent(go))
 				{
 					float3 aux = go->transform.GetRotationRadiants() + rotation_factor;
 					go->transform.SetRotationRad(aux);
@@ -366,41 +366,6 @@ void PanelScene::RenderDebugMetrics() const
 	ImGui::EndChild();
 }
 
-bool PanelScene::HasParent(GameObject * go) const
-{
-	if (go->GetHierarchyDepth() == 1)
-	{
-		return false;
-	}
-
-	int depth = go->GetHierarchyDepth();
-
-	GameObject *game_object = go;
-
-	while (depth >= 2) 
-	{
-		if (BelongsToList(game_object->parent))
-		{
-			return true;
-
-		}
-		game_object = game_object->parent;
-		depth = depth - 1;
-	}
-	return false;
-}
-
-bool PanelScene::BelongsToList(GameObject* game_object) const
-{
-	for (auto go : App->editor->selected_game_objects)
-	{
-		if (go->UUID == game_object->UUID)
-		{
-			return true;
-		}
-	}
-	return false;
-}
 
 void PanelScene::MousePicking(const float2& mouse_position)
 {
