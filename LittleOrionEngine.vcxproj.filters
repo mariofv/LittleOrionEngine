@@ -550,6 +550,15 @@
     <ClCompile Include="Engine\Actions\EditorActionMultipleRotation.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Helper\Quad.cpp">
+      <Filter>Engine\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentVideoPlayer.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Video.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1094,6 +1103,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Actions\EditorActionMultipleRotation.h">
       <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helper\Quad.h">
+      <Filter>Engine\Helper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
