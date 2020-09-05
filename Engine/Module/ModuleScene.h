@@ -68,6 +68,10 @@ public:
 
 	void StopSceneTimer();
 
+	//Multiselection
+	bool HasParent(GameObject* go) const;
+	bool BelongsToList(GameObject* go) const;
+
 private:
 	void OpenScene();
 	inline void LoadSceneResource();

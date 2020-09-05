@@ -157,8 +157,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\Component\ComponentVideoPlayer.h" />
-    <ClInclude Include="Engine\ResourceManagement\Resources\Video.h" />
+    <ClInclude Include="Engine\Actions\EditorActionMultipleRotation.h" />
+    <ClInclude Include="Engine\Actions\EditorActionMultipleScale.h" />
+    <ClInclude Include="Engine\Actions\EditorActionMultipleTranslate.h" />
     <ClInclude Include="Engine\Component\ComponentAudioListener.h" />
     <ClInclude Include="Engine\Component\ComponentTrail.h" />
     <ClInclude Include="Engine\Helper\ThreadSafeQueue.h" />
@@ -332,6 +333,9 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Video.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddMultipleGO.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionDeleteMultipleGO.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionMultipleRotation.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionMultipleScale.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionMultipleTranslate.cpp" />
     <ClCompile Include="Engine\Animation\Tween\LOTween.cpp" />
     <ClCompile Include="Engine\Animation\Tween\Tween.cpp" />
     <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp" />

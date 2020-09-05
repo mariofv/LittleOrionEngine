@@ -9,6 +9,9 @@
 #include "Actions/EditorActionAddMultipleGO.h"
 #include "Actions/EditorActionDeleteMultipleGO.h"
 #include "Actions/EditorActionDeleteGameObject.h"
+#include "Actions/EditorActionMultipleRotation.h"
+#include "Actions/EditorActionMultipleScale.h"
+#include "Actions/EditorActionMultipleTranslate.h"
 #include "Actions/EditorActionTranslate.h"
 #include "Actions/EditorActionRotation.h"
 #include "Actions/EditorActionScale.h"
@@ -130,6 +133,27 @@ void ModuleActions::AddUndoAction(UndoActionType type)
 			previous_transform,
 			App->editor->selected_game_object->transform.GetScale(),
 			App->editor->selected_game_object
+		);
+		break;
+
+	case UndoActionType::MULTIPLE_TRANSLATION:
+		new_action = new EditorActionMultipleTranslate(
+			previous_transform, 
+			App->editor->selected_game_object->transform.GetTranslation()
+		);
+		break;
+
+	case UndoActionType::MULTIPLE_SCALE:
+		new_action = new EditorActionMultipleScale(
+			previous_transform,
+			App->editor->selected_game_object->transform.GetScale()
+		);
+		break;
+
+	case UndoActionType::MULTIPLE_ROTATION:
+		new_action = new EditorActionMultipleRotate(
+			previous_transform,
+			App->editor->selected_game_object->transform.GetRotationRadiants()
 		);
 		break;
 

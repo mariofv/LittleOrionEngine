@@ -541,14 +541,14 @@
     <ClCompile Include="Engine\Component\ComponentTrail.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Resources\Video.cpp">
-      <Filter>Engine\ResourceManagement\Resources</Filter>
+    <ClCompile Include="Engine\Actions\EditorActionMultipleTranslate.cpp">
+      <Filter>Engine\Actions</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentVideoPlayer.cpp">
-      <Filter>Engine\Component</Filter>
+    <ClCompile Include="Engine\Actions\EditorActionMultipleScale.cpp">
+      <Filter>Engine\Actions</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Helper\Quad.cpp">
-      <Filter>Engine\Helper</Filter>
+    <ClCompile Include="Engine\Actions\EditorActionMultipleRotation.cpp">
+      <Filter>Engine\Actions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1086,14 +1086,14 @@
     <ClInclude Include="Engine\Helper\ThreadSafeQueue.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Resources\Video.h">
-      <Filter>Engine\ResourceManagement\Resources</Filter>
+    <ClInclude Include="Engine\Actions\EditorActionMultipleTranslate.h">
+      <Filter>Engine\Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentVideoPlayer.h">
-      <Filter>Engine\Component</Filter>
+    <ClInclude Include="Engine\Actions\EditorActionMultipleScale.h">
+      <Filter>Engine\Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Helper\Quad.h">
-      <Filter>Engine\Helper</Filter>
+    <ClInclude Include="Engine\Actions\EditorActionMultipleRotation.h">
+      <Filter>Engine\Actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleScene.h"
 
-EditorActionScale::EditorActionScale(float3 &previous, float3 &current, GameObject* go) : previous_scale(previous),
+EditorActionScale::EditorActionScale(const float3 &previous, const float3 &current, GameObject* go) : previous_scale(previous),
 current_scale(current), UUID_go(go->UUID) {}
 
 void EditorActionScale::Undo()
