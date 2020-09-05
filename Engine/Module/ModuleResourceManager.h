@@ -20,6 +20,7 @@
 #include "ResourceManagement/Resources/StateMachine.h"
 #include "ResourceManagement/Resources/Texture.h"
 #include "ResourceManagement/Resources/SoundBank.h"
+#include "ResourceManagement/Resources/Video.h"
 
 #include "ResourceManagement/Metafile/MetafileManager.h"
 #include "ResourceManagement/ResourcesDB/ResourceDataBase.h"
@@ -36,22 +37,18 @@
 class Path;
 class Timer;
 
+class Importer;
 class AnimationImporter;
-class FontImporter;
 class MaterialImporter;
 class MeshImporter;
 class ModelImporter;
 class PrefabImporter;
-class SceneImporter;
 class SkeletonImporter;
-class SkyboxImporter;
 class StateMachineImporter;
 class SoundImporter;
 class TextureImporter;
 
 class SceneManager;
-
-
 
 struct LoadingJob
 {
@@ -232,17 +229,15 @@ public:
 
 	//Importers
 	std::unique_ptr<AnimationImporter> animation_importer;
-	std::unique_ptr<FontImporter> font_importer;
 	std::unique_ptr<MaterialImporter> material_importer;
 	std::unique_ptr<MeshImporter> mesh_importer;
 	std::unique_ptr<ModelImporter> model_importer;
 	std::unique_ptr<PrefabImporter> prefab_importer;
-	std::unique_ptr<SceneImporter> scene_importer;
 	std::unique_ptr<SkeletonImporter> skeleton_importer;
-	std::unique_ptr<SkyboxImporter> skybox_importer;
 	std::unique_ptr<StateMachineImporter> state_machine_importer;
 	std::unique_ptr<TextureImporter> texture_importer;
 	std::unique_ptr<SoundImporter> sound_importer;
+	std::unique_ptr<Importer> generic_importer;
 
 	std::unique_ptr<MetafileManager> metafile_manager;
 	std::unique_ptr<SceneManager> scene_manager;

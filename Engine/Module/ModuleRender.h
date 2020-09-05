@@ -1,7 +1,9 @@
 #ifndef _MODULERENDER_H_
 #define _MODULERENDER_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Module.h"
 #include "Helper/Timer.h"

@@ -1,7 +1,9 @@
 #ifndef _COMPONENTTRANSFORM_H_
 #define _COMPONENTTRANSFORM_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Component.h"
 

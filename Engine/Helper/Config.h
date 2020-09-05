@@ -1,7 +1,9 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Main/Globals.h"
 #include <MathGeoLib.h>

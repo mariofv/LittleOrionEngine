@@ -7,11 +7,6 @@
 #include <assimp/scene.h>
 #include <algorithm>
 
-FileData SkeletonImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
-{
-	return assets_file_path.GetFile()->Load();
-}
-
 FileData SkeletonImporter::ExtractSkeletonFromAssimp(const aiScene* scene, const aiMesh* mesh, float unit_scale_factor, bool complex_skeleton) const
 {
 	FileData skeleton_data;
