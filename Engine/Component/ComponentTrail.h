@@ -79,6 +79,8 @@ public:
 	void Update() override;
 	void SetTrailTexture(uint32_t texture_uuid);
 	void GetPerpendiculars();
+	void GetCatmull();
+	void GetUVs();
 
 	void Render();
 	void ChangeTexture(uint32_t texture_uuid);

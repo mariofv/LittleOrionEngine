@@ -88,8 +88,13 @@ void ComponentTrail::Update()
 		last_gameobject_position = gameobject_position;
 		
 	}
+	if (test_points.size() > 0)
+	{
+		GetPerpendiculars();
+		GetCatmull();
+		GetUVs();
+	}
 	
-	GetPerpendiculars();
 	auto it = test_points.begin();
 	while (it != test_points.end())
 	{
@@ -127,7 +132,7 @@ void  ComponentTrail::GetPerpendiculars()
 	path_top.spline_points.clear();
 	path_bottom.spline_points.clear();
 	float3 top_left, bottom_left;
-
+	unsigned int j = 0;
 	while (pair != mesh_points.end())
 	{
 		if (pair->first->life > 0 && pair->second->life > 0)
@@ -159,72 +164,105 @@ void  ComponentTrail::GetPerpendiculars()
 			path_top.spline_points.emplace_back(top_left);// add points on the spline
 			path_bottom.spline_points.emplace_back(bottom_left);// add points on the spline
 			
-			float3 spoint_top_s1, spoint_top_s2, spoint_top_s3, spoint_bottom_s1, spoint_bottom_s2, spoint_bottom_s3, p0_t, p1_t, p2_t, p3_t, p0_b, p1_b, p2_b, p3_b;
-			auto seg_top = path_top.spline_points.begin();
-			auto seg_bottom = path_bottom.spline_points.begin();
-			while (seg_top < path_top.spline_points.end() - 3)
-			{
-
-				auto aux_top = seg_top;
-				p0_t = *aux_top;
-				p1_t = *(++aux_top); 
-				p2_t = *(++aux_top);
-				p3_t = *(++aux_top);
-
-				auto aux_bottom = seg_bottom;
-
-				p0_b = *aux_bottom;
-				p1_b = *(++aux_bottom);
-				p2_b = *(++aux_bottom);
-				p3_b = *(++aux_bottom);
-				// from 4 points we need to draw 3 splines on top connecting those points
-				//Spline 1t
-				spline_top.push_back(p0_t);
-				spoint_top_s1 = path_top.GetSplinePoint(0.5, p0_t, p0_t, p1_t, p2_t, alpha);
-				spline_top.push_back(spoint_top_s1);
-				App->debug_draw->RenderPoint(spoint_top_s1, 5.0F, float3{ 0, 150, 255 });
-				
-				//Spline 1b
-				spline_bottom.push_back(p0_b);
-				spoint_bottom_s1 = path_bottom.GetSplinePoint(0.5, p0_b, p0_b, p1_b, p2_b, alpha);
-				spline_bottom.push_back(spoint_bottom_s1);
-				App->debug_draw->RenderPoint(spoint_bottom_s1, 10.0F, float3{ 255, 0, 255 });
-
-				//Spline 2t
-				spline_top.push_back(p1_t);
-				spoint_top_s2 = path_top.GetSplinePoint(0.5, p0_t, p1_t, p2_t, p3_t, alpha);
-				spline_top.push_back(spoint_top_s2);
-				App->debug_draw->RenderPoint(spoint_top_s2, 5.0F, float3{ 0, 150, 255 });
-				spline_top.push_back(p2_t);
-				//Spline 2b
-				spline_bottom.push_back(p1_b);
-				spoint_bottom_s2 = path_bottom.GetSplinePoint(0.5, p0_b, p1_b, p2_b, p3_b, alpha);
-				spline_bottom.push_back(spoint_bottom_s2);
-				App->debug_draw->RenderPoint(spoint_bottom_s2, 10.0F, float3{ 255, 0, 255 });
-				spline_bottom.push_back(p2_b);
-
-				++seg_top;
-				++seg_bottom;
-			}
-			float trail_segment_uv = 1.f / spline_top.size(); // to coordinate texture
-			vertices.clear();
-			for (int l = 0; l < spline_top.size(); l++)
-			{
-				vertices.push_back({ spline_top[l], float2(trail_segment_uv * l  , 1.0f) });//uv[++i]
-				vertices.push_back({ spline_bottom[l], float2(trail_segment_uv * l  , 0.0f) });//uv[++i]
-				App->engine_log->Log("%f", trail_segment_uv * l);
-			}
-			spline_top.clear();
-			spline_bottom.clear();
 			++pair;
+			++j;
 		}
 		else
 		{
 			pair = mesh_points.erase(pair);
 		}
 	}
+
+}
+void ComponentTrail::GetCatmull()
+{
+	if (path_top.spline_points.size() < 4)
+	{
+		return;
+	}
+	float3 spoint_top_s1, spoint_top_s2, spoint_top_s3, spoint_bottom_s1, spoint_bottom_s2, spoint_bottom_s3;
+	
+	for (unsigned int i = 0; i < path_top.spline_points.size() - 1; i++)
+	{
+		//Top
+		auto aux_top = i;
+		float3 segment_begin, segment_end, smoothen_begin, smoothen_end;
+		segment_begin = path_top.spline_points[i];
+		if (i == 0)
+		{
+			smoothen_begin = segment_begin;
+		}
+		else
+		{
+			smoothen_begin = path_top.spline_points[i - 1];
+		}
+		segment_end = path_top.spline_points[i + 1];
+		if (i == path_top.spline_points.size() - 1)
+		{
+			smoothen_end = segment_end;
+		}
+		else
+		{
+			smoothen_end = path_top.spline_points[i + 2];
+		}
+
+		for (int r = 0; r < 5; r++)
+		{
+			float t = r / 5.f; //TODO::make a variable and expose it to Panel
+			//Spline 1t
+			spoint_top_s1 = path_top.GetSplinePoint(t, smoothen_begin, segment_begin, segment_end, smoothen_end, alpha);
+			spline_top.push_back(spoint_top_s1);
+
+		}
+	}
+	for (unsigned int i = 0; i < path_bottom.spline_points.size() - 1; i++)
+	{
+		//Bottom
+		auto aux_bottom = i;
+		float3 segment_begin_bottom, segment_end_bottom, smoothen_begin_bottom, smoothen_end_bottom;
+		segment_begin_bottom = path_bottom.spline_points[i];
+		if (i == 0)
+		{
+			smoothen_begin_bottom = segment_begin_bottom;
+		}
+		else
+		{
+			smoothen_begin_bottom = path_bottom.spline_points[i - 1];
+		}
+		segment_end_bottom = path_bottom.spline_points[i + 1];
+		if (i == path_bottom.spline_points.size() - 1)
+		{
+			smoothen_end_bottom = segment_end_bottom;
+		}
+		else
+		{
+			smoothen_end_bottom = path_bottom.spline_points[i + 2];
+		}
+		for (int r = 0; r < 5; r++)
+		{
+			float t = r / 5.f; //TODO::make a variable and expose it to Panel	   
+			//Spline 1b
+			//spline_bottom.push_back(p0_b);
+			spoint_bottom_s1 = path_bottom.GetSplinePoint(t, smoothen_begin_bottom, segment_begin_bottom, segment_end_bottom, smoothen_end_bottom, alpha);
+			spline_bottom.push_back(spoint_bottom_s1);
+
+		}
+	}
 }
 
+void ComponentTrail::GetUVs()
+{
+	float trail_segment_uv = 1.f / spline_top.size(); // to coordinate texture
+	vertices.clear();
+	for (int l = 0; l < spline_top.size(); l++)
+	{
+		vertices.push_back({ spline_top[l], float2(trail_segment_uv * l , 1.0f) });//uv[++i]
+		vertices.push_back({ spline_bottom[l], float2(trail_segment_uv * l, 0.0f) });//uv[++i]
+		App->engine_log->Log("%f", trail_segment_uv * l);
+	}
+	spline_top.clear();
+	spline_bottom.clear();
+}
 void ComponentTrail::Render()
 {
 	if (active)
