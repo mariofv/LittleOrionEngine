@@ -209,13 +209,13 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    0.0,
-                    0.0
+                    600.0,
+                    291.0
                 ],
                 "Rotation": [
+                    -0.0,
                     0.0,
-                    0.0,
-                    0.0
+                    -0.0
                 ],
                 "Scale": [
                     1.0,
@@ -231,8 +231,8 @@
                     0.5
                 ],
                 "SizeDelta": [
-                    1154.0,
-                    566.0
+                    1200.0,
+                    582.0
                 ],
                 "Pivot": [
                     0.5,
@@ -404,668 +404,8 @@
             ]
         },
         {
-            "UUID": 1426324500,
-            "ParentUUID": 1534107240,
-            "Name": "LoadingCircle",
-            "Tag": "",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 2991353801,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 3744876730,
-                "ComponentType": 7,
-                "Active": true,
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": false,
-            "Components": [
-                {
-                    "UUID": 2695633094,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "LoadingScreen"
-                }
-            ]
-        },
-        {
-            "UUID": 4110421402,
-            "ParentUUID": 1426324500,
-            "Name": "Exterior Doted Circle",
-            "Tag": "",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3649566402,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 922913319,
-                "ComponentType": 7,
-                "Active": true,
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "SizeDelta": [
-                    550.0,
-                    550.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 3264419312,
-                    "ComponentType": 12,
-                    "Active": true,
-                    "ImageColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 411374570,
-                    "PreserveAspectRatio": false
-                },
-                {
-                    "UUID": 3167557095,
-                    "ComponentType": 10,
-                    "Active": true
-                }
-            ]
-        },
-        {
-            "UUID": 2252790113,
-            "ParentUUID": 1426324500,
-            "Name": "Exterior Circle",
-            "Tag": "",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1457818962,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 396494332,
-                "ComponentType": 7,
-                "Active": true,
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "SizeDelta": [
-                    525.0,
-                    525.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 3264419312,
-                    "ComponentType": 12,
-                    "Active": true,
-                    "ImageColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 1841166270,
-                    "PreserveAspectRatio": false
-                },
-                {
-                    "UUID": 3167557095,
-                    "ComponentType": 10,
-                    "Active": true
-                }
-            ]
-        },
-        {
-            "UUID": 910161739,
-            "ParentUUID": 1426324500,
-            "Name": "Inner Thick Circle",
-            "Tag": "",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1963317449,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2018380768,
-                "ComponentType": 7,
-                "Active": true,
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "SizeDelta": [
-                    280.0,
-                    280.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 3264419312,
-                    "ComponentType": 12,
-                    "Active": true,
-                    "ImageColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 2601449773,
-                    "PreserveAspectRatio": false
-                },
-                {
-                    "UUID": 3167557095,
-                    "ComponentType": 10,
-                    "Active": true
-                }
-            ]
-        },
-        {
-            "UUID": 1741264222,
-            "ParentUUID": 1426324500,
-            "Name": "Inner Thin Circle",
-            "Tag": "",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 97561876,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2890106719,
-                "ComponentType": 7,
-                "Active": true,
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "SizeDelta": [
-                    300.0,
-                    300.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 3264419312,
-                    "ComponentType": 12,
-                    "Active": true,
-                    "ImageColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 2484410329,
-                    "PreserveAspectRatio": false
-                },
-                {
-                    "UUID": 3167557095,
-                    "ComponentType": 10,
-                    "Active": true
-                }
-            ]
-        },
-        {
-            "UUID": 2673891216,
-            "ParentUUID": 1426324500,
-            "Name": "Text",
-            "Tag": "",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 363761432,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2926167022,
-                "ComponentType": 7,
-                "Active": true,
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "SizeDelta": [
-                    150.0,
-                    35.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 3264419312,
-                    "ComponentType": 12,
-                    "Active": true,
-                    "ImageColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 89894198,
-                    "PreserveAspectRatio": false
-                },
-                {
-                    "UUID": 3167557095,
-                    "ComponentType": 10,
-                    "Active": true
-                }
-            ]
-        },
-        {
-            "UUID": 1240935720,
-            "ParentUUID": 1426324500,
-            "Name": "Middle Thin Circle",
-            "Tag": "",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 701798184,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 1233432272,
-                "ComponentType": 7,
-                "Active": true,
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "SizeDelta": [
-                    475.0,
-                    475.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 3264419312,
-                    "ComponentType": 12,
-                    "Active": true,
-                    "ImageColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 793223557,
-                    "PreserveAspectRatio": false
-                },
-                {
-                    "UUID": 3167557095,
-                    "ComponentType": 10,
-                    "Active": true
-                }
-            ]
-        },
-        {
-            "UUID": 3522435498,
-            "ParentUUID": 1426324500,
-            "Name": "Middle Thick Circle",
-            "Tag": "",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1896222126,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2681674359,
-                "ComponentType": 7,
-                "Active": true,
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "SizeDelta": [
-                    375.0,
-                    375.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 3264419312,
-                    "ComponentType": 12,
-                    "Active": true,
-                    "ImageColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 621334571,
-                    "PreserveAspectRatio": false
-                },
-                {
-                    "UUID": 3167557095,
-                    "ComponentType": 10,
-                    "Active": true
-                }
-            ]
-        },
-        {
             "UUID": 2948796769,
-            "ParentUUID": 1426324500,
+            "ParentUUID": 1534107240,
             "Name": "Percentatge Text",
             "Tag": "",
             "IsStatic": false,
@@ -1095,13 +435,13 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    -2.0,
-                    -55.0
+                    527.2830810546875,
+                    -227.28933715820313
                 ],
                 "Rotation": [
+                    -0.0,
                     0.0,
-                    0.0,
-                    0.0
+                    -0.0
                 ],
                 "Scale": [
                     1.0,
@@ -1109,7 +449,7 @@
                     1.0
                 ],
                 "MinAnchor": [
-                    0.5,
+                    0.4699999988079071,
                     0.5
                 ],
                 "MaxAnchor": [
@@ -1117,8 +457,8 @@
                     0.5
                 ],
                 "SizeDelta": [
-                    332.0,
-                    275.0
+                    34.000030517578128,
+                    50.0
                 ],
                 "Pivot": [
                     0.5,
@@ -1140,10 +480,264 @@
                         1.0,
                         1.0
                     ],
-                    "HorizontalAlignment": 1
+                    "HorizontalAlignment": 0
                 },
                 {
                     "UUID": 3443230033,
+                    "ComponentType": 10,
+                    "Active": true
+                }
+            ]
+        },
+        {
+            "UUID": 3051784469,
+            "ParentUUID": 1534107240,
+            "Name": "UI Text",
+            "Tag": "",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3386856387,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    -334.4117431640625,
+                    107.411865234375,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2522585104,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    374.68536376953127,
+                    -225.30799865722657
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    173.0,
+                    60.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 1564696284,
+                    "ComponentType": 13,
+                    "Active": true,
+                    "Text": "Loading",
+                    "FontUUID": 17,
+                    "FontSize": 34.0,
+                    "FontColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "HorizontalAlignment": 2
+                },
+                {
+                    "UUID": 114190247,
+                    "ComponentType": 10,
+                    "Active": true
+                }
+            ]
+        },
+        {
+            "UUID": 1985674481,
+            "ParentUUID": 1534107240,
+            "Name": "bunny_1",
+            "Tag": "",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2154609459,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3427504718,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    256.15618896484377,
+                    -218.798583984375
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 374016774,
+                    "ComponentType": 12,
+                    "Active": true,
+                    "ImageColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 2605680060,
+                    "PreserveAspectRatio": false
+                },
+                {
+                    "UUID": 2851371229,
+                    "ComponentType": 10,
+                    "Active": true
+                }
+            ]
+        },
+        {
+            "UUID": 1160439781,
+            "ParentUUID": 1534107240,
+            "Name": "bunny_2",
+            "Tag": "",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2824824525,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1576676049,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    140.33428955078126,
+                    -220.01364135742188
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 287820218,
+                    "ComponentType": 12,
+                    "Active": true,
+                    "ImageColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 3278320805,
+                    "PreserveAspectRatio": false
+                },
+                {
+                    "UUID": 2754238926,
                     "ComponentType": 10,
                     "Active": true
                 }
