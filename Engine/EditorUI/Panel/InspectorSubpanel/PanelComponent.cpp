@@ -680,7 +680,7 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image)
 			component_image->SetTextureToRenderFromInspector(selected_resource);
 		}
 
-		ImGui::ColorEdit3("Color", component_image->color.ptr());
+		ImGui::ColorEdit4("Color", component_image->color.ptr());
 
 		ImGui::Checkbox("Preserve Aspect Ratio", &component_image->preserve_aspect_ratio);
 
@@ -1321,7 +1321,7 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 		if (selected_resource != 0)
 		{
 			component_audio_source->SetSoundBank(selected_resource);
-			component_audio_source->modified_by_user = true;
+			component_audio_source->modified_by_user = true;		
 		}
 		selected_resource = ImGui::ResourceDropper<SoundBank>();
 		if (selected_resource != 0)
@@ -1331,16 +1331,42 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 		}
 		if (component_audio_source->soundbank)
 		{
-			//static std::string soundbank;
-			ImGui::InputText("Awake Event Name ", &component_audio_source->awake_event);
-			if (ImGui::Button("Play Event"))
+			std::string event_name = component_audio_source->GetEventName();
+			if (ImGui::BeginCombo("Event Name", event_name.c_str()))
 			{
-				component_audio_source->PlayEvent(component_audio_source->awake_event);
+				for (int i = 0; i < component_audio_source->soundbank->events.size(); ++i)
+				{
+					if (ImGui::Selectable(component_audio_source->soundbank->events[i].c_str()))
+					{
+						component_audio_source->selected_event = i;
+						component_audio_source->modified_by_user = true;
+					}
+				}
+
+				ImGui::Separator();
+				ImGui::EndCombo();
+			}
+
+			if (component_audio_source->selected_event != -1)
+			{
+				if (ImGui::Button("Play Event"))
+				{
+					component_audio_source->PlayEvent(component_audio_source->soundbank->events[component_audio_source->selected_event]);
+
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Stop Event"))
+				{
+					component_audio_source->StopSelectedEvent();
+
+				}
 			}
 		}
+
 		if (ImGui::SliderFloat("Volume", &component_audio_source->volume, 0, 30))
 		{
 			component_audio_source->SetVolume(component_audio_source->volume);
+			component_audio_source->modified_by_user = true;
 		}
 	}
 }

@@ -25,7 +25,7 @@ public:
 
 public:
 	ResourceType m_resource_type = ResourceType::UNKNOWN;
-	static const int IMPORTER_VERSION = 11;
+	static const int IMPORTER_VERSION = 12;
 };
 #endif // !_IMPORTER_H_
 
