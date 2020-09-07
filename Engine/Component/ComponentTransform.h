@@ -65,6 +65,10 @@ public:
 	ENGINE_API float3 GetFrontVector() const;
 	ENGINE_API float3 GetRightVector() const;
 
+	ENGINE_API float3 GetGlobalUpVector() const;
+	ENGINE_API float3 GetGlobalFrontVector() const;
+	ENGINE_API float3 GetGlobalRightVector() const;
+
 	void ChangeLocalSpace(const float4x4& new_local_space);
 
 	float4x4 GetModelMatrix() const;
