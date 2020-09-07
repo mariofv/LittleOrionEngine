@@ -1282,19 +1282,27 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 						component_audio_source->modified_by_user = true;
 					}
 				}
-				
+
 				ImGui::Separator();
 				ImGui::EndCombo();
 			}
 
-			if (ImGui::Button("Play Event"))
+			if (component_audio_source->selected_event != -1)
 			{
-				if (event_name != "-")
+				if (ImGui::Button("Play Event"))
 				{
 					component_audio_source->PlayEvent(component_audio_source->soundbank->events[component_audio_source->selected_event]);
+
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Stop Event"))
+				{
+					component_audio_source->StopSelectedEvent();
+
 				}
 			}
 		}
+
 		if (ImGui::SliderFloat("Volume", &component_audio_source->volume, 0, 30))
 		{
 			component_audio_source->SetVolume(component_audio_source->volume);

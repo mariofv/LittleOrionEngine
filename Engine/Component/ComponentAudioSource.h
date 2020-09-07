@@ -27,6 +27,7 @@ public:
 	ENGINE_API unsigned long PlayEvent(const std::string & event_to_play);
 	ENGINE_API unsigned long PlayAwake();
 	ENGINE_API void StopEvent(const std::string & event_to_stop);
+	void StopSelectedEvent();
 	ENGINE_API void StopEvent(unsigned long playing_id_to_stop);
 	ENGINE_API void StopAll();
 
@@ -42,7 +43,7 @@ public:
 
 	void SetListener(const AkGameObjectID listener_name);
 
-	std::string GetEventName();
+	std::string GetEventName() const;
 
 
 public:

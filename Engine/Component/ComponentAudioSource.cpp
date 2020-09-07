@@ -104,6 +104,15 @@ void ComponentAudioSource::StopEvent(const std::string & event_to_stop)
 	}
 }
 
+void ComponentAudioSource::StopSelectedEvent()
+{
+	if (selected_event != -1)
+	{
+		StopEvent(soundbank->events[selected_event].c_str());
+	}
+	
+}
+
 void ComponentAudioSource::StopEvent(unsigned long playing_id_to_stop)
 {
 	AK::SoundEngine::StopPlayingID(playing_id_to_stop);
@@ -188,7 +197,7 @@ void ComponentAudioSource::SetListener(const AkGameObjectID listener_AkId)
 	AK::SoundEngine::SetListeners(gameobject_source, &listener_AkId, 1);
 }
 
-std::string ComponentAudioSource::GetEventName()
+std::string ComponentAudioSource::GetEventName() const
 {
 	if (selected_event != -1)
 	{
