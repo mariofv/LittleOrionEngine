@@ -21,9 +21,9 @@ bool ModuleAnimation::Init()
 update_status ModuleAnimation::Update()
 {
 	BROFILER_CATEGORY("Module Animation Update", Profiler::Color::LemonChiffon);
-	if (App->time->isGameRunning() && !App->resources->loading_thread_communication.loading)
+	if (App->time->isGameRunning())
 	{
-		tweener->Update(App->time->delta_time);
+		tweener->Update(App->time->real_time_delta_time);
 	}
 	else
 	{
