@@ -376,6 +376,9 @@ void PanelProjectExplorer::ShowMetafileIcon(Metafile * metafile)
 		case ResourceType::STATE_MACHINE:
 			icon = ICON_FA_PROJECT_DIAGRAM;
 			break;
+		case ResourceType::VIDEO:
+			icon = ICON_FA_FILM;
+			break;
 		default:
 			icon = ICON_FA_FILE;
 			break;

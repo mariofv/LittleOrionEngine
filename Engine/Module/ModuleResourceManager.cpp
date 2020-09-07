@@ -10,15 +10,12 @@
 #include "Module/ModuleScene.h"
 
 #include "ResourceManagement/Importer/Importer.h"
-#include "ResourceManagement/Importer/FontImporter.h"
 #include "ResourceManagement/Importer/MaterialImporter.h"
 #include "ResourceManagement/Importer/ModelImporter.h"
 #include "ResourceManagement/Importer/ModelImporters/AnimationImporter.h"
 #include "ResourceManagement/Importer/ModelImporters/MeshImporter.h"
 #include "ResourceManagement/Importer/ModelImporters/SkeletonImporter.h"
 #include "ResourceManagement/Importer/PrefabImporter.h"
-#include "ResourceManagement/Importer/SceneImporter.h"
-#include "ResourceManagement/Importer/SkyboxImporter.h"
 #include "ResourceManagement/Importer/StateMachineImporter.h"
 #include "ResourceManagement/Importer/SoundImporter.h"
 #include "ResourceManagement/Importer/TextureImporter.h"
@@ -49,20 +46,19 @@ bool ModuleResourceManager::Init()
 	APP_LOG_SECTION("************ Module Resource Manager Init ************");
 
 	animation_importer = std::make_unique<AnimationImporter>();
-	font_importer = std::make_unique<FontImporter>();
+	generic_importer = std::make_unique<Importer>();
 	material_importer = std::make_unique<MaterialImporter>();
 	mesh_importer = std::make_unique<MeshImporter>();
 	model_importer = std::make_unique<ModelImporter>();
 	prefab_importer = std::make_unique<PrefabImporter>();
-	scene_importer = std::make_unique<SceneImporter>();
 	skeleton_importer = std::make_unique<SkeletonImporter>();
-	skybox_importer = std::make_unique<SkyboxImporter>();
 	state_machine_importer = std::make_unique<StateMachineImporter>();
 	sound_importer = std::make_unique<SoundImporter>();
 	texture_importer = std::make_unique<TextureImporter>();
 
 	metafile_manager = std::make_unique<MetafileManager>();
 	scene_manager = std::make_unique<SceneManager>();
+
 
 #if !GAME
 	ImportAssetsInDirectory(*App->filesystem->resources_folder_path); // Import all assets in folder Resources. All metafiles in Resources are correct"
@@ -303,7 +299,7 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path, bool force) cons
 			break;
 
 		case FileType::FONT:
-			asset_metafile = font_importer->Import(file_path);
+			asset_metafile = generic_importer->GenericImport(file_path, ResourceType::FONT);
 			break;
 		
 		case FileType::MATERIAL:
@@ -323,7 +319,7 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path, bool force) cons
 			break;
 		
 		case FileType::SCENE:
-			asset_metafile = scene_importer->Import(file_path);
+			asset_metafile = generic_importer->GenericImport(file_path, ResourceType::SCENE);
 			break;
 
 		case FileType::SKELETON:
@@ -331,7 +327,7 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path, bool force) cons
 			break;
 
 		case FileType::SKYBOX:
-			asset_metafile = skybox_importer->Import(file_path);
+			asset_metafile = generic_importer->GenericImport(file_path, ResourceType::SKYBOX);
 			break;
 
 		case FileType::STATE_MACHINE:
@@ -343,6 +339,9 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path, bool force) cons
 			break;
 		case FileType::SOUND:
 			asset_metafile = sound_importer->Import(file_path);
+			break;
+		case FileType::VIDEO:
+			asset_metafile = generic_importer->GenericImport(file_path, ResourceType::VIDEO);
 			break;
 		}
 	}

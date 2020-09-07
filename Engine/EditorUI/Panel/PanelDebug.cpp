@@ -7,6 +7,7 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleSpacePartitioning.h"
+#include "Module/ModuleUI.h"
 #include "SpacePartition/OLQuadTree.h"
 #include "Module/ModulePhysics.h"
 
@@ -60,6 +61,8 @@ void PanelDebug::Render()
 
 		float time_meshes = App->resources->time_loading_meshes;
 		ImGui::DragFloat("Time loading meshes:", &time_meshes);
+
+		ImGui::Checkbox("Disable UI rendering", &App->ui->disable_ui_render);
 
 	}
 	ImGui::End();

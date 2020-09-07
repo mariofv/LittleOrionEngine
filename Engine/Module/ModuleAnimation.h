@@ -1,6 +1,8 @@
 #ifndef _MODULEANIMATION_H_
 #define _MODULEANIMATION_H_
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Animation/Tween/LOTween.h"
 #include "Animation/Tween/TweenSequence.h"
