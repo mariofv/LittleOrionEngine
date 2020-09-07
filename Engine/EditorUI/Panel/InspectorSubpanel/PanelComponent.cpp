@@ -680,7 +680,7 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image)
 			component_image->SetTextureToRenderFromInspector(selected_resource);
 		}
 
-		ImGui::ColorEdit3("Color", component_image->color.ptr());
+		ImGui::ColorEdit4("Color", component_image->color.ptr());
 
 		ImGui::Checkbox("Preserve Aspect Ratio", &component_image->preserve_aspect_ratio);
 
