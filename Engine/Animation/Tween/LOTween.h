@@ -17,5 +17,6 @@ public:
 
 private:
 	std::vector<TweenSequence*> sequences;
+	const float MAX_TIME_ALLOWED = 1000.f;
 };
 #endif _LOTWEEN_H_
