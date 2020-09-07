@@ -22,6 +22,7 @@
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTrail.h"
+#include "Component/ComponentVideoPlayer.h"
 
 #include "EditorUI/Panel/PanelInspector.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelTransform.h"
@@ -182,7 +183,9 @@ void PanelGameObject::Render(GameObject* game_object)
 			case Component::ComponentType::UI_IMAGE:
 				component_panel.ShowComponentImageWindow(static_cast<ComponentImage*>(component));
 				break;
-
+			case Component::ComponentType::VIDEO_PLAYER:
+				component_panel.ShowComponentVideoPlayerWindow(static_cast<ComponentVideoPlayer*>(component));
+				break;
 			case Component::ComponentType::UI_SPRITE_MASK:
 				component_panel.ShowComponentSpriteMaskWindow(static_cast<ComponentSpriteMask*>(component));
 				break;
@@ -210,7 +213,6 @@ void PanelGameObject::Render(GameObject* game_object)
 			case Component::ComponentType::AUDIO_LISTENER:
 				component_panel.ShowComponentAudioListenerWindow(static_cast<ComponentAudioListener*>(component));
 				break;
-
 			default:
 				break;
 		}

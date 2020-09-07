@@ -16,10 +16,7 @@ public:
 	SkeletonImporter() : Importer(ResourceType::SKELETON) {};
 	~SkeletonImporter() = default;
 
-	FileData ExtractData(Path& assets_file_path, const Metafile& metafile) const override;
 	FileData ExtractSkeletonFromAssimp(const aiScene* scene, const aiMesh* mesh, float unit_scale_factor, bool complex_skeleton) const;
-
-
 
 private:
 	FileData CreateBinary(const Skeleton & skeleton) const;

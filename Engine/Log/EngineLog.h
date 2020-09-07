@@ -1,7 +1,9 @@
 #ifndef _ENGINELOG_H_
 #define _ENGINELOG_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Log/EngineSink.h"
 #include "Main/Globals.h"

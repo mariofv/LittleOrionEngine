@@ -610,70 +610,72 @@ void ModuleDebugDraw::RenderOutline() const
 {
 	BROFILER_CATEGORY("Render Outline", Profiler::Color::Lavender);
 
-	GameObject* selected_game_object = App->editor->selected_game_object;
-	Component* selected_object_mesh_component = selected_game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
+	for (auto selected_game_object : App->editor->selected_game_objects) {
 
-	if (selected_object_mesh_component != nullptr && selected_object_mesh_component->IsEnabled())
-	{
-		BROFILER_CATEGORY("Render Outline Write Stencil", Profiler::Color::Lavender);
+		Component* selected_object_mesh_component = selected_game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
 
-		ComponentMeshRenderer* selected_object_mesh = static_cast<ComponentMeshRenderer*>(selected_object_mesh_component);
-		if (!selected_object_mesh->mesh_to_render)
+		if (selected_object_mesh_component != nullptr && selected_object_mesh_component->IsEnabled())
 		{
-			return;
+			BROFILER_CATEGORY("Render Outline Write Stencil", Profiler::Color::Lavender);
+
+			ComponentMeshRenderer* selected_object_mesh = static_cast<ComponentMeshRenderer*>(selected_object_mesh_component);
+			if (!selected_object_mesh->mesh_to_render)
+			{
+				return;
+			}
+			glEnable(GL_STENCIL_TEST);
+			glStencilFunc(GL_ALWAYS, 1, 0xFF);
+			glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
+			glStencilMask(0xFF);
+
+			selected_object_mesh->Render();
+
+			glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+			glStencilMask(0x00);
+			glDisable(GL_DEPTH_TEST);
+
+			BROFILER_CATEGORY("Render Outline Read Stencil", Profiler::Color::Lavender);
+
+			GLuint outline_shader_program = App->program->UseProgram("Outline");
+			float4x4 new_transformation_matrix;
+			if (selected_game_object->parent != nullptr)
+			{
+				new_transformation_matrix = selected_game_object->parent->transform.GetGlobalModelMatrix() * selected_game_object->transform.GetModelMatrix() * float4x4::Scale(float3(1.01f));
+
+				ComponentTransform object_transform_copy = selected_game_object->transform;
+				float3 object_scale = object_transform_copy.GetScale();
+				object_transform_copy.SetScale(object_scale*1.01f);
+				object_transform_copy.GenerateGlobalModelMatrix();
+			}
+			else
+			{
+				new_transformation_matrix = selected_game_object->transform.GetGlobalModelMatrix() * float4x4::Scale(float3(1.01f));
+			}
+
+
+			ModuleRender::DrawMode last_draw_mode = App->renderer->draw_mode;
+			App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
+			glLineWidth(15.f);
+
+			glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+			glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), selected_game_object->transform.GetGlobalModelMatrix().Transposed().ptr());
+			glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+			float color[4] = { 1.0, 0.4, 0.0, 1.0 };
+			glUniform4fv(glGetUniformLocation(outline_shader_program, "base_color"), 1, color);
+
+			selected_object_mesh->RenderModel();
+
+			glLineWidth(1.f);
+			App->renderer->SetDrawMode(last_draw_mode);
+
+			glStencilMask(0xFF);
+			glEnable(GL_DEPTH_TEST);
+			glDisable(GL_STENCIL_TEST);
+
+			glUseProgram(0);
+
 		}
-		glEnable(GL_STENCIL_TEST);
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
-		glStencilMask(0xFF);
-
-		selected_object_mesh->Render();
-
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
-		glDisable(GL_DEPTH_TEST);
-
-		BROFILER_CATEGORY("Render Outline Read Stencil", Profiler::Color::Lavender);
-
-		GLuint outline_shader_program = App->program->UseProgram("Outline");
-		float4x4 new_transformation_matrix;
-		if (selected_game_object->parent != nullptr)
-		{
-			new_transformation_matrix = selected_game_object->parent->transform.GetGlobalModelMatrix() * selected_game_object->transform.GetModelMatrix() * float4x4::Scale(float3(1.01f));
-
-			ComponentTransform object_transform_copy = selected_game_object->transform;
-			float3 object_scale = object_transform_copy.GetScale();
-			object_transform_copy.SetScale(object_scale*1.01f);
-			object_transform_copy.GenerateGlobalModelMatrix();
-		}
-		else 
-		{
-			new_transformation_matrix =  selected_game_object->transform.GetGlobalModelMatrix() * float4x4::Scale(float3(1.01f));
-		}
-
-		
-		ModuleRender::DrawMode last_draw_mode = App->renderer->draw_mode;
-		App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
-		glLineWidth(15.f);
-
-		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), selected_game_object->transform.GetGlobalModelMatrix().Transposed().ptr());
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-		float color[4] = { 1.0, 0.4, 0.0, 1.0 };
-		glUniform4fv(glGetUniformLocation(outline_shader_program, "base_color"), 1, color);
-
-		selected_object_mesh->RenderModel();
-
-		glLineWidth(1.f);
-		App->renderer->SetDrawMode(last_draw_mode);
-
-		glStencilMask(0xFF);
-		glEnable(GL_DEPTH_TEST);
-		glDisable(GL_STENCIL_TEST);
-
-		glUseProgram(0);
-
 	}
 }
 

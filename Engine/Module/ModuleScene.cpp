@@ -550,3 +550,40 @@ void ModuleScene::StopSceneTimer()
 	APP_LOG_INFO("TOTAL TIME LOADING SCENE: %.3f", timer.Stop());
 }
 
+bool ModuleScene::HasParent(GameObject* go) const
+{
+	if (go->GetHierarchyDepth() == 1)
+	{
+		return false;
+	}
+
+	int depth = go->GetHierarchyDepth();
+
+	GameObject* game_object = game_object;
+
+	while (depth >= 2)
+	{
+		if (BelongsToList(game_object->parent))
+		{
+			return true;
+
+		}
+		game_object = game_object->parent;
+		depth = depth - 1;
+	}
+
+	return false;
+}
+
+bool ModuleScene::BelongsToList(GameObject* go) const
+{
+	for (auto game_object : App->editor->selected_game_objects)
+	{
+		if (game_object->UUID == go->UUID)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
