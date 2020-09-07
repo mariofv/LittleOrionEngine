@@ -36,7 +36,7 @@ update_status ModuleScriptManager::Update()
 		for (size_t i = 0; i < scripts.size(); ++i)
 		{
 			BROFILER_CATEGORY("AwakeScript", Profiler::Color::CadetBlue);
-			if (!scripts[i]->awaken)
+			if (scripts[i]->active && !scripts[i]->awaken)
 			{
 				scripts[i]->AwakeScript();
 			}
@@ -45,7 +45,7 @@ update_status ModuleScriptManager::Update()
 		for (size_t i = 0; i < scripts.size(); ++i)
 		{
 			BROFILER_CATEGORY("StartScript", Profiler::Color::DeepSkyBlue);
-			if (scripts[i]->awaken && !scripts[i]->started)
+			if (scripts[i]->active && scripts[i]->awaken && !scripts[i]->started)
 			{
 				scripts[i]->StartScript();
 			}
