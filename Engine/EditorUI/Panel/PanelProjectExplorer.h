@@ -47,6 +47,7 @@ private:
 	void ShowMetafileIcon(Metafile* metafile);
 
 	size_t GetResourcePreviewImage(uint32_t uuid);
+	void ShowSearchedFiles();
 
 private:
 	float file_size_width = 100.f;
@@ -58,6 +59,8 @@ private:
 	ImGuiID project_explorer_dockspace_id;
 
 	std::unordered_map<uint32_t,std::shared_ptr<Texture>> project_explorer_icon_cache;
+
+	std::vector<Path*> searching_file_paths;
 public:
 	ModelMetafile* opened_model = nullptr;
 	std::string searching_file;

@@ -46,7 +46,7 @@ void PanelProjectExplorer::Render()
 		ImGui::Text(ICON_FA_SEARCH);
 
 		ImGui::SameLine();
-		ImGui::InputText("###File Searching Input", &searching_file);
+		bool text_changed = ImGui::InputText("###File Searching Input", &searching_file);
 
 		project_explorer_dockspace_id = ImGui::GetID("ProjectExplorerDockspace");
 		bool initialized = ImGui::DockBuilderGetNode(project_explorer_dockspace_id) != NULL;
@@ -74,13 +74,19 @@ void PanelProjectExplorer::Render()
 		{
 			ImGui::BeginChild("Project File Explorer Drop Target");
 			hovered = ImGui::IsWindowHovered() ? true : hovered;
+			if(text_changed)
+			{
+				//Recompute searchfilepaths
+				searching_file_paths.clear();
+				SearchFilesInExplorer(App->filesystem->assets_folder_path);
+			}
 			if (searching_file == "")
 			{
 				ShowFilesInExplorer();
 			}
 			else
 			{
-				SearchFilesInExplorer(App->filesystem->assets_folder_path);
+				ShowSearchedFiles();
 			}
 			ImGui::EndChild();
 			FilesDrop();
@@ -246,34 +252,13 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 void PanelProjectExplorer::SearchFilesInExplorer(Path* path)
 {
 	transform(searching_file.begin(), searching_file.end(), searching_file.begin(), ::tolower);
-	ImVec2 available_region = ImGui::GetContentRegionAvail();
-	int files_per_line = static_cast<int>(available_region.x / file_size_width);
-
-	int current_line = 0;
-	int current_file_in_line = 0;
-
 	for (auto & child_path : path->children)
 	{
 		std::string name = child_path->GetFilename();
 		transform(name.begin(), name.end(), name.begin(), ::tolower);
 		if (child_path != nullptr && child_path->IsMeta() && name.find(searching_file) != std::string::npos)
 		{
-			ImGui::PushID(current_line * files_per_line + current_file_in_line);
-			Metafile* metafile = App->resources->metafile_manager->GetMetafile(*child_path);
-			std::string filename = child_path->GetFilenameWithoutExtension();
-			ShowMetafile(child_path, metafile, filename);
-			ImGui::PopID();
-			CalculateNextLinePosition(current_file_in_line, files_per_line, current_line);
-			if (opened_model && metafile->uuid == opened_model->uuid)
-			{
-				for (auto & meta : opened_model->nodes)
-				{
-					ImGui::PushID(meta->resource_name.c_str());
-					ShowMetafile(App->filesystem->GetPath(meta->exported_file_path), meta.get(), meta->resource_name);
-					ImGui::PopID();
-					CalculateNextLinePosition(current_file_in_line, files_per_line, current_line);
-				}
-			}
+			searching_file_paths.emplace_back(child_path);
 		}
 		if (child_path->IsDirectory())
 		{
@@ -424,6 +409,35 @@ size_t PanelProjectExplorer::GetResourcePreviewImage(uint32_t uuid)
 	}
 
 	return opengl_id;
+}
+
+void PanelProjectExplorer::ShowSearchedFiles()
+{
+	ImVec2 available_region = ImGui::GetContentRegionAvail();
+	int files_per_line = static_cast<int>(available_region.x / file_size_width);
+
+	int current_line = 0;
+	int current_file_in_line = 0;
+
+	for(auto& path : searching_file_paths)
+	{
+		ImGui::PushID(current_line * files_per_line + current_file_in_line);
+		Metafile* metafile = App->resources->metafile_manager->GetMetafile(*path);
+		std::string filename = path->GetFilenameWithoutExtension();
+		ShowMetafile(path, metafile, filename);
+		ImGui::PopID();
+		CalculateNextLinePosition(current_file_in_line, files_per_line, current_line);
+		if (opened_model && metafile->uuid == opened_model->uuid)
+		{
+			for (auto & meta : opened_model->nodes)
+			{
+				ImGui::PushID(meta->resource_name.c_str());
+				ShowMetafile(App->filesystem->GetPath(meta->exported_file_path), meta.get(), meta->resource_name);
+				ImGui::PopID();
+				CalculateNextLinePosition(current_file_in_line, files_per_line, current_line);
+			}
+		}
+	}
 }
 
 void PanelProjectExplorer::ResourceDragSource(const Metafile* metafile) const
