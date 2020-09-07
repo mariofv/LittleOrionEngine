@@ -1,7 +1,10 @@
 #ifndef _MODULESPACEPARTITIONING_H_
 #define _MODULESPACEPARTITIONING_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
+
 
 #include "Module.h"
 

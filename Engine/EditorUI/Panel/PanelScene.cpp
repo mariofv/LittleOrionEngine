@@ -168,6 +168,7 @@ void PanelScene::RenderEditorDraws()
 void PanelScene::RenderGizmo()
 {
 	ComponentTransform* selected_object_transform = nullptr;
+
 	if (App->editor->selected_game_object->GetTransformType() == Component::ComponentType::TRANSFORM)
 	{
 		selected_object_transform = &App->editor->selected_game_object->transform;
@@ -211,8 +212,63 @@ void PanelScene::RenderGizmo()
 	scene_camera_gizmo_hovered = ImGuizmo::IsOver();
 	if (ImGuizmo::IsUsing())
 	{
+		float3 prev_transform = float3::zero;
+		float3 translation_vector = float3::zero;
+		float3 scale_factor = float3::one;
+		float3 prev_rotation = float3::zero;
+		float3 rotation_factor = float3::zero;
+
+		prev_transform = selected_object_transform->GetTranslation();
+		prev_rotation = selected_object_transform->GetRotationRadiants();
+
+		float3 prev_scale = float3::one;
+		prev_scale = selected_object_transform->GetScale();
+
 		gizmo_released = true;
 		selected_object_transform->SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
+		float3 new_position = selected_object_transform->GetTranslation();
+		float3 new_scale = selected_object_transform->GetScale();
+		float3 new_rotation = selected_object_transform->GetRotationRadiants();
+
+		scale_factor = new_scale.Div(prev_scale);
+		translation_vector = new_position - prev_transform;
+		
+		rotation_factor = new_rotation - prev_rotation;
+		
+		if (translation_vector.Length() > 0)
+		{
+			for (auto go : App->editor->selected_game_objects)
+			{
+				if (go->UUID != App->editor->selected_game_object->UUID && !App->scene->HasParent(go))
+				{
+					float3 trans = go->transform.GetTranslation();
+					trans = trans + translation_vector;
+					go->transform.SetTranslation(trans);
+				}
+			}
+		}
+		if (!scale_factor.Equals(float3::one))
+		{
+			for (auto go : App->editor->selected_game_objects)
+			{
+				if (go->UUID != App->editor->selected_game_object->UUID && !App->scene->HasParent(go))
+				{
+					go->transform.SetScale(go->transform.GetScale().Mul(scale_factor));
+				}
+			}
+		}
+
+		if (!rotation_factor.Equals(float3::zero))
+		{
+			for (auto go : App->editor->selected_game_objects)
+			{
+				if (go->UUID != App->editor->selected_game_object->UUID && !App->scene->HasParent(go))
+				{
+					float3 aux = go->transform.GetRotationRadiants() + rotation_factor;
+					go->transform.SetRotationRad(aux);
+				}
+			}
+		}
 		selected_object_transform->modified_by_user = true;
 	}
 	else if (gizmo_released)
@@ -222,15 +278,15 @@ void PanelScene::RenderGizmo()
 		switch (App->editor->gizmo_operation)
 		{
 		case ImGuizmo::TRANSLATE:
-			action_type = ModuleActions::UndoActionType::TRANSLATION;
+			action_type = ModuleActions::UndoActionType::MULTIPLE_TRANSLATION;
 			break;
 
 		case ImGuizmo::ROTATE:
-			action_type = ModuleActions::UndoActionType::ROTATION;
+			action_type = ModuleActions::UndoActionType::MULTIPLE_ROTATION;
 			break;
 
 		case ImGuizmo::SCALE:
-			action_type = ModuleActions::UndoActionType::SCALE;
+			action_type = ModuleActions::UndoActionType::MULTIPLE_SCALE;
 			break;
 
 		default:
@@ -310,6 +366,7 @@ void PanelScene::RenderDebugMetrics() const
 	ImGui::EndChild();
 }
 
+
 void PanelScene::MousePicking(const float2& mouse_position)
 {
 	if (scene_camera_gizmo_hovered)
@@ -320,7 +377,50 @@ void PanelScene::MousePicking(const float2& mouse_position)
 	LineSegment ray;
 	App->cameras->scene_camera->GetRay(mouse_position, ray);
 	RaycastHit* hit = App->renderer->GetRaycastIntersection(ray, App->cameras->scene_camera);
-	App->editor->selected_game_object = hit->game_object;
+
+	if (hit->game_object != nullptr)
+	{
+		control_key_down = true;
+	}
+	if (App->input->GetKeyUp(KeyCode::LeftControl))
+	{
+		control_key_down = false;
+	}
+	if (control_key_down && App->input->GetKey(KeyCode::LeftControl))
+	{
+		App->editor->selected_game_object = hit->game_object;
+		bool already_selected = false;
+		for (auto go : App->editor->selected_game_objects)
+		{
+			if ((go->UUID == hit->game_object->UUID))
+			{
+				already_selected = true;
+			}
+		}
+		if (!already_selected)
+		{
+			App->editor->selected_game_objects.push_back(hit->game_object);
+		}
+
+		control_key_down = false;
+	}
+	else
+	{
+		if (control_key_down)
+		{
+			App->editor->selected_game_object = hit->game_object;
+			App->editor->selected_game_objects.erase(App->editor->selected_game_objects.begin(), App->editor->selected_game_objects.end());
+			App->editor->selected_game_objects.push_back(hit->game_object);
+			control_key_down = false;
+		}
+		else
+		{
+			App->editor->selected_game_object = nullptr;
+			App->editor->selected_game_objects.erase(App->editor->selected_game_objects.begin(), App->editor->selected_game_objects.end());
+		}
+	}
+
+
 	delete(hit);
 }
 

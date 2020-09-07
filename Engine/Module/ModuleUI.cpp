@@ -8,13 +8,13 @@
 #include "Component/ComponentText.h"
 #include "Component/ComponentButton.h"
 
+
 #include "Log/EngineLog.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
 
 #include <algorithm>
 #include <Brofiler/Brofiler.h>
-#include <GL/glew.h>
 #include <SDL/SDL.h>
 
 
@@ -22,7 +22,7 @@
 bool ModuleUI::Init()
 {
 	APP_LOG_SECTION("************ Module UI Init ************");
-
+	quad = std::make_unique<Quad>();
 	return true;
 }
 

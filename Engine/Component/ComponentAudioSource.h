@@ -1,7 +1,10 @@
 #ifndef _COMPONENTAUDIOSOURCE_H_
 #define _COMPONENTAUDIOSOURCE_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
+
 
 #include "Component.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"

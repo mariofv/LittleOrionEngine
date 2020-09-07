@@ -128,6 +128,14 @@ void ComponentTransform::SetRotation(const float3& new_rotation)
 	OnTransformChange();
 }
 
+void ComponentTransform::SetRotationRad(const float3& rotation_radians)
+{
+	this->rotation_radians = rotation_radians;
+	rotation = math::Quat::FromEulerXYZ(rotation_radians.x, rotation_radians.y, rotation_radians.z);
+	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
+	OnTransformChange();
+}
+
 void ComponentTransform::SetRotation(const Quat& new_rotation)
 {
 	rotation = new_rotation;

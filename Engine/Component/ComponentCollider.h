@@ -1,7 +1,9 @@
 #ifndef _COMPONENTCOLLIDER_H
 #define _COMPONENTCOLLIDER_H
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Component.h"
 #include <bullet3/btBulletDynamicsCommon.h>

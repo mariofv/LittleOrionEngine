@@ -1,6 +1,8 @@
 #ifndef _TWEENSEQUENCE_H_
 #define _TWEENSEQUENCE_H_
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Animation/Tween/Tween.h"
 #include <vector>

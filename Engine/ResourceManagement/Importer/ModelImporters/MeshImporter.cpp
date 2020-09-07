@@ -7,11 +7,6 @@
 #include "Helper/Utils.h"
 #include <map>
 
-FileData MeshImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
-{
-	return assets_file_path.GetFile()->Load();
-}
-
 FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, float unit_scale_factor, uint32_t mesh_skeleton_uuid, bool animated_model) const
 {
 	FileData mesh_data{NULL, 0};
