@@ -9,10 +9,16 @@ class SoundBank : public Resource
 {
 public:
 	SoundBank(uint32_t uuid, const void* data, size_t image_size);
+	SoundBank(uint32_t uuid, const void* data, size_t image_size, std::vector<std::string> events);
 	~SoundBank();
 
+	void InitData(size_t data_size, const void* data);
+
+public:
+	std::vector<std::string> events;
+
 private:
-	AkBankID banck_id = 0;
+	AkBankID bank_id = 0;
 	AkGameObjectID game_obj = 0;
 	char * aligned_buffer;
 	char * cursor;
