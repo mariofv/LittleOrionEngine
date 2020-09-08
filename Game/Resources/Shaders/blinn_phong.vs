@@ -4,7 +4,7 @@ layout(location = 7) in vec2 vertex_uv1;
 layout(location = 2) in vec3 vertex_normal;
 layout(location = 3) in vec3 vertex_tangent;
 layout(location = 4) in uvec4 vertex_joints;
-layout(location = 5) in vec3 vertex_weights;
+layout(location = 5) in vec4 vertex_weights;
 layout(location = 6) in uint vertex_num_joints;
 
 
