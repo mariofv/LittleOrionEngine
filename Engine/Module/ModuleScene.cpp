@@ -206,9 +206,8 @@ bool ModuleScene::HasParentInList(GameObject * go, std::vector<GameObject*> game
 GameObject* ModuleScene::DuplicateGO(GameObject* game_object, GameObject* parent_go)
 {
 	std::unique_ptr<GameObject> aux_copy_pointer = std::make_unique<GameObject>();
-	aux_copy_pointer.get()->Duplicate(*game_object);
 	GameObject* duplicated_go = App->scene->AddGameObject(aux_copy_pointer);
-	duplicated_go->SetParent(parent_go);
+	duplicated_go->Duplicate(*game_object, parent_go);
 	duplicated_go->name += "(1)";
 
 	if (game_object->is_prefab_parent)
@@ -548,5 +547,42 @@ bool ModuleScene::CurrentSceneIsSaved() const
 void ModuleScene::StopSceneTimer()
 {
 	APP_LOG_INFO("TOTAL TIME LOADING SCENE: %.3f", timer.Stop());
+}
+
+bool ModuleScene::HasParent(GameObject* go) const
+{
+	if (go->GetHierarchyDepth() == 1)
+	{
+		return false;
+	}
+
+	int depth = go->GetHierarchyDepth();
+
+	GameObject* game_object = game_object;
+
+	while (depth >= 2)
+	{
+		if (BelongsToList(game_object->parent))
+		{
+			return true;
+
+		}
+		game_object = game_object->parent;
+		depth = depth - 1;
+	}
+
+	return false;
+}
+
+bool ModuleScene::BelongsToList(GameObject* go) const
+{
+	for (auto game_object : App->editor->selected_game_objects)
+	{
+		if (game_object->UUID == go->UUID)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 

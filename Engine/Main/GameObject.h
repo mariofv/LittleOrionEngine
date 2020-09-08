@@ -1,7 +1,9 @@
 #ifndef _GAMEOBJECT_H_
 #define _GAMEOBJECT_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Globals.h"
 #include "Component/Component.h"
@@ -32,7 +34,7 @@ public:
 	void CopyParameters(const GameObject & gameobject_to_copy);
 	GameObject& operator=(GameObject&& gameobject_to_move) = default;
 
-	void Duplicate(const GameObject& gameobject_to_copy);
+	void Duplicate(const GameObject& gameobject_to_copy, GameObject* parent);
 
 	void SetTransform(GameObject* game_object);
 

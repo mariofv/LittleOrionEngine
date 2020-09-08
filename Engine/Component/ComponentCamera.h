@@ -1,7 +1,9 @@
 #ifndef _COMPONENTCAMERA_H_
 #define _COMPONENTCAMERA_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Component.h"
 #include "Component/ComponentAABB.h"

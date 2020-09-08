@@ -53,6 +53,7 @@ void ComponentAudioSource::Delete()
 void ComponentAudioSource::SetSoundBank(uint32_t uuid)
 {
 	soundbank = App->resources->Load<SoundBank>(uuid);
+	selected_event = -1;
 }
 
 void ComponentAudioSource::SetVolume(float volume)
@@ -77,6 +78,23 @@ unsigned long ComponentAudioSource::PlayEvent(const std::string & event_to_play)
 	return playing_id;
 }
 
+unsigned long ComponentAudioSource::PlayAwake()
+{
+	if (!play_on_awake || selected_event == -1)
+	{
+		return 0;
+	}
+	std::string event_to_play = soundbank->events[selected_event];
+	AkPlayingID playing_id = AK::SoundEngine::PostEvent(event_to_play.c_str(), gameobject_source);
+	if (playing_id == AK_INVALID_PLAYING_ID)
+	{
+		APP_LOG_ERROR("Unable to post main event");
+	}
+	AkUInt32 event_id = AK::SoundEngine::GetIDFromString(event_to_play.c_str());
+	event_playing_ids[event_id] = playing_id;
+	return playing_id;
+}
+
 void ComponentAudioSource::StopEvent(const std::string & event_to_stop)
 {
 	AkUInt32 event_id = AK::SoundEngine::GetIDFromString(event_to_stop.c_str());
@@ -84,6 +102,15 @@ void ComponentAudioSource::StopEvent(const std::string & event_to_stop)
 	{
 		StopEvent(event_playing_ids[event_id]);
 	}
+}
+
+void ComponentAudioSource::StopSelectedEvent()
+{
+	if (selected_event != -1)
+	{
+		StopEvent(soundbank->events[selected_event].c_str());
+	}
+	
 }
 
 void ComponentAudioSource::StopEvent(unsigned long playing_id_to_stop)
@@ -128,7 +155,7 @@ void ComponentAudioSource::SpecializedSave(Config& config) const
 	config.AddUInt(soundbank_uuid, "SoundBank");
 	config.AddBool(sound_3d, "3DSound");
 	config.AddBool(play_on_awake, "PlayOnAwake");
-	config.AddString(awake_event, "AwakeEvent");
+	config.AddInt(selected_event, "AwakeEvent");
 }
 
 void ComponentAudioSource::SpecializedLoad(const Config& config)
@@ -136,7 +163,6 @@ void ComponentAudioSource::SpecializedLoad(const Config& config)
 	volume = config.GetFloat("Volume", 1);
 	sound_3d = config.GetBool("3DSound", false);
 	play_on_awake = config.GetBool("PlayOnAwake", false);
-	config.GetString("AwakeEvent", awake_event, "");
 
 	uint32_t soundbank_uuid = config.GetUInt32("SoundBank", 0);
 	if (soundbank_uuid != 0)
@@ -144,6 +170,7 @@ void ComponentAudioSource::SpecializedLoad(const Config& config)
 		SetSoundBank(soundbank_uuid);
 	}
 	SetVolume(volume);
+	selected_event = config.GetInt("AwakeEventIndex", -1);
 }
 
 void ComponentAudioSource::Disable() 
@@ -168,4 +195,16 @@ void ComponentAudioSource::Enable()
 void ComponentAudioSource::SetListener(const AkGameObjectID listener_AkId)
 {
 	AK::SoundEngine::SetListeners(gameobject_source, &listener_AkId, 1);
+}
+
+std::string ComponentAudioSource::GetEventName() const
+{
+	if (selected_event != -1)
+	{
+		return soundbank->events[selected_event];
+	}
+	else
+	{
+		return "";
+	}
 }

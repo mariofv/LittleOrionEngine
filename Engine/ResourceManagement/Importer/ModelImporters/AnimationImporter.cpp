@@ -9,11 +9,6 @@
 #include <cmath>
 #include <map>
 
-FileData AnimationImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
-{
-	return assets_file_path.GetFile()->Load();
-}
-
 FileData AnimationImporter::ExtractAnimationFromAssimp(const aiScene* scene, const aiAnimation* animation, float unit_scale_factor) const
 {
 	Animation own_format_animation;
