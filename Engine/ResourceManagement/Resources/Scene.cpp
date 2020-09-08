@@ -85,6 +85,13 @@ void Scene::Save(GameObject* gameobject_to_save) const
 
 	scene_config.AddFloat(App->lights->ambient_light_intensity, "Ambiental Light Intensity");
 	scene_config.AddColor(float4(App->lights->ambient_light_color), "Ambiental Light Color");
+	scene_config.AddBool(App->renderer->hdr_active, "HDR");
+	scene_config.AddBool(App->renderer->bloom, "Bloom");
+	scene_config.AddInt(App->renderer->amount_of_blur, "Amount of Blur");
+	scene_config.AddInt(App->renderer->exposure, "Exposure");
+	scene_config.AddInt(App->renderer->emisive_exposure, "Exposure of Bloom");
+
+
 }
 
 void Scene::Load(bool from_file)
@@ -166,6 +173,11 @@ void Scene::Load(bool from_file)
 	App->lights->ambient_light_color[2] = ambiental_light_color.z;
 	App->lights->ambient_light_color[3] = ambiental_light_color.w;
 
+	App->renderer->hdr_active = scene_config.GetBool("HDR",false);
+	App->renderer->bloom = scene_config.GetBool("Bloom",false);
+	App->renderer->amount_of_blur = scene_config.GetInt("Amount of Blur", 10);
+	App->renderer->exposure = scene_config.GetInt("Exposure", 1);
+	App->renderer->emisive_exposure = scene_config.GetInt("Exposure of Bloom", 2);
 	App->scripts->ReLink();
 	App->animations->UpdateAnimationMeshes();
 }

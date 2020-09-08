@@ -184,6 +184,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	num_rendered_tris = 0;
 	num_rendered_verts = 0;
 
+	
 	GetMeshesToRender(&camera);
 	for (auto &mesh : opaque_mesh_to_render)
 	{
@@ -226,6 +227,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	
 	App->effects->Render();
 	RenderPostProcessingEffects(camera);
+	
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
 	
@@ -553,9 +555,9 @@ void ModuleRender::RenderPostProcessingEffects(const ComponentCamera &camera)
 	{
 		horizontal = true;
 		bool first_iteration = true;
-		int amount = 10;
+	
 		GLuint blur = App->program->UseProgram("Blur", 0);
-		for (unsigned int i = 0; i < amount; i++)
+		for (unsigned int i = 0; i < amount_of_blur; i++)
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, camera.pingpongFBO[horizontal]);
 			glUniform1f(glGetUniformLocation(blur, "horizontal"), horizontal);

@@ -269,11 +269,6 @@ void PanelConfiguration::ShowRenderOptions()
 		if (ImGui::TreeNode("Post Processing"))
 		{
 			ImGui::Checkbox("HDR", &App->renderer->hdr_active);
-			ImGui::Checkbox("Bloom", &App->renderer->bloom);
-			if (App->renderer->bloom)
-			{
-				ImGui::DragFloat("Emisive exposure", &App->renderer->emisive_exposure);
-			}
 			if (ImGui::BeginCombo("Tonemapping Type", App->renderer->GetHDRType(App->renderer->hdr_type).c_str()))
 			{
 
@@ -295,6 +290,14 @@ void PanelConfiguration::ShowRenderOptions()
 			{
 				ImGui::DragFloat("Exposure", &App->renderer->exposure, 0.1f, 0.0f, 10.0f);
 			}
+			ImGui::Checkbox("Bloom", &App->renderer->bloom);
+			if (App->renderer->bloom)
+			{
+				ImGui::DragFloat("Emisive exposure", &App->renderer->emisive_exposure);
+				ImGui::DragInt("Blur of bloom", &App->renderer->amount_of_blur);
+
+			}
+			
 		}
 		ImGui::Separator();
 		HelpMarker("This settings have no visual impact, WIP.");

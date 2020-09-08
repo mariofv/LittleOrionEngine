@@ -1,5 +1,5 @@
 in vec2 frag_position;
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
 
 layout (std140) uniform Matrices
 {
