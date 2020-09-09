@@ -21,7 +21,6 @@ ComponentParticleSystem::ComponentParticleSystem(GameObject* owner) : Component(
 ComponentParticleSystem::~ComponentParticleSystem()
 {
 	delete billboard;
-	billboard = nullptr;
 }
 
 void ComponentParticleSystem::Init() 
@@ -160,7 +159,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	particle.time_passed = 0.0F;
 	particle.velocity_initial = particle.velocity_initial;
 
-	particle.geometric_space = float4x4::FromTRS(owner->transform.GetGlobalTranslation(), owner->transform.GetRotation(), float3::one);
+	particle.geometric_space = float4x4::FromTRS(owner->transform.GetGlobalTranslation(), owner->transform.GetGlobalRotation(), float3::one);
 	particle.inital_random_orbit = rand();
 }
 
@@ -345,10 +344,9 @@ unsigned int ComponentParticleSystem::GetParticlesSystemVariation()
 
 void ComponentParticleSystem::SpecializedSave(Config& config) const
 {
-
 	billboard->SpecializedSave(config);
 	config.AddInt(static_cast<int>(type_of_particle_system), "Type of particle system");
-	config.AddBool(loop, "Loop");
+	config.AddBool(loop, "EmissionLoop");
 	config.AddBool(active, "Active");
 	config.AddFloat(min_size_of_particle, "Max Size Particles");
 	config.AddFloat(max_size_of_particle, "Min Size Particles");
@@ -390,6 +388,11 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddBool(fade_between_colors, "Fade between Colors");
 	config.AddColor(color_to_fade, "Color to fade");
 	config.AddBool(orbit, "Orbit");
+
+	config.AddBool(velocity_over_time, "Velocity Random");
+	config.AddFloat(velocity_over_time_speed_modifier, "Velocity Speed First");
+	config.AddFloat(velocity_over_time_speed_modifier_second, "Velocity Speed Second");
+	
 }
 
 void ComponentParticleSystem::SpecializedLoad(const Config& config)
@@ -398,7 +401,7 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	billboard->SpecializedLoad(config);
 	type_of_particle_system = static_cast<TypeOfParticleSystem>(config.GetInt("Type of particle system", static_cast<int>(TypeOfParticleSystem::BOX)));
 	
-	loop = config.GetBool("Loop", true);
+	loop = config.GetBool("EmissionLoop", true);
 	min_size_of_particle = config.GetFloat("Max Size Particles", 0.2);
 	max_size_of_particle = config.GetFloat("Min Size Particles", 0.2);
 	config.GetFloat2("Particle Size", particles_size, float2(0.2f));
@@ -443,6 +446,10 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	config.GetColor("Color to fade", color_to_fade, float4::one);
 
 	orbit = config.GetBool("Orbit", false);
+
+	velocity_over_time = config.GetBool("Velocity Random", false);
+	velocity_over_time_speed_modifier = config.GetFloat("Velocity Speed First", 0.f);
+	velocity_over_time_speed_modifier_second = config.GetFloat("Velocity Speed Second", 0.f);
 }
 
 void ComponentParticleSystem::ReassignResource()
