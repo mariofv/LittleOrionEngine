@@ -76,20 +76,6 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 		particle.current_sprite_y = (rand() % static_cast<int>((max_tile_value - min_tile_value) + 1) + min_tile_value);
 	}
 
-	if (size_over_time)
-	{
-		particle.size = float2(min_size_of_particle);
-	}
-	else if (size_random)
-	{
-		float size = min_size_of_particle + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max_size_of_particle - min_size_of_particle)));
-		particle.size = float2(size);
-	}
-	else
-	{
-		particle.size = particles_size;
-	}
-
 	switch (type_of_particle_system)
 	{
 		case SPHERE:
@@ -135,6 +121,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	}
 
 	particle.velocity_initial.Normalize3();
+	particle.size = particles_size;
 	
 	particle.color = initial_color;
 	particle.life = particles_life_time * 1000;
@@ -356,11 +343,7 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddInt(static_cast<int>(type_of_particle_system), "Type of particle system");
 	config.AddBool(loop, "Loop Particles");
 	config.AddBool(active, "Active");
-	config.AddFloat(min_size_of_particle, "Max Size Particles");
-	config.AddFloat(max_size_of_particle, "Min Size Particles");
 	config.AddFloat2(particles_size, "Particle Size");
-	config.AddBool(size_random, "Size random");
-	config.AddBool(size_over_time, "Change size");
 	config.AddBool(tile_random, "Tile random");
 	config.AddFloat(max_tile_value, "Max Tile");
 	config.AddFloat(min_tile_value, "Min Tile");
@@ -401,6 +384,12 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(velocity_over_time_speed_modifier, "Velocity Initial");
 	config.AddFloat(velocity_over_time_speed_modifier_second, "Velocity Final");
 	vel_curve.SpecializedSave(config, "Velocity Curve");
+
+	config.AddBool(size_over_time, "Size Over Time");
+	config.AddInt(type_of_size_over_time, "Type of Size");
+	config.AddFloat(min_size_of_particle, "Max Size Particles");
+	config.AddFloat(max_size_of_particle, "Min Size Particles");
+	size_curve.SpecializedSave(config, "Size Curve");
 }
 
 void ComponentParticleSystem::SpecializedLoad(const Config& config)
@@ -409,12 +398,8 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	type_of_particle_system = static_cast<TypeOfParticleSystem>(config.GetInt("Type of particle system", static_cast<int>(TypeOfParticleSystem::BOX)));
 	
 	loop = config.GetBool("Loop Particles", true);
-	min_size_of_particle = config.GetFloat("Max Size Particles", 0.2);
-	max_size_of_particle = config.GetFloat("Min Size Particles", 0.2);
 	config.GetFloat2("Particle Size", particles_size, float2(0.2f));
-	size_random = config.GetBool("Size random", false);
 	tile_random = config.GetBool("Tile random", false);
-	size_over_time = config.GetBool("Change size", false);
 	max_tile_value = config.GetFloat("Max Tile", 0);
 	min_tile_value = config.GetFloat("Min Tile", 4);
 
@@ -457,8 +442,13 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	type_of_velocity_over_time = static_cast<TypeOfVelocityOverTime>(config.GetInt("Type of Velocity", TypeOfVelocityOverTime::VEL_CONSTANT));
 	velocity_over_time_speed_modifier = config.GetFloat("Velocity Initial", 1.0F);
 	velocity_over_time_speed_modifier_second = config.GetFloat("Velocity Final", 2.0F);
-
 	vel_curve.SpecializedLoad(config, "Velocity Curve");
+
+	size_over_time = config.GetBool("Size Over Time", false);
+	type_of_size_over_time = static_cast<TypeOfSizeOverTime>(config.GetInt("Type of Size", TypeOfSizeOverTime::SIZE_LINEAR));
+	min_size_of_particle = config.GetFloat("Max Size Particles", 1.0f);
+	max_size_of_particle = config.GetFloat("Min Size Particles", 1.0f);
+	size_curve.SpecializedLoad(config, "Size Curve");
 }
 
 void ComponentParticleSystem::ReassignResource()

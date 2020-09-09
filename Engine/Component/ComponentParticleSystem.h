@@ -146,12 +146,11 @@ public:
 	bool active = true;
 
 	//size
+	float2 particles_size = float2(0.2f);
 	bool size_over_time = false;
 	TypeOfSizeOverTime type_of_size_over_time = TypeOfSizeOverTime::SIZE_LINEAR;
 	float min_size_of_particle = 1.0f;
 	float max_size_of_particle = 1.0f;
-	float2 particles_size = float2(0.2f);
-	bool size_random = false;
 	BezierCurve size_curve;
 
 	bool tile_random = false;
