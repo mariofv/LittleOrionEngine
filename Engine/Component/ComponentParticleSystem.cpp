@@ -354,7 +354,7 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 {
 	billboard->SpecializedSave(config);
 	config.AddInt(static_cast<int>(type_of_particle_system), "Type of particle system");
-	config.AddBool(loop, "Loop");
+	config.AddBool(loop, "Loop Particles");
 	config.AddBool(active, "Active");
 	config.AddFloat(min_size_of_particle, "Max Size Particles");
 	config.AddFloat(max_size_of_particle, "Min Size Particles");
@@ -401,7 +401,6 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(velocity_over_time_speed_modifier, "Velocity Initial");
 	config.AddFloat(velocity_over_time_speed_modifier_second, "Velocity Final");
 	vel_curve.SpecializedSave(config, "Velocity Curve");
-	
 }
 
 void ComponentParticleSystem::SpecializedLoad(const Config& config)
@@ -409,7 +408,7 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	billboard->SpecializedLoad(config);
 	type_of_particle_system = static_cast<TypeOfParticleSystem>(config.GetInt("Type of particle system", static_cast<int>(TypeOfParticleSystem::BOX)));
 	
-	loop = config.GetBool("Loop", true);
+	loop = config.GetBool("Loop Particles", true);
 	min_size_of_particle = config.GetFloat("Max Size Particles", 0.2);
 	max_size_of_particle = config.GetFloat("Min Size Particles", 0.2);
 	config.GetFloat2("Particle Size", particles_size, float2(0.2f));
