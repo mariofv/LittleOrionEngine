@@ -41,6 +41,7 @@ void ComponentParticleSystem::Init()
 	}
 
 	vel_curve = BezierCurve();
+	size_curve = BezierCurve();
 }
 
 unsigned int ComponentParticleSystem::FirstUnusedParticle()
@@ -75,7 +76,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 		particle.current_sprite_y = (rand() % static_cast<int>((max_tile_value - min_tile_value) + 1) + min_tile_value);
 	}
 
-	if (change_size)
+	if (size_over_time)
 	{
 		particle.size = float2(min_size_of_particle);
 	}
@@ -143,6 +144,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	particle.geometric_space = float4x4::FromTRS(owner->transform.GetGlobalTranslation(), owner->transform.GetRotation(), float3::one);
 	particle.inital_random_orbit = rand();
 	particle.random_velocity_percentage = (float)rand() / RAND_MAX;
+	particle.random_size_percentage = (float)rand() / RAND_MAX;
 }
 
 void ComponentParticleSystem::Render()
@@ -224,22 +226,22 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	{
 		switch (type_of_velocity_over_time)
 		{
-		case CONSTANT:
+		case TypeOfVelocityOverTime::VEL_CONSTANT:
 			velocity *= velocity_over_time_speed_modifier;
 			break;
-		case LINEAR:
+		case TypeOfVelocityOverTime::VEL_LINEAR:
 		{
 			velocity *= velocity_over_time_speed_modifier;
-			float accel = (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * velocity_factor_mod / particles_life_time / 1000;
+			float accel = (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * velocity_factor_mod / particles_life_time * 0.001f;
 			acceleration += particle.velocity_initial * accel;
 			break;
 		}
-		case RANDOM_BETWEEN_TWO_CONSTANTS:
+		case TypeOfVelocityOverTime::VEL_RANDOM_BETWEEN_TWO_CONSTANTS:
 			velocity *= velocity_over_time_speed_modifier + (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * particle.random_velocity_percentage;
 			break;
-		case CURVE:
+		case TypeOfVelocityOverTime::VEL_CURVE:
 			velocity *= velocity_over_time_speed_modifier;
-			float curve_value = vel_curve.BezierValue(particle.time_passed / particles_life_time / 1000).y;
+			float curve_value = vel_curve.BezierValue(particle.time_passed / particles_life_time * 0.001f).y;
 			float vel_in_range = (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * curve_value + velocity_over_time_speed_modifier;
 			vel_curve_interpolated = particle.velocity_initial * vel_in_range * velocity_factor_mod;
 			break;
@@ -272,11 +274,26 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 		particle.color.z = tmp_color.z;
 	}
 
-	//size fade
-	if (change_size)
+	if (size_over_time)
 	{
-		float progress = particle.time_passed * 0.001f / size_change_speed;
-		particle.size = float2::Lerp(float2(min_size_of_particle), float2(max_size_of_particle), progress);
+		switch (type_of_size_over_time)
+		{
+		
+		case TypeOfSizeOverTime::SIZE_LINEAR:
+		{
+			float progress = particle.time_passed * 0.001f / particles_life_time;
+			particle.size = particles_size * ((max_size_of_particle - min_size_of_particle) * progress + min_size_of_particle);
+			break;
+		}
+		case TypeOfSizeOverTime::SIZE_RANDOM_BETWEEN_TWO_CONSTANTS:
+			particle.size = particles_size * ((max_size_of_particle - min_size_of_particle) * particle.random_size_percentage + 1);
+			break;
+		case TypeOfSizeOverTime::SIZE_CURVE:
+			float size_value = size_curve.BezierValue(particle.time_passed * 0.001f / particles_life_time).y;
+			float size_in_range = (max_size_of_particle - min_size_of_particle) * size_value + min_size_of_particle;
+			particle.size = particles_size * size_in_range;
+			break;
+		}
 	}
 
 	//animation 
@@ -339,7 +356,7 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(max_size_of_particle, "Min Size Particles");
 	config.AddFloat2(particles_size, "Particle Size");
 	config.AddBool(size_random, "Size random");
-	config.AddBool(change_size, "Change size");
+	config.AddBool(size_over_time, "Change size");
 	config.AddBool(tile_random, "Tile random");
 	config.AddFloat(max_tile_value, "Max Tile");
 	config.AddFloat(min_tile_value, "Min Tile");
@@ -370,7 +387,6 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddColor(initial_color, "Intial Color");
 	config.AddBool(fade, "Fade");
 	config.AddFloat(fade_time, "Fade Time");
-	config.AddFloat(size_change_speed, "Size Fade Time");
 	config.AddFloat(color_fade_time, "Color Fade Time");
 	config.AddBool(fade_between_colors, "Fade between Colors");
 	config.AddColor(color_to_fade, "Color to fade");
@@ -394,7 +410,7 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	config.GetFloat2("Particle Size", particles_size, float2(0.2f));
 	size_random = config.GetBool("Size random", false);
 	tile_random = config.GetBool("Tile random", false);
-	change_size = config.GetBool("Change size", false);
+	size_over_time = config.GetBool("Change size", false);
 	max_tile_value = config.GetFloat("Max Tile", 0);
 	min_tile_value = config.GetFloat("Min Tile", 4);
 
@@ -426,7 +442,6 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 
 	fade = config.GetBool("Fade", false);
 	fade_time = config.GetFloat("Fade Time", 1.0F);
-	size_change_speed = config.GetFloat("Fade Time", 1.0F);
 	color_fade_time = config.GetFloat("Color Fade Time", 1.0F);
 
 	fade_between_colors = config.GetBool("Fade between Colors", false);
@@ -435,7 +450,7 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	orbit = config.GetBool("Orbit", false);
 
 	velocity_over_time = config.GetBool("Velocity Over Time", false);
-	type_of_velocity_over_time = static_cast<TypeOfVelocityOverTime>(config.GetInt("Type of Velocity", CONSTANT));
+	type_of_velocity_over_time = static_cast<TypeOfVelocityOverTime>(config.GetInt("Type of Velocity", TypeOfVelocityOverTime::VEL_CONSTANT));
 	velocity_over_time_speed_modifier = config.GetFloat("Velocity Initial", 1.0F);
 	velocity_over_time_speed_modifier_second = config.GetFloat("Velocity Final", 2.0F);
 

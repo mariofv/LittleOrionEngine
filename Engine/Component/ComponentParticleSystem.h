@@ -36,7 +36,7 @@ public:
 
 		float inital_random_orbit;
 		float random_velocity_percentage;
-		float float3;
+		float random_size_percentage;
 		float float4;
 		/*
 		if you add a parameter here you have to put the equivalent in the shader particles.vs
@@ -59,10 +59,17 @@ public:
 
 	enum TypeOfVelocityOverTime
 	{
-		CONSTANT,
-		LINEAR,
-		RANDOM_BETWEEN_TWO_CONSTANTS,
-		CURVE
+		VEL_CONSTANT,
+		VEL_LINEAR,
+		VEL_RANDOM_BETWEEN_TWO_CONSTANTS,
+		VEL_CURVE
+	};
+
+	enum TypeOfSizeOverTime
+	{
+		SIZE_LINEAR,
+		SIZE_RANDOM_BETWEEN_TWO_CONSTANTS,
+		SIZE_CURVE
 	};
 
 	ComponentParticleSystem();
@@ -138,12 +145,13 @@ public:
 	bool active = true;
 
 	//size
-	float min_size_of_particle = 0.2f;
-	float max_size_of_particle = 0.2f;
+	bool size_over_time = false;
+	TypeOfSizeOverTime type_of_size_over_time = TypeOfSizeOverTime::SIZE_LINEAR;
+	float min_size_of_particle = 1.0f;
+	float max_size_of_particle = 1.0f;
 	float2 particles_size = float2(0.2f);
 	bool size_random = false;
-	bool change_size = false;
-	float size_change_speed = 1.0F;
+	BezierCurve size_curve;
 
 	bool tile_random = false;
 
@@ -182,7 +190,7 @@ public:
 
 	//Velocity over time
 	bool velocity_over_time = false;
-	TypeOfVelocityOverTime type_of_velocity_over_time = CONSTANT;
+	TypeOfVelocityOverTime type_of_velocity_over_time = TypeOfVelocityOverTime::VEL_CONSTANT;
 	float velocity_over_time_speed_modifier = 1.0F;
 	float velocity_over_time_speed_modifier_second = 2.0F;
 	BezierCurve vel_curve;
