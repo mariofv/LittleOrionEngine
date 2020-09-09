@@ -199,6 +199,8 @@ public:
 	GLuint ssbo;
 	GLuint shader_program;
 
+	int x;
+
 };
 
 #endif
