@@ -182,9 +182,12 @@ void ComponentParticleSystem::Update()
 
 		if (time_counter >= (time_between_particles * 1000))
 		{
-			int unused_particle = FirstUnusedParticle();
-			RespawnParticle(particles[unused_particle]);
-			time_counter = 0.0F;
+			if (loop)
+			{
+				int unused_particle = FirstUnusedParticle();
+				RespawnParticle(particles[unused_particle]);
+				time_counter = 0.0F;
+			}
 		}
 
 		CalculateGravityVector();
@@ -351,6 +354,7 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 {
 	billboard->SpecializedSave(config);
 	config.AddInt(static_cast<int>(type_of_particle_system), "Type of particle system");
+	config.AddBool(loop, "Loop");
 	config.AddBool(active, "Active");
 	config.AddFloat(min_size_of_particle, "Max Size Particles");
 	config.AddFloat(max_size_of_particle, "Min Size Particles");
@@ -405,6 +409,7 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	billboard->SpecializedLoad(config);
 	type_of_particle_system = static_cast<TypeOfParticleSystem>(config.GetInt("Type of particle system", static_cast<int>(TypeOfParticleSystem::BOX)));
 	
+	loop = config.GetBool("Loop", true);
 	min_size_of_particle = config.GetFloat("Max Size Particles", 0.2);
 	max_size_of_particle = config.GetFloat("Min Size Particles", 0.2);
 	config.GetFloat2("Particle Size", particles_size, float2(0.2f));
