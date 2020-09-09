@@ -134,7 +134,6 @@ public:
 	float min_tile_value = 4;
 
 	//standard values
-	bool loop = true;
 	unsigned int last_used_particle = 0;
 	bool active = true;
 
