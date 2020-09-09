@@ -72,6 +72,13 @@ public:
 		SIZE_CURVE
 	};
 
+	enum TypeOfSizeColorChange
+	{
+		COLOR_NONE,
+		COLOR_LINEAR,
+		COLOR_CURVE
+	};
+
 	ComponentParticleSystem();
 	~ComponentParticleSystem();
 
@@ -179,10 +186,11 @@ public:
 	float outer_radius = 3.0F;
 	
 	//color
+	TypeOfSizeColorChange type_of_color_change = TypeOfSizeColorChange::COLOR_NONE;
 	float4 initial_color = float4::one;
-	bool fade_between_colors = false;
 	float4 color_to_fade = float4::one;;
 	float color_fade_time = 1.0F;
+	BezierCurve color_curve;
 
 	bool fade = false;
 	bool orbit = false;

@@ -22,9 +22,11 @@ BezierCurve::~BezierCurve()
 
 float2 BezierCurve::BezierValue(const float percentage) const
 {
-	//assert(percentage >= 0 && percentage <= 1);
-	if (percentage < 0 || percentage > 1)
-		return float2::zero;
+	if (percentage <= 0)
+		return points[0].curve_point;
+
+	if (percentage >= 1)
+		return points[num_points - 1].curve_point;
 
 	if (num_points == 2)
 	{

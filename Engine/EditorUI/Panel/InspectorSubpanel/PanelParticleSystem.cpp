@@ -226,26 +226,50 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		}
 
 		//Color of Particles
-
 		if (ImGui::CollapsingHeader("Color"))
 		{
 			particle_system->modified_by_user |= ImGui::ColorEdit4("Particle Color##2f", particle_system->initial_color.ptr(), ImGuiColorEditFlags_Float);
-			ImGui::Text("Fade Between Colors");
-			particle_system->modified_by_user |= ImGui::Checkbox("###Fade Between Colors", &particle_system->fade_between_colors);
-			ImGui::SameLine();
-			if (!particle_system->fade_between_colors)
+
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+
+			int color_fade_type = static_cast<int>(particle_system->type_of_color_change);
+			if (ImGui::Combo("Fade Between Colors", &color_fade_type, "None\0Linear\0Curve\0"))
 			{
-				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+				switch (color_fade_type)
+				{
+				case 0:
+					particle_system->type_of_color_change = ComponentParticleSystem::TypeOfSizeColorChange::COLOR_NONE;
+					particle_system->modified_by_user = true;
+					break;
+				case 1:
+					particle_system->type_of_color_change = ComponentParticleSystem::TypeOfSizeColorChange::COLOR_LINEAR;
+					particle_system->modified_by_user = true;
+					break;
+				case 2:
+					particle_system->type_of_color_change = ComponentParticleSystem::TypeOfSizeColorChange::COLOR_CURVE;
+					particle_system->modified_by_user = true;
+					break;
+				}
 			}
-			particle_system->modified_by_user |= ImGui::ColorEdit4("Particle Color To Fade##2f", particle_system->color_to_fade.ptr(), ImGuiColorEditFlags_Float);
-			particle_system->modified_by_user |= ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
-			if (!particle_system->fade_between_colors)
+
+			ImGui::Spacing();
+			switch (color_fade_type)
 			{
-				ImGui::PopItemFlag();
-				ImGui::PopStyleVar();
+			case ComponentParticleSystem::TypeOfSizeColorChange::COLOR_NONE:
+				break;
+			case ComponentParticleSystem::TypeOfSizeColorChange::COLOR_LINEAR:
+				particle_system->modified_by_user |= ImGui::ColorEdit4("Particle Color To Fade##2f", particle_system->color_to_fade.ptr(), ImGuiColorEditFlags_Float);
+				particle_system->modified_by_user |= ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
+				break;
+			case ComponentParticleSystem::TypeOfSizeColorChange::COLOR_CURVE:
+				particle_system->modified_by_user |= ImGui::ColorEdit4("Particle Color To Fade##2f", particle_system->color_to_fade.ptr(), ImGuiColorEditFlags_Float);
+				particle_system->modified_by_user |= ImGui::DrawBezierCubic(&particle_system->color_curve, ImVec2(0,1));
+				break;
 			}
 		}
+
 		//Velocity over time
 		ImGui::Checkbox("###Velocity over lifetime", &particle_system->velocity_over_time);
 		ImGui::SameLine();

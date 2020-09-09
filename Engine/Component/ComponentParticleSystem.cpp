@@ -42,6 +42,7 @@ void ComponentParticleSystem::Init()
 
 	vel_curve = BezierCurve();
 	size_curve = BezierCurve();
+	color_curve = BezierCurve();
 }
 
 unsigned int ComponentParticleSystem::FirstUnusedParticle()
@@ -255,15 +256,23 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	}
 
 	//fade color
-	if (fade_between_colors)
+	switch (type_of_color_change)
+	{
+	case TypeOfSizeColorChange::COLOR_NONE:
+		break;
+	case TypeOfSizeColorChange::COLOR_LINEAR:
 	{
 		float progress = particle.time_passed * 0.001f / color_fade_time;
-		float3 tmp_color = float3::Lerp(initial_color.xyz(), color_to_fade.xyz(), progress);
-		particle.color.x = tmp_color.x;
-		particle.color.y = tmp_color.y;
-		particle.color.z = tmp_color.z;
+		particle.color = float4::Lerp(initial_color, color_to_fade, progress);
+		break;
+	}
+	case TypeOfSizeColorChange::COLOR_CURVE:
+		float color_value = color_curve.BezierValue(particle.time_passed * 0.001f / particles_life_time).y;
+		particle.color = float4::Lerp(initial_color, color_to_fade, color_value);
+		break;
 	}
 
+	//size change
 	if (size_over_time)
 	{
 		switch (type_of_size_over_time)
@@ -371,12 +380,14 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(inner_radius, "Inner Radius");
 	config.AddFloat(outer_radius, "Outer Radius");
 
+	config.AddInt(type_of_color_change, "Type of Color Fade");
 	config.AddColor(initial_color, "Intial Color");
+	config.AddColor(color_to_fade, "Color to fade");
+	config.AddFloat(color_fade_time, "Color Fade Time");
+	color_curve.SpecializedSave(config, "Color Curve");
+
 	config.AddBool(fade, "Fade");
 	config.AddFloat(fade_time, "Fade Time");
-	config.AddFloat(color_fade_time, "Color Fade Time");
-	config.AddBool(fade_between_colors, "Fade between Colors");
-	config.AddColor(color_to_fade, "Color to fade");
 	config.AddBool(orbit, "Orbit");
 
 	config.AddBool(velocity_over_time, "Velocity Over Time");
@@ -426,16 +437,14 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	inner_radius = config.GetFloat("Inner Radius", 1.0F);
 	outer_radius = config.GetFloat("Outer Radius", 3.0F);
 
-	float4 color_aux;
+	type_of_color_change = static_cast<TypeOfSizeColorChange>(config.GetInt("Type of Color Fade", TypeOfSizeColorChange::COLOR_NONE));
 	config.GetColor("Intial Color", initial_color, float4::one);
+	config.GetColor("Color to fade", color_to_fade, float4::one);
+	color_fade_time = config.GetFloat("Color Fade Time", 1.0F);
+	color_curve.SpecializedLoad(config, "Color Curve");
 
 	fade = config.GetBool("Fade", false);
 	fade_time = config.GetFloat("Fade Time", 1.0F);
-	color_fade_time = config.GetFloat("Color Fade Time", 1.0F);
-
-	fade_between_colors = config.GetBool("Fade between Colors", false);
-	config.GetColor("Color to fade", color_to_fade, float4::one);
-
 	orbit = config.GetBool("Orbit", false);
 
 	velocity_over_time = config.GetBool("Velocity Over Time", false);
