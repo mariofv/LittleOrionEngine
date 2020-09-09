@@ -441,7 +441,7 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    543.58349609375,
+                    139.4315185546875,
                     -221.94293212890626
                 ],
                 "Rotation": [
@@ -477,7 +477,7 @@
                     "UUID": 345362801,
                     "ComponentType": 13,
                     "Active": true,
-                    "Text": "0",
+                    "Text": "100%",
                     "FontUUID": 17,
                     "FontSize": 140.0,
                     "FontColor": [
@@ -527,7 +527,7 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    317.9007568359375,
+                    -90.36279296875,
                     -221.583984375
                 ],
                 "Rotation": [
@@ -613,7 +613,7 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    184.937744140625,
+                    534.4189453125,
                     -218.798583984375
                 ],
                 "Rotation": [
@@ -697,7 +697,7 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    87.41357421875,
+                    431.89501953125,
                     -220.01364135742188
                 ],
                 "Rotation": [
@@ -781,7 +781,7 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    -7.231201171875,
+                    327.38763427734377,
                     -218.798583984375
                 ],
                 "Rotation": [
@@ -865,7 +865,7 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    -108.15103149414063,
+                    218.351806640625,
                     -220.01364135742188
                 ],
                 "Rotation": [
@@ -949,7 +949,7 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    -207.54461669921876,
+                    -218.05758666992188,
                     -218.798583984375
                 ],
                 "Rotation": [
@@ -1033,7 +1033,7 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    -304.6314697265625,
+                    -324.1640930175781,
                     -220.01364135742188
                 ],
                 "Rotation": [
@@ -1117,7 +1117,7 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    -509.4337463378906,
+                    -525.9724731445313,
                     -220.01364135742188
                 ],
                 "Rotation": [
@@ -1201,7 +1201,7 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    -406.3136291503906,
+                    -422.8521728515625,
                     -218.798583984375
                 ],
                 "Rotation": [
@@ -1248,6 +1248,92 @@
                 },
                 {
                     "UUID": 2851371229,
+                    "ComponentType": 10,
+                    "Active": true
+                }
+            ]
+        },
+        {
+            "UUID": 2213659947,
+            "ParentUUID": 1534107240,
+            "Name": "Hints",
+            "Tag": "",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3386856387,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    -334.4117431640625,
+                    107.411865234375,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2522585104,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    0.0,
+                    180.02499389648438
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    0.3499999940395355,
+                    0.3499999940395355,
+                    1.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    3142.0,
+                    520.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 1564696284,
+                    "ComponentType": 13,
+                    "Active": true,
+                    "Text": "Loading",
+                    "FontUUID": 17,
+                    "FontSize": 140.0,
+                    "FontColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "HorizontalAlignment": 1
+                },
+                {
+                    "UUID": 114190247,
                     "ComponentType": 10,
                     "Active": true
                 }
