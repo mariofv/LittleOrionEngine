@@ -95,7 +95,7 @@ void AnimController::UpdateAttachedBones(const std::shared_ptr<Skeleton>& skelet
 			{
 				const float4x4& new_model_matrix = pose[joint_index];
 				attached_bones.second->transform.SetTranslation(new_model_matrix.TranslatePart());
-				attached_bones.second->transform.SetRotation(new_model_matrix.TranslatePart());
+				attached_bones.second->transform.SetRotation(new_model_matrix.RotatePart());
 			}
 		}
 
