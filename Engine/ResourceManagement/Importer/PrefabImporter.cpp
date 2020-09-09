@@ -17,11 +17,6 @@
 
 #include <queue>
 
-FileData PrefabImporter::ExtractData(Path& file_path, const Metafile& metafile) const
-{
-	return file_path.GetFile()->Load();
-}
-
 FileData PrefabImporter::ExtractFromModel(const Config& model_config, const ModelMetafile& metafile, bool animated_model) const
 {
 	std::vector<std::unique_ptr<GameObject>> game_objects;

@@ -128,6 +128,14 @@ void ComponentTransform::SetRotation(const float3& new_rotation)
 	OnTransformChange();
 }
 
+void ComponentTransform::SetRotationRad(const float3& rotation_radians)
+{
+	this->rotation_radians = rotation_radians;
+	rotation = math::Quat::FromEulerXYZ(rotation_radians.x, rotation_radians.y, rotation_radians.z);
+	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
+	OnTransformChange();
+}
+
 void ComponentTransform::SetRotation(const Quat& new_rotation)
 {
 	rotation = new_rotation;
@@ -210,6 +218,21 @@ float3 ComponentTransform::GetFrontVector() const
 float3 ComponentTransform::GetRightVector() const
 {
 	return Cross(GetFrontVector(), GetUpVector());
+}
+
+ENGINE_API float3 ComponentTransform::GetGlobalUpVector() const
+{
+	return global_model_matrix.RotatePart() * float3::unitY;
+}
+
+ENGINE_API float3 ComponentTransform::GetGlobalFrontVector() const
+{
+	return global_model_matrix.RotatePart() * float3::unitZ;
+}
+
+ENGINE_API float3 ComponentTransform::GetGlobalRightVector() const
+{
+	return Cross(GetGlobalFrontVector(), GetGlobalUpVector());
 }
 
 void ComponentTransform::OnTransformChange()

@@ -1,7 +1,9 @@
 #ifndef _MODULEINPUT_H_
 #define _MODULEINPUT_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Module.h"
 #include "Main/Globals.h"

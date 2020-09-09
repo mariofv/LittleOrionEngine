@@ -1,7 +1,9 @@
 #ifndef _PANELTRANSFORM_H_
 #define _PANELTRANSFORM_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Module/ModuleActions.h"
 
