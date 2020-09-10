@@ -326,6 +326,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		{
 			return;
 		}
+
 		ImGui::Separator();
 
 		camera->modified_by_user |= ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly);
