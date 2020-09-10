@@ -559,6 +559,9 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Video.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="Viewport.cpp">
+      <Filter>Engine\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1107,6 +1110,9 @@
     <ClInclude Include="Engine\Helper\Quad.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
+    <ClInclude Include="Viewport.h">
+      <Filter>Engine\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -1210,6 +1216,9 @@
     </Filter>
     <Filter Include="Engine\Log">
       <UniqueIdentifier>{d22e17b5-e141-4631-a234-4cf691074a55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Rendering">
+      <UniqueIdentifier>{78aa80fc-bf92-45f7-930b-469a45d58e66}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -327,6 +327,7 @@
     <ClInclude Include="Engine\Helper\PerlinNoise.h" />
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.h" />
     <ClInclude Include="Engine\Helper\Quad.h" />
+    <ClInclude Include="Viewport.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Component\ComponentVideoPlayer.cpp" />
@@ -508,6 +509,7 @@
     <ClCompile Include="Engine\Helper\TagManager.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.cpp" />
     <ClCompile Include="Engine\Helper\Quad.cpp" />
+    <ClCompile Include="Viewport.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
