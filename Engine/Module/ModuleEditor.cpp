@@ -152,6 +152,7 @@ void ModuleEditor::Render()
 #if !GAME
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth(), App->window->GetHeight()));
+
 	if (ImGui::Begin("MainWindow", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBringToFrontOnFocus))
 	{
 		menu_bar->Render();
@@ -189,6 +190,12 @@ void ModuleEditor::RenderEditorDockspace()
 			{
 				panel->Render();
 			}
+		}
+
+
+		if (ImGui::Begin("Viewport", NULL))
+		{
+			ImGui::Text("Hello World!");
 		}
 	}
 	ImGui::EndChild();
