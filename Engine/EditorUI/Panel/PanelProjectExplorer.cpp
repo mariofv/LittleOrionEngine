@@ -46,7 +46,11 @@ void PanelProjectExplorer::Render()
 		ImGui::Text(ICON_FA_SEARCH);
 
 		ImGui::SameLine();
-		bool text_changed = ImGui::InputText("###File Searching Input", &searching_file);
+		if(ImGui::InputText("###File Searching Input", &searching_file))
+		{
+			searching_file_paths.clear();
+			SearchFilesInExplorer(App->filesystem->assets_folder_path);
+		}
 
 		project_explorer_dockspace_id = ImGui::GetID("ProjectExplorerDockspace");
 		bool initialized = ImGui::DockBuilderGetNode(project_explorer_dockspace_id) != NULL;
@@ -74,12 +78,6 @@ void PanelProjectExplorer::Render()
 		{
 			ImGui::BeginChild("Project File Explorer Drop Target");
 			hovered = ImGui::IsWindowHovered() ? true : hovered;
-			if(text_changed)
-			{
-				//Recompute searchfilepaths
-				searching_file_paths.clear();
-				SearchFilesInExplorer(App->filesystem->assets_folder_path);
-			}
 			if (searching_file == "")
 			{
 				ShowFilesInExplorer();
