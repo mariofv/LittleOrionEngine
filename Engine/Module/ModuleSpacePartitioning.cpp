@@ -29,21 +29,21 @@ void ModuleSpacePartitioning::GenerateQuadTree()
 	AABB2D global_AABB;
 	global_AABB.SetNegativeInfinity();
 
-	for (const auto& mesh : App->renderer->meshes)
+	for (const auto& mesh_renderer : App->renderer->mesh_renderers)
 	{
-		float minX = std::fmin(mesh->owner->aabb.bounding_box2D.minPoint.x, global_AABB.minPoint.x);
-		float minY = std::fmin(mesh->owner->aabb.bounding_box2D.minPoint.y, global_AABB.minPoint.y);
+		float minX = std::fmin(mesh_renderer->owner->aabb.bounding_box2D.minPoint.x, global_AABB.minPoint.x);
+		float minY = std::fmin(mesh_renderer->owner->aabb.bounding_box2D.minPoint.y, global_AABB.minPoint.y);
 
-		float maxX = std::fmax(mesh->owner->aabb.bounding_box2D.maxPoint.x, global_AABB.maxPoint.x);
-		float maxY = std::fmax(mesh->owner->aabb.bounding_box2D.maxPoint.y, global_AABB.maxPoint.y);
+		float maxX = std::fmax(mesh_renderer->owner->aabb.bounding_box2D.maxPoint.x, global_AABB.maxPoint.x);
+		float maxY = std::fmax(mesh_renderer->owner->aabb.bounding_box2D.maxPoint.y, global_AABB.maxPoint.y);
 		global_AABB.maxPoint = float2(maxX, maxY);
 		global_AABB.minPoint = float2(minX, minY);
 	}
 
 	ol_quadtree->Create(global_AABB);
-	for (const auto& mesh : App->renderer->meshes)
+	for (const auto& mesh_renderer : App->renderer->mesh_renderers)
 	{
-		ol_quadtree->Insert(*mesh->owner);
+		ol_quadtree->Insert(*mesh_renderer->owner);
 	}
 }
 
@@ -54,24 +54,24 @@ void ModuleSpacePartitioning::GenerateOctTree()
 	AABB global_AABB;
 	global_AABB.SetNegativeInfinity();
 
-	for (const auto& mesh : App->renderer->meshes)
+	for (const auto& mesh_renderer : App->renderer->mesh_renderers)
 	{
-		float minX = std::fmin(mesh->owner->aabb.bounding_box.minPoint.x, global_AABB.minPoint.x);
-		float minY = std::fmin(mesh->owner->aabb.bounding_box.minPoint.y, global_AABB.minPoint.y);
-		float minZ = std::fmin(mesh->owner->aabb.bounding_box.minPoint.z, global_AABB.minPoint.z);
+		float minX = std::fmin(mesh_renderer->owner->aabb.bounding_box.minPoint.x, global_AABB.minPoint.x);
+		float minY = std::fmin(mesh_renderer->owner->aabb.bounding_box.minPoint.y, global_AABB.minPoint.y);
+		float minZ = std::fmin(mesh_renderer->owner->aabb.bounding_box.minPoint.z, global_AABB.minPoint.z);
 
-		float maxX = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.x, global_AABB.maxPoint.x);
-		float maxY = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.y, global_AABB.maxPoint.y);
-		float maxZ = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.z, global_AABB.maxPoint.z);
+		float maxX = std::fmax(mesh_renderer->owner->aabb.bounding_box.maxPoint.x, global_AABB.maxPoint.x);
+		float maxY = std::fmax(mesh_renderer->owner->aabb.bounding_box.maxPoint.y, global_AABB.maxPoint.y);
+		float maxZ = std::fmax(mesh_renderer->owner->aabb.bounding_box.maxPoint.z, global_AABB.maxPoint.z);
 
 		global_AABB.maxPoint = float3(maxX, maxY, maxZ);
 		global_AABB.minPoint = float3(minX, minY, minZ);
 	}
 
 	ol_octtree->Create(global_AABB);
-	for (const auto&  mesh : App->renderer->meshes)
+	for (const auto&  mesh_renderer : App->renderer->mesh_renderers)
 	{
-		ol_octtree->Insert(*mesh->owner);
+		ol_octtree->Insert(*mesh_renderer->owner);
 	}
 }
 
@@ -129,8 +129,8 @@ void ModuleSpacePartitioning::GetCullingMeshes(const ComponentCamera * camera) c
 	{
 	case ModuleDebug::CullingMode::NONE:
 		std::copy_if(
-			App->renderer->meshes.begin(),
-			App->renderer->meshes.end(),
+			App->renderer->mesh_renderers.begin(),
+			App->renderer->mesh_renderers.end(),
 			std::back_inserter(App->renderer->meshes_to_render),
 			[camera](const auto& mesh)
 		{
@@ -143,8 +143,8 @@ void ModuleSpacePartitioning::GetCullingMeshes(const ComponentCamera * camera) c
 		if (camera != nullptr)
 		{
 			std::copy_if(
-				App->renderer->meshes.begin(),
-				App->renderer->meshes.end(),
+				App->renderer->mesh_renderers.begin(),
+				App->renderer->mesh_renderers.end(),
 				std::back_inserter(App->renderer->meshes_to_render),
 				[camera](const auto& mesh)
 			{
@@ -159,8 +159,8 @@ void ModuleSpacePartitioning::GetCullingMeshes(const ComponentCamera * camera) c
 		{
 			// First we get all non static objects inside frustum
 			std::copy_if(
-				App->renderer->meshes.begin(),
-				App->renderer->meshes.end(),
+				App->renderer->mesh_renderers.begin(),
+				App->renderer->mesh_renderers.end(),
 				std::back_inserter(App->renderer->meshes_to_render),
 				[camera](const auto& mesh)
 			{
@@ -185,8 +185,8 @@ void ModuleSpacePartitioning::GetCullingMeshes(const ComponentCamera * camera) c
 		{
 			// First we get all non static objects inside frustum
 			std::copy_if(
-				App->renderer->meshes.begin(),
-				App->renderer->meshes.end(),
+				App->renderer->mesh_renderers.begin(),
+				App->renderer->mesh_renderers.end(),
 				std::back_inserter(App->renderer->meshes_to_render),
 				[camera](const auto&  mesh)
 			{
@@ -211,8 +211,8 @@ void ModuleSpacePartitioning::GetCullingMeshes(const ComponentCamera * camera) c
 		{
 			// First we get all static objects inside frustum
 			std::copy_if(
-				App->renderer->meshes.begin(),
-				App->renderer->meshes.end(),
+				App->renderer->mesh_renderers.begin(),
+				App->renderer->mesh_renderers.end(),
 				std::back_inserter(App->renderer->meshes_to_render),
 				[camera](const auto& mesh)
 			{

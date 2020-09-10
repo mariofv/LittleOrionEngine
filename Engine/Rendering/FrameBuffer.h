@@ -12,6 +12,11 @@ public:
 	void GenerateAttachements(float width, float height);
 	void ClearAttachements();
 
+	void Bind() const;
+	void UnBind() const;
+
+	GLuint GetColorAttachement() const;
+
 private:
 	GLuint fbo = 0;
 	GLuint rbo = 0;

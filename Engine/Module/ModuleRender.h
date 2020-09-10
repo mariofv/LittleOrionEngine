@@ -132,7 +132,7 @@ private:
 	};
 	DrawMode draw_mode = DrawMode::SHADED;
 
-	std::vector<ComponentMeshRenderer*> meshes;
+	std::vector<ComponentMeshRenderer*> mesh_renderers;
 	std::vector<ComponentMeshRenderer*> meshes_to_render;
 
 	typedef std::pair<float, ComponentMeshRenderer*> ipair;
@@ -148,6 +148,7 @@ private:
 	friend class PanelConfiguration;
 	friend class PanelScene;
 	friend class NavMesh; 
+	friend class Viewport; 
 };
 
 #endif //_MODULERENDER_H_

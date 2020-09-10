@@ -455,16 +455,16 @@ void NavMesh::InitAABB()
 {
 	global_AABB.SetNegativeInfinity();
 
-	for (const auto& mesh : App->renderer->meshes)
+	for (const auto& mesh_renderer : App->renderer->mesh_renderers)
 	{
-		float minX = std::fmin(mesh->owner->aabb.bounding_box.minPoint.x, global_AABB.minPoint.x);
-		float minY = std::fmin(mesh->owner->aabb.bounding_box.minPoint.y, global_AABB.minPoint.y);
-		float minZ = std::fmin(mesh->owner->aabb.bounding_box.minPoint.z, global_AABB.minPoint.z);
+		float minX = std::fmin(mesh_renderer->owner->aabb.bounding_box.minPoint.x, global_AABB.minPoint.x);
+		float minY = std::fmin(mesh_renderer->owner->aabb.bounding_box.minPoint.y, global_AABB.minPoint.y);
+		float minZ = std::fmin(mesh_renderer->owner->aabb.bounding_box.minPoint.z, global_AABB.minPoint.z);
 
 
-		float maxX = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.x, global_AABB.maxPoint.x);
-		float maxY = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.y, global_AABB.maxPoint.y);
-		float maxZ = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.z, global_AABB.maxPoint.z);
+		float maxX = std::fmax(mesh_renderer->owner->aabb.bounding_box.maxPoint.x, global_AABB.maxPoint.x);
+		float maxY = std::fmax(mesh_renderer->owner->aabb.bounding_box.maxPoint.y, global_AABB.maxPoint.y);
+		float maxZ = std::fmax(mesh_renderer->owner->aabb.bounding_box.maxPoint.z, global_AABB.maxPoint.z);
 
 
 		global_AABB.maxPoint = float3(maxX, maxY, maxZ);
@@ -817,12 +817,12 @@ void NavMesh::GetVerticesScene()
 	verts_vec.clear();
 	unwalkable_verts.clear();
 
-	for (const auto& mesh : App->renderer->meshes)
+	for (const auto& mesh_renderer : App->renderer->mesh_renderers)
 	{
-		for (size_t i = 0; i < mesh->mesh_to_render.get()->vertices.size(); ++i)
+		for (size_t i = 0; i < mesh_renderer->mesh_to_render.get()->vertices.size(); ++i)
 		{
-			float4 vertss(mesh->mesh_to_render.get()->vertices[i].position, 1.0f);
-			vertss = mesh->owner->transform.GetGlobalModelMatrix() * vertss;
+			float4 vertss(mesh_renderer->mesh_to_render.get()->vertices[i].position, 1.0f);
+			vertss = mesh_renderer->owner->transform.GetGlobalModelMatrix() * vertss;
 
 			verts_vec.push_back(vertss.x);
 			verts_vec.push_back(vertss.y);
@@ -838,25 +838,27 @@ void NavMesh::GetIndicesScene()
 	//Clear index vector
 	tris_vec.clear();
 
-	if (!App->renderer->meshes.size())
-		return;
-
-	std::vector<int>max_vert_mesh(App->renderer->meshes.size() + 1, 0);
-	for(size_t i = 0; i < App->renderer->meshes.size(); ++i)
+	if (!App->renderer->mesh_renderers.size())
 	{
-		ntris += App->renderer->meshes[i]->mesh_to_render.get()->indices.size() / 3;
-		max_vert_mesh[i + 1] = App->renderer->meshes[i]->mesh_to_render.get()->vertices.size();
+		return;
+	}
+
+	std::vector<int>max_vert_mesh(App->renderer->mesh_renderers.size() + 1, 0);
+	for(size_t i = 0; i < App->renderer->mesh_renderers.size(); ++i)
+	{
+		ntris += App->renderer->mesh_renderers[i]->mesh_to_render.get()->indices.size() / 3;
+		max_vert_mesh[i + 1] = App->renderer->mesh_renderers[i]->mesh_to_render.get()->vertices.size();
 	}
 
 	int vert_overload = 0;
-	for(size_t j = 0; j < App->renderer->meshes.size(); ++j)
+	for(size_t j = 0; j < App->renderer->mesh_renderers.size(); ++j)
 	{
 		vert_overload += max_vert_mesh[j];
-		for(size_t i = 0; i < App->renderer->meshes[j]->mesh_to_render.get()->indices.size(); i+= 3)
+		for(size_t i = 0; i < App->renderer->mesh_renderers[j]->mesh_to_render.get()->indices.size(); i+= 3)
 		{
-			tris_vec.push_back(App->renderer->meshes[j]->mesh_to_render.get()->indices[i] + vert_overload);
-			tris_vec.push_back(App->renderer->meshes[j]->mesh_to_render.get()->indices[i + 1] + vert_overload);
-			tris_vec.push_back(App->renderer->meshes[j]->mesh_to_render.get()->indices[i + 2] + vert_overload);
+			tris_vec.push_back(App->renderer->mesh_renderers[j]->mesh_to_render.get()->indices[i] + vert_overload);
+			tris_vec.push_back(App->renderer->mesh_renderers[j]->mesh_to_render.get()->indices[i + 1] + vert_overload);
+			tris_vec.push_back(App->renderer->mesh_renderers[j]->mesh_to_render.get()->indices[i + 2] + vert_overload);
 
 		}
 	}
@@ -868,7 +870,7 @@ void NavMesh::GetNormalsScene()
 	//Clear normals vector
 	normals_vec.clear();
 
-	for (const auto&  mesh : App->renderer->meshes)
+	for (const auto&  mesh : App->renderer->mesh_renderers)
 	{
 		for (size_t i = 0; i < mesh->mesh_to_render.get()->vertices.size(); ++i)
 		{

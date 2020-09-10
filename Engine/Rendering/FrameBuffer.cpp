@@ -43,3 +43,18 @@ void FrameBuffer::ClearAttachements()
 	}
 
 }
+
+void FrameBuffer::Bind() const
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+}
+
+void FrameBuffer::UnBind() const
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+GLuint FrameBuffer::GetColorAttachement() const
+{
+	return color_attachement;
+}

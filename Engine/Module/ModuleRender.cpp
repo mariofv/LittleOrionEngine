@@ -139,7 +139,7 @@ bool ModuleRender::CleanUp()
 {
 	APP_LOG_INFO("Destroying renderer");
 	delete rendering_measure_timer;
-	for (auto& mesh : meshes)
+	for (auto& mesh : mesh_renderers)
 	{
 		mesh->owner->RemoveComponent(mesh);
 	}
@@ -269,7 +269,7 @@ void ModuleRender::GetMeshesToRender(const ComponentCamera* camera)
 	meshes_to_render.clear();
 	if (camera == App->cameras->scene_camera && !App->debug->culling_scene_mode)
 	{
-		meshes_to_render = meshes;
+		meshes_to_render = mesh_renderers;
 	}
 	else
 	{
@@ -423,17 +423,17 @@ std::string ModuleRender::GetDrawMode() const
 ComponentMeshRenderer* ModuleRender::CreateComponentMeshRenderer()
 {
 	ComponentMeshRenderer* created_mesh = new ComponentMeshRenderer();
-	meshes.push_back(created_mesh);
+	mesh_renderers.push_back(created_mesh);
 	return created_mesh;
 }
 
 void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 {
-	const auto it = std::find(meshes.begin(), meshes.end(), mesh_to_remove);
-	if (it != meshes.end())
+	const auto it = std::find(mesh_renderers.begin(), mesh_renderers.end(), mesh_to_remove);
+	if (it != mesh_renderers.end())
 	{
 		delete *it;
-		meshes.erase(it);
+		mesh_renderers.erase(it);
 	}
 }
 

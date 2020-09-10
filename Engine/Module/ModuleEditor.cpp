@@ -46,6 +46,7 @@
 #include <SDL/SDL.h>
 
 #include "Rendering/Viewport.h"
+#include "Module/ModuleCamera.h"
 #include "Module/ModuleRender.h"
 
 // Called before render is available
@@ -215,6 +216,7 @@ void ModuleEditor::RenderEditorDockspace()
 			float height = scene_window_content_area_max_point.y - scene_window_content_area_pos.y;
 
 			App->renderer->testing_viewport->SetSize(width, height);
+			App->renderer->testing_viewport->Render(App->cameras->scene_camera);
 
 			ImGui::Image(
 				(void *)App->renderer->testing_viewport->last_displayed_texture,
@@ -222,7 +224,9 @@ void ModuleEditor::RenderEditorDockspace()
 				ImVec2(0, 1),
 				ImVec2(1, 0)
 			);
+
 		}
+		ImGui::End();
 	}
 	ImGui::EndChild();
 }

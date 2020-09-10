@@ -55,6 +55,8 @@ public:
 	Component* Clone(GameObject* owner, bool original_prefab) override;
 	void CopyTo(Component* component_to_copy) const override;
 
+	void Clear() const;
+
 	float GetWidth() const;
 	float GetHeight() const;
 

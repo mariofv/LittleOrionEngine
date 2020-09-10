@@ -63,12 +63,42 @@ Component* ComponentCamera::Clone(GameObject* owner, bool original_prefab)
 	created_component->owner = owner;
 	created_component->owner->components.push_back(created_component);
 	return created_component;
-};
+}
+
 void ComponentCamera::CopyTo(Component* component_to_copy) const
 {  
 	*component_to_copy = *this;
 	*static_cast<ComponentCamera*>(component_to_copy) = *this;
-};
+}
+
+void ComponentCamera::Clear() const
+{
+	switch (camera_clear_mode)
+	{
+	case ComponentCamera::ClearMode::COLOR:
+		glClearColor(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f);
+		glStencilMask(0xFF);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		glClearColor(0.f, 0.f, 0.f, 1.f);
+		break;
+
+	case ComponentCamera::ClearMode::SKYBOX:
+		glStencilMask(0xFF);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		if (skybox_uuid != 0 && camera_skybox)
+		{
+			camera_skybox->Render(*this);
+		}
+		else
+		{
+			App->cameras->world_skybox->Render(*this);
+		}
+		break;
+
+	default:
+		break;
+	}
+}
 
 ComponentCamera::~ComponentCamera()
 {
@@ -218,29 +248,7 @@ void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode
 	
 	glViewport(0, 0, width, height);
 
-	switch (camera_clear_mode)
-	{
-		case ComponentCamera::ClearMode::COLOR:
-			glClearColor(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f);
-			glStencilMask(0xFF);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-			glClearColor(0.f, 0.f, 0.f, 1.f);
-			break;
-		case ComponentCamera::ClearMode::SKYBOX:
-			glStencilMask(0xFF);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-			if (skybox_uuid != 0 && camera_skybox)
-			{
-				camera_skybox->Render(*this);
-			}
-			else
-			{
-				App->cameras->world_skybox->Render(*this);
-			}
-			break;
-		default:
-			break;
-	}
+	Clear();
 
 	App->renderer->RenderFrame(*this);
 
