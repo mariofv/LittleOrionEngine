@@ -4,9 +4,6 @@
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleCamera.h"
-#include "Module/ModuleEditor.h"
-#include "Module/ModuleDebug.h"
-#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleTime.h"
@@ -80,7 +77,7 @@ void ComponentTrail::Update()
 	float3 gameobject_position = owner->transform.GetGlobalTranslation(); //current GO position
 	bool on_transform_change = last_gameobject_position.Distance(gameobject_position) > 0.0f;
 
-	if (on_transform_change)//always gets in this is wrong ! TODO create an event here/ merge with event system
+	if (on_transform_change)//always gets in this is wrong 
 	{
 		TrailPoint next_point(gameobject_position, width, duration);
 		test_points.push_back(next_point);	//create another Trail point and add it to the pool		
@@ -116,7 +113,6 @@ void  ComponentTrail::GetPerpendiculars()
 	TrailPoint* previous_point = nullptr;
 	TrailPoint* current_point = nullptr;
 	mesh_points.clear();
-	
 	for (int i = 0; i < test_points.size(); ++i)
 	{
 		current_point = &test_points[i];
@@ -132,7 +128,6 @@ void  ComponentTrail::GetPerpendiculars()
 	path_top.spline_points.clear();
 	path_bottom.spline_points.clear();
 	float3 top_left, bottom_left;
-	unsigned int j = 0;
 	while (pair != mesh_points.end())
 	{
 		if (pair->first->life > 0 && pair->second->life > 0)
@@ -165,87 +160,56 @@ void  ComponentTrail::GetPerpendiculars()
 			path_bottom.spline_points.emplace_back(bottom_left);// add points on the spline
 			
 			++pair;
-			++j;
 		}
 		else
 		{
 			pair = mesh_points.erase(pair);
 		}
 	}
-
 }
 void ComponentTrail::GetCatmull()
 {
-	if (path_top.spline_points.size() < 4)
+	if ((path_top.spline_points.size() < 4) || (path_bottom.spline_points.size() < 4))
 	{
 		return;
 	}
-	float3 spoint_top_s1, spoint_top_s2, spoint_top_s3, spoint_bottom_s1, spoint_bottom_s2, spoint_bottom_s3;
-	
-	for (unsigned int i = 0; i < path_top.spline_points.size() - 1; i++)
+	CalculateCatmull(path_top, spline_top);
+	CalculateCatmull(path_bottom, spline_bottom);
+}
+
+void ComponentTrail::CalculateCatmull(Spline& path_to_smoothen, std::vector<float3>& spline_points)
+{
+	float3 curve_point;
+	spline_points.clear();
+	for (unsigned int i = 0; i < path_to_smoothen.spline_points.size() - 1; i++)
 	{
-		//Top
-		auto aux_top = i;
-		float3 segment_begin, segment_end, smoothen_begin, smoothen_end;
-		segment_begin = path_top.spline_points[i];
+		float3 curve_begin, curve_end, smoothen_weight_point_left, smoothen_weight_point_right;
+		curve_begin = path_to_smoothen.spline_points[i];
+		//If we are are 1st point then p0 = p1;
 		if (i == 0)
 		{
-			smoothen_begin = segment_begin;
+			smoothen_weight_point_left = curve_begin;
 		}
 		else
 		{
-			smoothen_begin = path_top.spline_points[i - 1];
+			smoothen_weight_point_left = path_to_smoothen.spline_points[i - 1];//else P0 is previous point from where we are
 		}
-		segment_end = path_top.spline_points[i + 1];
-		if (i == path_top.spline_points.size() - 1)
+		curve_end = path_to_smoothen.spline_points[i + 1];
+		//If we are at the last point then P3 = P2
+		if (i == path_to_smoothen.spline_points.size() - 1)
 		{
-			smoothen_end = segment_end;
-		}
-		else
-		{
-			smoothen_end = path_top.spline_points[i + 2];
-		}
-
-		for (int r = 0; r < 5; r++)
-		{
-			float t = r / 5.f; //TODO::make a variable and expose it to Panel
-			//Spline 1t
-			spoint_top_s1 = path_top.GetSplinePoint(t, smoothen_begin, segment_begin, segment_end, smoothen_end, alpha);
-			spline_top.push_back(spoint_top_s1);
-
-		}
-	}
-	for (unsigned int i = 0; i < path_bottom.spline_points.size() - 1; i++)
-	{
-		//Bottom
-		auto aux_bottom = i;
-		float3 segment_begin_bottom, segment_end_bottom, smoothen_begin_bottom, smoothen_end_bottom;
-		segment_begin_bottom = path_bottom.spline_points[i];
-		if (i == 0)
-		{
-			smoothen_begin_bottom = segment_begin_bottom;
+			smoothen_weight_point_right = curve_end;
 		}
 		else
 		{
-			smoothen_begin_bottom = path_bottom.spline_points[i - 1];
+			smoothen_weight_point_right = path_to_smoothen.spline_points[i + 2]; //else P3 is 2 points after the one we are now
 		}
-		segment_end_bottom = path_bottom.spline_points[i + 1];
-		if (i == path_bottom.spline_points.size() - 1)
+		//Calculate r intermediate points
+		for (int r = 0; r < points_in_curve; r++)
 		{
-			smoothen_end_bottom = segment_end_bottom;
-		}
-		else
-		{
-			smoothen_end_bottom = path_bottom.spline_points[i + 2];
-		}
-		for (int r = 0; r < 5; r++)
-		{
-			float t = r / 5.f; //TODO::make a variable and expose it to Panel	   
-			//Spline 1b
-			//spline_bottom.push_back(p0_b);
-			spoint_bottom_s1 = path_bottom.GetSplinePoint(t, smoothen_begin_bottom, segment_begin_bottom, segment_end_bottom, smoothen_end_bottom, alpha);
-			spline_bottom.push_back(spoint_bottom_s1);
-
+			float t = r / static_cast<float>(points_in_curve);
+			curve_point = path_to_smoothen.GetSplinePoint(t, smoothen_weight_point_left, curve_begin, curve_end, smoothen_weight_point_right);
+			spline_points.push_back(curve_point);
 		}
 	}
 }
@@ -258,7 +222,6 @@ void ComponentTrail::GetUVs()
 	{
 		vertices.push_back({ spline_top[l], float2(trail_segment_uv * l , 1.0f) });//uv[++i]
 		vertices.push_back({ spline_bottom[l], float2(trail_segment_uv * l, 0.0f) });//uv[++i]
-		App->engine_log->Log("%f", trail_segment_uv * l);
 	}
 	spline_top.clear();
 	spline_bottom.clear();
@@ -371,6 +334,7 @@ void ComponentTrail::SpecializedSave(Config& config) const
 	config.AddUInt(texture_uuid, "TextureUUID");
 	config.AddColor(color, "Color");
 	config.AddFloat(bloom_intensity, "Bloom_Intensity");
+	config.AddUInt(points_in_curve, "Curve Points");
 }
 void ComponentTrail::SpecializedLoad(const Config& config)
 {
@@ -383,6 +347,8 @@ void ComponentTrail::SpecializedLoad(const Config& config)
 	ChangeTexture(texture_uuid);
 	config.GetColor("Color", color, float4(1.0f, 1.0f, 1.0f, 1.0f));
 	bloom_intensity = config.GetFloat("Bloom_Intensity", 1.0f);
+	points_in_curve = config.GetUInt("Curve Points", 5);
+
 }
 
 void ComponentTrail::Disable()

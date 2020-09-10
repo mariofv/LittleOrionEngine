@@ -272,7 +272,6 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 			billboard->Play();
 		}
 	}
-
 	ImGui::Separator();
 	ImGui::Text("Custom");
 	billboard->modified_by_user |= ImGui::DragFloat("Width:", &billboard->width, 0.2f, 0.f, 10.f);
@@ -294,14 +293,12 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 		trail->modified_by_user |= ImGui::InputFloat("Distance", &trail->min_distance, 1.0f);
 		ImGui::Text("Texture");
 		ImGui::SameLine();
-
 		std::string texture_name = trail->trail_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(trail->trail_texture->GetUUID())->resource_name;
 		ImGuiID element_id = ImGui::GetID((std::to_string(trail->UUID) + "TextureSelector").c_str());
 		if (ImGui::Button(texture_name.c_str()))
 		{
 			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
 		}
-
 		uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
 		if (selected_resource_uuid != 0)
 		{
@@ -316,27 +313,7 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 		}
 		trail->modified_by_user |= ImGui::ColorEdit4("Color", trail->color.ptr());
 		trail->modified_by_user |= ImGui::DragFloat("Intensity", &trail->bloom_intensity, 0.05f, 0.01f, 10.0f);
-		if (ImGui::CollapsingHeader("Type"))
-		{
-			ImGui::Spacing();
-
-			int current_type = static_cast<int>(trail->alpha);
-			if (ImGui::Combo("Shape###Combo", &current_type, "Uniform\0Centripetal\0Chordal\0"))
-			{
-				switch (current_type)
-				{
-				case 0:
-					trail->alpha = 0.0f;
-					break;
-				case 1:
-					trail->alpha = 0.5f;
-					break;
-				case 2:
-					trail->alpha = 1.0f;
-					break;
-				}
-			}
-		}
+		trail->modified_by_user |= ImGui::DragInt("Curve Points", &trail->points_in_curve, 1, 0);
 	}
 }
 
