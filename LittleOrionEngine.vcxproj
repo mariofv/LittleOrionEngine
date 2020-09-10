@@ -327,7 +327,8 @@
     <ClInclude Include="Engine\Helper\PerlinNoise.h" />
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.h" />
     <ClInclude Include="Engine\Helper\Quad.h" />
-    <ClInclude Include="Viewport.h" />
+    <ClInclude Include="Engine\Rendering\FrameBuffer.h" />
+    <ClInclude Include="Engine\Rendering\Viewport.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Component\ComponentVideoPlayer.cpp" />
@@ -470,6 +471,7 @@
     <ClCompile Include="Engine\EditorUI\Panel\PanelResourceDatabase.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\ImGuiHelper.cpp" />
+    <ClCompile Include="Engine\Rendering\FrameBuffer.cpp" />
     <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Builders.cpp" />
     <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Drawing.cpp" />
     <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Widgets.cpp" />
@@ -509,7 +511,7 @@
     <ClCompile Include="Engine\Helper\TagManager.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.cpp" />
     <ClCompile Include="Engine\Helper\Quad.cpp" />
-    <ClCompile Include="Viewport.cpp" />
+    <ClCompile Include="Engine\Rendering\Viewport.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

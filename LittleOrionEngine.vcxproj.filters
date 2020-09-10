@@ -559,7 +559,10 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Video.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Viewport.cpp">
+    <ClCompile Include="Engine\Rendering\Viewport.cpp">
+      <Filter>Engine\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\FrameBuffer.cpp">
       <Filter>Engine\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1110,7 +1113,10 @@
     <ClInclude Include="Engine\Helper\Quad.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Viewport.h">
+    <ClInclude Include="Engine\Rendering\Viewport.h">
+      <Filter>Engine\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\FrameBuffer.h">
       <Filter>Engine\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
