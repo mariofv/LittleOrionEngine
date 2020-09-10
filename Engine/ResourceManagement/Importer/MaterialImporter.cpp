@@ -15,11 +15,6 @@
 #include <regex>
 
 
-FileData MaterialImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
-{
-	return assets_file_path.GetFile()->Load();
-}
-
 FileData MaterialImporter::ExtractMaterialFromAssimp(const aiMaterial* assimp_mesh_material, const Path& material_file_folder_path) const
 {
 	Material imported_material;

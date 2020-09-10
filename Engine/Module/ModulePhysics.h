@@ -1,7 +1,9 @@
 #ifndef _MODULEPHYSICS_H_
 #define _MODULEPHYSICS_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Module.h"
 #include "Component/ComponentCollider.h"

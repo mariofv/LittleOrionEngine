@@ -1,7 +1,9 @@
 #ifndef _COMPONENTTRANSFORM_H_
 #define _COMPONENTTRANSFORM_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Component.h"
 
@@ -43,6 +45,7 @@ public:
 	ENGINE_API float3 GetRotationRadiants() const;
 	ENGINE_API void SetRotation(const float3x3& rotation);
 	ENGINE_API void SetRotation(const float3& rotation);
+	void SetRotationRad(const float3& rotation);
 	ENGINE_API void SetRotation(const Quat& rotation);
 
 	ENGINE_API void SetGlobalMatrixRotation(const float3x3& rotation);
@@ -61,6 +64,10 @@ public:
 	ENGINE_API float3 GetUpVector() const;
 	ENGINE_API float3 GetFrontVector() const;
 	ENGINE_API float3 GetRightVector() const;
+
+	ENGINE_API float3 GetGlobalUpVector() const;
+	ENGINE_API float3 GetGlobalFrontVector() const;
+	ENGINE_API float3 GetGlobalRightVector() const;
 
 	void ChangeLocalSpace(const float4x4& new_local_space);
 

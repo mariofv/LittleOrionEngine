@@ -237,7 +237,8 @@ bool Path::IsImportable() const
 		|| file_type == FileType::SKYBOX
 		|| file_type == FileType::STATE_MACHINE
 		|| file_type == FileType::TEXTURE
-		|| file_type == FileType::SOUND;
+		|| file_type == FileType::SOUND
+		|| file_type == FileType::VIDEO;
 }
 
 bool Path::IsBinary() const
