@@ -20,6 +20,7 @@ private:
 
 	void MeshRenderPass() const;
 	void DebugDrawPass() const;
+	void EditorDrawPass() const;
 
 public:
 	GLuint last_displayed_texture = 0;

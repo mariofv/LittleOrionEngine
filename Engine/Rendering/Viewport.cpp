@@ -4,7 +4,9 @@
 #include "Component/ComponentMeshRenderer.h"
 
 #include "Main/Application.h"
+#include "Module/ModuleDebug.h"
 #include "Module/ModuleDebugDraw.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleSpacePartitioning.h"
@@ -45,6 +47,7 @@ void Viewport::Render(ComponentCamera* camera)
 
 	MeshRenderPass();
 	DebugDrawPass();
+	EditorDrawPass();
 
 	last_displayed_texture = render_fbo->GetColorAttachement();
 }
@@ -86,5 +89,22 @@ void Viewport::DebugDrawPass() const
 	render_fbo->Bind();
 	glViewport(0, 0, width, height);
 	App->debug_draw->Render(width, height, camera->GetProjectionMatrix() * camera->GetViewMatrix());
+	render_fbo->UnBind();
+}
+
+void Viewport::EditorDrawPass() const
+{
+	render_fbo->Bind();
+	glViewport(0, 0, width, height);
+	App->debug_draw->RenderGrid();
+	if (App->debug->show_navmesh)
+	{
+		App->debug_draw->RenderNavMesh(*camera);
+	}
+	App->debug_draw->RenderBillboards();
+	if (App->editor->selected_game_object != nullptr)
+	{
+		App->debug_draw->RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
+	}
 	render_fbo->UnBind();
 }
