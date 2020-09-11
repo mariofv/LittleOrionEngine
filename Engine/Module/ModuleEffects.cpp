@@ -24,9 +24,7 @@ bool ModuleEffects::CleanUp()
 
 void ModuleEffects::Render()
 {
-
-
-	if (!render_particles)
+	if (!render_effects)
 	{
 		return;
 	}
@@ -53,7 +51,6 @@ void ModuleEffects::Render()
 
 	glDisable(GL_BLEND);
 	glDepthMask(GL_TRUE);
-	
 }
 
 ComponentBillboard* ModuleEffects::CreateComponentBillboard()

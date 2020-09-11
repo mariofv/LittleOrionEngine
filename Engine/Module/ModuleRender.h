@@ -56,7 +56,7 @@ public:
 	bool CleanUp();
 	
 	void Render() const;
-	void RenderFrame(const ComponentCamera& camera);
+	void RenderFrame(const ComponentCamera& camera); // TODO: Delete this
 	void RenderZBufferFrame(const ComponentCamera& camera);
 	void GetMeshesToRender(const ComponentCamera* camera);
 

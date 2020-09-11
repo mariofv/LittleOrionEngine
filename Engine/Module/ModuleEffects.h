@@ -30,7 +30,7 @@ public:
 	void RemoveComponentTrail(ComponentTrail* trail_to_remove);
 
 private:
-	bool render_particles = true;
+	bool render_effects = true;
 	std::vector<ComponentBillboard*> billboards;
 	std::vector<ComponentBillboard*> billboards_to_render;
 

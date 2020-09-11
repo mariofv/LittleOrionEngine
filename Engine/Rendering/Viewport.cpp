@@ -6,6 +6,7 @@
 #include "Main/Application.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleDebugDraw.h"
+#include "Module/ModuleEffects.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
@@ -48,6 +49,7 @@ void Viewport::Render(ComponentCamera* camera)
 	BindCameraMatrices();
 
 	MeshRenderPass();
+	EffectsRenderPass();
 	UIRenderPass();
 	DebugDrawPass();
 	EditorDrawPass();
@@ -83,6 +85,13 @@ void Viewport::MeshRenderPass() const
 		}
 	}
 
+	render_fbo->UnBind();
+}
+
+void Viewport::EffectsRenderPass() const
+{
+	render_fbo->Bind();
+	App->effects->Render();
 	render_fbo->UnBind();
 }
 
