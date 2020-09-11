@@ -46,7 +46,7 @@ public:
 
 	void SetListener(const AkGameObjectID listener_name);
 
-	std::string GetEventName() const;
+	ENGINE_API std::string GetEventName() const;
 
 
 public:
