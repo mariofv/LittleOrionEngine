@@ -34,7 +34,7 @@ void Viewport::SetSize(float width, float height)
 	render_fbo->GenerateAttachements(width, height);
 }
 
-void Viewport::Render(ComponentCamera * camera)
+void Viewport::Render(ComponentCamera* camera)
 {
 	this->camera = camera;
 	camera->SetAspectRatio(width / height);
