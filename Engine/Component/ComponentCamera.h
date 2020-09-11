@@ -57,14 +57,10 @@ public:
 
 	void Clear() const;
 
-	float GetWidth() const; // TODO: Delete this
-	float GetHeight() const; // TODO: Delete this
-
 	void RecordFrame(GLsizei width, GLsizei height, bool scene_mode = false);
 	void RecordZBufferFrame(GLsizei width, GLsizei height);
 	void SetWidthAndHeight(const GLsizei &width, const GLsizei &height);
 
-	ENGINE_API void RecordDebugDraws(bool scene_mode = false);  // TODO: Delete this
 	GLuint GetLastRecordedFrame() const;
 
 	void SetFOV(float fov);

@@ -223,16 +223,6 @@ void ComponentCamera::SpecializedLoad(const Config& config)
 	GenerateMatrices();
 }
 
-float ComponentCamera::GetWidth() const
-{
-	return last_width;
-}
-
-float ComponentCamera::GetHeight() const
-{
-	return last_height;
-}
-
 void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode)
 {
 	SetWidthAndHeight(width, height);
@@ -294,40 +284,6 @@ void ComponentCamera::SetWidthAndHeight(const GLsizei &width, const GLsizei &hei
 		GenerateFrameBuffers(width, height);
 		toggle_msaa = false;
 	}
-}
-
-void ComponentCamera::RecordDebugDraws(bool scene_mode)
-{
-#if !GAME
-	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-#endif
-	glViewport(0, 0, static_cast<GLsizei>(last_width), static_cast<GLsizei>(last_height));
-
-	if (scene_mode)
-	{
-		App->debug_draw->RenderGrid();
-		if (App->debug->show_navmesh)
-		{
-			App->debug_draw->RenderNavMesh(*this);
-		}
-		App->debug_draw->RenderBillboards();
-		if (App->editor->selected_game_object != nullptr)
-		{
-			App->debug_draw->RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
-		}
-	}
-
-	App->debug_draw->RenderDebugDraws(*this);
-#if !GAME
-	if (App->renderer->anti_aliasing)
-	{
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-		glBlitFramebuffer(0, 0, last_width, last_height, 0, 0, last_width, last_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-#endif
 }
 
 GLuint ComponentCamera::GetLastRecordedFrame() const

@@ -827,19 +827,6 @@ ENGINE_API void ModuleDebugDraw::RenderBox(const float3 points[8], const float3&
 	dd::box(points, color);
 }
 
-void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera) // TODO: Delete this
-{
-	BROFILER_CATEGORY("Flush Debug Draw", Profiler::Color::Lavender);
-
-	math::float4x4 view = camera.GetViewMatrix();
-	math::float4x4 proj = camera.GetProjectionMatrix();
-
-	dd_interface_implementation->width = static_cast<unsigned int>(camera.GetWidth());
-	dd_interface_implementation->height = static_cast<unsigned int>(camera.GetHeight());
-	dd_interface_implementation->mvpMatrix = proj * view;
-	dd::flush();
-}
-
 void ModuleDebugDraw::Render(float width, float height, const float4x4& projection_view_matrix)
 {
 	BROFILER_CATEGORY("Flush Debug Draw", Profiler::Color::Lavender);

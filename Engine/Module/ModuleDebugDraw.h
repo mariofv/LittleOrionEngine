@@ -24,7 +24,6 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	void RenderDebugDraws(const ComponentCamera& camera);
 	void Render(float width, float height, const float4x4& projection_view_matrix);
 
 	ENGINE_API void RenderSingleAABB(AABB& aabb, const float3& color = float3::one) const;
