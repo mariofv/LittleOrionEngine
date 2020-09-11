@@ -19,11 +19,13 @@ private:
 	void BindCameraMatrices() const;
 
 	void MeshRenderPass() const;
+	void DebugDrawPass() const;
 
 public:
 	GLuint last_displayed_texture = 0;
 
 	FrameBuffer* render_fbo = 0;
+	FrameBuffer* debug_draw_fbo = 0;
 
 private:
 	ComponentCamera* camera = nullptr;
@@ -34,4 +36,13 @@ private:
 };
 
 #endif //_VIEWPORT_H_
+
+/* 
+
+CURRENT RENDERING PIPELINE
+/------------------------/
+MESHES -> DEBUG_DRAWS
+
+
+*/
 

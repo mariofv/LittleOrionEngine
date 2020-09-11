@@ -4,6 +4,7 @@
 #include "Component/ComponentMeshRenderer.h"
 
 #include "Main/Application.h"
+#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleSpacePartitioning.h"
@@ -13,11 +14,13 @@
 Viewport::Viewport()
 {
 	render_fbo = new FrameBuffer();
+	debug_draw_fbo = new FrameBuffer();
 }
 
 Viewport::~Viewport()
 {
 	delete render_fbo;
+	delete debug_draw_fbo;
 }
 
 void Viewport::SetSize(float width, float height)
@@ -40,13 +43,8 @@ void Viewport::Render(ComponentCamera* camera)
 	camera->SetAspectRatio(width / height);
 	BindCameraMatrices();
 
-	render_fbo->Bind();
-	glViewport(0, 0, width, height);
-	camera->Clear();
-
 	MeshRenderPass();
-
-	render_fbo->UnBind();
+	DebugDrawPass();
 
 	last_displayed_texture = render_fbo->GetColorAttachement();
 }
@@ -66,6 +64,10 @@ void Viewport::BindCameraMatrices() const
 
 void Viewport::MeshRenderPass() const
 {
+	render_fbo->Bind();
+	glViewport(0, 0, width, height);
+	camera->Clear();
+
 	std::vector<ComponentMeshRenderer*> culled_mesh_renderers = App->space_partitioning->GetCullingMeshes(camera, App->renderer->mesh_renderers);
 	for (auto &mesh_renderer : culled_mesh_renderers)
 	{
@@ -75,4 +77,14 @@ void Viewport::MeshRenderPass() const
 			glUseProgram(0);
 		}
 	}
+
+	render_fbo->UnBind();
+}
+
+void Viewport::DebugDrawPass() const
+{
+	render_fbo->Bind();
+	glViewport(0, 0, width, height);
+	App->debug_draw->Render(width, height, camera->GetProjectionMatrix() * camera->GetViewMatrix());
+	render_fbo->UnBind();
 }

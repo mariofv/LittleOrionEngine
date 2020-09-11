@@ -65,7 +65,7 @@ void PanelScene::Render()
 
 		App->cameras->scene_camera->RecordFrame((GLsizei)scene_window_content_area_width, (GLsizei)scene_window_content_area_height, true);
 		App->debug->Render(App->cameras->scene_camera);
-		App->cameras->scene_camera->RecordDebugDraws(true);
+		//App->cameras->scene_camera->RecordDebugDraws(true);
 
 		ImGui::Image(
 			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),
