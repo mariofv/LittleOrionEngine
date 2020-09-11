@@ -34,6 +34,7 @@ void Viewport::SetSize(float width, float height)
 
 	this->width = width;
 	this->height = height;
+	glViewport(0, 0, width, height);
 
 	render_fbo->ClearAttachements();
 	render_fbo->GenerateAttachements(width, height);
@@ -68,7 +69,6 @@ void Viewport::BindCameraMatrices() const
 void Viewport::MeshRenderPass() const
 {
 	render_fbo->Bind();
-	glViewport(0, 0, width, height);
 	camera->Clear();
 
 	std::vector<ComponentMeshRenderer*> culled_mesh_renderers = App->space_partitioning->GetCullingMeshes(camera, App->renderer->mesh_renderers);
@@ -87,7 +87,6 @@ void Viewport::MeshRenderPass() const
 void Viewport::DebugDrawPass() const
 {
 	render_fbo->Bind();
-	glViewport(0, 0, width, height);
 	App->debug_draw->Render(width, height, camera->GetProjectionMatrix() * camera->GetViewMatrix());
 	render_fbo->UnBind();
 }
@@ -95,7 +94,6 @@ void Viewport::DebugDrawPass() const
 void Viewport::EditorDrawPass() const
 {
 	render_fbo->Bind();
-	glViewport(0, 0, width, height);
 	App->debug_draw->RenderGrid();
 	if (App->debug->show_navmesh)
 	{

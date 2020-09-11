@@ -236,7 +236,6 @@ void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode
 		glBindFramebuffer(GL_FRAMEBUFFER, msfbo);
 	} 
 	
-	glViewport(0, 0, width, height);
 
 	Clear();
 
@@ -266,7 +265,6 @@ void ComponentCamera::RecordZBufferFrame(GLsizei width, GLsizei height)
 	SetWidthAndHeight(width, height);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-	glViewport(0, 0, width, height);
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 	App->renderer->RenderZBufferFrame(*this);
