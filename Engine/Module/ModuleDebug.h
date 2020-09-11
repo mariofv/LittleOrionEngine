@@ -9,16 +9,7 @@
 class ModuleDebug : public Module
 {
 public:
-	enum class CullingMode
-	{
-		NONE,
-		FRUSTUM_CULLING,
-		QUADTREE_CULLING,
-		OCTTREE_CULLING,
-		AABBTREE_CULLING,
-		COMBINED_CULLING
-	};
-
+	
 	ModuleDebug() = default;
 	~ModuleDebug() = default;
 
@@ -47,7 +38,6 @@ public:
 #else
 	bool culling_scene_mode = true;
 #endif
-	CullingMode culling_mode = CullingMode::FRUSTUM_CULLING;
 	float rendering_time = 0;
 
 private:

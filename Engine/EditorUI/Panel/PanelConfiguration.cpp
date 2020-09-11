@@ -787,29 +787,28 @@ void PanelConfiguration::ShowSpacePartitioningOptions()
 {
 	if (ImGui::CollapsingHeader(ICON_FA_TREE " SpacePartitioning"))
 	{
-		ImGui::Checkbox("Scene window culling", &App->debug->culling_scene_mode);
-		int culling_mode_int = static_cast<int>(App->debug->culling_mode);
+		int culling_mode_int = static_cast<int>(App->space_partitioning->culling_mode);
 		if (ImGui::Combo("Culling Mode", &culling_mode_int, "None\0Frustum Culling\0QuadTree Culling\0OctTree Culling\0AabbTree Culling\0Combined Culling"))
 		{
 			switch (culling_mode_int)
 			{
 			case 0:
-				App->debug->culling_mode = ModuleDebug::CullingMode::NONE;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::NONE;
 				break;
 			case 1:
-				App->debug->culling_mode = ModuleDebug::CullingMode::FRUSTUM_CULLING;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::FRUSTUM_CULLING;
 				break;
 			case 2:
-				App->debug->culling_mode = ModuleDebug::CullingMode::QUADTREE_CULLING;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::QUADTREE_CULLING;
 				break;
 			case 3:
-				App->debug->culling_mode = ModuleDebug::CullingMode::OCTTREE_CULLING;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::OCTTREE_CULLING;
 				break;
 			case 4:
-				App->debug->culling_mode = ModuleDebug::CullingMode::AABBTREE_CULLING;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::AABBTREE_CULLING;
 				break;
 			case 5:
-				App->debug->culling_mode = ModuleDebug::CullingMode::COMBINED_CULLING;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::COMBINED_CULLING;
 				break;
 			}
 		}

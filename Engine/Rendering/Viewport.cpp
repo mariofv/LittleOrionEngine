@@ -6,6 +6,7 @@
 #include "Main/Application.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleSpacePartitioning.h"
 
 #include "FrameBuffer.h"
 
@@ -65,7 +66,8 @@ void Viewport::BindCameraMatrices() const
 
 void Viewport::MeshRenderPass() const
 {
-	for (auto &mesh_renderer : App->renderer->mesh_renderers)
+	std::vector<ComponentMeshRenderer*> culled_mesh_renderers = App->space_partitioning->GetCullingMeshes(camera, App->renderer->mesh_renderers);
+	for (auto &mesh_renderer : culled_mesh_renderers)
 	{
 		if (mesh_renderer->mesh_to_render != nullptr && mesh_renderer->IsEnabled())
 		{
