@@ -65,24 +65,21 @@ void ComponentCanvas::Delete()
 	App->ui->RemoveComponentCanvas(this);
 }
 
-void ComponentCanvas::Render(bool scene_mode)
+void ComponentCanvas::Render(float width, float height, bool scene_mode)
 {
 	float2 last_canvas_screen_size = canvas_screen_size;
 
 #if GAME
-	canvas_screen_size.x = App->window->GetWidth();
-	canvas_screen_size.y = App->window->GetHeight();
-
 	canvas_screen_position = float2::zero;
 	focused = App->window->IsFocused();
 	
 #else
-	canvas_screen_size.x = App->editor->game_panel->game_window_content_area_width;
-	canvas_screen_size.y = App->editor->game_panel->game_window_content_area_height;
-
 	canvas_screen_position = App->editor->game_panel->game_window_content_area_pos;
 	focused = App->editor->game_panel->IsFocused();
 #endif
+
+	canvas_screen_size.x = width;
+	canvas_screen_size.y = height;
 
 	float4x4 projection_view;
 	if (scene_mode)

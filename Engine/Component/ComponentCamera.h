@@ -57,7 +57,7 @@ public:
 
 	void Clear() const;
 
-	void RecordFrame(GLsizei width, GLsizei height, bool scene_mode = false);
+	void RecordFrame(GLsizei width, GLsizei height, bool scene_mode = false); //TODO: Delete this
 	void RecordZBufferFrame(GLsizei width, GLsizei height);
 	void SetWidthAndHeight(const GLsizei &width, const GLsizei &height);
 

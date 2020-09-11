@@ -19,6 +19,7 @@ private:
 	void BindCameraMatrices() const;
 
 	void MeshRenderPass() const;
+	void UIRenderPass() const;
 	void DebugDrawPass() const;
 	void EditorDrawPass() const;
 

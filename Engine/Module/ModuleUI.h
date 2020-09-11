@@ -26,7 +26,7 @@ public:
 	bool Init() override;
 	update_status Update() override;
 
-	void Render(bool scene_mode);
+	void Render(float width, float height, bool scene_mode);
 
 	ComponentEventSystem* CreateComponentEventSystem();
 	void RemoveComponentEventSystem(ComponentEventSystem* component_event_system);

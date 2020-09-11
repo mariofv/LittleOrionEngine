@@ -9,6 +9,7 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleUI.h"
 #include "Module/ModuleSpacePartitioning.h"
 
 #include "FrameBuffer.h"
@@ -47,6 +48,7 @@ void Viewport::Render(ComponentCamera* camera)
 	BindCameraMatrices();
 
 	MeshRenderPass();
+	UIRenderPass();
 	DebugDrawPass();
 	EditorDrawPass();
 
@@ -84,6 +86,13 @@ void Viewport::MeshRenderPass() const
 	render_fbo->UnBind();
 }
 
+void Viewport::UIRenderPass() const
+{
+	render_fbo->Bind();
+	App->ui->Render(width, height, false);
+	render_fbo->UnBind();
+}
+
 void Viewport::DebugDrawPass() const
 {
 	render_fbo->Bind();
@@ -102,7 +111,7 @@ void Viewport::EditorDrawPass() const
 	App->debug_draw->RenderBillboards();
 	if (App->editor->selected_game_object != nullptr)
 	{
-		App->debug_draw->RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
+		App->debug_draw->RenderOutline();
 	}
 	render_fbo->UnBind();
 }
