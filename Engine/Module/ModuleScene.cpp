@@ -525,6 +525,7 @@ void ModuleScene::DeleteLoadingScreen()
 	if(loading_screen_canvas)
 	{
 		RemoveGameObject(loading_screen_canvas);
+		App->animations->CleanTweens();
 		loading_screen_canvas = nullptr;
 	}
 }
