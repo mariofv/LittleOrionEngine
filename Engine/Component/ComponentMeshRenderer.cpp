@@ -333,7 +333,7 @@ bool ComponentMeshRenderer::BindTextureNormal(Material::MaterialTextureType id) 
 
 Component* ComponentMeshRenderer::Clone(GameObject* owner, bool original_prefab)
 {
-	ComponentMeshRenderer * created_component;
+	ComponentMeshRenderer* created_component;
 	if (original_prefab)
 	{
 		created_component = new ComponentMeshRenderer();
@@ -347,6 +347,12 @@ Component* ComponentMeshRenderer::Clone(GameObject* owner, bool original_prefab)
 
 	created_component->owner = owner;
 	created_component->owner->components.push_back(created_component);
+
+	if(created_component)
+	{
+		created_component->ReassignResource();
+	}
+
 	return created_component;
 }
 

@@ -552,7 +552,7 @@ void GameObject::RemoveComponent(uint64_t UUID)
 
 Component* GameObject::GetComponent(const Component::ComponentType type) const
 {
-	for (unsigned int i = 0; i < components.size(); ++i)
+ 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
 		if (components[i]->GetType() == type)
 		{
