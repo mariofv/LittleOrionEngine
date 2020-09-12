@@ -217,11 +217,26 @@ void ComponentTrail::CalculateCatmull(Spline& path_to_smoothen, std::vector<floa
 void ComponentTrail::GetUVs()
 {
 	float trail_segment_uv = 1.f / spline_top.size(); // to coordinate texture
+	float trail_segment_uv_x = 1.f / (spline_top.size() / colums);
+	float trail_segment_uv_y = rows;
 	vertices.clear();
 	for (int l = 0; l < spline_top.size(); l++)
 	{
-		vertices.push_back({ spline_top[l], float2(trail_segment_uv * l , 1.0f) });//uv[++i]
-		vertices.push_back({ spline_bottom[l], float2(trail_segment_uv * l, 0.0f) });//uv[++i]
+		switch (texture_mode)
+		{
+		case ComponentTrail::TextureMode::STRETCH:
+			vertices.push_back({ spline_top[l], float2(trail_segment_uv * l , 1.0f) });//uv[++i]
+			vertices.push_back({ spline_bottom[l], float2(trail_segment_uv * l, 0.0f) });//uv[++i]
+			break;
+		case ComponentTrail::TextureMode::TILE:
+			vertices.push_back({ spline_top[l], float2(trail_segment_uv_x * l , 1.0f * trail_segment_uv_y) });//uv[++i]
+			vertices.push_back({ spline_bottom[l], float2(trail_segment_uv_x * l, 0.0f) });//uv[++i]
+			break;
+		case ComponentTrail::TextureMode::REPEATPERSEGMENT:
+			vertices.push_back({ spline_top[l], float2(l , 1.0f) });//uv[++i]
+			vertices.push_back({ spline_bottom[l], float2(l, 0.0f) });//uv[++i]
+			break;
+		}
 	}
 	spline_top.clear();
 	spline_bottom.clear();
@@ -245,11 +260,9 @@ void ComponentTrail::Render()
 			glUnmapBuffer(GL_ARRAY_BUFFER);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
-
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, trail_texture->opengl_texture);
 		glUniform1i(glGetUniformLocation(shader_program, "tex"), 0);
-
 		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -335,6 +348,9 @@ void ComponentTrail::SpecializedSave(Config& config) const
 	config.AddColor(color, "Color");
 	config.AddFloat(bloom_intensity, "Bloom_Intensity");
 	config.AddUInt(points_in_curve, "Curve Points");
+	config.AddInt(static_cast<int>(texture_mode), "Texture Mode");
+	config.AddUInt(rows, "Rows");
+	config.AddUInt(colums, "Columns");
 }
 void ComponentTrail::SpecializedLoad(const Config& config)
 {
@@ -348,6 +364,9 @@ void ComponentTrail::SpecializedLoad(const Config& config)
 	config.GetColor("Color", color, float4(1.0f, 1.0f, 1.0f, 1.0f));
 	bloom_intensity = config.GetFloat("Bloom_Intensity", 1.0f);
 	points_in_curve = config.GetUInt("Curve Points", 5);
+	texture_mode = static_cast<TextureMode>(config.GetInt("Texture Mode", static_cast<int>(TextureMode::STRETCH)));
+	rows = config.GetUInt("Rows", 1);
+	colums = config.GetUInt("Columns", 1);
 
 }
 

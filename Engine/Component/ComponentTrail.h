@@ -52,9 +52,17 @@ struct Spline
 	}
 };
 
+
+
 class ComponentTrail : public Component
 {
 public:
+	enum TextureMode
+	{
+		STRETCH,
+		TILE,
+		REPEATPERSEGMENT
+	};
 	ComponentTrail();
 	ComponentTrail(GameObject* owner);
 
@@ -114,6 +122,8 @@ public:
 	float* trail_renderer_vertices = nullptr;
 	std::vector<Vertex> vertices;
 	std::shared_ptr<Texture> trail_texture = nullptr;
+	TextureMode texture_mode = ComponentTrail::TextureMode::STRETCH;
+	int colums = 1, rows = 1;
 
 	//Color properties
 	float4 color = { 1.0f, 1.0f, 1.0f, 1.0f };

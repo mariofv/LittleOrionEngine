@@ -312,9 +312,27 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 			trail->SetTrailTexture(selected_resource_uuid);
 			trail->modified_by_user = true;
 		}
+		int mode = static_cast<int>(trail->texture_mode);
+		if (ImGui::Combo("TextureMode###Combo", &mode, "Stretch\0Tile\0RepeatPerSegment\0"))
+		{
+			switch (mode)
+			{
+			case 0:
+				trail->texture_mode = ComponentTrail::TextureMode::STRETCH;
+				break;
+			case 1:
+				trail->texture_mode = ComponentTrail::TextureMode::TILE;
+				break;
+			case 2:
+				trail->texture_mode = ComponentTrail::TextureMode::REPEATPERSEGMENT;
+				break;
+			}
+		}
+		trail->modified_by_user |= ImGui::DragInt("Tile Rows", &trail->rows, 1, 0, 1000);
+		trail->modified_by_user |= ImGui::DragInt("Tile Columns", &trail->colums, 1, 0, 1000);
+		trail->modified_by_user |= ImGui::DragInt("Curve Segments", &trail->points_in_curve, 1, 0, 100);
 		trail->modified_by_user |= ImGui::ColorEdit4("Color", trail->color.ptr());
 		trail->modified_by_user |= ImGui::DragFloat("Intensity", &trail->bloom_intensity, 0.05f, 0.01f, 10.0f);
-		trail->modified_by_user |= ImGui::DragInt("Curve Points", &trail->points_in_curve, 1, 0);
 	}
 }
 
