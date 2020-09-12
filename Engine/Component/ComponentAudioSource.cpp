@@ -155,7 +155,7 @@ void ComponentAudioSource::SpecializedSave(Config& config) const
 	config.AddUInt(soundbank_uuid, "SoundBank");
 	config.AddBool(sound_3d, "3DSound");
 	config.AddBool(play_on_awake, "PlayOnAwake");
-	config.AddInt(selected_event, "AwakeEvent");
+	config.AddInt(selected_event, "SelectedEventIndex");
 }
 
 void ComponentAudioSource::SpecializedLoad(const Config& config)
@@ -170,7 +170,7 @@ void ComponentAudioSource::SpecializedLoad(const Config& config)
 		SetSoundBank(soundbank_uuid);
 	}
 	SetVolume(volume);
-	selected_event = config.GetInt("AwakeEventIndex", -1);
+	selected_event = config.GetInt("SelectedEventIndex", -1);
 }
 
 void ComponentAudioSource::Disable() 
