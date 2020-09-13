@@ -247,7 +247,7 @@ void ComponentTrail::GetUVs()
 }
 void ComponentTrail::Render()
 {
-	if (active)
+	if (active && trail_texture)
 	{
 
 		GLuint shader_program = App->program->UseProgram("Trail");

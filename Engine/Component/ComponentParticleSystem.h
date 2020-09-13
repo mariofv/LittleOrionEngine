@@ -110,6 +110,8 @@ public:
 	ENGINE_API void Pause();
 
 	void OrbitX(float angle, Particle& particle);
+	ENGINE_API bool IsEmitting() const;
+	ENGINE_API bool IsPlaying() const;
 
 private:
 	unsigned int GetParticlesSystemVariation();
