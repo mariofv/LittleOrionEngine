@@ -91,7 +91,10 @@ void ComponentAnimation::Disable()
 void ComponentAnimation::SetStateMachine(uint32_t state_machine_uuid)
 {
 	animation_controller->SetStateMachine(state_machine_uuid);
-	GenerateJointChannelMaps();
+	if (animation_controller->state_machine)
+	{
+		GenerateJointChannelMaps();
+	}
 }
 
 void ComponentAnimation::Play()
