@@ -4,9 +4,6 @@
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleCamera.h"
-#include "Module/ModuleEditor.h"
-#include "Module/ModuleDebug.h"
-#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleTime.h"
@@ -14,7 +11,7 @@
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
-namespace { const float MAX_TRAIL_VERTICES = 1000; } //arbitrary number 
+namespace { const float MAX_TRAIL_VERTICES = 5000; } //arbitrary number 
 
 ComponentTrail::ComponentTrail() : Component(nullptr, ComponentType::TRAIL)
 {
@@ -78,18 +75,23 @@ void ComponentTrail::Update()
 		return;
 	}
 	float3 gameobject_position = owner->transform.GetGlobalTranslation(); //current GO position
-	bool on_transform_change = last_gameobject_position.Distance(gameobject_position) >= min_distance;
+	bool on_transform_change = last_gameobject_position.Distance(gameobject_position) > 0.0f;
 
-	if (on_transform_change)//always gets in this is wrong ! TODO create an event here/ merge with event system
+	if (on_transform_change)//always gets in this is wrong 
 	{
 		TrailPoint next_point(gameobject_position, width, duration);
 		test_points.push_back(next_point);	//create another Trail point and add it to the pool		
 		last_point = next_point; // So we're gonna calculate, on the next iteration how far we are from the last point created, and so on
 		last_gameobject_position = gameobject_position;
+		
 	}
-
-	GetPerpendiculars();
-
+	if (test_points.size() > 0)
+	{
+		GetPerpendiculars();
+		GetCatmull();
+		GetUVs();
+	}
+	
 	auto it = test_points.begin();
 	while (it != test_points.end())
 	{
@@ -111,7 +113,6 @@ void  ComponentTrail::GetPerpendiculars()
 	TrailPoint* previous_point = nullptr;
 	TrailPoint* current_point = nullptr;
 	mesh_points.clear();
-	
 	for (int i = 0; i < test_points.size(); ++i)
 	{
 		current_point = &test_points[i];
@@ -123,12 +124,10 @@ void  ComponentTrail::GetPerpendiculars()
 		previous_point = current_point;
 	}
 
-	unsigned int j = 0;
-	vertices.clear();
-	float trail_segment_uv = 1.f / test_points.size(); // to coordinate texture
 	auto pair = mesh_points.begin();
 	path_top.spline_points.clear();
 	path_bottom.spline_points.clear();
+	float3 top_left, bottom_left;
 	while (pair != mesh_points.end())
 	{
 		if (pair->first->life > 0 && pair->second->life > 0)
@@ -138,17 +137,13 @@ void  ComponentTrail::GetPerpendiculars()
 			float3 perpendicular;
 			if (App->cameras->scene_camera)
 			{
-				perpendicular = vector_adjacent.Cross((App->cameras->scene_camera->camera_frustum.pos - owner->transform.GetFrontVector() )) * width; //Front is currently local
+				perpendicular = vector_adjacent.Cross((App->cameras->scene_camera->camera_frustum.pos - owner->transform.GetGlobalTranslation().Normalized())) * width; //Front is currently local
 
 			}
 			else
 			{
-				perpendicular = vector_adjacent.Cross(owner->transform.GetFrontVector()) * width; //Front is currently local
+				perpendicular = vector_adjacent.Cross(owner->transform.GetRightVector()) * width; //Front is currently local
 			}
-			
-
-			float3 top_left, bottom_left;
-			++j;
 			if (++pair == mesh_points.end())
 			{
 				--pair;
@@ -160,49 +155,10 @@ void  ComponentTrail::GetPerpendiculars()
 				top_left = pair->second->position + perpendicular;
 				bottom_left = (pair->second->position - perpendicular);
 			}
-			
 			//Spline points
 			path_top.spline_points.emplace_back(top_left);// add points on the spline
 			path_bottom.spline_points.emplace_back(bottom_left);// add points on the spline
-			float3 spoint_top, spoint_bottom, p0_t, p1_t, p2_t, p3_t, p0_b, p1_b, p2_b, p3_b;
-			auto seg_top = path_top.spline_points.begin();
-			auto seg_bottom = path_bottom.spline_points.begin();
-			while (seg_top <= path_top.spline_points.end() - 3 )
-			{
-				auto aux_top = seg_top;
-				
-				p0_t = *aux_top;
-				p1_t = *(++aux_top);
-				p2_t = *(++aux_top);
-				p3_t = *(++aux_top);
-
-				for (float t = 0; t < 1; t += 0.01)
-				{
-					spoint_top = path_top.GetSplinePoint(t, p0_t, p1_t, p2_t, p3_t);
-					App->debug_draw->RenderPoint(spoint_top, 10.0F, float3{0, 150, 255});
-
-					//vertices.push_back({ spoint_top, float2(trail_segment_uv * j, 1.0f) }); //uv[i]
-				}
-				++seg_top;
-			}
-			while (seg_bottom <= path_bottom.spline_points.end() - 3)
-			{
-				auto aux_bottom = seg_bottom;
-
-				p0_b = *aux_bottom;
-				p1_b = *(++aux_bottom);
-				p2_b = *(++aux_bottom);
-				p3_b = *(++aux_bottom);
-				for (float h = 0; h < 1; h += 0.01)
-				{
-					spoint_bottom = path_bottom.GetSplinePoint(h, p0_b, p1_b, p2_b, p3_b);
-					App->debug_draw->RenderPoint(spoint_bottom, 10.0F, float3{ 255, 255, 0 });
-					//vertices.push_back({ spoint_bottom, float2(trail_segment_uv * j, 0.0f) });//uv[++i]
-				}
-				++seg_bottom;
-			}
-			vertices.push_back({ spoint_top, float2(trail_segment_uv * j, 1.0f) }); //uv[i]
-			vertices.push_back({ spoint_bottom, float2(trail_segment_uv * j, 0.0f) });//uv[++i]
+			
 			++pair;
 		}
 		else
@@ -211,7 +167,80 @@ void  ComponentTrail::GetPerpendiculars()
 		}
 	}
 }
+void ComponentTrail::GetCatmull()
+{
+	if ((path_top.spline_points.size() < 4) || (path_bottom.spline_points.size() < 4))
+	{
+		return;
+	}
+	CalculateCatmull(path_top, spline_top);
+	CalculateCatmull(path_bottom, spline_bottom);
+}
 
+void ComponentTrail::CalculateCatmull(Spline& path_to_smoothen, std::vector<float3>& spline_points)
+{
+	float3 curve_point;
+	spline_points.clear();
+	for (unsigned int i = 0; i < path_to_smoothen.spline_points.size() - 1; i++)
+	{
+		float3 curve_begin, curve_end, smoothen_weight_point_left, smoothen_weight_point_right;
+		curve_begin = path_to_smoothen.spline_points[i];
+		//If we are are 1st point then p0 = p1;
+		if (i == 0)
+		{
+			smoothen_weight_point_left = curve_begin;
+		}
+		else
+		{
+			smoothen_weight_point_left = path_to_smoothen.spline_points[i - 1];//else P0 is previous point from where we are
+		}
+		curve_end = path_to_smoothen.spline_points[i + 1];
+		//If we are at the last point then P3 = P2
+		if (i == path_to_smoothen.spline_points.size() - 1)
+		{
+			smoothen_weight_point_right = curve_end;
+		}
+		else
+		{
+			smoothen_weight_point_right = path_to_smoothen.spline_points[i + 2]; //else P3 is 2 points after the one we are now
+		}
+		//Calculate r intermediate points
+		for (int r = 0; r < points_in_curve; r++)
+		{
+			float t = r / static_cast<float>(points_in_curve);
+			curve_point = path_to_smoothen.GetSplinePoint(t, smoothen_weight_point_left, curve_begin, curve_end, smoothen_weight_point_right);
+			spline_points.push_back(curve_point);
+		}
+	}
+}
+
+void ComponentTrail::GetUVs()
+{
+	float trail_segment_uv = 1.f / spline_top.size(); // to coordinate texture
+	float trail_segment_uv_x = 1.f / (spline_top.size() / colums);
+	float trail_segment_uv_y = rows;
+	vertices.clear();
+	for (int l = 0; l < spline_top.size(); l++)
+	{
+		switch (texture_mode)
+		{
+		case ComponentTrail::TextureMode::STRETCH:
+			vertices.push_back({ spline_top[l], float2(trail_segment_uv * l , 1.0f) });//uv[++i]
+			vertices.push_back({ spline_bottom[l], float2(trail_segment_uv * l, 0.0f) });//uv[++i]
+			break;
+		case ComponentTrail::TextureMode::TILE:
+			vertices.push_back({ spline_top[l], float2(trail_segment_uv_x * l , 1.0f * trail_segment_uv_y) });//uv[++i]
+			vertices.push_back({ spline_bottom[l], float2(trail_segment_uv_x * l, 0.0f) });//uv[++i]
+			break;
+		case ComponentTrail::TextureMode::REPEATPERSEGMENT:
+			vertices.push_back({ spline_top[l], float2(l , 1.0f) });//uv[++i]
+			vertices.push_back({ spline_bottom[l], float2(l, 0.0f) });//uv[++i]
+			break;
+		}
+	}
+	spline_top.clear();
+	spline_bottom.clear();
+}
 void ComponentTrail::Render()
 {
 	if (active)
@@ -231,11 +260,9 @@ void ComponentTrail::Render()
 			glUnmapBuffer(GL_ARRAY_BUFFER);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
-
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, trail_texture->opengl_texture);
 		glUniform1i(glGetUniformLocation(shader_program, "tex"), 0);
-
 		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -320,6 +347,10 @@ void ComponentTrail::SpecializedSave(Config& config) const
 	config.AddUInt(texture_uuid, "TextureUUID");
 	config.AddColor(color, "Color");
 	config.AddFloat(bloom_intensity, "Bloom_Intensity");
+	config.AddUInt(points_in_curve, "Curve Points");
+	config.AddInt(static_cast<int>(texture_mode), "Texture Mode");
+	config.AddUInt(rows, "Rows");
+	config.AddUInt(colums, "Columns");
 }
 void ComponentTrail::SpecializedLoad(const Config& config)
 {
@@ -332,6 +363,11 @@ void ComponentTrail::SpecializedLoad(const Config& config)
 	ChangeTexture(texture_uuid);
 	config.GetColor("Color", color, float4(1.0f, 1.0f, 1.0f, 1.0f));
 	bloom_intensity = config.GetFloat("Bloom_Intensity", 1.0f);
+	points_in_curve = config.GetUInt("Curve Points", 5);
+	texture_mode = static_cast<TextureMode>(config.GetInt("Texture Mode", static_cast<int>(TextureMode::STRETCH)));
+	rows = config.GetUInt("Rows", 1);
+	colums = config.GetUInt("Columns", 1);
+
 }
 
 void ComponentTrail::Disable()

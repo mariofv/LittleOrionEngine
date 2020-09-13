@@ -10,5 +10,4 @@ void main()
 {
 	vec4 texture_color = texture(tex, texCoord) * color * bloom_intensity;
 	FragColor =  texture_color;
-
 }  

@@ -5,8 +5,6 @@
 
 #include "MathGeoLib.h"
 #include "Main/Application.h"
-#include "Module/ModuleTime.h"
-#include "Component/ComponentTransform.h"
 
 #include <queue>
 #include <list>
@@ -18,7 +16,6 @@ class Texture;
 
 struct TrailPoint {
 	float3 position;
-	float3 position_perpendicular_point;
 	float4 color;
 	float width;
 	float life;//tolal life of trail point
@@ -50,17 +47,22 @@ struct Spline
 		float3 v; // Interpolated point
 
 		/* Catmull Rom spline Calculation */
-
-		v.x = ((-t3 + 2 * t2 - t)*(p0.x) + (3 * t3 - 5 * t2 + 2)*(p1.x) + (-3 * t3 + 4 * t2 + t)* (p2.x) + (t3 - t2)*(p3.x)) / 2;
-		v.y = ((-t3 + 2 * t2 - t)*(p0.y) + (3 * t3 - 5 * t2 + 2)*(p1.y) + (-3 * t3 + 4 * t2 + t)* (p2.y) + (t3 - t2)*(p3.y)) / 2;
-		
+		v = ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 + (-p0 + 3 * p1 - 3 * p2 + p3) * t3) * 0.5;
 		return v;
 	}
 };
 
+
+
 class ComponentTrail : public Component
 {
 public:
+	enum TextureMode
+	{
+		STRETCH,
+		TILE,
+		REPEATPERSEGMENT
+	};
 	ComponentTrail();
 	ComponentTrail(GameObject* owner);
 
@@ -80,10 +82,14 @@ public:
 	void Delete() override;
 
 	void Update() override;
-	void SetTrailTexture(uint32_t texture_uuid);
+	
 	void GetPerpendiculars();
+	void GetCatmull();
+	void CalculateCatmull(Spline& path_to_smoothen, std::vector<float3>& spline_points);
+	void GetUVs();
 
 	void Render();
+	void SetTrailTexture(uint32_t texture_uuid);
 	void ChangeTexture(uint32_t texture_uuid);
 
 	void SpecializedSave(Config& config) const override;
@@ -98,28 +104,16 @@ private:
 public:
 	uint32_t texture_uuid = 0;
 	float3 last_gameobject_position;
-
 	int total_points = 1;
 	float3 last_point_added;
-
-	//Trail Generation properties
+	
+	//Trail generation properties
 	float width = 0.1f;
 	float duration = 1000.0f; // in millis
 	float min_distance = 1.0f;
 
-	//Color properties
-	//float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float bloom_intensity = 1.0f;
-	//Render properties
-	int blend_mode; //0 for aplha blend, 1 for addition
-	
-	//Standard parameters
+	//Trail path parameters
 	bool active = true;
-	//time
-	float time_counter = 0.0f;
-
-	//Toni tests stuff
 	std::vector<TrailPoint> test_points; // These are individual points that define the path
 	TrailPoint last_point;
 	std::vector <std::pair <TrailPoint*, TrailPoint*>> mesh_points; // These are from which we're gonna build the mesh
@@ -128,9 +122,17 @@ public:
 	float* trail_renderer_vertices = nullptr;
 	std::vector<Vertex> vertices;
 	std::shared_ptr<Texture> trail_texture = nullptr;
+	TextureMode texture_mode = ComponentTrail::TextureMode::STRETCH;
+	int colums = 1, rows = 1;
+
+	//Color properties
+	float4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float bloom_intensity = 1.0f;
 
 	//Catmull-rom
 	Spline path_top, path_bottom;
+	std::vector<float3> spline, spline_top, spline_bottom;
+	int points_in_curve = 5; // Begin with 5 points for a smooth Curve
 
 private:
 	unsigned int trail_vao, trail_vbo;

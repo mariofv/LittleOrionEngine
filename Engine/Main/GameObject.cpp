@@ -43,6 +43,7 @@
 #include "Component/ComponentText.h"
 #include "Component/ComponentTrail.h"
 #include "Component/ComponentTransform.h"
+#include "Component/ComponentVideoPlayer.h"
 
 #include <Brofiler/Brofiler.h>
 #include <pcg_basic.h>
@@ -145,20 +146,21 @@ void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 		prefab_reference->RemoveInstance(this);
 	}
 }
-void GameObject::Duplicate(const GameObject& gameobject_to_copy)
+
+void GameObject::Duplicate(const GameObject& gameobject_to_copy, GameObject* parent)
 {
+	SetParent(parent);
+
 	gameobject_to_copy.transform.CopyTo(&transform);
 	gameobject_to_copy.transform_2d.CopyTo(&transform_2d);
 
 	CopyComponents(gameobject_to_copy);
 	CopyParameters(gameobject_to_copy);
-	if(gameobject_to_copy.prefab_reference != nullptr && !gameobject_to_copy.is_prefab_parent)
+	if (gameobject_to_copy.prefab_reference != nullptr && !gameobject_to_copy.is_prefab_parent)
 	{
 		this->original_UUID = 0;
 		this->prefab_reference = nullptr;
 	}
-
-
 	return;
 }
 
@@ -351,7 +353,8 @@ void GameObject::Load(const Config& config)
 		Component::ComponentType component_type = static_cast<Component::ComponentType>(component_type_uint);
 
 		Component* created_component = nullptr;
-		if (component_type == Component::ComponentType::COLLIDER) {
+		if (component_type == Component::ComponentType::COLLIDER) 
+		{
 			ComponentCollider::ColliderType collider_type = static_cast<ComponentCollider::ColliderType>(gameobject_components_config[i].GetUInt("ColliderType", 0));
 			created_component = CreateComponent(collider_type);
 		}
@@ -473,7 +476,9 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 	case Component::ComponentType::UI_IMAGE:
 		created_component = App->ui->CreateComponentUI<ComponentImage>();
 		break;
-
+	case Component::ComponentType::VIDEO_PLAYER:
+		created_component = App->ui->CreateComponentUI<ComponentVideoPlayer>();
+		break;
 	case Component::ComponentType::UI_SPRITE_MASK:
 		created_component = App->ui->CreateComponentUI<ComponentSpriteMask>();
 		break;
@@ -481,7 +486,6 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 	case Component::ComponentType::UI_TEXT:
 		created_component = App->ui->CreateComponentUI<ComponentText>();
 		break;
-
 	case Component::ComponentType::BILLBOARD:
 		created_component = App->effects->CreateComponentBillboard();
 		break;

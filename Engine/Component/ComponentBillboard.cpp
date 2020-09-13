@@ -150,7 +150,7 @@ void ComponentBillboard::Render(const float3& global_position)
 	shader_program = App->program->UseProgram("Billboard", variation);
 
 	CommonUniforms(shader_program);
-	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color"),1, (float*)color);
+	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color"), 1, color.ptr());
 	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color_emissive"), 1, (float*)color_emissive);
 
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_x"), current_sprite_x);
@@ -223,6 +223,7 @@ void ComponentBillboard::SpecializedSave(Config& config) const
 	config.AddFloat(width, "Width");
 	config.AddFloat(height, "Height");
 	config.AddBool( pulse, "Pulse");
+	config.AddBool(loop, "Loop");
 	config.AddInt(static_cast<int>(alignment_type), "BillboardType");
 
 	config.AddInt(animation_time, "AnimationTime");
@@ -248,6 +249,7 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 	width = config.GetFloat("Width", 1.0f);
 	height = config.GetFloat("Height", 1.0f);
 	pulse = config.GetBool("Pulse", false);
+	loop = config.GetBool("Loop", false);
 
 	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::WORLD)));
 	ChangeBillboardType(alignment_type);

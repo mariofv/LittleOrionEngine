@@ -13,7 +13,7 @@ TweenSequence* LOTween::CreateSequence()
 
 void LOTween::Update(float dt)
 {
-	if (sequences.size() <= 0) return;
+	if (sequences.size() <= 0 || dt >= MAX_TIME_ALLOWED) return;
 
 	for (std::vector<TweenSequence*>::reverse_iterator it = sequences.rbegin(); it != sequences.rend(); ++it)
 	{

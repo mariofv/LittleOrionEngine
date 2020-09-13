@@ -23,7 +23,8 @@ enum class FileType
 	STATE_MACHINE,
 	TEXTURE,
 	SOUND,
-	UNKNOWN
+	UNKNOWN,
+	VIDEO
 };
 
 

@@ -36,6 +36,7 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
 #include "Component/ComponentTrail.h"
+#include "Component/ComponentVideoPlayer.h"
 
 #include "Helper/Utils.h"
 
@@ -214,7 +215,7 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 		billboard->ChangeTexture(selected_resource_uuid);
 		billboard->modified_by_user = true;
 	}
-	billboard->modified_by_user |= ImGui::ColorEdit4("Color", billboard->color);
+	billboard->modified_by_user |= ImGui::ColorEdit4("Color", billboard->color.ptr());
 
 	ImGui::Text("TextureEmissive");
 	ImGui::SameLine();
@@ -272,7 +273,6 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 			billboard->Play();
 		}
 	}
-
 	ImGui::Separator();
 	ImGui::Text("Custom");
 	billboard->modified_by_user |= ImGui::DragFloat("Width:", &billboard->width, 0.2f, 0.f, 10.f);
@@ -294,14 +294,12 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 		trail->modified_by_user |= ImGui::InputFloat("Distance", &trail->min_distance, 1.0f);
 		ImGui::Text("Texture");
 		ImGui::SameLine();
-
 		std::string texture_name = trail->trail_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(trail->trail_texture->GetUUID())->resource_name;
 		ImGuiID element_id = ImGui::GetID((std::to_string(trail->UUID) + "TextureSelector").c_str());
 		if (ImGui::Button(texture_name.c_str()))
 		{
 			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
 		}
-
 		uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
 		if (selected_resource_uuid != 0)
 		{
@@ -314,9 +312,27 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 			trail->SetTrailTexture(selected_resource_uuid);
 			trail->modified_by_user = true;
 		}
+		int mode = static_cast<int>(trail->texture_mode);
+		if (ImGui::Combo("TextureMode###Combo", &mode, "Stretch\0Tile\0RepeatPerSegment\0"))
+		{
+			switch (mode)
+			{
+			case 0:
+				trail->texture_mode = ComponentTrail::TextureMode::STRETCH;
+				break;
+			case 1:
+				trail->texture_mode = ComponentTrail::TextureMode::TILE;
+				break;
+			case 2:
+				trail->texture_mode = ComponentTrail::TextureMode::REPEATPERSEGMENT;
+				break;
+			}
+		}
+		trail->modified_by_user |= ImGui::DragInt("Tile Rows", &trail->rows, 1, 0, 1000);
+		trail->modified_by_user |= ImGui::DragInt("Tile Columns", &trail->colums, 1, 0, 1000);
+		trail->modified_by_user |= ImGui::DragInt("Curve Segments", &trail->points_in_curve, 1, 0, 100);
 		trail->modified_by_user |= ImGui::ColorEdit4("Color", trail->color.ptr());
 		trail->modified_by_user |= ImGui::DragFloat("Intensity", &trail->bloom_intensity, 0.05f, 0.01f, 10.0f);
-		
 	}
 }
 
@@ -328,6 +344,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		{
 			return;
 		}
+
 		ImGui::Separator();
 
 		camera->modified_by_user |= ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly);
@@ -679,13 +696,68 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image)
 			component_image->SetTextureToRenderFromInspector(selected_resource);
 		}
 
-		ImGui::ColorEdit3("Color", component_image->color.ptr());
+		ImGui::ColorEdit4("Color", component_image->color.ptr());
 
 		ImGui::Checkbox("Preserve Aspect Ratio", &component_image->preserve_aspect_ratio);
 
 		if (ImGui::Button("Set Native Size"))
 		{
 			component_image->SetNativeSize();
+		}
+	}
+}
+
+void PanelComponent::ShowComponentVideoPlayerWindow(ComponentVideoPlayer* video_player)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_FILM " Video Player", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (!ShowCommonComponentWindow(video_player))
+		{
+			return;
+		}
+		ImGui::Separator();
+		ImGui::Text("Video");
+		std::string video_name = video_player->video_to_render == nullptr ? "None (Video)" : App->resources->resource_DB->GetEntry(video_player->video_to_render->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(video_player->UUID) + "VideoSelector").c_str());
+		if (ImGui::Button(video_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::VIDEO);
+		}
+
+		uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource != 0)
+		{
+			video_player->SetVideoToRenderFromInspector(selected_resource);
+		}
+		selected_resource = ImGui::ResourceDropper<Video>();
+		if (selected_resource != 0)
+		{
+			video_player->SetVideoToRenderFromInspector(selected_resource);
+		}
+
+		std::string soundbank_name = video_player->soundbank == nullptr ? "None (Sound Bank)" : App->resources->resource_DB->GetEntry(video_player->soundbank->GetUUID())->resource_name;
+		element_id = ImGui::GetID((std::to_string(video_player->UUID) + "SoundBankSelector").c_str());
+		if (ImGui::Button(soundbank_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::SOUND);
+		}
+		selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource != 0)
+		{
+			video_player->SetSoundBank(selected_resource);
+			video_player->modified_by_user = true;
+		}
+		selected_resource = ImGui::ResourceDropper<SoundBank>();
+		if (selected_resource != 0)
+		{
+			video_player->SetSoundBank(selected_resource);
+			video_player->modified_by_user = true;
+		}
+		ImGui::InputText("Sound Event Name ", &video_player->sound_event);
+
+		if (ImGui::Button("Play Video"))
+		{
+			video_player->PlayVideo();
 		}
 	}
 }
@@ -924,6 +996,12 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_IMAGE);
 		}
 
+		sprintf_s(tmp_string, "%s Video Player", ICON_FA_FILM);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::VIDEO_PLAYER);
+		}
+
 		sprintf_s(tmp_string, "%s Sprite Mask", ICON_FA_THEATER_MASKS);
 		if (ImGui::Selectable(tmp_string))
 		{
@@ -956,8 +1034,6 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::AUDIO_LISTENER);
 
 		}
-
-
 		ImGui::EndPopup();
 	}
 
@@ -1261,7 +1337,7 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 		if (selected_resource != 0)
 		{
 			component_audio_source->SetSoundBank(selected_resource);
-			component_audio_source->modified_by_user = true;
+			component_audio_source->modified_by_user = true;		
 		}
 		selected_resource = ImGui::ResourceDropper<SoundBank>();
 		if (selected_resource != 0)
@@ -1271,16 +1347,42 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 		}
 		if (component_audio_source->soundbank)
 		{
-			//static std::string soundbank;
-			ImGui::InputText("Awake Event Name ", &component_audio_source->awake_event);
-			if (ImGui::Button("Play Event"))
+			std::string event_name = component_audio_source->GetEventName();
+			if (ImGui::BeginCombo("Event Name", event_name.c_str()))
 			{
-				component_audio_source->PlayEvent(component_audio_source->awake_event);
+				for (int i = 0; i < component_audio_source->soundbank->events.size(); ++i)
+				{
+					if (ImGui::Selectable(component_audio_source->soundbank->events[i].c_str()))
+					{
+						component_audio_source->selected_event = i;
+						component_audio_source->modified_by_user = true;
+					}
+				}
+
+				ImGui::Separator();
+				ImGui::EndCombo();
+			}
+
+			if (component_audio_source->selected_event != -1)
+			{
+				if (ImGui::Button("Play Event"))
+				{
+					component_audio_source->PlayEvent(component_audio_source->soundbank->events[component_audio_source->selected_event]);
+
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Stop Event"))
+				{
+					component_audio_source->StopSelectedEvent();
+
+				}
 			}
 		}
+
 		if (ImGui::SliderFloat("Volume", &component_audio_source->volume, 0, 30))
 		{
 			component_audio_source->SetVolume(component_audio_source->volume);
+			component_audio_source->modified_by_user = true;
 		}
 	}
 }
