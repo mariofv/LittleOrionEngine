@@ -44,14 +44,14 @@ void FrameBuffer::ClearAttachements()
 
 }
 
-void FrameBuffer::Bind() const
+void FrameBuffer::Bind(GLenum target) const
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glBindFramebuffer(target, fbo);
 }
 
-void FrameBuffer::UnBind() const
+void FrameBuffer::UnBind(GLenum target)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(target, 0);
 }
 
 GLuint FrameBuffer::GetColorAttachement() const

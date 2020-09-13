@@ -14,32 +14,20 @@
 #include "Module/ModuleSpacePartitioning.h"
 
 #include "FrameBuffer.h"
+#include "MultiSampledFrameBuffer.h"
 
 Viewport::Viewport(bool is_scene_viewport) : is_scene_viewport(is_scene_viewport)
 {
-	render_fbo = new FrameBuffer();
-	debug_draw_fbo = new FrameBuffer();
+	regular_fbo = new FrameBuffer();
+	multisampled_fbo = new MultiSampledFrameBuffer();
+
+	main_fbo = regular_fbo;
 }
 
 Viewport::~Viewport()
 {
-	delete render_fbo;
-	delete debug_draw_fbo;
-}
-
-void Viewport::SetSize(float width, float height)
-{
-	if (this->width == width && this->height == height)
-	{
-		return;
-	}
-
-	this->width = width;
-	this->height = height;
-	glViewport(0, 0, width, height);
-
-	render_fbo->ClearAttachements();
-	render_fbo->GenerateAttachements(width, height);
+	delete regular_fbo;
+	delete multisampled_fbo;
 }
 
 void Viewport::Render(ComponentCamera* camera)
@@ -54,8 +42,9 @@ void Viewport::Render(ComponentCamera* camera)
 	DebugPass();
 	DebugDrawPass();
 	EditorDrawPass();
+	PostProcessPass();
 
-	last_displayed_texture = render_fbo->GetColorAttachement();
+	SelectLastDisplayedTexture();
 }
 
 void Viewport::BindCameraMatrices() const
@@ -73,7 +62,7 @@ void Viewport::BindCameraMatrices() const
 
 void Viewport::MeshRenderPass() const
 {
-	render_fbo->Bind();
+	main_fbo->Bind();
 	camera->Clear();
 
 	std::vector<ComponentMeshRenderer*> culled_mesh_renderers = App->space_partitioning->GetCullingMeshes(camera, App->renderer->mesh_renderers);
@@ -86,7 +75,7 @@ void Viewport::MeshRenderPass() const
 		}
 	}
 
-	render_fbo->UnBind();
+	FrameBuffer::UnBind();
 }
 
 void Viewport::EffectsRenderPass() const
@@ -96,20 +85,28 @@ void Viewport::EffectsRenderPass() const
 		return;
 	}
 
-	render_fbo->Bind();
+	main_fbo->Bind();
 	App->effects->Render();
-	render_fbo->UnBind();
+	FrameBuffer::UnBind();
 }
 
 void Viewport::UIRenderPass() const
 {
-	render_fbo->Bind();
+	main_fbo->Bind();
 	App->ui->Render(width, height, is_scene_viewport);
-	render_fbo->UnBind();
+	FrameBuffer::UnBind();
 }
 
 void Viewport::PostProcessPass() const
 {
+	if (antialiasing)
+	{
+		main_fbo->Bind(GL_READ_FRAMEBUFFER);
+		regular_fbo->Bind(GL_DRAW_FRAMEBUFFER);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		FrameBuffer::UnBind();
+	}
+
 	//App->renderer->RenderPostProcessingEffects(*camera);
 }
 
@@ -131,9 +128,9 @@ void Viewport::DebugDrawPass() const
 		return;
 	}
 
-	render_fbo->Bind();
+	main_fbo->Bind();
 	App->debug_draw->Render(width, height, camera->GetProjectionMatrix() * camera->GetViewMatrix());
-	render_fbo->UnBind();
+	FrameBuffer::UnBind();
 }
 
 void Viewport::EditorDrawPass() const
@@ -143,7 +140,7 @@ void Viewport::EditorDrawPass() const
 		return;
 	}
 
-	render_fbo->Bind();
+	main_fbo->Bind();
 	App->debug_draw->RenderGrid();
 	if (App->debug->show_navmesh)
 	{
@@ -154,5 +151,48 @@ void Viewport::EditorDrawPass() const
 	{
 		App->debug_draw->RenderOutline();
 	}
-	render_fbo->UnBind();
+	FrameBuffer::UnBind();
+}
+
+void Viewport::SetSize(float width, float height)
+{
+	if (this->width == width && this->height == height)
+	{
+		return;
+	}
+
+	this->width = width;
+	this->height = height;
+	glViewport(0, 0, width, height);
+
+	regular_fbo->ClearAttachements();
+	regular_fbo->GenerateAttachements(width, height);
+
+	multisampled_fbo->ClearAttachements();
+	multisampled_fbo->GenerateAttachements(width, height);
+}
+
+void Viewport::SelectLastDisplayedTexture()
+{
+	if (antialiasing)
+	{
+		last_displayed_texture = regular_fbo->GetColorAttachement();
+	}
+	else
+	{
+		last_displayed_texture = main_fbo->GetColorAttachement();
+	}
+}
+
+void Viewport::SetAntialiasing(bool antialiasing)
+{
+	this->antialiasing = antialiasing;
+	if (antialiasing)
+	{
+		main_fbo = multisampled_fbo;
+	}
+	else
+	{
+		main_fbo = regular_fbo;
+	}
 }

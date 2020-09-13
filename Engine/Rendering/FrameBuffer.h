@@ -7,17 +7,17 @@ class FrameBuffer
 {
 public:
 	FrameBuffer();
-	~FrameBuffer();
+	virtual ~FrameBuffer();
 
-	void GenerateAttachements(float width, float height);
+	virtual void GenerateAttachements(float width, float height);
 	void ClearAttachements();
 
-	void Bind() const;
-	void UnBind() const;
+	void Bind(GLenum target = GL_FRAMEBUFFER) const;
+	static void UnBind(GLenum target = GL_FRAMEBUFFER);
 
 	GLuint GetColorAttachement() const;
 
-private:
+protected:
 	GLuint fbo = 0;
 	GLuint rbo = 0;
 	GLuint color_attachement = 0;

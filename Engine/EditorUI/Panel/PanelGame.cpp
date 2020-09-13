@@ -18,12 +18,10 @@ PanelGame::PanelGame()
 	opened = true;
 	enabled = true;
 	window_name = ICON_FA_GHOST " Game";
-	game_viewport = new Viewport(false);
 }
 
 PanelGame::~PanelGame()
 {
-	delete game_viewport;
 }
 
 void PanelGame::Render()
@@ -53,11 +51,11 @@ void PanelGame::Render()
 			game_window_content_area_width = game_window_content_area_max_point.x - game_window_content_area_pos.x;
 			game_window_content_area_height = game_window_content_area_max_point.y - game_window_content_area_pos.y;
 
-			game_viewport->SetSize(game_window_content_area_width, game_window_content_area_height);
-			game_viewport->Render(App->cameras->main_camera);
+			App->renderer->game_viewport->SetSize(game_window_content_area_width, game_window_content_area_height);
+			App->renderer->game_viewport->Render(App->cameras->main_camera);
 
 			ImGui::Image(
-				(void *)game_viewport->last_displayed_texture,
+				(void *)App->renderer->game_viewport->last_displayed_texture,
 				ImVec2(game_window_content_area_width, game_window_content_area_height),
 				ImVec2(0, 1),
 				ImVec2(1, 0)

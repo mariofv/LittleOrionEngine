@@ -31,14 +31,11 @@ PanelScene::PanelScene()
 	opened = true;
 	enabled = true;
 	window_name = ICON_FA_TH " Scene";
-
-	scene_viewport = new Viewport(true);
 }
 
 
 PanelScene::~PanelScene()
 {
-	delete scene_viewport;
 }
 
 void PanelScene::Render()
@@ -67,11 +64,11 @@ void PanelScene::Render()
 
 		//App->lights->RecordShadowsFrameBuffers((GLsizei)scene_window_content_area_width, (GLsizei)scene_window_content_area_height);
 
-		scene_viewport->SetSize(scene_window_content_area_width, scene_window_content_area_height);
-		scene_viewport->Render(App->cameras->scene_camera);
+		App->renderer->scene_viewport->SetSize(scene_window_content_area_width, scene_window_content_area_height);
+		App->renderer->scene_viewport->Render(App->cameras->scene_camera);
 
 		ImGui::Image(
-			(void *)scene_viewport->last_displayed_texture,
+			(void *)App->renderer->scene_viewport->last_displayed_texture,
 			ImVec2(scene_window_content_area_width, scene_window_content_area_height),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
@@ -329,6 +326,7 @@ void PanelScene::RenderSceneCameraGizmo() const
 
 void PanelScene::RenderCameraPreview() const
 {
+	/*
 	Component * selected_camera_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::CAMERA);
 	if (selected_camera_component != nullptr) {
 		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
@@ -356,6 +354,7 @@ void PanelScene::RenderCameraPreview() const
 
 		ImGui::EndChild();
 	}
+	*/
 }
 
 void PanelScene::RenderDebugMetrics() const

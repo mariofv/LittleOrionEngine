@@ -5,6 +5,7 @@
 
 class ComponentCamera;
 class FrameBuffer;
+class MultiSampledFrameBuffer;
 
 class Viewport
 {
@@ -12,9 +13,10 @@ public:
 	Viewport(bool is_scene_viewport);
 	~Viewport();
 
-	void SetSize(float width, float height);
-
 	void Render(ComponentCamera* camera);
+
+	void SetSize(float width, float height);
+	void SetAntialiasing(bool antialiasing);
 
 private:
 	void BindCameraMatrices() const;
@@ -27,15 +29,19 @@ private:
 	void DebugDrawPass() const;
 	void EditorDrawPass() const;
 
+	void SelectLastDisplayedTexture();
+
 public:
 	GLuint last_displayed_texture = 0;
 
-	FrameBuffer* render_fbo = 0;
-	FrameBuffer* debug_draw_fbo = 0;
+	FrameBuffer* main_fbo = nullptr;
+	FrameBuffer* regular_fbo = nullptr;
+	MultiSampledFrameBuffer* multisampled_fbo = nullptr;
 
 	bool effects_pass = true;
 	bool debug_pass = true;
 	bool debug_draw_pass = true;
+
 
 private:
 	ComponentCamera* camera = nullptr;
@@ -44,6 +50,7 @@ private:
 	float height = 0;
 
 	bool is_scene_viewport = false;
+	bool antialiasing = true;
 };
 
 #endif //_VIEWPORT_H_
@@ -52,8 +59,7 @@ private:
 
 CURRENT RENDERING PIPELINE
 /------------------------/
-MESHES -> EFFECTS -> UI -> DEBUG_DRAWS -> EDITOR DRAWS
-
+MESHES -> EFFECTS -> UI -> POST_PROCESS -> DEBUG_DRAWS -> EDITOR DRAWS
 
 */
 

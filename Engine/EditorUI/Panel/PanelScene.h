@@ -6,7 +6,6 @@
 
 class GameObject;
 class PanelConfiguration;
-class Viewport;
 
 class PanelScene : public Panel
 {
@@ -36,13 +35,9 @@ private:
 	void RenderDebugMetrics() const;
 
 private:
-	Viewport* scene_viewport = nullptr;
-
 	bool scene_camera_gizmo_hovered = false;
 	bool gizmo_released = false;
 	bool control_key_down = false;
-
-	friend PanelConfiguration;
 };
 
 #endif //_PANELSCENE_H_

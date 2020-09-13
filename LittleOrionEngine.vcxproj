@@ -192,6 +192,7 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
     <ClInclude Include="Engine\Module\ModuleEffects.h" />
+    <ClInclude Include="Engine\Rendering\MultiSampledFrameBuffer.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\FontManager.h" />
     <ClInclude Include="Engine\Module\ModulePhysics.h" />
     <ClInclude Include="Engine\Module\ModuleAudio.h" />
@@ -332,6 +333,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Component\ComponentVideoPlayer.cpp" />
+    <ClCompile Include="Engine\Rendering\MultiSampledFrameBuffer.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Video.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddMultipleGO.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionDeleteMultipleGO.cpp" />

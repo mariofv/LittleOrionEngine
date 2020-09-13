@@ -5,7 +5,6 @@
 #include <MathGeoLib.h>
 
 class PanelConfiguration;
-class Viewport;
 
 class PanelGame : public Panel
 {
@@ -23,10 +22,6 @@ public:
 	float game_window_content_area_height = 0;
 	float2 game_window_content_area_pos = float2::zero;
 
-private:
-	Viewport* game_viewport = nullptr;
-
-	friend PanelConfiguration;
 };
 
 #endif //_PANELGAME_H_

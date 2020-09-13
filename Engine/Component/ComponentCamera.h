@@ -57,7 +57,6 @@ public:
 
 	void Clear() const;
 
-	void RecordFrame(GLsizei width, GLsizei height, bool scene_mode = false); //TODO: Delete this
 	void RecordZBufferFrame(GLsizei width, GLsizei height);
 	void SetWidthAndHeight(const GLsizei &width, const GLsizei &height);
 
@@ -129,7 +128,6 @@ private:
 	void GenerateFrameBuffers(GLsizei width, GLsizei height);
 	void InitCamera();
 	void CreateFramebuffer(GLsizei width, GLsizei height);
-	void CreateMssaFramebuffer(GLsizei width, GLsizei height);
 	void CreateOrthographicFramebuffer(GLsizei width, GLsizei height);
 
 public:

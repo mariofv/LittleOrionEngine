@@ -1,5 +1,11 @@
 #include "ModuleRender.h"
 
+#include "Component/ComponentCamera.h"
+#include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentLight.h"
+
+#include "EditorUI/DebugDraw.h"
+
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleCamera.h"
@@ -8,17 +14,12 @@
 #include "ModuleEditor.h"
 #include "ModuleEffects.h"
 #include "ModuleProgram.h"
+#include "ModuleResourceManager.h"
 #include "ModuleSpacePartitioning.h"
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
 #include "ModuleLight.h"
-
-#include "Component/ComponentCamera.h"
-#include "Component/ComponentMeshRenderer.h"
-#include "Component/ComponentLight.h"
-
-#include "EditorUI/DebugDraw.h"
-#include "ModuleResourceManager.h"
+#include "Rendering/Viewport.h"
 
 #include <algorithm>
 #include <assimp/scene.h>
@@ -120,6 +121,10 @@ bool ModuleRender::Init()
 
 	APP_LOG_INFO("Glew initialized correctly.");
 
+	scene_viewport = new Viewport(true);
+	game_viewport = new Viewport(false);
+	SetAntialiasing(true);
+
 	return true;
 }
 
@@ -140,6 +145,9 @@ bool ModuleRender::CleanUp()
 	{
 		mesh->owner->RemoveComponent(mesh);
 	}
+
+	delete scene_viewport;
+	delete game_viewport;
 
 	return true;
 }
@@ -164,72 +172,6 @@ void ModuleRender::Render() const
 
 	BROFILER_CATEGORY("Swap Window (VSYNC)", Profiler::Color::Aquamarine);
 	SDL_GL_SwapWindow(App->window->window);
-}
-
-void ModuleRender::RenderFrame(const ComponentCamera &camera)
-{
-	BROFILER_CATEGORY("Render Frame", Profiler::Color::Azure);
-  
-	rendering_measure_timer->Start();
-	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-
-	static size_t projection_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + sizeof(float4x4);
-	glBufferSubData(GL_UNIFORM_BUFFER, projection_matrix_offset, sizeof(float4x4), camera.GetProjectionMatrix().Transposed().ptr());
-
-	static size_t view_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + 2 * sizeof(float4x4);
-	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), camera.GetViewMatrix().Transposed().ptr());
-
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-	num_rendered_tris = 0;
-	num_rendered_verts = 0;
-
-	
-	GetMeshesToRender(&camera);
-	for (auto &mesh : opaque_mesh_to_render)
-	{
-		BROFILER_CATEGORY("Render Mesh Opaque", Profiler::Color::Aquamarine);
-		if (mesh.second->mesh_uuid != 0 && mesh.second->IsEnabled())
-		{
-			mesh.second->Render();
-			if(mesh.second->mesh_to_render)
-			{
-				num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
-				num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
-				App->lights->UpdateLightAABB(*mesh.second->owner);			
-			}
-			glUseProgram(0);
-
-		}
-	}
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glBlendEquation(GL_FUNC_ADD);
-	for (auto &mesh : transparent_mesh_to_render)
-	{
-		BROFILER_CATEGORY("Render Mesh Transparent", Profiler::Color::Aquamarine);
-		if (mesh.second->mesh_uuid != 0 && mesh.second->IsEnabled())
-		{
-			mesh.second->Render();
-			if(mesh.second->mesh_to_render)
-			{
-				num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
-				num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
-				App->lights->UpdateLightAABB(*mesh.second->owner);			
-			}
-
-			glUseProgram(0);
-			
-		}
-	}
-	glDisable(GL_BLEND);
-	
-	App->effects->Render();
-	
-	rendering_measure_timer->Stop();
-	App->debug->rendering_time = rendering_measure_timer->Read();
-	
 }
 
 void ModuleRender::RenderZBufferFrame(const ComponentCamera & camera)
@@ -356,6 +298,13 @@ void ModuleRender::SetDrawMode(DrawMode draw_mode)
 	default:
 		break;
 	}
+}
+
+void ModuleRender::SetAntialiasing(bool antialiasing)
+{
+	this->antialiasing = antialiasing;
+	scene_viewport->SetAntialiasing(antialiasing);
+	game_viewport->SetAntialiasing(antialiasing);
 }
 
 std::string ModuleRender::GetDrawMode() const

@@ -18,6 +18,7 @@ class ComponentMeshRenderer;
 class ComponentCamera;
 
 class GameObject;
+class Viewport;
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -39,6 +40,7 @@ public:
 		WIREFRAME, 
 		BRIGHTNESS
 	};
+
 	enum class HDRType
 	{
 		REINHARD = 0,
@@ -55,10 +57,8 @@ public:
 	bool CleanUp();
 	
 	void Render() const;
-	void RenderFrame(const ComponentCamera& camera); // TODO: Delete this
 	void RenderZBufferFrame(const ComponentCamera& camera);
 	void GetMeshesToRender(const ComponentCamera* camera);
-
 
 	ComponentMeshRenderer* CreateComponentMeshRenderer();
 	void RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove);
@@ -70,6 +70,7 @@ public:
 
 	ENGINE_API RaycastHit* GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* cam);
 	ENGINE_API void SetDrawMode(DrawMode draw_mode);
+	ENGINE_API void SetAntialiasing(bool antialiasing);
 
 private:
 	void SetVSync(bool vsync);
@@ -86,7 +87,8 @@ private:
 	void SetListOfMeshesToRender(const ComponentCamera* camera);
 
 public:
-	bool anti_aliasing = false;
+	bool antialiasing = true;
+
 	bool toggle_ortho_frustum = false;
 	bool toggle_directional_light_aabb = true;
 	bool toggle_perspective_sub_frustums = false;
@@ -97,6 +99,9 @@ public:
 	bool hdr_active = false;
 	float emisive_exposure = 1.0f;
 	int amount_of_blur = 20;
+
+	Viewport* scene_viewport = nullptr;
+	Viewport* game_viewport = nullptr;
 
 private:
 	void* context = nullptr;
@@ -126,7 +131,7 @@ private:
 	std::list <ipair> opaque_mesh_to_render, transparent_mesh_to_render;
 
 	int num_rendered_tris = 0;
-	int num_rendered_verts = 0;
+	int num_rendered_verts = 0; // TODO: Recalculate this
 	Timer * rendering_measure_timer = new Timer();
 
 	friend class ModuleDebugDraw;

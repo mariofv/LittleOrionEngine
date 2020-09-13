@@ -206,13 +206,6 @@ void PanelConfiguration::ShowRenderOptions()
 			App->renderer->SetVSync(App->renderer->vsync);
 		}
 
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Anti-aliasing", &App->renderer->anti_aliasing))
-		{
-			App->cameras->scene_camera->toggle_msaa = true;
-			App->cameras->main_camera->toggle_msaa = true;
-		}
-
 		ImGui::Separator();
 
 		if (ImGui::Checkbox("Face culling", &App->renderer->gl_cull_face))
@@ -291,7 +284,6 @@ void PanelConfiguration::ShowRenderOptions()
 				ImGui::DragInt("Blur of bloom", &App->renderer->amount_of_blur);
 
 			}
-			
 		}
 
 		ImGui::Separator();
@@ -316,18 +308,14 @@ void PanelConfiguration::ShowRenderOptions()
 
 
 		ImGui::Separator();
-
-		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Scene Viewport");
-		ImGui::PushID("Scene Viewport");
-		ImGui::Checkbox("Render Debug", &App->editor->scene_panel->scene_viewport->debug_pass);
-		ImGui::Checkbox("Render Debug Draws", &App->editor->scene_panel->scene_viewport->debug_draw_pass);
-		ImGui::Checkbox("Render Effects", &App->editor->scene_panel->scene_viewport->effects_pass);
-		ImGui::PopID();
-
-		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Game Viewport");
+		
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Game Graphic Settings");
 		ImGui::PushID("Game Viewport");
-		ImGui::Checkbox("Render Debug Draws", &App->editor->game_panel->game_viewport->debug_draw_pass);
-		ImGui::Checkbox("Render Effects", &App->editor->game_panel->game_viewport->effects_pass);
+		ImGui::Checkbox("Render Effects", &App->renderer->game_viewport->effects_pass);
+		if (ImGui::Checkbox("Antialiasing", &App->renderer->antialiasing))
+		{
+			App->renderer->SetAntialiasing(App->renderer->antialiasing);
+		}
 		ImGui::PopID();
 	}
 }
