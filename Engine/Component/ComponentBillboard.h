@@ -84,7 +84,7 @@ public:
 	bool pulse = false;
 	int current_sprite_x = 0;
 	int current_sprite_y = 0;
-	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float4 color = float4::one;
 	float color_emissive[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	int emissive_intensity = 1;
 private:

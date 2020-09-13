@@ -353,7 +353,8 @@ void GameObject::Load(const Config& config)
 		Component::ComponentType component_type = static_cast<Component::ComponentType>(component_type_uint);
 
 		Component* created_component = nullptr;
-		if (component_type == Component::ComponentType::COLLIDER) {
+		if (component_type == Component::ComponentType::COLLIDER) 
+		{
 			ComponentCollider::ColliderType collider_type = static_cast<ComponentCollider::ColliderType>(gameobject_components_config[i].GetUInt("ColliderType", 0));
 			created_component = CreateComponent(collider_type);
 		}
@@ -551,7 +552,7 @@ void GameObject::RemoveComponent(uint64_t UUID)
 
 Component* GameObject::GetComponent(const Component::ComponentType type) const
 {
-	for (unsigned int i = 0; i < components.size(); ++i)
+ 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
 		if (components[i]->GetType() == type)
 		{

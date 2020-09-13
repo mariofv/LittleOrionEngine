@@ -215,7 +215,7 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 		billboard->ChangeTexture(selected_resource_uuid);
 		billboard->modified_by_user = true;
 	}
-	billboard->modified_by_user |= ImGui::ColorEdit4("Color", billboard->color);
+	billboard->modified_by_user |= ImGui::ColorEdit4("Color", billboard->color.ptr());
 
 	ImGui::Text("TextureEmissive");
 	ImGui::SameLine();

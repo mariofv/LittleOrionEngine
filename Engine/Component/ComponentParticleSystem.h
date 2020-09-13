@@ -43,9 +43,9 @@ public:
 		/*
 		if you add a parameter here you have to put the equivalent in the shader particles.vs
 		Also you will need to add block of 4 floats, so if you add a float like this
-		
+
 		float f1;
-		 
+
 		Add 3 more even if you don't use them:
 
 		float f2,f3,f4;
@@ -85,7 +85,7 @@ public:
 	~ComponentParticleSystem();
 
 	ComponentParticleSystem(GameObject* owner);
-	
+
 
 	void Init() override;
 
@@ -104,7 +104,7 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 	//Copy and move
-	
+
 	void ReassignResource() override;
 	Component* Clone(GameObject* owner, bool original_prefab) override;
 	void CopyTo(Component* component_to_copy) const override;
@@ -123,6 +123,9 @@ public:
 
 	void OrbitX(float angle, Particle& particle);
 	void CalculateGravityVector();
+
+	ENGINE_API bool IsEmitting() const;
+	ENGINE_API bool IsPlaying() const;
 
 private:
 	unsigned int GetParticlesSystemVariation();
@@ -186,7 +189,7 @@ public:
 	//Cone properties
 	float inner_radius = 1.0F;
 	float outer_radius = 3.0F;
-	
+
 	//color
 	TypeOfSizeColorChange type_of_color_change = TypeOfSizeColorChange::COLOR_NONE;
 	float4 initial_color = float4::one;
@@ -204,7 +207,7 @@ public:
 	float velocity_over_time_speed_modifier = 1.0F;
 	float velocity_over_time_speed_modifier_second = 2.0F;
 	BezierCurve vel_curve;
-	
+
 	//Runtime values
 	size_t playing_particles_number = MAX_PARTICLES;
 	size_t num_of_alive_particles = 0;

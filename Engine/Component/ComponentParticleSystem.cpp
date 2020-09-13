@@ -10,20 +10,19 @@
 
 ComponentParticleSystem::ComponentParticleSystem() : Component(nullptr, ComponentType::PARTICLE_SYSTEM)
 {
-	
+
 }
 
 ComponentParticleSystem::ComponentParticleSystem(GameObject* owner) : Component(owner, ComponentType::PARTICLE_SYSTEM)
 {
-	
+
 }
 ComponentParticleSystem::~ComponentParticleSystem()
 {
 	delete billboard;
-	billboard = nullptr;
 }
 
-void ComponentParticleSystem::Init() 
+void ComponentParticleSystem::Init()
 {
 	glGenBuffers(1, &ssbo);
 	particles.reserve(MAX_PARTICLES);
@@ -49,15 +48,15 @@ unsigned int ComponentParticleSystem::FirstUnusedParticle()
 {
 	for (unsigned int i =last_used_particle; i < max_particles_number; ++i)
 	{
-		if (particles[i].life <= 0.0f) 
+		if (particles[i].life <= 0.0f)
 		{
 			last_used_particle = i;
 			return i;
 		}
 	}
-	for (unsigned int i = 0; i < last_used_particle; ++i) 
+	for (unsigned int i = 0; i < last_used_particle; ++i)
 	{
-		if (particles[i].life <= 0.0f) 
+		if (particles[i].life <= 0.0f)
 		{
 			last_used_particle = i;
 			return i;
@@ -105,7 +104,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 			{
 				particle.position_initial.z = position_z / 100.0F;
 			}
-		
+
 		break;
 		}
 		case CONE:
@@ -123,13 +122,13 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 	particle.velocity_initial.Normalize3();
 	particle.size = particles_size;
-	
+
 	particle.color = initial_color;
 	particle.life = particles_life_time * 1000;
 	particle.time_counter = particle.life;
 	particle.time_passed = 0.0F;
 
-	particle.geometric_space = float4x4::FromTRS(owner->transform.GetGlobalTranslation(), owner->transform.GetRotation(), float3::one);
+	particle.geometric_space = float4x4::FromTRS(owner->transform.GetGlobalTranslation(), owner->transform.GetGlobalRotation(), float3::one);
 	particle.inital_random_orbit = rand();
 	particle.random_velocity_percentage = (float)rand() / RAND_MAX;
 	particle.random_size_percentage = (float)rand() / RAND_MAX;
@@ -159,7 +158,7 @@ void ComponentParticleSystem::Render()
 
 		glUseProgram(0);
 	}
-	
+
 }
 
 void ComponentParticleSystem::Update()
@@ -277,7 +276,7 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	{
 		switch (type_of_size_over_time)
 		{
-		
+
 		case TypeOfSizeOverTime::SIZE_LINEAR:
 		{
 			float progress = particle.time_passed * 0.001f / particles_life_time;
@@ -295,7 +294,7 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 		}
 	}
 
-	//animation 
+	//animation
 	if (billboard->is_spritesheet && !tile_random)
 	{
 		float progress = particle.time_passed * 0.001f / particles_life_time;
@@ -350,7 +349,8 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 {
 	billboard->SpecializedSave(config);
 	config.AddInt(static_cast<int>(type_of_particle_system), "Type of particle system");
-	config.AddBool(loop, "Loop Particles");
+
+	config.AddBool(loop, "EmissionLoop");
 	config.AddBool(active, "Active");
 	config.AddFloat2(particles_size, "Particle Size");
 	config.AddBool(tile_random, "Tile random");
@@ -390,10 +390,10 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(fade_time, "Fade Time");
 	config.AddBool(orbit, "Orbit");
 
-	config.AddBool(velocity_over_time, "Velocity Over Time");
 	config.AddInt(type_of_velocity_over_time, "Type of Velocity");
-	config.AddFloat(velocity_over_time_speed_modifier, "Velocity Initial");
-	config.AddFloat(velocity_over_time_speed_modifier_second, "Velocity Final");
+	config.AddBool(velocity_over_time, "Velocity Random");
+	config.AddFloat(velocity_over_time_speed_modifier, "Velocity Speed First");
+	config.AddFloat(velocity_over_time_speed_modifier_second, "Velocity Speed Second");
 	vel_curve.SpecializedSave(config, "Velocity Curve");
 
 	config.AddBool(size_over_time, "Size Over Time");
@@ -401,14 +401,16 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(min_size_of_particle, "Max Size Particles");
 	config.AddFloat(max_size_of_particle, "Min Size Particles");
 	size_curve.SpecializedSave(config, "Size Curve");
-}
+	}
 
 void ComponentParticleSystem::SpecializedLoad(const Config& config)
 {
 	billboard->SpecializedLoad(config);
 	type_of_particle_system = static_cast<TypeOfParticleSystem>(config.GetInt("Type of particle system", static_cast<int>(TypeOfParticleSystem::BOX)));
-	
-	loop = config.GetBool("Loop Particles", true);
+
+	loop = config.GetBool("EmissionLoop", true);
+	min_size_of_particle = config.GetFloat("Max Size Particles", 0.2);
+	max_size_of_particle = config.GetFloat("Min Size Particles", 0.2);
 	config.GetFloat2("Particle Size", particles_size, float2(0.2f));
 	tile_random = config.GetBool("Tile random", false);
 	max_tile_value = config.GetFloat("Max Tile", 0);
@@ -447,10 +449,10 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	fade_time = config.GetFloat("Fade Time", 1.0F);
 	orbit = config.GetBool("Orbit", false);
 
-	velocity_over_time = config.GetBool("Velocity Over Time", false);
 	type_of_velocity_over_time = static_cast<TypeOfVelocityOverTime>(config.GetInt("Type of Velocity", TypeOfVelocityOverTime::VEL_CONSTANT));
-	velocity_over_time_speed_modifier = config.GetFloat("Velocity Initial", 1.0F);
-	velocity_over_time_speed_modifier_second = config.GetFloat("Velocity Final", 2.0F);
+	velocity_over_time = config.GetBool("Velocity Random", false);
+	velocity_over_time_speed_modifier = config.GetFloat("Velocity Speed First", 0.f);
+	velocity_over_time_speed_modifier_second = config.GetFloat("Velocity Speed Second", 0.f);
 	vel_curve.SpecializedLoad(config, "Velocity Curve");
 
 	size_over_time = config.GetBool("Size Over Time", false);
@@ -576,4 +578,14 @@ void ComponentParticleSystem::Disable()
 void ComponentParticleSystem::Enable()
 {
 	active = true;
+}
+
+ENGINE_API bool ComponentParticleSystem::IsEmitting() const
+{
+	return emitting;
+}
+
+ENGINE_API bool ComponentParticleSystem::IsPlaying() const
+{
+	return playing;
 }
