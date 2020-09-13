@@ -14,6 +14,7 @@
 #include "Module/ModuleWindow.h"
 #include "PanelConfiguration.h"
 #include "Module/ModulePhysics.h"
+#include "Rendering/Viewport.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <GL/glew.h>
@@ -313,8 +314,21 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::Checkbox("Render shadows", &App->lights->render_shadows);
 		ImGui::SliderFloat("Shadows Fov Factor", &App->lights->main_camera_fov_increment_factor, 0, 4, "%.2f");
 
-		ImGui::Checkbox("Render Effects", &App->effects->render_effects);
 
+		ImGui::Separator();
+
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Scene Viewport");
+		ImGui::PushID("Scene Viewport");
+		ImGui::Checkbox("Render Debug", &App->editor->scene_panel->scene_viewport->debug_pass);
+		ImGui::Checkbox("Render Debug Draws", &App->editor->scene_panel->scene_viewport->debug_draw_pass);
+		ImGui::Checkbox("Render Effects", &App->editor->scene_panel->scene_viewport->effects_pass);
+		ImGui::PopID();
+
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Game Viewport");
+		ImGui::PushID("Game Viewport");
+		ImGui::Checkbox("Render Debug Draws", &App->editor->game_panel->game_viewport->debug_draw_pass);
+		ImGui::Checkbox("Render Effects", &App->editor->game_panel->game_viewport->effects_pass);
+		ImGui::PopID();
 	}
 }
 

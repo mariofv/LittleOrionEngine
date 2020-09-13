@@ -4,6 +4,7 @@
 #include "Panel.h"
 #include <MathGeoLib.h>
 
+class PanelConfiguration;
 class Viewport;
 
 class PanelGame : public Panel
@@ -24,6 +25,8 @@ public:
 
 private:
 	Viewport* game_viewport = nullptr;
+
+	friend PanelConfiguration;
 };
 
 #endif //_PANELGAME_H_

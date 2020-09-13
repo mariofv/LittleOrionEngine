@@ -33,6 +33,10 @@ public:
 	FrameBuffer* render_fbo = 0;
 	FrameBuffer* debug_draw_fbo = 0;
 
+	bool effects_pass = true;
+	bool debug_pass = true;
+	bool debug_draw_pass = true;
+
 private:
 	ComponentCamera* camera = nullptr;
 

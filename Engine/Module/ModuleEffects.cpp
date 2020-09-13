@@ -24,10 +24,6 @@ bool ModuleEffects::CleanUp()
 
 void ModuleEffects::Render()
 {
-	if (!render_effects)
-	{
-		return;
-	}
 	BROFILER_CATEGORY("Module Effects Render", Profiler::Color::OrangeRed);
 
 	glDepthMask(GL_FALSE);

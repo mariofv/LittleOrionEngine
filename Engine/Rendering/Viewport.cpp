@@ -91,6 +91,11 @@ void Viewport::MeshRenderPass() const
 
 void Viewport::EffectsRenderPass() const
 {
+	if (!effects_pass)
+	{
+		return;
+	}
+
 	render_fbo->Bind();
 	App->effects->Render();
 	render_fbo->UnBind();
@@ -110,14 +115,22 @@ void Viewport::PostProcessPass() const
 
 void Viewport::DebugPass() const
 {
-	if (is_scene_viewport)
+	if (!debug_pass || !is_scene_viewport)
 	{
-		App->debug->Render();
+		return;
 	}
+
+	App->debug->Render();
+
 }
 
 void Viewport::DebugDrawPass() const
 {
+	if (!debug_draw_pass)
+	{
+		return;
+	}
+
 	render_fbo->Bind();
 	App->debug_draw->Render(width, height, camera->GetProjectionMatrix() * camera->GetViewMatrix());
 	render_fbo->UnBind();
@@ -125,6 +138,11 @@ void Viewport::DebugDrawPass() const
 
 void Viewport::EditorDrawPass() const
 {
+	if (!is_scene_viewport)
+	{
+		return;
+	}
+
 	render_fbo->Bind();
 	App->debug_draw->RenderGrid();
 	if (App->debug->show_navmesh)
