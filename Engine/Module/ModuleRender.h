@@ -73,18 +73,13 @@ public:
 
 private:
 	void SetVSync(bool vsync);
-	void SetAlphaTest(bool gl_alpha_test);
 	void SetDepthTest(bool gl_depth_test);
-	void SetScissorTest(bool gl_scissor_test);
-	void SetStencilTest(bool gl_stencil_test);
-	void SetBlending(bool gl_blend);
 	void SetFaceCulling(bool gl_cull_face);
 	void SetCulledFaces(GLenum culled_faces) const;
 	void SetFrontFaces(GLenum front_faces) const;
-	void SetDithering(bool gl_dither);
-	void SetMinMaxing(bool gl_minmax);
 	void SetHDRType(const HDRType type);
 	std::string GetHDRType(const HDRType type) const;
+
 	void RenderPostProcessingEffects(const ComponentCamera &camera);
 	std::string GetDrawMode() const;
 
@@ -108,17 +103,12 @@ private:
 	HDRType hdr_type = HDRType::FILMIC;
 
 	bool vsync = false;
-	bool gl_alpha_test = false;
 	bool gl_depth_test = false;
-	bool gl_scissor_test = false;
-	bool gl_stencil_test = false;
 	bool gl_blend = true;
 	bool gl_cull_face = false;
 	int culled_faces = 0;
 	int front_faces = 0;
 	int filling_mode = 0;
-	bool gl_dither = false;
-	bool gl_minmax = false;
 
 	float quadVertices[20] = {
 		// positions        // texture Coords

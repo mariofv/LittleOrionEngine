@@ -206,13 +206,6 @@ void PanelConfiguration::ShowRenderOptions()
 		}
 
 		ImGui::SameLine();
-		if (ImGui::Checkbox("Depth test", &App->renderer->gl_depth_test))
-		{
-			App->renderer->SetDepthTest(App->renderer->gl_depth_test);
-
-		}
-
-		ImGui::SameLine();
 		if (ImGui::Checkbox("Anti-aliasing", &App->renderer->anti_aliasing))
 		{
 			App->cameras->scene_camera->toggle_msaa = true;
@@ -298,37 +291,6 @@ void PanelConfiguration::ShowRenderOptions()
 
 			}
 			
-		}
-		ImGui::Separator();
-		HelpMarker("This settings have no visual impact, WIP.");
-		ImGui::SameLine();
-		if (ImGui::TreeNode("Non-functional settings"))
-		{
-			if (ImGui::Checkbox("Alpha test", &App->renderer->gl_alpha_test))
-			{
-				App->renderer->SetAlphaTest(App->renderer->gl_alpha_test);
-			}
-			if (ImGui::Checkbox("Scissor test", &App->renderer->gl_scissor_test))
-			{
-				App->renderer->SetScissorTest(App->renderer->gl_scissor_test);
-			}
-			if (ImGui::Checkbox("Stencil test", &App->renderer->gl_stencil_test))
-			{
-				App->renderer->SetStencilTest(App->renderer->gl_stencil_test);
-			}
-			if (ImGui::Checkbox("Blending", &App->renderer->gl_blend))
-			{
-				App->renderer->SetBlending(App->renderer->gl_blend);
-			}
-			if (ImGui::Checkbox("Dithering", &App->renderer->gl_dither))
-			{
-				App->renderer->SetDithering(App->renderer->gl_dither);
-			}
-			if (ImGui::Checkbox("Min Maxing", &App->renderer->gl_minmax))
-			{
-				App->renderer->SetMinMaxing(App->renderer->gl_minmax);
-			}
-			ImGui::TreePop();
 		}
 
 		ImGui::Separator();
