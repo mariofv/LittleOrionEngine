@@ -195,38 +195,6 @@ void ModuleEditor::RenderEditorDockspace()
 				panel->Render();
 			}
 		}
-
-
-		if (ImGui::Begin("Viewport", NULL))
-		{
-			ImVec2 scene_window_pos_ImVec2 = ImGui::GetWindowPos();
-			float2 scene_window_pos = float2(scene_window_pos_ImVec2.x, scene_window_pos_ImVec2.y);
-
-			ImVec2 scene_window_content_area_max_point_ImVec2 = ImGui::GetWindowContentRegionMax();
-			scene_window_content_area_max_point_ImVec2 = ImVec2(
-				scene_window_content_area_max_point_ImVec2.x + scene_window_pos_ImVec2.x,
-				scene_window_content_area_max_point_ImVec2.y + scene_window_pos_ImVec2.y
-			); // Pass from window space to screen space
-			float2 scene_window_content_area_max_point = float2(scene_window_content_area_max_point_ImVec2.x, scene_window_content_area_max_point_ImVec2.y);
-
-			ImVec2 scene_window_content_area_pos_ImVec2 = ImGui::GetCursorScreenPos();
-			float2 scene_window_content_area_pos = float2(scene_window_content_area_pos_ImVec2.x, scene_window_content_area_pos_ImVec2.y);
-
-			float width = scene_window_content_area_max_point.x - scene_window_content_area_pos.x;
-			float height = scene_window_content_area_max_point.y - scene_window_content_area_pos.y;
-
-			App->renderer->testing_viewport->SetSize(width, height);
-			App->renderer->testing_viewport->Render(App->cameras->scene_camera);
-
-			ImGui::Image(
-				(void *)App->renderer->testing_viewport->last_displayed_texture,
-				ImVec2(width, height),
-				ImVec2(0, 1),
-				ImVec2(1, 0)
-			);
-
-		}
-		ImGui::End();
 	}
 	ImGui::EndChild();
 }

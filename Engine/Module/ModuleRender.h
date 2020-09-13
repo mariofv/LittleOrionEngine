@@ -18,7 +18,6 @@ class ComponentMeshRenderer;
 class ComponentCamera;
 
 class GameObject;
-class Viewport;
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -103,8 +102,6 @@ public:
 	bool hdr_active = false;
 	float emisive_exposure = 1.0f;
 	int amount_of_blur = 20;
-
-	Viewport* testing_viewport = nullptr;
 
 private:
 	void* context = nullptr;

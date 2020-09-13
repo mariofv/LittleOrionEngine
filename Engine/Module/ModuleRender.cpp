@@ -19,7 +19,6 @@
 
 #include "EditorUI/DebugDraw.h"
 #include "ModuleResourceManager.h"
-#include "Rendering/Viewport.h"
 
 #include <algorithm>
 #include <assimp/scene.h>
@@ -121,8 +120,6 @@ bool ModuleRender::Init()
 
 	APP_LOG_INFO("Glew initialized correctly.");
 
-	testing_viewport = new Viewport(true);
-
 	return true;
 }
 
@@ -143,8 +140,6 @@ bool ModuleRender::CleanUp()
 	{
 		mesh->owner->RemoveComponent(mesh);
 	}
-
-	delete testing_viewport;
 
 	return true;
 }

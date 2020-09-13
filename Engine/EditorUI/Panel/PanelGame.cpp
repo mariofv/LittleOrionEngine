@@ -7,6 +7,8 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleRender.h"
 
+#include "Rendering/Viewport.h"
+
 #include <Brofiler/Brofiler.h>
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -16,6 +18,12 @@ PanelGame::PanelGame()
 	opened = true;
 	enabled = true;
 	window_name = ICON_FA_GHOST " Game";
+	game_viewport = new Viewport(false);
+}
+
+PanelGame::~PanelGame()
+{
+	delete game_viewport;
 }
 
 void PanelGame::Render()
@@ -45,14 +53,11 @@ void PanelGame::Render()
 			game_window_content_area_width = game_window_content_area_max_point.x - game_window_content_area_pos.x;
 			game_window_content_area_height = game_window_content_area_max_point.y - game_window_content_area_pos.y;
 
-			
-			App->lights->RecordShadowsFrameBuffers((GLsizei)game_window_content_area_width, (GLsizei)game_window_content_area_height);
-			App->cameras->main_camera->RecordFrame((GLsizei)game_window_content_area_width, (GLsizei)game_window_content_area_height);
-			//App->cameras->main_camera->RecordDebugDraws(false);
-
+			game_viewport->SetSize(game_window_content_area_width, game_window_content_area_height);
+			game_viewport->Render(App->cameras->main_camera);
 
 			ImGui::Image(
-				(void *)App->cameras->main_camera->GetLastRecordedFrame(),
+				(void *)game_viewport->last_displayed_texture,
 				ImVec2(game_window_content_area_width, game_window_content_area_height),
 				ImVec2(0, 1),
 				ImVec2(1, 0)

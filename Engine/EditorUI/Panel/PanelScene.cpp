@@ -20,6 +20,8 @@
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Resources/Prefab.h"
 
+#include "Rendering/Viewport.h"
+
 #include <Brofiler/Brofiler.h>
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -29,11 +31,14 @@ PanelScene::PanelScene()
 	opened = true;
 	enabled = true;
 	window_name = ICON_FA_TH " Scene";
+
+	scene_viewport = new Viewport(true);
 }
 
 
 PanelScene::~PanelScene()
 {
+	delete scene_viewport;
 }
 
 void PanelScene::Render()
@@ -59,14 +64,14 @@ void PanelScene::Render()
 
 		scene_window_content_area_width = scene_window_content_area_max_point.x - scene_window_content_area_pos.x;
 		scene_window_content_area_height = scene_window_content_area_max_point.y - scene_window_content_area_pos.y;
-		
 
-		App->lights->RecordShadowsFrameBuffers((GLsizei)scene_window_content_area_width, (GLsizei)scene_window_content_area_height);
+		//App->lights->RecordShadowsFrameBuffers((GLsizei)scene_window_content_area_width, (GLsizei)scene_window_content_area_height);
 
-		App->cameras->scene_camera->RecordFrame((GLsizei)scene_window_content_area_width, (GLsizei)scene_window_content_area_height, true);
+		scene_viewport->SetSize(scene_window_content_area_width, scene_window_content_area_height);
+		scene_viewport->Render(App->cameras->scene_camera);
 
 		ImGui::Image(
-			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),
+			(void *)scene_viewport->last_displayed_texture,
 			ImVec2(scene_window_content_area_width, scene_window_content_area_height),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
