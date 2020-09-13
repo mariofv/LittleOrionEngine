@@ -135,15 +135,7 @@ void  ComponentTrail::GetPerpendiculars()
 			//Get the vector that links every two points
 			float3 vector_adjacent = (pair->second->position - pair->first->position).Normalized();//vector between each pair -> Normalized to get vector with magnitutde = 1 but same direction
 			float3 perpendicular;
-			if (App->cameras->scene_camera)
-			{
-				perpendicular = vector_adjacent.Cross((App->cameras->scene_camera->camera_frustum.pos - owner->transform.GetGlobalTranslation().Normalized())) * width; //Front is currently local
-
-			}
-			else
-			{
-				perpendicular = vector_adjacent.Cross(owner->transform.GetRightVector()) * width; //Front is currently local
-			}
+			perpendicular = vector_adjacent.Cross((App->cameras->scene_camera->camera_frustum.pos - owner->transform.GetGlobalTranslation().Normalized())) * width; //Front is currently local
 			if (++pair == mesh_points.end())
 			{
 				--pair;
@@ -177,7 +169,7 @@ void ComponentTrail::GetCatmull()
 	CalculateCatmull(path_bottom, spline_bottom);
 }
 
-void ComponentTrail::CalculateCatmull(Spline& path_to_smoothen, std::vector<float3>& spline_points)
+void ComponentTrail::CalculateCatmull(Spline& const path_to_smoothen, std::vector<float3>& spline_points)
 {
 	float3 curve_point;
 	spline_points.clear();
@@ -217,7 +209,7 @@ void ComponentTrail::CalculateCatmull(Spline& path_to_smoothen, std::vector<floa
 void ComponentTrail::GetUVs()
 {
 	float trail_segment_uv = 1.f / spline_top.size(); // to coordinate texture
-	float trail_segment_uv_x = 1.f / (spline_top.size() / colums);
+	float trail_segment_uv_x = 1.f / (spline_top.size() / columns);
 	float trail_segment_uv_y = rows;
 	vertices.clear();
 	for (int l = 0; l < spline_top.size(); l++)
@@ -225,14 +217,30 @@ void ComponentTrail::GetUVs()
 		switch (texture_mode)
 		{
 		case ComponentTrail::TextureMode::STRETCH:
-			vertices.push_back({ spline_top[l], float2(trail_segment_uv * l , 1.0f) });//uv[++i]
-			vertices.push_back({ spline_bottom[l], float2(trail_segment_uv * l, 0.0f) });//uv[++i]
+			if (l == 0)
+			{
+				vertices.push_back({ spline_top[l], float2(trail_segment_uv , 1.0f) });//uv[++i]
+				vertices.push_back({ spline_bottom[l], float2(trail_segment_uv , 0.0f) });//uv[++i]
+			}
+			else
+			{
+				vertices.push_back({ spline_top[l], float2(trail_segment_uv * l , 1.0f) });//uv[++i]
+				vertices.push_back({ spline_bottom[l], float2(trail_segment_uv * l, 0.0f) });//uv[++i]
+			}
 			break;
 		case ComponentTrail::TextureMode::TILE:
-			vertices.push_back({ spline_top[l], float2(trail_segment_uv_x * l , 1.0f * trail_segment_uv_y) });//uv[++i]
-			vertices.push_back({ spline_bottom[l], float2(trail_segment_uv_x * l, 0.0f) });//uv[++i]
+			if (l == 0)
+			{
+				vertices.push_back({ spline_top[l], float2(trail_segment_uv_x , 1.0f * trail_segment_uv_y) });//uv[++i]
+				vertices.push_back({ spline_bottom[l], float2(trail_segment_uv_x , 0.0f) });//uv[++i]
+			}
+			else
+			{
+				vertices.push_back({ spline_top[l], float2(trail_segment_uv_x * l , 1.0f * trail_segment_uv_y) });//uv[++i]
+				vertices.push_back({ spline_bottom[l], float2(trail_segment_uv_x * l, 0.0f) });//uv[++i]
+			}
 			break;
-		case ComponentTrail::TextureMode::REPEATPERSEGMENT:
+		case ComponentTrail::TextureMode::REPEAT_PER_SEGMENT:
 			vertices.push_back({ spline_top[l], float2(l , 1.0f) });//uv[++i]
 			vertices.push_back({ spline_bottom[l], float2(l, 0.0f) });//uv[++i]
 			break;
@@ -350,7 +358,7 @@ void ComponentTrail::SpecializedSave(Config& config) const
 	config.AddUInt(points_in_curve, "Curve Points");
 	config.AddInt(static_cast<int>(texture_mode), "Texture Mode");
 	config.AddUInt(rows, "Rows");
-	config.AddUInt(colums, "Columns");
+	config.AddUInt(columns, "Columns");
 }
 void ComponentTrail::SpecializedLoad(const Config& config)
 {
@@ -366,7 +374,7 @@ void ComponentTrail::SpecializedLoad(const Config& config)
 	points_in_curve = config.GetUInt("Curve Points", 5);
 	texture_mode = static_cast<TextureMode>(config.GetInt("Texture Mode", static_cast<int>(TextureMode::STRETCH)));
 	rows = config.GetUInt("Rows", 1);
-	colums = config.GetUInt("Columns", 1);
+	columns = config.GetUInt("Columns", 1);
 
 }
 
