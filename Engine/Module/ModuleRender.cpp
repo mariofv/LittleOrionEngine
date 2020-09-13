@@ -121,7 +121,7 @@ bool ModuleRender::Init()
 
 	APP_LOG_INFO("Glew initialized correctly.");
 
-	testing_viewport = new Viewport();
+	testing_viewport = new Viewport(true);
 
 	return true;
 }

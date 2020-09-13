@@ -15,7 +15,7 @@
 
 #include "FrameBuffer.h"
 
-Viewport::Viewport()
+Viewport::Viewport(bool is_scene_viewport) : is_scene_viewport(is_scene_viewport)
 {
 	render_fbo = new FrameBuffer();
 	debug_draw_fbo = new FrameBuffer();
@@ -98,7 +98,7 @@ void Viewport::EffectsRenderPass() const
 void Viewport::UIRenderPass() const
 {
 	render_fbo->Bind();
-	App->ui->Render(width, height, false);
+	App->ui->Render(width, height, is_scene_viewport);
 	render_fbo->UnBind();
 }
 

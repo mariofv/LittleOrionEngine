@@ -9,10 +9,11 @@ class FrameBuffer;
 class Viewport
 {
 public:
-	Viewport();
+	Viewport(bool is_scene_viewport);
 	~Viewport();
 
 	void SetSize(float width, float height);
+
 	void Render(ComponentCamera* camera);
 
 private:
@@ -36,6 +37,7 @@ private:
 	float width = 0;
 	float height = 0;
 
+	bool is_scene_viewport = false;
 };
 
 #endif //_VIEWPORT_H_
@@ -44,7 +46,7 @@ private:
 
 CURRENT RENDERING PIPELINE
 /------------------------/
-MESHES -> DEBUG_DRAWS
+MESHES -> EFFECTS -> UI -> DEBUG_DRAWS -> EDITOR DRAWS
 
 
 */
