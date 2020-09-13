@@ -6,6 +6,7 @@
 #include "Main/Application.h"
 #include "ModuleEditor.h"
 #include "ModuleAnimation.h"
+#include "ModuleAudio.h"
 #include "ModuleScene.h"
 #include "ModuleScriptManager.h"
 #include "ModuleWindow.h"
@@ -116,11 +117,13 @@ void ModuleTime::Play()
 		SetTimeScale(1.f);
 		frame_start_time = game_time_clock->Read();
 		App->animations->PlayAnimations();
+		App->audio->ResetRTPCValues("FilterLPF");
 	}
 	else
 	{
 		game_time_clock->Stop();
 		App->scene->LoadTmpScene();
+		App->audio->ResetRTPCValues("FilterLPF");
 	}
 }
 
