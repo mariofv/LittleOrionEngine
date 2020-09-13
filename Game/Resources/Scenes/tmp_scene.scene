@@ -236,7 +236,7 @@
                     0.5
                 ],
                 "SizeDelta": [
-                    1168.0,
+                    1174.0,
                     551.0
                 ],
                 "Pivot": [
@@ -331,7 +331,7 @@
                     "SoundBank": 249539085,
                     "3DSound": false,
                     "PlayOnAwake": false,
-                    "AwakeEvent": ""
+                    "AwakeEvent": -1
                 }
             ]
         },
