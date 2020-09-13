@@ -229,12 +229,28 @@ void ComponentTrail::GetUVs()
 		switch (texture_mode)
 		{
 		case ComponentTrail::TextureMode::STRETCH:
-			vertices.push_back({ spline_top[l], float2(trail_segment_uv * l , 1.0f) });//uv[++i]
-			vertices.push_back({ spline_bottom[l], float2(trail_segment_uv * l, 0.0f) });//uv[++i]
+			if (l == 0)
+			{
+				vertices.push_back({ spline_top[l], float2(trail_segment_uv , 1.0f) });//uv[++i]
+				vertices.push_back({ spline_bottom[l], float2(trail_segment_uv , 0.0f) });//uv[++i]
+			}
+			else
+			{
+				vertices.push_back({ spline_top[l], float2(trail_segment_uv * l , 1.0f) });//uv[++i]
+				vertices.push_back({ spline_bottom[l], float2(trail_segment_uv * l, 0.0f) });//uv[++i]
+			}
 			break;
 		case ComponentTrail::TextureMode::TILE:
-			vertices.push_back({ spline_top[l], float2(trail_segment_uv_x * l , 1.0f * trail_segment_uv_y) });//uv[++i]
-			vertices.push_back({ spline_bottom[l], float2(trail_segment_uv_x * l, 0.0f) });//uv[++i]
+			if (l == 0)
+			{
+				vertices.push_back({ spline_top[l], float2(trail_segment_uv_x , 1.0f * trail_segment_uv_y) });//uv[++i]
+				vertices.push_back({ spline_bottom[l], float2(trail_segment_uv_x , 0.0f) });//uv[++i]
+			}
+			else
+			{
+				vertices.push_back({ spline_top[l], float2(trail_segment_uv_x * l , 1.0f * trail_segment_uv_y) });//uv[++i]
+				vertices.push_back({ spline_bottom[l], float2(trail_segment_uv_x * l, 0.0f) });//uv[++i]
+			}
 			break;
 		case ComponentTrail::TextureMode::REPEATPERSEGMENT:
 			vertices.push_back({ spline_top[l], float2(l , 1.0f) });//uv[++i]
