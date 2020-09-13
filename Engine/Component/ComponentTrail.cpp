@@ -217,7 +217,11 @@ void ComponentTrail::CalculateCatmull(Spline& path_to_smoothen, std::vector<floa
 void ComponentTrail::GetUVs()
 {
 	float trail_segment_uv = 1.f / spline_top.size(); // to coordinate texture
-	float trail_segment_uv_x = 1.f / (spline_top.size() / colums);
+	if (columns <= 0)
+	{
+		return;
+	}
+	float trail_segment_uv_x = 1.f / (spline_top.size() / columns);
 	float trail_segment_uv_y = rows;
 	vertices.clear();
 	for (int l = 0; l < spline_top.size(); l++)
@@ -350,7 +354,7 @@ void ComponentTrail::SpecializedSave(Config& config) const
 	config.AddUInt(points_in_curve, "Curve Points");
 	config.AddInt(static_cast<int>(texture_mode), "Texture Mode");
 	config.AddUInt(rows, "Rows");
-	config.AddUInt(colums, "Columns");
+	config.AddUInt(columns, "Columns");
 }
 void ComponentTrail::SpecializedLoad(const Config& config)
 {
@@ -366,7 +370,7 @@ void ComponentTrail::SpecializedLoad(const Config& config)
 	points_in_curve = config.GetUInt("Curve Points", 5);
 	texture_mode = static_cast<TextureMode>(config.GetInt("Texture Mode", static_cast<int>(TextureMode::STRETCH)));
 	rows = config.GetUInt("Rows", 1);
-	colums = config.GetUInt("Columns", 1);
+	columns = config.GetUInt("Columns", 1);
 
 }
 

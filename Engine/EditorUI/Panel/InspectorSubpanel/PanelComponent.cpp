@@ -329,7 +329,7 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 			}
 		}
 		trail->modified_by_user |= ImGui::DragInt("Tile Rows", &trail->rows, 1, 0, 1000);
-		trail->modified_by_user |= ImGui::DragInt("Tile Columns", &trail->colums, 1, 0, 1000);
+		trail->modified_by_user |= ImGui::DragInt("Tile Columns", &trail->columns, 1, 0, 1000);
 		trail->modified_by_user |= ImGui::DragInt("Curve Segments", &trail->points_in_curve, 1, 0, 100);
 		trail->modified_by_user |= ImGui::ColorEdit4("Color", trail->color.ptr());
 		trail->modified_by_user |= ImGui::DragFloat("Intensity", &trail->bloom_intensity, 0.05f, 0.01f, 10.0f);
