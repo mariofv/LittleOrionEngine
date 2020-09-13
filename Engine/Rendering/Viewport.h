@@ -22,6 +22,7 @@ private:
 	void MeshRenderPass() const;
 	void EffectsRenderPass() const;
 	void UIRenderPass() const;
+	void PostProcessPass() const;
 	void DebugPass() const;
 	void DebugDrawPass() const;
 	void EditorDrawPass() const;

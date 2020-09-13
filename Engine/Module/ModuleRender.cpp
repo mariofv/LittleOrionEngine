@@ -231,7 +231,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	glDisable(GL_BLEND);
 	
 	App->effects->Render();
-	RenderPostProcessingEffects(camera);
 	
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();

@@ -103,6 +103,11 @@ void Viewport::UIRenderPass() const
 	render_fbo->UnBind();
 }
 
+void Viewport::PostProcessPass() const
+{
+	//App->renderer->RenderPostProcessingEffects(*camera);
+}
+
 void Viewport::DebugPass() const
 {
 	if (is_scene_viewport)
