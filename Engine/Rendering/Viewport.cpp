@@ -51,6 +51,7 @@ void Viewport::Render(ComponentCamera* camera)
 	MeshRenderPass();
 	EffectsRenderPass();
 	UIRenderPass();
+	DebugPass();
 	DebugDrawPass();
 	EditorDrawPass();
 
@@ -100,6 +101,14 @@ void Viewport::UIRenderPass() const
 	render_fbo->Bind();
 	App->ui->Render(width, height, is_scene_viewport);
 	render_fbo->UnBind();
+}
+
+void Viewport::DebugPass() const
+{
+	if (is_scene_viewport)
+	{
+		App->debug->Render();
+	}
 }
 
 void Viewport::DebugDrawPass() const

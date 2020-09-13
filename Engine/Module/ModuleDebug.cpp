@@ -33,7 +33,7 @@ bool ModuleDebug::Init()
 }
 
 
-void ModuleDebug::Render(ComponentCamera* cam)
+void ModuleDebug::Render()
 {
 	BROFILER_CATEGORY("Module Debug Render", Profiler::Color::NavajoWhite);
 

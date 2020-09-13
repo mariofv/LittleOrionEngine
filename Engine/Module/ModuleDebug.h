@@ -14,9 +14,10 @@ public:
 	~ModuleDebug() = default;
 
 	bool Init() override;
-	void Render(ComponentCamera* cam);
+	void Render();
 	
 	void CreateFrustumCullingDebugScene() const;
+
 public:
 	bool show_imgui_demo = false;
 	bool show_debug_metrics = true;
