@@ -4,6 +4,7 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScriptManager.h"
+#include "Module/ModuleTime.h"
 #include "Script/Script.h"
 
 #include <imgui.h>
@@ -60,7 +61,7 @@ void ComponentScript::CopyTo(Component* component_to_copy) const
 void ComponentScript::Enable()
 {
 	active = true;
-	if(!awaken)
+	if(!awaken && App->time->isGameRunning())
 	{
 		AwakeScript();
 		StartScript();

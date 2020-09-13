@@ -28,7 +28,7 @@ Tween * Tween::LOTranslate(ComponentTransform2D* transform, const float2 end_val
 	return tween;
 }
 
-Tween * Tween::LORotate(ComponentTransform2D* transform, const float end_value, float desired_time)
+Tween* Tween::LORotate(ComponentTransform2D* transform, const float end_value, float desired_time)
 {
 	Tween* tween = new Tween();
 	tween->transform = transform;

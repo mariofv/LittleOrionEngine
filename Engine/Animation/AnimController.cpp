@@ -95,7 +95,7 @@ void AnimController::UpdateAttachedBones(const std::shared_ptr<Skeleton>& skelet
 			{
 				const float4x4& new_model_matrix = pose[joint_index];
 				attached_bones.second->transform.SetTranslation(new_model_matrix.TranslatePart());
-				attached_bones.second->transform.SetRotation(new_model_matrix.TranslatePart());
+				attached_bones.second->transform.SetRotation(new_model_matrix.RotatePart());
 			}
 		}
 
@@ -153,7 +153,10 @@ void AnimController::AdjustInterpolationTimes()
 void AnimController::SetStateMachine(uint32_t state_machine_uuid)
 {
 	this->state_machine = App->resources->Load<StateMachine>(state_machine_uuid);
-	SetActiveState(state_machine->GetDefaultState());
+	if (this->state_machine)
+	{
+		SetActiveState(state_machine->GetDefaultState());
+	}
 }
 
 void AnimController::SetActiveState(std::shared_ptr<State> & state)
