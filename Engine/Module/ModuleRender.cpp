@@ -121,8 +121,15 @@ bool ModuleRender::Init()
 
 	APP_LOG_INFO("Glew initialized correctly.");
 
-	scene_viewport = new Viewport(true);
-	game_viewport = new Viewport(false);
+	int scene_viewport_options = (int)Viewport::ViewportOption::SCENE_MODE | (int)Viewport::ViewportOption::BLIT_FRAMEBUFFER;
+	scene_viewport = new Viewport(scene_viewport_options);
+
+	int game_viewport_options = 0;
+#if !GAME
+	game_viewport_options = (int)Viewport::ViewportOption::BLIT_FRAMEBUFFER;
+#endif
+	game_viewport = new Viewport(game_viewport_options);
+
 	SetAntialiasing(true);
 
 	return true;
@@ -159,12 +166,8 @@ void ModuleRender::Render() const
 #if GAME
 	if (App->cameras->main_camera != nullptr) 
 	{
-
-		App->lights->RecordShadowsFrameBuffers(App->window->GetWidth(), App->window->GetHeight());
-
-		App->cameras->main_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
-
-		App->cameras->main_camera->RecordDebugDraws(false);
+		game_viewport->SetSize(App->window->GetWidth(), App->window->GetHeight());
+		game_viewport->Render(App->cameras->main_camera);
 	}
 #endif
 

@@ -10,7 +10,13 @@ class MultiSampledFrameBuffer;
 class Viewport
 {
 public:
-	Viewport(bool is_scene_viewport);
+	enum class ViewportOption
+	{
+		SCENE_MODE = 1 << 0,
+		BLIT_FRAMEBUFFER = 2 << 0
+	};
+
+	Viewport(int options);
 	~Viewport();
 
 	void Render(ComponentCamera* camera);
@@ -35,6 +41,8 @@ public:
 	GLuint last_displayed_texture = 0;
 
 	FrameBuffer* main_fbo = nullptr;
+	FrameBuffer* blit_fbo = nullptr;
+
 	FrameBuffer* regular_fbo = nullptr;
 	MultiSampledFrameBuffer* multisampled_fbo = nullptr;
 
@@ -49,7 +57,7 @@ private:
 	float width = 0;
 	float height = 0;
 
-	bool is_scene_viewport = false;
+	int viewport_options = 0;
 	bool antialiasing = true;
 };
 

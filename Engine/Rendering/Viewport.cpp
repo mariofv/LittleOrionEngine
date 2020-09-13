@@ -16,8 +16,9 @@
 #include "FrameBuffer.h"
 #include "MultiSampledFrameBuffer.h"
 
-Viewport::Viewport(bool is_scene_viewport) : is_scene_viewport(is_scene_viewport)
+Viewport::Viewport(int options) : viewport_options(options)
 {
+	blit_fbo = new FrameBuffer();
 	regular_fbo = new FrameBuffer();
 	multisampled_fbo = new MultiSampledFrameBuffer();
 
@@ -26,6 +27,7 @@ Viewport::Viewport(bool is_scene_viewport) : is_scene_viewport(is_scene_viewport
 
 Viewport::~Viewport()
 {
+	delete blit_fbo;
 	delete regular_fbo;
 	delete multisampled_fbo;
 }
@@ -93,26 +95,32 @@ void Viewport::EffectsRenderPass() const
 void Viewport::UIRenderPass() const
 {
 	main_fbo->Bind();
-	App->ui->Render(width, height, is_scene_viewport);
+	App->ui->Render(width, height, viewport_options & (int)ViewportOption::SCENE_MODE);
 	FrameBuffer::UnBind();
 }
 
 void Viewport::PostProcessPass() const
 {
-	if (antialiasing)
+	main_fbo->Bind(GL_READ_FRAMEBUFFER);
+
+	if (viewport_options & (int)ViewportOption::BLIT_FRAMEBUFFER)
 	{
-		main_fbo->Bind(GL_READ_FRAMEBUFFER);
-		regular_fbo->Bind(GL_DRAW_FRAMEBUFFER);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-		FrameBuffer::UnBind();
+		blit_fbo->Bind(GL_DRAW_FRAMEBUFFER);
 	}
+	else
+	{
+		FrameBuffer::UnBind(GL_DRAW_FRAMEBUFFER);
+	}
+
+	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	FrameBuffer::UnBind();
 
 	//App->renderer->RenderPostProcessingEffects(*camera);
 }
 
 void Viewport::DebugPass() const
 {
-	if (!debug_pass || !is_scene_viewport)
+	if (!debug_pass || !(viewport_options & (int)ViewportOption::SCENE_MODE))
 	{
 		return;
 	}
@@ -135,7 +143,7 @@ void Viewport::DebugDrawPass() const
 
 void Viewport::EditorDrawPass() const
 {
-	if (!is_scene_viewport)
+	if (!(viewport_options & (int)ViewportOption::SCENE_MODE))
 	{
 		return;
 	}
@@ -165,6 +173,9 @@ void Viewport::SetSize(float width, float height)
 	this->height = height;
 	glViewport(0, 0, width, height);
 
+	blit_fbo->ClearAttachements();
+	blit_fbo->GenerateAttachements(width, height);
+	
 	regular_fbo->ClearAttachements();
 	regular_fbo->GenerateAttachements(width, height);
 
@@ -174,14 +185,7 @@ void Viewport::SetSize(float width, float height)
 
 void Viewport::SelectLastDisplayedTexture()
 {
-	if (antialiasing)
-	{
-		last_displayed_texture = regular_fbo->GetColorAttachement();
-	}
-	else
-	{
-		last_displayed_texture = main_fbo->GetColorAttachement();
-	}
+	last_displayed_texture = blit_fbo->GetColorAttachement();
 }
 
 void Viewport::SetAntialiasing(bool antialiasing)
