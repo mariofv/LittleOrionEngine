@@ -117,13 +117,11 @@ void ModuleTime::Play()
 		SetTimeScale(1.f);
 		frame_start_time = game_time_clock->Read();
 		App->animations->PlayAnimations();
-		App->audio->ResetRTPCValues("FilterLPF");
 	}
 	else
 	{
 		game_time_clock->Stop();
 		App->scene->LoadTmpScene();
-		App->audio->ResetRTPCValues("FilterLPF");
 	}
 }
 

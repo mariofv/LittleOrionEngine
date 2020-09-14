@@ -116,12 +116,12 @@ void ModuleAudio::SelectMainListener()
 	}
 }
 
-void ModuleAudio::SetRTPCValue(const std::string & name, int value)
+void ModuleAudio::SetRTPCValue(const std::string& name, int value)
 {
 	AK::SoundEngine::SetRTPCValue(name.c_str(), value);
 }
 
-void ModuleAudio::ResetRTPCValues(const std::string & name)
+void ModuleAudio::ResetRTPCValues(const std::string& name)
 {
 	AK::SoundEngine::ResetRTPCValue(name.c_str());
 }
