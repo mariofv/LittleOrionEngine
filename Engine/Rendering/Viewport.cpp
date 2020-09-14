@@ -95,7 +95,7 @@ void Viewport::EffectsRenderPass() const
 void Viewport::UIRenderPass() const
 {
 	main_fbo->Bind();
-	App->ui->Render(width, height, viewport_options & (int)ViewportOption::SCENE_MODE);
+	App->ui->Render(width, height, IsOptionSet(ViewportOption::SCENE_MODE));
 	FrameBuffer::UnBind();
 }
 
@@ -103,7 +103,7 @@ void Viewport::PostProcessPass() const
 {
 	main_fbo->Bind(GL_READ_FRAMEBUFFER);
 
-	if (viewport_options & (int)ViewportOption::BLIT_FRAMEBUFFER)
+	if (IsOptionSet(ViewportOption::BLIT_FRAMEBUFFER))
 	{
 		blit_fbo->Bind(GL_DRAW_FRAMEBUFFER);
 	}
@@ -120,7 +120,7 @@ void Viewport::PostProcessPass() const
 
 void Viewport::DebugPass() const
 {
-	if (!debug_pass || !(viewport_options & (int)ViewportOption::SCENE_MODE))
+	if (!debug_pass || !IsOptionSet(ViewportOption::SCENE_MODE))
 	{
 		return;
 	}
@@ -143,7 +143,7 @@ void Viewport::DebugDrawPass() const
 
 void Viewport::EditorDrawPass() const
 {
-	if (!(viewport_options & (int)ViewportOption::SCENE_MODE))
+	if (!IsOptionSet(ViewportOption::SCENE_MODE))
 	{
 		return;
 	}
@@ -186,6 +186,11 @@ void Viewport::SetSize(float width, float height)
 void Viewport::SelectLastDisplayedTexture()
 {
 	last_displayed_texture = blit_fbo->GetColorAttachement();
+}
+
+bool Viewport::IsOptionSet(ViewportOption option) const
+{
+	return viewport_options & (int)option;
 }
 
 void Viewport::SetAntialiasing(bool antialiasing)

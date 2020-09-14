@@ -13,7 +13,7 @@ public:
 	enum class ViewportOption
 	{
 		SCENE_MODE = 1 << 0,
-		BLIT_FRAMEBUFFER = 2 << 0
+		BLIT_FRAMEBUFFER = 1 << 1
 	};
 
 	Viewport(int options);
@@ -36,6 +36,7 @@ private:
 	void EditorDrawPass() const;
 
 	void SelectLastDisplayedTexture();
+	bool IsOptionSet(ViewportOption option) const;
 
 public:
 	GLuint last_displayed_texture = 0;
