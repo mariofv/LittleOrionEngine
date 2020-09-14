@@ -138,7 +138,6 @@ private:
 	float last_width = 0;
 
 	float aspect_ratio = 1.f;
-	float orthographic_fov_ratio = 3;
 	int perpesctive_enable = 0;
 
 	bool is_speeding_up = false;
