@@ -126,7 +126,7 @@ void ComponentMeshRenderer::Render()
 		return;
 	}
 	unsigned int shader_variation = material_to_render->GetShaderVariation();
-	if (shadow_receiver && App->lights->render_shadows)
+	if (shadow_receiver)
 	{
 		shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_RECEIVE_SHADOWS);
 	}

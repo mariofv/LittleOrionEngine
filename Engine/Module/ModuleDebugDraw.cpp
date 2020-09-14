@@ -468,24 +468,19 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 {
 	BROFILER_CATEGORY("Render Selected GameObject Camera Frustum", Profiler::Color::Lavender);
 
-	if (!App->debug->show_camera_frustum)
-	{
-		return;
-	}
-
 	Component * selected_camera_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::CAMERA);
 	if (selected_camera_component != nullptr) {
 		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
 
-		if(selected_camera->camera_frustum.type == FrustumType::PerspectiveFrustum)
-			dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
-
-
-		if (selected_camera->camera_frustum.type == FrustumType::OrthographicFrustum)
+		if (selected_camera->camera_frustum.type == FrustumType::PerspectiveFrustum)
+		{
+			RenderPerspectiveFrustum(selected_camera->GetInverseClipMatrix());
+		}
+		else if (selected_camera->camera_frustum.type == FrustumType::OrthographicFrustum)
 		{
 			float3 points[8];
 			selected_camera->camera_frustum.GetCornerPoints(points);
-			dd::box(points, float3(1, 1, 1), 0, true);
+			RenderOrtographicFrustum(points);
 		}
 	}	
 }
@@ -833,6 +828,16 @@ void ModuleDebugDraw::RenderSphere(const float3& center, float radius, const flo
 }
 
 ENGINE_API void ModuleDebugDraw::RenderBox(const float3 points[8], const float3& color)
+{
+	dd::box(points, color);
+}
+
+void ModuleDebugDraw::RenderPerspectiveFrustum(const float4x4& inverse_clip_matrix, const float3& color) const
+{
+	dd::frustum(inverse_clip_matrix, color);
+}
+
+void ModuleDebugDraw::RenderOrtographicFrustum(const float3 points[8], const float3& color) const
 {
 	dd::box(points, color);
 }

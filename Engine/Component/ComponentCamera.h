@@ -51,8 +51,12 @@ public:
 
 	void SetFOV(float fov);
 	void SetAspectRatio(float aspect_ratio);
+
 	void SetNearDistance(float distance);
+	float GetNearDistance() const;
 	void SetFarDistance(float distance);
+	float GetFarDistance() const;
+
 	void SetOrientation(const float3 & orientation);
 	ENGINE_API void SetStartFocusPosition(const float3& focus_position);
 	ENGINE_API void SetGoalFocusPosition(const float3& focus_position);

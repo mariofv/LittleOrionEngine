@@ -62,8 +62,6 @@ void PanelScene::Render()
 		scene_window_content_area_width = scene_window_content_area_max_point.x - scene_window_content_area_pos.x;
 		scene_window_content_area_height = scene_window_content_area_max_point.y - scene_window_content_area_pos.y;
 
-		//App->lights->RecordShadowsFrameBuffers((GLsizei)scene_window_content_area_width, (GLsizei)scene_window_content_area_height);
-
 		App->renderer->scene_viewport->SetSize(scene_window_content_area_width, scene_window_content_area_height);
 		App->renderer->scene_viewport->Render(App->cameras->scene_camera);
 

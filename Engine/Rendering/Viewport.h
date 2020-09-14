@@ -2,8 +2,11 @@
 #define _VIEWPORT_H_
 
 #include <GL/glew.h>
+#include <MathGeoLib.h>
+#include <vector>
 
 class ComponentCamera;
+class ComponentMeshRenderer;
 class FrameBuffer;
 class MultiSampledFrameBuffer;
 
@@ -26,7 +29,9 @@ public:
 
 private:
 	void BindCameraMatrices() const;
+	Frustum InitLightFrustum(const float3& position, const float3& up, const float3& front, float vertical_fov, float horizontal_fov, float near_distance, float far_distance) const;
 
+	void LightCameraPass() const;
 	void MeshRenderPass() const;
 	void EffectsRenderPass() const;
 	void UIRenderPass() const;
@@ -47,6 +52,7 @@ public:
 	FrameBuffer* regular_fbo = nullptr;
 	MultiSampledFrameBuffer* multisampled_fbo = nullptr;
 
+	bool shadows_pass = true;
 	bool effects_pass = true;
 	bool debug_pass = true;
 	bool debug_draw_pass = true;
@@ -54,6 +60,7 @@ public:
 
 private:
 	ComponentCamera* camera = nullptr;
+	std::vector<ComponentMeshRenderer*> culled_mesh_renderers;
 
 	float width = 0;
 	float height = 0;

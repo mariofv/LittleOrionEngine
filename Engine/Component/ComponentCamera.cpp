@@ -223,9 +223,19 @@ void ComponentCamera::SetNearDistance(float distance)
 	camera_frustum.nearPlaneDistance = distance;
 }
 
+float ComponentCamera::GetNearDistance() const
+{
+	return camera_frustum.nearPlaneDistance;
+}
+
 void ComponentCamera::SetFarDistance(float distance)
 {
 	camera_frustum.farPlaneDistance = distance;
+}
+
+float ComponentCamera::GetFarDistance() const
+{
+	return camera_frustum.farPlaneDistance;
 }
 
 void ComponentCamera::SetOrientation(const float3 & orientation)

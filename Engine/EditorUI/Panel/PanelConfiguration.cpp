@@ -301,17 +301,13 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::SliderFloat("Intensity", &App->lights->ambient_light_intensity, 0, 1, "%.2f");
 		ImGui::ColorEdit3("Color", App->lights->ambient_light_color);
 
-		//ImGui::Checkbox("Toggle directional camera frustum", &App->renderer->toggle_ortho_frustum);
-
-		ImGui::Checkbox("Render shadows", &App->lights->render_shadows);
-		ImGui::SliderFloat("Shadows Fov Factor", &App->lights->main_camera_fov_increment_factor, 0, 4, "%.2f");
-
 
 		ImGui::Separator();
 		
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Game Graphic Settings");
 		ImGui::PushID("Game Viewport");
 		ImGui::Checkbox("Render Effects", &App->renderer->game_viewport->effects_pass);
+		ImGui::Checkbox("Render Shadows", &App->renderer->game_viewport->shadows_pass);
 		if (ImGui::Checkbox("Antialiasing", &App->renderer->antialiasing))
 		{
 			App->renderer->SetAntialiasing(App->renderer->antialiasing);
