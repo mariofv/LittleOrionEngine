@@ -404,18 +404,28 @@ void ModuleDebugDraw::RenderTangentsAndBitangents() const
 {
 	BROFILER_CATEGORY("Render Tangent, Bitangent and Normal Vectors", Profiler::Color::Lavender);
 
-	for (auto& mesh : App->renderer->meshes_to_render)
+	for (auto& mesh_renderer : App->renderer->mesh_renderers)
 	{
-		
-		for (unsigned int i = 0; i < 30; ++i)
+		if (!mesh_renderer->active || mesh_renderer->mesh_to_render == nullptr)
 		{
-			float4 normal = float4(mesh->mesh_to_render->vertices[i].normals, 0.0F);
-			float4 tangent = float4(mesh->mesh_to_render->vertices[i].tangent, 0.0F);
-			float4 bitangent = float4(mesh->mesh_to_render->vertices[i].bitangent, 0.0F);
-			float4 position = float4 (mesh->mesh_to_render->vertices[i].position, 1.0F);
+			continue;
+		}
+
+		size_t i = 0;
+		while (i < 30 && i < mesh_renderer->mesh_to_render->vertices.size())
+		{
+			Mesh::Vertex current_vertex = mesh_renderer->mesh_to_render->vertices[i];
+
+			float4 normal = float4(current_vertex.normals, 0.0F);
+			float4 tangent = float4(current_vertex.tangent, 0.0F);
+			float4 bitangent = float4(current_vertex.bitangent, 0.0F);
+			float4 position = float4 (current_vertex.position, 1.0F);
+
 			float4x4 axis_object_space = float4x4(tangent, bitangent, normal, position);
-			float4x4 axis_transform = mesh->owner->transform.GetGlobalModelMatrix() * axis_object_space;
+			float4x4 axis_transform = mesh_renderer->owner->transform.GetGlobalModelMatrix() * axis_object_space;
 			dd::axisTriad(axis_transform, 0.1F, 1.0F);
+
+			++i;
 		}	
 	}
 }
@@ -683,9 +693,9 @@ void ModuleDebugDraw::RenderBoundingBoxes(const float3& color) const
 {
 	BROFILER_CATEGORY("Render Bounding Boxes", Profiler::Color::Lavender);
 
-	for (auto& mesh : App->renderer->meshes_to_render)
+	for (auto& mesh_renderer : App->renderer->mesh_renderers)
 	{
-		GameObject* mesh_game_object = mesh->owner;
+		GameObject* mesh_game_object = mesh_renderer->owner;
 		if (!mesh_game_object->aabb.IsEmpty())
 		{
 			dd::aabb(mesh_game_object->aabb.bounding_box.minPoint, mesh_game_object->aabb.bounding_box.maxPoint, color);

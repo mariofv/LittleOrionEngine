@@ -191,66 +191,15 @@ void ModuleRender::RenderZBufferFrame(const ComponentCamera & camera)
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
+	/*
 	for (ComponentMeshRenderer* mesh : meshes_to_render)
 	{
 		if (mesh->shadow_caster)
 		{
 			mesh->Render();
 		}
-	}
+	}*/
 
-}
-
-void ModuleRender::GetMeshesToRender(const ComponentCamera* camera)
-{
-	BROFILER_CATEGORY("Get meshes to render", Profiler::Color::Aquamarine);
-
-	meshes_to_render.clear();
-	if (camera == App->cameras->scene_camera && !App->debug->culling_scene_mode)
-	{
-		meshes_to_render = mesh_renderers;
-	}
-	else
-	{
-		App->space_partitioning->GetCullingMeshes(App->cameras->main_camera);
-	}
-	SetListOfMeshesToRender(camera);
-}
-
-void ModuleRender::SetListOfMeshesToRender(const ComponentCamera* camera)
-{
-	opaque_mesh_to_render.clear();
-	transparent_mesh_to_render.clear();
-	float3 camera_pos = camera->camera_frustum.pos;
-	for (ComponentMeshRenderer* mesh_to_render : meshes_to_render)
-	{
-		if (mesh_to_render->mesh_to_render == nullptr || mesh_to_render->material_to_render == nullptr)
-		{
-			continue;
-		}
-
-		if (
-			mesh_to_render->material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT 
-			|| mesh_to_render->material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID
-			|| mesh_to_render->material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING
-		)
-		{
-			mesh_to_render->owner->aabb.bounding_box;
-			float3 center_bounding_box = (mesh_to_render->owner->aabb.bounding_box.minPoint + mesh_to_render->owner->aabb.bounding_box.maxPoint) / 2;
-			float distance = center_bounding_box.Distance(camera_pos);
-			transparent_mesh_to_render.push_back(std::make_pair(distance, mesh_to_render));
-			transparent_mesh_to_render.sort([](const ipair & a, const ipair & b) { return a.first > b.first; });
-		}
-
-		if (mesh_to_render->material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)
-		{
-			mesh_to_render->owner->aabb.bounding_box;
-			float3 center_bounding_box = (mesh_to_render->owner->aabb.bounding_box.minPoint + mesh_to_render->owner->aabb.bounding_box.maxPoint) / 2;
-			float distance = center_bounding_box.Distance(camera_pos);
-			opaque_mesh_to_render.push_back(std::make_pair(distance, mesh_to_render));
-			opaque_mesh_to_render.sort([](const ipair & a, const ipair & b) { return a.first < b.first; });
-		}
-	}
 }
 
 void ModuleRender::SetVSync(bool vsync)
@@ -346,19 +295,27 @@ void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 	}
 }
 
-RaycastHit* ModuleRender::GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* cam)
+RaycastHit* ModuleRender::GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* camera)
 {
-	BROFILER_CATEGORY("Do Raycast", Profiler::Color::HotPink);
-	App->space_partitioning->GetCullingMeshes(cam);
-	std::vector<ComponentMeshRenderer*> intersected_meshes;
-	for (const auto&  mesh : meshes_to_render)
+	if (camera != App->cameras->scene_camera)
 	{
-		if (mesh->owner->aabb.bounding_box.Intersects(ray))
+		return nullptr;
+	}
+
+	BROFILER_CATEGORY("Do Raycast", Profiler::Color::HotPink);
+	std::vector<ComponentMeshRenderer*> culled_mesh_renderers = App->space_partitioning->GetCullingMeshes(camera, mesh_renderers);
+	std::vector<ComponentMeshRenderer*> intersected_meshes;
+	for (const auto& mesh_renderer : culled_mesh_renderers)
+	{
+		if (mesh_renderer->owner->aabb.bounding_box.Intersects(ray))
 		{
 			//Allow non touchable meshes to be ignored from mouse picking in game mode
-			if (cam != App->cameras->scene_camera && !mesh->is_raycastable) continue;
+			if (!mesh_renderer->is_raycastable)
+			{
+				continue;
+			}
 
-			intersected_meshes.push_back(mesh);
+			intersected_meshes.push_back(mesh_renderer);
 		}
 	}
 

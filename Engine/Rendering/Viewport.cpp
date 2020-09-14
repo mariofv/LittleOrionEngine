@@ -4,6 +4,7 @@
 #include "Component/ComponentMeshRenderer.h"
 
 #include "Main/Application.h"
+#include "Main/GameObject.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleEffects.h"
@@ -12,6 +13,7 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleUI.h"
 #include "Module/ModuleSpacePartitioning.h"
+#include "Helper/Utils.h"
 
 #include "FrameBuffer.h"
 #include "MultiSampledFrameBuffer.h"
@@ -68,11 +70,39 @@ void Viewport::MeshRenderPass() const
 	camera->Clear();
 
 	std::vector<ComponentMeshRenderer*> culled_mesh_renderers = App->space_partitioning->GetCullingMeshes(camera, App->renderer->mesh_renderers);
-	for (auto &mesh_renderer : culled_mesh_renderers)
+	float3 camera_position = camera->owner->transform.GetGlobalTranslation();
+
+	std::vector<Utils::MeshRendererDistancePair> opaque_mesh_renderers;
+	std::vector<Utils::MeshRendererDistancePair> transparent_mesh_renderers;
+	Utils::SplitCulledMeshRenderers(culled_mesh_renderers, camera_position, opaque_mesh_renderers, transparent_mesh_renderers);
+
+	for (auto& opaque_mesh_renderer : opaque_mesh_renderers)
 	{
-		if (mesh_renderer->mesh_to_render != nullptr && mesh_renderer->IsEnabled())
+		if (opaque_mesh_renderer.mesh_renderer->mesh_to_render != nullptr && opaque_mesh_renderer.mesh_renderer->IsEnabled())
 		{
-			mesh_renderer->Render();
+			opaque_mesh_renderer.mesh_renderer->Render();
+			/*
+			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
+			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
+			App->lights->UpdateLightAABB(*mesh.second->owner);
+			*/
+			glUseProgram(0);
+		}
+	}
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation(GL_FUNC_ADD);
+	for (auto& transparent_mesh_renderer : transparent_mesh_renderers)
+	{
+		if (transparent_mesh_renderer.mesh_renderer->mesh_to_render != nullptr && transparent_mesh_renderer.mesh_renderer->IsEnabled())
+		{
+			transparent_mesh_renderer.mesh_renderer->Render();
+			/*
+			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
+			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
+			App->lights->UpdateLightAABB(*mesh.second->owner);
+			*/
 			glUseProgram(0);
 		}
 	}

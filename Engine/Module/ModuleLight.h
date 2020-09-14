@@ -21,7 +21,7 @@ public:
 	void Render(const float3& mesh_position, GLuint program);
 
 	void UpdateLightAABB(GameObject& object_aabb);
-	void RecordShadowsFrameBuffers(int width, int height);
+	void RecordShadowsFrameBuffers(int width, int height); // TODO: Move this
 
 	ComponentLight* CreateComponentLight();
 	void RemoveComponentLight(ComponentLight* light_to_remove);

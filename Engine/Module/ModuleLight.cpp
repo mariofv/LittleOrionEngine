@@ -232,8 +232,9 @@ void ModuleLight::SetDirectionalLightFrustums()
 
 }
 
-void ModuleLight::RecordShadowsFrameBuffers(int width, int height)
+void ModuleLight::RecordShadowsFrameBuffers(int width, int height) 
 {
+	/*
 	if (!render_shadows)
 	{
 		return;
@@ -250,6 +251,7 @@ void ModuleLight::RecordShadowsFrameBuffers(int width, int height)
 	directional_light_far->RecordZBufferFrame(width / 4, height / 4);
 	rendering_shadows = false;
 	glCullFace(GL_BACK);
+	*/
 }
 
 void ModuleLight::UpdateDirectionalLightFrustums(float3 max, float3 min)

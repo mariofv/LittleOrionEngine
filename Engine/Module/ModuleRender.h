@@ -58,7 +58,6 @@ public:
 	
 	void Render() const;
 	void RenderZBufferFrame(const ComponentCamera& camera);
-	void GetMeshesToRender(const ComponentCamera* camera);
 
 	ComponentMeshRenderer* CreateComponentMeshRenderer();
 	void RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove);
@@ -68,7 +67,7 @@ public:
 
 	void RenderQuad();
 
-	ENGINE_API RaycastHit* GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* cam);
+	ENGINE_API RaycastHit* GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* camera);
 	ENGINE_API void SetDrawMode(DrawMode draw_mode);
 	ENGINE_API void SetAntialiasing(bool antialiasing);
 
@@ -83,8 +82,6 @@ private:
 
 	void RenderPostProcessingEffects(const ComponentCamera &camera);
 	std::string GetDrawMode() const;
-
-	void SetListOfMeshesToRender(const ComponentCamera* camera);
 
 public:
 	bool antialiasing = true;
@@ -125,10 +122,6 @@ private:
 	DrawMode draw_mode = DrawMode::SHADED;
 
 	std::vector<ComponentMeshRenderer*> mesh_renderers;
-	std::vector<ComponentMeshRenderer*> meshes_to_render;
-
-	typedef std::pair<float, ComponentMeshRenderer*> ipair;
-	std::list <ipair> opaque_mesh_to_render, transparent_mesh_to_render;
 
 	int num_rendered_tris = 0;
 	int num_rendered_verts = 0; // TODO: Recalculate this

@@ -72,7 +72,7 @@ void ModuleDebug::Render()
 		App->debug_draw->RenderPathfinding();
 	}
 
-	if (show_axis && App->renderer->meshes_to_render.size() != 0)
+	if (show_axis)
 	{
 		App->debug_draw->RenderTangentsAndBitangents();
 	}

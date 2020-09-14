@@ -120,148 +120,6 @@ void ModuleSpacePartitioning::DrawAABBTree() const
 	ol_abbtree->Draw();
 }
 
-void ModuleSpacePartitioning::GetCullingMeshes(const ComponentCamera* camera) const
-{
-	BROFILER_CATEGORY("Get culling meshes", Profiler::Color::Lavender);
-
-	App->renderer->meshes_to_render.clear();
-	switch (culling_mode)
-	{
-	case CullingMode::NONE:
-		std::copy_if(
-			App->renderer->mesh_renderers.begin(),
-			App->renderer->mesh_renderers.end(),
-			std::back_inserter(App->renderer->meshes_to_render),
-			[camera](const auto& mesh)
-		{
-			return mesh->IsEnabled();
-		}
-		);
-		break;
-
-	case CullingMode::FRUSTUM_CULLING:
-		if (camera != nullptr)
-		{
-			std::copy_if(
-				App->renderer->mesh_renderers.begin(),
-				App->renderer->mesh_renderers.end(),
-				std::back_inserter(App->renderer->meshes_to_render),
-				[camera](const auto& mesh)
-			{
-				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera);
-			}
-			);
-		}
-		break;
-
-	case CullingMode::QUADTREE_CULLING:
-		if (camera != nullptr)
-		{
-			// First we get all non static objects inside frustum
-			std::copy_if(
-				App->renderer->mesh_renderers.begin(),
-				App->renderer->mesh_renderers.end(),
-				std::back_inserter(App->renderer->meshes_to_render),
-				[camera](const auto& mesh)
-			{
-				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera) && !mesh->owner->IsStatic();
-			}
-			);
-
-			// Then we add all static objects culled using the quadtree
-			std::vector<GameObject*> rendered_objects;
-			ol_quadtree->CollectIntersect(rendered_objects, *camera);
-
-			for (const auto& object : rendered_objects)
-			{
-				ComponentMeshRenderer* object_mesh = static_cast<ComponentMeshRenderer*>(object->GetComponent(Component::ComponentType::MESH_RENDERER));
-				App->renderer->meshes_to_render.push_back(object_mesh);
-			}
-		}
-		break;
-
-	case CullingMode::OCTTREE_CULLING:
-		if (camera != nullptr)
-		{
-			// First we get all non static objects inside frustum
-			std::copy_if(
-				App->renderer->mesh_renderers.begin(),
-				App->renderer->mesh_renderers.end(),
-				std::back_inserter(App->renderer->meshes_to_render),
-				[camera](const auto&  mesh)
-			{
-				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera) && !mesh->owner->IsStatic();
-			}
-			);
-
-			// Then we add all static objects culled using the octtree
-			std::vector<GameObject*> rendered_objects;
-			ol_octtree->CollectIntersect(rendered_objects, *camera);
-
-			for (const auto& object : rendered_objects)
-			{
-				ComponentMeshRenderer *object_mesh = static_cast<ComponentMeshRenderer*>(object->GetComponent(Component::ComponentType::MESH_RENDERER));
-				App->renderer->meshes_to_render.push_back(object_mesh);
-			}
-		}
-		break;
-
-	case CullingMode::AABBTREE_CULLING:
-		if (camera != nullptr)
-		{
-			// First we get all static objects inside frustum
-			std::copy_if(
-				App->renderer->mesh_renderers.begin(),
-				App->renderer->mesh_renderers.end(),
-				std::back_inserter(App->renderer->meshes_to_render),
-				[camera](const auto& mesh)
-			{
-				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera) && mesh->owner->IsStatic();
-			}
-			);
-
-			// Then we add all dynamic objects culled using the aabbtree
-			std::vector<GameObject*> rendered_objects;
-			ol_abbtree->GetIntersection(rendered_objects, camera);
-
-			for (const auto& object : rendered_objects)
-			{
-				ComponentMeshRenderer *object_mesh = static_cast<ComponentMeshRenderer*>(object->GetComponent(Component::ComponentType::MESH_RENDERER));
-				App->renderer->meshes_to_render.push_back(object_mesh);
-			}
-		}
-		break;
-	case CullingMode::COMBINED_CULLING:
-		if (camera != nullptr)
-		{
-			// We add all static objects culled using the quadtree
-			std::vector<GameObject*> rendered_static_objects;
-			ol_quadtree->CollectIntersect(rendered_static_objects, *camera);
-
-			for (const auto& object : rendered_static_objects)
-			{
-				ComponentMeshRenderer *object_mesh = static_cast<ComponentMeshRenderer*>(object->GetComponent(Component::ComponentType::MESH_RENDERER));
-				App->renderer->meshes_to_render.push_back(object_mesh);
-			}
-
-			// Then we add all dynamic objects culled using the aabbtree
-			std::vector<GameObject*> rendered_dynamic_objects;
-			ol_abbtree->GetIntersection(rendered_dynamic_objects, camera);
-
-			for (const auto& object : rendered_dynamic_objects)
-			{
-				ComponentMeshRenderer *object_mesh = static_cast<ComponentMeshRenderer*>(object->GetComponent(Component::ComponentType::MESH_RENDERER));
-				App->renderer->meshes_to_render.push_back(object_mesh);
-			}
-
-		}
-		break;
-
-	default:
-		break;
-	}
-}
-
 std::vector<ComponentMeshRenderer*> ModuleSpacePartitioning::GetCullingMeshes(
 	const ComponentCamera* camera, 
 	const std::vector<ComponentMeshRenderer*>& mesh_renderers
@@ -319,7 +177,7 @@ std::vector<ComponentMeshRenderer*> ModuleSpacePartitioning::GetCullingMeshes(
 			for (const auto& object : rendered_objects)
 			{
 				ComponentMeshRenderer* object_mesh = static_cast<ComponentMeshRenderer*>(object->GetComponent(Component::ComponentType::MESH_RENDERER));
-				App->renderer->meshes_to_render.push_back(object_mesh);
+				culled_mesh_renderers.push_back(object_mesh);
 			}
 		}
 		break;
@@ -345,7 +203,7 @@ std::vector<ComponentMeshRenderer*> ModuleSpacePartitioning::GetCullingMeshes(
 			for (const auto& object : rendered_objects)
 			{
 				ComponentMeshRenderer *object_mesh = static_cast<ComponentMeshRenderer*>(object->GetComponent(Component::ComponentType::MESH_RENDERER));
-				App->renderer->meshes_to_render.push_back(object_mesh);
+				culled_mesh_renderers.push_back(object_mesh);
 			}
 		}
 		break;
@@ -371,7 +229,7 @@ std::vector<ComponentMeshRenderer*> ModuleSpacePartitioning::GetCullingMeshes(
 			for (const auto& object : rendered_objects)
 			{
 				ComponentMeshRenderer *object_mesh = static_cast<ComponentMeshRenderer*>(object->GetComponent(Component::ComponentType::MESH_RENDERER));
-				App->renderer->meshes_to_render.push_back(object_mesh);
+				culled_mesh_renderers.push_back(object_mesh);
 			}
 		}
 		break;
@@ -385,7 +243,7 @@ std::vector<ComponentMeshRenderer*> ModuleSpacePartitioning::GetCullingMeshes(
 			for (const auto& object : rendered_static_objects)
 			{
 				ComponentMeshRenderer *object_mesh = static_cast<ComponentMeshRenderer*>(object->GetComponent(Component::ComponentType::MESH_RENDERER));
-				App->renderer->meshes_to_render.push_back(object_mesh);
+				culled_mesh_renderers.push_back(object_mesh);
 			}
 
 			// Then we add all dynamic objects culled using the aabbtree
@@ -395,7 +253,7 @@ std::vector<ComponentMeshRenderer*> ModuleSpacePartitioning::GetCullingMeshes(
 			for (const auto& object : rendered_dynamic_objects)
 			{
 				ComponentMeshRenderer *object_mesh = static_cast<ComponentMeshRenderer*>(object->GetComponent(Component::ComponentType::MESH_RENDERER));
-				App->renderer->meshes_to_render.push_back(object_mesh);
+				culled_mesh_renderers.push_back(object_mesh);
 			}
 
 		}

@@ -46,7 +46,6 @@ public:
 	void ResetAABBTree();
 	ENGINE_API void DrawAABBTree() const;
 
-	void GetCullingMeshes(const ComponentCamera* camera) const;
 	std::vector<ComponentMeshRenderer*> GetCullingMeshes(const ComponentCamera* camera, const std::vector<ComponentMeshRenderer*>& mesh_renderers) const;
 
 public:
