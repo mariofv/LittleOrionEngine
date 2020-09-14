@@ -24,15 +24,7 @@ public:
 	enum class ClearMode
 	{
 		COLOR = 0,
-		SKYBOX = 1,
-		ORTHO = 2
-	};
-
-	enum OrthoIndex
-	{
-		CLOSE = 0,
-		MID = 1,
-		AWAY = 2
+		SKYBOX = 1
 	};
 
 	ComponentCamera();
@@ -56,11 +48,6 @@ public:
 	void CopyTo(Component* component_to_copy) const override;
 
 	void Clear() const;
-
-	void RecordZBufferFrame(GLsizei width, GLsizei height);
-	void SetWidthAndHeight(const GLsizei &width, const GLsizei &height);
-
-	GLuint GetLastRecordedFrame() const;
 
 	void SetFOV(float fov);
 	void SetAspectRatio(float aspect_ratio);
@@ -125,10 +112,7 @@ public:
 	void GenerateMatrices();
 
 private:
-	void GenerateFrameBuffers(GLsizei width, GLsizei height);
 	void InitCamera();
-	void CreateFramebuffer(GLsizei width, GLsizei height);
-	void CreateOrthographicFramebuffer(GLsizei width, GLsizei height);
 
 public:
 	const float SPEED_UP_FACTOR = 2.f;
@@ -146,29 +130,10 @@ public:
 	float4x4 proj;
 	float4x4 view;
 
-	GLuint depth_map = 0;
-	GLuint last_recorded_frame_texture = 0;
-	unsigned int color_buffers[2];
-	GLuint fbo = 0;
-
-	bool last_bloom = false;
-	OrthoIndex ortho_index; //Only for orthographic cameras
-
-
-	bool toggle_msaa = false;
 	bool is_focusing = false;
 	Frustum camera_frustum;
 
 private:
-	GLuint rbo = 0;
-	GLuint depth_rbo = 0;
-	GLuint msfbo = 0;
-	GLuint msfb_color = 0;
-	unsigned int pingpongFBO[2];
-	unsigned int pingpongColorbuffers[2];
-	GLuint hdr_fbo = 0;
-	GLuint hdr_color_buffer_texture = 0;
-
 	float last_height = 0;
 	float last_width = 0;
 
@@ -184,7 +149,6 @@ private:
 	float3 goal_focus_position = float3::zero;
 
 	ClearMode camera_clear_mode = ClearMode::SKYBOX;
-	float borderColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	uint32_t skybox_uuid = 0;
 	std::shared_ptr<Skybox> camera_skybox = nullptr;
 

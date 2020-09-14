@@ -282,6 +282,7 @@ void ModuleLight::SendShadowUniformsToShader(GLuint program)
 	BROFILER_CATEGORY("Module Light shadow uniforms", Profiler::Color::MediumTurquoise);
 	glUniform1i(glGetUniformLocation(program, "render_shadows"), render_shadows);
 
+	/*
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, directional_light_camera->depth_map);
 	glUniform1i(glGetUniformLocation(program, "close_depth_map"), 0);
@@ -294,7 +295,8 @@ void ModuleLight::SendShadowUniformsToShader(GLuint program)
 	glBindTexture(GL_TEXTURE_2D, directional_light_far->depth_map);
 	glUniform1i(glGetUniformLocation(program, "far_depth_map"), 2);
 
-	
+	*/
+
 	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_view"), 1, GL_TRUE, &directional_light_camera->GetViewMatrix()[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_proj"), 1, GL_TRUE, &directional_light_camera->GetProjectionMatrix()[0][0]);
 

@@ -40,7 +40,6 @@ ComponentCamera & ComponentCamera::operator=(const ComponentCamera & component_t
 	memcpy(camera_clear_color, component_to_copy.camera_clear_color,3 * sizeof(float));
 	this->depth = component_to_copy.depth;
 	this->camera_movement_speed = component_to_copy.camera_movement_speed;
-	this->toggle_msaa = component_to_copy.toggle_msaa;
 	this->speed_up = component_to_copy.speed_up;
 
 	GenerateMatrices();
@@ -102,26 +101,10 @@ void ComponentCamera::Clear() const
 
 ComponentCamera::~ComponentCamera()
 {
-	glDeleteTextures(1, &last_recorded_frame_texture);
-	glDeleteTextures(1, &msfb_color);
-	glDeleteTextures(1, &depth_map);
-
-
-	glDeleteRenderbuffers(1, &rbo);
-	glDeleteRenderbuffers(1, &depth_rbo);
-
-	glDeleteFramebuffers(1, &fbo);
-	glDeleteFramebuffers(1, &msfbo);
-	glDeleteFramebuffers(2, pingpongFBO);
 }
 
 void ComponentCamera::InitCamera()
 {
-	glGenFramebuffers(1, &fbo);
-	glGenFramebuffers(1, &msfbo);
-	glGenFramebuffers(2, pingpongFBO);
-
-
 	aspect_ratio = 1.F;
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
 	camera_frustum.pos = float3::unitX;
@@ -221,178 +204,6 @@ void ComponentCamera::SpecializedLoad(const Config& config)
 	SetSkybox(skybox_uuid);
 
 	GenerateMatrices();
-}
-
-void ComponentCamera::RecordZBufferFrame(GLsizei width, GLsizei height)
-{
-
-	SetWidthAndHeight(width, height);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-
-	glClear(GL_DEPTH_BUFFER_BIT);
-	App->renderer->RenderZBufferFrame(*this);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-void ComponentCamera::SetWidthAndHeight(const GLsizei &width, const GLsizei &height)
-{
-	if (last_width != width || last_height != height || toggle_msaa )
-	{
-		last_width = static_cast<float>(width);
-		last_height = static_cast<float>(height);
-		SetAspectRatio(last_width / last_height);
-		GenerateFrameBuffers(width, height);
-		toggle_msaa = false;
-	}
-}
-
-GLuint ComponentCamera::GetLastRecordedFrame() const
-{
-		if (App->renderer->threshold_brightness)
-		{
-			return color_buffers[1];
-		}
-		else
-		{
-			return color_buffers[0];
-		}
-}
-
-void ComponentCamera::GenerateFrameBuffers(GLsizei width, GLsizei height)
-{
-	if (last_recorded_frame_texture != 0)
-	{
-		glDeleteTextures(1, &last_recorded_frame_texture);
-	}
-	if (color_buffers != 0)
-	{
-		glDeleteTextures(2, color_buffers);
-	}
-	if (pingpongColorbuffers != 0)
-	{
-		glDeleteTextures(2, pingpongColorbuffers);
-	}
-	glGenTextures(1, &last_recorded_frame_texture);
-	glGenTextures(2, color_buffers);
-	glGenTextures(2, pingpongColorbuffers);
-
-	if (rbo != 0)
-	{
-		glDeleteRenderbuffers(1, &rbo);
-	}
-
-	if (depth_rbo != 0)
-	{
-		glDeleteRenderbuffers(1, &depth_rbo);
-	}
-
-	/*
-	if(App->renderer->anti_aliasing)
-	{
-		CreateMssaFramebuffer(width, height);
-	}
-	else
-	{
-		CreateFramebuffer(width, height);
-	}
-	*/
-}
-
-void ComponentCamera::CreateFramebuffer(GLsizei width, GLsizei height)
-{
-
-	if (camera_frustum.type == FrustumType::PerspectiveFrustum) //Scene and game cameras render this way
-	{
-		//render buffer (depth buffer)
-		glGenRenderbuffers(1, &rbo);
-		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-
-		//floating point color buffer
-		glBindTexture(GL_TEXTURE_2D, color_buffers[0]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		//floating point color buffer
-		glBindTexture(GL_TEXTURE_2D, color_buffers[1]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		//blur effect textures
-		glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[0]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		
-		glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[1]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		//attach buffers
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_buffers[0], 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, color_buffers[1], 0);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-
-		unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-		glDrawBuffers(2, attachments);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-
-		//blur effect framebuffer
-		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[0]);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongColorbuffers[0], 0);
-		
-
-		glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[1]);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongColorbuffers[1], 0);
-		
-		
-	}
-
-	if (camera_frustum.type == FrustumType::OrthographicFrustum) //Light cameras render this way
-	{
-		CreateOrthographicFramebuffer(width, height);
-	}
-	
-}
-
-void ComponentCamera::CreateOrthographicFramebuffer(GLsizei width, GLsizei height)
-{
-	glGenRenderbuffers(1, &depth_rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, depth_rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	glGenTextures(1, &depth_map);
-	glBindTexture(GL_TEXTURE_2D, depth_map);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rbo);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void ComponentCamera::SetFOV(float fov)

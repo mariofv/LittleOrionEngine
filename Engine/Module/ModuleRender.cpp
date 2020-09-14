@@ -177,31 +177,6 @@ void ModuleRender::Render() const
 	SDL_GL_SwapWindow(App->window->window);
 }
 
-void ModuleRender::RenderZBufferFrame(const ComponentCamera & camera)
-{
-	BROFILER_CATEGORY("Render Z buffer Frame", Profiler::Color::Azure);
-
-	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-
-	static size_t projection_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + sizeof(float4x4);
-	glBufferSubData(GL_UNIFORM_BUFFER, projection_matrix_offset, sizeof(float4x4), camera.GetProjectionMatrix().Transposed().ptr());
-
-	static size_t view_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + 2 * sizeof(float4x4);
-	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), camera.GetViewMatrix().Transposed().ptr());
-
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-	/*
-	for (ComponentMeshRenderer* mesh : meshes_to_render)
-	{
-		if (mesh->shadow_caster)
-		{
-			mesh->Render();
-		}
-	}*/
-
-}
-
 void ModuleRender::SetVSync(bool vsync)
 {
 	this->vsync = vsync;
@@ -422,6 +397,7 @@ std::string ModuleRender::GetHDRType(const HDRType type) const
 
 void ModuleRender::RenderPostProcessingEffects(const ComponentCamera &camera)
 {
+	/*
 	if (hdr_active)
 	{
 		horizontal = true;
@@ -455,4 +431,5 @@ void ModuleRender::RenderPostProcessingEffects(const ComponentCamera &camera)
 		glUniform1i(glGetUniformLocation(program, "hdr_type"), static_cast<int>(hdr_type));
 		RenderQuad();
 	}
+	*/
 }

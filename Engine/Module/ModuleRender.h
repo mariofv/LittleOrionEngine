@@ -57,7 +57,6 @@ public:
 	bool CleanUp();
 	
 	void Render() const;
-	void RenderZBufferFrame(const ComponentCamera& camera);
 
 	ComponentMeshRenderer* CreateComponentMeshRenderer();
 	void RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove);
