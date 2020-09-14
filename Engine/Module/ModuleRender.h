@@ -99,6 +99,8 @@ public:
 	Viewport* scene_viewport = nullptr;
 	Viewport* game_viewport = nullptr;
 
+	std::vector<ComponentMeshRenderer*> mesh_renderers;
+
 private:
 	void* context = nullptr;
 	HDRType hdr_type = HDRType::FILMIC;
@@ -119,8 +121,6 @@ private:
 		 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
 	};
 	DrawMode draw_mode = DrawMode::SHADED;
-
-	std::vector<ComponentMeshRenderer*> mesh_renderers;
 
 	int num_rendered_tris = 0;
 	int num_rendered_verts = 0; // TODO: Recalculate this

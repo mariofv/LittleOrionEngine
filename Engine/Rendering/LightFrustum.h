@@ -21,10 +21,12 @@ public:
 
 	void RenderSubFrustum() const;
 	void RenderSubFrustumAABB() const;
+	void RenderMeshRenderersAABB() const;
 
 private:
 	void UpdateSubPerspectiveFrustum();
 	void UpdateSubPerspectiveFrustumAABB();
+	void UpdateMeshRenderersAABB();
 	void UpdateLightOrthogonalFrustum();
 
 public:
@@ -32,6 +34,7 @@ public:
 
 	Frustum sub_perspective_frustum;
 	AABB sub_perspective_frustum_enclosing_aabb; // Light space
+	AABB mesh_renderers_enclosing_aabb; // Light space
 
 
 	Frustum light_orthogonal_frustum;

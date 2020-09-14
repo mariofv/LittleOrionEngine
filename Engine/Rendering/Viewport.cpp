@@ -90,6 +90,7 @@ void Viewport::LightCameraPass() const
 
 	near_frustum->RenderSubFrustum();
 	near_frustum->RenderSubFrustumAABB();
+	near_frustum->RenderMeshRenderersAABB();
 }
 
 void Viewport::MeshRenderPass() const

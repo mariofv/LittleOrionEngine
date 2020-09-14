@@ -518,9 +518,19 @@ bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const
 	return CheckAABBCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
 }
 
+bool ComponentCamera::IsInsideFrustum(const Frustum& frustum, const AABB& aabb)
+{
+	return CheckAABBCollision(frustum, aabb) != ComponentAABB::CollisionState::OUTSIDE;
+}
+
 bool ComponentCamera::IsInsideFrustum(const AABB2D& aabb) const
 {
 	return CheckAABB2DCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
+}
+
+bool ComponentCamera::IsInsideFrustum(const Frustum& frustum, const AABB2D& aabb)
+{
+	return CheckAABB2DCollision(frustum, aabb) != ComponentAABB::CollisionState::OUTSIDE;
 }
 
 bool ComponentCamera::IsCompletlyInsideFrustum(const AABB& aabb) const
@@ -529,6 +539,11 @@ bool ComponentCamera::IsCompletlyInsideFrustum(const AABB& aabb) const
 }
 
 ComponentAABB::CollisionState ComponentCamera::CheckAABBCollision(const AABB& reference_AABB) const
+{
+	return CheckAABBCollision(camera_frustum, reference_AABB);
+}
+
+ComponentAABB::CollisionState ComponentCamera::CheckAABBCollision(const Frustum& frustum, const AABB& reference_AABB)
 {
 	static const size_t number_of_corners = 8;
 	static const size_t number_of_planes = 6;
@@ -539,7 +554,7 @@ ComponentAABB::CollisionState ComponentCamera::CheckAABBCollision(const AABB& re
 
 	//Get own aabb planes
 	Plane own_frustum_planes[number_of_planes];
-	camera_frustum.GetPlanes(own_frustum_planes);
+	frustum.GetPlanes(own_frustum_planes);
 
 	//Check if Corners are inside the planes
 	int total_reference_planes_inside = 0;
@@ -573,13 +588,18 @@ ComponentAABB::CollisionState ComponentCamera::CheckAABBCollision(const AABB& re
 
 ComponentAABB::CollisionState ComponentCamera::CheckAABB2DCollision(const AABB2D& reference_AABB) const
 {
+	return CheckAABB2DCollision(camera_frustum, reference_AABB);
+}
+
+ComponentAABB::CollisionState ComponentCamera::CheckAABB2DCollision(const Frustum& frustum, const AABB2D& reference_AABB)
+{
 	static const size_t number_of_corners = 4;
 	static const size_t number_of_planes = 4;
 
 	//Get own aabb planes
 	Plane own_frustum_planes[6];
-	camera_frustum.GetPlanes(own_frustum_planes);
-	
+	frustum.GetPlanes(own_frustum_planes);
+
 	//Get refence corners
 	std::vector<float> reference_aabb_corners = Utils::GetVertices(reference_AABB);
 

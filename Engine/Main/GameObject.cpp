@@ -240,8 +240,13 @@ bool GameObject::IsStatic() const
 
 bool GameObject::IsVisible(const ComponentCamera& camera) const
 {
+	return IsVisible(camera.camera_frustum);
+}
+
+bool GameObject::IsVisible(const Frustum& frustum) const
+{
 	ComponentMeshRenderer* mesh = static_cast<ComponentMeshRenderer*>(GetComponent(Component::ComponentType::MESH_RENDERER));
-	if ((mesh != nullptr && !mesh->IsEnabled()) || !IsEnabled() || !camera.IsInsideFrustum(aabb.bounding_box))
+	if ((mesh != nullptr && !mesh->IsEnabled()) || !IsEnabled() || !ComponentCamera::IsInsideFrustum(frustum, aabb.bounding_box))
 	{
 		return false;
 	}

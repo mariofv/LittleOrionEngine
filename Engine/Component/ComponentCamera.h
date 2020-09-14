@@ -104,12 +104,16 @@ public:
 	std::vector<float> GetFrustumVertices() const;
 	
 	ENGINE_API bool IsInsideFrustum(const AABB& aabb) const;
+	ENGINE_API static bool IsInsideFrustum(const Frustum& frustum, const AABB& aabb);
 	ComponentAABB::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
+	static ComponentAABB::CollisionState CheckAABBCollision(const Frustum& frustum, const AABB& reference_AABB);
 
 	ENGINE_API bool IsInsideFrustum(const AABB2D& aabb) const;
-	ENGINE_API bool IsCompletlyInsideFrustum(const AABB & aabb) const;
+	ENGINE_API static bool IsInsideFrustum(const Frustum& frustum, const AABB2D& aabb);
 	ComponentAABB::CollisionState CheckAABB2DCollision(const AABB2D& reference_AABB) const;
+	static ComponentAABB::CollisionState CheckAABB2DCollision(const Frustum& frustum, const AABB2D& reference_AABB);
 
+	ENGINE_API bool IsCompletlyInsideFrustum(const AABB & aabb) const;
 	ENGINE_API void GetRay(const float2 &mouse_position, LineSegment &return_value) const;
 
 	AABB GetMinimalEnclosingAABB() const;

@@ -47,6 +47,7 @@ public:
 	ENGINE_API void DrawAABBTree() const;
 
 	std::vector<ComponentMeshRenderer*> GetCullingMeshes(const ComponentCamera* camera, const std::vector<ComponentMeshRenderer*>& mesh_renderers) const;
+	std::vector<ComponentMeshRenderer*> GetCullingMeshes(const Frustum& camera_frustum, const std::vector<ComponentMeshRenderer*>& mesh_renderers) const;
 
 public:
 	CullingMode culling_mode = CullingMode::FRUSTUM_CULLING;

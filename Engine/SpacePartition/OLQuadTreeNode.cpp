@@ -96,20 +96,20 @@ void OLQuadTreeNode::DistributeGameObjectsAmongChildren()
 	assert(objects.size() == 0);
 }
 
-void OLQuadTreeNode::CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera)
+void OLQuadTreeNode::CollectIntersect(std::vector<GameObject*>& game_objects, const Frustum& camera_frustum)
 {
-	if (camera.IsInsideFrustum(box))
+	if (ComponentCamera::IsInsideFrustum(camera_frustum, box))
 	{
 		for (const auto& object : objects)
 		{
-			if (object->IsVisible(camera))
+			if (object->IsVisible(camera_frustum))
 			{
 				game_objects.push_back(object);
 			}
 		}
 		for (const auto& child : children)
 		{
-			child->CollectIntersect(game_objects, camera);
+			child->CollectIntersect(game_objects, camera_frustum);
 		}
 	}
 
