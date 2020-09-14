@@ -37,8 +37,12 @@ public:
 	enum class DrawMode
 	{
 		SHADED,
-		WIREFRAME, 
-		BRIGHTNESS
+		WIREFRAME,
+		BRIGHTNESS,
+
+		DEPTH_NEAR,
+		DEPTH_MID,
+		DEPTH_FAR
 	};
 
 	enum class HDRType

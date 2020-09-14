@@ -106,6 +106,18 @@ void PanelScene::RenderSceneBar()
 			{
 				App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
 			}
+			if (ImGui::MenuItem("Near Depth Map", NULL, draw_mode == "Near Depth Map"))
+			{
+				App->renderer->SetDrawMode(ModuleRender::DrawMode::DEPTH_NEAR);
+			}
+			if (ImGui::MenuItem("Mid Depth Map", NULL, draw_mode == "Mid Depth Map"))
+			{
+				App->renderer->SetDrawMode(ModuleRender::DrawMode::DEPTH_MID);
+			}
+			if (ImGui::MenuItem("Far Depth Map", NULL, draw_mode == "Far Depth Map"))
+			{
+				App->renderer->SetDrawMode(ModuleRender::DrawMode::DEPTH_FAR);
+			}
 			if (ImGui::MenuItem("Brightness", NULL, draw_mode == "Brightness"))
 			{
 				App->renderer->SetDrawMode(ModuleRender::DrawMode::BRIGHTNESS);
@@ -141,7 +153,6 @@ void PanelScene::RenderSceneBar()
 
 	}
 }
-
 
 void PanelScene::RenderEditorDraws()
 {

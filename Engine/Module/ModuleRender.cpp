@@ -211,17 +211,37 @@ void ModuleRender::SetDrawMode(DrawMode draw_mode)
 	switch (draw_mode)
 	{
 	case ModuleRender::DrawMode::SHADED:
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			threshold_brightness = false;
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		game_viewport->SetOutput(Viewport::ViewportOutput::COLOR);
+		threshold_brightness = false;
 		break;
+
 	case ModuleRender::DrawMode::WIREFRAME:
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			threshold_brightness = false;
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		game_viewport->SetOutput(Viewport::ViewportOutput::COLOR);
+		threshold_brightness = false;
 		break;
+
 	case ModuleRender::DrawMode::BRIGHTNESS:
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			threshold_brightness = true;
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		threshold_brightness = true;
 		break;
+
+	case ModuleRender::DrawMode::DEPTH_NEAR:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		game_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_NEAR);
+		break;
+
+	case ModuleRender::DrawMode::DEPTH_MID:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		game_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_MID);
+		break;
+
+	case ModuleRender::DrawMode::DEPTH_FAR:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		game_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_FAR);
+		break;
+
 	default:
 		break;
 	}
@@ -240,16 +260,24 @@ std::string ModuleRender::GetDrawMode() const
 	{
 	case ModuleRender::DrawMode::SHADED:
 		return "Shaded";
-		break;
+
 	case ModuleRender::DrawMode::WIREFRAME:
 		return "Wireframe";
-		break;
+
 	case ModuleRender::DrawMode::BRIGHTNESS:
 		return "Brightness";
-		break;
+
+	case ModuleRender::DrawMode::DEPTH_NEAR:
+		return "Near Depth Map";
+
+	case ModuleRender::DrawMode::DEPTH_MID:
+		return "Mid Depth Map";
+
+	case ModuleRender::DrawMode::DEPTH_FAR:
+		return "Far Depth Map";
+
 	default:
 		return "Unknown";
-		break;
 	}
 }
 

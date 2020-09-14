@@ -7,6 +7,7 @@
 
 class ComponentCamera;
 class ComponentMeshRenderer;
+class DepthFrameBuffer;
 class FrameBuffer;
 class LightFrustum;
 class MultiSampledFrameBuffer;
@@ -20,6 +21,14 @@ public:
 		BLIT_FRAMEBUFFER = 1 << 1
 	};
 
+	enum class ViewportOutput
+	{
+		COLOR,
+		DEPTH_NEAR,
+		DEPTH_MID,
+		DEPTH_FAR
+	};
+
 	Viewport(int options);
 	~Viewport();
 
@@ -28,8 +37,10 @@ public:
 	void SetSize(float width, float height);
 	void SetAntialiasing(bool antialiasing);
 
+	void SetOutput(ViewportOutput output);
+
 private:
-	void BindCameraMatrices() const;
+	void BindCameraFrustumMatrices(const Frustum& camera_to_bind) const;
 
 	void LightCameraPass() const;
 	void MeshRenderPass() const;
@@ -45,12 +56,18 @@ private:
 
 public:
 	GLuint last_displayed_texture = 0;
+	ViewportOutput viewport_output = ViewportOutput::COLOR;
 
 	FrameBuffer* main_fbo = nullptr;
-	FrameBuffer* blit_fbo = nullptr;
 
+	std::vector<FrameBuffer*> framebuffers;
+	FrameBuffer* blit_fbo = nullptr;
 	FrameBuffer* regular_fbo = nullptr;
 	MultiSampledFrameBuffer* multisampled_fbo = nullptr;
+
+	FrameBuffer* depth_near_fbo = nullptr;
+	FrameBuffer* depth_mid_fbo = nullptr;
+	FrameBuffer* depth_far_fbo = nullptr;
 
 	bool shadows_pass = true;
 	bool effects_pass = true;

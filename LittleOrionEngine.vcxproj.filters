@@ -562,14 +562,17 @@
     <ClCompile Include="Engine\Rendering\Viewport.cpp">
       <Filter>Engine\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Rendering\FrameBuffer.cpp">
-      <Filter>Engine\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Rendering\MultiSampledFrameBuffer.cpp">
-      <Filter>Engine\Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Rendering\LightFrustum.cpp">
       <Filter>Engine\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\FrameBuffer\FrameBuffer.cpp">
+      <Filter>Engine\Rendering\FrameBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\FrameBuffer\MultiSampledFrameBuffer.cpp">
+      <Filter>Engine\Rendering\FrameBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\FrameBuffer\DepthFrameBuffer.cpp">
+      <Filter>Engine\Rendering\FrameBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1122,14 +1125,17 @@
     <ClInclude Include="Engine\Rendering\Viewport.h">
       <Filter>Engine\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Rendering\FrameBuffer.h">
-      <Filter>Engine\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\MultiSampledFrameBuffer.h">
-      <Filter>Engine\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Rendering\LightFrustum.h">
       <Filter>Engine\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\FrameBuffer\FrameBuffer.h">
+      <Filter>Engine\Rendering\FrameBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\FrameBuffer\MultiSampledFrameBuffer.h">
+      <Filter>Engine\Rendering\FrameBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\FrameBuffer\DepthFrameBuffer.h">
+      <Filter>Engine\Rendering\FrameBuffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1237,6 +1243,9 @@
     </Filter>
     <Filter Include="Engine\Rendering">
       <UniqueIdentifier>{78aa80fc-bf92-45f7-930b-469a45d58e66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Rendering\FrameBuffer">
+      <UniqueIdentifier>{690eddaa-f84a-46a4-bbbf-3441da24d4d8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -16,15 +16,20 @@
 #include "Module/ModuleSpacePartitioning.h"
 #include "Helper/Utils.h"
 
-#include "FrameBuffer.h"
+#include "FrameBuffer/DepthFrameBuffer.h"
+#include "FrameBuffer/FrameBuffer.h"
+#include "FrameBuffer/MultiSampledFrameBuffer.h"
 #include "LightFrustum.h"
-#include "MultiSampledFrameBuffer.h"
 
 Viewport::Viewport(int options) : viewport_options(options)
 {
-	blit_fbo = new FrameBuffer();
-	regular_fbo = new FrameBuffer();
-	multisampled_fbo = new MultiSampledFrameBuffer();
+	framebuffers.emplace_back(blit_fbo = new FrameBuffer());
+	framebuffers.emplace_back(regular_fbo = new FrameBuffer());
+	framebuffers.emplace_back(multisampled_fbo = new MultiSampledFrameBuffer());
+
+	depth_near_fbo = new FrameBuffer();
+	depth_mid_fbo = new FrameBuffer();
+	depth_far_fbo = new FrameBuffer();
 
 	near_frustum = new LightFrustum(LightFrustum::FrustumSubDivision::NEAR_FRUSTUM);
 	mid_frustum = new LightFrustum(LightFrustum::FrustumSubDivision::MID_FRUSTUM);
@@ -35,9 +40,14 @@ Viewport::Viewport(int options) : viewport_options(options)
 
 Viewport::~Viewport()
 {
-	delete blit_fbo;
-	delete regular_fbo;
-	delete multisampled_fbo;
+	for (auto& framebuffer : framebuffers)
+	{
+		delete framebuffer;
+	}
+
+	delete depth_near_fbo;
+	delete depth_mid_fbo;
+	delete depth_far_fbo;
 
 	delete near_frustum;
 	delete mid_frustum;
@@ -48,11 +58,12 @@ void Viewport::Render(ComponentCamera* camera)
 {
 	this->camera = camera;
 	camera->SetAspectRatio(width / height);
-	BindCameraMatrices();
 
 	culled_mesh_renderers = App->space_partitioning->GetCullingMeshes(camera, App->renderer->mesh_renderers);
 
 	LightCameraPass();
+
+	BindCameraFrustumMatrices(camera->camera_frustum);
 	MeshRenderPass();
 	EffectsRenderPass();
 	UIRenderPass();
@@ -64,15 +75,17 @@ void Viewport::Render(ComponentCamera* camera)
 	SelectLastDisplayedTexture();
 }
 
-void Viewport::BindCameraMatrices() const
+void Viewport::BindCameraFrustumMatrices(const Frustum& camera_frustum) const
 {
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 
 	static size_t projection_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + sizeof(float4x4);
-	glBufferSubData(GL_UNIFORM_BUFFER, projection_matrix_offset, sizeof(float4x4), camera->GetProjectionMatrix().Transposed().ptr());
+	float4x4 projection_matrix = camera_frustum.ProjectionMatrix();
+	glBufferSubData(GL_UNIFORM_BUFFER, projection_matrix_offset, sizeof(float4x4), projection_matrix.Transposed().ptr());
 
 	static size_t view_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + 2 * sizeof(float4x4);
-	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), camera->GetViewMatrix().Transposed().ptr());
+	float4x4 view_matrix = camera_frustum.ViewMatrix();
+	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), view_matrix.Transposed().ptr());
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
@@ -85,16 +98,76 @@ void Viewport::LightCameraPass() const
 	}
 
 	near_frustum->Update();
-	near_frustum->RenderSubFrustum();
+	depth_near_fbo->ClearAttachements();
+	depth_near_fbo->GenerateAttachements(near_frustum->light_orthogonal_frustum.orthographicWidth, near_frustum->light_orthogonal_frustum.orthographicHeight);
 	near_frustum->RenderLightFrustum();
 
 	mid_frustum->Update();
-	mid_frustum->RenderSubFrustum();
+	depth_mid_fbo->ClearAttachements();
+	depth_mid_fbo->GenerateAttachements(mid_frustum->light_orthogonal_frustum.orthographicWidth, mid_frustum->light_orthogonal_frustum.orthographicHeight);
 	mid_frustum->RenderLightFrustum();
 
 	far_frustum->Update();
-	far_frustum->RenderSubFrustum();
+	depth_far_fbo->ClearAttachements();
+	depth_far_fbo->GenerateAttachements(far_frustum->light_orthogonal_frustum.orthographicWidth, far_frustum->light_orthogonal_frustum.orthographicHeight);
 	far_frustum->RenderLightFrustum();
+
+	depth_near_fbo->Bind();
+	glClearColor(1.f, 1.f, 0.f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+
+	static size_t projection_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + sizeof(float4x4);
+	float4x4 projection_matrix = float4x4::identity;
+	glBufferSubData(GL_UNIFORM_BUFFER, projection_matrix_offset, sizeof(float4x4), projection_matrix.Transposed().ptr());
+
+	static size_t view_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + 2 * sizeof(float4x4);
+	float4x4 view_matrix = float4x4::identity;
+	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), view_matrix.Transposed().ptr());
+
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);	for (ComponentMeshRenderer* culled_mesh_renderer : culled_mesh_renderers)
+	{
+		if (culled_mesh_renderer->shadow_caster)
+		{
+			culled_mesh_renderer->Render();
+			glUseProgram(0);
+		}
+	}
+	FrameBuffer::UnBind();
+
+
+	depth_mid_fbo->Bind();
+	glClearColor(1.f, 1.f, 0.f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	BindCameraFrustumMatrices(mid_frustum->light_orthogonal_frustum);
+	for (ComponentMeshRenderer* culled_mesh_renderer : culled_mesh_renderers)
+	{
+		if (culled_mesh_renderer->shadow_caster)
+		{
+			culled_mesh_renderer->Render();
+			glUseProgram(0);
+		}
+	}
+	FrameBuffer::UnBind();
+
+
+	depth_far_fbo->Bind();
+	glClearColor(1.f, 1.f, 0.f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	BindCameraFrustumMatrices(far_frustum->light_orthogonal_frustum);
+	for (ComponentMeshRenderer* culled_mesh_renderer : culled_mesh_renderers)
+	{
+		if (culled_mesh_renderer->shadow_caster)
+		{
+			culled_mesh_renderer->Render();
+			glUseProgram(0);
+		}
+	}
+	FrameBuffer::UnBind();
+	glClearColor(0.f, 0.f, 0.f, 1.f);
 }
 
 void Viewport::MeshRenderPass() const
@@ -235,19 +308,37 @@ void Viewport::SetSize(float width, float height)
 	this->height = height;
 	glViewport(0, 0, width, height);
 
-	blit_fbo->ClearAttachements();
-	blit_fbo->GenerateAttachements(width, height);
-	
-	regular_fbo->ClearAttachements();
-	regular_fbo->GenerateAttachements(width, height);
-
-	multisampled_fbo->ClearAttachements();
-	multisampled_fbo->GenerateAttachements(width, height);
+	for (auto& framebuffer : framebuffers)
+	{
+		framebuffer->ClearAttachements();
+		framebuffer->GenerateAttachements(width, height);
+	}
 }
 
 void Viewport::SelectLastDisplayedTexture()
 {
-	last_displayed_texture = blit_fbo->GetColorAttachement();
+	switch (viewport_output)
+	{
+	case ViewportOutput::COLOR:
+		last_displayed_texture = blit_fbo->GetColorAttachement();
+		break;
+
+	case ViewportOutput::DEPTH_NEAR:
+		last_displayed_texture = depth_near_fbo->GetColorAttachement();
+		break;
+
+	case ViewportOutput::DEPTH_MID:
+		last_displayed_texture = depth_mid_fbo->GetColorAttachement();
+		break;
+
+	case ViewportOutput::DEPTH_FAR:
+		last_displayed_texture = depth_far_fbo->GetColorAttachement();
+		break;
+
+	default:
+		break;
+	}
+
 }
 
 bool Viewport::IsOptionSet(ViewportOption option) const
@@ -266,4 +357,9 @@ void Viewport::SetAntialiasing(bool antialiasing)
 	{
 		main_fbo = regular_fbo;
 	}
+}
+
+void Viewport::SetOutput(ViewportOutput output)
+{
+	viewport_output = output;
 }
