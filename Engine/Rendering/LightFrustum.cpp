@@ -10,11 +10,41 @@
 #include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleRender.h"
 
+LightFrustum::LightFrustum(FrustumSubDivision frustum_sub_division) : frustum_sub_division(frustum_sub_division)
+{
+	switch (frustum_sub_division)
+	{
+	case LightFrustum::FrustumSubDivision::NEAR_FRUSTUM:
+		sub_perspective_frustum_render_color = float3(1.f, 0.f, 0.f);
+		sub_perspective_frustum_enclosing_aabb_render_color = float3(1.f, 0.2f, 0.f);
+		mesh_renderers_enclosing_aabb_render_color = float3(1.f, 0.f, 0.4f);
+		light_orthogonal_frustum_render_color = float3(1.f, 0.6f, 0.f);
+		break;
+
+	case LightFrustum::FrustumSubDivision::MID_FRUSTUM:
+		sub_perspective_frustum_render_color = float3(0.f, 1.f, 0.f);
+		sub_perspective_frustum_enclosing_aabb_render_color = float3(0.2f, 1.f, 0.f);
+		mesh_renderers_enclosing_aabb_render_color = float3(0.f, 1.f, 0.4f);
+		light_orthogonal_frustum_render_color = float3(0.6f, 1.f, 0.f);
+		break;
+
+	case LightFrustum::FrustumSubDivision::FAR_FRUSTUM:
+		sub_perspective_frustum_render_color = float3(0.f, 0.f, 1.f);
+		sub_perspective_frustum_enclosing_aabb_render_color = float3(0.2f, 0.f, 1.f);
+		mesh_renderers_enclosing_aabb_render_color = float3(0.f, 0.4f, 1.f);
+		light_orthogonal_frustum_render_color = float3(0.6f, 0.f, 1.f);
+		break;
+	default:
+		break;
+	}
+}
+
 void LightFrustum::Update()
 {
 	UpdateSubPerspectiveFrustum();
 	UpdateSubPerspectiveFrustumAABB();
 	UpdateMeshRenderersAABB();
+	UpdateLightOrthogonalFrustum();
 }
 
 void LightFrustum::UpdateSubPerspectiveFrustum()
@@ -71,12 +101,15 @@ void LightFrustum::UpdateMeshRenderersAABB()
 
 void LightFrustum::UpdateLightOrthogonalFrustum()
 {
-	float3 min_point = sub_perspective_frustum_enclosing_aabb.minPoint;
-	float3 max_point = sub_perspective_frustum_enclosing_aabb.maxPoint;
+	AABB intersected_aabb = sub_perspective_frustum_enclosing_aabb.Intersection(mesh_renderers_enclosing_aabb);
+	float3 min_point = intersected_aabb.minPoint;
+	float3 max_point = intersected_aabb.maxPoint;
 
 	light_orthogonal_frustum.type = FrustumType::OrthographicFrustum;
 	light_orthogonal_frustum.pos = float3((max_point.x + min_point.x)*0.5f, (max_point.y + min_point.y)*0.5f, min_point.z);
 	light_orthogonal_frustum.nearPlaneDistance = 0;
+	light_orthogonal_frustum.front = float3::unitZ;
+	light_orthogonal_frustum.up = float3::unitY;
 	light_orthogonal_frustum.farPlaneDistance = max_point.z - min_point.z;
 	light_orthogonal_frustum.orthographicWidth = max_point.x - min_point.x;
 	light_orthogonal_frustum.orthographicHeight = max_point.y - min_point.y;
@@ -84,7 +117,7 @@ void LightFrustum::UpdateLightOrthogonalFrustum()
 
 void LightFrustum::RenderSubFrustum() const
 {
-	App->debug_draw->RenderPerspectiveFrustum(sub_perspective_frustum.ViewProjMatrix().Inverted(), float3::unitX);
+	App->debug_draw->RenderPerspectiveFrustum(sub_perspective_frustum.ViewProjMatrix().Inverted(), sub_perspective_frustum_render_color);
 }
 
 void LightFrustum::RenderSubFrustumAABB() const
@@ -95,7 +128,7 @@ void LightFrustum::RenderSubFrustumAABB() const
 	{
 		sub_perspective_frustum_aabb_corner_points[i] = App->lights->directional_light_rotation * sub_perspective_frustum_aabb_corner_points[i];
 	}
-	App->debug_draw->RenderBox(sub_perspective_frustum_aabb_corner_points, float3::unitX);
+	App->debug_draw->RenderBox(sub_perspective_frustum_aabb_corner_points, sub_perspective_frustum_enclosing_aabb_render_color);
 }
 
 void LightFrustum::RenderMeshRenderersAABB() const
@@ -106,6 +139,17 @@ void LightFrustum::RenderMeshRenderersAABB() const
 	{
 		mesh_renderers_enclosing_aabb_corner_points[i] = App->lights->directional_light_rotation * mesh_renderers_enclosing_aabb_corner_points[i];
 	}
-	App->debug_draw->RenderBox(mesh_renderers_enclosing_aabb_corner_points, float3::unitX);
+	App->debug_draw->RenderBox(mesh_renderers_enclosing_aabb_corner_points, mesh_renderers_enclosing_aabb_render_color);
+}
+
+void LightFrustum::RenderLightFrustum() const
+{
+	float3 light_orthogonal_frustum_corner_points[8];
+	light_orthogonal_frustum.GetCornerPoints(light_orthogonal_frustum_corner_points);
+	for (size_t i = 0; i < 8; ++i)
+	{
+		light_orthogonal_frustum_corner_points[i] = App->lights->directional_light_rotation * light_orthogonal_frustum_corner_points[i];
+	}
+	App->debug_draw->RenderBox(light_orthogonal_frustum_corner_points, light_orthogonal_frustum_render_color);
 }
 

@@ -85,12 +85,16 @@ void Viewport::LightCameraPass() const
 	}
 
 	near_frustum->Update();
-	mid_frustum->Update();
-	far_frustum->Update();
-
 	near_frustum->RenderSubFrustum();
-	near_frustum->RenderSubFrustumAABB();
-	near_frustum->RenderMeshRenderersAABB();
+	near_frustum->RenderLightFrustum();
+
+	mid_frustum->Update();
+	mid_frustum->RenderSubFrustum();
+	mid_frustum->RenderLightFrustum();
+
+	far_frustum->Update();
+	far_frustum->RenderSubFrustum();
+	far_frustum->RenderLightFrustum();
 }
 
 void Viewport::MeshRenderPass() const

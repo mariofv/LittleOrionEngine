@@ -14,7 +14,7 @@ public:
 	};
 
 	LightFrustum() = default;
-	LightFrustum(FrustumSubDivision frustum_sub_division) : frustum_sub_division(frustum_sub_division) {};
+	LightFrustum(FrustumSubDivision frustum_sub_division);
 	~LightFrustum() = default;
 
 	void Update();
@@ -22,6 +22,7 @@ public:
 	void RenderSubFrustum() const;
 	void RenderSubFrustumAABB() const;
 	void RenderMeshRenderersAABB() const;
+	void RenderLightFrustum() const;
 
 private:
 	void UpdateSubPerspectiveFrustum();
@@ -33,11 +34,16 @@ public:
 	FrustumSubDivision frustum_sub_division;
 
 	Frustum sub_perspective_frustum;
-	AABB sub_perspective_frustum_enclosing_aabb; // Light space
-	AABB mesh_renderers_enclosing_aabb; // Light space
+	float3 sub_perspective_frustum_render_color;
 
+	AABB sub_perspective_frustum_enclosing_aabb; // Light space
+	float3 sub_perspective_frustum_enclosing_aabb_render_color;
+
+	AABB mesh_renderers_enclosing_aabb; // Light space
+	float3 mesh_renderers_enclosing_aabb_render_color;
 
 	Frustum light_orthogonal_frustum;
+	float3 light_orthogonal_frustum_render_color;
 };
 
 #endif //__LIGHTFRUSTUM_H__
