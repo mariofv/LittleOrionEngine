@@ -8,6 +8,7 @@
 class ComponentCamera;
 class ComponentMeshRenderer;
 class FrameBuffer;
+class LightFrustum;
 class MultiSampledFrameBuffer;
 
 class Viewport
@@ -29,7 +30,6 @@ public:
 
 private:
 	void BindCameraMatrices() const;
-	Frustum InitLightFrustum(const float3& position, const float3& up, const float3& front, float vertical_fov, float horizontal_fov, float near_distance, float far_distance) const;
 
 	void LightCameraPass() const;
 	void MeshRenderPass() const;
@@ -57,13 +57,16 @@ public:
 	bool debug_pass = true;
 	bool debug_draw_pass = true;
 
-
 private:
 	ComponentCamera* camera = nullptr;
 	std::vector<ComponentMeshRenderer*> culled_mesh_renderers;
 
 	float width = 0;
 	float height = 0;
+
+	LightFrustum* near_frustum = nullptr;
+	LightFrustum* mid_frustum = nullptr;
+	LightFrustum* far_frustum = nullptr;
 
 	int viewport_options = 0;
 	bool antialiasing = true;

@@ -330,6 +330,7 @@
     <ClInclude Include="Engine\Helper\Quad.h" />
     <ClInclude Include="Engine\Rendering\FrameBuffer.h" />
     <ClInclude Include="Engine\Rendering\Viewport.h" />
+    <ClInclude Include="Engine\Rendering\LightFrustum.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Component\ComponentVideoPlayer.cpp" />
@@ -514,6 +515,7 @@
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.cpp" />
     <ClCompile Include="Engine\Helper\Quad.cpp" />
     <ClCompile Include="Engine\Rendering\Viewport.cpp" />
+    <ClCompile Include="Engine\Rendering\LightFrustum.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

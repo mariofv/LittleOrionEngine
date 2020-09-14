@@ -17,6 +17,7 @@
 #include "Helper/Utils.h"
 
 #include "FrameBuffer.h"
+#include "LightFrustum.h"
 #include "MultiSampledFrameBuffer.h"
 
 Viewport::Viewport(int options) : viewport_options(options)
@@ -24,6 +25,10 @@ Viewport::Viewport(int options) : viewport_options(options)
 	blit_fbo = new FrameBuffer();
 	regular_fbo = new FrameBuffer();
 	multisampled_fbo = new MultiSampledFrameBuffer();
+
+	near_frustum = new LightFrustum(LightFrustum::FrustumSubDivision::NEAR_FRUSTUM);
+	mid_frustum = new LightFrustum(LightFrustum::FrustumSubDivision::MID_FRUSTUM);
+	far_frustum = new LightFrustum(LightFrustum::FrustumSubDivision::FAR_FRUSTUM);
 
 	main_fbo = regular_fbo;
 }
@@ -33,6 +38,10 @@ Viewport::~Viewport()
 	delete blit_fbo;
 	delete regular_fbo;
 	delete multisampled_fbo;
+
+	delete near_frustum;
+	delete mid_frustum;
+	delete far_frustum;
 }
 
 void Viewport::Render(ComponentCamera* camera)
@@ -68,21 +77,6 @@ void Viewport::BindCameraMatrices() const
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-Frustum Viewport::InitLightFrustum(const float3& position, const float3& up, const float3& front, float vertical_fov, float horizontal_fov, float near_distance, float far_distance) const
-{
-	Frustum light_frustum = Frustum();
-	light_frustum.type = FrustumType::PerspectiveFrustum;
-	light_frustum.pos = position;
-	light_frustum.front = front;
-	light_frustum.up = up;
-	light_frustum.nearPlaneDistance = near_distance;
-	light_frustum.farPlaneDistance = far_distance;
-	light_frustum.verticalFov = vertical_fov;
-	light_frustum.horizontalFov = horizontal_fov;
-
-	return light_frustum;
-}
-
 void Viewport::LightCameraPass() const
 {
 	if (!shadows_pass || App->cameras->main_camera == nullptr)
@@ -90,27 +84,12 @@ void Viewport::LightCameraPass() const
 		return;
 	}
 
-	float3 game_camera_position = App->cameras->main_camera->owner->transform.GetGlobalTranslation();
-	float3 game_camera_up = App->cameras->main_camera->owner->transform.GetGlobalUpVector();
-	float3 game_camera_front = App->cameras->main_camera->owner->transform.GetGlobalFrontVector();
+	near_frustum->Update();
+	mid_frustum->Update();
+	far_frustum->Update();
 
-	float vertical_fov = App->cameras->main_camera->camera_frustum.verticalFov;
-	float horizontal_fov = App->cameras->main_camera->camera_frustum.horizontalFov;
-
-	float game_camera_near_distance = App->cameras->main_camera->GetNearDistance();
-	float game_camera_far_distance = App->cameras->main_camera->GetFarDistance();
-	float game_camera_frustum_depth = game_camera_far_distance - game_camera_near_distance;
-	
-	float game_camera_first_third = game_camera_near_distance + game_camera_frustum_depth / 3.f;
-	float game_camera_second_third = game_camera_far_distance - game_camera_frustum_depth / 3.f;
-	
-	Frustum near_frustum = InitLightFrustum(game_camera_position, game_camera_up, game_camera_front, vertical_fov, horizontal_fov, game_camera_near_distance, game_camera_first_third);
-	Frustum mid_frustum = InitLightFrustum(game_camera_position, game_camera_up, game_camera_front, vertical_fov, horizontal_fov, game_camera_near_distance, game_camera_second_third);
-	Frustum far_frustum = InitLightFrustum(game_camera_position, game_camera_up, game_camera_front, vertical_fov, horizontal_fov, game_camera_near_distance, game_camera_far_distance);
-
-	App->debug_draw->RenderPerspectiveFrustum(near_frustum.ViewProjMatrix().Inverted(), float3::unitX);
-	App->debug_draw->RenderPerspectiveFrustum(mid_frustum.ViewProjMatrix().Inverted(), float3::unitY);
-	App->debug_draw->RenderPerspectiveFrustum(far_frustum.ViewProjMatrix().Inverted(), float3::unitZ);
+	near_frustum->RenderSubFrustum();
+	near_frustum->RenderSubFrustumAABB();
 }
 
 void Viewport::MeshRenderPass() const

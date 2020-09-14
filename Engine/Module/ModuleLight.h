@@ -50,9 +50,7 @@ public:
 	float ambient_light_intensity = 0.3f;
 	float ambient_light_color[4] = { 1.f, 1.f, 1.f, 1.f };
 
-private:
 	Quat directional_light_rotation;
-
 
 	friend class ModuleEditor;
 };
