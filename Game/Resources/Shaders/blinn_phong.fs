@@ -128,11 +128,12 @@ uniform vec4 ambient_light_color;
 
 //SHADOW MAPS
 float ShadowCalculation();
+float ShadowCalculation2();
 uniform bool render_shadows;
 
-in vec4 close_pos_from_light;
-in vec4 mid_pos_from_light;
-in vec4 far_pos_from_light;
+in vec4 position_near_depth_space;
+in vec4 position_mid_depth_space;
+in vec4 position_far_depth_space;
 
 vec3 FrustumsCheck();
 
@@ -207,7 +208,7 @@ void main()
 
 	//hdr computes gamma on the shader, so there is no need to put it here aswell
 #if	!ENABLE_HDR
-		FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); 
+		FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma));
 #endif
 
 	FragColor.a=material.transparency;
@@ -379,8 +380,12 @@ vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel)
 	return (1-frensel)*diffuse_color/PI;
 }
 
-
 float ShadowCalculation()
+{
+	return 1;
+}
+
+float ShadowCalculation2()
 {
 #if RECEIVE_SHADOWS
 	if(distance_to_camera > far_plane)
@@ -389,21 +394,21 @@ float ShadowCalculation()
 	}
 
 	//Light frustums
-	vec3 normalized_close_depth = close_pos_from_light.xyz / close_pos_from_light.w;
-	normalized_close_depth = normalized_close_depth * 0.5 + 0.5;
+	vec3 normalized_position_near_depth_space = position_near_depth_space.xyz / position_near_depth_space.w;
+	normalized_position_near_depth_space = normalized_position_near_depth_space * 0.5 + 0.5;
 
-	vec3 normalized_mid_depth = mid_pos_from_light.xyz / mid_pos_from_light.w;
-	normalized_mid_depth = normalized_mid_depth * 0.5 + 0.5;
+	vec3 normalized_position_mid_depth_space = position_mid_depth_space.xyz / position_mid_depth_space.w;
+	normalized_position_mid_depth_space = normalized_position_mid_depth_space * 0.5 + 0.5;
 
-	vec3 normalized_far_depth = far_pos_from_light.xyz / far_pos_from_light.w;
-	normalized_far_depth = normalized_far_depth * 0.5 + 0.5;
+	vec3 normalized_position_far_depth_space = position_far_depth_space.xyz / position_far_depth_space.w;
+	normalized_position_far_depth_space = normalized_position_far_depth_space * 0.5 + 0.5;
 
 	float bias = 0.005;
 	float factor = 0.0;
 
-	vec3 close_coords = vec3(normalized_close_depth.xy, normalized_close_depth.z - bias);
-	vec3 mid_coords = vec3(normalized_mid_depth.xy, normalized_mid_depth.z - bias);
-	vec3 far_coords = vec3(normalized_far_depth.xy, normalized_far_depth.z - bias);
+	vec3 close_coords = vec3(normalized_position_near_depth_space.xy, normalized_position_near_depth_space.z - bias);
+	vec3 mid_coords = vec3(normalized_position_mid_depth_space.xy, normalized_position_mid_depth_space.z - bias);
+	vec3 far_coords = vec3(normalized_position_far_depth_space.xy, normalized_position_far_depth_space.z - bias);
 
 
 	for(int x = -1; x <= 1; ++x) //PCF, solution for edgy shadoWs

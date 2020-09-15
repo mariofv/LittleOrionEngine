@@ -64,6 +64,7 @@ void Viewport::Render(ComponentCamera* camera)
 	LightCameraPass();
 
 	BindCameraFrustumMatrices(camera->camera_frustum);
+	BindLightFrustumsMatrices();
 	glViewport(0, 0, width, height);
 	MeshRenderPass();
 	EffectsRenderPass();
@@ -91,6 +92,25 @@ void Viewport::BindCameraFrustumMatrices(const Frustum& camera_frustum) const
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	glViewport(0, 0, width, height);
+}
+
+void Viewport::BindLightFrustumsMatrices() const
+{
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+
+	static size_t near_depth_space_matrix_offset = App->program->uniform_buffer.LIGHT_FRUSTUM_UNIFORMS_SIZE;
+	float4x4 near_depth_space_matrix = near_frustum->light_orthogonal_frustum.ProjectionMatrix() * near_frustum->light_orthogonal_frustum.ViewMatrix();
+	glBufferSubData(GL_UNIFORM_BUFFER, near_depth_space_matrix_offset, sizeof(float4x4), near_depth_space_matrix.Transposed().ptr());
+
+	static size_t mid_depth_space_matrix_offset = App->program->uniform_buffer.LIGHT_FRUSTUM_UNIFORMS_SIZE + sizeof(float4x4);
+	float4x4 mid_depth_space_matrix = mid_frustum->light_orthogonal_frustum.ProjectionMatrix() * mid_frustum->light_orthogonal_frustum.ViewMatrix();
+	glBufferSubData(GL_UNIFORM_BUFFER, mid_depth_space_matrix_offset, sizeof(float4x4), mid_depth_space_matrix.Transposed().ptr());
+
+	static size_t far_depth_space_matrix_offset = App->program->uniform_buffer.LIGHT_FRUSTUM_UNIFORMS_SIZE + 2 * sizeof(float4x4);
+	float4x4 far_depth_space_matrix = far_frustum->light_orthogonal_frustum.ProjectionMatrix() * far_frustum->light_orthogonal_frustum.ViewMatrix();
+	glBufferSubData(GL_UNIFORM_BUFFER, far_depth_space_matrix_offset, sizeof(float4x4), far_depth_space_matrix.Transposed().ptr());
+
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void Viewport::LightCameraPass() const

@@ -40,7 +40,8 @@ public:
 	void SetOutput(ViewportOutput output);
 
 private:
-	void BindCameraFrustumMatrices(const Frustum& camera_to_bind) const;
+	void BindCameraFrustumMatrices(const Frustum& camera_frustum) const;
+	void BindLightFrustumsMatrices() const;
 
 	void LightCameraPass() const;
 	void MeshRenderPass() const;

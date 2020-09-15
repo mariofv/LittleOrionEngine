@@ -15,6 +15,13 @@ layout (std140) uniform Matrices
 	mat4 view;
 } matrices;
 
+layout (std140) uniform DepthMatrices
+{
+  mat4 near_depth_space_matrix;
+  mat4 mid_depth_space_matrix;
+  mat4 far_depth_space_matrix;
+} depth_matrices;
+
 uniform int num_joints;
 uniform int time;
 
@@ -31,19 +38,10 @@ out mat3 TBN;
 out vec3 view_pos;
 out vec3 view_dir;
 
-//SHADOWS
-uniform mat4 close_directional_view;
-uniform mat4 close_directional_proj;
+out vec4 position_near_depth_space;
+out vec4 position_mid_depth_space;
+out vec4 position_far_depth_space;
 
-uniform mat4 mid_directional_view;
-uniform mat4 mid_directional_proj;
-
-uniform mat4 far_directional_view;
-uniform mat4 far_directional_proj;
-
-out vec4 close_pos_from_light;
-out vec4 mid_pos_from_light;
-out vec4 far_pos_from_light;
 out vec3 vertex_normal_fs;
 out vec3 vertex_tangent_fs;
 uniform float render_depth_from_light;
@@ -52,16 +50,12 @@ out float distance_to_camera;
 
 void main()
 {
-	mat4 close_lightSpaceMatrix = close_directional_proj * close_directional_view;
-	mat4 mid_lightSpaceMatrix   = mid_directional_proj * mid_directional_view;
-	mat4 far_lightSpaceMatrix   = far_directional_proj * far_directional_view;
-
 //Skinning
 	mat4 skinning_matrix = mat4(has_skinning_value);
-   for(uint i=0; i<vertex_num_joints; i++)
-	{
-		skinning_matrix += vertex_weights[i] * palette[vertex_joints[i]];
-	}
+  for(uint i=0; i<vertex_num_joints; i++)
+  {
+    skinning_matrix += vertex_weights[i] * palette[vertex_joints[i]];
+  }
 
 // General variables
 	texCoord = vertex_uv0;
@@ -76,9 +70,9 @@ void main()
 
 
 	//Light space
-	close_pos_from_light = close_lightSpaceMatrix*vec4(position, 1.0);
-	mid_pos_from_light = mid_lightSpaceMatrix*vec4(position, 1.0);
-	far_pos_from_light = far_lightSpaceMatrix*vec4(position, 1.0);
+	position_near_depth_space = depth_matrices.near_depth_space_matrix * vec4(position, 1.0);
+	position_mid_depth_space = depth_matrices.mid_depth_space_matrix * vec4(position, 1.0);
+	position_far_depth_space = depth_matrices.far_depth_space_matrix * vec4(position, 1.0);
 
 	vec4 eye_coordinate_pos = matrices.view * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
 	distance_to_camera = -eye_coordinate_pos.z;
