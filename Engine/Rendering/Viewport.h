@@ -54,6 +54,8 @@ private:
 	void SelectLastDisplayedTexture();
 	bool IsOptionSet(ViewportOption option) const;
 
+	void DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo) const;
+
 public:
 	GLuint last_displayed_texture = 0;
 	ViewportOutput viewport_output = ViewportOutput::COLOR;
