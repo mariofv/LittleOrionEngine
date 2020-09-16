@@ -61,7 +61,7 @@ public:
 	{
 		STRETCH,
 		TILE,
-		REPEATPERSEGMENT
+		REPEAT_PER_SEGMENT
 	};
 	ComponentTrail();
 	ComponentTrail(GameObject* owner);
@@ -85,7 +85,7 @@ public:
 	
 	void GetPerpendiculars();
 	void GetCatmull();
-	void CalculateCatmull(Spline& path_to_smoothen, std::vector<float3>& spline_points);
+	void CalculateCatmull(Spline& const path_to_smoothen, std::vector<float3>& spline_points);
 	void GetUVs();
 
 	void Render();
@@ -103,10 +103,10 @@ private:
 
 public:
 	uint32_t texture_uuid = 0;
+	std::shared_ptr<Texture> trail_texture = nullptr;
 	float3 last_gameobject_position;
 	int total_points = 1;
 	float3 last_point_added;
-	
 	//Trail generation properties
 	float width = 0.1f;
 	float duration = 1000.0f; // in millis
@@ -121,13 +121,17 @@ public:
 	//Renderer
 	float* trail_renderer_vertices = nullptr;
 	std::vector<Vertex> vertices;
-	std::shared_ptr<Texture> trail_texture = nullptr;
 	TextureMode texture_mode = ComponentTrail::TextureMode::STRETCH;
 	int columns = 1, rows = 1;
 
 	//Color properties
-	float4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float4 color = float4::one;
 	float bloom_intensity = 1.0f;
+	//fade effect
+	//float4 initial_color = float4::one;
+	bool fade_between_colors = false;
+	float4 color_to_fade = float4::one;;
+	float color_fade_length = 1.0F;
 
 	//Catmull-rom
 	Spline path_top, path_bottom;

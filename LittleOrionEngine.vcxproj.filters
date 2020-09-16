@@ -559,6 +559,9 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Video.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTrail.cpp">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1106,6 +1109,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Helper\Quad.h">
       <Filter>Engine\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTrail.h">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
