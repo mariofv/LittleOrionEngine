@@ -70,20 +70,20 @@ void ComponentTrail::InitBuffers()
 
 void ComponentTrail::Update()
 {
+	
 	if (!active)
 	{
 		return;
 	}
 	float3 gameobject_position = owner->transform.GetGlobalTranslation(); //current GO position
 	bool on_transform_change = last_gameobject_position.Distance(gameobject_position) > 0.0f;
-
+	
 	if (on_transform_change)//always gets in this is wrong 
 	{
 		TrailPoint next_point(gameobject_position, width, duration);
 		test_points.push_back(next_point);	//create another Trail point and add it to the pool		
 		last_point = next_point; // So we're gonna calculate, on the next iteration how far we are from the last point created, and so on
 		last_gameobject_position = gameobject_position;
-		
 	}
 	if (test_points.size() > 0)
 	{
@@ -93,8 +93,10 @@ void ComponentTrail::Update()
 	}
 	
 	auto it = test_points.begin();
+	unsigned int j = 0;
 	while (it != test_points.end())
 	{
+		j++;
 		if (it->life >= 0) // If life is positive, all good
 		{
 			it->is_rendered = true;
@@ -105,6 +107,18 @@ void ComponentTrail::Update()
 		{
 			it = test_points.erase(it);
 		}
+	}
+	if (fade_between_colors)//currently fades color according to coordinates of shader
+	{
+		if (test_points.size() == 0)
+		{
+			return;
+		}
+		float progress = test_points.size() / 2;
+		float3 tmp_color = float3::Lerp(color.xyz(), color_to_fade.xyz(), progress);
+		color.x = tmp_color.x;
+		color.y = tmp_color.y;
+		color.z = tmp_color.z;
 	}
 }
 
@@ -180,7 +194,10 @@ void ComponentTrail::CalculateCatmull(Spline& const path_to_smoothen, std::vecto
 		//If we are are 1st point then p0 = p1;
 		if (i == 0)
 		{
-			smoothen_weight_point_left = curve_begin;
+			//Implementing r = d * (d . n) * n reflection formula
+			float3 normal_begin = - curve_begin.Normalized(); //Normal of negative p1
+			float3 from_end_to_begin = (curve_end.Cross(curve_begin)).Normalized();//Normal of p2->p1
+			smoothen_weight_point_left = from_end_to_begin - 2 * (normal_begin.Dot(from_end_to_begin) * from_end_to_begin);//refrection of p2 to p1 for getting p0
 		}
 		else
 		{
@@ -191,6 +208,9 @@ void ComponentTrail::CalculateCatmull(Spline& const path_to_smoothen, std::vecto
 		if (i == path_to_smoothen.spline_points.size() - 1)
 		{
 			smoothen_weight_point_right = curve_end;
+			float3 normal_end = - curve_end.Normalized(); //Normal of negative p2
+			float3 from_begin_to_end = (curve_begin.Cross(curve_end)).Normalized();//Normal of p1->p2
+			smoothen_weight_point_right = from_begin_to_end - 2 * (normal_end.Dot(from_begin_to_end) * from_begin_to_end);//refrection of p1 to p2 for getting p3
 		}
 		else
 		{
@@ -217,28 +237,12 @@ void ComponentTrail::GetUVs()
 		switch (texture_mode)
 		{
 		case ComponentTrail::TextureMode::STRETCH:
-			if (l == 0)
-			{
-				vertices.push_back({ spline_top[l], float2(trail_segment_uv , 1.0f) });//uv[++i]
-				vertices.push_back({ spline_bottom[l], float2(trail_segment_uv , 0.0f) });//uv[++i]
-			}
-			else
-			{
-				vertices.push_back({ spline_top[l], float2(trail_segment_uv * l , 1.0f) });//uv[++i]
-				vertices.push_back({ spline_bottom[l], float2(trail_segment_uv * l, 0.0f) });//uv[++i]
-			}
+			vertices.push_back({ spline_top[l], float2(trail_segment_uv * l , 1.0f) });//uv[++i]
+			vertices.push_back({ spline_bottom[l], float2(trail_segment_uv * l, 0.0f) });//uv[++i]
 			break;
 		case ComponentTrail::TextureMode::TILE:
-			if (l == 0)
-			{
-				vertices.push_back({ spline_top[l], float2(trail_segment_uv_x , 1.0f * trail_segment_uv_y) });//uv[++i]
-				vertices.push_back({ spline_bottom[l], float2(trail_segment_uv_x , 0.0f) });//uv[++i]
-			}
-			else
-			{
-				vertices.push_back({ spline_top[l], float2(trail_segment_uv_x * l , 1.0f * trail_segment_uv_y) });//uv[++i]
-				vertices.push_back({ spline_bottom[l], float2(trail_segment_uv_x * l, 0.0f) });//uv[++i]
-			}
+			vertices.push_back({ spline_top[l], float2(trail_segment_uv_x * l , 1.0f * trail_segment_uv_y) });//uv[++i]
+			vertices.push_back({ spline_bottom[l], float2(trail_segment_uv_x * l, 0.0f) });//uv[++i]
 			break;
 		case ComponentTrail::TextureMode::REPEAT_PER_SEGMENT:
 			vertices.push_back({ spline_top[l], float2(l , 1.0f) });//uv[++i]
