@@ -119,26 +119,6 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "Size");
 			ImGui::DragFloat2("Initial Size", particle_system->particles_size.ptr(), 0.1f, 0, 999);
 
-			/*int random_size = particle_system->size_random ? 1 : 0;
-			if (ImGui::Combo("Initial Size Type", &random_size, "Constant\0Random\0"))
-			{
-				particle_system->size_random = random_size == 1;
-				particle_system->modified_by_user = true;
-			}
-
-			if (particle_system->size_random)
-			{
-				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				particle_system->modified_by_user |= ImGui::DragFloat("Initial Min size", &particle_system->min_size_of_particle, 0.1f, 0, 999);
-				ImGui::SameLine();
-				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragFloat("Initial Max size", &particle_system->max_size_of_particle, 0.1f, 0, 999);
-			}
-			else
-			{
-				ImGui::DragFloat2("Initial Size", particle_system->particles_size.ptr(), 0.1f, 0, 999);
-			}*/
-
 			ImGui::Spacing();
 			ImGui::Separator();
 			ImGui::Spacing();
@@ -187,6 +167,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::CONE;
 					break;
 				}
+				particle_system->modified_by_user = true;
 			}
 
 			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::BOX)
@@ -241,17 +222,15 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				{
 				case 0:
 					particle_system->type_of_color_change = ComponentParticleSystem::TypeOfSizeColorChange::COLOR_NONE;
-					particle_system->modified_by_user = true;
 					break;
 				case 1:
 					particle_system->type_of_color_change = ComponentParticleSystem::TypeOfSizeColorChange::COLOR_LINEAR;
-					particle_system->modified_by_user = true;
 					break;
 				case 2:
 					particle_system->type_of_color_change = ComponentParticleSystem::TypeOfSizeColorChange::COLOR_CURVE;
-					particle_system->modified_by_user = true;
 					break;
 				}
+				particle_system->modified_by_user = true;
 			}
 
 			ImGui::Spacing();
@@ -290,21 +269,18 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				{
 				case 0:
 					particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::VEL_CONSTANT;
-					particle_system->modified_by_user = true;
 					break;
 				case 1:
 					particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::VEL_LINEAR;
-					particle_system->modified_by_user = true;
 					break;
 				case 2:
 					particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::VEL_RANDOM_BETWEEN_TWO_CONSTANTS;
-					particle_system->modified_by_user = true;
 					break;
 				case 3:
 					particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::VEL_CURVE;
-					particle_system->modified_by_user = true;
 					break;
 				}
+				particle_system->modified_by_user = true;
 			}
 
 			switch (velocity_type)
@@ -386,17 +362,15 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				{
 				case 0:
 					particle_system->type_of_size_over_time = ComponentParticleSystem::TypeOfSizeOverTime::SIZE_LINEAR;
-					particle_system->modified_by_user = true;
 					break;
 				case 1:
 					particle_system->type_of_size_over_time = ComponentParticleSystem::TypeOfSizeOverTime::SIZE_RANDOM_BETWEEN_TWO_CONSTANTS;
-					particle_system->modified_by_user = true;
 					break;
 				case 2:
 					particle_system->type_of_size_over_time = ComponentParticleSystem::TypeOfSizeOverTime::SIZE_CURVE;
-					particle_system->modified_by_user = true;
 					break;
 				}
+				particle_system->modified_by_user = true;
 			}
 
 			switch (size_type)
@@ -466,17 +440,15 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				{
 				case 0:
 					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::WORLD);
-					particle_system->modified_by_user = true;
 					break;
 				case 1:
 					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
-					particle_system->modified_by_user = true;
 					break;
 				case 2:
 					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
-					particle_system->modified_by_user = true;
 					break;
 				}
+				particle_system->modified_by_user = true;
 			}
 
 			

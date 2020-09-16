@@ -87,7 +87,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 			float random_z = (rand() % ((max_range_random_z - min_range_random_z) + 1) + min_range_random_z) / 100.f;
 
-			particle.velocity_initial = float4(0, 1, 0, 0);
+			particle.velocity_initial = float4::unitY;
 			if (enabled_random_x)
 			{
 				particle.position_initial.x = random_x;

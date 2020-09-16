@@ -116,8 +116,7 @@ void BezierCurve::MovePivotByIncrement(float2& handle, float2& increment)
 	float2 change = handle;
 
 	handle += increment;
-	handle.x = handle.x < 0 ? 0 : (handle.x > 1 ? 1 : handle.x);
-	handle.y = handle.y < 0 ? 0 : (handle.y > 1 ? 1 : handle.y);
+	Clamp(handle, 0, 1);
 
 	change = handle - change;
 	increment = change;
@@ -168,12 +167,18 @@ void BezierCurve::CheckAllPoints()
 	for (int i = 0; i < num_points; i++)
 	{
 		if (i == 0)
+		{
 			points[i].curve_point.x = 0;
+		}
 		else if (i == num_points - 1)
+		{
 			points[i].curve_point.x = 1;
+		}
 		else
+		{
 			points[i].curve_point.x = points[i].curve_point.x < points[i - 1].curve_point.x ? points[i - 1].curve_point.x + 0.01f
 				: (points[i].curve_point.x > points[i + 1].curve_point.x ? points[i + 1].curve_point.x - 0.01f : points[i].curve_point.x);
+		}
 
 		points[i].curve_point.y = points[i].curve_point.y < 0 ? 0 : (points[i].curve_point.y > 1 ? 1 : points[i].curve_point.y);
 	}
