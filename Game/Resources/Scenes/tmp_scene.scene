@@ -125,7 +125,7 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    300.0,
+                    567.5,
                     302.0
                 ],
                 "Rotation": [
@@ -147,7 +147,7 @@
                     0.5
                 ],
                 "SizeDelta": [
-                    600.0,
+                    1135.0,
                     604.0
                 ],
                 "Pivot": [

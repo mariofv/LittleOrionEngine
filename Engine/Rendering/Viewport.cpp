@@ -86,6 +86,21 @@ void Viewport::BindCameraFrustumMatrices(const Frustum& camera_frustum) const
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
+void Viewport::BindDepthMaps(GLuint program) const
+{
+	glActiveTexture(GL_TEXTURE12);
+	glBindTexture(GL_TEXTURE_2D, depth_full_fbo->GetColorAttachement());
+	glUniform1i(glGetUniformLocation(program, "close_depth_map"), 12);
+
+	glActiveTexture(GL_TEXTURE13);
+	glBindTexture(GL_TEXTURE_2D, depth_mid_fbo->GetColorAttachement());
+	glUniform1i(glGetUniformLocation(program, "mid_depth_map"), 13);
+
+	glActiveTexture(GL_TEXTURE14);
+	glBindTexture(GL_TEXTURE_2D, depth_full_fbo->GetColorAttachement());
+	glUniform1i(glGetUniformLocation(program, "far_depth_map"), 14);
+}
+
 void Viewport::LightCameraPass() const
 {
 	if (!shadows_pass || App->cameras->main_camera == nullptr)
@@ -122,6 +137,7 @@ void Viewport::MeshRenderPass() const
 			GLuint mesh_renderer_program = opaque_mesh_renderer.mesh_renderer->BindShaderProgram();
 			opaque_mesh_renderer.mesh_renderer->BindMeshUniforms(mesh_renderer_program);
 			opaque_mesh_renderer.mesh_renderer->BindMaterialUniforms(mesh_renderer_program);
+			BindDepthMaps(mesh_renderer_program);
 			App->lights->Render(opaque_mesh_renderer.mesh_renderer->owner->transform.GetGlobalTranslation(), mesh_renderer_program);
 			opaque_mesh_renderer.mesh_renderer->RenderModel();
 			/*
@@ -144,6 +160,7 @@ void Viewport::MeshRenderPass() const
 			GLuint mesh_renderer_program = transparent_mesh_renderer.mesh_renderer->BindShaderProgram();
 			transparent_mesh_renderer.mesh_renderer->BindMeshUniforms(mesh_renderer_program);
 			transparent_mesh_renderer.mesh_renderer->BindMaterialUniforms(mesh_renderer_program);
+			BindDepthMaps(mesh_renderer_program);
 			App->lights->Render(transparent_mesh_renderer.mesh_renderer->owner->transform.GetGlobalTranslation(), mesh_renderer_program);
 			transparent_mesh_renderer.mesh_renderer->RenderModel();
 			/*
@@ -153,6 +170,12 @@ void Viewport::MeshRenderPass() const
 			glUseProgram(0);
 		}
 	}
+
+	GLuint program = App->program->UseProgram("Quad", 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, depth_full_fbo->GetColorAttachement());
+	
+	App->ui->quad->Render();
 
 	FrameBuffer::UnBind();
 }
@@ -296,6 +319,7 @@ void Viewport::DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo)
 	depth_fbo->ClearAttachements();
 	depth_fbo->GenerateAttachements(light_frustum->light_orthogonal_frustum.orthographicWidth, light_frustum->light_orthogonal_frustum.orthographicHeight);
 
+	light_frustum->RenderMeshRenderersAABB();
 	light_frustum->RenderLightFrustum();
 
 	depth_fbo->Bind();

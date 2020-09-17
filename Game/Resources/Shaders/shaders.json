@@ -101,6 +101,12 @@
       "Vertex": "/Resources/Shaders/depth.vs",
       "Fragment": "/Resources/Shaders/depth.fs",
       "Selectable": false
+    },
+    {
+      "Name": "Quad",
+      "Vertex": "/Resources/Shaders/quad.vs",
+      "Fragment": "/Resources/Shaders/quad.fs",
+      "Selectable": false
     }
   ]
 }

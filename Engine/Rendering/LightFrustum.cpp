@@ -132,10 +132,10 @@ void LightFrustum::UpdateLightOrthogonalFrustum()
 	float3 max_point = intersected_aabb.maxPoint;
 
 	light_orthogonal_frustum.type = FrustumType::OrthographicFrustum;
-	light_orthogonal_frustum.pos = float3((max_point.x + min_point.x)*0.5f, (max_point.y + min_point.y)*0.5f, min_point.z);
+	light_orthogonal_frustum.pos = App->lights->directional_light_rotation * float3((max_point.x + min_point.x)*0.5f, (max_point.y + min_point.y)*0.5f, min_point.z);
 	light_orthogonal_frustum.nearPlaneDistance = 0;
-	light_orthogonal_frustum.front = float3::unitZ;
-	light_orthogonal_frustum.up = float3::unitY;
+	light_orthogonal_frustum.front = App->lights->directional_light_rotation * float3::unitZ;
+	light_orthogonal_frustum.up = App->lights->directional_light_rotation * float3::unitY;
 	light_orthogonal_frustum.farPlaneDistance = max_point.z - min_point.z;
 	light_orthogonal_frustum.orthographicWidth = max_point.x - min_point.x;
 	light_orthogonal_frustum.orthographicHeight = max_point.y - min_point.y;
@@ -174,7 +174,7 @@ void LightFrustum::RenderLightFrustum() const
 	light_orthogonal_frustum.GetCornerPoints(light_orthogonal_frustum_corner_points);
 	for (size_t i = 0; i < 8; ++i)
 	{
-		light_orthogonal_frustum_corner_points[i] = App->lights->directional_light_rotation * light_orthogonal_frustum_corner_points[i];
+		light_orthogonal_frustum_corner_points[i] = light_orthogonal_frustum_corner_points[i];
 	}
 	App->debug_draw->RenderBox(light_orthogonal_frustum_corner_points, light_orthogonal_frustum_render_color);
 	float4x4 light_frustum_transform = App->lights->directional_light_rotation.ToFloat4x4() * float4x4::Translate(light_orthogonal_frustum.pos);

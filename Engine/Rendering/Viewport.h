@@ -42,6 +42,7 @@ public:
 
 private:
 	void BindCameraFrustumMatrices(const Frustum& camera_frustum) const;
+	void BindDepthMaps(GLuint program) const;
 
 	void LightCameraPass() const;
 	void MeshRenderPass() const;
