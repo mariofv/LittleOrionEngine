@@ -64,7 +64,7 @@ public:
 
 	void ChangeTextureEmissive(uint32_t texture_uuid);
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
-
+	void Disable() override;
 
 	void ComputeAnimationFrame(float progress);
 
@@ -87,6 +87,7 @@ public:
 	float4 color = float4::one;
 	float color_emissive[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	int emissive_intensity = 1;
+	bool playing_once = false;
 private:
 	GLuint shader_program;
 	GLuint vbo, vao, ebo;
