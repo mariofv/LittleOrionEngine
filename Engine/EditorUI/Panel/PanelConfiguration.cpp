@@ -308,6 +308,7 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::PushID("Game Viewport");
 		ImGui::Checkbox("Render Effects", &App->renderer->game_viewport->effects_pass);
 		ImGui::Checkbox("Render Shadows", &App->renderer->game_viewport->shadows_pass);
+		ImGui::Checkbox("Cascade debug", &App->renderer->cascade_debug);
 		if (ImGui::Checkbox("Antialiasing", &App->renderer->antialiasing))
 		{
 			App->renderer->SetAntialiasing(App->renderer->antialiasing);

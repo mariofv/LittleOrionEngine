@@ -633,7 +633,10 @@ void ModuleDebugDraw::RenderOutline() const
 			glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
 			glStencilMask(0xFF);
 
-			selected_object_mesh->Render();
+			GLuint mesh_renderer_program = selected_object_mesh->BindDepthShaderProgram();
+			selected_object_mesh->BindMeshUniforms(mesh_renderer_program);
+			selected_object_mesh->RenderModel();
+			glUseProgram(0);
 
 			glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 			glStencilMask(0x00);
@@ -830,6 +833,11 @@ void ModuleDebugDraw::RenderSphere(const float3& center, float radius, const flo
 ENGINE_API void ModuleDebugDraw::RenderBox(const float3 points[8], const float3& color)
 {
 	dd::box(points, color);
+}
+
+void ModuleDebugDraw::RenderAxis(const float4x4& axis_space, float size, float length, const float3 & color)
+{
+	return dd::axisTriad(axis_space, size, length);
 }
 
 void ModuleDebugDraw::RenderPerspectiveFrustum(const float4x4& inverse_clip_matrix, const float3& color) const

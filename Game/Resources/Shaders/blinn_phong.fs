@@ -129,20 +129,16 @@ uniform vec4 ambient_light_color;
 //SHADOW MAPS
 float ShadowCalculation();
 float ShadowCalculation2();
+vec3 CascadeVisualization();
 uniform bool render_shadows;
 
 in vec4 position_near_depth_space;
 in vec4 position_mid_depth_space;
 in vec4 position_far_depth_space;
 
-vec3 FrustumsCheck();
-
-uniform sampler2DShadow close_depth_map;
-uniform sampler2DShadow mid_depth_map;
-uniform sampler2DShadow far_depth_map;
-
-in float distance_to_camera;
-uniform float far_plane;
+uniform sampler2D close_depth_map;
+uniform sampler2D mid_depth_map;
+uniform sampler2D far_depth_map;
 
 
 void main()
@@ -209,6 +205,10 @@ void main()
 	//hdr computes gamma on the shader, so there is no need to put it here aswell
 #if	!ENABLE_HDR
 		FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma));
+#endif
+
+#if	ENABLE_CASCADE_VISUALIZATION
+	FragColor.rgb = CascadeVisualization();
 #endif
 
 	FragColor.a=material.transparency;
@@ -385,86 +385,65 @@ float ShadowCalculation()
 	return 1;
 }
 
-float ShadowCalculation2()
+vec3 CascadeVisualization()
 {
-#if RECEIVE_SHADOWS
-	if(distance_to_camera > far_plane)
-	{
-			return 0;
-	}
+	float znear = 10;
+	float zfar = 100;
+	float linear_depth = (2.0 * znear) / (zfar + znear - gl_FragCoord.z * (zfar - znear));
 
+	return vec3(linear_depth);
 	//Light frustums
 	vec3 normalized_position_near_depth_space = position_near_depth_space.xyz / position_near_depth_space.w;
 	normalized_position_near_depth_space = normalized_position_near_depth_space * 0.5 + 0.5;
 
+	if(
+		normalized_position_near_depth_space.x >= 0.0
+		&& normalized_position_near_depth_space.x <= 1.0
+		&& normalized_position_near_depth_space.y >= 0.0
+		&& normalized_position_near_depth_space.y <= 1.0
+	)
+	{
+			return vec3(1.0, 0.0, 0.0);
+	}
+
 	vec3 normalized_position_mid_depth_space = position_mid_depth_space.xyz / position_mid_depth_space.w;
 	normalized_position_mid_depth_space = normalized_position_mid_depth_space * 0.5 + 0.5;
+
+	if(
+		normalized_position_mid_depth_space.x >= 0.0
+		&& normalized_position_mid_depth_space.x <= 1.0
+		&& normalized_position_mid_depth_space.y >= 0.0
+		&& normalized_position_mid_depth_space.y <= 1.0
+	)
+	{
+			return vec3(0.0, 1.0, 0.0);
+	}
 
 	vec3 normalized_position_far_depth_space = position_far_depth_space.xyz / position_far_depth_space.w;
 	normalized_position_far_depth_space = normalized_position_far_depth_space * 0.5 + 0.5;
 
-	float bias = 0.005;
+	if(
+		normalized_position_far_depth_space.x >= 0.0
+		&& normalized_position_far_depth_space.x <= 1.0
+		&& normalized_position_far_depth_space.y >= 0.0
+		&& normalized_position_far_depth_space.y <= 1.0
+	)
+	{
+			return vec3(0.0, 0.0, 1.0);
+	}
+
+	return vec3(1.0, 1.0, 1.0);
+}
+
+float ShadowCalculation2()
+{
+#if RECEIVE_SHADOWS
+
 	float factor = 0.0;
-
-	vec3 close_coords = vec3(normalized_position_near_depth_space.xy, normalized_position_near_depth_space.z - bias);
-	vec3 mid_coords = vec3(normalized_position_mid_depth_space.xy, normalized_position_mid_depth_space.z - bias);
-	vec3 far_coords = vec3(normalized_position_far_depth_space.xy, normalized_position_far_depth_space.z - bias);
-
-
-	for(int x = -1; x <= 1; ++x) //PCF, solution for edgy shadoWs
-    {
-        for(int y = -1; y <= 1; ++y)
-        {
-			//We sample the texture given from the light camera
-			//A few times at different texture coordinates
-
-			if(distance_to_camera > 0 && distance_to_camera < far_plane/3)
-			{
-				close_coords.xy = normalized_close_depth.xy + vec2(x, y)* (1.0 / textureSize(close_depth_map, 0));
-				factor += texture(close_depth_map, close_coords);
-			}
-
-			if(distance_to_camera >= far_plane/3 &&distance_to_camera < 2*far_plane/3) // Until depth detection is fixed (stops calculating at 50% depth)
-			{
-				mid_coords.xy = normalized_mid_depth.xy + vec2(x, y)*(1.0 / textureSize(mid_depth_map, 0));
-				factor += texture(mid_depth_map, mid_coords);
-			}
-
-			if(distance_to_camera >=  2*far_plane/3 && distance_to_camera < far_plane) // Looks weird, but works
-			{
-				far_coords.xy = normalized_far_depth.xy + vec2(x, y)*(1.0 / textureSize(far_depth_map, 0));
-				factor += texture(far_depth_map, far_coords);
-			}
-
-        }
-    }
-    factor /= 9.0;
-
 
 	return factor;
 #endif
 	return 1;
-}
-
-vec3 FrustumsCheck()
-{
-	vec3 result = vec3(0, 0, 0);
-
-	if(distance_to_camera > 0 && distance_to_camera  < far_plane/3)
-	{
-		result = vec3(100, 0, 0);
-	}
-
-	if(distance_to_camera  >= far_plane/3 && distance_to_camera  < 2*far_plane/3)
-	{
-		result = vec3(0, 100, 0);
-	}
-
-	if(distance_to_camera  >= 2*far_plane/3 && distance_to_camera  < far_plane)
-	{
-		result = vec3(0, 0, 100);
-	}
-	return result;
 }
 
 vec3 GetLiquidNormal(const Material material)

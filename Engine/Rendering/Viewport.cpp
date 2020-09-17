@@ -27,13 +27,10 @@ Viewport::Viewport(int options) : viewport_options(options)
 	framebuffers.emplace_back(regular_fbo = new FrameBuffer());
 	framebuffers.emplace_back(multisampled_fbo = new MultiSampledFrameBuffer());
 
+	depth_full_fbo = new DepthFrameBuffer();
 	depth_near_fbo = new DepthFrameBuffer();
 	depth_mid_fbo = new DepthFrameBuffer();
 	depth_far_fbo = new DepthFrameBuffer();
-
-	near_frustum = new LightFrustum(LightFrustum::FrustumSubDivision::NEAR_FRUSTUM);
-	mid_frustum = new LightFrustum(LightFrustum::FrustumSubDivision::MID_FRUSTUM);
-	far_frustum = new LightFrustum(LightFrustum::FrustumSubDivision::FAR_FRUSTUM);
 
 	main_fbo = regular_fbo;
 }
@@ -45,13 +42,10 @@ Viewport::~Viewport()
 		delete framebuffer;
 	}
 
+	delete depth_full_fbo;
 	delete depth_near_fbo;
 	delete depth_mid_fbo;
 	delete depth_far_fbo;
-
-	delete near_frustum;
-	delete mid_frustum;
-	delete far_frustum;
 }
 
 void Viewport::Render(ComponentCamera* camera)
@@ -64,7 +58,7 @@ void Viewport::Render(ComponentCamera* camera)
 	LightCameraPass();
 
 	BindCameraFrustumMatrices(camera->camera_frustum);
-	BindLightFrustumsMatrices();
+	App->lights->BindLightFrustumsMatrices();
 	glViewport(0, 0, width, height);
 	MeshRenderPass();
 	EffectsRenderPass();
@@ -90,27 +84,6 @@ void Viewport::BindCameraFrustumMatrices(const Frustum& camera_frustum) const
 	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), view_matrix.Transposed().ptr());
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-	glViewport(0, 0, width, height);
-}
-
-void Viewport::BindLightFrustumsMatrices() const
-{
-	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-
-	static size_t near_depth_space_matrix_offset = App->program->uniform_buffer.LIGHT_FRUSTUM_UNIFORMS_SIZE;
-	float4x4 near_depth_space_matrix = near_frustum->light_orthogonal_frustum.ProjectionMatrix() * near_frustum->light_orthogonal_frustum.ViewMatrix();
-	glBufferSubData(GL_UNIFORM_BUFFER, near_depth_space_matrix_offset, sizeof(float4x4), near_depth_space_matrix.Transposed().ptr());
-
-	static size_t mid_depth_space_matrix_offset = App->program->uniform_buffer.LIGHT_FRUSTUM_UNIFORMS_SIZE + sizeof(float4x4);
-	float4x4 mid_depth_space_matrix = mid_frustum->light_orthogonal_frustum.ProjectionMatrix() * mid_frustum->light_orthogonal_frustum.ViewMatrix();
-	glBufferSubData(GL_UNIFORM_BUFFER, mid_depth_space_matrix_offset, sizeof(float4x4), mid_depth_space_matrix.Transposed().ptr());
-
-	static size_t far_depth_space_matrix_offset = App->program->uniform_buffer.LIGHT_FRUSTUM_UNIFORMS_SIZE + 2 * sizeof(float4x4);
-	float4x4 far_depth_space_matrix = far_frustum->light_orthogonal_frustum.ProjectionMatrix() * far_frustum->light_orthogonal_frustum.ViewMatrix();
-	glBufferSubData(GL_UNIFORM_BUFFER, far_depth_space_matrix_offset, sizeof(float4x4), far_depth_space_matrix.Transposed().ptr());
-
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void Viewport::LightCameraPass() const
@@ -120,9 +93,12 @@ void Viewport::LightCameraPass() const
 		return;
 	}
 
-	DepthMapPass(near_frustum, depth_near_fbo);
-	DepthMapPass(mid_frustum, depth_mid_fbo);
-	DepthMapPass(far_frustum, depth_far_fbo);
+	DepthMapPass(App->lights->full_frustum, depth_full_fbo);
+	/*
+	DepthMapPass(App->lights->near_frustum, depth_near_fbo);
+	DepthMapPass(App->lights->mid_frustum, depth_mid_fbo);
+	DepthMapPass(App->lights->far_frustum, depth_far_fbo);
+	*/
 }
 
 void Viewport::MeshRenderPass() const
@@ -138,13 +114,19 @@ void Viewport::MeshRenderPass() const
 
 	for (auto& opaque_mesh_renderer : opaque_mesh_renderers)
 	{
-		if (opaque_mesh_renderer.mesh_renderer->mesh_to_render != nullptr && opaque_mesh_renderer.mesh_renderer->IsEnabled())
+		if (opaque_mesh_renderer.mesh_renderer->mesh_to_render != nullptr 
+			&& opaque_mesh_renderer.mesh_renderer->material_to_render != nullptr
+			&& opaque_mesh_renderer.mesh_renderer->IsEnabled()
+		)
 		{
-			opaque_mesh_renderer.mesh_renderer->Render();
+			GLuint mesh_renderer_program = opaque_mesh_renderer.mesh_renderer->BindShaderProgram();
+			opaque_mesh_renderer.mesh_renderer->BindMeshUniforms(mesh_renderer_program);
+			opaque_mesh_renderer.mesh_renderer->BindMaterialUniforms(mesh_renderer_program);
+			App->lights->Render(opaque_mesh_renderer.mesh_renderer->owner->transform.GetGlobalTranslation(), mesh_renderer_program);
+			opaque_mesh_renderer.mesh_renderer->RenderModel();
 			/*
 			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
 			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
-			App->lights->UpdateLightAABB(*mesh.second->owner);
 			*/
 			glUseProgram(0);
 		}
@@ -155,13 +137,18 @@ void Viewport::MeshRenderPass() const
 	glBlendEquation(GL_FUNC_ADD);
 	for (auto& transparent_mesh_renderer : transparent_mesh_renderers)
 	{
-		if (transparent_mesh_renderer.mesh_renderer->mesh_to_render != nullptr && transparent_mesh_renderer.mesh_renderer->IsEnabled())
-		{
-			transparent_mesh_renderer.mesh_renderer->Render();
+		if (transparent_mesh_renderer.mesh_renderer->mesh_to_render != nullptr
+			&& transparent_mesh_renderer.mesh_renderer->material_to_render != nullptr
+			&& transparent_mesh_renderer.mesh_renderer->IsEnabled()
+		) {
+			GLuint mesh_renderer_program = transparent_mesh_renderer.mesh_renderer->BindShaderProgram();
+			transparent_mesh_renderer.mesh_renderer->BindMeshUniforms(mesh_renderer_program);
+			transparent_mesh_renderer.mesh_renderer->BindMaterialUniforms(mesh_renderer_program);
+			App->lights->Render(transparent_mesh_renderer.mesh_renderer->owner->transform.GetGlobalTranslation(), mesh_renderer_program);
+			transparent_mesh_renderer.mesh_renderer->RenderModel();
 			/*
 			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
 			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
-			App->lights->UpdateLightAABB(*mesh.second->owner);
 			*/
 			glUseProgram(0);
 		}
@@ -289,6 +276,10 @@ void Viewport::SelectLastDisplayedTexture()
 		last_displayed_texture = depth_far_fbo->GetColorAttachement();
 		break;
 
+	case ViewportOutput::DEPTH_FULL:
+		last_displayed_texture = depth_full_fbo->GetColorAttachement();
+		break;
+
 	default:
 		break;
 	}
@@ -302,22 +293,31 @@ bool Viewport::IsOptionSet(ViewportOption option) const
 
 void Viewport::DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo) const
 {
-	light_frustum->Update();
 	depth_fbo->ClearAttachements();
 	depth_fbo->GenerateAttachements(light_frustum->light_orthogonal_frustum.orthographicWidth, light_frustum->light_orthogonal_frustum.orthographicHeight);
+
 	light_frustum->RenderLightFrustum();
 
 	depth_fbo->Bind();
 	BindCameraFrustumMatrices(light_frustum->light_orthogonal_frustum);
 
-	glClear(GL_DEPTH_BUFFER_BIT);
+	App->cameras->main_camera->Clear();
 	glViewport(0, 0, light_frustum->light_orthogonal_frustum.orthographicWidth, light_frustum->light_orthogonal_frustum.orthographicHeight);
 
 	for (ComponentMeshRenderer* culled_mesh_renderer : culled_mesh_renderers)
 	{
+		/*
 		if (culled_mesh_renderer->shadow_caster)
 		{
-			culled_mesh_renderer->Render();
+		*/
+		if (
+			culled_mesh_renderer->mesh_to_render != nullptr
+			&& culled_mesh_renderer->material_to_render != nullptr
+			&& culled_mesh_renderer->IsEnabled()
+		) {
+			GLuint mesh_renderer_program = culled_mesh_renderer->BindDepthShaderProgram();
+			culled_mesh_renderer->BindMeshUniforms(mesh_renderer_program);
+			culled_mesh_renderer->RenderModel();
 			glUseProgram(0);
 		}
 	}

@@ -34,6 +34,13 @@ LightFrustum::LightFrustum(FrustumSubDivision frustum_sub_division) : frustum_su
 		mesh_renderers_enclosing_aabb_render_color = float3(0.f, 0.4f, 1.f);
 		light_orthogonal_frustum_render_color = float3(0.6f, 0.f, 1.f);
 		break;
+
+	case LightFrustum::FrustumSubDivision::FULL_FRUSTUM:
+		sub_perspective_frustum_render_color = float3(0.5f);
+		sub_perspective_frustum_enclosing_aabb_render_color = float3(0.6f);
+		mesh_renderers_enclosing_aabb_render_color = float3(0.7f);
+		light_orthogonal_frustum_render_color = float3(0.8f);
+		break;
 	default:
 		break;
 	}
@@ -41,8 +48,16 @@ LightFrustum::LightFrustum(FrustumSubDivision frustum_sub_division) : frustum_su
 
 void LightFrustum::Update()
 {
+	if (App->cameras->main_camera == nullptr)
+	{
+		return;
+	}
+
 	UpdateSubPerspectiveFrustum();
-	UpdateSubPerspectiveFrustumAABB();
+	if (frustum_sub_division != FrustumSubDivision::FULL_FRUSTUM)
+	{
+		UpdateSubPerspectiveFrustumAABB();
+	}
 	UpdateMeshRenderersAABB();
 	UpdateLightOrthogonalFrustum();
 }
@@ -69,6 +84,9 @@ void LightFrustum::UpdateSubPerspectiveFrustum()
 		sub_perspective_frustum.farPlaneDistance = game_camera_far_distance - (game_camera_far_distance - game_camera_near_distance) / 3.f;
 		break;
 	case LightFrustum::FrustumSubDivision::FAR_FRUSTUM:
+		sub_perspective_frustum.farPlaneDistance = game_camera_far_distance;
+		break;
+	case LightFrustum::FrustumSubDivision::FULL_FRUSTUM:
 		sub_perspective_frustum.farPlaneDistance = game_camera_far_distance;
 		break;
 	default:
@@ -101,7 +119,15 @@ void LightFrustum::UpdateMeshRenderersAABB()
 
 void LightFrustum::UpdateLightOrthogonalFrustum()
 {
-	AABB intersected_aabb = sub_perspective_frustum_enclosing_aabb.Intersection(mesh_renderers_enclosing_aabb);
+	AABB intersected_aabb;
+	if (frustum_sub_division == FrustumSubDivision::FULL_FRUSTUM)
+	{
+		intersected_aabb = mesh_renderers_enclosing_aabb;
+	}
+	else
+	{
+		intersected_aabb = sub_perspective_frustum_enclosing_aabb.Intersection(mesh_renderers_enclosing_aabb);
+	}
 	float3 min_point = intersected_aabb.minPoint;
 	float3 max_point = intersected_aabb.maxPoint;
 
@@ -151,5 +177,7 @@ void LightFrustum::RenderLightFrustum() const
 		light_orthogonal_frustum_corner_points[i] = App->lights->directional_light_rotation * light_orthogonal_frustum_corner_points[i];
 	}
 	App->debug_draw->RenderBox(light_orthogonal_frustum_corner_points, light_orthogonal_frustum_render_color);
+	float4x4 light_frustum_transform = App->lights->directional_light_rotation.ToFloat4x4() * float4x4::Translate(light_orthogonal_frustum.pos);
+	App->debug_draw->RenderAxis(light_frustum_transform, 1.f, 1.f, light_orthogonal_frustum_render_color);
 }
 

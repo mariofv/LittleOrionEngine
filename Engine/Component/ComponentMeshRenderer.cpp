@@ -119,43 +119,68 @@ void ComponentMeshRenderer::ReassignResource()
 	SetMaterial(material_uuid);
 }
 
-void ComponentMeshRenderer::Render()
+GLuint ComponentMeshRenderer::BindShaderProgram() const
 {
-	if (mesh_to_render == nullptr || material_to_render == nullptr)
-	{
-		return;
-	}
 	unsigned int shader_variation = material_to_render->GetShaderVariation();
 	if (shadow_receiver)
 	{
 		shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_RECEIVE_SHADOWS);
 	}
+	if (App->renderer->cascade_debug)
+	{
+		shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_CASCADE_VISUALIZATION);
+	}
 
-	GLuint program = App->program->UseProgram(material_to_render->shader_program, shader_variation);
+	return App->program->UseProgram(material_to_render->shader_program, shader_variation);
+}
 
-	glUniform1i(glGetUniformLocation(program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
-	glUniform1f(glGetUniformLocation(program, "emisive_exposure"), App->renderer->emisive_exposure);
-	
+GLuint ComponentMeshRenderer::BindDepthShaderProgram() const
+{
+	return App->program->UseProgram("Depth", 0);
+}
+
+void ComponentMeshRenderer::BindMeshUniforms(GLuint shader_program) const
+{
+	glUniform1i(glGetUniformLocation(shader_program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
+	glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), App->renderer->emisive_exposure);
+
 	if (palette.size() > 0)
 	{
-		glUniformMatrix4fv(glGetUniformLocation(program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(shader_program, "palette"), palette.size(), GL_TRUE, palette[0].ptr());
 	}
-	glUniform1i(glGetUniformLocation(program, "has_skinning_value"), skeleton_uuid != 0 ? 0 : 1);
-	
+	glUniform1i(glGetUniformLocation(shader_program, "has_skinning_value"), skeleton_uuid != 0 ? 0 : 1);
+
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	if (!material_to_render->UseLightmap())
+}
+
+void ComponentMeshRenderer::BindMaterialUniforms(GLuint shader_program) const
+{
+	BROFILER_CATEGORY("Render material", Profiler::Color::ForestGreen);
+	AddDiffuseUniforms(shader_program);
+	AddEmissiveUniforms(shader_program);
+	AddEmissiveUniforms(shader_program);
+	AddSpecularUniforms(shader_program);
+
+	AddAmbientOclusionUniforms(shader_program);
+	AddNormalUniforms(shader_program);
+	AddLightMapUniforms(shader_program);
+
+	if (material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING || material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
 	{
-		App->lights->Render(owner->transform.GetGlobalTranslation(), program);
+		AddDissolveMaterialUniforms(shader_program);
 	}
 
-	RenderMaterial(program);
-	RenderModel();
+	if (material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
+	{
+		material_to_render->UpdateLiquidProperties();
+		AddLiquidMaterialUniforms(shader_program);
+	}
 
-	glUseProgram(0);
-}	
+	AddExtraUniforms(shader_program);
+}
 
 void ComponentMeshRenderer::RenderModel() const
 {
@@ -167,33 +192,6 @@ void ComponentMeshRenderer::RenderModel() const
 	glBindVertexArray(mesh_to_render->GetVAO());
 	glDrawElements(GL_TRIANGLES, mesh_to_render->indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
-}
-
-void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
-{
-	BROFILER_CATEGORY("Render material", Profiler::Color::ForestGreen);
-	AddDiffuseUniforms(shader_program);
-	AddEmissiveUniforms(shader_program);
-	AddEmissiveUniforms(shader_program);
-	AddSpecularUniforms(shader_program);
-
-	AddAmbientOclusionUniforms(shader_program);
-	AddNormalUniforms(shader_program);
-	AddLightMapUniforms(shader_program);
-	
-	if (material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING || material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
-	{
-		AddDissolveMaterialUniforms(shader_program);
-	}
-
-	if (material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
-	{
-		material_to_render->UpdateLiquidProperties();
-		AddLiquidMaterialUniforms(shader_program);
-	}
-	
-	AddExtraUniforms(shader_program);
-	
 }
 
 void ComponentMeshRenderer::AddDiffuseUniforms(unsigned int shader_program) const

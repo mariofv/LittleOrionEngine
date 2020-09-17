@@ -42,7 +42,8 @@ public:
 
 		DEPTH_NEAR,
 		DEPTH_MID,
-		DEPTH_FAR
+		DEPTH_FAR,
+		DEPTH_FULL
 	};
 
 	enum class HDRType
@@ -88,6 +89,7 @@ private:
 
 public:
 	bool antialiasing = true;
+	bool cascade_debug = false;
 
 	bool toggle_ortho_frustum = false;
 	bool toggle_directional_light_aabb = true;

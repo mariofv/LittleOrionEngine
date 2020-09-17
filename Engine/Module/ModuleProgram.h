@@ -28,7 +28,8 @@ public:
 		ENABLE_LIQUID_PROPERTIES = 1 << 6,
 		ENABLE_DISSOLVING_PROPERTIES = 1 << 7,
 		ENABLE_HDR = 1 << 8,
-		ENABLE_BLOOM = 1 << 9
+		ENABLE_BLOOM = 1 << 9,
+		ENABLE_CASCADE_VISUALIZATION = 1 << 10
 	};
 
 	struct ShaderProgram
@@ -112,7 +113,7 @@ public:
 
 private:
 	std::unordered_map<std::string, ShaderProgram> loaded_programs;
-	std::array<std::string, 10> defines =
+	std::array<std::string, 11> defines =
 	{
 		"#define NORMAL_MAP 1\n",
 		"#define SPECULAR_MAP 1\n",
@@ -125,7 +126,8 @@ private:
 		"#define ENABLE_LIQUID_PROPERTIES 1\n",
 		"#define ENABLE_DISSOLVING_PROPERTIES 1\n",
 		"#define ENABLE_HDR 1\n",
-		"#define ENABLE_BLOOM 1\n"
+		"#define ENABLE_BLOOM 1\n",
+		"#define ENABLE_CASCADE_VISUALIZATION 1\n"
 	};
 
 	std::vector<const char *> names;

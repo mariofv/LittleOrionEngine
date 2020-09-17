@@ -173,11 +173,6 @@ void Material::LoadResource(uint32_t uuid, unsigned texture_type)
 
 void Material::InitResource(uint32_t uuid, unsigned texture_type)
 {
-	if (uuid == 814689362)
-	{
-		int i = 0;
-	}
-
 	MaterialTextureType type = static_cast<MaterialTextureType>(texture_type);
 	if (textures[type] && !textures[type].get()->initialized)
 	{

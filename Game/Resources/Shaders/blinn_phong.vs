@@ -46,8 +46,6 @@ out vec3 vertex_normal_fs;
 out vec3 vertex_tangent_fs;
 uniform float render_depth_from_light;
 
-out float distance_to_camera;
-
 void main()
 {
 //Skinning
@@ -68,14 +66,12 @@ void main()
 	view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
 	view_dir    = normalize(view_pos - position);
 
-
-	//Light space
-	position_near_depth_space = depth_matrices.near_depth_space_matrix * vec4(position, 1.0);
-	position_mid_depth_space = depth_matrices.mid_depth_space_matrix * vec4(position, 1.0);
-	position_far_depth_space = depth_matrices.far_depth_space_matrix * vec4(position, 1.0);
-
 	vec4 eye_coordinate_pos = matrices.view * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
-	distance_to_camera = -eye_coordinate_pos.z;
 
 	gl_Position = matrices.proj * eye_coordinate_pos;
+
+  //Light space
+  position_near_depth_space = depth_matrices.near_depth_space_matrix * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
+  position_mid_depth_space = depth_matrices.mid_depth_space_matrix * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
+  position_far_depth_space = depth_matrices.far_depth_space_matrix * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
 }

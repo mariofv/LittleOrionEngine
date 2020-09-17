@@ -95,6 +95,12 @@
       "Vertex": "/Resources/Shaders/bloom.vs",
       "Fragment": "/Resources/Shaders/bloom.fs",
       "Selectable": false
+    },
+    {
+      "Name": "Depth",
+      "Vertex": "/Resources/Shaders/depth.vs",
+      "Fragment": "/Resources/Shaders/depth.fs",
+      "Selectable": false
     }
   ]
 }

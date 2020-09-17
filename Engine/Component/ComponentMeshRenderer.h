@@ -37,9 +37,11 @@ public:
 
 	void Delete() override;
 
-	void Render();
+	GLuint BindShaderProgram() const;
+	GLuint BindDepthShaderProgram() const;
+	void BindMeshUniforms(GLuint shader_program) const;
+	void BindMaterialUniforms(GLuint shader_program) const;
 	void RenderModel() const;
-	void RenderMaterial(GLuint shader_program) const;
 
 	void SetMesh(uint32_t mesh_uuid);
 	void SetMaterial(uint32_t material_uuid);

@@ -227,6 +227,11 @@ void ModuleRender::SetDrawMode(DrawMode draw_mode)
 		threshold_brightness = true;
 		break;
 
+	case ModuleRender::DrawMode::DEPTH_FULL:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		game_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_FULL);
+		break;
+
 	case ModuleRender::DrawMode::DEPTH_NEAR:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		game_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_NEAR);
@@ -275,6 +280,9 @@ std::string ModuleRender::GetDrawMode() const
 
 	case ModuleRender::DrawMode::DEPTH_FAR:
 		return "Far Depth Map";
+
+	case ModuleRender::DrawMode::DEPTH_FULL:
+		return "Full Depth Map";
 
 	default:
 		return "Unknown";

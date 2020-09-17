@@ -10,7 +10,8 @@ public:
 	{
 		NEAR_FRUSTUM,
 		MID_FRUSTUM,
-		FAR_FRUSTUM
+		FAR_FRUSTUM,
+		FULL_FRUSTUM
 	};
 
 	LightFrustum() = default;

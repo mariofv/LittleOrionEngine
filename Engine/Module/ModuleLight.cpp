@@ -1,5 +1,6 @@
 #include "ModuleLight.h"
 
+#include "Component/ComponentLight.h"
 #include "Log/EngineLog.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -7,6 +8,7 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
+#include "Rendering/LightFrustum.h"
 
 #include <Brofiler/Brofiler.h>
 #include <algorithm>
@@ -20,19 +22,22 @@ bool ModuleLight::Init()
 {
 	APP_LOG_SECTION("************ Module Light Init ************");
 
+	full_frustum = new LightFrustum(LightFrustum::FrustumSubDivision::FULL_FRUSTUM);
+	near_frustum = new LightFrustum(LightFrustum::FrustumSubDivision::NEAR_FRUSTUM);
+	mid_frustum = new LightFrustum(LightFrustum::FrustumSubDivision::MID_FRUSTUM);
+	far_frustum = new LightFrustum(LightFrustum::FrustumSubDivision::FAR_FRUSTUM);
+
 	return true;
 }
 
-update_status ModuleLight::PostUpdate()
+update_status ModuleLight::Update()
 {
 	BROFILER_CATEGORY("Module Light PostUpdate", Profiler::Color::PaleTurquoise);
-	light_position = float3((light_aabb.maxPoint.x + light_aabb.minPoint.x) * 0.5, (light_aabb.maxPoint.y + light_aabb.minPoint.y) * 0.5, light_aabb.maxPoint.z);
-	
-	float3 new_pos;
-	new_pos = directional_light_rotation * light_position;
+	full_frustum->Update();
+	near_frustum->Update();
+	mid_frustum->Update();
+	far_frustum->Update();
 
-	light_aabb.SetNegativeInfinity();
-	
 	return update_status::UPDATE_CONTINUE;
 
 }
@@ -44,6 +49,12 @@ bool ModuleLight::CleanUp()
 		light->owner->RemoveComponent(light);
 	}
 	lights.clear();
+
+	delete full_frustum;
+	delete near_frustum;
+	delete mid_frustum;
+	delete far_frustum;
+
 	return true;
 }
 
@@ -51,7 +62,6 @@ void ModuleLight::Render(const float3& mesh_position, GLuint program)
 {
 	BROFILER_CATEGORY("Module Light Render", Profiler::Color::White);
 	SortClosestLights(mesh_position);
-	SendShadowUniformsToShader(program);
 
 	current_number_directional_lights_rendered = 0;
 	current_number_spot_lights_rendered = 0;
@@ -167,41 +177,21 @@ void ModuleLight::SortClosestLights(const float3& position)
 	});
 }
 
-
-void ModuleLight::SendShadowUniformsToShader(GLuint program)
+void ModuleLight::BindLightFrustumsMatrices()
 {
-	BROFILER_CATEGORY("Module Light shadow uniforms", Profiler::Color::MediumTurquoise);
-	glUniform1i(glGetUniformLocation(program, "render_shadows"), false);
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 
-	/*
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, directional_light_camera->depth_map);
-	glUniform1i(glGetUniformLocation(program, "close_depth_map"), 0);
+	static size_t near_depth_space_matrix_offset = App->program->uniform_buffer.light_frustums_uniform_offset;
+	float4x4 near_depth_space_matrix = near_frustum->light_orthogonal_frustum.ProjectionMatrix() * near_frustum->light_orthogonal_frustum.ViewMatrix();
+	glBufferSubData(GL_UNIFORM_BUFFER, near_depth_space_matrix_offset, sizeof(float4x4), near_depth_space_matrix.Transposed().ptr());
 
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, directional_light_mid->depth_map);
-	glUniform1i(glGetUniformLocation(program, "mid_depth_map"), 1);
+	static size_t mid_depth_space_matrix_offset = App->program->uniform_buffer.light_frustums_uniform_offset + sizeof(float4x4);
+	float4x4 mid_depth_space_matrix = mid_frustum->light_orthogonal_frustum.ProjectionMatrix() * mid_frustum->light_orthogonal_frustum.ViewMatrix();
+	glBufferSubData(GL_UNIFORM_BUFFER, mid_depth_space_matrix_offset, sizeof(float4x4), mid_depth_space_matrix.Transposed().ptr());
 
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, directional_light_far->depth_map);
-	glUniform1i(glGetUniformLocation(program, "far_depth_map"), 2);
+	static size_t far_depth_space_matrix_offset = App->program->uniform_buffer.light_frustums_uniform_offset + 2 * sizeof(float4x4);
+	float4x4 far_depth_space_matrix = far_frustum->light_orthogonal_frustum.ProjectionMatrix() * far_frustum->light_orthogonal_frustum.ViewMatrix();
+	glBufferSubData(GL_UNIFORM_BUFFER, far_depth_space_matrix_offset, sizeof(float4x4), far_depth_space_matrix.Transposed().ptr());
 
-
-	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_view"), 1, GL_TRUE, &directional_light_camera->GetViewMatrix()[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_proj"), 1, GL_TRUE, &directional_light_camera->GetProjectionMatrix()[0][0]);
-
-	glUniformMatrix4fv(glGetUniformLocation(program, "mid_directional_view"), 1, GL_TRUE, &directional_light_mid->GetViewMatrix()[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "mid_directional_proj"), 1, GL_TRUE, &directional_light_mid->GetProjectionMatrix()[0][0]);
-
-	glUniformMatrix4fv(glGetUniformLocation(program, "far_directional_view"), 1, GL_TRUE, &directional_light_far->GetViewMatrix()[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "far_directional_proj"), 1, GL_TRUE, &directional_light_far->GetProjectionMatrix()[0][0]);
-	*/
-
-	if (App->cameras->main_camera != nullptr)
-	{
-		glUniform1f(glGetUniformLocation(program, "far_plane"), App->cameras->main_camera->camera_frustum.farPlaneDistance);
-
-	}
-
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
-

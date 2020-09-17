@@ -26,7 +26,8 @@ public:
 		COLOR,
 		DEPTH_NEAR,
 		DEPTH_MID,
-		DEPTH_FAR
+		DEPTH_FAR,
+		DEPTH_FULL
 	};
 
 	Viewport(int options);
@@ -41,7 +42,6 @@ public:
 
 private:
 	void BindCameraFrustumMatrices(const Frustum& camera_frustum) const;
-	void BindLightFrustumsMatrices() const;
 
 	void LightCameraPass() const;
 	void MeshRenderPass() const;
@@ -68,6 +68,7 @@ public:
 	FrameBuffer* regular_fbo = nullptr;
 	MultiSampledFrameBuffer* multisampled_fbo = nullptr;
 
+	FrameBuffer* depth_full_fbo = nullptr;
 	FrameBuffer* depth_near_fbo = nullptr;
 	FrameBuffer* depth_mid_fbo = nullptr;
 	FrameBuffer* depth_far_fbo = nullptr;
@@ -83,10 +84,6 @@ private:
 
 	float width = 0;
 	float height = 0;
-
-	LightFrustum* near_frustum = nullptr;
-	LightFrustum* mid_frustum = nullptr;
-	LightFrustum* far_frustum = nullptr;
 
 	int viewport_options = 0;
 	bool antialiasing = true;
