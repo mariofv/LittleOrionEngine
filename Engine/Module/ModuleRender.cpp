@@ -116,14 +116,6 @@ bool ModuleRender::Init()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glBlendEquation(GL_FUNC_ADD);
 
-	glEnable(GL_FOG);
-	glFogi(GL_FOG_MODE, GL_LINEAR);
-	glFogf(GL_FOG_START, 10.0f);
-	glFogf(GL_FOG_END, 20.0F);
-	GLfloat fogColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	glFogfv(GL_FOG_COLOR, fogColor);
-	glFogf(GL_FOG_DENSITY, 0.3f); 
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	APP_LOG_INFO("Glew initialized correctly.");
 
