@@ -128,9 +128,7 @@ uniform vec4 ambient_light_color;
 
 //SHADOW MAPS
 float ShadowCalculation();
-float ShadowCalculation2();
 vec3 CascadeVisualization();
-uniform bool render_shadows;
 
 in vec4 position_near_depth_space;
 in vec4 position_mid_depth_space;
@@ -382,19 +380,39 @@ vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel)
 
 float ShadowCalculation()
 {
-	return 1;
+#if	!ENABLE_RECEIVE_SHADOWS
+	return 1.0;
+#endif
+	vec3 normalized_position_near_depth_space = position_near_depth_space.xyz / position_near_depth_space.w;
+	normalized_position_near_depth_space.xy = normalized_position_near_depth_space.xy * 0.5 + 0.5;
+
+	if(normalized_position_near_depth_space.z > 1.0 || normalized_position_near_depth_space.z < 0.0)
+	{
+			return 1;
+	}
+
+
+	if(
+		normalized_position_near_depth_space.x >= 0.0
+		&& normalized_position_near_depth_space.x <= 1.0
+		&& normalized_position_near_depth_space.y >= 0.0
+		&& normalized_position_near_depth_space.y <= 1.0
+		&& normalized_position_near_depth_space.z < texture(close_depth_map, normalized_position_near_depth_space.xy).r
+	)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 vec3 CascadeVisualization()
 {
-	float znear = 10;
-	float zfar = 100;
-	float linear_depth = (2.0 * znear) / (zfar + znear - gl_FragCoord.z * (zfar - znear));
-
-	return vec3(linear_depth);
 	//Light frustums
 	vec3 normalized_position_near_depth_space = position_near_depth_space.xyz / position_near_depth_space.w;
-	normalized_position_near_depth_space = normalized_position_near_depth_space * 0.5 + 0.5;
+	normalized_position_near_depth_space.xy = normalized_position_near_depth_space.xy * 0.5 + 0.5;
 
 	if(
 		normalized_position_near_depth_space.x >= 0.0
@@ -433,17 +451,6 @@ vec3 CascadeVisualization()
 	}
 
 	return vec3(1.0, 1.0, 1.0);
-}
-
-float ShadowCalculation2()
-{
-#if RECEIVE_SHADOWS
-
-	float factor = 0.0;
-
-	return factor;
-#endif
-	return 1;
 }
 
 vec3 GetLiquidNormal(const Material material)

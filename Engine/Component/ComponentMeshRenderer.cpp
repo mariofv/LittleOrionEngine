@@ -37,8 +37,7 @@ void ComponentMeshRenderer::SpecializedSave(Config& config) const
 	config.AddUInt(mesh_uuid, "Mesh");
 	config.AddUInt(material_uuid, "Material");
 	config.AddUInt(skeleton_uuid, "Skeleton");
-	config.AddBool(shadow_caster, "ShadowCaster");
-	config.AddBool(shadow_receiver, "ShadowReceiver");
+	config.AddInt(properties, "Properties");
 }
 
 void ComponentMeshRenderer::SpecializedLoad(const Config& config)
@@ -52,8 +51,7 @@ void ComponentMeshRenderer::SpecializedLoad(const Config& config)
 	skeleton_uuid =	config.GetUInt32("Skeleton", 0);
 	SetSkeleton(skeleton_uuid);
 
-	shadow_caster = config.GetBool("ShadowCaster", shadow_caster);
-	shadow_receiver = config.GetBool("ShadowReceiver", shadow_receiver);
+	properties = config.GetInt("Properties", MeshProperties::RAYCASTABLE);
 }
 
 void ComponentMeshRenderer::LoadResource(uint32_t uuid, ResourceType resource, unsigned texture_type)
@@ -122,7 +120,7 @@ void ComponentMeshRenderer::ReassignResource()
 GLuint ComponentMeshRenderer::BindShaderProgram() const
 {
 	unsigned int shader_variation = material_to_render->GetShaderVariation();
-	if (shadow_receiver)
+	if (App->renderer->shadows_enabled && IsPropertySet(MeshProperties::SHADOW_RECEIVER))
 	{
 		shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_RECEIVE_SHADOWS);
 	}
@@ -423,4 +421,24 @@ void ComponentMeshRenderer::UpdatePalette(std::vector<float4x4>& pose)
 		}
 		palette[i] = pose[i] * joints[i].transform_global;
 	}
+}
+
+bool ComponentMeshRenderer::IsPropertySet(MeshProperties property_to_check) const
+{
+	return properties & (int)property_to_check;
+}
+
+void ComponentMeshRenderer::AddProperty(MeshProperties property_to_add)
+{
+	properties |= (int)property_to_add;
+}
+
+void ComponentMeshRenderer::RemoveProperty(MeshProperties property_to_remove)
+{
+	properties &= ~(int)property_to_remove;
+}
+
+bool ComponentMeshRenderer::CheckFilters(int filters)
+{
+	return (filters & properties) == filters;
 }

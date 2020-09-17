@@ -307,8 +307,14 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Game Graphic Settings");
 		ImGui::PushID("Game Viewport");
 		ImGui::Checkbox("Render Effects", &App->renderer->game_viewport->effects_pass);
-		ImGui::Checkbox("Render Shadows", &App->renderer->game_viewport->shadows_pass);
-		ImGui::Checkbox("Cascade debug", &App->renderer->cascade_debug);
+		if (ImGui::Checkbox("Shadows", &App->renderer->shadows_enabled))
+		{
+			App->renderer->SetShadows(App->renderer->shadows_enabled);
+		}
+		if (App->renderer->shadows_enabled)
+		{
+			ImGui::Checkbox("Cascade debug", &App->renderer->cascade_debug);
+		}
 		if (ImGui::Checkbox("Antialiasing", &App->renderer->antialiasing))
 		{
 			App->renderer->SetAntialiasing(App->renderer->antialiasing);

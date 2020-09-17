@@ -74,6 +74,7 @@ public:
 	ENGINE_API RaycastHit* GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* camera);
 	ENGINE_API void SetDrawMode(DrawMode draw_mode);
 	ENGINE_API void SetAntialiasing(bool antialiasing);
+	ENGINE_API void SetShadows(bool shadows_enabled);
 
 private:
 	void SetVSync(bool vsync);
@@ -89,6 +90,7 @@ private:
 
 public:
 	bool antialiasing = true;
+	bool shadows_enabled = false;
 	bool cascade_debug = false;
 
 	bool toggle_ortho_frustum = false;

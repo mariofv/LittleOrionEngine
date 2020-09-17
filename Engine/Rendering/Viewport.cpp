@@ -109,11 +109,9 @@ void Viewport::LightCameraPass() const
 	}
 
 	DepthMapPass(App->lights->full_frustum, depth_full_fbo);
-	/*
 	DepthMapPass(App->lights->near_frustum, depth_near_fbo);
 	DepthMapPass(App->lights->mid_frustum, depth_mid_fbo);
 	DepthMapPass(App->lights->far_frustum, depth_far_fbo);
-	*/
 }
 
 void Viewport::MeshRenderPass() const
@@ -170,12 +168,6 @@ void Viewport::MeshRenderPass() const
 			glUseProgram(0);
 		}
 	}
-
-	GLuint program = App->program->UseProgram("Quad", 0);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, depth_full_fbo->GetColorAttachement());
-	
-	App->ui->quad->Render();
 
 	FrameBuffer::UnBind();
 }
@@ -317,7 +309,7 @@ bool Viewport::IsOptionSet(ViewportOption option) const
 void Viewport::DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo) const
 {
 	depth_fbo->ClearAttachements();
-	depth_fbo->GenerateAttachements(light_frustum->light_orthogonal_frustum.orthographicWidth, light_frustum->light_orthogonal_frustum.orthographicHeight);
+	depth_fbo->GenerateAttachements(width, height);
 
 	light_frustum->RenderMeshRenderersAABB();
 	light_frustum->RenderLightFrustum();
@@ -326,22 +318,24 @@ void Viewport::DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo)
 	BindCameraFrustumMatrices(light_frustum->light_orthogonal_frustum);
 
 	App->cameras->main_camera->Clear();
-	glViewport(0, 0, light_frustum->light_orthogonal_frustum.orthographicWidth, light_frustum->light_orthogonal_frustum.orthographicHeight);
+	glViewport(0, 0, width, height);
 
-	for (ComponentMeshRenderer* culled_mesh_renderer : culled_mesh_renderers)
+	std::vector<ComponentMeshRenderer*> culled_shadow_casters = App->space_partitioning->GetCullingMeshes(
+		App->cameras->main_camera, 
+		App->renderer->mesh_renderers,
+		ComponentMeshRenderer::MeshProperties::SHADOW_CASTER
+	);
+
+	for (ComponentMeshRenderer* culled_shadow_caster : culled_shadow_casters)
 	{
-		/*
-		if (culled_mesh_renderer->shadow_caster)
-		{
-		*/
 		if (
-			culled_mesh_renderer->mesh_to_render != nullptr
-			&& culled_mesh_renderer->material_to_render != nullptr
-			&& culled_mesh_renderer->IsEnabled()
+			culled_shadow_caster->mesh_to_render != nullptr
+			&& culled_shadow_caster->material_to_render != nullptr
+			&& culled_shadow_caster->IsEnabled()
 		) {
-			GLuint mesh_renderer_program = culled_mesh_renderer->BindDepthShaderProgram();
-			culled_mesh_renderer->BindMeshUniforms(mesh_renderer_program);
-			culled_mesh_renderer->RenderModel();
+			GLuint mesh_renderer_program = culled_shadow_caster->BindDepthShaderProgram();
+			culled_shadow_caster->BindMeshUniforms(mesh_renderer_program);
+			culled_shadow_caster->RenderModel();
 			glUseProgram(0);
 		}
 	}

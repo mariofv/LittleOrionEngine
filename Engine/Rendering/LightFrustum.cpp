@@ -64,6 +64,12 @@ void LightFrustum::Update()
 
 void LightFrustum::UpdateSubPerspectiveFrustum()
 {
+	if (frustum_sub_division == LightFrustum::FrustumSubDivision::FULL_FRUSTUM)
+	{
+		sub_perspective_frustum = App->cameras->main_camera->camera_frustum;
+		return;
+	}
+
 	sub_perspective_frustum.type = FrustumType::PerspectiveFrustum;
 	sub_perspective_frustum.pos = App->cameras->main_camera->owner->transform.GetGlobalTranslation();
 	sub_perspective_frustum.front = App->cameras->main_camera->owner->transform.GetGlobalFrontVector();
@@ -86,9 +92,6 @@ void LightFrustum::UpdateSubPerspectiveFrustum()
 	case LightFrustum::FrustumSubDivision::FAR_FRUSTUM:
 		sub_perspective_frustum.farPlaneDistance = game_camera_far_distance;
 		break;
-	case LightFrustum::FrustumSubDivision::FULL_FRUSTUM:
-		sub_perspective_frustum.farPlaneDistance = game_camera_far_distance;
-		break;
 	default:
 		break;
 	}
@@ -108,7 +111,11 @@ void LightFrustum::UpdateSubPerspectiveFrustumAABB()
 void LightFrustum::UpdateMeshRenderersAABB()
 {
 	mesh_renderers_enclosing_aabb.SetNegativeInfinity();
-	std::vector<ComponentMeshRenderer*> culled_meshes = App->space_partitioning->GetCullingMeshes(sub_perspective_frustum, App->renderer->mesh_renderers);
+	std::vector<ComponentMeshRenderer*> culled_meshes = App->space_partitioning->GetCullingMeshes(
+		sub_perspective_frustum,
+		App->renderer->mesh_renderers, 
+		ComponentMeshRenderer::MeshProperties::SHADOW_CASTER
+	);
 	for (auto& mesh_renderer : culled_meshes)
 	{
 		AABB mesh_renderer_aabb = mesh_renderer->owner->aabb.bounding_box;

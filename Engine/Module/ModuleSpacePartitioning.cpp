@@ -122,13 +122,14 @@ void ModuleSpacePartitioning::DrawAABBTree() const
 
 std::vector<ComponentMeshRenderer*> ModuleSpacePartitioning::GetCullingMeshes(
 	const ComponentCamera* camera, 
-	const std::vector<ComponentMeshRenderer*>& mesh_renderers
+	const std::vector<ComponentMeshRenderer*>& mesh_renderers, 
+	int culling_filters
 ) const
 {
-	return GetCullingMeshes(camera->camera_frustum, mesh_renderers);
+	return GetCullingMeshes(camera->camera_frustum, mesh_renderers, culling_filters);
 }
 
-std::vector<ComponentMeshRenderer*> ModuleSpacePartitioning::GetCullingMeshes(const Frustum& camera_frustum, const std::vector<ComponentMeshRenderer*>& mesh_renderers) const
+std::vector<ComponentMeshRenderer*> ModuleSpacePartitioning::GetCullingMeshes(const Frustum& camera_frustum, const std::vector<ComponentMeshRenderer*>& mesh_renderers, int culling_filters) const
 {
 	std::vector<ComponentMeshRenderer*> culled_mesh_renderers;
 
@@ -139,9 +140,9 @@ std::vector<ComponentMeshRenderer*> ModuleSpacePartitioning::GetCullingMeshes(co
 			mesh_renderers.begin(),
 			mesh_renderers.end(),
 			std::back_inserter(culled_mesh_renderers),
-			[](const auto& mesh_renderer)
+			[culling_filters](const auto& mesh_renderer)
 		{
-			return mesh_renderer->IsEnabled();
+			return mesh_renderer->IsEnabled() && (culling_filters == 0 || mesh_renderer->CheckFilters(culling_filters));
 		}
 		);
 		break;
@@ -151,9 +152,12 @@ std::vector<ComponentMeshRenderer*> ModuleSpacePartitioning::GetCullingMeshes(co
 			mesh_renderers.begin(),
 			mesh_renderers.end(),
 			std::back_inserter(culled_mesh_renderers),
-			[camera_frustum](const auto& mesh_renderer)
+			[camera_frustum, culling_filters](const auto& mesh_renderer)
 			{
-				return mesh_renderer->IsEnabled() && mesh_renderer->owner->IsVisible(camera_frustum);
+				return 
+					mesh_renderer->IsEnabled()
+					&& mesh_renderer->owner->IsVisible(camera_frustum)
+					&& (culling_filters == 0 || mesh_renderer->CheckFilters(culling_filters));
 			}
 		);
 		break;
@@ -165,9 +169,14 @@ std::vector<ComponentMeshRenderer*> ModuleSpacePartitioning::GetCullingMeshes(co
 			mesh_renderers.begin(),
 			mesh_renderers.end(),
 			std::back_inserter(culled_mesh_renderers),
-			[camera_frustum](const auto& mesh_renderer)
+			[camera_frustum, culling_filters](const auto& mesh_renderer)
 		{
-			return mesh_renderer->IsEnabled() && mesh_renderer->owner->IsVisible(camera_frustum) && !mesh_renderer->owner->IsStatic();
+
+			return
+				mesh_renderer->IsEnabled()
+				&& mesh_renderer->owner->IsVisible(camera_frustum)
+				&& !mesh_renderer->owner->IsStatic()
+				&& (culling_filters == 0 || mesh_renderer->CheckFilters(culling_filters));
 		}
 		);
 
@@ -189,9 +198,13 @@ std::vector<ComponentMeshRenderer*> ModuleSpacePartitioning::GetCullingMeshes(co
 			mesh_renderers.begin(),
 			mesh_renderers.end(),
 			std::back_inserter(culled_mesh_renderers),
-			[camera_frustum](const auto& mesh_renderer)
+			[camera_frustum, culling_filters](const auto& mesh_renderer)
 			{
-				return mesh_renderer->IsEnabled() && mesh_renderer->owner->IsVisible(camera_frustum) && !mesh_renderer->owner->IsStatic();
+				return
+					mesh_renderer->IsEnabled()
+					&& mesh_renderer->owner->IsVisible(camera_frustum)
+					&& !mesh_renderer->owner->IsStatic()
+					&& (culling_filters == 0 || mesh_renderer->CheckFilters(culling_filters));
 			}
 		);
 
@@ -214,9 +227,14 @@ std::vector<ComponentMeshRenderer*> ModuleSpacePartitioning::GetCullingMeshes(co
 			mesh_renderers.begin(),
 			mesh_renderers.end(),
 			std::back_inserter(culled_mesh_renderers),
-			[camera_frustum](const auto& mesh_renderer)
+			[camera_frustum, culling_filters](const auto& mesh_renderer)
 			{
-				return mesh_renderer->IsEnabled() && mesh_renderer->owner->IsVisible(camera_frustum) && mesh_renderer->owner->IsStatic();
+
+			return
+				mesh_renderer->IsEnabled()
+				&& mesh_renderer->owner->IsVisible(camera_frustum)
+				&& mesh_renderer->owner->IsStatic()
+				&& (culling_filters == 0 || mesh_renderer->CheckFilters(culling_filters));
 			}
 		);
 

@@ -74,7 +74,7 @@ public:
 	FrameBuffer* depth_mid_fbo = nullptr;
 	FrameBuffer* depth_far_fbo = nullptr;
 
-	bool shadows_pass = true;
+	bool shadows_pass = false;
 	bool effects_pass = true;
 	bool debug_pass = true;
 	bool debug_draw_pass = true;

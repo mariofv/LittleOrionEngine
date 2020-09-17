@@ -117,7 +117,7 @@ private:
 	{
 		"#define NORMAL_MAP 1\n",
 		"#define SPECULAR_MAP 1\n",
-		"#define RECEIVE_SHADOWS 1\n",
+		"#define ENABLE_RECEIVE_SHADOWS 1\n",
 
 		"#define ENABLE_SPRITESHEET 1\n",
 		"#define ENABLE_BILLBOARD_VIEWPOINT_ALIGNMENT  1\n",

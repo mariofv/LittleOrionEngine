@@ -163,9 +163,47 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 			ImGui::Button(tmp_string);
 		}
 
-		ImGui::Checkbox("Is Raycastable", &mesh_renderer->is_raycastable);
-		ImGui::Checkbox("Shadow caster", &mesh_renderer->shadow_caster);
-		ImGui::Checkbox("Shadow receiver", &mesh_renderer->shadow_receiver);
+		bool is_raycastable = mesh_renderer->IsPropertySet(ComponentMeshRenderer::MeshProperties::RAYCASTABLE);
+		if (ImGui::Checkbox("Is Raycastable", &is_raycastable))
+		{
+			if (is_raycastable)
+			{
+				mesh_renderer->AddProperty(ComponentMeshRenderer::MeshProperties::RAYCASTABLE);
+			}
+			else
+			{
+				mesh_renderer->RemoveProperty(ComponentMeshRenderer::MeshProperties::RAYCASTABLE);
+			}
+
+		}
+
+		bool shadow_caster = mesh_renderer->IsPropertySet(ComponentMeshRenderer::MeshProperties::SHADOW_CASTER);
+		if (ImGui::Checkbox("Shadow Caster", &shadow_caster))
+		{
+			if (shadow_caster)
+			{
+				mesh_renderer->AddProperty(ComponentMeshRenderer::MeshProperties::SHADOW_CASTER);
+			}
+			else
+			{
+				mesh_renderer->RemoveProperty(ComponentMeshRenderer::MeshProperties::SHADOW_CASTER);
+			}
+
+		}
+
+		bool shadow_receiver = mesh_renderer->IsPropertySet(ComponentMeshRenderer::MeshProperties::SHADOW_RECEIVER);
+		if (ImGui::Checkbox("Shadow Receiver", &shadow_receiver))
+		{
+			if (shadow_receiver)
+			{
+				mesh_renderer->AddProperty(ComponentMeshRenderer::MeshProperties::SHADOW_RECEIVER);
+			}
+			else
+			{
+				mesh_renderer->RemoveProperty(ComponentMeshRenderer::MeshProperties::SHADOW_RECEIVER);
+			}
+
+		}	
 	}
 }
 

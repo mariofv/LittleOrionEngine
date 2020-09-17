@@ -33,6 +33,11 @@ bool ModuleLight::Init()
 update_status ModuleLight::Update()
 {
 	BROFILER_CATEGORY("Module Light PostUpdate", Profiler::Color::PaleTurquoise);
+	if (!App->renderer->shadows_enabled)
+	{
+		return update_status::UPDATE_CONTINUE;
+	}
+
 	full_frustum->Update();
 	near_frustum->Update();
 	mid_frustum->Update();

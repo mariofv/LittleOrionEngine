@@ -259,6 +259,13 @@ void ModuleRender::SetAntialiasing(bool antialiasing)
 	game_viewport->SetAntialiasing(antialiasing);
 }
 
+void ModuleRender::SetShadows(bool shadows_enabled)
+{
+	this->shadows_enabled = shadows_enabled;
+	scene_viewport->shadows_pass = shadows_enabled;
+	game_viewport->shadows_pass = shadows_enabled;
+}
+
 std::string ModuleRender::GetDrawMode() const
 {
 	switch (draw_mode)
@@ -321,7 +328,7 @@ RaycastHit* ModuleRender::GetRaycastIntersection(const LineSegment& ray, const C
 		if (mesh_renderer->owner->aabb.bounding_box.Intersects(ray))
 		{
 			//Allow non touchable meshes to be ignored from mouse picking in game mode
-			if (!mesh_renderer->is_raycastable)
+			if (!mesh_renderer->IsPropertySet(ComponentMeshRenderer::MeshProperties::RAYCASTABLE))
 			{
 				continue;
 			}
