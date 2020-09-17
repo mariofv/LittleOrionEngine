@@ -117,7 +117,6 @@ bool ModuleRender::Init()
 	glBlendEquation(GL_FUNC_ADD);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
 	APP_LOG_INFO("Glew initialized correctly.");
 
 	return true;
@@ -181,6 +180,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
+	
 	num_rendered_tris = 0;
 	num_rendered_verts = 0;
 
