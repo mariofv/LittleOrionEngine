@@ -23,7 +23,6 @@ layout (std140) uniform DepthMatrices
 } depth_matrices;
 
 uniform int num_joints;
-uniform int time;
 
 uniform mat4 palette[128]; // REMEMBER MAXIMUM NUMBER OF BONES NOT MORE PLEASE DON'T LOSE YOUR TIME LIKE ME
 uniform int has_skinning_value;
@@ -44,7 +43,6 @@ out vec4 position_far_depth_space;
 
 out vec3 vertex_normal_fs;
 out vec3 vertex_tangent_fs;
-uniform float render_depth_from_light;
 
 void main()
 {

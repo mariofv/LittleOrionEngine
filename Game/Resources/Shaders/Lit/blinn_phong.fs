@@ -1,30 +1,16 @@
+//////////////////////////////////
+///////     CONSTANTS    /////////
+//////////////////////////////////
+
 #define PI 3.14159
-
-//General variables
-in vec3 position;
-in vec3 normal;
-in vec2 texCoord;
-in vec2 texCoordLightmap;
-in vec3 view_dir;
-in vec3 view_pos;
-in vec3 vertex_normal_fs;
-in vec3 vertex_tangent_fs;
-
-//Tangent - Normal mapping variables
-in mat3 TBN;
-
-layout (location = 0) out vec4 FragColor;
-layout (location = 1) out vec4 BrightColor;
 
 //constants
 float gamma = 2.2;
 const float ambient_light_strength = 0.1;
 
-vec3 normal_from_texture;
-vec3 liquid_normal_from_texture;
-
-//bloom
-uniform float emisive_exposure;
+//////////////////////////////////
+////////     STRUCTS    //////////
+//////////////////////////////////
 
 struct Material
 {
@@ -54,7 +40,33 @@ struct Material
 	sampler2D dissolved_noise;
 	float dissolve_progress;
 };
-uniform Material material;
+
+struct SpotLight
+{
+	vec3 color;
+  vec3 position;
+  vec3 direction;
+  float cutOff;
+  float outerCutOff;
+
+  float constant;
+  float linear;
+  float quadratic;
+};
+
+struct PointLight
+{
+	vec3 color;
+	vec3 position;
+
+	float constant;
+  float linear;
+  float quadratic;
+};
+
+//////////////////////////////////
+////////     LAYOUTS    //////////
+//////////////////////////////////
 
 layout (std140) uniform Matrices
 {
@@ -70,38 +82,36 @@ layout (std140) uniform DirectionalLight
 	int num_directional_lights;
 } directional_light;
 
-struct SpotLight
-{
-	vec3 color;
-    vec3 position;
-    vec3 direction;
-    float cutOff;
-    float outerCutOff;
+//////////////////////////////////
+///////     UNIFORMS    //////////
+//////////////////////////////////
 
-    float constant;
-    float linear;
-    float quadratic;
-};
+uniform Material material;
 
-struct PointLight
-{
-	vec3 color;
-	vec3 position;
-
-	float constant;
-    float linear;
-    float quadratic;
-};
-
+// LIGHTS
 uniform int num_spot_lights;
 uniform SpotLight spot_lights[10];
 
 uniform int num_point_lights;
 uniform PointLight point_lights[10];
 
+// SHADOWS
+uniform sampler2D close_depth_map;
+uniform sampler2D mid_depth_map;
+uniform sampler2D far_depth_map;
+
+uniform float ambient_light_intensity;
+uniform vec4 ambient_light_color;
+
+// BLOOM
+uniform float emisive_exposure;
+
+// LIGHTMAPS
 uniform int use_light_map;
 
-uniform sampler2D scene_texture;
+//////////////////////////////////
+///////     FUNCTIONS    /////////
+//////////////////////////////////
 
 //COLOR TEXTURES
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord);
@@ -120,24 +130,39 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4
 vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
 
 vec3 GetLiquidNormal(const Material material);
-
 vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel);
-
-uniform float ambient_light_intensity;
-uniform vec4 ambient_light_color;
 
 //SHADOW MAPS
 float ShadowCalculation();
 vec3 CascadeVisualization();
 
+//////////////////////////////////
+///////     PARAMETERS    ////////
+//////////////////////////////////
+
+//General variables
+in vec3 position;
+in vec3 normal;
+in vec2 texCoord;
+in vec2 texCoordLightmap;
+in vec3 view_dir;
+in vec3 view_pos;
+in vec3 vertex_normal_fs;
+in vec3 vertex_tangent_fs;
+
+//Tangent - Normal mapping variables
+in mat3 TBN;
+
 in vec4 position_near_depth_space;
 in vec4 position_mid_depth_space;
 in vec4 position_far_depth_space;
 
-uniform sampler2D close_depth_map;
-uniform sampler2D mid_depth_map;
-uniform sampler2D far_depth_map;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 BrightColor;
 
+//////////////////////////////////
+///////     DEFINTIONS    ////////
+//////////////////////////////////
 
 void main()
 {
