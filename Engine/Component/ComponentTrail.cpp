@@ -108,18 +108,6 @@ void ComponentTrail::Update()
 			it = test_points.erase(it);
 		}
 	}
-	if (fade_between_colors)//currently fades color according to coordinates of shader
-	{
-		if (test_points.size() == 0)
-		{
-			return;
-		}
-		float progress = test_points.size() / 2;
-		float3 tmp_color = float3::Lerp(color.xyz(), color_to_fade.xyz(), progress);
-		color.x = tmp_color.x;
-		color.y = tmp_color.y;
-		color.z = tmp_color.z;
-	}
 }
 
 void  ComponentTrail::GetPerpendiculars()
@@ -191,26 +179,25 @@ void ComponentTrail::CalculateCatmull(Spline& const path_to_smoothen, std::vecto
 	{
 		float3 curve_begin, curve_end, smoothen_weight_point_left, smoothen_weight_point_right;
 		curve_begin = path_to_smoothen.spline_points[i];
-		//If we are are 1st point then p0 = p1;
+		//If we are are 1st point then p0 = reflection of p2;
 		if (i == 0)
 		{
-			//Implementing r = d * (d . n) * n reflection formula
-			float3 normal_begin = - curve_begin.Normalized(); //Normal of negative p1
-			float3 from_end_to_begin = (curve_end.Cross(curve_begin)).Normalized();//Normal of p2->p1
-			smoothen_weight_point_left = from_end_to_begin - 2 * (normal_begin.Dot(from_end_to_begin) * from_end_to_begin);//refrection of p2 to p1 for getting p0
+			//Implementing r = v - 2 * (v . n) * n reflection formula
+			float3 normal_begin = -(curve_end.Cross(curve_begin).Normalized()); //Normal of negative p1
+			float3 from_end_to_begin = (curve_end - curve_begin).Normalized();//Normal of p2->p1
+			smoothen_weight_point_left = from_end_to_begin - 2 * (from_end_to_begin.Dot(normal_begin) * normal_begin);//refrection of p2 to p1 for getting p0
 		}
 		else
 		{
 			smoothen_weight_point_left = path_to_smoothen.spline_points[i - 1];//else P0 is previous point from where we are
 		}
 		curve_end = path_to_smoothen.spline_points[i + 1];
-		//If we are at the last point then P3 = P2
+		//If we are at the last point then p3 = reflection of p1
 		if (i == path_to_smoothen.spline_points.size() - 1)
 		{
-			smoothen_weight_point_right = curve_end;
-			float3 normal_end = - curve_end.Normalized(); //Normal of negative p2
-			float3 from_begin_to_end = (curve_begin.Cross(curve_end)).Normalized();//Normal of p1->p2
-			smoothen_weight_point_right = from_begin_to_end - 2 * (normal_end.Dot(from_begin_to_end) * from_begin_to_end);//refrection of p1 to p2 for getting p3
+			float3 normal_end = -(curve_end.Cross(curve_begin)).Normalized(); //Normal of negative p2
+			float3 from_begin_to_end = (curve_begin - curve_end).Normalized();//Normal of p1->p2
+			smoothen_weight_point_right =  from_begin_to_end - 2 * (from_begin_to_end.Dot(normal_end) * normal_end);//refrection of p1 to p2 for getting p3
 		}
 		else
 		{

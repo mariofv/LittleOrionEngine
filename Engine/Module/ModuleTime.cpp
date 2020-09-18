@@ -6,6 +6,7 @@
 #include "Main/Application.h"
 #include "ModuleEditor.h"
 #include "ModuleAnimation.h"
+#include "ModuleAudio.h"
 #include "ModuleScene.h"
 #include "ModuleScriptManager.h"
 #include "ModuleWindow.h"

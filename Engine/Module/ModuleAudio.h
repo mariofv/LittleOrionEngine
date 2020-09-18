@@ -1,6 +1,8 @@
 #ifndef _MODULEAUDIO_H_
 #define _MODULEAUDIO_H_
 
+#define ENGINE_EXPORTS
+
 #include "Module/Module.h"
 
 #include <AK/SoundEngine/Common/AkMemoryMgr.h>  //Memory Manager
@@ -33,6 +35,10 @@ public:
 
 	void SelectMainListener();
 
+	ENGINE_API void SetRTPCValue(const std::string& name, int value);
+	ENGINE_API void ResetRTPCValues(const std::string& name);
+
+public:
 	const AkGameObjectID default_listener = 0;
 	ComponentAudioListener * main_listener = nullptr;
 
