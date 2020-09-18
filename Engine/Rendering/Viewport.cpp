@@ -22,6 +22,8 @@
 
 Viewport::Viewport(int options) : viewport_options(options)
 {
+	scene_quad = new Quad(2.f);
+
 	framebuffers.emplace_back(main_fbo = new FrameBuffer());
 	framebuffers.emplace_back(postprocess_fbo = new FrameBuffer());
 	framebuffers.emplace_back(blit_fbo = new FrameBuffer());
@@ -34,6 +36,8 @@ Viewport::Viewport(int options) : viewport_options(options)
 
 Viewport::~Viewport()
 {
+	delete scene_quad;
+
 	for (auto& framebuffer : framebuffers)
 	{
 		delete framebuffer;
@@ -59,11 +63,11 @@ void Viewport::Render(ComponentCamera* camera)
 
 	MeshRenderPass();
 	EffectsRenderPass();
-	UIRenderPass();
 	DebugPass();
 	DebugDrawPass();
 	EditorDrawPass();
 	PostProcessPass();
+	UIRenderPass();
 	BlitPass();
 
 	SelectLastDisplayedTexture();
@@ -184,7 +188,7 @@ void Viewport::EffectsRenderPass() const
 
 void Viewport::UIRenderPass() const
 {
-	main_fbo->Bind();
+	postprocess_fbo->Bind();
 	App->ui->Render(width, height, IsOptionSet(ViewportOption::SCENE_MODE));
 	FrameBuffer::UnBind();
 }
@@ -192,6 +196,8 @@ void Viewport::UIRenderPass() const
 void Viewport::PostProcessPass() const
 {
 	postprocess_fbo->Bind();
+	glClearColor(0.f, 0.f, 0.f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	int shader_variation = 0;
 	if (antialiasing)
@@ -215,14 +221,14 @@ void Viewport::PostProcessPass() const
 	}
 	glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
 	
-	App->ui->quad->Render();
+	scene_quad->Render();
 
 	FrameBuffer::UnBind();
 }
 
 void Viewport::BlitPass() const
 {
-	main_fbo->Bind(GL_READ_FRAMEBUFFER);
+	postprocess_fbo->Bind(GL_READ_FRAMEBUFFER);
 
 	if (IsOptionSet(ViewportOption::BLIT_FRAMEBUFFER))
 	{
@@ -325,7 +331,6 @@ void Viewport::SelectLastDisplayedTexture()
 	default:
 		break;
 	}
-
 }
 
 bool Viewport::IsOptionSet(ViewportOption option) const

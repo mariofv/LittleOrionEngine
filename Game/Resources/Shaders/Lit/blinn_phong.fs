@@ -225,11 +225,6 @@ void main()
 #endif
 	FragColor = vec4(result,1.0);
 
-	//hdr computes gamma on the shader, so there is no need to put it here aswell
-#if	!ENABLE_HDR
-		FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma));
-#endif
-
 #if	ENABLE_CASCADE_VISUALIZATION
 	FragColor.rgb = CascadeVisualization();
 #endif

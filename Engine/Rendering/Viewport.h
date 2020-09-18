@@ -10,6 +10,7 @@ class ComponentMeshRenderer;
 class DepthFrameBuffer;
 class FrameBuffer;
 class LightFrustum;
+class Quad;
 
 class Viewport
 {
@@ -62,7 +63,7 @@ private:
 public:
 	GLuint last_displayed_texture = 0;
 	ViewportOutput viewport_output = ViewportOutput::COLOR;
-
+	Quad* scene_quad = nullptr;
 
 	std::vector<FrameBuffer*> framebuffers;
 	FrameBuffer* main_fbo = nullptr;

@@ -5,11 +5,11 @@
 class Quad
 {
 public:
-	Quad();
+	Quad(float size = 1.f, float depth = 0.f);
 	~Quad();
 
 	void Render() const;
 private:
-	GLuint vao, vbo;
+	GLuint vao, vbo, ebo;
 };
 

@@ -27,7 +27,6 @@ void main()
   vec3 mapped = fragment_color.rgb / (fragment_color.rgb + vec3(1.0));
   FragColor = vec4(pow(mapped, vec3(1.0 / gamma)), 1.0);
 #else
-  FragColor = vec4(pow(fragment_color, vec3(1.0 / gamma)), 1.0);
+  FragColor = vec4(pow(fragment_color.rgb, vec3(1.0 / gamma)), 1.0);
 #endif
-  FragColor = vec4(1.0);
 }
