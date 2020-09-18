@@ -2,110 +2,110 @@
   "Shaders": [
     {
       "Name": "Skybox",
-      "Vertex": "/Resources/Shaders/skybox.vs",
-      "Fragment": "/Resources/Shaders/skybox.fs",
+      "Vertex": "/Resources/Shaders/Editor/skybox.vs",
+      "Fragment": "/Resources/Shaders/Editor/skybox.fs",
       "Selectable": false
     },
     {
       "Name": "Linepoint",
-      "Vertex": "/Resources/Shaders/linepoint.vs",
-      "Fragment": "/Resources/Shaders/linepoint.fs",
+      "Vertex": "/Resources/Shaders/Editor/linepoint.vs",
+      "Fragment": "/Resources/Shaders/Editor/linepoint.fs",
       "Selectable": false
     },
     {
       "Name": "Text",
-      "Vertex": "/Resources/Shaders/text.vs",
-      "Fragment": "/Resources/Shaders/text.fs",
+      "Vertex": "/Resources/Shaders/Editor/text.vs",
+      "Fragment": "/Resources/Shaders/Editor/text.fs",
       "Selectable": false
     },
     {
       "Name": "Outline",
-      "Vertex": "/Resources/Shaders/simple_color.vs",
-      "Fragment": "/Resources/Shaders/simple_color.fs",
+      "Vertex": "/Resources/Shaders/Editor/simple_color.vs",
+      "Fragment": "/Resources/Shaders/Editor/simple_color.fs",
       "Selectable": false
     },
     {
       "Name": "Blinn phong",
-      "Vertex": "/Resources/Shaders/blinn_phong.vs",
-      "Fragment": "/Resources/Shaders/blinn_phong.fs",
+      "Vertex": "/Resources/Shaders/Lit/blinn_phong.vs",
+      "Fragment": "/Resources/Shaders/Lit/blinn_phong.fs",
       "Selectable": true
     },
     {
       "Name": "Lightmap",
-      "Vertex": "/Resources/Shaders/blinn_phong.vs",
-      "Fragment": "/Resources/Shaders/lightmap.fs",
+      "Vertex": "/Resources/Shaders/Lit/blinn_phong.vs",
+      "Fragment": "/Resources/Shaders/Lit/lightmap.fs",
       "Selectable": true
     },
     {
       "Name": "Billboard",
-      "Vertex": "/Resources/Shaders/billboard.vs",
-      "Fragment": "/Resources/Shaders/billboard.fs",
+      "Vertex": "/Resources/Shaders/VFX/billboard.vs",
+      "Fragment": "/Resources/Shaders/VFX/billboard.fs",
       "Selectable": false
     },
     {
       "Name": "Particles",
-      "Vertex": "/Resources/Shaders/particles.vs",
-      "Fragment": "/Resources/Shaders/particles.fs",
+      "Vertex": "/Resources/Shaders/VFX/particles.vs",
+      "Fragment": "/Resources/Shaders/VFX/particles.fs",
       "Selectable": false
     },
     {
       "Name": "NavMesh",
-      "Vertex": "/Resources/Shaders/simple_color.vs",
-      "Fragment": "/Resources/Shaders/simple_color.fs",
+      "Vertex": "/Resources/Shaders/Editor/simple_color.vs",
+      "Fragment": "/Resources/Shaders/Editor/simple_color.fs",
       "Selectable": true
     },
     {
       "Name": "Grid",
-      "Vertex": "/Resources/Shaders/grid.vs",
-      "Fragment": "/Resources/Shaders/grid.fs",
+      "Vertex": "/Resources/Shaders/Editor/grid.vs",
+      "Fragment": "/Resources/Shaders/Editor/grid.fs",
       "Selectable": false
     },
     {
       "Name":"Sprite",
-      "Vertex":"/Resources/Shaders/sprite.vs",
-      "Fragment":"/Resources/Shaders/sprite.fs",
+      "Vertex":"/Resources/Shaders/UI/sprite.vs",
+      "Fragment":"/Resources/Shaders/UI/sprite.fs",
       "Selectable":false
     },
     {
       "Name": "UI Text",
-      "Vertex": "/Resources/Shaders/sprite.vs",
-      "Fragment": "/Resources/Shaders/ui_text.fs",
+      "Vertex": "/Resources/Shaders/UI/sprite.vs",
+      "Fragment": "/Resources/Shaders/UI/ui_text.fs",
       "Selectable": false
     },
     {
       "Name": "Trail",
-      "Vertex": "/Resources/Shaders/trail.vs",
-      "Fragment": "/Resources/Shaders/trail.fs",
+      "Vertex": "/Resources/Shaders/VFX/trail.vs",
+      "Fragment": "/Resources/Shaders/VFX/trail.fs",
       "Selectable": false
     },
     {
       "Name": "HDR",
-      "Vertex": "/Resources/Shaders/hdr.vs",
-      "Fragment": "/Resources/Shaders/hdr.fs",
+      "Vertex": "/Resources/Shaders/PostProcess/hdr.vs",
+      "Fragment": "/Resources/Shaders/PostProcess/hdr.fs",
       "Selectable": false
     },
     {
       "Name": "Blur",
-      "Vertex": "/Resources/Shaders/blur_effect.vs",
-      "Fragment": "/Resources/Shaders/blur_effect.fs",
+      "Vertex": "/Resources/Shaders/PostProcess/blur_effect.vs",
+      "Fragment": "/Resources/Shaders/PostProcess/blur_effect.fs",
       "Selectable": false
     },
     {
       "Name": "Bloom",
-      "Vertex": "/Resources/Shaders/bloom.vs",
-      "Fragment": "/Resources/Shaders/bloom.fs",
+      "Vertex": "/Resources/Shaders/PostProcess/bloom.vs",
+      "Fragment": "/Resources/Shaders/PostProcess/bloom.fs",
       "Selectable": false
     },
     {
       "Name": "Depth",
-      "Vertex": "/Resources/Shaders/depth.vs",
-      "Fragment": "/Resources/Shaders/depth.fs",
+      "Vertex": "/Resources/Shaders/Shadows/depth.vs",
+      "Fragment": "/Resources/Shaders/Shadows/depth.fs",
       "Selectable": false
     },
     {
       "Name": "Quad",
-      "Vertex": "/Resources/Shaders/quad.vs",
-      "Fragment": "/Resources/Shaders/quad.fs",
+      "Vertex": "/Resources/Shaders/Shadows/quad.vs",
+      "Fragment": "/Resources/Shaders/Shadows/quad.fs",
       "Selectable": false
     }
   ]
