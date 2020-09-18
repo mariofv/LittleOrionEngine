@@ -1,12 +1,13 @@
 #include "FrameBuffer.h"
 
-FrameBuffer::FrameBuffer()
+FrameBuffer::FrameBuffer(int num_color_attachements) : num_color_attachements(num_color_attachements)
 {
 	glGenFramebuffers(1, &fbo);
 }
 
 FrameBuffer::~FrameBuffer()
 {
+	ClearAttachements();
 	glDeleteFramebuffers(1, &fbo);
 }
 
@@ -19,9 +20,12 @@ void FrameBuffer::GenerateAttachements(float width, float height)
 
 void FrameBuffer::ClearAttachements()
 {
-	if (color_attachement != 0)
+	for (size_t i = 0; i < num_color_attachements; ++i)
 	{
-		glDeleteTextures(1, &color_attachement);
+		if (color_attachements[i] != 0)
+		{
+			glDeleteTextures(1, &color_attachements[i]);
+		}
 	}
 
 	if (rbo != 0)
@@ -40,46 +44,49 @@ void FrameBuffer::UnBind(GLenum target)
 	glBindFramebuffer(target, 0);
 }
 
-GLuint FrameBuffer::GetColorAttachement() const
+GLuint FrameBuffer::GetColorAttachement(int index) const
 {
-	return color_attachement;
+	return color_attachements[index];
 }
 
 void FrameBuffer::GenerateColorAttachement(float width, float height)
 {
-	glGenTextures(1, &color_attachement);
-	if (multisampled && !floating_point)
+	glGenTextures(num_color_attachements, &color_attachements[0]);
+	for (size_t i = 0; i < num_color_attachements; ++i)
 	{
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color_attachement);
-		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA, width, height, GL_TRUE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-	}
-	else if (multisampled && floating_point)
-	{
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color_attachement);
-		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, width, height, GL_TRUE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-	}
-	else if (!multisampled && floating_point)
-	{
-		glBindTexture(GL_TEXTURE_2D, color_attachement);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-	else if (!multisampled && !floating_point)
-	{
-		glBindTexture(GL_TEXTURE_2D, color_attachement);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
+		if (multisampled && !floating_point)
+		{
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color_attachements[i]);
+			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA, width, height, GL_TRUE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+		}
+		else if (multisampled && floating_point)
+		{
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color_attachements[i]);
+			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, width, height, GL_TRUE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+		}
+		else if (!multisampled && floating_point)
+		{
+			glBindTexture(GL_TEXTURE_2D, color_attachements[i]);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+		else if (!multisampled && !floating_point)
+		{
+			glBindTexture(GL_TEXTURE_2D, color_attachements[i]);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+	}	
 }
 
 void FrameBuffer::GenerateDepthAttachement(float width, float height)
@@ -100,13 +107,16 @@ void FrameBuffer::GenerateDepthAttachement(float width, float height)
 void FrameBuffer::LinkAttachements() const
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	if (multisampled)
+	for (size_t i = 0; i < num_color_attachements; ++i)
 	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, color_attachement, 0);
-	}
-	else
-	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_attachement, 0);
+		if (multisampled)
+		{
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D_MULTISAMPLE, color_attachements[i], 0);
+		}
+		else
+		{
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, color_attachements[i], 0);
+		}
 	}
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

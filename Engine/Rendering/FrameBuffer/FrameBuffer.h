@@ -6,7 +6,7 @@
 class FrameBuffer
 {
 public:
-	FrameBuffer();
+	FrameBuffer(int num_color_attachements = 1);
 	virtual ~FrameBuffer();
 
 	virtual void GenerateAttachements(float width, float height);
@@ -15,7 +15,7 @@ public:
 	void Bind(GLenum target = GL_FRAMEBUFFER) const;
 	static void UnBind(GLenum target = GL_FRAMEBUFFER);
 
-	GLuint GetColorAttachement() const;
+	GLuint GetColorAttachement(int index = 0) const;
 
 	void SetMultiSampled(bool multisampled);
 	void SetFloatingPoint(bool floating_point);
@@ -28,8 +28,9 @@ private:
 protected:
 	GLuint fbo = 0;
 	GLuint rbo = 0;
-	GLuint color_attachement = 0;
+	GLuint color_attachements[2];
 
+	int num_color_attachements = 1;
 	bool multisampled = false;
 	bool floating_point = false;
 };
