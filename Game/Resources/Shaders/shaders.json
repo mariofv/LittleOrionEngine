@@ -103,9 +103,15 @@
       "Selectable": false
     },
     {
-      "Name": "Quad",
-      "Vertex": "/Resources/Shaders/Shadows/quad.vs",
-      "Fragment": "/Resources/Shaders/Shadows/quad.fs",
+      "Name": "DepthMap",
+      "Vertex": "/Resources/Shaders/Editor/quad.vs",
+      "Fragment": "/Resources/Shaders/Shadows/depth_map.fs",
+      "Selectable": false
+    },
+    {
+      "Name": "PostProcessing",
+      "Vertex": "/Resources/Shaders/Editor/quad.vs",
+      "Fragment": "/Resources/Shaders/PostProcess/postprocess.fs",
       "Selectable": false
     }
   ]

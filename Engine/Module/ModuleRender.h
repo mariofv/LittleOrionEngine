@@ -69,11 +69,10 @@ public:
 	ENGINE_API int GetRenderedTris() const;
 	ENGINE_API int GetRenderedVerts() const;
 
-	void RenderQuad();
-
 	ENGINE_API RaycastHit* GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* camera);
 	ENGINE_API void SetDrawMode(DrawMode draw_mode);
 	ENGINE_API void SetAntialiasing(bool antialiasing);
+	ENGINE_API void SetHDR(bool hdr);
 	ENGINE_API void SetShadows(bool shadows_enabled);
 
 private:
@@ -90,6 +89,7 @@ private:
 
 public:
 	bool antialiasing = true;
+	bool hdr = false;
 	bool shadows_enabled = false;
 	bool cascade_debug = false;
 
@@ -100,7 +100,6 @@ public:
 	bool threshold_brightness = false;
 	float exposure = 1.0f;
 	bool horizontal = true;
-	bool hdr_active = false;
 	float emisive_exposure = 1.0f;
 	int amount_of_blur = 20;
 
@@ -121,13 +120,6 @@ private:
 	int front_faces = 0;
 	int filling_mode = 0;
 
-	float quadVertices[20] = {
-		// positions        // texture Coords
-		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-		 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-		 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-	};
 	DrawMode draw_mode = DrawMode::SHADED;
 
 	int num_rendered_tris = 0;

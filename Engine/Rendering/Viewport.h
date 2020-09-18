@@ -10,7 +10,6 @@ class ComponentMeshRenderer;
 class DepthFrameBuffer;
 class FrameBuffer;
 class LightFrustum;
-class MultiSampledFrameBuffer;
 
 class Viewport
 {
@@ -37,6 +36,7 @@ public:
 
 	void SetSize(float width, float height);
 	void SetAntialiasing(bool antialiasing);
+	void SetHDR(bool hdr);
 
 	void SetOutput(ViewportOutput output);
 
@@ -49,6 +49,7 @@ private:
 	void EffectsRenderPass() const;
 	void UIRenderPass() const;
 	void PostProcessPass() const;
+	void BlitPass() const;
 	void DebugPass() const;
 	void DebugDrawPass() const;
 	void EditorDrawPass() const;
@@ -62,12 +63,11 @@ public:
 	GLuint last_displayed_texture = 0;
 	ViewportOutput viewport_output = ViewportOutput::COLOR;
 
-	FrameBuffer* main_fbo = nullptr;
 
 	std::vector<FrameBuffer*> framebuffers;
+	FrameBuffer* main_fbo = nullptr;
+	FrameBuffer* postprocess_fbo = nullptr;
 	FrameBuffer* blit_fbo = nullptr;
-	FrameBuffer* regular_fbo = nullptr;
-	MultiSampledFrameBuffer* multisampled_fbo = nullptr;
 
 	FrameBuffer* depth_full_fbo = nullptr;
 	FrameBuffer* depth_near_fbo = nullptr;
@@ -88,6 +88,7 @@ private:
 
 	int viewport_options = 0;
 	bool antialiasing = true;
+	bool hdr = true;
 };
 
 #endif //_VIEWPORT_H_

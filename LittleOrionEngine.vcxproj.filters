@@ -568,9 +568,6 @@
     <ClCompile Include="Engine\Rendering\FrameBuffer\FrameBuffer.cpp">
       <Filter>Engine\Rendering\FrameBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Rendering\FrameBuffer\MultiSampledFrameBuffer.cpp">
-      <Filter>Engine\Rendering\FrameBuffer</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Rendering\FrameBuffer\DepthFrameBuffer.cpp">
       <Filter>Engine\Rendering\FrameBuffer</Filter>
     </ClCompile>
@@ -1129,9 +1126,6 @@
       <Filter>Engine\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Rendering\FrameBuffer\FrameBuffer.h">
-      <Filter>Engine\Rendering\FrameBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Rendering\FrameBuffer\MultiSampledFrameBuffer.h">
       <Filter>Engine\Rendering\FrameBuffer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Rendering\FrameBuffer\DepthFrameBuffer.h">

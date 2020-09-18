@@ -17,10 +17,21 @@ public:
 
 	GLuint GetColorAttachement() const;
 
+	void SetMultiSampled(bool multisampled);
+	void SetFloatingPoint(bool floating_point);
+
+private:
+	void GenerateColorAttachement(float width, float height);
+	void GenerateDepthAttachement(float width, float height);
+	void LinkAttachements() const;
+
 protected:
 	GLuint fbo = 0;
 	GLuint rbo = 0;
 	GLuint color_attachement = 0;
+
+	bool multisampled = false;
+	bool floating_point = false;
 };
 
 #endif //_FRAMEBUFFER_H_

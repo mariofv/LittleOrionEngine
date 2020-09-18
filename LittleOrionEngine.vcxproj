@@ -193,7 +193,6 @@
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
     <ClInclude Include="Engine\Module\ModuleEffects.h" />
     <ClInclude Include="Engine\Rendering\FrameBuffer\DepthFrameBuffer.h" />
-    <ClInclude Include="Engine\Rendering\FrameBuffer\MultiSampledFrameBuffer.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\FontManager.h" />
     <ClInclude Include="Engine\Module\ModulePhysics.h" />
     <ClInclude Include="Engine\Module\ModuleAudio.h" />
@@ -336,7 +335,6 @@
   <ItemGroup>
     <ClCompile Include="Engine\Component\ComponentVideoPlayer.cpp" />
     <ClCompile Include="Engine\Rendering\FrameBuffer\DepthFrameBuffer.cpp" />
-    <ClCompile Include="Engine\Rendering\FrameBuffer\MultiSampledFrameBuffer.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Video.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddMultipleGO.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionDeleteMultipleGO.cpp" />

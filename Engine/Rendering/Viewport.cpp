@@ -18,21 +18,18 @@
 
 #include "FrameBuffer/DepthFrameBuffer.h"
 #include "FrameBuffer/FrameBuffer.h"
-#include "FrameBuffer/MultiSampledFrameBuffer.h"
 #include "LightFrustum.h"
 
 Viewport::Viewport(int options) : viewport_options(options)
 {
+	framebuffers.emplace_back(main_fbo = new FrameBuffer());
+	framebuffers.emplace_back(postprocess_fbo = new FrameBuffer());
 	framebuffers.emplace_back(blit_fbo = new FrameBuffer());
-	framebuffers.emplace_back(regular_fbo = new FrameBuffer());
-	framebuffers.emplace_back(multisampled_fbo = new MultiSampledFrameBuffer());
 
 	depth_full_fbo = new DepthFrameBuffer();
 	depth_near_fbo = new DepthFrameBuffer();
 	depth_mid_fbo = new DepthFrameBuffer();
 	depth_far_fbo = new DepthFrameBuffer();
-
-	main_fbo = regular_fbo;
 }
 
 Viewport::~Viewport()
@@ -52,14 +49,14 @@ void Viewport::Render(ComponentCamera* camera)
 {
 	this->camera = camera;
 	camera->SetAspectRatio(width / height);
-
 	culled_mesh_renderers = App->space_partitioning->GetCullingMeshes(camera, App->renderer->mesh_renderers);
 
 	LightCameraPass();
+	App->lights->BindLightFrustumsMatrices();
 
 	BindCameraFrustumMatrices(camera->camera_frustum);
-	App->lights->BindLightFrustumsMatrices();
 	glViewport(0, 0, width, height);
+
 	MeshRenderPass();
 	EffectsRenderPass();
 	UIRenderPass();
@@ -67,6 +64,7 @@ void Viewport::Render(ComponentCamera* camera)
 	DebugDrawPass();
 	EditorDrawPass();
 	PostProcessPass();
+	BlitPass();
 
 	SelectLastDisplayedTexture();
 }
@@ -193,6 +191,37 @@ void Viewport::UIRenderPass() const
 
 void Viewport::PostProcessPass() const
 {
+	postprocess_fbo->Bind();
+
+	int shader_variation = 0;
+	if (antialiasing)
+	{
+		shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_MSAA;
+	}
+	if (hdr)
+	{
+		shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_HDR;
+	}
+	GLuint program = App->program->UseProgram("PostProcessing", shader_variation);
+	
+	glActiveTexture(GL_TEXTURE0);
+	if (antialiasing)
+	{
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, main_fbo->GetColorAttachement());
+	}
+	else
+	{
+		glBindTexture(GL_TEXTURE_2D, main_fbo->GetColorAttachement());
+	}
+	glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
+	
+	App->ui->quad->Render();
+
+	FrameBuffer::UnBind();
+}
+
+void Viewport::BlitPass() const
+{
 	main_fbo->Bind(GL_READ_FRAMEBUFFER);
 
 	if (IsOptionSet(ViewportOption::BLIT_FRAMEBUFFER))
@@ -206,8 +235,6 @@ void Viewport::PostProcessPass() const
 
 	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	FrameBuffer::UnBind();
-
-	//App->renderer->RenderPostProcessingEffects(*camera);
 }
 
 void Viewport::DebugPass() const
@@ -345,14 +372,17 @@ void Viewport::DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo)
 void Viewport::SetAntialiasing(bool antialiasing)
 {
 	this->antialiasing = antialiasing;
-	if (antialiasing)
-	{
-		main_fbo = multisampled_fbo;
-	}
-	else
-	{
-		main_fbo = regular_fbo;
-	}
+	main_fbo->SetMultiSampled(antialiasing);
+	main_fbo->ClearAttachements();
+	main_fbo->GenerateAttachements(width, height);
+}
+
+void Viewport::SetHDR(bool hdr)
+{
+	this->hdr = hdr;
+	main_fbo->SetFloatingPoint(hdr);
+	main_fbo->ClearAttachements();
+	main_fbo->GenerateAttachements(width, height);
 }
 
 void Viewport::SetOutput(ViewportOutput output)

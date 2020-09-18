@@ -255,7 +255,6 @@ void PanelConfiguration::ShowRenderOptions()
 		}
 		if (ImGui::TreeNode("Post Processing"))
 		{
-			ImGui::Checkbox("HDR", &App->renderer->hdr_active);
 			if (ImGui::BeginCombo("Tonemapping Type", App->renderer->GetHDRType(App->renderer->hdr_type).c_str()))
 			{
 
@@ -318,6 +317,10 @@ void PanelConfiguration::ShowRenderOptions()
 		if (ImGui::Checkbox("Antialiasing", &App->renderer->antialiasing))
 		{
 			App->renderer->SetAntialiasing(App->renderer->antialiasing);
+		}
+		if (ImGui::Checkbox("HDR", &App->renderer->hdr))
+		{
+			App->renderer->SetHDR(App->renderer->hdr);
 		}
 		ImGui::PopID();
 	}
