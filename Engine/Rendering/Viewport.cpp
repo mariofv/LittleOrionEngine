@@ -24,7 +24,7 @@ Viewport::Viewport(int options) : viewport_options(options)
 {
 	scene_quad = new Quad(2.f);
 
-	framebuffers.emplace_back(main_fbo = new FrameBuffer());
+	framebuffers.emplace_back(main_fbo = new FrameBuffer(2));
 	framebuffers.emplace_back(postprocess_fbo = new FrameBuffer());
 	framebuffers.emplace_back(blit_fbo = new FrameBuffer());
 
@@ -70,7 +70,7 @@ void Viewport::Render(ComponentCamera* camera)
 	UIRenderPass();
 	BlitPass();
 
-	SelectLastDisplayedTexture();
+	SelectDisplayedTexture();
 }
 
 void Viewport::BindCameraFrustumMatrices(const Frustum& camera_frustum) const
@@ -319,12 +319,16 @@ void Viewport::SetSize(float width, float height)
 	}
 }
 
-void Viewport::SelectLastDisplayedTexture()
+void Viewport::SelectDisplayedTexture()
 {
 	switch (viewport_output)
 	{
 	case ViewportOutput::COLOR:
 		last_displayed_texture = blit_fbo->GetColorAttachement();
+		break;
+
+	case ViewportOutput::BRIGHTNESS:
+		last_displayed_texture = main_fbo->GetColorAttachement(1);
 		break;
 
 	case ViewportOutput::DEPTH_NEAR:

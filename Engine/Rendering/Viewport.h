@@ -24,6 +24,7 @@ public:
 	enum class ViewportOutput
 	{
 		COLOR,
+		BRIGHTNESS,
 		DEPTH_NEAR,
 		DEPTH_MID,
 		DEPTH_FAR,
@@ -55,7 +56,7 @@ private:
 	void DebugDrawPass() const;
 	void EditorDrawPass() const;
 
-	void SelectLastDisplayedTexture();
+	void SelectDisplayedTexture();
 	bool IsOptionSet(ViewportOption option) const;
 
 	void DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo) const;

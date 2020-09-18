@@ -106,6 +106,10 @@ void PanelScene::RenderSceneBar()
 			{
 				App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
 			}
+			if (ImGui::MenuItem("Brightness", NULL, draw_mode == "Brightness"))
+			{
+				App->renderer->SetDrawMode(ModuleRender::DrawMode::BRIGHTNESS);
+			}
 			if (ImGui::BeginMenu("Depth Map"))
 			{
 				if (ImGui::MenuItem("Full Depth Map", NULL, draw_mode == "Full Depth Map"))

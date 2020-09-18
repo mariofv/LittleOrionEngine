@@ -5,11 +5,11 @@ layout (location = 1) out vec4 BrightColor;
 
 uniform sampler2D tex;
 uniform vec4 color;
-uniform float emisive_exposure;
+uniform float emissive_exposure;
 
 void main()
 {
-	vec4 texture_color = texture(tex, texCoord) * color * emisive_exposure;
+	vec4 texture_color = texture(tex, texCoord) * color * emissive_exposure;
 	FragColor =  texture_color;
 	float brightness = dot(texture_color.rgb, vec3(0.2126, 0.7152, 0.0722));
 	if(brightness > 1.0)

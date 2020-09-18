@@ -119,6 +119,10 @@ void FrameBuffer::LinkAttachements() const
 		}
 	}
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(2, attachments);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

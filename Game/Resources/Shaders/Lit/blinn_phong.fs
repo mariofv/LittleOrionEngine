@@ -107,7 +107,7 @@ uniform vec4 ambient_light_color;
 uniform int use_light_map;
 
 // BLOOM
-uniform float emisive_exposure;
+uniform float emissive_exposure;
 
 //////////////////////////////////
 ///////     FUNCTIONS    /////////
@@ -232,15 +232,17 @@ void main()
 
 	FragColor.a = material.transparency;
 
-	float brightness = dot(result.rgb, vec3(0.2126, 0.7152, 0.0722));
+	float brightness = dot(result, vec3(0.2126, 0.7152, 0.0722));
   if (brightness > 1.0)
 	{
-  	BrightColor = vec4(result.rgb, 1.0);
+  	BrightColor = vec4(result, 1.0);
 	}
   else
 	{
     BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
 	}
+
+	BrightColor = vec4(result, 1.0);
 }
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)

@@ -213,36 +213,37 @@ void ModuleRender::SetDrawMode(DrawMode draw_mode)
 	{
 	case ModuleRender::DrawMode::SHADED:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		game_viewport->SetOutput(Viewport::ViewportOutput::COLOR);
+		scene_viewport->SetOutput(Viewport::ViewportOutput::COLOR);
 		break;
 
 	case ModuleRender::DrawMode::WIREFRAME:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		game_viewport->SetOutput(Viewport::ViewportOutput::COLOR);
+		scene_viewport->SetOutput(Viewport::ViewportOutput::COLOR);
 		break;
 
 	case ModuleRender::DrawMode::BRIGHTNESS:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		scene_viewport->SetOutput(Viewport::ViewportOutput::BRIGHTNESS);
 		break;
 
 	case ModuleRender::DrawMode::DEPTH_FULL:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		game_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_FULL);
+		scene_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_FULL);
 		break;
 
 	case ModuleRender::DrawMode::DEPTH_NEAR:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		game_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_NEAR);
+		scene_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_NEAR);
 		break;
 
 	case ModuleRender::DrawMode::DEPTH_MID:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		game_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_MID);
+		scene_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_MID);
 		break;
 
 	case ModuleRender::DrawMode::DEPTH_FAR:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		game_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_FAR);
+		scene_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_FAR);
 		break;
 
 	default:

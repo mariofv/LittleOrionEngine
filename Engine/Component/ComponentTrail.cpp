@@ -190,12 +190,12 @@ void ComponentTrail::Render()
 		{
 			if (App->renderer->bloom)
 			{
-				glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), App->renderer->emissive_exposure);
+				glUniform1f(glGetUniformLocation(shader_program, "emissive_exposure"), App->renderer->emissive_exposure);
 			}
 		}
 		else
 		{
-			glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), 1.0F);
+			glUniform1f(glGetUniformLocation(shader_program, "emissive_exposure"), 1.0F);
 		}
 
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size());

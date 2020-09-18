@@ -145,7 +145,7 @@ GLuint ComponentMeshRenderer::BindDepthShaderProgram() const
 void ComponentMeshRenderer::BindMeshUniforms(GLuint shader_program) const
 {
 	glUniform1i(glGetUniformLocation(shader_program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
-	glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), App->renderer->emissive_exposure);
+	glUniform1f(glGetUniformLocation(shader_program, "emissive_exposure"), App->renderer->emissive_exposure);
 
 	if (palette.size() > 0)
 	{
