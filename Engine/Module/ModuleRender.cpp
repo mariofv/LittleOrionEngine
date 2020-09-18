@@ -130,7 +130,8 @@ bool ModuleRender::Init()
 #endif
 	game_viewport = new Viewport(game_viewport_options);
 
-	SetAntialiasing(true);
+	SetAntialiasing(antialiasing);
+	SetHDR(hdr);
 
 	return true;
 }
@@ -213,18 +214,15 @@ void ModuleRender::SetDrawMode(DrawMode draw_mode)
 	case ModuleRender::DrawMode::SHADED:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		game_viewport->SetOutput(Viewport::ViewportOutput::COLOR);
-		threshold_brightness = false;
 		break;
 
 	case ModuleRender::DrawMode::WIREFRAME:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		game_viewport->SetOutput(Viewport::ViewportOutput::COLOR);
-		threshold_brightness = false;
 		break;
 
 	case ModuleRender::DrawMode::BRIGHTNESS:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		threshold_brightness = true;
 		break;
 
 	case ModuleRender::DrawMode::DEPTH_FULL:

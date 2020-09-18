@@ -190,7 +190,7 @@ void ComponentTrail::Render()
 		{
 			if (App->renderer->bloom)
 			{
-				glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), App->renderer->emisive_exposure);
+				glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), App->renderer->emissive_exposure);
 			}
 		}
 		else

@@ -90,16 +90,14 @@ private:
 public:
 	bool antialiasing = true;
 
-	bool hdr = false;
-	float exposure = 1.0f;
+	bool hdr = true;
+	float exposure = 0.5f;
 
 	bool shadows_enabled = false;
 	bool cascade_debug = false;
 
 	bool bloom = false;
-	bool threshold_brightness = false;
-	bool horizontal = true;
-	float emisive_exposure = 1.0f;
+	float emissive_exposure = 1.f;
 	int amount_of_blur = 20;
 
 	Viewport* scene_viewport = nullptr;

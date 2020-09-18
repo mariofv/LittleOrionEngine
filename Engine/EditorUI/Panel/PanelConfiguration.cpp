@@ -41,6 +41,9 @@ void PanelConfiguration::Render()
 
 		ImGui::Spacing();
 		ShowRenderOptions();
+		
+		ImGui::Spacing();
+		ShowPostProcessingOptions();
 
 		ImGui::Spacing();
 		ShowTimeOptions();
@@ -253,47 +256,6 @@ void PanelConfiguration::ShowRenderOptions()
 				break;
 			}
 		}
-		if (ImGui::TreeNode("Post Processing"))
-		{
-			if (ImGui::Checkbox("HDR", &App->renderer->hdr))
-			{
-				App->renderer->SetHDR(App->renderer->hdr);
-			}
-
-			if (App->renderer->hdr)
-			{
-				if (ImGui::BeginCombo("Tonemapping Type", App->renderer->GetHDRType(App->renderer->hdr_type).c_str()))
-				{
-
-					for (int i = 0; i < static_cast<int>(ModuleRender::HDRType::MAX_HDR_TYPE); ++i)
-					{
-						bool is_selected = (static_cast<int>(App->renderer->hdr_type) == i);
-						if (ImGui::Selectable(App->renderer->GetHDRType((ModuleRender::HDRType)i).c_str(), is_selected))
-						{
-							App->renderer->SetHDRType((ModuleRender::HDRType)i);
-							if (is_selected)
-							{
-								ImGui::SetItemDefaultFocus();
-							}
-						}
-					}
-					ImGui::EndCombo();
-				}
-				if (App->renderer->hdr_type == ModuleRender::HDRType::FILMIC || App->renderer->hdr_type == ModuleRender::HDRType::EXPOSURE)
-				{
-					ImGui::DragFloat("Exposure", &App->renderer->exposure, 0.1f, 0.0f, 10.0f);
-				}
-			}
-
-			
-			ImGui::Checkbox("Bloom", &App->renderer->bloom);
-			if (App->renderer->bloom)
-			{
-				ImGui::DragFloat("Emisive exposure", &App->renderer->emisive_exposure);
-				ImGui::DragInt("Blur of bloom", &App->renderer->amount_of_blur);
-
-			}
-		}
 
 		ImGui::Separator();
 
@@ -324,11 +286,55 @@ void PanelConfiguration::ShowRenderOptions()
 		{
 			ImGui::Checkbox("Cascade debug", &App->renderer->cascade_debug);
 		}
+		ImGui::PopID();
+	}
+}
+
+void PanelConfiguration::ShowPostProcessingOptions()
+{
+	if (ImGui::CollapsingHeader(ICON_FA_IMAGES " Post Processing"))
+	{
 		if (ImGui::Checkbox("Antialiasing", &App->renderer->antialiasing))
 		{
 			App->renderer->SetAntialiasing(App->renderer->antialiasing);
 		}
-		ImGui::PopID();
+
+		if (ImGui::Checkbox("HDR", &App->renderer->hdr))
+		{
+			App->renderer->SetHDR(App->renderer->hdr);
+		}
+
+		if (App->renderer->hdr)
+		{
+			if (ImGui::BeginCombo("Tonemapping Type", App->renderer->GetHDRType(App->renderer->hdr_type).c_str()))
+			{
+
+				for (int i = 0; i < static_cast<int>(ModuleRender::HDRType::MAX_HDR_TYPE); ++i)
+				{
+					bool is_selected = (static_cast<int>(App->renderer->hdr_type) == i);
+					if (ImGui::Selectable(App->renderer->GetHDRType((ModuleRender::HDRType)i).c_str(), is_selected))
+					{
+						App->renderer->SetHDRType((ModuleRender::HDRType)i);
+						if (is_selected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+				}
+				ImGui::EndCombo();
+			}
+			if (App->renderer->hdr_type == ModuleRender::HDRType::FILMIC || App->renderer->hdr_type == ModuleRender::HDRType::EXPOSURE)
+			{
+				ImGui::DragFloat("Exposure", &App->renderer->exposure, 0.1f, 0.0f, 10.0f);
+			}
+
+			ImGui::Checkbox("Bloom", &App->renderer->bloom);
+			if (App->renderer->bloom)
+			{
+				ImGui::DragInt("Amount of blur", &App->renderer->amount_of_blur);
+				ImGui::DragFloat("Emmissive exposure", &App->renderer->emissive_exposure, 0.05f, 1.0f, 10.f);
+			}
+		}
 	}
 }
 

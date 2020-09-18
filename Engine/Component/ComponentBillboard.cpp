@@ -186,7 +186,7 @@ void ComponentBillboard::CommonUniforms(const GLuint &shader_program)
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.num_columns"), num_sprisheet_columns);
 	if (App->renderer->bloom)
 	{
-		glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), App->renderer->emisive_exposure);
+		glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), App->renderer->emissive_exposure);
 	}
 	else
 	{

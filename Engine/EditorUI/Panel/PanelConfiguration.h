@@ -19,7 +19,8 @@ private:
 	void ShowHardware() const;
 
 	void ShowWindowOptions();
-	void ShowRenderOptions();
+	void ShowRenderOptions(); 
+	void ShowPostProcessingOptions();
 	void ShowTimeOptions();
 	void ShowInputOptions();
 	void ShowPhysicsOptions();

@@ -128,6 +128,11 @@ GLuint ComponentMeshRenderer::BindShaderProgram() const
 	{
 		shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_CASCADE_VISUALIZATION);
 	}
+	if (App->renderer->bloom)
+	{
+		shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_BLOOM);
+	}
+
 
 	return App->program->UseProgram(material_to_render->shader_program, shader_variation);
 }
@@ -140,7 +145,7 @@ GLuint ComponentMeshRenderer::BindDepthShaderProgram() const
 void ComponentMeshRenderer::BindMeshUniforms(GLuint shader_program) const
 {
 	glUniform1i(glGetUniformLocation(shader_program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
-	glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), App->renderer->emisive_exposure);
+	glUniform1f(glGetUniformLocation(shader_program, "emisive_exposure"), App->renderer->emissive_exposure);
 
 	if (palette.size() > 0)
 	{

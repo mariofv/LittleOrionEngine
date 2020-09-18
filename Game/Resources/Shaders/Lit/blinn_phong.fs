@@ -103,11 +103,11 @@ uniform sampler2D far_depth_map;
 uniform float ambient_light_intensity;
 uniform vec4 ambient_light_color;
 
-// BLOOM
-uniform float emisive_exposure;
-
 // LIGHTMAPS
 uniform int use_light_map;
+
+// BLOOM
+uniform float emisive_exposure;
 
 //////////////////////////////////
 ///////     FUNCTIONS    /////////
@@ -218,23 +218,29 @@ void main()
 	result += GetLightMapColor(material,texCoordLightmap) * use_light_map;
 	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
 
-#if	ENABLE_BLOOM
-	result += emissive_color * emisive_exposure;
+#if ENABLE_BLOOM
+	result += emissive_color * emissive_exposure;
 #else
 	result += emissive_color;
 #endif
+
 	FragColor = vec4(result,1.0);
 
 #if	ENABLE_CASCADE_VISUALIZATION
 	FragColor.rgb = CascadeVisualization();
 #endif
 
-	FragColor.a=material.transparency;
+	FragColor.a = material.transparency;
+
 	float brightness = dot(result.rgb, vec3(0.2126, 0.7152, 0.0722));
-    if(brightness > 1.0)
-        BrightColor = vec4(result.rgb, 1.0);
-    else
-        BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
+  if (brightness > 1.0)
+	{
+  	BrightColor = vec4(result.rgb, 1.0);
+	}
+  else
+	{
+    BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
+	}
 }
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
