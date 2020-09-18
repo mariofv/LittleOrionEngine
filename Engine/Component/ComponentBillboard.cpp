@@ -372,3 +372,9 @@ void ComponentBillboard::SetOrientation(bool is_oriented)
 {
 	oriented_to_camera = is_oriented;
 }
+
+void ComponentBillboard::Disable() 
+{
+	active = false;
+	playing = false;
+}
