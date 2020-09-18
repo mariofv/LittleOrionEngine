@@ -1,4 +1,5 @@
 const float gamma = 2.2;
+const float W = 11.2;
 
 #if ENABLE_MSAA
 uniform sampler2DMS screen_texture;
@@ -6,8 +7,13 @@ uniform sampler2DMS screen_texture;
 uniform sampler2D screen_texture;
 #endif
 
+uniform float exposure;
+
 in vec2 texCoord;
 layout (location = 0) out vec4 FragColor;
+
+vec3 ToneMapping(vec3 color);
+vec3 Uncharted2Tonemap(vec3 x);
 
 void main()
 {
@@ -24,9 +30,37 @@ void main()
 #endif
 
 #if ENABLE_HDR
-  vec3 mapped = fragment_color.rgb / (fragment_color.rgb + vec3(1.0));
-  FragColor = vec4(pow(mapped, vec3(1.0 / gamma)), 1.0);
-#else
-  FragColor = vec4(pow(fragment_color.rgb, vec3(1.0 / gamma)), 1.0);
+  fragment_color.rgb = ToneMapping(fragment_color.rgb);
 #endif
+  FragColor = vec4(pow(fragment_color.rgb, vec3(1.0 / gamma)), 1.0);
+}
+
+vec3 ToneMapping(vec3 color)
+{
+#if ENABLE_REINHARD
+  return color.rgb / (color.rgb + vec3(1.0));
+
+#elif ENABLE_FILMIC
+  vec3 hdr = color * exposure;
+  vec3 curr = Uncharted2Tonemap(2.0 * hdr);
+  vec3 whiteScale = 1.0/Uncharted2Tonemap(vec3(W));
+  return curr*whiteScale;
+
+#elif ENABLE_EXPOSURE
+  return vec3(1.0) - exp(-color * exposure);
+
+#else
+  return color;
+#endif
+}
+
+vec3 Uncharted2Tonemap(vec3 x)
+{
+   const float A = 0.22;
+   const float B = 0.3;
+   const float C = 0.1;
+   const float D = 0.2;
+   const float E = 0.01;
+   const float F = 0.30;
+   return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
 }

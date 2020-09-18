@@ -207,6 +207,20 @@ void Viewport::PostProcessPass() const
 	if (hdr)
 	{
 		shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_HDR;
+		switch (App->renderer->hdr_type)
+		{
+		case ModuleRender::HDRType::REINHARD:
+			shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_HDR;
+			break;
+
+		case ModuleRender::HDRType::FILMIC:
+			shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_FILMIC;
+			break;
+
+		case ModuleRender::HDRType::EXPOSURE:
+			shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_EXPOSURE;
+			break;
+		}
 	}
 	GLuint program = App->program->UseProgram("PostProcessing", shader_variation);
 	
@@ -220,7 +234,8 @@ void Viewport::PostProcessPass() const
 		glBindTexture(GL_TEXTURE_2D, main_fbo->GetColorAttachement());
 	}
 	glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
-	
+	glUniform1f(glGetUniformLocation(program, "exposure"), App->renderer->exposure);
+
 	scene_quad->Render();
 
 	FrameBuffer::UnBind();

@@ -255,27 +255,37 @@ void PanelConfiguration::ShowRenderOptions()
 		}
 		if (ImGui::TreeNode("Post Processing"))
 		{
-			if (ImGui::BeginCombo("Tonemapping Type", App->renderer->GetHDRType(App->renderer->hdr_type).c_str()))
+			if (ImGui::Checkbox("HDR", &App->renderer->hdr))
 			{
+				App->renderer->SetHDR(App->renderer->hdr);
+			}
 
-				for (int i = 0; i < static_cast<int>(ModuleRender::HDRType::MAX_HDR_TYPE); ++i)
+			if (App->renderer->hdr)
+			{
+				if (ImGui::BeginCombo("Tonemapping Type", App->renderer->GetHDRType(App->renderer->hdr_type).c_str()))
 				{
-					bool is_selected = (static_cast<int>(App->renderer->hdr_type) == i);
-					if (ImGui::Selectable(App->renderer->GetHDRType((ModuleRender::HDRType)i).c_str(), is_selected))
+
+					for (int i = 0; i < static_cast<int>(ModuleRender::HDRType::MAX_HDR_TYPE); ++i)
 					{
-						App->renderer->SetHDRType((ModuleRender::HDRType)i);
-						if (is_selected)
+						bool is_selected = (static_cast<int>(App->renderer->hdr_type) == i);
+						if (ImGui::Selectable(App->renderer->GetHDRType((ModuleRender::HDRType)i).c_str(), is_selected))
 						{
-							ImGui::SetItemDefaultFocus();
+							App->renderer->SetHDRType((ModuleRender::HDRType)i);
+							if (is_selected)
+							{
+								ImGui::SetItemDefaultFocus();
+							}
 						}
 					}
+					ImGui::EndCombo();
 				}
-				ImGui::EndCombo();
+				if (App->renderer->hdr_type == ModuleRender::HDRType::FILMIC || App->renderer->hdr_type == ModuleRender::HDRType::EXPOSURE)
+				{
+					ImGui::DragFloat("Exposure", &App->renderer->exposure, 0.1f, 0.0f, 10.0f);
+				}
 			}
-			if (App->renderer->hdr_type == ModuleRender::HDRType::FILMIC || App->renderer->hdr_type == ModuleRender::HDRType::EXPOSURE)
-			{
-				ImGui::DragFloat("Exposure", &App->renderer->exposure, 0.1f, 0.0f, 10.0f);
-			}
+
+			
 			ImGui::Checkbox("Bloom", &App->renderer->bloom);
 			if (App->renderer->bloom)
 			{
@@ -317,10 +327,6 @@ void PanelConfiguration::ShowRenderOptions()
 		if (ImGui::Checkbox("Antialiasing", &App->renderer->antialiasing))
 		{
 			App->renderer->SetAntialiasing(App->renderer->antialiasing);
-		}
-		if (ImGui::Checkbox("HDR", &App->renderer->hdr))
-		{
-			App->renderer->SetHDR(App->renderer->hdr);
 		}
 		ImGui::PopID();
 	}

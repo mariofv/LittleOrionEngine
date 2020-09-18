@@ -450,11 +450,7 @@ void ModuleRender::RenderPostProcessingEffects(const ComponentCamera &camera)
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, camera.pingpongColorbuffers[!horizontal]);
 		glUniform1i(glGetUniformLocation(program, "hdr_uniform.bloom_texture"), 1);
-		glUniform1f(glGetUniformLocation(program, "exposure"), exposure);
 		glUniform1f(glGetUniformLocation(program, "bloom"), bloom);
-		glUniform1f(glGetUniformLocation(program, "hdr_active"), hdr_active);
-		glUniform1i(glGetUniformLocation(program, "hdr_type"), static_cast<int>(hdr_type));
-		RenderQuad();
 	}
 	*/
 }

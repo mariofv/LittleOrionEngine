@@ -89,16 +89,15 @@ private:
 
 public:
 	bool antialiasing = true;
+
 	bool hdr = false;
+	float exposure = 1.0f;
+
 	bool shadows_enabled = false;
 	bool cascade_debug = false;
 
-	bool toggle_ortho_frustum = false;
-	bool toggle_directional_light_aabb = true;
-	bool toggle_perspective_sub_frustums = false;
 	bool bloom = false;
 	bool threshold_brightness = false;
-	float exposure = 1.0f;
 	bool horizontal = true;
 	float emisive_exposure = 1.0f;
 	int amount_of_blur = 20;
@@ -110,7 +109,6 @@ public:
 
 private:
 	void* context = nullptr;
-	HDRType hdr_type = HDRType::FILMIC;
 
 	bool vsync = false;
 	bool gl_depth_test = false;
@@ -121,6 +119,7 @@ private:
 	int filling_mode = 0;
 
 	DrawMode draw_mode = DrawMode::SHADED;
+	HDRType hdr_type = HDRType::FILMIC;
 
 	int num_rendered_tris = 0;
 	int num_rendered_verts = 0; // TODO: Recalculate this
