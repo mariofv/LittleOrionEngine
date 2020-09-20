@@ -18,7 +18,8 @@ public:
 	enum class ViewportOption
 	{
 		SCENE_MODE = 1 << 0,
-		BLIT_FRAMEBUFFER = 1 << 1
+		BLIT_FRAMEBUFFER = 1 << 1,
+		RENDER_UI = 1 << 2,
 	};
 
 	enum class ViewportOutput
@@ -39,6 +40,7 @@ public:
 	void SetSize(float width, float height);
 	void SetAntialiasing(bool antialiasing);
 	void SetHDR(bool hdr);
+	void SetBloom(bool bloom);
 
 	void SetOutput(ViewportOutput output);
 
@@ -101,8 +103,9 @@ private:
 	float height = 0;
 
 	int viewport_options = 0;
-	bool antialiasing = true;
-	bool hdr = true;
+	bool antialiasing = false;
+	bool hdr = false;
+	bool bloom = false;
 };
 
 #endif //_VIEWPORT_H_

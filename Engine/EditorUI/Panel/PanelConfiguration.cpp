@@ -327,13 +327,17 @@ void PanelConfiguration::ShowPostProcessingOptions()
 			{
 				ImGui::DragFloat("Exposure", &App->renderer->exposure, 0.1f, 0.0f, 10.0f);
 			}
+		}
 
-			ImGui::Checkbox("Bloom", &App->renderer->bloom);
-			if (App->renderer->bloom)
-			{
-				ImGui::DragInt("Amount of blur", &App->renderer->amount_of_blur, 1, 2, 20);
-				ImGui::DragFloat("Emmissive exposure", &App->renderer->emissive_exposure, 0.5f, 1.0f, 100.f);
-			}
+		if (ImGui::Checkbox("Bloom", &App->renderer->bloom))
+		{
+			App->renderer->SetBloom(App->renderer->bloom);
+		}
+
+		if (App->renderer->bloom)
+		{
+			ImGui::DragInt("Amount of blur", &App->renderer->amount_of_blur, 1, 2, 20);
+			ImGui::DragFloat("Emmissive exposure", &App->renderer->emissive_exposure, 0.5f, 1.0f, 100.f);
 		}
 	}
 }

@@ -73,6 +73,7 @@ public:
 	ENGINE_API void SetDrawMode(DrawMode draw_mode);
 	ENGINE_API void SetAntialiasing(bool antialiasing);
 	ENGINE_API void SetHDR(bool hdr);
+	ENGINE_API void SetBloom(bool bloom);
 	ENGINE_API void SetShadows(bool shadows_enabled);
 
 private:

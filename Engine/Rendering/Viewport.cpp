@@ -205,6 +205,11 @@ void Viewport::EffectsRenderPass() const
 
 void Viewport::UIRenderPass() const
 {
+	if (!IsOptionSet(ViewportOption::RENDER_UI))
+	{
+		return;
+	}
+
 	postprocess_fbo->Bind();
 	App->ui->Render(width, height, IsOptionSet(ViewportOption::SCENE_MODE));
 	FrameBuffer::UnBind();
@@ -402,7 +407,7 @@ void Viewport::HDRPass() const
 			break;
 		}
 	}
-	if (App->renderer->bloom)
+	if (bloom)
 	{
 		shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_BLOOM;
 	}
@@ -420,7 +425,7 @@ void Viewport::HDRPass() const
 	glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
 	glUniform1f(glGetUniformLocation(program, "exposure"), App->renderer->exposure);
 
-	if (App->renderer->bloom)
+	if (bloom)
 	{
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, ping_pong_fbo->GetColorAttachement());
@@ -471,6 +476,11 @@ void Viewport::SetAntialiasing(bool antialiasing)
 void Viewport::SetHDR(bool hdr)
 {
 	this->hdr = hdr;
+}
+
+void Viewport::SetBloom(bool bloom)
+{
+	this->bloom = bloom;
 }
 
 void Viewport::SetOutput(ViewportOutput output)

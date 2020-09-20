@@ -121,17 +121,18 @@ bool ModuleRender::Init()
 
 	APP_LOG_INFO("Glew initialized correctly.");
 
-	int scene_viewport_options = (int)Viewport::ViewportOption::SCENE_MODE | (int)Viewport::ViewportOption::BLIT_FRAMEBUFFER;
+	int scene_viewport_options = (int)Viewport::ViewportOption::RENDER_UI | (int)Viewport::ViewportOption::SCENE_MODE | (int)Viewport::ViewportOption::BLIT_FRAMEBUFFER;
 	scene_viewport = new Viewport(scene_viewport_options);
 
-	int game_viewport_options = 0;
+	int game_viewport_options = (int)Viewport::ViewportOption::RENDER_UI;
 #if !GAME
-	game_viewport_options = (int)Viewport::ViewportOption::BLIT_FRAMEBUFFER;
+	game_viewport_options |= (int)Viewport::ViewportOption::BLIT_FRAMEBUFFER;
 #endif
 	game_viewport = new Viewport(game_viewport_options);
 
 	SetAntialiasing(antialiasing);
 	SetHDR(hdr);
+	SetBloom(bloom);
 
 	return true;
 }
@@ -253,21 +254,36 @@ void ModuleRender::SetDrawMode(DrawMode draw_mode)
 void ModuleRender::SetAntialiasing(bool antialiasing)
 {
 	this->antialiasing = antialiasing;
+#if !GAME
 	scene_viewport->SetAntialiasing(antialiasing);
+#endif
 	game_viewport->SetAntialiasing(antialiasing);
 }
 
 void ModuleRender::SetHDR(bool hdr)
 {
 	this->hdr = hdr;
+#if !GAME
 	scene_viewport->SetHDR(hdr);
+#endif
 	game_viewport->SetHDR(hdr);
+}
+
+void ModuleRender::SetBloom(bool bloom)
+{
+	this->bloom = bloom;
+#if !GAME
+	scene_viewport->SetBloom(bloom);
+#endif
+	game_viewport->SetBloom(bloom);
 }
 
 void ModuleRender::SetShadows(bool shadows_enabled)
 {
 	this->shadows_enabled = shadows_enabled;
+#if !GAME
 	scene_viewport->shadows_pass = shadows_enabled;
+#endif
 	game_viewport->shadows_pass = shadows_enabled;
 }
 
