@@ -32,13 +32,16 @@ void main()
 
 #if ENABLE_BLOOM
   vec4 brightness_color = texture(brightness_texture, texCoord);
-  fragment_color = brightness_color;
+  fragment_color += brightness_color;
 #endif
 
 #if ENABLE_HDR
   fragment_color.rgb = ToneMapping(fragment_color.rgb);
 #endif
-  FragColor = vec4(pow(fragment_color.rgb, vec3(1.0 / gamma)), 1.0);
+
+  FragColor.rgb = fragment_color.rgb;
+  FragColor.rgb = pow(FragColor.rgb, vec3(1 / gamma));
+  FragColor.a = 1.0;
 }
 
 vec3 ToneMapping(vec3 color)

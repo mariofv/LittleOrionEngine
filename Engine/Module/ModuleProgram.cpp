@@ -150,7 +150,8 @@ bool ModuleProgram::InitFragmentShader(GLuint &fragment_shader, const std::strin
 	Path* fragment_shader_path = App->filesystem->GetPath(fragment_shader_file_name.c_str());
 	FileData fragment_shader_path_data = fragment_shader_path->GetFile()->Load();
 
-	char* fragment_shader_loaded_file = (char*)fragment_shader_path_data.buffer;	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+	char* fragment_shader_loaded_file = (char*)fragment_shader_path_data.buffer;
+	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	if (fragment_shader == 0) {
 		OPENGL_LOG_ERROR("Error creating fragment shader %s", fragment_shader_file_name.c_str());
 		return false;

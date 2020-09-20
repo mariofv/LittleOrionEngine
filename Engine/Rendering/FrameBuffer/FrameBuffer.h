@@ -24,7 +24,6 @@ public:
 	) const;
 
 	void SetMultiSampled(bool multisampled);
-	void SetFloatingPoint(bool floating_point);
 
 private:
 	void GenerateColorAttachement(float width, float height);
@@ -38,7 +37,6 @@ protected:
 
 	int num_color_attachements = 1;
 	bool multisampled = false;
-	bool floating_point = false;
 };
 
 #endif //_FRAMEBUFFER_H_

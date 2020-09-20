@@ -361,8 +361,8 @@ void Viewport::BloomPass()
 void Viewport::HDRPass() const
 {
 	postprocess_fbo->Bind();
-	glClearColor(0.f, 0.f, 0.f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	postprocess_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 	int shader_variation = 0;
 	if (antialiasing)
@@ -484,18 +484,6 @@ void Viewport::SetAntialiasing(bool antialiasing)
 void Viewport::SetHDR(bool hdr)
 {
 	this->hdr = hdr;
-
-	main_fbo->SetFloatingPoint(hdr);
-	main_fbo->ClearAttachements();
-	main_fbo->GenerateAttachements(width, height);
-
-	ping_fbo->SetFloatingPoint(hdr);
-	ping_fbo->ClearAttachements();
-	ping_fbo->GenerateAttachements(width, height);
-
-	pong_fbo->SetFloatingPoint(hdr);
-	pong_fbo->ClearAttachements();
-	pong_fbo->GenerateAttachements(width, height);
 }
 
 void Viewport::SetOutput(ViewportOutput output)

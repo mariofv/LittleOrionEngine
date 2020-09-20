@@ -63,15 +63,7 @@ void FrameBuffer::GenerateColorAttachement(float width, float height)
 	glGenTextures(num_color_attachements, &color_attachements[0]);
 	for (size_t i = 0; i < num_color_attachements; ++i)
 	{
-		if (multisampled && !floating_point)
-		{
-			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color_attachements[i]);
-			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA, width, height, GL_TRUE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-		}
-		else if (multisampled && floating_point)
+		if (multisampled)
 		{
 			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color_attachements[i]);
 			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA16F, width, height, GL_TRUE);
@@ -79,18 +71,10 @@ void FrameBuffer::GenerateColorAttachement(float width, float height)
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 		}
-		else if (!multisampled && floating_point)
+		else
 		{
 			glBindTexture(GL_TEXTURE_2D, color_attachements[i]);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glBindTexture(GL_TEXTURE_2D, 0);
-		}
-		else if (!multisampled && !floating_point)
-		{
-			glBindTexture(GL_TEXTURE_2D, color_attachements[i]);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glBindTexture(GL_TEXTURE_2D, 0);
@@ -135,9 +119,4 @@ void FrameBuffer::LinkAttachements() const
 void FrameBuffer::SetMultiSampled(bool multisampled)
 {
 	this->multisampled = multisampled;
-}
-
-void FrameBuffer::SetFloatingPoint(bool floating_point)
-{
-	this->floating_point = floating_point;
 }
