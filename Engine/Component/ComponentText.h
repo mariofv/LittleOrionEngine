@@ -71,7 +71,7 @@ public:
 
 private:
 	GLuint program = 0;
-	GLuint vao, vbo;
+	GLuint vao, vbo, ebo;
 
 	float scale_factor = 0.f;
 	std::vector<float> line_sizes;
