@@ -16,13 +16,17 @@ struct Material
 {
 	sampler2D diffuse_map;
 	vec4 diffuse_color;
+
 	sampler2D specular_map;
 	vec4 specular_color;
 	float smoothness;
 
 	sampler2D occlusion_map;
+
 	sampler2D emissive_map;
 	vec4 emissive_color;
+	float emissive_intensity;
+
 	sampler2D normal_map;
 	sampler2D light_map;
 
@@ -105,9 +109,6 @@ uniform vec4 ambient_light_color;
 
 // LIGHTMAPS
 uniform int use_light_map;
-
-// BLOOM
-uniform float emissive_exposure;
 
 //////////////////////////////////
 ///////     FUNCTIONS    /////////
@@ -217,12 +218,7 @@ void main()
 	}
 	result += GetLightMapColor(material,texCoordLightmap) * use_light_map;
 	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
-
-#if ENABLE_BLOOM
-	result += emissive_color * emissive_exposure;
-#else
 	result += emissive_color;
-#endif
 
 	FragColor = vec4(result,1.0);
 
@@ -308,7 +304,7 @@ vec3 GetEmissiveColor(const Material mat, const vec2 texCoord)
 			result = texture(mat.emissive_map, texCoord);
 	#endif
 
-	result = result * mat.emissive_color;
+	result = result * mat.emissive_color * mat.emissive_intensity;
 	result.rgb = pow(result.rgb, vec3(2.2));
 	return result.rgb;
 }

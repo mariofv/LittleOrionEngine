@@ -337,7 +337,6 @@ void PanelConfiguration::ShowPostProcessingOptions()
 		if (App->renderer->bloom)
 		{
 			ImGui::DragInt("Amount of blur", &App->renderer->amount_of_blur, 1, 2, 20);
-			ImGui::DragFloat("Emmissive exposure", &App->renderer->emissive_exposure, 0.5f, 1.0f, 100.f);
 		}
 	}
 }

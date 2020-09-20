@@ -277,6 +277,7 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 		billboard->modified_by_user = true;
 	}
 	billboard->modified_by_user |= ImGui::ColorEdit4("Color Emissive", billboard->color_emissive);
+	billboard->modified_by_user |= ImGui::DragFloat("Emissive Intensity", &billboard->emissive_intensity, 0.01f, 1.f, 100.f);
 
 	int alignment_type = static_cast<int>(billboard->alignment_type);
 	if (ImGui::Combo("Billboard type", &alignment_type, "World\0View point\0Axial")) {
@@ -355,6 +356,7 @@ void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 		}
 		trail->modified_by_user |= ImGui::ColorEdit4("Color", trail->color.ptr());
 		trail->modified_by_user |= ImGui::Checkbox("Emissive", &trail->emissive);
+		trail->modified_by_user |= ImGui::DragFloat("Emissive Intensity", &trail->emissive_intensity, 0.01f, 1.f, 100.f);
 	}
 }
 

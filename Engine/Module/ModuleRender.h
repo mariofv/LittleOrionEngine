@@ -97,7 +97,6 @@ public:
 	bool cascade_debug = false;
 
 	bool bloom = false;
-	float emissive_exposure = 1.f;
 	int amount_of_blur = 20;
 
 	Viewport* scene_viewport = nullptr;

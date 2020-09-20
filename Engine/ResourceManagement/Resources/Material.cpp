@@ -78,7 +78,7 @@ void Material::Save(Config& config) const
 	config.AddString(shader_program, "ShaderProgram");
 
 	config.AddFloat(smoothness, "Smoothness");
-
+	config.AddFloat(emissive_intensity, "Emissive Intensity");
 	config.AddFloat(transparency, "Transparency");
 
 
@@ -111,7 +111,8 @@ void Material::Load(const Config& config)
 	material_type = static_cast<MaterialType>(config.GetInt("MaterialType", 0));
 
 	transparency = config.GetFloat("Transparency", 1.f);
-	smoothness = config.GetFloat("Smoothness", 1.0F);
+	smoothness = config.GetFloat("Smoothness", 1.f);
+	emissive_intensity = config.GetFloat("Emissive Intensity", 1.f);
 
 
 	config.GetFloat2("Tiling", tiling, float2::one);

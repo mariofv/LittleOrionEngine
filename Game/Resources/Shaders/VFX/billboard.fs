@@ -9,11 +9,9 @@ struct Billboard
   int num_rows;
   int current_sprite_x;
   int current_sprite_y;
-  int emissive_intensity;
+  float emissive_intensity;
 };
 uniform Billboard billboard;
-
-uniform float emissive_exposure;
 
 in vec2 texCoord;
 layout (location = 0) out vec4 FragColor;
@@ -23,7 +21,7 @@ void main()
 {
 	// Change to preprocessor directives
 		vec4 texture_color = texture(billboard.texture, texCoord)*billboard.color;
-		texture_color += texture(billboard.texture_emissive, texCoord)*billboard.color_emissive * billboard.emissive_intensity * emissive_exposure;
+		texture_color += texture(billboard.texture_emissive, texCoord)*billboard.color_emissive * billboard.emissive_intensity;
 		if(texture_color.a <0.1)
 		{
 			discard;

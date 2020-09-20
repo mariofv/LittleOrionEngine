@@ -86,7 +86,8 @@ public:
 	int current_sprite_y = 0;
 	float4 color = float4::one;
 	float color_emissive[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	int emissive_intensity = 1;
+	float emissive_intensity = 1.f;
+
 private:
 	GLuint shader_program;
 	GLuint vbo, vao, ebo;

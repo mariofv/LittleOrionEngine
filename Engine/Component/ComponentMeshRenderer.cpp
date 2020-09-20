@@ -145,7 +145,6 @@ GLuint ComponentMeshRenderer::BindDepthShaderProgram() const
 void ComponentMeshRenderer::BindMeshUniforms(GLuint shader_program) const
 {
 	glUniform1i(glGetUniformLocation(shader_program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
-	glUniform1f(glGetUniformLocation(shader_program, "emissive_exposure"), App->renderer->emissive_exposure);
 
 	if (palette.size() > 0)
 	{
@@ -163,7 +162,6 @@ void ComponentMeshRenderer::BindMaterialUniforms(GLuint shader_program) const
 {
 	BROFILER_CATEGORY("Render material", Profiler::Color::ForestGreen);
 	AddDiffuseUniforms(shader_program);
-	AddEmissiveUniforms(shader_program);
 	AddEmissiveUniforms(shader_program);
 	AddSpecularUniforms(shader_program);
 
@@ -213,6 +211,7 @@ void ComponentMeshRenderer::AddEmissiveUniforms(unsigned int shader_program) con
 	BindTexture(Material::MaterialTextureType::EMISSIVE);
 	glUniform1i(glGetUniformLocation(shader_program, "material.emissive_map"), 4);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.emissive_color"), 1, (float*)material_to_render->emissive_color);
+	glUniform1f(glGetUniformLocation(shader_program, "material.emissive_intensity"), material_to_render->emissive_intensity);
 }
 
 void ComponentMeshRenderer::AddSpecularUniforms(unsigned int shader_program) const
@@ -223,7 +222,6 @@ void ComponentMeshRenderer::AddSpecularUniforms(unsigned int shader_program) con
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 5);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)material_to_render->specular_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.smoothness"), material_to_render->smoothness);
-	
 }
 
 void ComponentMeshRenderer::AddAmbientOclusionUniforms(unsigned int shader_program) const
