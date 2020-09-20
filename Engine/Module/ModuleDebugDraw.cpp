@@ -381,7 +381,7 @@ private:
 }; // class IDebugDrawOpenGLImplementation
 
 
-IDebugDrawOpenGLImplementation* ModuleDebugDraw::dd_interface_implementation = 0; // TODO: Ask why this is needed
+IDebugDrawOpenGLImplementation* ModuleDebugDraw::dd_interface_implementation = 0;
 
 // Called before render is available
 bool ModuleDebugDraw::Init()
