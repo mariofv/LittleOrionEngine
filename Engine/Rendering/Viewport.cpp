@@ -327,15 +327,26 @@ void Viewport::BloomPass()
 	}
 
 	FrameBuffer* current_fbo = ping_fbo;
-	FrameBuffer* other_fbo = ping_fbo;
+	FrameBuffer* other_fbo = pong_fbo;
 
 	bool horizontal = true;
 	bool first_iteration = true;
+	
+	current_fbo->Bind();
+	current_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);
+	other_fbo->Bind();
+	other_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);
+	FrameBuffer::UnBind();
 
 	GLuint shader_program = App->program->UseProgram("Blur", 0);
 	for (unsigned int i = 0; i < App->renderer->amount_of_blur; i++)
 	{
 		current_fbo->Bind();
+		if (first_iteration)
+		{
+			ping_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);
+		}
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		glUniform1f(glGetUniformLocation(shader_program, "horizontal"), horizontal);
 
 		glActiveTexture(GL_TEXTURE0);
@@ -444,7 +455,7 @@ void Viewport::SelectDisplayedTexture()
 		break;
 
 	case ViewportOutput::BRIGHTNESS:
-		displayed_texture = main_fbo->GetColorAttachement(1);
+		displayed_texture = ping_pong_fbo->GetColorAttachement(0);
 		break;
 
 	case ViewportOutput::DEPTH_NEAR:
