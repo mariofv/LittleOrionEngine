@@ -115,10 +115,10 @@ void ComponentBillboard::ComputeAnimationFrame(float progress)
 {
 	num_sprites = num_sprisheet_columns * num_sprisheet_rows;
 
-	int current_sprite = math::FloorInt(progress * num_sprites);
+	int current_sprite = min(math::FloorInt(progress * num_sprites), num_sprites - 1);
 	current_sprite_x = current_sprite % num_sprisheet_columns;
-	current_sprite_y = (num_sprisheet_columns - 1) - current_sprite / num_sprisheet_columns;
-}
+	current_sprite_y =  (num_sprisheet_rows - 1) - math::FloorInt(current_sprite / num_sprisheet_columns);
+} 
 
 void ComponentBillboard::Play()
 {
@@ -371,6 +371,11 @@ unsigned int ComponentBillboard::GetBillboardVariation()
 void ComponentBillboard::SetOrientation(bool is_oriented)
 {
 	oriented_to_camera = is_oriented;
+}
+
+ENGINE_API void ComponentBillboard::SetAnimationTime(size_t time)
+{
+	animation_time = time;
 }
 
 void ComponentBillboard::Disable() 
