@@ -102,10 +102,6 @@ void PanelScene::RenderSceneBar()
 			{
 				App->renderer->SetDrawMode(ModuleRender::DrawMode::SHADED);
 			}
-			if (ImGui::MenuItem("Wireframe", NULL, draw_mode == "Wireframe"))
-			{
-				App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
-			}
 			if (ImGui::MenuItem("Brightness", NULL, draw_mode == "Brightness"))
 			{
 				App->renderer->SetDrawMode(ModuleRender::DrawMode::BRIGHTNESS);
@@ -129,10 +125,6 @@ void PanelScene::RenderSceneBar()
 					App->renderer->SetDrawMode(ModuleRender::DrawMode::DEPTH_FAR);
 				}
 				ImGui::EndMenu();
-			}
-			if (ImGui::MenuItem("Brightness", NULL, draw_mode == "Brightness"))
-			{
-				App->renderer->SetDrawMode(ModuleRender::DrawMode::BRIGHTNESS);
 			}
 
 			ImGui::EndMenu();

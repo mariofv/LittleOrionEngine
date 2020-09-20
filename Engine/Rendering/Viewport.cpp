@@ -34,6 +34,8 @@ Viewport::Viewport(int options) : viewport_options(options)
 	depth_near_fbo = new DepthFrameBuffer();
 	depth_mid_fbo = new DepthFrameBuffer();
 	depth_far_fbo = new DepthFrameBuffer();
+
+	SetOutput(ViewportOutput::COLOR);
 }
 
 Viewport::~Viewport()
@@ -216,7 +218,7 @@ void Viewport::PostProcessPass()
 
 void Viewport::BlitPass() const
 {
-	postprocess_fbo->Bind(GL_READ_FRAMEBUFFER);
+	source_fbo->Bind(GL_READ_FRAMEBUFFER);
 
 	if (IsOptionSet(ViewportOption::BLIT_FRAMEBUFFER))
 	{
@@ -239,7 +241,6 @@ void Viewport::DebugPass() const
 	}
 
 	App->debug->Render();
-
 }
 
 void Viewport::DebugDrawPass() const
@@ -451,35 +452,7 @@ void Viewport::SetSize(float width, float height)
 
 void Viewport::SelectDisplayedTexture()
 {
-	switch (viewport_output)
-	{
-	case ViewportOutput::COLOR:
-		displayed_texture = blit_fbo->GetColorAttachement();
-		break;
-
-	case ViewportOutput::BRIGHTNESS:
-		displayed_texture = ping_pong_fbo->GetColorAttachement(0);
-		break;
-
-	case ViewportOutput::DEPTH_NEAR:
-		displayed_texture = depth_near_fbo->GetColorAttachement();
-		break;
-
-	case ViewportOutput::DEPTH_MID:
-		displayed_texture = depth_mid_fbo->GetColorAttachement();
-		break;
-
-	case ViewportOutput::DEPTH_FAR:
-		displayed_texture = depth_far_fbo->GetColorAttachement();
-		break;
-
-	case ViewportOutput::DEPTH_FULL:
-		displayed_texture = depth_full_fbo->GetColorAttachement();
-		break;
-
-	default:
-		break;
-	}
+	displayed_texture = blit_fbo->GetColorAttachement();
 }
 
 bool Viewport::IsOptionSet(ViewportOption option) const
@@ -503,4 +476,34 @@ void Viewport::SetHDR(bool hdr)
 void Viewport::SetOutput(ViewportOutput output)
 {
 	viewport_output = output;
+	switch (viewport_output)
+	{
+	case Viewport::ViewportOutput::COLOR:
+		source_fbo = postprocess_fbo;
+		break;
+
+	case Viewport::ViewportOutput::BRIGHTNESS:
+		source_fbo = ping_pong_fbo;
+		break;
+
+	case Viewport::ViewportOutput::DEPTH_NEAR:
+		source_fbo = depth_near_fbo;
+		break;
+
+	case Viewport::ViewportOutput::DEPTH_MID:
+		source_fbo = depth_mid_fbo;
+		break;
+
+	case Viewport::ViewportOutput::DEPTH_FAR:
+		source_fbo = depth_far_fbo;
+		break;
+
+	case Viewport::ViewportOutput::DEPTH_FULL:
+		source_fbo = depth_full_fbo;
+		break;
+
+	default:
+		source_fbo = nullptr;
+		break;
+	}
 }

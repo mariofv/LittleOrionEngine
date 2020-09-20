@@ -71,12 +71,13 @@ public:
 
 	std::vector<FrameBuffer*> framebuffers;
 	FrameBuffer* main_fbo = nullptr;
+	FrameBuffer* postprocess_fbo = nullptr;
 
 	FrameBuffer* ping_fbo = nullptr;
 	FrameBuffer* pong_fbo = nullptr;
 	FrameBuffer* ping_pong_fbo = nullptr;
 
-	FrameBuffer* postprocess_fbo = nullptr;
+	FrameBuffer* source_fbo = nullptr;
 	FrameBuffer* blit_fbo = nullptr;
 
 	FrameBuffer* depth_full_fbo = nullptr;
