@@ -389,7 +389,8 @@ void PanelScene::RenderDebugMetrics() const
 	}
 
 	ImGui::Text("FPS: %f.2", App->time->GetFPS());
-	ImGui::Text("Tris: %d", App->renderer->GetRenderedTris());
+	ImGui::Text("Triangles: %d", App->renderer->scene_viewport->num_rendered_triangles);
+	ImGui::Text("Vertices: %d", App->renderer->scene_viewport->num_rendered_vertices);
 
 	ImGui::EndChild();
 }

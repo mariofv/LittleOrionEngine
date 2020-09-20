@@ -89,6 +89,9 @@ public:
 	bool debug_pass = true;
 	bool debug_draw_pass = true;
 
+	mutable int num_rendered_triangles = 0;
+	mutable int num_rendered_vertices = 0;
+
 private:
 	ComponentCamera* camera = nullptr;
 	std::vector<ComponentMeshRenderer*> culled_mesh_renderers;

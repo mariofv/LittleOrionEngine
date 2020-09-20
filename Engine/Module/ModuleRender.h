@@ -118,10 +118,6 @@ private:
 	DrawMode draw_mode = DrawMode::SHADED;
 	HDRType hdr_type = HDRType::FILMIC;
 
-	int num_rendered_tris = 0;
-	int num_rendered_verts = 0; // TODO: Recalculate this
-	Timer * rendering_measure_timer = new Timer();
-
 	friend class ModuleDebugDraw;
 	friend class ModuleDebug;
 	friend class ModuleSpacePartitioning;

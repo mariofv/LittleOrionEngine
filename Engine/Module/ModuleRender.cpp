@@ -148,7 +148,6 @@ update_status ModuleRender::PreUpdate()
 bool ModuleRender::CleanUp()
 {
 	APP_LOG_INFO("Destroying renderer");
-	delete rendering_measure_timer;
 	for (auto& mesh : mesh_renderers)
 	{
 		mesh->owner->RemoveComponent(mesh);
@@ -383,12 +382,12 @@ RaycastHit* ModuleRender::GetRaycastIntersection(const LineSegment& ray, const C
 
 int ModuleRender::GetRenderedTris() const
 {
-	return num_rendered_tris;
+	return game_viewport->num_rendered_triangles;
 }
 
 int ModuleRender::GetRenderedVerts() const
 {
-	return num_rendered_verts;
+	return game_viewport->num_rendered_vertices;
 }
 
 void ModuleRender::SetHDRType(const HDRType type)

@@ -133,6 +133,9 @@ void Viewport::MeshRenderPass() const
 	static GLenum attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
 	glDrawBuffers(2, attachments);
 
+	num_rendered_triangles = 0;
+	num_rendered_vertices = 0;
+
 	float3 camera_position = camera->owner->transform.GetGlobalTranslation();
 
 	std::vector<Utils::MeshRendererDistancePair> opaque_mesh_renderers;
@@ -152,10 +155,10 @@ void Viewport::MeshRenderPass() const
 			BindDepthMaps(mesh_renderer_program);
 			App->lights->Render(opaque_mesh_renderer.mesh_renderer->owner->transform.GetGlobalTranslation(), mesh_renderer_program);
 			opaque_mesh_renderer.mesh_renderer->RenderModel();
-			/*
-			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
-			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
-			*/
+
+			num_rendered_triangles += opaque_mesh_renderer.mesh_renderer->mesh_to_render->GetNumTriangles();
+			num_rendered_vertices += opaque_mesh_renderer.mesh_renderer->mesh_to_render->GetNumVerts();
+
 			glUseProgram(0);
 		}
 	}
@@ -175,10 +178,10 @@ void Viewport::MeshRenderPass() const
 			BindDepthMaps(mesh_renderer_program);
 			App->lights->Render(transparent_mesh_renderer.mesh_renderer->owner->transform.GetGlobalTranslation(), mesh_renderer_program);
 			transparent_mesh_renderer.mesh_renderer->RenderModel();
-			/*
-			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
-			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
-			*/
+
+			num_rendered_triangles += transparent_mesh_renderer.mesh_renderer->mesh_to_render->GetNumTriangles();
+			num_rendered_vertices += transparent_mesh_renderer.mesh_renderer->mesh_to_render->GetNumVerts();
+
 			glUseProgram(0);
 		}
 	}
