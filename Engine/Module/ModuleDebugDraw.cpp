@@ -628,6 +628,8 @@ void ModuleDebugDraw::RenderOutline() const
 			{
 				return;
 			}
+
+			glDrawBuffer(0);
 			glEnable(GL_STENCIL_TEST);
 			glStencilFunc(GL_ALWAYS, 1, 0xFF);
 			glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
@@ -664,7 +666,7 @@ void ModuleDebugDraw::RenderOutline() const
 			ModuleRender::DrawMode last_draw_mode = App->renderer->draw_mode;
 			App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
 			glLineWidth(15.f);
-
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
 			glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 			glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), selected_game_object->transform.GetGlobalModelMatrix().Transposed().ptr());
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
