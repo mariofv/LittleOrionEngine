@@ -84,11 +84,10 @@ private:
 	void SetHDRType(const HDRType type);
 	std::string GetHDRType(const HDRType type) const;
 
-	void RenderPostProcessingEffects(const ComponentCamera &camera);
 	std::string GetDrawMode() const;
 
 public:
-	bool antialiasing = true;
+	bool antialiasing = false;
 
 	bool hdr = true;
 	float exposure = 0.5f;

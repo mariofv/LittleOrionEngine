@@ -47,7 +47,7 @@ public:
 	Component* Clone(GameObject* owner, bool original_prefab) override;
 	void CopyTo(Component* component_to_copy) const override;
 
-	void Clear() const;
+	bool HasSkybox() const;
 
 	void SetFOV(float fov);
 	void SetAspectRatio(float aspect_ratio);
@@ -132,7 +132,7 @@ public:
 
 	const float CAMERA_ROTATION_SPEED = 0.000625f;
 
-	float camera_clear_color[3] = {0.0f, 0.0f, 0.0f};
+	float3 camera_clear_color = float3::zero;
 	int depth = 0;
 
 	float4x4 proj;

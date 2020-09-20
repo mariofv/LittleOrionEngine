@@ -25,6 +25,8 @@ Viewport::Viewport(int options) : viewport_options(options)
 	scene_quad = new Quad(2.f);
 
 	framebuffers.emplace_back(main_fbo = new FrameBuffer(2));
+	framebuffers.emplace_back(ping_fbo = new FrameBuffer());
+	framebuffers.emplace_back(pong_fbo = new FrameBuffer());
 	framebuffers.emplace_back(postprocess_fbo = new FrameBuffer());
 	framebuffers.emplace_back(blit_fbo = new FrameBuffer());
 
@@ -64,8 +66,8 @@ void Viewport::Render(ComponentCamera* camera)
 	MeshRenderPass();
 	EffectsRenderPass();
 	DebugPass();
-	DebugDrawPass();
 	EditorDrawPass();
+	DebugDrawPass();
 	PostProcessPass();
 	UIRenderPass();
 	BlitPass();
@@ -119,7 +121,17 @@ void Viewport::LightCameraPass() const
 void Viewport::MeshRenderPass() const
 {
 	main_fbo->Bind();
-	camera->Clear();
+	main_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0, camera->camera_clear_color);
+	main_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT1);
+
+	if (camera->HasSkybox())
+	{
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+		SkyboxPass();
+	}
+
+	static GLenum attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(2, attachments);
 
 	float3 camera_position = camera->owner->transform.GetGlobalTranslation();
 
@@ -193,52 +205,10 @@ void Viewport::UIRenderPass() const
 	FrameBuffer::UnBind();
 }
 
-void Viewport::PostProcessPass() const
+void Viewport::PostProcessPass()
 {
-	postprocess_fbo->Bind();
-	glClearColor(0.f, 0.f, 0.f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-	int shader_variation = 0;
-	if (antialiasing)
-	{
-		shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_MSAA;
-	}
-	if (hdr)
-	{
-		shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_HDR;
-		switch (App->renderer->hdr_type)
-		{
-		case ModuleRender::HDRType::REINHARD:
-			shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_HDR;
-			break;
-
-		case ModuleRender::HDRType::FILMIC:
-			shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_FILMIC;
-			break;
-
-		case ModuleRender::HDRType::EXPOSURE:
-			shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_EXPOSURE;
-			break;
-		}
-	}
-	GLuint program = App->program->UseProgram("PostProcessing", shader_variation);
-	
-	glActiveTexture(GL_TEXTURE0);
-	if (antialiasing)
-	{
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, main_fbo->GetColorAttachement());
-	}
-	else
-	{
-		glBindTexture(GL_TEXTURE_2D, main_fbo->GetColorAttachement());
-	}
-	glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
-	glUniform1f(glGetUniformLocation(program, "exposure"), App->renderer->exposure);
-
-	scene_quad->Render();
-
-	FrameBuffer::UnBind();
+	BloomPass();
+	HDRPass();
 }
 
 void Viewport::BlitPass() const
@@ -277,6 +247,8 @@ void Viewport::DebugDrawPass() const
 	}
 
 	main_fbo->Bind();
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
 	App->debug_draw->Render(width, height, camera->GetProjectionMatrix() * camera->GetViewMatrix());
 	FrameBuffer::UnBind();
 }
@@ -289,6 +261,9 @@ void Viewport::EditorDrawPass() const
 	}
 
 	main_fbo->Bind();
+	unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
+	glDrawBuffers(1, attachments);
+
 	App->debug_draw->RenderGrid();
 	if (App->debug->show_navmesh)
 	{
@@ -299,6 +274,147 @@ void Viewport::EditorDrawPass() const
 	{
 		App->debug_draw->RenderOutline();
 	}
+	FrameBuffer::UnBind();
+}
+
+
+void Viewport::SkyboxPass() const
+{
+	App->cameras->world_skybox->Render(*camera);
+}
+
+void Viewport::DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo) const
+{
+	depth_fbo->ClearAttachements();
+	depth_fbo->GenerateAttachements(width, height);
+
+	light_frustum->RenderMeshRenderersAABB();
+	light_frustum->RenderLightFrustum();
+
+	depth_fbo->Bind();
+	BindCameraFrustumMatrices(light_frustum->light_orthogonal_frustum);
+
+	depth_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);;
+	glViewport(0, 0, width, height);
+
+	std::vector<ComponentMeshRenderer*> culled_shadow_casters = App->space_partitioning->GetCullingMeshes(
+		App->cameras->main_camera,
+		App->renderer->mesh_renderers,
+		ComponentMeshRenderer::MeshProperties::SHADOW_CASTER
+	);
+
+	for (ComponentMeshRenderer* culled_shadow_caster : culled_shadow_casters)
+	{
+		if (
+			culled_shadow_caster->mesh_to_render != nullptr
+			&& culled_shadow_caster->material_to_render != nullptr
+			&& culled_shadow_caster->IsEnabled()
+			) {
+			GLuint mesh_renderer_program = culled_shadow_caster->BindDepthShaderProgram();
+			culled_shadow_caster->BindMeshUniforms(mesh_renderer_program);
+			culled_shadow_caster->RenderModel();
+			glUseProgram(0);
+		}
+	}
+	FrameBuffer::UnBind();
+}
+
+void Viewport::BloomPass()
+{
+	if (!App->renderer->bloom)
+	{
+		return;
+	}
+
+	FrameBuffer* current_fbo = ping_fbo;
+	FrameBuffer* other_fbo = ping_fbo;
+
+	bool horizontal = true;
+	bool first_iteration = true;
+
+	GLuint shader_program = App->program->UseProgram("Blur", 0);
+	for (unsigned int i = 0; i < App->renderer->amount_of_blur; i++)
+	{
+		current_fbo->Bind();
+		glUniform1f(glGetUniformLocation(shader_program, "horizontal"), horizontal);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, first_iteration ? main_fbo->GetColorAttachement(1) : other_fbo->GetColorAttachement());
+		glUniform1i(glGetUniformLocation(shader_program, "image"), 0);
+
+		scene_quad->Render();
+
+		horizontal = !horizontal;
+		std::swap(current_fbo, other_fbo);
+		if (first_iteration)
+		{
+			first_iteration = false;
+		}
+	}
+
+	glUseProgram(0);
+	FrameBuffer::UnBind();
+
+	ping_pong_fbo = other_fbo;
+}
+
+void Viewport::HDRPass() const
+{
+	postprocess_fbo->Bind();
+	glClearColor(0.f, 0.f, 0.f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+	int shader_variation = 0;
+	if (antialiasing)
+	{
+		shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_MSAA;
+	}
+	if (hdr)
+	{
+		shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_HDR;
+		switch (App->renderer->hdr_type)
+		{
+		case ModuleRender::HDRType::REINHARD:
+			shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_HDR;
+			break;
+
+		case ModuleRender::HDRType::FILMIC:
+			shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_FILMIC;
+			break;
+
+		case ModuleRender::HDRType::EXPOSURE:
+			shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_EXPOSURE;
+			break;
+		}
+	}
+	if (App->renderer->bloom)
+	{
+		shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_BLOOM;
+	}
+	GLuint program = App->program->UseProgram("PostProcessing", shader_variation);
+
+	glActiveTexture(GL_TEXTURE0);
+	if (antialiasing)
+	{
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, main_fbo->GetColorAttachement());
+	}
+	else
+	{
+		glBindTexture(GL_TEXTURE_2D, main_fbo->GetColorAttachement());
+	}
+	glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
+	glUniform1f(glGetUniformLocation(program, "exposure"), App->renderer->exposure);
+
+	if (App->renderer->bloom)
+	{
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, ping_pong_fbo->GetColorAttachement());
+		glUniform1i(glGetUniformLocation(program, "brightness_texture"), 1);
+	}
+
+	scene_quad->Render();
+
+	glUseProgram(0);
 	FrameBuffer::UnBind();
 }
 
@@ -324,27 +440,27 @@ void Viewport::SelectDisplayedTexture()
 	switch (viewport_output)
 	{
 	case ViewportOutput::COLOR:
-		last_displayed_texture = blit_fbo->GetColorAttachement();
+		displayed_texture = blit_fbo->GetColorAttachement();
 		break;
 
 	case ViewportOutput::BRIGHTNESS:
-		last_displayed_texture = main_fbo->GetColorAttachement(1);
+		displayed_texture = main_fbo->GetColorAttachement(1);
 		break;
 
 	case ViewportOutput::DEPTH_NEAR:
-		last_displayed_texture = depth_near_fbo->GetColorAttachement();
+		displayed_texture = depth_near_fbo->GetColorAttachement();
 		break;
 
 	case ViewportOutput::DEPTH_MID:
-		last_displayed_texture = depth_mid_fbo->GetColorAttachement();
+		displayed_texture = depth_mid_fbo->GetColorAttachement();
 		break;
 
 	case ViewportOutput::DEPTH_FAR:
-		last_displayed_texture = depth_far_fbo->GetColorAttachement();
+		displayed_texture = depth_far_fbo->GetColorAttachement();
 		break;
 
 	case ViewportOutput::DEPTH_FULL:
-		last_displayed_texture = depth_full_fbo->GetColorAttachement();
+		displayed_texture = depth_full_fbo->GetColorAttachement();
 		break;
 
 	default:
@@ -355,42 +471,6 @@ void Viewport::SelectDisplayedTexture()
 bool Viewport::IsOptionSet(ViewportOption option) const
 {
 	return viewport_options & (int)option;
-}
-
-void Viewport::DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo) const
-{
-	depth_fbo->ClearAttachements();
-	depth_fbo->GenerateAttachements(width, height);
-
-	light_frustum->RenderMeshRenderersAABB();
-	light_frustum->RenderLightFrustum();
-
-	depth_fbo->Bind();
-	BindCameraFrustumMatrices(light_frustum->light_orthogonal_frustum);
-
-	App->cameras->main_camera->Clear();
-	glViewport(0, 0, width, height);
-
-	std::vector<ComponentMeshRenderer*> culled_shadow_casters = App->space_partitioning->GetCullingMeshes(
-		App->cameras->main_camera, 
-		App->renderer->mesh_renderers,
-		ComponentMeshRenderer::MeshProperties::SHADOW_CASTER
-	);
-
-	for (ComponentMeshRenderer* culled_shadow_caster : culled_shadow_casters)
-	{
-		if (
-			culled_shadow_caster->mesh_to_render != nullptr
-			&& culled_shadow_caster->material_to_render != nullptr
-			&& culled_shadow_caster->IsEnabled()
-		) {
-			GLuint mesh_renderer_program = culled_shadow_caster->BindDepthShaderProgram();
-			culled_shadow_caster->BindMeshUniforms(mesh_renderer_program);
-			culled_shadow_caster->RenderModel();
-			glUseProgram(0);
-		}
-	}
-	FrameBuffer::UnBind();
 }
 
 void Viewport::SetAntialiasing(bool antialiasing)
@@ -404,9 +484,18 @@ void Viewport::SetAntialiasing(bool antialiasing)
 void Viewport::SetHDR(bool hdr)
 {
 	this->hdr = hdr;
+
 	main_fbo->SetFloatingPoint(hdr);
 	main_fbo->ClearAttachements();
 	main_fbo->GenerateAttachements(width, height);
+
+	ping_fbo->SetFloatingPoint(hdr);
+	ping_fbo->ClearAttachements();
+	ping_fbo->GenerateAttachements(width, height);
+
+	pong_fbo->SetFloatingPoint(hdr);
+	pong_fbo->ClearAttachements();
+	pong_fbo->GenerateAttachements(width, height);
 }
 
 void Viewport::SetOutput(ViewportOutput output)

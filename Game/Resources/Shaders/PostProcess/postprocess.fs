@@ -6,6 +6,7 @@ uniform sampler2DMS screen_texture;
 #else
 uniform sampler2D screen_texture;
 #endif
+uniform sampler2D brightness_texture;
 
 uniform float exposure;
 
@@ -27,6 +28,11 @@ void main()
   vec4 fragment_color = (sample1 + sample2 + sample3 + sample4) / 4.0f;
 #else
   vec4 fragment_color = texture(screen_texture, texCoord);
+#endif
+
+#if ENABLE_BLOOM
+  vec4 brightness_color = texture(brightness_texture, texCoord);
+  fragment_color = brightness_color;
 #endif
 
 #if ENABLE_HDR

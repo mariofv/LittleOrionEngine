@@ -37,7 +37,7 @@ ComponentCamera & ComponentCamera::operator=(const ComponentCamera & component_t
 	this->camera_frustum = component_to_copy.camera_frustum;
 
 	this->camera_clear_mode = component_to_copy.camera_clear_mode;
-	memcpy(camera_clear_color, component_to_copy.camera_clear_color,3 * sizeof(float));
+	this->camera_clear_color, component_to_copy.camera_clear_color;
 	this->depth = component_to_copy.depth;
 	this->camera_movement_speed = component_to_copy.camera_movement_speed;
 	this->speed_up = component_to_copy.speed_up;
@@ -70,33 +70,16 @@ void ComponentCamera::CopyTo(Component* component_to_copy) const
 	*static_cast<ComponentCamera*>(component_to_copy) = *this;
 }
 
-void ComponentCamera::Clear() const
+bool ComponentCamera::HasSkybox() const
 {
-	switch (camera_clear_mode)
+	return camera_clear_mode == ClearMode::SKYBOX;
+	
+	/*
+	if (skybox_uuid != 0 && camera_skybox)
 	{
-	case ComponentCamera::ClearMode::COLOR:
-		glClearColor(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f);
-		glStencilMask(0xFF);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-		glClearColor(0.f, 0.f, 0.f, 1.f);
-		break;
-
-	case ComponentCamera::ClearMode::SKYBOX:
-		glStencilMask(0xFF);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-		if (skybox_uuid != 0 && camera_skybox)
-		{
-			camera_skybox->Render(*this);
-		}
-		else
-		{
-			App->cameras->world_skybox->Render(*this);
-		}
-		break;
-
-	default:
-		break;
+		camera_skybox->Render(*this);
 	}
+	*/
 }
 
 ComponentCamera::~ComponentCamera()
@@ -149,7 +132,7 @@ void ComponentCamera::SpecializedSave(Config& config) const
 	config.AddFloat(camera_frustum.farPlaneDistance, "FarPlaneDistance");
 	config.AddFloat(camera_frustum.verticalFov, "VerticalFOV");
 	config.AddUInt((uint64_t)camera_clear_mode, "ClearMode");
-	config.AddColor(float4(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f), "ClearColor");
+	config.AddFloat3(camera_clear_color, "Clear Color");
 	config.AddInt(depth, "Depth");
 
 	config.AddUInt(skybox_uuid, "Skybox");
@@ -186,12 +169,8 @@ void ComponentCamera::SpecializedLoad(const Config& config)
 		break;
 	}
 
-	float4 clear_color;
-	config.GetColor("ClearColor", clear_color, float4(0.f, 0.f, 0.f, 1.f));
-	camera_clear_color[0] = clear_color.x;
-	camera_clear_color[1] = clear_color.y;
-	camera_clear_color[2] = clear_color.z;
-
+	config.GetFloat3("Clear Color", camera_clear_color, float3::zero);
+	
 	depth = config.GetInt("Depth", 0);
 
 	skybox_uuid = config.GetUInt32("Skybox", 0);

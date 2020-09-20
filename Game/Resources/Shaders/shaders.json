@@ -79,21 +79,9 @@
       "Selectable": false
     },
     {
-      "Name": "HDR",
-      "Vertex": "/Resources/Shaders/PostProcess/hdr.vs",
-      "Fragment": "/Resources/Shaders/PostProcess/hdr.fs",
-      "Selectable": false
-    },
-    {
       "Name": "Blur",
-      "Vertex": "/Resources/Shaders/PostProcess/blur_effect.vs",
+      "Vertex": "/Resources/Shaders/Editor/quad.vs",
       "Fragment": "/Resources/Shaders/PostProcess/blur_effect.fs",
-      "Selectable": false
-    },
-    {
-      "Name": "Bloom",
-      "Vertex": "/Resources/Shaders/PostProcess/bloom.vs",
-      "Fragment": "/Resources/Shaders/PostProcess/bloom.fs",
       "Selectable": false
     },
     {

@@ -50,7 +50,7 @@ private:
 	void MeshRenderPass() const;
 	void EffectsRenderPass() const;
 	void UIRenderPass() const;
-	void PostProcessPass() const;
+	void PostProcessPass();
 	void BlitPass() const;
 	void DebugPass() const;
 	void DebugDrawPass() const;
@@ -59,15 +59,23 @@ private:
 	void SelectDisplayedTexture();
 	bool IsOptionSet(ViewportOption option) const;
 
+	void SkyboxPass() const;
 	void DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo) const;
+	void BloomPass();
+	void HDRPass() const;
 
 public:
-	GLuint last_displayed_texture = 0;
+	GLuint displayed_texture = 0;
 	ViewportOutput viewport_output = ViewportOutput::COLOR;
 	Quad* scene_quad = nullptr;
 
 	std::vector<FrameBuffer*> framebuffers;
 	FrameBuffer* main_fbo = nullptr;
+
+	FrameBuffer* ping_fbo = nullptr;
+	FrameBuffer* pong_fbo = nullptr;
+	FrameBuffer* ping_pong_fbo = nullptr;
+
 	FrameBuffer* postprocess_fbo = nullptr;
 	FrameBuffer* blit_fbo = nullptr;
 
@@ -94,12 +102,3 @@ private:
 };
 
 #endif //_VIEWPORT_H_
-
-/* 
-
-CURRENT RENDERING PIPELINE
-/------------------------/
-MESHES -> EFFECTS -> UI -> POST_PROCESS -> DEBUG_DRAWS -> EDITOR DRAWS
-
-*/
-

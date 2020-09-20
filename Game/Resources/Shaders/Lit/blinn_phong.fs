@@ -232,7 +232,7 @@ void main()
 
 	FragColor.a = material.transparency;
 
-	float brightness = dot(result, vec3(0.2126, 0.7152, 0.0722));
+	float brightness = dot(result, vec3(0.2, 0.6, 0.0));
   if (brightness > 1.0)
 	{
   	BrightColor = vec4(result, 1.0);
@@ -241,8 +241,6 @@ void main()
 	{
     BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
 	}
-
-	BrightColor = vec4(result, 1.0);
 }
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)

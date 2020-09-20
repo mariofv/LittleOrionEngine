@@ -174,7 +174,7 @@ void Scene::Load(bool from_file)
 	App->lights->ambient_light_color[3] = ambiental_light_color.w;
 
 	App->renderer->hdr = scene_config.GetBool("HDR", true);
-	App->renderer->bloom = scene_config.GetBool("Bloom", false);
+	App->renderer->bloom = scene_config.GetBool("Bloom", true);
 	App->renderer->amount_of_blur = scene_config.GetInt("Amount of Blur", 10);
 	App->renderer->exposure = scene_config.GetFloat("Exposure", 0.5f);
 	App->renderer->emissive_exposure = scene_config.GetFloat("Exposure of Bloom", 1.5f);

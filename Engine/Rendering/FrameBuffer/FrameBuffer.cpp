@@ -49,6 +49,15 @@ GLuint FrameBuffer::GetColorAttachement(int index) const
 	return color_attachements[index];
 }
 
+void FrameBuffer::ClearColorAttachement(GLenum color_attachement, const float3& clear_color, GLbitfield mask) const
+{
+	glDrawBuffer(color_attachement);
+	glClearColor(clear_color.x, clear_color.y, clear_color.z, 1.0f);
+	glStencilMask(0xFF);
+	glClear(mask);
+	glDrawBuffer(0);
+}
+
 void FrameBuffer::GenerateColorAttachement(float width, float height)
 {
 	glGenTextures(num_color_attachements, &color_attachements[0]);
@@ -119,9 +128,6 @@ void FrameBuffer::LinkAttachements() const
 		}
 	}
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-
-	unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-	glDrawBuffers(2, attachments);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

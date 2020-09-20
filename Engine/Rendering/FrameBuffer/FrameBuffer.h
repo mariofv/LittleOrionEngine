@@ -2,6 +2,7 @@
 #define _FRAMEBUFFER_H_
 
 #include <GL/glew.h>
+#include <MathGeoLib/MathGeoLib.h>
 
 class FrameBuffer
 {
@@ -16,6 +17,11 @@ public:
 	static void UnBind(GLenum target = GL_FRAMEBUFFER);
 
 	GLuint GetColorAttachement(int index = 0) const;
+	void ClearColorAttachement(
+		GLenum color_attachement, 
+		const float3& clear_color = float3::zero, 
+		GLbitfield mask = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT
+	) const;
 
 	void SetMultiSampled(bool multisampled);
 	void SetFloatingPoint(bool floating_point);

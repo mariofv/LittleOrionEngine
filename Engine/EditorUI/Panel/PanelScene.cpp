@@ -66,7 +66,7 @@ void PanelScene::Render()
 		App->renderer->scene_viewport->Render(App->cameras->scene_camera);
 
 		ImGui::Image(
-			(void *)App->renderer->scene_viewport->last_displayed_texture,
+			(void *)App->renderer->scene_viewport->displayed_texture,
 			ImVec2(scene_window_content_area_width, scene_window_content_area_height),
 			ImVec2(0, 1),
 			ImVec2(1, 0)

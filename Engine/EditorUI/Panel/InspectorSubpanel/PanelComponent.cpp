@@ -432,7 +432,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 				break;
 			}
 		}
-		camera->modified_by_user |= ImGui::ColorEdit3("Clear Color", camera->camera_clear_color);
+		camera->modified_by_user |= ImGui::ColorEdit3("Clear Color", camera->camera_clear_color.ptr());
 		ImGui::Separator();
 
 		if (ImGui::DragFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0.01f, 0, 100))
