@@ -251,7 +251,6 @@ void ModuleScene::InitDuplicatedScripts(GameObject* clone_go)
 	}
 }
 
-
 GameObject* ModuleScene::GetRoot() const
 {
 	return root;
@@ -278,7 +277,7 @@ GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 	return nullptr;
 }
 
-GameObject* ModuleScene::GetGameObjectByName(const std::string & go_name) const
+GameObject* ModuleScene::GetGameObjectByName(const std::string& go_name) const
 {
 	APP_LOG_INFO("Getting game object %s", go_name.c_str());
 	APP_LOG_INFO("%d", game_objects_ownership.size())
@@ -317,11 +316,27 @@ std::vector<GameObject*> ModuleScene::GetGameObjectsWithTag(const std::string& t
 			returned_game_objects.push_back(game_object.get());
 		}
 	}
-
 	return returned_game_objects;
 }
 
-Component * ModuleScene::GetComponent(uint64_t UUID) const
+std::vector<GameObject*> ModuleScene::GetGameObjectsWithComponent(const Component::ComponentType component_type) const
+{
+	std::vector<GameObject*> returned_game_objects;
+	for (auto& game_object : game_objects_ownership)
+	{
+		for (auto& component : game_object->components)
+		{
+			if (component->type == component_type)
+			{
+				returned_game_objects.push_back(game_object.get());
+				break;
+			}
+		}
+	}
+	return returned_game_objects;
+}
+
+Component* ModuleScene::GetComponent(uint64_t UUID) const
 {
 	for (auto& game_object : game_objects_ownership)
 	{
