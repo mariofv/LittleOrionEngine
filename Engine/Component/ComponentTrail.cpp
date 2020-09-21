@@ -93,10 +93,8 @@ void ComponentTrail::Update()
 	}
 	
 	auto it = test_points.begin();
-	unsigned int j = 0;
 	while (it != test_points.end())
 	{
-		j++;
 		if (it->life >= 0) // If life is positive, all good
 		{
 			it->is_rendered = true;
@@ -341,7 +339,6 @@ void ComponentTrail::SpecializedSave(Config& config) const
 {
 	config.AddFloat(width, "Width");
 	config.AddFloat(duration, "Duration");
-	config.AddFloat(min_distance, "Min_Distance");
 	config.AddUInt(texture_uuid, "TextureUUID");
 	config.AddColor(color, "Color");
 	config.AddFloat(bloom_intensity, "Bloom_Intensity");
@@ -354,7 +351,6 @@ void ComponentTrail::SpecializedLoad(const Config& config)
 {
 	width = config.GetFloat("Width", 0.1f);
 	duration = config.GetFloat("Duration", 1000.0f);
-	min_distance = config.GetFloat("Min_Distance", 1.0f);
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
 	texture_uuid = config.GetUInt("TextureUUID", 0);
