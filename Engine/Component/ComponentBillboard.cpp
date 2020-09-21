@@ -38,7 +38,7 @@ void ComponentBillboard::CleanUp()
 
 void ComponentBillboard::InitData()
 {
-	ChangeTexture(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
+	ChangeTexture(texture_uuid);
 	ChangeTextureEmissive(texture_emissive_uuid);
 	InitQuad();
 }
