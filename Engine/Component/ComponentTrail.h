@@ -127,12 +127,7 @@ public:
 	//Color properties
 	float4 color = float4::one;
 	float bloom_intensity = 1.0f;
-	//fade effect
-	//float4 initial_color = float4::one;
-	bool fade_between_colors = false;
-	float4 color_to_fade = float4::one;;
-	float color_fade_length = 1.0F;
-
+	
 	//Catmull-rom
 	Spline path_top, path_bottom;
 	std::vector<float3> spline, spline_top, spline_bottom;

@@ -110,22 +110,6 @@ void PanelTrail::Render(ComponentTrail* trail)
 			ImGui::Spacing();
 			trail->modified_by_user |= ImGui::ColorEdit4("Color", trail->color.ptr());
 			trail->modified_by_user |= ImGui::DragFloat("Intensity", &trail->bloom_intensity, 0.05f, 0.01f, 10.0f);
-
-			ImGui::Text("Fade Between Colors");
-			trail->modified_by_user |= ImGui::Checkbox("###Fade Between Colors", &trail->fade_between_colors);
-			ImGui::SameLine();
-			if (!trail->fade_between_colors)
-			{
-				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
-			}
-			trail->modified_by_user |= ImGui::ColorEdit4("Color To Fade##2f", trail->color_to_fade.ptr(), ImGuiColorEditFlags_Float);
-			trail->modified_by_user |= ImGui::DragFloat("Color Fade time", &trail->color_fade_length, 0.01f, 0.0f, 10.0F);
-			if (!trail->fade_between_colors)
-			{
-				ImGui::PopItemFlag();
-				ImGui::PopStyleVar();
-			}
 		}
 	}
 }
