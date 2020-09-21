@@ -115,9 +115,9 @@ void ComponentBillboard::ComputeAnimationFrame(float progress)
 {
 	num_sprites = num_sprisheet_columns * num_sprisheet_rows;
 
-	int current_sprite = math::FloorInt(progress * num_sprites);
+	int current_sprite = min(math::FloorInt(progress * num_sprites), num_sprites - 1);
 	current_sprite_x = current_sprite % num_sprisheet_columns;
-	current_sprite_y = (num_sprisheet_columns - 1) - current_sprite / num_sprisheet_columns;
+	current_sprite_y = (num_sprisheet_rows - 1) - math::FloorInt(current_sprite / num_sprisheet_columns);
 }
 
 void ComponentBillboard::Play()
@@ -236,6 +236,7 @@ void ComponentBillboard::SpecializedSave(Config& config) const
 
 	float4 billbaord_color_emissive(color_emissive[0], color_emissive[1], color_emissive[2], color_emissive[3]);
 	config.AddColor(billbaord_color_emissive, "ColorEmissive");
+	config.AddBool(playing_once, "Playing Once");
 }
 
 void ComponentBillboard::SpecializedLoad(const Config& config)
@@ -250,7 +251,7 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 	height = config.GetFloat("Height", 1.0f);
 	pulse = config.GetBool("Pulse", false);
 	loop = config.GetBool("Loop", false);
-
+	playing_once = config.GetBool("Playing Once", false);
 	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::WORLD)));
 	ChangeBillboardType(alignment_type);
 
