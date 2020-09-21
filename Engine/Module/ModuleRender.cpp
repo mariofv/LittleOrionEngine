@@ -118,7 +118,6 @@ bool ModuleRender::Init()
 	glBlendEquation(GL_FUNC_ADD);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
 	APP_LOG_INFO("Glew initialized correctly.");
 
 	int scene_viewport_options = (int)Viewport::ViewportOption::RENDER_UI | (int)Viewport::ViewportOption::SCENE_MODE | (int)Viewport::ViewportOption::BLIT_FRAMEBUFFER;
@@ -165,7 +164,7 @@ void ModuleRender::Render() const
 	BROFILER_CATEGORY("Module Render Render",Profiler::Color::Aqua);
 
 #if GAME
-	if (App->cameras->main_camera != nullptr) 
+	if (App->cameras->main_camera != nullptr)
 	{
 		game_viewport->SetSize(App->window->GetWidth(), App->window->GetHeight());
 		game_viewport->Render(App->cameras->main_camera);
@@ -412,7 +411,7 @@ void ModuleRender::SetHDRType(const HDRType type)
 	{
 		case HDRType::REINHARD:
 			hdr_type = HDRType::REINHARD;
-		break;	
+		break;
 		case HDRType::FILMIC:
 			hdr_type = HDRType::FILMIC;
 		break;

@@ -43,6 +43,7 @@ public:
 
 	ENGINE_API GameObject* GetGameObjectWithTag(const std::string& tag) const;
 	ENGINE_API std::vector<GameObject*> GetGameObjectsWithTag(const std::string& tag) const;
+	ENGINE_API std::vector<GameObject*> GetGameObjectsWithComponent(const Component::ComponentType component_type) const;
 
 	Component* GetComponent(uint64_t UUID) const;
 	void SortGameObjectChilds(GameObject* go) const;
