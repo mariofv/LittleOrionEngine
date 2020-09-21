@@ -72,7 +72,7 @@ public:
 	Quad* scene_quad = nullptr;
 
 	std::vector<FrameBuffer*> framebuffers;
-	FrameBuffer* main_fbo = nullptr;
+	FrameBuffer* scene_fbo = nullptr;
 	FrameBuffer* postprocess_fbo = nullptr;
 
 	FrameBuffer* ping_fbo = nullptr;

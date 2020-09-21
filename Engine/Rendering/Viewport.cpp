@@ -24,7 +24,7 @@ Viewport::Viewport(int options) : viewport_options(options)
 {
 	scene_quad = new Quad(2.f);
 
-	framebuffers.emplace_back(main_fbo = new FrameBuffer(2));
+	framebuffers.emplace_back(scene_fbo = new FrameBuffer(2));
 	framebuffers.emplace_back(ping_fbo = new FrameBuffer());
 	framebuffers.emplace_back(pong_fbo = new FrameBuffer());
 	framebuffers.emplace_back(postprocess_fbo = new FrameBuffer());
@@ -122,9 +122,9 @@ void Viewport::LightCameraPass() const
 
 void Viewport::MeshRenderPass() const
 {
-	main_fbo->Bind();
-	main_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0, camera->camera_clear_color);
-	main_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT1);
+	scene_fbo->Bind();
+	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0, camera->camera_clear_color);
+	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT1);
 
 	if (camera->HasSkybox())
 	{
@@ -198,7 +198,7 @@ void Viewport::EffectsRenderPass() const
 		return;
 	}
 
-	main_fbo->Bind();
+	scene_fbo->Bind();
 	App->effects->Render();
 	FrameBuffer::UnBind();
 }
@@ -255,7 +255,7 @@ void Viewport::DebugDrawPass() const
 		return;
 	}
 
-	main_fbo->Bind();
+	scene_fbo->Bind();
 	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 	App->debug_draw->Render(width, height, camera->GetProjectionMatrix() * camera->GetViewMatrix());
@@ -269,7 +269,7 @@ void Viewport::EditorDrawPass() const
 		return;
 	}
 
-	main_fbo->Bind();
+	scene_fbo->Bind();
 	unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(1, attachments);
 
@@ -334,12 +334,16 @@ void Viewport::BloomPass()
 	{
 		return;
 	}
-
+	
+	scene_fbo->Bind(GL_READ_FRAMEBUFFER);
+	glReadBuffer(GL_COLOR_ATTACHMENT1);
+	blit_fbo->Bind(GL_DRAW_FRAMEBUFFER);
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
+	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	FrameBuffer::UnBind();
+	
 	FrameBuffer* current_fbo = ping_fbo;
 	FrameBuffer* other_fbo = pong_fbo;
-
-	bool horizontal = true;
-	bool first_iteration = true;
 	
 	current_fbo->Bind();
 	current_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);
@@ -347,19 +351,18 @@ void Viewport::BloomPass()
 	other_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);
 	FrameBuffer::UnBind();
 
+	bool horizontal = true;
+	bool first_iteration = true;
+
 	GLuint shader_program = App->program->UseProgram("Blur", 0);
 	for (unsigned int i = 0; i < App->renderer->amount_of_blur; i++)
 	{
 		current_fbo->Bind();
-		if (first_iteration)
-		{
-			ping_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);
-		}
 		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		glUniform1f(glGetUniformLocation(shader_program, "horizontal"), horizontal);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, first_iteration ? main_fbo->GetColorAttachement(1) : other_fbo->GetColorAttachement());
+		glBindTexture(GL_TEXTURE_2D, first_iteration ? blit_fbo->GetColorAttachement(0) : other_fbo->GetColorAttachement());
 		glUniform1i(glGetUniformLocation(shader_program, "image"), 0);
 
 		scene_quad->Render();
@@ -416,11 +419,11 @@ void Viewport::HDRPass() const
 	glActiveTexture(GL_TEXTURE0);
 	if (antialiasing)
 	{
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, main_fbo->GetColorAttachement());
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, scene_fbo->GetColorAttachement());
 	}
 	else
 	{
-		glBindTexture(GL_TEXTURE_2D, main_fbo->GetColorAttachement());
+		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement());
 	}
 	glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
 	glUniform1f(glGetUniformLocation(program, "exposure"), App->renderer->exposure);
@@ -468,9 +471,9 @@ bool Viewport::IsOptionSet(ViewportOption option) const
 void Viewport::SetAntialiasing(bool antialiasing)
 {
 	this->antialiasing = antialiasing;
-	main_fbo->SetMultiSampled(antialiasing);
-	main_fbo->ClearAttachements();
-	main_fbo->GenerateAttachements(width, height);
+	scene_fbo->SetMultiSampled(antialiasing);
+	scene_fbo->ClearAttachements();
+	scene_fbo->GenerateAttachements(width, height);
 }
 
 void Viewport::SetHDR(bool hdr)
