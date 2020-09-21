@@ -1,8 +1,10 @@
 uniform vec4 base_color;
 
-out vec4 color;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 PostProcessFilter;
 
 void main()
 {
-    color = base_color;
+    FragColor = base_color;
+    PostProcessFilter = vec4(0.0, 1.0, 0.0, 0.0);
 }

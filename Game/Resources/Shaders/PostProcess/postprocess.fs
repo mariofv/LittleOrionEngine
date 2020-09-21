@@ -3,8 +3,10 @@ const float W = 11.2;
 
 #if ENABLE_MSAA
 uniform sampler2DMS screen_texture;
+uniform sampler2DMS post_processing_filter;
 #else
 uniform sampler2D screen_texture;
+uniform sampler2D post_processing_filter;
 #endif
 uniform sampler2D brightness_texture;
 
@@ -26,8 +28,18 @@ void main()
   vec4 sample4 = texelFetch(screen_texture, vp, 3);
 
   vec4 fragment_color = (sample1 + sample2 + sample3 + sample4) / 4.0f;
+
+  vp = ivec2(vec2(textureSize(post_processing_filter)) * texCoord);
+  sample1 = texelFetch(post_processing_filter, vp, 0);
+  sample2 = texelFetch(post_processing_filter, vp, 1);
+  sample3 = texelFetch(post_processing_filter, vp, 2);
+  sample4 = texelFetch(post_processing_filter, vp, 3);
+
+  vec2 fragment_filter = round((sample1 + sample2 + sample3 + sample4) / 4.0f).xy;
+
 #else
   vec4 fragment_color = texture(screen_texture, texCoord);
+  vec2 fragment_filter = texture(post_processing_filter, texCoord).xy;
 #endif
 
 #if ENABLE_BLOOM
@@ -40,7 +52,7 @@ void main()
 #endif
 
   FragColor.rgb = fragment_color.rgb;
-  FragColor.rgb = pow(FragColor.rgb, vec3(1 / gamma));
+  FragColor.rgb = pow(FragColor.rgb, vec3(1 / gamma)) * fragment_filter.x + FragColor.rgb * fragment_filter.y;
   FragColor.a = 1.0;
 }
 

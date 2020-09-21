@@ -24,7 +24,7 @@ Viewport::Viewport(int options) : viewport_options(options)
 {
 	scene_quad = new Quad(2.f);
 
-	framebuffers.emplace_back(scene_fbo = new FrameBuffer(2));
+	framebuffers.emplace_back(scene_fbo = new FrameBuffer(3));
 	framebuffers.emplace_back(ping_fbo = new FrameBuffer());
 	framebuffers.emplace_back(pong_fbo = new FrameBuffer());
 	framebuffers.emplace_back(postprocess_fbo = new FrameBuffer());
@@ -125,15 +125,17 @@ void Viewport::MeshRenderPass() const
 	scene_fbo->Bind();
 	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0, camera->camera_clear_color);
 	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT1);
+	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT2);
 
 	if (camera->HasSkybox())
 	{
-		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+		static GLenum attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT2 };
+		glDrawBuffers(2, attachments);
 		SkyboxPass();
 	}
 
-	static GLenum attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-	glDrawBuffers(2, attachments);
+	static GLenum attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+	glDrawBuffers(3, attachments);
 
 	num_rendered_triangles = 0;
 	num_rendered_vertices = 0;
@@ -256,7 +258,8 @@ void Viewport::DebugDrawPass() const
 	}
 
 	scene_fbo->Bind();
-	glDrawBuffer(GL_COLOR_ATTACHMENT0);
+	static GLenum attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT2 };
+	glDrawBuffers(2, attachments);
 
 	App->debug_draw->Render(width, height, camera->GetProjectionMatrix() * camera->GetViewMatrix());
 	FrameBuffer::UnBind();
@@ -270,8 +273,8 @@ void Viewport::EditorDrawPass() const
 	}
 
 	scene_fbo->Bind();
-	unsigned int attachments[1] = { GL_COLOR_ATTACHMENT0 };
-	glDrawBuffers(1, attachments);
+	static GLenum attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT2 };
+	glDrawBuffers(2, attachments);
 
 	App->debug_draw->RenderGrid();
 	if (App->debug->show_navmesh)
@@ -416,14 +419,25 @@ void Viewport::HDRPass() const
 	}
 	GLuint program = App->program->UseProgram("PostProcessing", shader_variation);
 
-	glActiveTexture(GL_TEXTURE0);
 	if (antialiasing)
 	{
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, scene_fbo->GetColorAttachement());
+		glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, scene_fbo->GetColorAttachement(2));
+		glUniform1i(glGetUniformLocation(program, "post_processing_filter"), 2);
 	}
 	else
 	{
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement());
+		glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(2));
+		glUniform1i(glGetUniformLocation(program, "post_processing_filter"), 2);
 	}
 	glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
 	glUniform1f(glGetUniformLocation(program, "exposure"), App->renderer->exposure);

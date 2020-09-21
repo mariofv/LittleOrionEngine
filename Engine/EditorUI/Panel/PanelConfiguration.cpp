@@ -336,7 +336,7 @@ void PanelConfiguration::ShowPostProcessingOptions()
 
 		if (App->renderer->bloom)
 		{
-			ImGui::DragInt("Amount of blur", &App->renderer->amount_of_blur, 1, 2, 20);
+			ImGui::DragInt("Amount of blur", &App->renderer->amount_of_blur, 2, 0, 100);
 		}
 	}
 }
