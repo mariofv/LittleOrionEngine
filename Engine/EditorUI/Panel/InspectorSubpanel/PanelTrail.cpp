@@ -108,7 +108,8 @@ void PanelTrail::Render(ComponentTrail* trail)
 		{
 			ImGui::Spacing();
 			trail->modified_by_user |= ImGui::ColorEdit4("Color", trail->color.ptr());
-			trail->modified_by_user |= ImGui::DragFloat("Intensity", &trail->bloom_intensity, 0.05f, 0.01f, 10.0f);
+			trail->modified_by_user |= ImGui::Checkbox("Emissive", &trail->emissive);
+			trail->modified_by_user |= ImGui::DragFloat("Intensity", &trail->emissive_intensity, 0.05f, 0.01f, 10.0f);
 
 		}
 	}
