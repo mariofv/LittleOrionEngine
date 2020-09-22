@@ -362,6 +362,7 @@ void Viewport::BloomPass()
 	for (unsigned int i = 0; i < App->renderer->amount_of_blur; i++)
 	{
 		current_fbo->Bind();
+		current_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);
 		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		glUniform1f(glGetUniformLocation(shader_program, "horizontal"), horizontal);
 
