@@ -23,6 +23,7 @@
 Viewport::Viewport(int options) : viewport_options(options)
 {
 	scene_quad = new Quad(2.f);
+	scene_quad->InitQuadUI();
 
 	framebuffers.emplace_back(scene_fbo = new FrameBuffer(3));
 	framebuffers.emplace_back(ping_fbo = new FrameBuffer());
@@ -368,7 +369,7 @@ void Viewport::BloomPass()
 		glBindTexture(GL_TEXTURE_2D, first_iteration ? blit_fbo->GetColorAttachement(0) : other_fbo->GetColorAttachement());
 		glUniform1i(glGetUniformLocation(shader_program, "image"), 0);
 
-		scene_quad->Render();
+		scene_quad->RenderArray();
 
 		horizontal = !horizontal;
 		std::swap(current_fbo, other_fbo);
@@ -449,7 +450,7 @@ void Viewport::HDRPass() const
 		glUniform1i(glGetUniformLocation(program, "brightness_texture"), 1);
 	}
 
-	scene_quad->Render();
+	scene_quad->RenderArray();
 
 	glUseProgram(0);
 	FrameBuffer::UnBind();
