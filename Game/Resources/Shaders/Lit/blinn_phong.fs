@@ -4,7 +4,6 @@
 
 #define PI 3.14159
 
-//constants
 float gamma = 2.2;
 const float ambient_light_strength = 0.1;
 
@@ -230,13 +229,13 @@ void main()
 	FragColor.a = material.transparency;
 
 	float brightness = dot(result, vec3(0.2, 0.6, 0.0));
-  if (brightness > 1.0)
+	if (brightness > 1.0)
 	{
-  	BrightColor = vec4(result, 1.0);
+  		BrightColor = vec4(result, 1.0);
 	}
-  else
+	else
 	{
-    BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
+		BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
 	}
 	PostProcessFilter = vec4(1.0, 0.0, 0.0, 1.0);
 }
