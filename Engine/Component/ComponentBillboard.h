@@ -71,6 +71,7 @@ public:
 	ENGINE_API void Play();
 	ENGINE_API bool IsPlaying();
 	ENGINE_API void SetOrientation(bool is_oriented);
+	ENGINE_API void SetAnimationTime(size_t time);
 
 private:
 	unsigned int GetBillboardVariation();
