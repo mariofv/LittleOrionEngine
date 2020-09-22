@@ -4,6 +4,8 @@
 #include "Module.h"
 
 #include <vector>
+#include <memory>
+#include "Helper/Quad.h"
 
 class ComponentBillboard;
 class ComponentParticleSystem;
@@ -17,6 +19,8 @@ class ModuleEffects : public Module
 
 public:
 
+	bool Init() override;
+
 	bool CleanUp() override;
 	void Render();
 
@@ -29,6 +33,7 @@ public:
 	ComponentTrail* CreateComponentTrail(GameObject* owner);
 	void RemoveComponentTrail(ComponentTrail* trail_to_remove);
 
+	std::unique_ptr<Quad> quad = nullptr;
 private:
 	bool render_particles = true;
 	std::vector<ComponentBillboard*> billboards;
