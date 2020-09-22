@@ -8,6 +8,15 @@
 #include "Main/GameObject.h"
 #include <Brofiler/Brofiler.h>
 
+// Called before render is available
+bool ModuleEffects::Init()
+{
+	APP_LOG_SECTION("************ Module Effects Init ************");
+	quad = std::make_unique<Quad>();
+	quad->InitQuadBillboard();
+	return true;
+}
+
 bool ModuleEffects::CleanUp()
 {
 	for (auto& particle : particle_systems)

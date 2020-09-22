@@ -36,6 +36,7 @@ class ComponentSpriteMask;
 class ComponentVideoPlayer;
 class GameObject;
 class PanelParticleSystem;
+class PanelTrail;
 
 class PanelComponent
 {
@@ -88,6 +89,7 @@ private:
 
 private:
 	PanelParticleSystem* particle_system_panel = nullptr;
+	PanelTrail* trail_panel = nullptr;
 };
 
 #endif //_PANELCOMPONENT_H_

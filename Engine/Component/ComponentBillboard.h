@@ -12,7 +12,7 @@
 
 class GameObject;
 class Texture;
-
+class Quad;
 class ComponentBillboard : public Component
 {
 public:
@@ -31,9 +31,7 @@ public:
 
 	ComponentBillboard();
 	ComponentBillboard(GameObject* owner);
-	~ComponentBillboard();
-
-	void CleanUp();
+	~ComponentBillboard() = default;
 
 	//Copy and move
 	ComponentBillboard(const ComponentBillboard& component_to_copy) = default;
@@ -50,7 +48,6 @@ public:
 	void CopyTo(Component* component_to_copy) const override;
 
 	void InitData();
-	void InitQuad();
 	void Update() override;
 
 	void Render(const float3& global_position);
@@ -71,6 +68,7 @@ public:
 	ENGINE_API void Play();
 	ENGINE_API bool IsPlaying();
 	ENGINE_API void SetOrientation(bool is_oriented);
+	ENGINE_API void SetAnimationTime(size_t time);
 
 private:
 	unsigned int GetBillboardVariation();
@@ -90,7 +88,7 @@ public:
 	bool playing_once = false;
 private:
 	GLuint shader_program;
-	GLuint vbo, vao, ebo;
+	Quad* quad = nullptr;
 
     uint32_t texture_uuid = 0;
 	std::shared_ptr<Texture> billboard_texture = nullptr;

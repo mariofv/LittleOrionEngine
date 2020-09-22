@@ -13,7 +13,6 @@
 
 class GameObject;
 class ComponentBillboard;
-
 const int MAX_PARTICLES = 500;
 
 class ComponentParticleSystem : public Component

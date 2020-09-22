@@ -68,7 +68,7 @@ void ComponentImage::Render(float4x4* projection)
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture_to_render->opengl_texture);
 
-		quad->Render();
+		quad->RenderArray();
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glUseProgram(0);
 	}

@@ -23,6 +23,7 @@ bool ModuleUI::Init()
 {
 	APP_LOG_SECTION("************ Module UI Init ************");
 	quad = std::make_unique<Quad>();
+	quad->InitQuadUI();
 	return true;
 }
 

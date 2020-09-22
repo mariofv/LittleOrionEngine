@@ -24,60 +24,11 @@ ComponentBillboard::ComponentBillboard(GameObject* owner) : Component(owner, Com
 	InitData();
 }
 
-ComponentBillboard::~ComponentBillboard()
-{
-	CleanUp();
-}
-
-void ComponentBillboard::CleanUp()
-{
-	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &ebo);
-	glDeleteVertexArrays(1, &vao);
-}
-
 void ComponentBillboard::InitData()
 {
 	ChangeTexture(texture_uuid);
 	ChangeTextureEmissive(texture_emissive_uuid);
-	InitQuad();
-}
-
-void ComponentBillboard::InitQuad()
-{
-	float vertices[20] =
-	{
-		0.5f,  0.5f, 0.0f,		1.0f, 1.0f,
-		0.5f, -0.5f, 0.0f,		1.0f, 0.0f,
-		-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
-		-0.5f,  0.5f, 0.0f,		0.0f, 1.0f
-	};
-	unsigned int indices[6] =
-	{
-		0, 1, 3,
-		1, 2, 3
-	};
-
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &ebo);
-
-	glBindVertexArray(vao);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	quad = App->effects->quad.get();
 }
 
 void ComponentBillboard::Update()
@@ -117,9 +68,9 @@ void ComponentBillboard::ComputeAnimationFrame(float progress)
 {
 	num_sprites = num_sprisheet_columns * num_sprisheet_rows;
 
-	int current_sprite = math::FloorInt(progress * num_sprites);
+	int current_sprite = min(math::FloorInt(progress * num_sprites), num_sprites - 1);
 	current_sprite_x = current_sprite % num_sprisheet_columns;
-	current_sprite_y = (num_sprisheet_columns - 1) - current_sprite / num_sprisheet_columns;
+	current_sprite_y =  (num_sprisheet_rows - 1) - math::FloorInt(current_sprite / num_sprisheet_columns);
 }
 
 void ComponentBillboard::Play()
@@ -157,16 +108,14 @@ void ComponentBillboard::Render(const float3& global_position)
 
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_x"), current_sprite_x);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_y"), current_sprite_y);
-	
-	
+
+
 	float4x4 model_matrix = float4x4::FromTRS(global_position, owner->transform.GetGlobalRotation(), float3(width, height, 1.f));
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), model_matrix.Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
+	quad->RenderElement();
 
 	glUseProgram(0);
 }
@@ -206,10 +155,9 @@ Component* ComponentBillboard::Clone(GameObject* owner, bool original_prefab)
 	else
 	{
 		created_component = App->effects->CreateComponentBillboard();
-	
+
 	}
 	*created_component = *this;
-	created_component->InitQuad();
 	created_component->owner = owner;
 	created_component->owner->components.push_back(created_component);
 	return created_component;
@@ -218,9 +166,7 @@ Component* ComponentBillboard::Clone(GameObject* owner, bool original_prefab)
 void ComponentBillboard::CopyTo(Component* component_to_copy) const
 {
 	ComponentBillboard* billboard = static_cast<ComponentBillboard*>(component_to_copy);
-	billboard->CleanUp();
 	*billboard = *this;
-	billboard->InitQuad();
 }
 
 
@@ -250,6 +196,7 @@ void ComponentBillboard::SpecializedSave(Config& config) const
 	float4 billbaord_color_emissive(color_emissive[0], color_emissive[1], color_emissive[2], color_emissive[3]);
 	config.AddColor(billbaord_color_emissive, "ColorEmissive");
 	config.AddFloat(emissive_intensity, "Emissive Intensity");
+	config.AddBool(playing_once, "Playing Once");
 }
 
 void ComponentBillboard::SpecializedLoad(const Config& config)
@@ -259,12 +206,12 @@ void ComponentBillboard::SpecializedLoad(const Config& config)
 
 	texture_emissive_uuid = config.GetUInt32("TextureEmissiveUUID", 0);
 	ChangeTextureEmissive(texture_emissive_uuid);
-	
+
 	width = config.GetFloat("Width", 1.0f);
 	height = config.GetFloat("Height", 1.0f);
 	pulse = config.GetBool("Pulse", false);
 	loop = config.GetBool("Loop", false);
-
+	playing_once = config.GetBool("Playing Once", false);
 	alignment_type = static_cast<AlignmentType>(config.GetInt("BillboardType", static_cast<int>(AlignmentType::WORLD)));
 	ChangeBillboardType(alignment_type);
 
@@ -383,7 +330,12 @@ void ComponentBillboard::SetOrientation(bool is_oriented)
 	oriented_to_camera = is_oriented;
 }
 
-void ComponentBillboard::Disable() 
+ENGINE_API void ComponentBillboard::SetAnimationTime(size_t time)
+{
+	animation_time = time;
+}
+
+void ComponentBillboard::Disable()
 {
 	active = false;
 	playing = false;
