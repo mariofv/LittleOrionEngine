@@ -45,10 +45,6 @@
 #include <imgui_impl_sdl.h>
 #include <SDL/SDL.h>
 
-#include "Rendering/Viewport.h"
-#include "Module/ModuleCamera.h"
-#include "Module/ModuleRender.h"
-
 // Called before render is available
 bool ModuleEditor::Init()
 {

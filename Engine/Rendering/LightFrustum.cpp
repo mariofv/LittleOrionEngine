@@ -15,21 +15,21 @@ LightFrustum::LightFrustum(FrustumSubDivision frustum_sub_division) : frustum_su
 	switch (frustum_sub_division)
 	{
 	case LightFrustum::FrustumSubDivision::NEAR_FRUSTUM:
-		sub_perspective_frustum_render_color = float3(1.f, 0.f, 0.f);
+		sub_perspective_frustum_render_color = float3::unitX;
 		sub_perspective_frustum_enclosing_aabb_render_color = float3(1.f, 0.2f, 0.f);
 		mesh_renderers_enclosing_aabb_render_color = float3(1.f, 0.f, 0.4f);
 		light_orthogonal_frustum_render_color = float3(1.f, 0.6f, 0.f);
 		break;
 
 	case LightFrustum::FrustumSubDivision::MID_FRUSTUM:
-		sub_perspective_frustum_render_color = float3(0.f, 1.f, 0.f);
+		sub_perspective_frustum_render_color = float3::unitY;
 		sub_perspective_frustum_enclosing_aabb_render_color = float3(0.2f, 1.f, 0.f);
 		mesh_renderers_enclosing_aabb_render_color = float3(0.f, 1.f, 0.4f);
 		light_orthogonal_frustum_render_color = float3(0.6f, 1.f, 0.f);
 		break;
 
 	case LightFrustum::FrustumSubDivision::FAR_FRUSTUM:
-		sub_perspective_frustum_render_color = float3(0.f, 0.f, 1.f);
+		sub_perspective_frustum_render_color = float3::unitZ;
 		sub_perspective_frustum_enclosing_aabb_render_color = float3(0.2f, 0.f, 1.f);
 		mesh_renderers_enclosing_aabb_render_color = float3(0.f, 0.4f, 1.f);
 		light_orthogonal_frustum_render_color = float3(0.6f, 0.f, 1.f);

@@ -73,13 +73,6 @@ void ComponentCamera::CopyTo(Component* component_to_copy) const
 bool ComponentCamera::HasSkybox() const
 {
 	return camera_clear_mode == ClearMode::SKYBOX;
-	
-	/*
-	if (skybox_uuid != 0 && camera_skybox)
-	{
-		camera_skybox->Render(*this);
-	}
-	*/
 }
 
 ComponentCamera::~ComponentCamera()

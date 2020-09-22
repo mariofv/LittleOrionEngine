@@ -13,12 +13,14 @@
 
 ComponentText::ComponentText() : Component(ComponentType::UI_TEXT)
 {
-	InitData();
+	text_quad = new Quad(1.f, 0.f, float2(0.5f));
+	text_quad->InitQuadText();
 }
 
 ComponentText::ComponentText(GameObject * owner) : Component(owner, ComponentType::UI_TEXT)
 {
-	InitData();
+	text_quad = new Quad(1.f, 0.f, float2(0.5f));
+	text_quad->InitQuadText();
 	SetFont((uint32_t)CoreResource::DEFAULT_FONT);
 	SetFontSize(12);
 }
@@ -28,41 +30,7 @@ ComponentText::~ComponentText()
 	glDeleteBuffers(1, &ebo);
 	glDeleteBuffers(1, &vbo);
 	glDeleteVertexArrays(1, &vao);
-}
-
-void ComponentText::InitData()
-{
-	GLfloat vertices[] = {
-		// Pos      // Tex
-		0.f, 1.f, 0.f, 0.0f, 0.0f,
-		1.f, 0.f, 0.f, 1.0f, 1.0f,
-		0.f, 0.f, 0.f, 0.0f, 1.0f,
-
-		0.f, 1.f, 0.f, 0.0f, 0.0f,
-		1.f, 1.f, 0.f, 1.0f, 0.0f,
-		1.f, 0.f, 0.f, 1.0f, 1.0f
-	};
-
-	glGenBuffers(1, &ebo);
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindVertexArray(vao);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	delete text_quad;
 }
 
 void ComponentText::Update()
@@ -93,7 +61,6 @@ void ComponentText::Render(float4x4* projection)
 	glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
 	glUniform4fv(glGetUniformLocation(program, "font_color"), 1, font_color.ptr());
 	glActiveTexture(GL_TEXTURE0);
-	glBindVertexArray(vao);
 
 
 	int current_line = 0;
@@ -146,7 +113,7 @@ void ComponentText::Render(float4x4* projection)
 		glUniform1i(glGetUniformLocation(program, "image"), 0);
 		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, model_matrix.ptr());
 		glBindTexture(GL_TEXTURE_2D, character.glyph_texture_id);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		text_quad->RenderArray();
 
 		x += character_size;
 	}

@@ -11,6 +11,7 @@
 #include <GL/glew.h>
 
 class Font;
+class Quad;
 
 class ComponentText : public Component
 {
@@ -56,6 +57,8 @@ private:
 	float GetLineStartPosition(float line_size) const;
 
 public:
+	Quad* text_quad = nullptr;
+
 	//Text Inputs
 	std::string text = "Default";
 	HorizontalAlignment horizontal_alignment = HorizontalAlignment::LEFT;

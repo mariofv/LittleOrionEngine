@@ -20,10 +20,6 @@ PanelGame::PanelGame()
 	window_name = ICON_FA_GHOST " Game";
 }
 
-PanelGame::~PanelGame()
-{
-}
-
 void PanelGame::Render()
 {
 	BROFILER_CATEGORY("Render Game Panel", Profiler::Color::BlueViolet);

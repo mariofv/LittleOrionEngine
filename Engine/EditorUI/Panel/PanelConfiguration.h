@@ -20,7 +20,7 @@ private:
 
 	void ShowWindowOptions();
 	void ShowRenderOptions(); 
-	void ShowPostProcessingOptions();
+	void ShowPostProcessingOptions() const;
 	void ShowTimeOptions();
 	void ShowInputOptions();
 	void ShowPhysicsOptions();

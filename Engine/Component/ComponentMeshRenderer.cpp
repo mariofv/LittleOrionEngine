@@ -441,7 +441,7 @@ void ComponentMeshRenderer::RemoveProperty(MeshProperties property_to_remove)
 	properties &= ~(int)property_to_remove;
 }
 
-bool ComponentMeshRenderer::CheckFilters(int filters)
+bool ComponentMeshRenderer::CheckFilters(int filters) const
 {
 	return (filters & properties) == filters;
 }

@@ -290,7 +290,7 @@ void PanelConfiguration::ShowRenderOptions()
 	}
 }
 
-void PanelConfiguration::ShowPostProcessingOptions()
+void PanelConfiguration::ShowPostProcessingOptions() const
 {
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGES " Post Processing"))
 	{

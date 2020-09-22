@@ -54,7 +54,7 @@ public:
 	bool IsPropertySet(MeshProperties property_to_check) const;
 	void AddProperty(MeshProperties property_to_add);
 	void RemoveProperty(MeshProperties property_to_remove);
-	bool CheckFilters(int filters);
+	bool CheckFilters(int filters) const;
 
 private:
 	void AddDiffuseUniforms(unsigned int shader_program) const;

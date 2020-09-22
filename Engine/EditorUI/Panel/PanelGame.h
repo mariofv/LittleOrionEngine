@@ -10,7 +10,7 @@ class PanelGame : public Panel
 {
 public:
 	PanelGame();
-	~PanelGame();
+	~PanelGame() = default;
 
 	void Render() override;
 
