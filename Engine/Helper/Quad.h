@@ -5,11 +5,15 @@
 class Quad
 {
 public:
-	Quad();
+	Quad() = default;
+	void InitQuadBillboard();
+	void InitQuadUI();
 	~Quad();
 
-	void Render() const;
+	void RenderArray() const;
+	void RenderElement() const;
+	void RenderInstanced(size_t size) const;
 private:
-	GLuint vao, vbo;
+	GLuint vao, vbo, ebo;
 };
 
