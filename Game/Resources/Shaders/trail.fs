@@ -9,6 +9,10 @@ uniform float bloom_intensity;
 void main()
 {
 	vec4 texture_color = texture(tex, texCoord) * color * bloom_intensity;
-	FragColor =  texture_color;
 
+	if(texture_color.a <0.1)
+	{
+			discard;
+	}
+	FragColor =  texture_color;
 }  

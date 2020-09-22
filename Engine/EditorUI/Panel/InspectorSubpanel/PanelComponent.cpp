@@ -52,6 +52,7 @@
 #include "Module/ModuleUI.h"
 
 #include "PanelParticleSystem.h"
+#include "PanelTrail.h"
 
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Resources/StateMachine.h"
@@ -63,11 +64,13 @@
 PanelComponent::PanelComponent()
 {
 	particle_system_panel = new PanelParticleSystem();
+	trail_panel = new PanelTrail();
 }
 
 PanelComponent::~PanelComponent()
 {
 	delete particle_system_panel;
+	delete trail_panel;
 }
 
 void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh_renderer)
@@ -274,7 +277,6 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 			billboard->Play();
 		}
 	}
-
 	ImGui::Separator();
 	ImGui::Text("Custom");
 	billboard->modified_by_user |= ImGui::DragFloat("Width:", &billboard->width, 0.2f, 0.f, 10.f);
@@ -284,42 +286,7 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 
 void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 {
-	if (!ShowCommonComponentWindow(trail))
-	{
-		return;
-	}
-	ImGui::Separator();
-	if (ImGui::CollapsingHeader(ICON_FA_SHARE " Trail Renderer", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		trail->modified_by_user |= ImGui::InputFloat("Width", &trail->width, 0.1f);
-		trail->modified_by_user |= ImGui::InputFloat("Duration", &trail->duration, 1000.0f);
-		trail->modified_by_user |= ImGui::InputFloat("Distance", &trail->min_distance, 1.0f);
-		ImGui::Text("Texture");
-		ImGui::SameLine();
-
-		std::string texture_name = trail->trail_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(trail->trail_texture->GetUUID())->resource_name;
-		ImGuiID element_id = ImGui::GetID((std::to_string(trail->UUID) + "TextureSelector").c_str());
-		if (ImGui::Button(texture_name.c_str()))
-		{
-			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
-		}
-
-		uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
-		if (selected_resource_uuid != 0)
-		{
-			trail->SetTrailTexture(selected_resource_uuid);
-			trail->modified_by_user = true;
-		}
-		selected_resource_uuid = ImGui::ResourceDropper<Texture>();
-		if (selected_resource_uuid != 0)
-		{
-			trail->SetTrailTexture(selected_resource_uuid);
-			trail->modified_by_user = true;
-		}
-		trail->modified_by_user |= ImGui::ColorEdit4("Color", trail->color.ptr());
-		trail->modified_by_user |= ImGui::DragFloat("Intensity", &trail->bloom_intensity, 0.05f, 0.01f, 10.0f);
-		
-	}
+	trail_panel->Render(trail);
 }
 
 void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
@@ -330,6 +297,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		{
 			return;
 		}
+
 		ImGui::Separator();
 
 		camera->modified_by_user |= ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly);
