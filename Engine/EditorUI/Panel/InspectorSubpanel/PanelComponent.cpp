@@ -267,6 +267,7 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 		billboard->modified_by_user |= ImGui::DragInt("Rows", &billboard->num_sprisheet_rows);
 		billboard->modified_by_user |= ImGui::DragInt("Animation Time", &billboard->animation_time, 10.f, 0);
 		billboard->modified_by_user |= ImGui::Checkbox("Loop", &billboard->loop);
+		billboard->modified_by_user |= ImGui::Checkbox("Play once", &billboard->playing_once);
 
 		if (ImGui::Button("Play"))
 		{
