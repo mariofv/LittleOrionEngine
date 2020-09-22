@@ -52,7 +52,7 @@ void main()
 #endif
 
   FragColor.rgb = fragment_color.rgb;
-  FragColor.rgb = pow(FragColor.rgb, vec3(1 / gamma)) * fragment_filter.x + FragColor.rgb * fragment_filter.y;
+  FragColor.rgb = pow(FragColor.rgb, vec3(1 / gamma)) * fragment_filter.x + FragColor.rgb *(1- fragment_filter.x);
   FragColor.a = 1.0;
 }
 

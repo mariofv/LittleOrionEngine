@@ -112,7 +112,6 @@ void Quad::InitQuadText()
 
 Quad::~Quad()
 {
-	glDeleteBuffers(1, &ebo);
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ebo);
 	glDeleteVertexArrays(1, &vao);

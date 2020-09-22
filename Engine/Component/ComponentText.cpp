@@ -13,24 +13,46 @@
 
 ComponentText::ComponentText() : Component(ComponentType::UI_TEXT)
 {
-	text_quad = new Quad(1.f, 0.f, float2(0.5f));
-	text_quad->InitQuadText();
+	InitData();
 }
 
 ComponentText::ComponentText(GameObject * owner) : Component(owner, ComponentType::UI_TEXT)
 {
-	text_quad = new Quad(1.f, 0.f, float2(0.5f));
-	text_quad->InitQuadText();
+	InitData();
 	SetFont((uint32_t)CoreResource::DEFAULT_FONT);
 	SetFontSize(12);
 }
 
 ComponentText::~ComponentText()
 {
-	glDeleteBuffers(1, &ebo);
 	glDeleteBuffers(1, &vbo);
 	glDeleteVertexArrays(1, &vao);
-	delete text_quad;
+}
+
+void ComponentText::InitData()
+{
+	GLfloat vertices[] = {
+		// Pos      // Tex
+		0.f, 1.f, 0.0f, 0.0f,
+		1.f, 0.f, 1.0f, 1.0f,
+		0.f, 0.f, 0.0f, 1.0f,
+
+		0.f, 1.f, 0.0f, 0.0f,
+		1.f, 1.f, 1.0f, 0.0f,
+		1.f, 0.f, 1.0f, 1.0f
+	};
+
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindVertexArray(vao);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 }
 
 void ComponentText::Update()
@@ -40,7 +62,7 @@ void ComponentText::Update()
 
 //TODO: Improve this shit
 void ComponentText::Render(float4x4* projection)
-{	
+{
 	if (font_uuid == 0 || !font)
 	{
 		return;
@@ -61,10 +83,11 @@ void ComponentText::Render(float4x4* projection)
 	glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
 	glUniform4fv(glGetUniformLocation(program, "font_color"), 1, font_color.ptr());
 	glActiveTexture(GL_TEXTURE0);
+	glBindVertexArray(vao);
 
 
 	int current_line = 0;
-	
+
 	float cursor_x = 0;
 	float cursor_y = 0;
 	float x = GetLineStartPosition(line_sizes[current_line]);
@@ -75,8 +98,8 @@ void ComponentText::Render(float4x4* projection)
 	{
 		Font::Character character = font->GetCharacter(c);
 		float character_size = (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
-		
-		float next_cursor_x = cursor_x + character_size; 
+
+		float next_cursor_x = cursor_x + character_size;
 		if (next_cursor_x > owner->transform_2d.size.x)
 		{
 			float next_cursor_y = cursor_y + font->GetMaxHeight() * scale_factor;
@@ -93,7 +116,7 @@ void ComponentText::Render(float4x4* projection)
 				cursor_y = font->GetMaxHeight() * scale_factor;
 				y -= font->GetMaxHeight() * scale_factor;
 			}
-			
+
 		}
 		else
 		{
@@ -113,7 +136,7 @@ void ComponentText::Render(float4x4* projection)
 		glUniform1i(glGetUniformLocation(program, "image"), 0);
 		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, model_matrix.ptr());
 		glBindTexture(GL_TEXTURE_2D, character.glyph_texture_id);
-		text_quad->RenderArray();
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		x += character_size;
 	}
@@ -125,7 +148,7 @@ void ComponentText::Render(float4x4* projection)
 
 void ComponentText::ComputeTextLines()
 {
-	if(!font)
+	if (!font)
 	{
 		return;
 	}
@@ -135,7 +158,7 @@ void ComponentText::ComputeTextLines()
 	float cursor_x = 0;
 	float cursor_y = 0;
 
-	float2 owner_rect_aabb_min_point(0.f,0.f);
+	float2 owner_rect_aabb_min_point(0.f, 0.f);
 	float2 owner_rect_aabb_max_point(owner->transform_2d.GetWidth(), owner->transform_2d.GetHeight());
 	AABB2D owner_rect(owner_rect_aabb_min_point, owner_rect_aabb_max_point);
 
@@ -147,7 +170,7 @@ void ComponentText::ComputeTextLines()
 		pending_characters.push(character);
 	}
 
-	while(!pending_characters.empty())
+	while (!pending_characters.empty())
 	{
 		Font::Character character = pending_characters.front();
 
@@ -176,7 +199,7 @@ void ComponentText::ComputeTextLines()
 				cursor_y += character_height;
 			}
 
-		}		
+		}
 	}
 
 	line_sizes.push_back(cursor_x);
@@ -236,12 +259,12 @@ void ComponentText::Delete()
 void ComponentText::SpecializedSave(Config& config) const
 {
 	config.AddString(text, "Text");
-	
+
 	config.AddUInt(font_uuid, "FontUUID");
 
 	config.AddFloat(font_size, "FontSize");
 	config.AddColor(font_color, "FontColor");
-	
+
 	config.AddUInt((uint32_t)horizontal_alignment, "HorizontalAlignment");
 }
 
@@ -275,7 +298,7 @@ void ComponentText::InitResource(uint32_t uuid, ResourceType resource)
 
 void ComponentText::ReassignResource()
 {
-	if(font_uuid != 0)
+	if (font_uuid != 0)
 	{
 		SetFont(font_uuid);
 	}

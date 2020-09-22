@@ -55,6 +55,7 @@ void FrameBuffer::ClearColorAttachement(GLenum color_attachement, const float3& 
 	glClearColor(clear_color.x, clear_color.y, clear_color.z, 1.0f);
 	glStencilMask(0xFF);
 	glClear(mask);
+	glClearColor(0.f, 0.f, 0.f, 1.0f);
 	glDrawBuffer(0);
 }
 
