@@ -135,7 +135,7 @@ void  ComponentTrail::GetPerpendiculars()
 			//Get the vector that links every two points
 			float3 vector_adjacent = (pair->second->position - pair->first->position).Normalized();//vector between each pair -> Normalized to get vector with magnitutde = 1 but same direction
 			float3 perpendicular;
-			perpendicular = vector_adjacent.Cross((App->cameras->scene_camera->camera_frustum.pos - owner->transform.GetGlobalTranslation().Normalized())) * width; //Front is currently local
+			perpendicular = vector_adjacent.Cross((App->cameras->main_camera->camera_frustum.pos - owner->transform.GetGlobalTranslation().Normalized()).Normalized()) * width; //Front is currently local
 			if (++pair == mesh_points.end())
 			{
 				--pair;
