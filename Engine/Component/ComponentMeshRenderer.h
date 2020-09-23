@@ -10,11 +10,13 @@
 class ComponentMeshRenderer : public Component
 {
 public:
-	enum Variations
+	enum MeshProperties
 	{
-		ENABLE_NORMAL_MAP =1 << 0,
-		ENABLE_SPECULAR_MAP = 1 << 1
+		RAYCASTABLE = 1 << 0,
+		SHADOW_CASTER = 1 << 1,
+		SHADOW_RECEIVER = 1 << 2
 	};
+
 	ComponentMeshRenderer();
 	ComponentMeshRenderer(GameObject * owner);
 	~ComponentMeshRenderer() = default;
@@ -37,15 +39,22 @@ public:
 
 	void Delete() override;
 
-	void Render();
+	GLuint BindShaderProgram() const;
+	GLuint BindDepthShaderProgram() const;
+	void BindMeshUniforms(GLuint shader_program) const;
+	void BindMaterialUniforms(GLuint shader_program) const;
 	void RenderModel() const;
-	void RenderMaterial(GLuint shader_program) const;
 
 	void SetMesh(uint32_t mesh_uuid);
 	void SetMaterial(uint32_t material_uuid);
 	void SetSkeleton(uint32_t skeleton_uuid);
 
 	void UpdatePalette(std::vector<float4x4> & pose);
+
+	bool IsPropertySet(MeshProperties property_to_check) const;
+	void AddProperty(MeshProperties property_to_add);
+	void RemoveProperty(MeshProperties property_to_remove);
+	bool CheckFilters(int filters) const;
 
 private:
 	void AddDiffuseUniforms(unsigned int shader_program) const;
@@ -73,10 +82,10 @@ public:
 
 	std::vector<float4x4> palette;
 
-	bool is_raycastable = true;
 	ComponentMeshCollider* mesh_collider = nullptr;
-	bool shadow_caster = false;
-	bool shadow_receiver = false;
+
+	int properties = MeshProperties::RAYCASTABLE;
+
 private:
 	friend class PanelComponent;
 };

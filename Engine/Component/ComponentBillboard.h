@@ -17,13 +17,13 @@ class ComponentBillboard : public Component
 {
 public:
 
-	enum AlignmentType 
+	enum AlignmentType
 	{
 		WORLD,
 		VIEW_POINT,
-		AXIAL			
+		AXIAL
 	};
-	
+
 	enum AnimationType {
 		CONSTANT,
 		RANDOM_BETWEEN_VALUES
@@ -84,7 +84,7 @@ public:
 	int current_sprite_y = 0;
 	float4 color = float4::one;
 	float color_emissive[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	int emissive_intensity = 1;
+	float emissive_intensity = 1.f;
 	bool playing_once = false;
 private:
 	GLuint shader_program;
@@ -94,7 +94,7 @@ private:
 	std::shared_ptr<Texture> billboard_texture = nullptr;
 	uint32_t texture_emissive_uuid = 0;
 	std::shared_ptr<Texture> billboard_texture_emissive = nullptr;
-	
+
 	//color
 
 	AlignmentType alignment_type = ComponentBillboard::AlignmentType::WORLD;
@@ -115,7 +115,7 @@ private:
 	friend class PanelComponent;
 	friend class PanelParticleSystem;
 	friend class ComponentParticleSystem;
-	
+
 };
 
 #endif //_COMPONENTBILLBOARD_H_

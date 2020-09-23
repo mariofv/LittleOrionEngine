@@ -37,8 +37,7 @@ void ComponentMeshRenderer::SpecializedSave(Config& config) const
 	config.AddUInt(mesh_uuid, "Mesh");
 	config.AddUInt(material_uuid, "Material");
 	config.AddUInt(skeleton_uuid, "Skeleton");
-	config.AddBool(shadow_caster, "ShadowCaster");
-	config.AddBool(shadow_receiver, "ShadowReceiver");
+	config.AddInt(properties, "Properties");
 }
 
 void ComponentMeshRenderer::SpecializedLoad(const Config& config)
@@ -52,8 +51,7 @@ void ComponentMeshRenderer::SpecializedLoad(const Config& config)
 	skeleton_uuid =	config.GetUInt32("Skeleton", 0);
 	SetSkeleton(skeleton_uuid);
 
-	shadow_caster = config.GetBool("ShadowCaster", shadow_caster);
-	shadow_receiver = config.GetBool("ShadowReceiver", shadow_receiver);
+	properties = config.GetInt("Properties", MeshProperties::RAYCASTABLE);
 }
 
 void ComponentMeshRenderer::LoadResource(uint32_t uuid, ResourceType resource, unsigned texture_type)
@@ -119,42 +117,71 @@ void ComponentMeshRenderer::ReassignResource()
 	SetMaterial(material_uuid);
 }
 
-void ComponentMeshRenderer::Render()
+GLuint ComponentMeshRenderer::BindShaderProgram() const
 {
-	if (mesh_to_render == nullptr || material_to_render == nullptr)
-	{
-		return;
-	}
 	unsigned int shader_variation = material_to_render->GetShaderVariation();
-	if (shadow_receiver && App->lights->render_shadows)
+	if (App->renderer->shadows_enabled && IsPropertySet(MeshProperties::SHADOW_RECEIVER))
 	{
 		shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_RECEIVE_SHADOWS);
 	}
+	if (App->renderer->cascade_debug)
+	{
+		shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_CASCADE_VISUALIZATION);
+	}
+	if (App->renderer->bloom)
+	{
+		shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_BLOOM);
+	}
 
-	GLuint program = App->program->UseProgram(material_to_render->shader_program, shader_variation);
 
-	glUniform1i(glGetUniformLocation(program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
-	
+	return App->program->UseProgram(material_to_render->shader_program, shader_variation);
+}
+
+GLuint ComponentMeshRenderer::BindDepthShaderProgram() const
+{
+	return App->program->UseProgram("Depth", 0);
+}
+
+void ComponentMeshRenderer::BindMeshUniforms(GLuint shader_program) const
+{
+	glUniform1i(glGetUniformLocation(shader_program, "num_joints"), skeleton_uuid != 0 ? MAX_JOINTS : 1);
+
 	if (palette.size() > 0)
 	{
-		glUniformMatrix4fv(glGetUniformLocation(program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(shader_program, "palette"), palette.size(), GL_TRUE, palette[0].ptr());
 	}
-	glUniform1i(glGetUniformLocation(program, "has_skinning_value"), skeleton_uuid != 0 ? 0 : 1);
-	
+	glUniform1i(glGetUniformLocation(shader_program, "has_skinning_value"), skeleton_uuid != 0 ? 0 : 1);
+
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	if (!material_to_render->UseLightmap())
+}
+
+void ComponentMeshRenderer::BindMaterialUniforms(GLuint shader_program) const
+{
+	BROFILER_CATEGORY("Render material", Profiler::Color::ForestGreen);
+	AddDiffuseUniforms(shader_program);
+	AddEmissiveUniforms(shader_program);
+	AddSpecularUniforms(shader_program);
+
+	AddAmbientOclusionUniforms(shader_program);
+	AddNormalUniforms(shader_program);
+	AddLightMapUniforms(shader_program);
+
+	if (material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING || material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
 	{
-		App->lights->Render(owner->transform.GetGlobalTranslation(), program);
+		AddDissolveMaterialUniforms(shader_program);
 	}
 
-	RenderMaterial(program);
-	RenderModel();
+	if (material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
+	{
+		material_to_render->UpdateLiquidProperties();
+		AddLiquidMaterialUniforms(shader_program);
+	}
 
-	glUseProgram(0);
-}	
+	AddExtraUniforms(shader_program);
+}
 
 void ComponentMeshRenderer::RenderModel() const
 {
@@ -166,32 +193,6 @@ void ComponentMeshRenderer::RenderModel() const
 	glBindVertexArray(mesh_to_render->GetVAO());
 	glDrawElements(GL_TRIANGLES, mesh_to_render->indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
-}
-
-void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
-{
-	BROFILER_CATEGORY("Render material", Profiler::Color::ForestGreen);
-	AddDiffuseUniforms(shader_program);
-	AddEmissiveUniforms(shader_program);
-	AddSpecularUniforms(shader_program);
-
-	AddAmbientOclusionUniforms(shader_program);
-	AddNormalUniforms(shader_program);
-	AddLightMapUniforms(shader_program);
-	
-	if (material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING || material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
-	{
-		AddDissolveMaterialUniforms(shader_program);
-	}
-
-	if (material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID)
-	{
-		material_to_render->UpdateLiquidProperties();
-		AddLiquidMaterialUniforms(shader_program);
-	}
-	
-	AddExtraUniforms(shader_program);
-	
 }
 
 void ComponentMeshRenderer::AddDiffuseUniforms(unsigned int shader_program) const
@@ -210,6 +211,7 @@ void ComponentMeshRenderer::AddEmissiveUniforms(unsigned int shader_program) con
 	BindTexture(Material::MaterialTextureType::EMISSIVE);
 	glUniform1i(glGetUniformLocation(shader_program, "material.emissive_map"), 4);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.emissive_color"), 1, (float*)material_to_render->emissive_color);
+	glUniform1f(glGetUniformLocation(shader_program, "material.emissive_intensity"), material_to_render->emissive_intensity);
 }
 
 void ComponentMeshRenderer::AddSpecularUniforms(unsigned int shader_program) const
@@ -220,7 +222,6 @@ void ComponentMeshRenderer::AddSpecularUniforms(unsigned int shader_program) con
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 5);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)material_to_render->specular_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.smoothness"), material_to_render->smoothness);
-	
 }
 
 void ComponentMeshRenderer::AddAmbientOclusionUniforms(unsigned int shader_program) const
@@ -423,4 +424,24 @@ void ComponentMeshRenderer::UpdatePalette(std::vector<float4x4>& pose)
 		}
 		palette[i] = pose[i] * joints[i].transform_global;
 	}
+}
+
+bool ComponentMeshRenderer::IsPropertySet(MeshProperties property_to_check) const
+{
+	return properties & (int)property_to_check;
+}
+
+void ComponentMeshRenderer::AddProperty(MeshProperties property_to_add)
+{
+	properties |= (int)property_to_add;
+}
+
+void ComponentMeshRenderer::RemoveProperty(MeshProperties property_to_remove)
+{
+	properties &= ~(int)property_to_remove;
+}
+
+bool ComponentMeshRenderer::CheckFilters(int filters) const
+{
+	return (filters & properties) == filters;
 }

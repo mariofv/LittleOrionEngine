@@ -84,6 +84,7 @@ public:
 	void SetHierarchyDepth(int value);
 
 	bool IsVisible(const ComponentCamera& camera) const;
+	bool IsVisible(const Frustum& frustum) const;
 
 	//Prefabs
 	GameObject * GetPrefabParent();

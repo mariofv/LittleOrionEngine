@@ -381,7 +381,7 @@ private:
 }; // class IDebugDrawOpenGLImplementation
 
 
-IDebugDrawOpenGLImplementation* ModuleDebugDraw::dd_interface_implementation = 0; // TODO: Ask why this is needed
+IDebugDrawOpenGLImplementation* ModuleDebugDraw::dd_interface_implementation = 0;
 
 // Called before render is available
 bool ModuleDebugDraw::Init()
@@ -404,18 +404,28 @@ void ModuleDebugDraw::RenderTangentsAndBitangents() const
 {
 	BROFILER_CATEGORY("Render Tangent, Bitangent and Normal Vectors", Profiler::Color::Lavender);
 
-	for (auto& mesh : App->renderer->meshes_to_render)
+	for (auto& mesh_renderer : App->renderer->mesh_renderers)
 	{
-		
-		for (unsigned int i = 0; i < 30; ++i)
+		if (!mesh_renderer->active || mesh_renderer->mesh_to_render == nullptr)
 		{
-			float4 normal = float4(mesh->mesh_to_render->vertices[i].normals, 0.0F);
-			float4 tangent = float4(mesh->mesh_to_render->vertices[i].tangent, 0.0F);
-			float4 bitangent = float4(mesh->mesh_to_render->vertices[i].bitangent, 0.0F);
-			float4 position = float4 (mesh->mesh_to_render->vertices[i].position, 1.0F);
+			continue;
+		}
+
+		size_t i = 0;
+		while (i < 30 && i < mesh_renderer->mesh_to_render->vertices.size())
+		{
+			Mesh::Vertex current_vertex = mesh_renderer->mesh_to_render->vertices[i];
+
+			float4 normal = float4(current_vertex.normals, 0.0F);
+			float4 tangent = float4(current_vertex.tangent, 0.0F);
+			float4 bitangent = float4(current_vertex.bitangent, 0.0F);
+			float4 position = float4 (current_vertex.position, 1.0F);
+
 			float4x4 axis_object_space = float4x4(tangent, bitangent, normal, position);
-			float4x4 axis_transform = mesh->owner->transform.GetGlobalModelMatrix() * axis_object_space;
+			float4x4 axis_transform = mesh_renderer->owner->transform.GetGlobalModelMatrix() * axis_object_space;
 			dd::axisTriad(axis_transform, 0.1F, 1.0F);
+
+			++i;
 		}	
 	}
 }
@@ -458,24 +468,19 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 {
 	BROFILER_CATEGORY("Render Selected GameObject Camera Frustum", Profiler::Color::Lavender);
 
-	if (!App->debug->show_camera_frustum)
-	{
-		return;
-	}
-
 	Component * selected_camera_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::CAMERA);
 	if (selected_camera_component != nullptr) {
 		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
 
-		if(selected_camera->camera_frustum.type == FrustumType::PerspectiveFrustum)
-			dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
-
-
-		if (selected_camera->camera_frustum.type == FrustumType::OrthographicFrustum)
+		if (selected_camera->camera_frustum.type == FrustumType::PerspectiveFrustum)
+		{
+			RenderPerspectiveFrustum(selected_camera->GetInverseClipMatrix());
+		}
+		else if (selected_camera->camera_frustum.type == FrustumType::OrthographicFrustum)
 		{
 			float3 points[8];
 			selected_camera->camera_frustum.GetCornerPoints(points);
-			dd::box(points, float3(1, 1, 1), 0, true);
+			RenderOrtographicFrustum(points);
 		}
 	}	
 }
@@ -623,12 +628,17 @@ void ModuleDebugDraw::RenderOutline() const
 			{
 				return;
 			}
+
+			glDrawBuffer(0);
 			glEnable(GL_STENCIL_TEST);
 			glStencilFunc(GL_ALWAYS, 1, 0xFF);
 			glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
 			glStencilMask(0xFF);
 
-			selected_object_mesh->Render();
+			GLuint mesh_renderer_program = selected_object_mesh->BindDepthShaderProgram();
+			selected_object_mesh->BindMeshUniforms(mesh_renderer_program);
+			selected_object_mesh->RenderModel();
+			glUseProgram(0);
 
 			glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 			glStencilMask(0x00);
@@ -656,7 +666,7 @@ void ModuleDebugDraw::RenderOutline() const
 			ModuleRender::DrawMode last_draw_mode = App->renderer->draw_mode;
 			App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
 			glLineWidth(15.f);
-
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
 			glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 			glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), selected_game_object->transform.GetGlobalModelMatrix().Transposed().ptr());
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -683,9 +693,9 @@ void ModuleDebugDraw::RenderBoundingBoxes(const float3& color) const
 {
 	BROFILER_CATEGORY("Render Bounding Boxes", Profiler::Color::Lavender);
 
-	for (auto& mesh : App->renderer->meshes_to_render)
+	for (auto& mesh_renderer : App->renderer->mesh_renderers)
 	{
-		GameObject* mesh_game_object = mesh->owner;
+		GameObject* mesh_game_object = mesh_renderer->owner;
 		if (!mesh_game_object->aabb.IsEmpty())
 		{
 			dd::aabb(mesh_game_object->aabb.bounding_box.minPoint, mesh_game_object->aabb.bounding_box.maxPoint, color);
@@ -827,16 +837,28 @@ ENGINE_API void ModuleDebugDraw::RenderBox(const float3 points[8], const float3&
 	dd::box(points, color);
 }
 
-void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
+void ModuleDebugDraw::RenderAxis(const float4x4& axis_space, float size, float length, const float3 & color)
+{
+	return dd::axisTriad(axis_space, size, length);
+}
+
+void ModuleDebugDraw::RenderPerspectiveFrustum(const float4x4& inverse_clip_matrix, const float3& color) const
+{
+	dd::frustum(inverse_clip_matrix, color);
+}
+
+void ModuleDebugDraw::RenderOrtographicFrustum(const float3 points[8], const float3& color) const
+{
+	dd::box(points, color);
+}
+
+void ModuleDebugDraw::Render(float width, float height, const float4x4& projection_view_matrix)
 {
 	BROFILER_CATEGORY("Flush Debug Draw", Profiler::Color::Lavender);
 
-	math::float4x4 view = camera.GetViewMatrix();
-	math::float4x4 proj = camera.GetProjectionMatrix();
-
-	dd_interface_implementation->width = static_cast<unsigned int>(camera.GetWidth());
-	dd_interface_implementation->height = static_cast<unsigned int>(camera.GetHeight());
-	dd_interface_implementation->mvpMatrix = proj * view;
+	dd_interface_implementation->width = static_cast<unsigned int>(width);
+	dd_interface_implementation->height = static_cast<unsigned int>(height);
+	dd_interface_implementation->mvpMatrix = projection_view_matrix;
 	dd::flush();
 }
 

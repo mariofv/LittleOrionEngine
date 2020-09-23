@@ -14,6 +14,7 @@
 #include "Module/ModuleWindow.h"
 #include "PanelConfiguration.h"
 #include "Module/ModulePhysics.h"
+#include "Rendering/Viewport.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <GL/glew.h>
@@ -40,6 +41,9 @@ void PanelConfiguration::Render()
 
 		ImGui::Spacing();
 		ShowRenderOptions();
+		
+		ImGui::Spacing();
+		ShowPostProcessingOptions();
 
 		ImGui::Spacing();
 		ShowTimeOptions();
@@ -205,20 +209,6 @@ void PanelConfiguration::ShowRenderOptions()
 			App->renderer->SetVSync(App->renderer->vsync);
 		}
 
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Depth test", &App->renderer->gl_depth_test))
-		{
-			App->renderer->SetDepthTest(App->renderer->gl_depth_test);
-
-		}
-
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Anti-aliasing", &App->renderer->anti_aliasing))
-		{
-			App->cameras->scene_camera->toggle_msaa = true;
-			App->cameras->main_camera->toggle_msaa = true;
-		}
-
 		ImGui::Separator();
 
 		if (ImGui::Checkbox("Face culling", &App->renderer->gl_cull_face))
@@ -266,37 +256,6 @@ void PanelConfiguration::ShowRenderOptions()
 				break;
 			}
 		}
-		ImGui::Separator();
-		HelpMarker("This settings have no visual impact, WIP.");
-		ImGui::SameLine();
-		if (ImGui::TreeNode("Non-functional settings"))
-		{
-			if (ImGui::Checkbox("Alpha test", &App->renderer->gl_alpha_test))
-			{
-				App->renderer->SetAlphaTest(App->renderer->gl_alpha_test);
-			}
-			if (ImGui::Checkbox("Scissor test", &App->renderer->gl_scissor_test))
-			{
-				App->renderer->SetScissorTest(App->renderer->gl_scissor_test);
-			}
-			if (ImGui::Checkbox("Stencil test", &App->renderer->gl_stencil_test))
-			{
-				App->renderer->SetStencilTest(App->renderer->gl_stencil_test);
-			}
-			if (ImGui::Checkbox("Blending", &App->renderer->gl_blend))
-			{
-				App->renderer->SetBlending(App->renderer->gl_blend);
-			}
-			if (ImGui::Checkbox("Dithering", &App->renderer->gl_dither))
-			{
-				App->renderer->SetDithering(App->renderer->gl_dither);
-			}
-			if (ImGui::Checkbox("Min Maxing", &App->renderer->gl_minmax))
-			{
-				App->renderer->SetMinMaxing(App->renderer->gl_minmax);
-			}
-			ImGui::TreePop();
-		}
 
 		ImGui::Separator();
 
@@ -313,13 +272,72 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::SliderFloat("Intensity", &App->lights->ambient_light_intensity, 0, 1, "%.2f");
 		ImGui::ColorEdit3("Color", App->lights->ambient_light_color);
 
-		//ImGui::Checkbox("Toggle directional camera frustum", &App->renderer->toggle_ortho_frustum);
 
-		ImGui::Checkbox("Render shadows", &App->lights->render_shadows);
-		ImGui::SliderFloat("Shadows Fov Factor", &App->lights->main_camera_fov_increment_factor, 0, 4, "%.2f");
+		ImGui::Separator();
+		
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Game Graphic Settings");
+		ImGui::PushID("Game Viewport");
+		ImGui::Checkbox("Render Effects", &App->renderer->game_viewport->effects_pass);
+		if (ImGui::Checkbox("Shadows", &App->renderer->shadows_enabled))
+		{
+			App->renderer->SetShadows(App->renderer->shadows_enabled);
+		}
+		if (App->renderer->shadows_enabled)
+		{
+			ImGui::Checkbox("Cascade debug", &App->renderer->cascade_debug);
+		}
+		ImGui::PopID();
+	}
+}
 
-		ImGui::Checkbox("Render Particles", &App->effects->render_particles);
+void PanelConfiguration::ShowPostProcessingOptions() const
+{
+	if (ImGui::CollapsingHeader(ICON_FA_IMAGES " Post Processing"))
+	{
+		if (ImGui::Checkbox("Antialiasing", &App->renderer->antialiasing))
+		{
+			App->renderer->SetAntialiasing(App->renderer->antialiasing);
+		}
 
+		if (ImGui::Checkbox("HDR", &App->renderer->hdr))
+		{
+			App->renderer->SetHDR(App->renderer->hdr);
+		}
+
+		if (App->renderer->hdr)
+		{
+			if (ImGui::BeginCombo("Tonemapping Type", App->renderer->GetHDRType(App->renderer->hdr_type).c_str()))
+			{
+
+				for (int i = 0; i < static_cast<int>(ModuleRender::HDRType::MAX_HDR_TYPE); ++i)
+				{
+					bool is_selected = (static_cast<int>(App->renderer->hdr_type) == i);
+					if (ImGui::Selectable(App->renderer->GetHDRType((ModuleRender::HDRType)i).c_str(), is_selected))
+					{
+						App->renderer->SetHDRType((ModuleRender::HDRType)i);
+						if (is_selected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+				}
+				ImGui::EndCombo();
+			}
+			if (App->renderer->hdr_type == ModuleRender::HDRType::FILMIC || App->renderer->hdr_type == ModuleRender::HDRType::EXPOSURE)
+			{
+				ImGui::DragFloat("Exposure", &App->renderer->exposure, 0.1f, 0.0f, 10.0f);
+			}
+		}
+
+		if (ImGui::Checkbox("Bloom", &App->renderer->bloom))
+		{
+			App->renderer->SetBloom(App->renderer->bloom);
+		}
+
+		if (App->renderer->bloom)
+		{
+			ImGui::DragInt("Amount of blur", &App->renderer->amount_of_blur, 2, 0, 100);
+		}
 	}
 }
 
@@ -754,29 +772,28 @@ void PanelConfiguration::ShowSpacePartitioningOptions()
 {
 	if (ImGui::CollapsingHeader(ICON_FA_TREE " SpacePartitioning"))
 	{
-		ImGui::Checkbox("Scene window culling", &App->debug->culling_scene_mode);
-		int culling_mode_int = static_cast<int>(App->debug->culling_mode);
+		int culling_mode_int = static_cast<int>(App->space_partitioning->culling_mode);
 		if (ImGui::Combo("Culling Mode", &culling_mode_int, "None\0Frustum Culling\0QuadTree Culling\0OctTree Culling\0AabbTree Culling\0Combined Culling"))
 		{
 			switch (culling_mode_int)
 			{
 			case 0:
-				App->debug->culling_mode = ModuleDebug::CullingMode::NONE;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::NONE;
 				break;
 			case 1:
-				App->debug->culling_mode = ModuleDebug::CullingMode::FRUSTUM_CULLING;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::FRUSTUM_CULLING;
 				break;
 			case 2:
-				App->debug->culling_mode = ModuleDebug::CullingMode::QUADTREE_CULLING;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::QUADTREE_CULLING;
 				break;
 			case 3:
-				App->debug->culling_mode = ModuleDebug::CullingMode::OCTTREE_CULLING;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::OCTTREE_CULLING;
 				break;
 			case 4:
-				App->debug->culling_mode = ModuleDebug::CullingMode::AABBTREE_CULLING;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::AABBTREE_CULLING;
 				break;
 			case 5:
-				App->debug->culling_mode = ModuleDebug::CullingMode::COMBINED_CULLING;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::COMBINED_CULLING;
 				break;
 			}
 		}

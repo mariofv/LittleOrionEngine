@@ -35,7 +35,6 @@ public:
 
 	std::unique_ptr<Quad> quad = nullptr;
 private:
-	bool render_particles = true;
 	std::vector<ComponentBillboard*> billboards;
 	std::vector<ComponentBillboard*> billboards_to_render;
 

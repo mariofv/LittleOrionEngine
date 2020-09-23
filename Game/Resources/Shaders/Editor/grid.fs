@@ -1,5 +1,6 @@
 in vec2 frag_position;
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 PostProcessFilter;
 
 layout (std140) uniform Matrices
 {
@@ -83,4 +84,6 @@ void main()
 
 	FragColor =  c;
 	FragColor.a *= 0.5;
+
+  PostProcessFilter = vec4(0.0, 0.0, 0.0, 0.0);
 }

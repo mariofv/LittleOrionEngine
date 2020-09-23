@@ -20,6 +20,8 @@
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Resources/Prefab.h"
 
+#include "Rendering/Viewport.h"
+
 #include <Brofiler/Brofiler.h>
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -29,11 +31,14 @@ PanelScene::PanelScene()
 	opened = true;
 	enabled = true;
 	window_name = ICON_FA_TH " Scene";
+
+	camera_preview_viewport = new Viewport((int)Viewport::ViewportOption::BLIT_FRAMEBUFFER);
 }
 
 
 PanelScene::~PanelScene()
 {
+	delete camera_preview_viewport;
 }
 
 void PanelScene::Render()
@@ -59,26 +64,23 @@ void PanelScene::Render()
 
 		scene_window_content_area_width = scene_window_content_area_max_point.x - scene_window_content_area_pos.x;
 		scene_window_content_area_height = scene_window_content_area_max_point.y - scene_window_content_area_pos.y;
-		
 
-		App->lights->RecordShadowsFrameBuffers((GLsizei)scene_window_content_area_width, (GLsizei)scene_window_content_area_height);
-
-		App->cameras->scene_camera->RecordFrame((GLsizei)scene_window_content_area_width, (GLsizei)scene_window_content_area_height, true);
-		App->debug->Render(App->cameras->scene_camera);
-		App->cameras->scene_camera->RecordDebugDraws(true);
+		App->renderer->scene_viewport->SetSize(scene_window_content_area_width, scene_window_content_area_height);
+		App->renderer->scene_viewport->Render(App->cameras->scene_camera);
 
 		ImGui::Image(
-			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),
+			(void *)App->renderer->scene_viewport->displayed_texture,
 			ImVec2(scene_window_content_area_width, scene_window_content_area_height),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
+
 		SceneDropTarget();
 
 		AABB2D content_area = AABB2D(scene_window_content_area_pos, scene_window_content_area_max_point);
 		float2 mouse_pos_f2 = float2(ImGui::GetMousePos().x, ImGui::GetMousePos().y);
 		AABB2D mouse_pos = AABB2D(mouse_pos_f2, mouse_pos_f2);
-		hovered = ImGui::IsWindowHovered(); // TODO: This seems to be inneficient, check with partner
+		hovered = ImGui::IsWindowHovered();
 		focused = ImGui::IsWindowFocused();
 
 		RenderEditorDraws(); // This should be render after rendering framebuffer texture.
@@ -103,9 +105,29 @@ void PanelScene::RenderSceneBar()
 			{
 				App->renderer->SetDrawMode(ModuleRender::DrawMode::SHADED);
 			}
-			if (ImGui::MenuItem("Wireframe", NULL, draw_mode == "Wireframe"))
+			if (ImGui::MenuItem("Brightness", NULL, draw_mode == "Brightness"))
 			{
-				App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
+				App->renderer->SetDrawMode(ModuleRender::DrawMode::BRIGHTNESS);
+			}
+			if (ImGui::BeginMenu("Depth Map"))
+			{
+				if (ImGui::MenuItem("Full Depth Map", NULL, draw_mode == "Full Depth Map"))
+				{
+					App->renderer->SetDrawMode(ModuleRender::DrawMode::DEPTH_FULL);
+				}
+				if (ImGui::MenuItem("Near Depth Map", NULL, draw_mode == "Near Depth Map"))
+				{
+					App->renderer->SetDrawMode(ModuleRender::DrawMode::DEPTH_NEAR);
+				}
+				if (ImGui::MenuItem("Mid Depth Map", NULL, draw_mode == "Mid Depth Map"))
+				{
+					App->renderer->SetDrawMode(ModuleRender::DrawMode::DEPTH_MID);
+				}
+				if (ImGui::MenuItem("Far Depth Map", NULL, draw_mode == "Far Depth Map"))
+				{
+					App->renderer->SetDrawMode(ModuleRender::DrawMode::DEPTH_FAR);
+				}
+				ImGui::EndMenu();
 			}
 
 			ImGui::EndMenu();
@@ -138,7 +160,6 @@ void PanelScene::RenderSceneBar()
 
 	}
 }
-
 
 void PanelScene::RenderEditorDraws()
 {
@@ -321,8 +342,9 @@ void PanelScene::RenderSceneCameraGizmo() const
 
 void PanelScene::RenderCameraPreview() const
 {
-	Component * selected_camera_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::CAMERA);
-	if (selected_camera_component != nullptr) {
+	Component* selected_camera_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::CAMERA);
+	if (selected_camera_component != nullptr) 
+	{
 		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
 
 		ImGui::SetCursorPos(ImVec2(scene_window_content_area_width - 200, scene_window_content_area_height - 200));
@@ -338,9 +360,10 @@ void PanelScene::RenderCameraPreview() const
 		float width = content_area_max_point.x - ImGui::GetCursorPos().x;
 		float height = content_area_max_point.y - ImGui::GetCursorPos().y;
 
-		selected_camera->RecordFrame(static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+		camera_preview_viewport->SetSize(width, height);
+		camera_preview_viewport->Render(selected_camera);
 		ImGui::Image(
-			(void *)selected_camera->GetLastRecordedFrame(),
+			(void *)camera_preview_viewport->displayed_texture,
 			ImVec2(width, height),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
@@ -361,7 +384,8 @@ void PanelScene::RenderDebugMetrics() const
 	}
 
 	ImGui::Text("FPS: %f.2", App->time->GetFPS());
-	ImGui::Text("Tris: %d", App->renderer->GetRenderedTris());
+	ImGui::Text("Triangles: %d", App->renderer->scene_viewport->num_rendered_triangles);
+	ImGui::Text("Vertices: %d", App->renderer->scene_viewport->num_rendered_vertices);
 
 	ImGui::EndChild();
 }

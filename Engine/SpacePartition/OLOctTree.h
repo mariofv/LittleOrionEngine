@@ -16,7 +16,7 @@ public:
 	void Create(AABB limits);
 	void Clear();
 	void Insert(GameObject &game_object);
-	void CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera);
+	void CollectIntersect(std::vector<GameObject*> &game_objects, const Frustum& camera_frustum);
 
 
 public:

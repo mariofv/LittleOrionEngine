@@ -23,7 +23,7 @@ public:
 	void Split(std::vector<OLOctTreeNode*> &generated_nodes);
 	void DistributeGameObjectsAmongChildren();
 
-	void CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera);
+	void CollectIntersect(std::vector<GameObject*> &game_objects, const Frustum &camera_frustum);
 
 	std::vector<float> GetVertices() const;
 

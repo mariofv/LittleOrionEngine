@@ -62,7 +62,7 @@ void ComponentText::Update()
 
 //TODO: Improve this shit
 void ComponentText::Render(float4x4* projection)
-{	
+{
 	if (font_uuid == 0 || !font)
 	{
 		return;
@@ -87,7 +87,7 @@ void ComponentText::Render(float4x4* projection)
 
 
 	int current_line = 0;
-	
+
 	float cursor_x = 0;
 	float cursor_y = 0;
 	float x = GetLineStartPosition(line_sizes[current_line]);
@@ -98,8 +98,8 @@ void ComponentText::Render(float4x4* projection)
 	{
 		Font::Character character = font->GetCharacter(c);
 		float character_size = (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
-		
-		float next_cursor_x = cursor_x + character_size; 
+
+		float next_cursor_x = cursor_x + character_size;
 		if (next_cursor_x > owner->transform_2d.size.x)
 		{
 			float next_cursor_y = cursor_y + font->GetMaxHeight() * scale_factor;
@@ -116,7 +116,7 @@ void ComponentText::Render(float4x4* projection)
 				cursor_y = font->GetMaxHeight() * scale_factor;
 				y -= font->GetMaxHeight() * scale_factor;
 			}
-			
+
 		}
 		else
 		{
@@ -148,7 +148,7 @@ void ComponentText::Render(float4x4* projection)
 
 void ComponentText::ComputeTextLines()
 {
-	if(!font)
+	if (!font)
 	{
 		return;
 	}
@@ -158,7 +158,7 @@ void ComponentText::ComputeTextLines()
 	float cursor_x = 0;
 	float cursor_y = 0;
 
-	float2 owner_rect_aabb_min_point(0.f,0.f);
+	float2 owner_rect_aabb_min_point(0.f, 0.f);
 	float2 owner_rect_aabb_max_point(owner->transform_2d.GetWidth(), owner->transform_2d.GetHeight());
 	AABB2D owner_rect(owner_rect_aabb_min_point, owner_rect_aabb_max_point);
 
@@ -170,7 +170,7 @@ void ComponentText::ComputeTextLines()
 		pending_characters.push(character);
 	}
 
-	while(!pending_characters.empty())
+	while (!pending_characters.empty())
 	{
 		Font::Character character = pending_characters.front();
 
@@ -199,7 +199,7 @@ void ComponentText::ComputeTextLines()
 				cursor_y += character_height;
 			}
 
-		}		
+		}
 	}
 
 	line_sizes.push_back(cursor_x);
@@ -259,12 +259,12 @@ void ComponentText::Delete()
 void ComponentText::SpecializedSave(Config& config) const
 {
 	config.AddString(text, "Text");
-	
+
 	config.AddUInt(font_uuid, "FontUUID");
 
 	config.AddFloat(font_size, "FontSize");
 	config.AddColor(font_color, "FontColor");
-	
+
 	config.AddUInt((uint32_t)horizontal_alignment, "HorizontalAlignment");
 }
 
@@ -298,7 +298,7 @@ void ComponentText::InitResource(uint32_t uuid, ResourceType resource)
 
 void ComponentText::ReassignResource()
 {
-	if(font_uuid != 0)
+	if (font_uuid != 0)
 	{
 		SetFont(font_uuid);
 	}

@@ -37,10 +37,9 @@ ComponentCamera & ComponentCamera::operator=(const ComponentCamera & component_t
 	this->camera_frustum = component_to_copy.camera_frustum;
 
 	this->camera_clear_mode = component_to_copy.camera_clear_mode;
-	memcpy(camera_clear_color, component_to_copy.camera_clear_color,3 * sizeof(float));
+	this->camera_clear_color, component_to_copy.camera_clear_color;
 	this->depth = component_to_copy.depth;
 	this->camera_movement_speed = component_to_copy.camera_movement_speed;
-	this->toggle_msaa = component_to_copy.toggle_msaa;
 	this->speed_up = component_to_copy.speed_up;
 
 	GenerateMatrices();
@@ -63,33 +62,25 @@ Component* ComponentCamera::Clone(GameObject* owner, bool original_prefab)
 	created_component->owner = owner;
 	created_component->owner->components.push_back(created_component);
 	return created_component;
-};
+}
+
 void ComponentCamera::CopyTo(Component* component_to_copy) const
 {  
 	*component_to_copy = *this;
 	*static_cast<ComponentCamera*>(component_to_copy) = *this;
-};
+}
+
+bool ComponentCamera::HasSkybox() const
+{
+	return camera_clear_mode == ClearMode::SKYBOX;
+}
 
 ComponentCamera::~ComponentCamera()
 {
-	glDeleteTextures(1, &last_recorded_frame_texture);
-	glDeleteTextures(1, &msfb_color);
-	glDeleteTextures(1, &depth_map);
-
-
-	glDeleteRenderbuffers(1, &rbo);
-	glDeleteRenderbuffers(1, &depth_rbo);
-
-	glDeleteFramebuffers(1, &fbo);
-	glDeleteFramebuffers(1, &msfbo);
 }
 
 void ComponentCamera::InitCamera()
 {
-	glGenFramebuffers(1, &fbo);
-	glGenFramebuffers(1, &msfbo);
-
-
 	aspect_ratio = 1.F;
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
 	camera_frustum.pos = float3::unitX;
@@ -119,12 +110,6 @@ void ComponentCamera::Update()
 	camera_frustum.up = owner_rotation * float3::unitY;
 	camera_frustum.front = owner_rotation * float3::unitZ;
 
-	if (camera_frustum.type == FrustumType::OrthographicFrustum)
-	{
-		SetOrthographicSize(float2(camera_frustum.orthographicWidth, camera_frustum.orthographicHeight));
-	}
-
-
 	GenerateMatrices();
 }
 
@@ -140,7 +125,7 @@ void ComponentCamera::SpecializedSave(Config& config) const
 	config.AddFloat(camera_frustum.farPlaneDistance, "FarPlaneDistance");
 	config.AddFloat(camera_frustum.verticalFov, "VerticalFOV");
 	config.AddUInt((uint64_t)camera_clear_mode, "ClearMode");
-	config.AddColor(float4(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f), "ClearColor");
+	config.AddFloat3(camera_clear_color, "Clear Color");
 	config.AddInt(depth, "Depth");
 
 	config.AddUInt(skybox_uuid, "Skybox");
@@ -177,270 +162,14 @@ void ComponentCamera::SpecializedLoad(const Config& config)
 		break;
 	}
 
-	float4 clear_color;
-	config.GetColor("ClearColor", clear_color, float4(0.f, 0.f, 0.f, 1.f));
-	camera_clear_color[0] = clear_color.x;
-	camera_clear_color[1] = clear_color.y;
-	camera_clear_color[2] = clear_color.z;
-
+	config.GetFloat3("Clear Color", camera_clear_color, float3::zero);
+	
 	depth = config.GetInt("Depth", 0);
 
 	skybox_uuid = config.GetUInt32("Skybox", 0);
 	SetSkybox(skybox_uuid);
 
 	GenerateMatrices();
-}
-
-float ComponentCamera::GetWidth() const
-{
-	return last_width;
-}
-
-float ComponentCamera::GetHeight() const
-{
-	return last_height;
-}
-
-void ComponentCamera::RecordFrame(GLsizei width, GLsizei height, bool scene_mode)
-{
-
-	SetWidthAndHeight(width, height);
-
-#if !GAME
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-#endif
-
-	if (App->renderer->anti_aliasing)
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, msfbo);
-	} 
-	
-	glViewport(0, 0, width, height);
-
-	switch (camera_clear_mode)
-	{
-		case ComponentCamera::ClearMode::COLOR:
-			glClearColor(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f);
-			glStencilMask(0xFF);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-			glClearColor(0.f, 0.f, 0.f, 1.f);
-			break;
-		case ComponentCamera::ClearMode::SKYBOX:
-			glStencilMask(0xFF);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-			if (skybox_uuid != 0 && camera_skybox)
-			{
-				camera_skybox->Render(*this);
-			}
-			else
-			{
-				App->cameras->world_skybox->Render(*this);
-			}
-			break;
-		default:
-			break;
-	}
-
-	App->renderer->RenderFrame(*this);
-
-
-	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
-	App->ui->Render(scene_mode);
-
-	if (App->renderer->anti_aliasing)
-	{
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
-#if !GAME
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-#else
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-#endif
-		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-void ComponentCamera::RecordZBufferFrame(GLsizei width, GLsizei height)
-{
-
-	SetWidthAndHeight(width, height);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-	glViewport(0, 0, width, height);
-
-	glClear(GL_DEPTH_BUFFER_BIT);
-	App->renderer->RenderZBufferFrame(*this);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-void ComponentCamera::SetWidthAndHeight(const GLsizei &width, const GLsizei &height)
-{
-	if (last_width != width || last_height != height || toggle_msaa)
-	{
-		last_width = static_cast<float>(width);
-		last_height = static_cast<float>(height);
-		SetAspectRatio(last_width / last_height);
-		GenerateFrameBuffers(width, height);
-		toggle_msaa = false;
-	}
-}
-
-void ComponentCamera::RecordDebugDraws(bool scene_mode)
-{
-#if !GAME
-	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-#endif
-	glViewport(0, 0, static_cast<GLsizei>(last_width), static_cast<GLsizei>(last_height));
-
-	if (scene_mode)
-	{
-		App->debug_draw->RenderGrid();
-		if (App->debug->show_navmesh)
-		{
-			App->debug_draw->RenderNavMesh(*this);
-		}
-		App->debug_draw->RenderBillboards();
-		if (App->editor->selected_game_object != nullptr)
-		{
-			App->debug_draw->RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
-		}
-	}
-
-	App->debug_draw->RenderDebugDraws(*this);
-#if !GAME
-	if (App->renderer->anti_aliasing)
-	{
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-		glBlitFramebuffer(0, 0, last_width, last_height, 0, 0, last_width, last_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-#endif
-}
-
-GLuint ComponentCamera::GetLastRecordedFrame() const
-{
-	return last_recorded_frame_texture;
-}
-
-void ComponentCamera::GenerateFrameBuffers(GLsizei width, GLsizei height)
-{
-	if (last_recorded_frame_texture != 0)
-	{
-		glDeleteTextures(1, &last_recorded_frame_texture);
-	}
-
-	glGenTextures(1, &last_recorded_frame_texture);
-
-	if (rbo != 0)
-	{
-		glDeleteRenderbuffers(1, &rbo);
-	}
-
-	if (depth_rbo != 0)
-	{
-		glDeleteRenderbuffers(1, &depth_rbo);
-	}
-
-	App->renderer->anti_aliasing ? CreateMssaFramebuffer(width, height) : CreateFramebuffer(width, height);
-}
-
-void ComponentCamera::CreateFramebuffer(GLsizei width, GLsizei height)
-{
-
-	if (camera_frustum.type == FrustumType::PerspectiveFrustum) //Scene and game cameras render this way
-	{
-		glGenRenderbuffers(1, &rbo);
-		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-		glBindTexture(GL_TEXTURE_2D, last_recorded_frame_texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
-
-	if (camera_frustum.type == FrustumType::OrthographicFrustum) //Light cameras render this way
-	{
-		CreateOrthographicFramebuffer(width, height);
-	}
-	
-}
-
-void ComponentCamera::CreateOrthographicFramebuffer(GLsizei width, GLsizei height)
-{
-	glGenRenderbuffers(1, &depth_rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, depth_rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	glGenTextures(1, &depth_map);
-	glBindTexture(GL_TEXTURE_2D, depth_map);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rbo);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-void ComponentCamera::CreateMssaFramebuffer(GLsizei width, GLsizei height)
-{
-
-	if (camera_frustum.type == FrustumType::PerspectiveFrustum)
-	{
-		glGenTextures(1, &msfb_color);
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msfb_color);
-		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, width, height, GL_TRUE);
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-
-		glGenRenderbuffers(1, &rbo);
-		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, width, height);
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, msfbo);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, msfb_color, 0);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-		glBindTexture(GL_TEXTURE_2D, last_recorded_frame_texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
-
-	if (camera_frustum.type == FrustumType::OrthographicFrustum) //Light cameras render this way
-	{
-		CreateOrthographicFramebuffer(width, height);
-
-	}
-	
 }
 
 void ComponentCamera::SetFOV(float fov)
@@ -460,9 +189,19 @@ void ComponentCamera::SetNearDistance(float distance)
 	camera_frustum.nearPlaneDistance = distance;
 }
 
+float ComponentCamera::GetNearDistance() const
+{
+	return camera_frustum.nearPlaneDistance;
+}
+
 void ComponentCamera::SetFarDistance(float distance)
 {
 	camera_frustum.farPlaneDistance = distance;
+}
+
+float ComponentCamera::GetFarDistance() const
+{
+	return camera_frustum.farPlaneDistance;
 }
 
 void ComponentCamera::SetOrientation(const float3 & orientation)
@@ -745,9 +484,19 @@ bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const
 	return CheckAABBCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
 }
 
+bool ComponentCamera::IsInsideFrustum(const Frustum& frustum, const AABB& aabb)
+{
+	return CheckAABBCollision(frustum, aabb) != ComponentAABB::CollisionState::OUTSIDE;
+}
+
 bool ComponentCamera::IsInsideFrustum(const AABB2D& aabb) const
 {
 	return CheckAABB2DCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
+}
+
+bool ComponentCamera::IsInsideFrustum(const Frustum& frustum, const AABB2D& aabb)
+{
+	return CheckAABB2DCollision(frustum, aabb) != ComponentAABB::CollisionState::OUTSIDE;
 }
 
 bool ComponentCamera::IsCompletlyInsideFrustum(const AABB& aabb) const
@@ -756,6 +505,11 @@ bool ComponentCamera::IsCompletlyInsideFrustum(const AABB& aabb) const
 }
 
 ComponentAABB::CollisionState ComponentCamera::CheckAABBCollision(const AABB& reference_AABB) const
+{
+	return CheckAABBCollision(camera_frustum, reference_AABB);
+}
+
+ComponentAABB::CollisionState ComponentCamera::CheckAABBCollision(const Frustum& frustum, const AABB& reference_AABB)
 {
 	static const size_t number_of_corners = 8;
 	static const size_t number_of_planes = 6;
@@ -766,7 +520,7 @@ ComponentAABB::CollisionState ComponentCamera::CheckAABBCollision(const AABB& re
 
 	//Get own aabb planes
 	Plane own_frustum_planes[number_of_planes];
-	camera_frustum.GetPlanes(own_frustum_planes);
+	frustum.GetPlanes(own_frustum_planes);
 
 	//Check if Corners are inside the planes
 	int total_reference_planes_inside = 0;
@@ -800,13 +554,18 @@ ComponentAABB::CollisionState ComponentCamera::CheckAABBCollision(const AABB& re
 
 ComponentAABB::CollisionState ComponentCamera::CheckAABB2DCollision(const AABB2D& reference_AABB) const
 {
+	return CheckAABB2DCollision(camera_frustum, reference_AABB);
+}
+
+ComponentAABB::CollisionState ComponentCamera::CheckAABB2DCollision(const Frustum& frustum, const AABB2D& reference_AABB)
+{
 	static const size_t number_of_corners = 4;
 	static const size_t number_of_planes = 4;
 
 	//Get own aabb planes
 	Plane own_frustum_planes[6];
-	camera_frustum.GetPlanes(own_frustum_planes);
-	
+	frustum.GetPlanes(own_frustum_planes);
+
 	//Get refence corners
 	std::vector<float> reference_aabb_corners = Utils::GetVertices(reference_AABB);
 

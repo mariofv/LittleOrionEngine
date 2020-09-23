@@ -19,7 +19,7 @@ struct Billboard
   int num_rows;
   int current_sprite_x;
   int current_sprite_y;
-  int emissive_intensity;
+  float emissive_intensity;
 };
 uniform Billboard billboard;
 

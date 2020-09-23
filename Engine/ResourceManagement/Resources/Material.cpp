@@ -6,6 +6,7 @@
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleRender.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleTime.h"
 
@@ -77,7 +78,7 @@ void Material::Save(Config& config) const
 	config.AddString(shader_program, "ShaderProgram");
 
 	config.AddFloat(smoothness, "Smoothness");
-
+	config.AddFloat(emissive_intensity, "Emissive Intensity");
 	config.AddFloat(transparency, "Transparency");
 
 
@@ -110,7 +111,8 @@ void Material::Load(const Config& config)
 	material_type = static_cast<MaterialType>(config.GetInt("MaterialType", 0));
 
 	transparency = config.GetFloat("Transparency", 1.f);
-	smoothness = config.GetFloat("Smoothness", 1.0F);
+	smoothness = config.GetFloat("Smoothness", 1.f);
+	emissive_intensity = config.GetFloat("Emissive Intensity", 1.f);
 
 
 	config.GetFloat2("Tiling", tiling, float2::one);
@@ -172,11 +174,6 @@ void Material::LoadResource(uint32_t uuid, unsigned texture_type)
 
 void Material::InitResource(uint32_t uuid, unsigned texture_type)
 {
-	if (uuid == 814689362)
-	{
-		int i = 0;
-	}
-
 	MaterialTextureType type = static_cast<MaterialTextureType>(texture_type);
 	if (textures[type] && !textures[type].get()->initialized)
 	{

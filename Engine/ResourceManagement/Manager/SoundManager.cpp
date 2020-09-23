@@ -30,8 +30,6 @@ std::shared_ptr<SoundBank> SoundManager::Load(uint32_t uuid, const FileData & re
 	std::string file_data;
 	file_data.assign(static_cast <const char*> (exported_file_data.buffer), exported_file_data.size);
 	free((void*)exported_file_data.buffer);
-
-	//TODO:Read the names of the events and asssign them to the vector<string> events which will be an attribute of the soundbank.
 	
 	std::string delimiter = "\n";
 	size_t pos = 0;

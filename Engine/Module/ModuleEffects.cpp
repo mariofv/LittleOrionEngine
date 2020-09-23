@@ -33,12 +33,6 @@ bool ModuleEffects::CleanUp()
 
 void ModuleEffects::Render()
 {
-
-
-	if (!render_particles)
-	{
-		return;
-	}
 	BROFILER_CATEGORY("Module Effects Render", Profiler::Color::OrangeRed);
 
 	glDepthMask(GL_FALSE);
@@ -62,7 +56,6 @@ void ModuleEffects::Render()
 
 	glDisable(GL_BLEND);
 	glDepthMask(GL_TRUE);
-	
 }
 
 ComponentBillboard* ModuleEffects::CreateComponentBillboard()

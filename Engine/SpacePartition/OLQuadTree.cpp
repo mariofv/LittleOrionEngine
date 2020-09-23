@@ -69,10 +69,10 @@ void OLQuadTree::Insert(GameObject &game_object)
 	}
 }
 
-void OLQuadTree::CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera)
+void OLQuadTree::CollectIntersect(std::vector<GameObject*>& game_objects, const Frustum& camera_frustum)
 {
 	BROFILER_CATEGORY("OLQuadTree collect intersect", Profiler::Color::Yellow);
-	root->CollectIntersect(game_objects, camera);
+	root->CollectIntersect(game_objects, camera_frustum);
 	const auto it = std::unique(game_objects.begin(), game_objects.end());
 	game_objects.erase(it, game_objects.end());
 }

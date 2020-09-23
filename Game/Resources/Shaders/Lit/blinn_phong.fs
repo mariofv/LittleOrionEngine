@@ -1,38 +1,31 @@
+//////////////////////////////////
+///////     CONSTANTS    /////////
+//////////////////////////////////
+
 #define PI 3.14159
 
-//General variables
-in vec3 position;
-in vec3 normal;
-in vec2 texCoord;
-in vec2 texCoordLightmap;
-in vec3 view_dir;
-in vec3 view_pos;
-in vec3 vertex_normal_fs;
-in vec3 vertex_tangent_fs;
-
-//Tangent - Normal mapping variables
-in mat3 TBN;
-
-out vec4 FragColor;
-
-//constants
 float gamma = 2.2;
 const float ambient_light_strength = 0.1;
 
-vec3 normal_from_texture;
-vec3 liquid_normal_from_texture;
+//////////////////////////////////
+////////     STRUCTS    //////////
+//////////////////////////////////
 
 struct Material
 {
 	sampler2D diffuse_map;
 	vec4 diffuse_color;
+
 	sampler2D specular_map;
 	vec4 specular_color;
 	float smoothness;
 
 	sampler2D occlusion_map;
+
 	sampler2D emissive_map;
 	vec4 emissive_color;
+	float emissive_intensity;
+
 	sampler2D normal_map;
 	sampler2D light_map;
 
@@ -50,7 +43,33 @@ struct Material
 	sampler2D dissolved_noise;
 	float dissolve_progress;
 };
-uniform Material material;
+
+struct SpotLight
+{
+	vec3 color;
+  vec3 position;
+  vec3 direction;
+  float cutOff;
+  float outerCutOff;
+
+  float constant;
+  float linear;
+  float quadratic;
+};
+
+struct PointLight
+{
+	vec3 color;
+	vec3 position;
+
+	float constant;
+  float linear;
+  float quadratic;
+};
+
+//////////////////////////////////
+////////     LAYOUTS    //////////
+//////////////////////////////////
 
 layout (std140) uniform Matrices
 {
@@ -66,37 +85,33 @@ layout (std140) uniform DirectionalLight
 	int num_directional_lights;
 } directional_light;
 
-struct SpotLight
-{
-	vec3 color;
-    vec3 position;
-    vec3 direction;
-    float cutOff;
-    float outerCutOff;
+//////////////////////////////////
+///////     UNIFORMS    //////////
+//////////////////////////////////
 
-    float constant;
-    float linear;
-    float quadratic;
-};
+uniform Material material;
 
-struct PointLight
-{
-	vec3 color;
-	vec3 position;
-
-	float constant;
-    float linear;
-    float quadratic;
-};
-
+// LIGHTS
 uniform int num_spot_lights;
 uniform SpotLight spot_lights[10];
 
 uniform int num_point_lights;
 uniform PointLight point_lights[10];
 
+// SHADOWS
+uniform sampler2D close_depth_map;
+uniform sampler2D mid_depth_map;
+uniform sampler2D far_depth_map;
+
+uniform float ambient_light_intensity;
+uniform vec4 ambient_light_color;
+
+// LIGHTMAPS
 uniform int use_light_map;
 
+//////////////////////////////////
+///////     FUNCTIONS    /////////
+//////////////////////////////////
 
 //COLOR TEXTURES
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord);
@@ -115,29 +130,40 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4
 vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
 
 vec3 GetLiquidNormal(const Material material);
-
 vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel);
-
-uniform float ambient_light_intensity;
-uniform vec4 ambient_light_color;
 
 //SHADOW MAPS
 float ShadowCalculation();
-uniform bool render_shadows;
+vec3 CascadeVisualization();
 
-in vec4 close_pos_from_light;
-in vec4 mid_pos_from_light;
-in vec4 far_pos_from_light;
+//////////////////////////////////
+///////     PARAMETERS    ////////
+//////////////////////////////////
 
-vec3 FrustumsCheck();
+//General variables
+in vec3 position;
+in vec3 normal;
+in vec2 texCoord;
+in vec2 texCoordLightmap;
+in vec3 view_dir;
+in vec3 view_pos;
+in vec3 vertex_normal_fs;
+in vec3 vertex_tangent_fs;
 
-uniform sampler2DShadow close_depth_map;
-uniform sampler2DShadow mid_depth_map;
-uniform sampler2DShadow far_depth_map;
+//Tangent - Normal mapping variables
+in mat3 TBN;
 
-in float distance_to_camera;
-uniform float far_plane;
+in vec4 position_near_depth_space;
+in vec4 position_mid_depth_space;
+in vec4 position_far_depth_space;
 
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 BrightColor;
+layout (location = 2) out vec4 PostProcessFilter;
+
+//////////////////////////////////
+///////     DEFINTIONS    ////////
+//////////////////////////////////
 
 void main()
 {
@@ -190,13 +216,28 @@ void main()
 	{
 		result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
-	
 	result += GetLightMapColor(material,texCoordLightmap) * use_light_map;
-	result += emissive_color;
 	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
+	result += emissive_color;
+
 	FragColor = vec4(result,1.0);
-	FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
-	FragColor.a=material.transparency;
+
+#if	ENABLE_CASCADE_VISUALIZATION
+	FragColor.rgb = CascadeVisualization();
+#endif
+
+	FragColor.a = material.transparency;
+
+	float brightness = dot(result, vec3(0.2, 0.6, 0.0));
+	if (brightness > 1.0)
+	{
+  		BrightColor = vec4(result, 1.0);
+	}
+	else
+	{
+		BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
+	}
+	PostProcessFilter = vec4(1.0, 0.0, 0.0, 1.0);
 }
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
@@ -237,7 +278,6 @@ vec3 GetLightMapColor(const Material mat, const vec2 texCoord)
 
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord)
 {
-
 	vec4 result = texture(mat.specular_map, texCoord)*mat.specular_color;
 	result.rgb = pow(result.rgb, vec3(2.2));
 	result.a *= mat.smoothness;
@@ -265,7 +305,7 @@ vec3 GetEmissiveColor(const Material mat, const vec2 texCoord)
 			result = texture(mat.emissive_map, texCoord);
 	#endif
 
-	result = result * mat.emissive_color;
+	result = result * mat.emissive_color * mat.emissive_intensity;
 	result.rgb = pow(result.rgb, vec3(2.2));
 	return result.rgb;
 }
@@ -361,87 +401,79 @@ vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel)
 	return (1-frensel)*diffuse_color/PI;
 }
 
-
 float ShadowCalculation()
 {
-#if RECEIVE_SHADOWS
-	if(distance_to_camera > far_plane)
+#if	!ENABLE_RECEIVE_SHADOWS
+	return 1.0;
+#endif
+	vec3 normalized_position_near_depth_space = position_near_depth_space.xyz / position_near_depth_space.w;
+	normalized_position_near_depth_space.xy = normalized_position_near_depth_space.xy * 0.5 + 0.5;
+
+	if(normalized_position_near_depth_space.z > 1.0 || normalized_position_near_depth_space.z < 0.0)
 	{
-			return 0;
+			return 1;
 	}
 
-	//Light frustums
-	vec3 normalized_close_depth = close_pos_from_light.xyz / close_pos_from_light.w;
-	normalized_close_depth = normalized_close_depth * 0.5 + 0.5;
 
-	vec3 normalized_mid_depth = mid_pos_from_light.xyz / mid_pos_from_light.w;
-	normalized_mid_depth = normalized_mid_depth * 0.5 + 0.5;
-
-	vec3 normalized_far_depth = far_pos_from_light.xyz / far_pos_from_light.w;
-	normalized_far_depth = normalized_far_depth * 0.5 + 0.5;
-
-	float bias = 0.005;
-	float factor = 0.0;
-
-	vec3 close_coords = vec3(normalized_close_depth.xy, normalized_close_depth.z - bias);
-	vec3 mid_coords = vec3(normalized_mid_depth.xy, normalized_mid_depth.z - bias);
-	vec3 far_coords = vec3(normalized_far_depth.xy, normalized_far_depth.z - bias);
-
-
-	for(int x = -1; x <= 1; ++x) //PCF, solution for edgy shadoWs
-    {
-        for(int y = -1; y <= 1; ++y)
-        {
-			//We sample the texture given from the light camera
-			//A few times at different texture coordinates
-
-			if(distance_to_camera > 0 && distance_to_camera < far_plane/3)
-			{
-				close_coords.xy = normalized_close_depth.xy + vec2(x, y)* (1.0 / textureSize(close_depth_map, 0));
-				factor += texture(close_depth_map, close_coords);
-			}
-
-			if(distance_to_camera >= far_plane/3 &&distance_to_camera < 2*far_plane/3) // Until depth detection is fixed (stops calculating at 50% depth)
-			{
-				mid_coords.xy = normalized_mid_depth.xy + vec2(x, y)*(1.0 / textureSize(mid_depth_map, 0));
-				factor += texture(mid_depth_map, mid_coords);
-			}
-
-			if(distance_to_camera >=  2*far_plane/3 && distance_to_camera < far_plane) // Looks weird, but works
-			{
-				far_coords.xy = normalized_far_depth.xy + vec2(x, y)*(1.0 / textureSize(far_depth_map, 0));
-				factor += texture(far_depth_map, far_coords);
-			}
-
-        }
-    }
-    factor /= 9.0;
-
-
-	return factor;
-#endif
-	return 1;
+	if(
+		normalized_position_near_depth_space.x >= 0.0
+		&& normalized_position_near_depth_space.x <= 1.0
+		&& normalized_position_near_depth_space.y >= 0.0
+		&& normalized_position_near_depth_space.y <= 1.0
+		&& normalized_position_near_depth_space.z < texture(close_depth_map, normalized_position_near_depth_space.xy).r
+	)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
-vec3 FrustumsCheck()
+vec3 CascadeVisualization()
 {
-	vec3 result = vec3(0, 0, 0);
+	//Light frustums
+	vec3 normalized_position_near_depth_space = position_near_depth_space.xyz / position_near_depth_space.w;
+	normalized_position_near_depth_space.xy = normalized_position_near_depth_space.xy * 0.5 + 0.5;
 
-	if(distance_to_camera > 0 && distance_to_camera  < far_plane/3)
+	if(
+		normalized_position_near_depth_space.x >= 0.0
+		&& normalized_position_near_depth_space.x <= 1.0
+		&& normalized_position_near_depth_space.y >= 0.0
+		&& normalized_position_near_depth_space.y <= 1.0
+	)
 	{
-		result = vec3(100, 0, 0);
+			return vec3(1.0, 0.0, 0.0);
 	}
 
-	if(distance_to_camera  >= far_plane/3 && distance_to_camera  < 2*far_plane/3)
+	vec3 normalized_position_mid_depth_space = position_mid_depth_space.xyz / position_mid_depth_space.w;
+	normalized_position_mid_depth_space = normalized_position_mid_depth_space * 0.5 + 0.5;
+
+	if(
+		normalized_position_mid_depth_space.x >= 0.0
+		&& normalized_position_mid_depth_space.x <= 1.0
+		&& normalized_position_mid_depth_space.y >= 0.0
+		&& normalized_position_mid_depth_space.y <= 1.0
+	)
 	{
-		result = vec3(0, 100, 0);
+			return vec3(0.0, 1.0, 0.0);
 	}
 
-	if(distance_to_camera  >= 2*far_plane/3 && distance_to_camera  < far_plane)
+	vec3 normalized_position_far_depth_space = position_far_depth_space.xyz / position_far_depth_space.w;
+	normalized_position_far_depth_space = normalized_position_far_depth_space * 0.5 + 0.5;
+
+	if(
+		normalized_position_far_depth_space.x >= 0.0
+		&& normalized_position_far_depth_space.x <= 1.0
+		&& normalized_position_far_depth_space.y >= 0.0
+		&& normalized_position_far_depth_space.y <= 1.0
+	)
 	{
-		result = vec3(0, 0, 100);
+			return vec3(0.0, 0.0, 1.0);
 	}
-	return result;
+
+	return vec3(1.0, 1.0, 1.0);
 }
 
 vec3 GetLiquidNormal(const Material material)

@@ -1,5 +1,11 @@
 #include "ModuleRender.h"
 
+#include "Component/ComponentCamera.h"
+#include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentLight.h"
+
+#include "EditorUI/DebugDraw.h"
+
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleCamera.h"
@@ -8,17 +14,12 @@
 #include "ModuleEditor.h"
 #include "ModuleEffects.h"
 #include "ModuleProgram.h"
+#include "ModuleResourceManager.h"
 #include "ModuleSpacePartitioning.h"
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
 #include "ModuleLight.h"
-
-#include "Component/ComponentCamera.h"
-#include "Component/ComponentMeshRenderer.h"
-#include "Component/ComponentLight.h"
-
-#include "EditorUI/DebugDraw.h"
-#include "ModuleResourceManager.h"
+#include "Rendering/Viewport.h"
 
 #include <algorithm>
 #include <assimp/scene.h>
@@ -119,6 +120,19 @@ bool ModuleRender::Init()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	APP_LOG_INFO("Glew initialized correctly.");
 
+	int scene_viewport_options = (int)Viewport::ViewportOption::RENDER_UI | (int)Viewport::ViewportOption::SCENE_MODE | (int)Viewport::ViewportOption::BLIT_FRAMEBUFFER;
+	scene_viewport = new Viewport(scene_viewport_options);
+
+	int game_viewport_options = (int)Viewport::ViewportOption::RENDER_UI;
+#if !GAME
+	game_viewport_options |= (int)Viewport::ViewportOption::BLIT_FRAMEBUFFER;
+#endif
+	game_viewport = new Viewport(game_viewport_options);
+
+	SetAntialiasing(antialiasing);
+	SetHDR(hdr);
+	SetBloom(bloom);
+
 	return true;
 }
 
@@ -134,11 +148,13 @@ update_status ModuleRender::PreUpdate()
 bool ModuleRender::CleanUp()
 {
 	APP_LOG_INFO("Destroying renderer");
-	delete rendering_measure_timer;
-	for (auto& mesh : meshes)
+	for (auto& mesh : mesh_renderers)
 	{
 		mesh->owner->RemoveComponent(mesh);
 	}
+
+	delete scene_viewport;
+	delete game_viewport;
 
 	return true;
 }
@@ -148,14 +164,10 @@ void ModuleRender::Render() const
 	BROFILER_CATEGORY("Module Render Render",Profiler::Color::Aqua);
 
 #if GAME
-	if (App->cameras->main_camera != nullptr) 
+	if (App->cameras->main_camera != nullptr)
 	{
-
-		App->lights->RecordShadowsFrameBuffers(App->window->GetWidth(), App->window->GetHeight());
-
-		App->cameras->main_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
-
-		App->cameras->main_camera->RecordDebugDraws();
+		game_viewport->SetSize(App->window->GetWidth(), App->window->GetHeight());
+		game_viewport->Render(App->cameras->main_camera);
 	}
 #endif
 
@@ -165,158 +177,10 @@ void ModuleRender::Render() const
 	SDL_GL_SwapWindow(App->window->window);
 }
 
-void ModuleRender::RenderFrame(const ComponentCamera &camera)
-{
-	BROFILER_CATEGORY("Render Frame", Profiler::Color::Azure);
-  
-	rendering_measure_timer->Start();
-	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-
-	static size_t projection_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + sizeof(float4x4);
-	glBufferSubData(GL_UNIFORM_BUFFER, projection_matrix_offset, sizeof(float4x4), camera.GetProjectionMatrix().Transposed().ptr());
-
-	static size_t view_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + 2 * sizeof(float4x4);
-	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), camera.GetViewMatrix().Transposed().ptr());
-
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-	
-	num_rendered_tris = 0;
-	num_rendered_verts = 0;
-
-	GetMeshesToRender(&camera);
-	for (auto &mesh : opaque_mesh_to_render)
-	{
-		BROFILER_CATEGORY("Render Mesh Opaque", Profiler::Color::Aquamarine);
-		if (mesh.second->mesh_uuid != 0 && mesh.second->IsEnabled())
-		{
-			mesh.second->Render();
-			if(mesh.second->mesh_to_render)
-			{
-				num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
-				num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
-				App->lights->UpdateLightAABB(*mesh.second->owner);			
-			}
-			glUseProgram(0);
-
-		}
-	}
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glBlendEquation(GL_FUNC_ADD);
-	for (auto &mesh : transparent_mesh_to_render)
-	{
-		BROFILER_CATEGORY("Render Mesh Transparent", Profiler::Color::Aquamarine);
-		if (mesh.second->mesh_uuid != 0 && mesh.second->IsEnabled())
-		{
-			mesh.second->Render();
-			if(mesh.second->mesh_to_render)
-			{
-				num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
-				num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
-				App->lights->UpdateLightAABB(*mesh.second->owner);			
-			}
-
-			glUseProgram(0);
-			
-		}
-	}
-	glDisable(GL_BLEND);
-	
-	App->effects->Render();
-
-	rendering_measure_timer->Stop();
-	App->debug->rendering_time = rendering_measure_timer->Read();
-	
-}
-
-void ModuleRender::RenderZBufferFrame(const ComponentCamera & camera)
-{
-	BROFILER_CATEGORY("Render Z buffer Frame", Profiler::Color::Azure);
-
-	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-
-	static size_t projection_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + sizeof(float4x4);
-	glBufferSubData(GL_UNIFORM_BUFFER, projection_matrix_offset, sizeof(float4x4), camera.GetProjectionMatrix().Transposed().ptr());
-
-	static size_t view_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + 2 * sizeof(float4x4);
-	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), camera.GetViewMatrix().Transposed().ptr());
-
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-	for (ComponentMeshRenderer* mesh : meshes_to_render)
-	{
-		if (mesh->shadow_caster)
-		{
-			mesh->Render();
-		}
-	}
-
-}
-
-void ModuleRender::GetMeshesToRender(const ComponentCamera* camera)
-{
-	BROFILER_CATEGORY("Get meshes to render", Profiler::Color::Aquamarine);
-
-	meshes_to_render.clear();
-	if (camera == App->cameras->scene_camera && !App->debug->culling_scene_mode)
-	{
-		meshes_to_render = meshes;
-	}
-	else
-	{
-		App->space_partitioning->GetCullingMeshes(App->cameras->main_camera);
-	}
-	SetListOfMeshesToRender(camera);
-}
-
-void ModuleRender::SetListOfMeshesToRender(const ComponentCamera* camera)
-{
-	opaque_mesh_to_render.clear();
-	transparent_mesh_to_render.clear();
-	float3 camera_pos = camera->camera_frustum.pos;
-	for (ComponentMeshRenderer* mesh_to_render : meshes_to_render)
-	{
-		if (mesh_to_render->mesh_to_render == nullptr || mesh_to_render->material_to_render == nullptr)
-		{
-			continue;
-		}
-
-		if (
-			mesh_to_render->material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT 
-			|| mesh_to_render->material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID
-			|| mesh_to_render->material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING
-		)
-		{
-			mesh_to_render->owner->aabb.bounding_box;
-			float3 center_bounding_box = (mesh_to_render->owner->aabb.bounding_box.minPoint + mesh_to_render->owner->aabb.bounding_box.maxPoint) / 2;
-			float distance = center_bounding_box.Distance(camera_pos);
-			transparent_mesh_to_render.push_back(std::make_pair(distance, mesh_to_render));
-			transparent_mesh_to_render.sort([](const ipair & a, const ipair & b) { return a.first > b.first; });
-		}
-
-		if (mesh_to_render->material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)
-		{
-			mesh_to_render->owner->aabb.bounding_box;
-			float3 center_bounding_box = (mesh_to_render->owner->aabb.bounding_box.minPoint + mesh_to_render->owner->aabb.bounding_box.maxPoint) / 2;
-			float distance = center_bounding_box.Distance(camera_pos);
-			opaque_mesh_to_render.push_back(std::make_pair(distance, mesh_to_render));
-			opaque_mesh_to_render.sort([](const ipair & a, const ipair & b) { return a.first < b.first; });
-		}
-	}
-}
-
 void ModuleRender::SetVSync(bool vsync)
 {
 	this->vsync = vsync;
 	vsync ? SDL_GL_SetSwapInterval(1) : SDL_GL_SetSwapInterval(0);
-}
-
-void ModuleRender::SetAlphaTest(bool gl_alpha_test)
-{
-	this->gl_alpha_test = gl_alpha_test;
-	gl_alpha_test ? glEnable(GL_ALPHA_TEST) : glDisable(GL_ALPHA_TEST);
 }
 
 void ModuleRender::SetDepthTest(bool gl_depth_test)
@@ -324,25 +188,6 @@ void ModuleRender::SetDepthTest(bool gl_depth_test)
 	this->gl_depth_test = gl_depth_test;
 	gl_depth_test ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
 }
-
-void ModuleRender::SetScissorTest(bool gl_scissor_test)
-{
-	this->gl_scissor_test = gl_scissor_test;
-	gl_scissor_test ? glEnable(GL_SCISSOR_TEST) : glDisable(GL_SCISSOR_TEST);
-}
-
-void ModuleRender::SetStencilTest(bool gl_stencil_test)
-{
-	this->gl_stencil_test = gl_stencil_test;
-	gl_stencil_test ? glEnable(GL_STENCIL_TEST) : glDisable(GL_STENCIL_TEST);
-}
-
-void ModuleRender::SetBlending(bool gl_blend)
-{
-	this->gl_blend = gl_blend;
-
-}
-
 
 void ModuleRender::SetFaceCulling(bool gl_cull_face)
 {
@@ -360,18 +205,6 @@ void ModuleRender::SetFrontFaces(GLenum front_faces) const
 	glFrontFace(front_faces);
 }
 
-void ModuleRender::SetDithering(bool gl_dither)
-{
-	this->gl_dither = gl_dither;
-	gl_dither ? glEnable(GL_DITHER) : glDisable(GL_DITHER);
-}
-
-void ModuleRender::SetMinMaxing(bool gl_minmax)
-{
-	this->gl_minmax = gl_minmax;
-	gl_minmax ? glEnable(GL_MINMAX) : glDisable(GL_MINMAX);
-}
-
 void ModuleRender::SetDrawMode(DrawMode draw_mode)
 {
 	this->draw_mode = draw_mode;
@@ -379,13 +212,78 @@ void ModuleRender::SetDrawMode(DrawMode draw_mode)
 	{
 	case ModuleRender::DrawMode::SHADED:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		scene_viewport->SetOutput(Viewport::ViewportOutput::COLOR);
 		break;
+
 	case ModuleRender::DrawMode::WIREFRAME:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		scene_viewport->SetOutput(Viewport::ViewportOutput::COLOR);
 		break;
+
+	case ModuleRender::DrawMode::BRIGHTNESS:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		scene_viewport->SetOutput(Viewport::ViewportOutput::BRIGHTNESS);
+		break;
+
+	case ModuleRender::DrawMode::DEPTH_FULL:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		scene_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_FULL);
+		break;
+
+	case ModuleRender::DrawMode::DEPTH_NEAR:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		scene_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_NEAR);
+		break;
+
+	case ModuleRender::DrawMode::DEPTH_MID:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		scene_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_MID);
+		break;
+
+	case ModuleRender::DrawMode::DEPTH_FAR:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		scene_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_FAR);
+		break;
+
 	default:
 		break;
 	}
+}
+
+void ModuleRender::SetAntialiasing(bool antialiasing)
+{
+	this->antialiasing = antialiasing;
+#if !GAME
+	scene_viewport->SetAntialiasing(antialiasing);
+#endif
+	game_viewport->SetAntialiasing(antialiasing);
+}
+
+void ModuleRender::SetHDR(bool hdr)
+{
+	this->hdr = hdr;
+#if !GAME
+	scene_viewport->SetHDR(hdr);
+#endif
+	game_viewport->SetHDR(hdr);
+}
+
+void ModuleRender::SetBloom(bool bloom)
+{
+	this->bloom = bloom;
+#if !GAME
+	scene_viewport->SetBloom(bloom);
+#endif
+	game_viewport->SetBloom(bloom);
+}
+
+void ModuleRender::SetShadows(bool shadows_enabled)
+{
+	this->shadows_enabled = shadows_enabled;
+#if !GAME
+	scene_viewport->shadows_pass = shadows_enabled;
+#endif
+	game_viewport->shadows_pass = shadows_enabled;
 }
 
 std::string ModuleRender::GetDrawMode() const
@@ -394,46 +292,68 @@ std::string ModuleRender::GetDrawMode() const
 	{
 	case ModuleRender::DrawMode::SHADED:
 		return "Shaded";
-		break;
+
 	case ModuleRender::DrawMode::WIREFRAME:
 		return "Wireframe";
-		break;
+
+	case ModuleRender::DrawMode::BRIGHTNESS:
+		return "Brightness";
+
+	case ModuleRender::DrawMode::DEPTH_NEAR:
+		return "Near Depth Map";
+
+	case ModuleRender::DrawMode::DEPTH_MID:
+		return "Mid Depth Map";
+
+	case ModuleRender::DrawMode::DEPTH_FAR:
+		return "Far Depth Map";
+
+	case ModuleRender::DrawMode::DEPTH_FULL:
+		return "Full Depth Map";
+
 	default:
 		return "Unknown";
-		break;
 	}
 }
 
 ComponentMeshRenderer* ModuleRender::CreateComponentMeshRenderer()
 {
 	ComponentMeshRenderer* created_mesh = new ComponentMeshRenderer();
-	meshes.push_back(created_mesh);
+	mesh_renderers.push_back(created_mesh);
 	return created_mesh;
 }
 
 void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 {
-	const auto it = std::find(meshes.begin(), meshes.end(), mesh_to_remove);
-	if (it != meshes.end())
+	const auto it = std::find(mesh_renderers.begin(), mesh_renderers.end(), mesh_to_remove);
+	if (it != mesh_renderers.end())
 	{
 		delete *it;
-		meshes.erase(it);
+		mesh_renderers.erase(it);
 	}
 }
 
-RaycastHit* ModuleRender::GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* cam)
+RaycastHit* ModuleRender::GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* camera)
 {
-	BROFILER_CATEGORY("Do Raycast", Profiler::Color::HotPink);
-	App->space_partitioning->GetCullingMeshes(cam);
-	std::vector<ComponentMeshRenderer*> intersected_meshes;
-	for (const auto&  mesh : meshes_to_render)
+	if (camera != App->cameras->scene_camera)
 	{
-		if (mesh->owner->aabb.bounding_box.Intersects(ray))
+		return nullptr;
+	}
+
+	BROFILER_CATEGORY("Do Raycast", Profiler::Color::HotPink);
+	std::vector<ComponentMeshRenderer*> culled_mesh_renderers = App->space_partitioning->GetCullingMeshes(camera, mesh_renderers);
+	std::vector<ComponentMeshRenderer*> intersected_meshes;
+	for (const auto& mesh_renderer : culled_mesh_renderers)
+	{
+		if (mesh_renderer->owner->aabb.bounding_box.Intersects(ray))
 		{
 			//Allow non touchable meshes to be ignored from mouse picking in game mode
-			if (cam != App->cameras->scene_camera && !mesh->is_raycastable) continue;
+			if (!mesh_renderer->IsPropertySet(ComponentMeshRenderer::MeshProperties::RAYCASTABLE))
+			{
+				continue;
+			}
 
-			intersected_meshes.push_back(mesh);
+			intersected_meshes.push_back(mesh_renderer);
 		}
 	}
 
@@ -477,10 +397,38 @@ RaycastHit* ModuleRender::GetRaycastIntersection(const LineSegment& ray, const C
 
 int ModuleRender::GetRenderedTris() const
 {
-	return num_rendered_tris;
+	return game_viewport->num_rendered_triangles;
 }
 
 int ModuleRender::GetRenderedVerts() const
 {
-	return num_rendered_verts;
+	return game_viewport->num_rendered_vertices;
+}
+
+void ModuleRender::SetHDRType(const HDRType type)
+{
+	switch (type)
+	{
+		case HDRType::REINHARD:
+			hdr_type = HDRType::REINHARD;
+		break;
+		case HDRType::FILMIC:
+			hdr_type = HDRType::FILMIC;
+		break;
+		case HDRType::EXPOSURE:
+			hdr_type = HDRType::EXPOSURE;
+		break;
+	}
+}
+std::string ModuleRender::GetHDRType(const HDRType type) const
+{
+	switch (type)
+	{
+		case HDRType::REINHARD:
+			return "Reinhard";
+		case HDRType::FILMIC:
+			return "Filmic";
+		case HDRType::EXPOSURE:
+			return "Exposure";
+	}
 }
