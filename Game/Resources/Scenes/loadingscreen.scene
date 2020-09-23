@@ -209,8 +209,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    600.0,
-                    291.0
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
                     -0.0,
@@ -231,8 +231,8 @@
                     0.5
                 ],
                 "SizeDelta": [
-                    1200.0,
-                    582.0
+                    1088.0,
+                    539.0
                 ],
                 "Pivot": [
                     0.5,
@@ -1322,7 +1322,7 @@
                     "ComponentType": 13,
                     "Active": true,
                     "Text": "Loading",
-                    "FontUUID": 17,
+                    "FontUUID": 1108573765,
                     "FontSize": 80.0,
                     "FontColor": [
                         1.0,
