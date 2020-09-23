@@ -150,7 +150,8 @@ bool ModuleProgram::InitFragmentShader(GLuint &fragment_shader, const std::strin
 	Path* fragment_shader_path = App->filesystem->GetPath(fragment_shader_file_name.c_str());
 	FileData fragment_shader_path_data = fragment_shader_path->GetFile()->Load();
 
-	char* fragment_shader_loaded_file = (char*)fragment_shader_path_data.buffer;	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+	char* fragment_shader_loaded_file = (char*)fragment_shader_path_data.buffer;
+	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	if (fragment_shader == 0) {
 		OPENGL_LOG_ERROR("Error creating fragment shader %s", fragment_shader_file_name.c_str());
 		return false;
@@ -262,8 +263,9 @@ void ModuleProgram::InitUniformBuffer()
 	glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &uniform_buffer_offset_alignment);
 
 	uniform_buffer.lights_uniform_offset = uniform_buffer_offset_alignment * CeilInt(((float)uniform_buffer.MATRICES_UNIFORMS_SIZE) / uniform_buffer_offset_alignment);
+	uniform_buffer.light_frustums_uniform_offset = uniform_buffer_offset_alignment * CeilInt(((float)uniform_buffer.lights_uniform_offset + uniform_buffer.LIGHT_UNIFORMS_SIZE) / uniform_buffer_offset_alignment);
 
-	uniform_buffer.uniforms_size = uniform_buffer.lights_uniform_offset + uniform_buffer.LIGHT_UNIFORMS_SIZE;
+	uniform_buffer.uniforms_size = uniform_buffer.light_frustums_uniform_offset + uniform_buffer.LIGHT_FRUSTUM_UNIFORMS_SIZE;
 
 	glGenBuffers(1, &uniform_buffer.ubo);
 
@@ -274,6 +276,7 @@ void ModuleProgram::InitUniformBuffer()
 	// Bind buffer ranges with binding points. NOTE: ORDER MATTERS!
 	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uniform_buffer.ubo, uniform_buffer.MATRICES_UNIFORMS_OFFSET, uniform_buffer.MATRICES_UNIFORMS_SIZE); // Sets binding point 0 for model, projection and view matrix
 	glBindBufferRange(GL_UNIFORM_BUFFER, 1, uniform_buffer.ubo, uniform_buffer.lights_uniform_offset, uniform_buffer.LIGHT_UNIFORMS_SIZE); // Sets binding point 1 for light intensity, color and position
+	glBindBufferRange(GL_UNIFORM_BUFFER, 2, uniform_buffer.ubo, uniform_buffer.light_frustums_uniform_offset, uniform_buffer.LIGHT_FRUSTUM_UNIFORMS_SIZE); // Sets binding point 2 for light frustums
 }
 
 void ModuleProgram::BindUniformBlocks(GLuint shader_program) const
@@ -288,5 +291,11 @@ void ModuleProgram::BindUniformBlocks(GLuint shader_program) const
 	if (light_uniform_block_index != GL_INVALID_INDEX)
 	{
 		glUniformBlockBinding(shader_program, light_uniform_block_index, 1);
+	}
+
+	GLuint light_frustums_uniform_block_index = glGetUniformBlockIndex(shader_program, "DepthMatrices");
+	if (light_frustums_uniform_block_index != GL_INVALID_INDEX)
+	{
+		glUniformBlockBinding(shader_program, light_frustums_uniform_block_index, 2);
 	}
 }

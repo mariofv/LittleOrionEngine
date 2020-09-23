@@ -8,6 +8,15 @@
 #include "Main/GameObject.h"
 #include <Brofiler/Brofiler.h>
 
+// Called before render is available
+bool ModuleEffects::Init()
+{
+	APP_LOG_SECTION("************ Module Effects Init ************");
+	quad = std::make_unique<Quad>();
+	quad->InitQuadBillboard();
+	return true;
+}
+
 bool ModuleEffects::CleanUp()
 {
 	for (auto& particle : particle_systems)
@@ -24,12 +33,6 @@ bool ModuleEffects::CleanUp()
 
 void ModuleEffects::Render()
 {
-
-
-	if (!render_particles)
-	{
-		return;
-	}
 	BROFILER_CATEGORY("Module Effects Render", Profiler::Color::OrangeRed);
 
 	glDepthMask(GL_FALSE);
@@ -53,7 +56,6 @@ void ModuleEffects::Render()
 
 	glDisable(GL_BLEND);
 	glDepthMask(GL_TRUE);
-	
 }
 
 ComponentBillboard* ModuleEffects::CreateComponentBillboard()

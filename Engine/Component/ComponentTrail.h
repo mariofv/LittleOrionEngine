@@ -82,7 +82,7 @@ public:
 	void Delete() override;
 
 	void Update() override;
-	
+
 	void GetPerpendiculars();
 	void GetCatmull();
 	void CalculateCatmull(Spline& const path_to_smoothen, std::vector<float3>& spline_points);
@@ -112,7 +112,7 @@ public:
 	float duration = 1000.0f; // in millis
 	float min_distance = 1.0f;
 
-	//Trail path parameters
+
 	bool active = true;
 	std::vector<TrailPoint> test_points; // These are individual points that define the path
 	TrailPoint last_point;
@@ -126,8 +126,9 @@ public:
 
 	//Color properties
 	float4 color = float4::one;
-	float bloom_intensity = 1.0f;
-	
+	bool emissive = false;
+	float emissive_intensity = 1.f;
+
 	//Catmull-rom
 	Spline path_top, path_bottom;
 	std::vector<float3> spline, spline_top, spline_bottom;
@@ -135,7 +136,7 @@ public:
 
 private:
 	unsigned int trail_vao, trail_vbo;
-	
+
 };
 
 #endif

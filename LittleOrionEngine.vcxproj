@@ -193,6 +193,7 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
     <ClInclude Include="Engine\Module\ModuleEffects.h" />
+    <ClInclude Include="Engine\Rendering\FrameBuffer\DepthFrameBuffer.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\FontManager.h" />
     <ClInclude Include="Engine\Module\ModulePhysics.h" />
     <ClInclude Include="Engine\Module\ModuleAudio.h" />
@@ -328,11 +329,15 @@
     <ClInclude Include="Engine\Helper\PerlinNoise.h" />
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.h" />
     <ClInclude Include="Engine\Helper\Quad.h" />
+    <ClInclude Include="Engine\Rendering\FrameBuffer\FrameBuffer.h" />
+    <ClInclude Include="Engine\Rendering\Viewport.h" />
+    <ClInclude Include="Engine\Rendering\LightFrustum.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Component\ComponentVideoPlayer.cpp" />
-    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTrail.cpp" />
+    <ClCompile Include="Engine\Rendering\FrameBuffer\DepthFrameBuffer.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Video.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTrail.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddMultipleGO.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionDeleteMultipleGO.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionMultipleRotation.cpp" />
@@ -471,6 +476,7 @@
     <ClCompile Include="Engine\EditorUI\Panel\PanelResourceDatabase.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\ImGuiHelper.cpp" />
+    <ClCompile Include="Engine\Rendering\FrameBuffer\FrameBuffer.cpp" />
     <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Builders.cpp" />
     <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Drawing.cpp" />
     <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Widgets.cpp" />
@@ -510,6 +516,8 @@
     <ClCompile Include="Engine\Helper\TagManager.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.cpp" />
     <ClCompile Include="Engine\Helper\Quad.cpp" />
+    <ClCompile Include="Engine\Rendering\Viewport.cpp" />
+    <ClCompile Include="Engine\Rendering\LightFrustum.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

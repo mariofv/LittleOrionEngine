@@ -237,6 +237,10 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		{
 			modified_by_user = true;
 		}
+		if (ImGui::DragFloat("Intensity", &material->emissive_intensity, 0.01f, 1.f, 100.f))
+		{
+			modified_by_user = true;
+		}
 		ImGui::Unindent();
 
 		break;

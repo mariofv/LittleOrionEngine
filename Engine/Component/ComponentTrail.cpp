@@ -11,7 +11,7 @@
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
-namespace { const float MAX_TRAIL_VERTICES = 5000; } //arbitrary number 
+namespace { const float MAX_TRAIL_VERTICES = 5000; } //arbitrary number
 
 ComponentTrail::ComponentTrail() : Component(nullptr, ComponentType::TRAIL)
 {
@@ -70,18 +70,18 @@ void ComponentTrail::InitBuffers()
 
 void ComponentTrail::Update()
 {
-	
+
 	if (!active)
 	{
 		return;
 	}
 	float3 gameobject_position = owner->transform.GetGlobalTranslation(); //current GO position
 	bool on_transform_change = last_gameobject_position.Distance(gameobject_position) > 0.0f;
-	
-	if (on_transform_change)//always gets in this is wrong 
+
+	if (on_transform_change)//always gets in this is wrong
 	{
 		TrailPoint next_point(gameobject_position, width, duration);
-		test_points.push_back(next_point);	//create another Trail point and add it to the pool		
+		test_points.push_back(next_point);	//create another Trail point and add it to the pool
 		last_point = next_point; // So we're gonna calculate, on the next iteration how far we are from the last point created, and so on
 		last_gameobject_position = gameobject_position;
 	}
@@ -91,7 +91,7 @@ void ComponentTrail::Update()
 		GetCatmull();
 		GetUVs();
 	}
-	
+
 	auto it = test_points.begin();
 	while (it != test_points.end())
 	{
@@ -116,7 +116,7 @@ void  ComponentTrail::GetPerpendiculars()
 	for (int i = 0; i < test_points.size(); ++i)
 	{
 		current_point = &test_points[i];
-		
+
 		if (previous_point != nullptr)
 		{
 			mesh_points.push_back(std::make_pair(previous_point, current_point));
@@ -135,7 +135,7 @@ void  ComponentTrail::GetPerpendiculars()
 			//Get the vector that links every two points
 			float3 vector_adjacent = (pair->second->position - pair->first->position).Normalized();//vector between each pair -> Normalized to get vector with magnitutde = 1 but same direction
 			float3 perpendicular;
-			perpendicular = vector_adjacent.Cross((App->cameras->main_camera->camera_frustum.pos - owner->transform.GetGlobalTranslation().Normalized()).Normalized()) * width; //Front is currently local
+			perpendicular = vector_adjacent.Cross((App->cameras->main_camera->camera_frustum.pos - owner->transform.GetGlobalTranslation()).Normalized()) * width; //Front is currently local
 			if (++pair == mesh_points.end())
 			{
 				--pair;
@@ -150,7 +150,7 @@ void  ComponentTrail::GetPerpendiculars()
 			//Spline points
 			path_top.spline_points.emplace_back(top_left);// add points on the spline
 			path_bottom.spline_points.emplace_back(bottom_left);// add points on the spline
-			
+
 			++pair;
 		}
 		else
@@ -184,7 +184,7 @@ void ComponentTrail::CalculateCatmull(Spline& const path_to_smoothen, std::vecto
 			//Implementing r = v - 2 * (v . n) * n reflection formula
 			float3 normal_begin = curve_begin.Cross(curve_end).Normalized(); //Normal of p1
 			smoothen_weight_point_left = curve_end - 2 * (curve_end.Dot(normal_begin) * normal_begin);//refrection of p2 to p1 for getting p0
-			
+
 		}
 		else
 		{
@@ -264,7 +264,8 @@ void ComponentTrail::Render()
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		glUniform4fv(glGetUniformLocation(shader_program, "color"), 1, color.ptr());
-		glUniform1f(glGetUniformLocation(shader_program, "bloom_intensity"), bloom_intensity);
+
+		glUniform1f(glGetUniformLocation(shader_program, "emissive_intensity"), emissive_intensity);
 
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size());
 		glBindVertexArray(0);
@@ -341,7 +342,8 @@ void ComponentTrail::SpecializedSave(Config& config) const
 	config.AddFloat(duration, "Duration");
 	config.AddUInt(texture_uuid, "TextureUUID");
 	config.AddColor(color, "Color");
-	config.AddFloat(bloom_intensity, "Bloom_Intensity");
+	config.AddBool(emissive, "Emissive");
+	config.AddFloat(emissive_intensity, "Emissive Intensity");
 	config.AddUInt(points_in_curve, "Curve Points");
 	config.AddInt(static_cast<int>(texture_mode), "Texture Mode");
 	config.AddUInt(rows, "Rows");
@@ -356,12 +358,12 @@ void ComponentTrail::SpecializedLoad(const Config& config)
 	texture_uuid = config.GetUInt("TextureUUID", 0);
 	ChangeTexture(texture_uuid);
 	config.GetColor("Color", color, float4(1.0f, 1.0f, 1.0f, 1.0f));
-	bloom_intensity = config.GetFloat("Bloom_Intensity", 1.0f);
+	emissive = config.GetBool("Emissive", false);
+	emissive_intensity = config.GetFloat("Emissive Intensity", 1.f);
 	points_in_curve = config.GetUInt("Curve Points", 5);
 	texture_mode = static_cast<TextureMode>(config.GetInt("Texture Mode", static_cast<int>(TextureMode::STRETCH)));
 	rows = config.GetUInt("Rows", 1);
 	columns = config.GetUInt("Columns", 1);
-
 }
 
 void ComponentTrail::Disable()

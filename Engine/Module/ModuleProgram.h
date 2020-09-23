@@ -26,7 +26,16 @@ public:
 		ENABLE_BILLBOARD_AXIAL_ALIGNMENT = 1 << 5,
 
 		ENABLE_LIQUID_PROPERTIES = 1 << 6,
-		ENABLE_DISSOLVING_PROPERTIES = 1 << 7
+		ENABLE_DISSOLVING_PROPERTIES = 1 << 7,
+		ENABLE_MSAA = 1 << 8,
+
+		ENABLE_HDR = 1 << 9,
+		ENABLE_REINHARD = 1 << 10,
+		ENABLE_FILMIC = 1 << 11,
+		ENABLE_EXPOSURE = 1 << 12,
+
+		ENABLE_BLOOM = 1 << 13,
+		ENABLE_CASCADE_VISUALIZATION = 1 << 14
 	};
 
 	struct ShaderProgram
@@ -76,6 +85,10 @@ public:
 		*/
 		const size_t LIGHT_UNIFORMS_SIZE = 8 * sizeof(float); // Size of light color, direction and num directional_lights
 
+
+		size_t light_frustums_uniform_offset;
+		const size_t LIGHT_FRUSTUM_UNIFORMS_SIZE = 3 * sizeof(float4x4); // Size of light color, direction and num directional_lights
+
 		/*
 			Total buffer size depends on the alignment between uniform blocks, so it's size will be computed real time. 
 		*/
@@ -106,18 +119,27 @@ public:
 
 private:
 	std::unordered_map<std::string, ShaderProgram> loaded_programs;
-	std::array<std::string, 8> defines =
+	std::array<std::string, 15> defines =
 	{
 		"#define NORMAL_MAP 1\n",
 		"#define SPECULAR_MAP 1\n",
-		"#define RECEIVE_SHADOWS 1\n",
+		"#define ENABLE_RECEIVE_SHADOWS 1\n",
 
 		"#define ENABLE_SPRITESHEET 1\n",
 		"#define ENABLE_BILLBOARD_VIEWPOINT_ALIGNMENT  1\n",
 		"#define ENABLE_BILLBOARD_AXIAL_ALIGNMENT 1\n",
 
 		"#define ENABLE_LIQUID_PROPERTIES 1\n",
-		"#define ENABLE_DISSOLVING_PROPERTIES 1\n"
+		"#define ENABLE_DISSOLVING_PROPERTIES 1\n",
+		"#define ENABLE_MSAA 1\n",
+		
+		"#define ENABLE_HDR 1\n",
+		"#define ENABLE_REINHARD 1\n",
+		"#define ENABLE_FILMIC 1\n",
+		"#define ENABLE_EXPOSURE 1\n",
+
+		"#define ENABLE_BLOOM 1\n",
+		"#define ENABLE_CASCADE_VISUALIZATION 1\n"
 	};
 
 	std::vector<const char *> names;

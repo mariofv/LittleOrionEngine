@@ -23,6 +23,7 @@ bool ModuleUI::Init()
 {
 	APP_LOG_SECTION("************ Module UI Init ************");
 	quad = std::make_unique<Quad>();
+	quad->InitQuadUI();
 	return true;
 }
 
@@ -34,7 +35,7 @@ update_status ModuleUI::Update()
 	return update_status::UPDATE_CONTINUE;
 }
 
-void ModuleUI::Render(bool scene_mode)
+void ModuleUI::Render(float width, float height, bool scene_mode)
 {
 	if(disable_ui_render)
 	{
@@ -44,7 +45,7 @@ void ModuleUI::Render(bool scene_mode)
 	BROFILER_CATEGORY("Module UI Render", Profiler::Color::LightSeaGreen);
 	if (main_canvas != nullptr)
 	{
-		main_canvas->Render(scene_mode);
+		main_canvas->Render(width, height, scene_mode);
 	}
 }
 
