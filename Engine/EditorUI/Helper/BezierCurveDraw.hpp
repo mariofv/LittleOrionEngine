@@ -86,54 +86,73 @@ namespace ImGui
 
 		ImVec2 mouse = GetIO().MousePos, pos[3 * bezier->MAXIMUM_POINTS];
 		float total_points_and_pivots = bezier->num_points * 3 - 2;
+		static int current_point_index = -1, current_point_side = 0; //side: 0=center, -1=left, 1=right
+		static float current_point_distance = 1000000;
 
-		//build point and handle array
-		for (int i = 0; i < bezier->num_points; i++)
+		//check interaction with mouse
+		if (!IsMouseDoubleClicked(0) && !IsMouseClicked(0) && !IsMouseReleased(0) && !IsMouseDragging(0))
 		{
-			if (i == 0)
-			{
-				pos[0] = ImVec2(bezier->points[i].curve_point.x, 1 - bezier->points[i].curve_point.y) * (rec.Max - rec.Min) + rec.Min;
-				pos[1] = ImVec2(bezier->points[i].right_pivot.x, 1 - bezier->points[i].right_pivot.y) * (rec.Max - rec.Min) + rec.Min;
-			}
-
-			else if (i == bezier->num_points - 1)
-			{
-				pos[2 + (i - 1) * 3 + 0] = ImVec2(bezier->points[i].left_pivot.x, 1 - bezier->points[i].left_pivot.y) * (rec.Max - rec.Min) + rec.Min;
-				pos[2 + (i - 1) * 3 + 1] = ImVec2(bezier->points[i].curve_point.x, 1 - bezier->points[i].curve_point.y) * (rec.Max - rec.Min) + rec.Min;
-			}
-
-			else
-			{
-				pos[2 + (i - 1) * 3 + 0] = ImVec2(bezier->points[i].left_pivot.x, 1 - bezier->points[i].left_pivot.y) * (rec.Max - rec.Min) + rec.Min;
-				pos[2 + (i - 1) * 3 + 1] = ImVec2(bezier->points[i].curve_point.x, 1 - bezier->points[i].curve_point.y) * (rec.Max - rec.Min) + rec.Min;
-				pos[2 + (i - 1) * 3 + 2] = ImVec2(bezier->points[i].right_pivot.x, 1 - bezier->points[i].right_pivot.y) * (rec.Max - rec.Min) + rec.Min;
-			}
+			return;
 		}
 
-		//find closest point or handle
-		float min_distance = 1000000;
-		int point_clicked = 0, point_side = 0; //side: 0=center, -1=left, 1=right
-		for (int i = 0; i < total_points_and_pivots; i++)
+		if (IsMouseReleased(0))
 		{
-			float distance = (pos[i].x - mouse.x) * (pos[i].x - mouse.x) + (pos[i].y - mouse.y) * (pos[i].y - mouse.y);
-			if (distance < min_distance)
-			{
-				min_distance = distance;
+			current_point_index = -1;
+			return;
+		}
 
-				if (i < 2)
+		if (IsMouseDoubleClicked(0) || !IsMouseClicked(0))
+		{
+			//build point and handle array
+			for (int i = 0; i < bezier->num_points; i++)
+			{
+				if (i == 0)
 				{
-					point_clicked = 0;
-					point_side = i;
+					pos[0] = ImVec2(bezier->points[i].curve_point.x, 1 - bezier->points[i].curve_point.y) * (rec.Max - rec.Min) + rec.Min;
+					pos[1] = ImVec2(bezier->points[i].right_pivot.x, 1 - bezier->points[i].right_pivot.y) * (rec.Max - rec.Min) + rec.Min;
 				}
-				else if (i > total_points_and_pivots - 2)
+
+				else if (i == bezier->num_points - 1)
 				{
-					point_clicked = bezier->num_points - 1;
-					point_side = (i + 1) - total_points_and_pivots;
+					pos[2 + (i - 1) * 3 + 0] = ImVec2(bezier->points[i].left_pivot.x, 1 - bezier->points[i].left_pivot.y) * (rec.Max - rec.Min) + rec.Min;
+					pos[2 + (i - 1) * 3 + 1] = ImVec2(bezier->points[i].curve_point.x, 1 - bezier->points[i].curve_point.y) * (rec.Max - rec.Min) + rec.Min;
 				}
+
 				else
 				{
-					point_clicked = (i - ((i - 2) % 3)) / 3 + 1;
-					point_side = (i - 2) % 3 - 1;
+					pos[2 + (i - 1) * 3 + 0] = ImVec2(bezier->points[i].left_pivot.x, 1 - bezier->points[i].left_pivot.y) * (rec.Max - rec.Min) + rec.Min;
+					pos[2 + (i - 1) * 3 + 1] = ImVec2(bezier->points[i].curve_point.x, 1 - bezier->points[i].curve_point.y) * (rec.Max - rec.Min) + rec.Min;
+					pos[2 + (i - 1) * 3 + 2] = ImVec2(bezier->points[i].right_pivot.x, 1 - bezier->points[i].right_pivot.y) * (rec.Max - rec.Min) + rec.Min;
+				}
+			}
+
+			//find closest point or handle
+			if (current_point_index == -1)
+			{
+				current_point_distance = 1000000;
+				for (int i = 0; i < total_points_and_pivots; i++)
+				{
+					float distance = (pos[i].x - mouse.x) * (pos[i].x - mouse.x) + (pos[i].y - mouse.y) * (pos[i].y - mouse.y);
+					if (distance < current_point_distance)
+					{
+						current_point_distance = distance;
+
+						if (i < 2)
+						{
+							current_point_index = 0;
+							current_point_side = i;
+						}
+						else if (i > total_points_and_pivots - 2)
+						{
+							current_point_index = bezier->num_points - 1;
+							current_point_side = (i + 1) - total_points_and_pivots;
+						}
+						else
+						{
+							current_point_index = (i - ((i - 2) % 3)) / 3 + 1;
+							current_point_side = (i - 2) % 3 - 1;
+						}
+					}
 				}
 			}
 		}
@@ -142,25 +161,25 @@ namespace ImGui
 		int detection_distance = 4 * GRAB_RADIUS * 4 * GRAB_RADIUS;
 		if (IsMouseDoubleClicked(0) && (rec.Contains(mouse)))
 		{
-			if (min_distance < detection_distance && point_side == 0)
-				bezier->RemovePointWithIndex(point_clicked);
+			if (current_point_distance < detection_distance && current_point_side == 0)
+				bezier->RemovePointWithIndex(current_point_index);
 			else
 				bezier->AddPointAtCurve((mouse.x - rec.Min.x) / (rec.Max.x - rec.Min.x));
 		}
 
 		//drag and move points
-		if (min_distance < detection_distance)
+		if (current_point_distance < detection_distance)
 		{
 			if (IsMouseClicked(0) || IsMouseDragging(0))
 			{
-				if (point_side == -1)
-					bezier->MovePivotByIncrement(bezier->points[point_clicked].left_pivot, float2(GetIO().MouseDelta.x / canvas.x, -GetIO().MouseDelta.y / canvas.y));
+				if (current_point_side == -1)
+					bezier->MovePivotByIncrement(bezier->points[current_point_index].left_pivot, float2(GetIO().MouseDelta.x / canvas.x, -GetIO().MouseDelta.y / canvas.y));
 
-				else if (point_side == 0)
-					bezier->MovePointByIncrement(bezier->points[point_clicked], float2(GetIO().MouseDelta.x / canvas.x, -GetIO().MouseDelta.y / canvas.y));
+				else if (current_point_side == 0)
+					bezier->MovePointByIncrement(bezier->points[current_point_index], float2(GetIO().MouseDelta.x / canvas.x, -GetIO().MouseDelta.y / canvas.y));
 
 				else
-					bezier->MovePivotByIncrement(bezier->points[point_clicked].right_pivot, float2(GetIO().MouseDelta.x / canvas.x, -GetIO().MouseDelta.y / canvas.y));
+					bezier->MovePivotByIncrement(bezier->points[current_point_index].right_pivot, float2(GetIO().MouseDelta.x / canvas.x, -GetIO().MouseDelta.y / canvas.y));
 
 				changed = true;
 			}
