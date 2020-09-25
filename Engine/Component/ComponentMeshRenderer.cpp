@@ -243,7 +243,6 @@ void ComponentMeshRenderer::AddLightMapUniforms(unsigned int shader_program) con
 	glActiveTexture(GL_TEXTURE8);
 	BindTexture(Material::MaterialTextureType::LIGHTMAP);
 	glUniform1i(glGetUniformLocation(shader_program, "material.light_map"), 8);
-	glUniform1i(glGetUniformLocation(shader_program, "use_light_map"), material_to_render->UseLightmap() ? 1 : 0);
 }
 
 void ComponentMeshRenderer::AddLiquidMaterialUniforms(unsigned int shader_program) const

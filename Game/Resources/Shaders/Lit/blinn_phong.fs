@@ -106,9 +106,6 @@ uniform sampler2D far_depth_map;
 uniform float ambient_light_intensity;
 uniform vec4 ambient_light_color;
 
-// LIGHTMAPS
-uniform int use_light_map;
-
 //////////////////////////////////
 ///////     FUNCTIONS    /////////
 //////////////////////////////////
@@ -216,7 +213,11 @@ void main()
 	{
 		result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
-	result += GetLightMapColor(material,texCoordLightmap) * use_light_map;
+
+#if USE_LIGHT_MAP
+	result += GetLightMapColor(material, texCoordLightmap);
+#endif
+
 	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
 	result += emissive_color;
 
@@ -238,6 +239,10 @@ void main()
 		BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
 	}
 	PostProcessFilter = vec4(1.0, 0.0, 0.0, 1.0);
+
+	#if USE_LIGHT_MAP
+		FragColor.rgb = vec3(1.0);
+	#endif
 }
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
@@ -269,11 +274,7 @@ vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 
 vec3 GetLightMapColor(const Material mat, const vec2 texCoord)
 {
-	if(use_light_map == 1)
-	{
-		gamma = 1.0;
-	}
-	return texture(mat.light_map, texCoord).rgb * use_light_map;
+	return texture(mat.light_map, texCoord).rgb;
 }
 
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord)

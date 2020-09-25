@@ -18,24 +18,25 @@ public:
 	{
 		ENABLE_NORMAL_MAP = 1 << 0,
 		ENABLE_SPECULAR_MAP = 1 << 1,
-		ENABLE_RECEIVE_SHADOWS = 1 << 2,
+		ENABLE_LIGHT_MAP = 1 << 2,
+		ENABLE_RECEIVE_SHADOWS = 1 << 3,
 
-		ENABLE_SPRITESHEET = 1 << 3,
+		ENABLE_SPRITESHEET = 1 << 4,
 
-		ENABLE_BILLBOARD_VIEWPOINT_ALIGNMENT = 1 << 4,
-		ENABLE_BILLBOARD_AXIAL_ALIGNMENT = 1 << 5,
+		ENABLE_BILLBOARD_VIEWPOINT_ALIGNMENT = 1 << 5,
+		ENABLE_BILLBOARD_AXIAL_ALIGNMENT = 1 << 6,
 
-		ENABLE_LIQUID_PROPERTIES = 1 << 6,
-		ENABLE_DISSOLVING_PROPERTIES = 1 << 7,
-		ENABLE_MSAA = 1 << 8,
+		ENABLE_LIQUID_PROPERTIES = 1 << 7,
+		ENABLE_DISSOLVING_PROPERTIES = 1 << 8,
+		ENABLE_MSAA = 1 << 9,
 
-		ENABLE_HDR = 1 << 9,
-		ENABLE_REINHARD = 1 << 10,
-		ENABLE_FILMIC = 1 << 11,
-		ENABLE_EXPOSURE = 1 << 12,
+		ENABLE_HDR = 1 << 10,
+		ENABLE_REINHARD = 1 << 11,
+		ENABLE_FILMIC = 1 << 12,
+		ENABLE_EXPOSURE = 1 << 13,
 
-		ENABLE_BLOOM = 1 << 13,
-		ENABLE_CASCADE_VISUALIZATION = 1 << 14
+		ENABLE_BLOOM = 1 << 14,
+		ENABLE_CASCADE_VISUALIZATION = 1 << 15
 	};
 
 	struct ShaderProgram
@@ -119,10 +120,11 @@ public:
 
 private:
 	std::unordered_map<std::string, ShaderProgram> loaded_programs;
-	std::array<std::string, 15> defines =
+	std::array<std::string, 16> defines =
 	{
 		"#define NORMAL_MAP 1\n",
 		"#define SPECULAR_MAP 1\n",
+		"#define LIGHT_MAP 1\n",
 		"#define ENABLE_RECEIVE_SHADOWS 1\n",
 
 		"#define ENABLE_SPRITESHEET 1\n",
