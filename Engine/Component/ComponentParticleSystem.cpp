@@ -122,6 +122,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 	particle.velocity_initial.Normalize3();
 	particle.size = particles_size;
+	particle.position = particle.position_initial;
 
 	particle.color = initial_color;
 	particle.life = particles_life_time * 1000;
@@ -205,8 +206,9 @@ void ComponentParticleSystem::Update()
 
 void ComponentParticleSystem::UpdateParticle(Particle& particle)
 {
-	particle.life -= App->time->real_time_delta_time; // reduce life
-	particle.time_passed += App->time->real_time_delta_time;
+	float time_increased = App->time->real_time_delta_time;
+	particle.life -= time_increased; // reduce life
+	particle.time_passed += time_increased;
 
 	//velocity over time
 	float4 velocity = particle.velocity_initial * velocity_particles_start * velocity_factor_mod;
@@ -239,8 +241,7 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	}
 
 	//update position
-	particle.position = particle.position_initial + ((velocity + vel_curve_interpolated) * particle.time_passed) +
-		(acceleration * particle.time_passed * particle.time_passed / 2);
+	particle.position += ((velocity + vel_curve_interpolated) * time_increased) + (acceleration * time_increased * time_increased / 2);
 
 	if (orbit)
 	{
