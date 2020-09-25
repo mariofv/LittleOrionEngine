@@ -19,24 +19,28 @@ public:
 	~BezierCurve();
 
 	float2 BezierValue(const float percentage) const;
+	void CalculateCurveValues();
 	
 	bool AddPointAtCurve(const float point_x);
 	bool RemovePointWithIndex(const int point_index);
 
-	void MovePivotByIncrement(float2& handle, float2& increment);
+	void MovePivotByIncrement(float2& handle, float2& increment, bool calculate_curve = true);
 	void MovePointByIncrement(BezierPoint& point, float2& increment);
 
 	void SpecializedSave(Config& config, const std::string& name) const;
 	void SpecializedLoad(const Config& config, const std::string& name);
 
 private:
-	float2 BezierValueIndexPoints(const float percentage, const int last_index) const;
+	float CalculateBezierValue(const float percentage) const;
+	float CalculateBezierValueIndexPoints(const float percentage, const int last_index) const;
 	void CheckAllPoints();
 
 public:
 	static const unsigned int MAXIMUM_POINTS = 10;
+	static const unsigned int NUM_CURVE_VALUES = 256;
 
 	BezierPoint points[MAXIMUM_POINTS];
+	float values[NUM_CURVE_VALUES + 1];
 	int num_points = 2;
 };
 

@@ -13,6 +13,8 @@ BezierCurve::BezierCurve()
 	points[1].right_pivot = points[1].curve_point;
 	
 	num_points = 2;
+
+	CalculateCurveValues();
 }
 
 
@@ -22,15 +24,29 @@ BezierCurve::~BezierCurve()
 
 float2 BezierCurve::BezierValue(const float percentage) const
 {
+	int index = percentage * NUM_CURVE_VALUES;
+	return float2(percentage, values[index]);
+}
+
+void BezierCurve::CalculateCurveValues()
+{
+	for (int i = 0; i <= NUM_CURVE_VALUES; i++)
+	{
+		values[i] = CalculateBezierValue((float)i / (float)NUM_CURVE_VALUES);
+	}
+}
+
+float BezierCurve::CalculateBezierValue(const float percentage) const
+{
 	if (percentage <= 0)
-		return points[0].curve_point;
+		return points[0].curve_point.y;
 
 	if (percentage >= 1)
-		return points[num_points - 1].curve_point;
+		return points[num_points - 1].curve_point.y;
 
 	if (num_points == 2)
 	{
-		return BezierValueIndexPoints(percentage, 1);
+		return CalculateBezierValueIndexPoints(percentage, 1);
 	}
 
 	for (int i = 1; i < num_points; i++)
@@ -38,18 +54,20 @@ float2 BezierCurve::BezierValue(const float percentage) const
 		if (points[i].curve_point.x >= percentage)
 		{
 			float mapped_val = (percentage - points[i - 1].curve_point.x) / (points[i].curve_point.x - points[i - 1].curve_point.x);
-			return BezierValueIndexPoints(mapped_val, i);
+			return CalculateBezierValueIndexPoints(mapped_val, i);
 		}
 	}
-	return float2::zero;
+	return 0;
 }
 
-float2 BezierCurve::BezierValueIndexPoints(const float percentage, const int last_index) const
+float BezierCurve::CalculateBezierValueIndexPoints(const float percentage, const int last_index) const
 {
 	assert(percentage >= 0 && percentage <= 1);
 
-	return pow((1 - percentage), 3) * points[last_index - 1].curve_point + 3 * pow((1 - percentage), 2) * percentage * points[last_index - 1].right_pivot
+	float2 point = pow((1 - percentage), 3) * points[last_index - 1].curve_point + 3 * pow((1 - percentage), 2) * percentage * points[last_index - 1].right_pivot
 		+ 3 * (1 - percentage) * pow(percentage, 2)* points[last_index].left_pivot + pow(percentage, 3) * points[last_index].curve_point;
+	
+	return point.y;
 }
 
 bool BezierCurve::AddPointAtCurve(const float point_x)
@@ -86,6 +104,8 @@ bool BezierCurve::AddPointAtCurve(const float point_x)
 
 	num_points++;
 
+	CalculateCurveValues();
+
 	return true;
 }
 
@@ -108,10 +128,12 @@ bool BezierCurve::RemovePointWithIndex(const int point_index)
 
 	num_points--;
 
+	CalculateCurveValues();
+
 	return true;
 }
 
-void BezierCurve::MovePivotByIncrement(float2& handle, float2& increment)
+void BezierCurve::MovePivotByIncrement(float2& handle, float2& increment, bool calculate_curve)
 {
 	float2 change = handle;
 
@@ -120,6 +142,11 @@ void BezierCurve::MovePivotByIncrement(float2& handle, float2& increment)
 
 	change = handle - change;
 	increment = change;
+
+	if (calculate_curve)
+	{
+		CalculateCurveValues();
+	}
 }
 
 void BezierCurve::MovePointByIncrement(BezierPoint& point, float2& increment)
@@ -131,9 +158,11 @@ void BezierCurve::MovePointByIncrement(BezierPoint& point, float2& increment)
 
 	change = point.curve_point - change;
 	
-	MovePivotByIncrement(point.left_pivot, change);
-	MovePivotByIncrement(point.right_pivot, change);
+	MovePivotByIncrement(point.left_pivot, change, false);
+	MovePivotByIncrement(point.right_pivot, change, false);
 	increment = change;
+
+	CalculateCurveValues();
 }
 
 void BezierCurve::SpecializedSave(Config & config, const std::string& name) const
@@ -160,6 +189,7 @@ void BezierCurve::SpecializedLoad(const Config & config, const std::string& name
 	}
 
 	CheckAllPoints();
+	CalculateCurveValues();
 }
 
 void BezierCurve::CheckAllPoints()
