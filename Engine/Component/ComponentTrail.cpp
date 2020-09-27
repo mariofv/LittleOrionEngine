@@ -106,6 +106,10 @@ void ComponentTrail::Update()
 			it = test_points.erase(it);
 		}
 	}
+	if (!blend_colors)
+	{
+		color_to_blend = color;
+	}
 }
 
 void  ComponentTrail::GetPerpendiculars()
@@ -264,8 +268,9 @@ void ComponentTrail::Render()
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		glUniform4fv(glGetUniformLocation(shader_program, "color"), 1, color.ptr());
-
+		glUniform4fv(glGetUniformLocation(shader_program, "color_blend"), 1, color_to_blend.ptr());
 		glUniform1f(glGetUniformLocation(shader_program, "emissive_intensity"), emissive_intensity);
+		glUniform1f(glGetUniformLocation(shader_program, "percentage"), blend_percentage);
 
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size());
 		glBindVertexArray(0);

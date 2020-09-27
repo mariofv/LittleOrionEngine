@@ -110,7 +110,12 @@ void PanelTrail::Render(ComponentTrail* trail)
 			trail->modified_by_user |= ImGui::ColorEdit4("Color", trail->color.ptr());
 			trail->modified_by_user |= ImGui::Checkbox("Emissive", &trail->emissive);
 			trail->modified_by_user |= ImGui::DragFloat("Intensity", &trail->emissive_intensity, 0.05f, 0.01f, 10.0f);
-
+			trail->modified_by_user |= ImGui::Checkbox("Blend Two Colors", &trail->blend_colors);
+			if (trail->blend_colors)
+			{
+				trail->modified_by_user |= ImGui::ColorEdit4("Color Blend", trail->color_to_blend.ptr());
+				trail->modified_by_user |= ImGui::DragFloat("Percentage Color2", &trail->blend_percentage, 0.1f, 0.0f, 1.0F);
+			}
 		}
 	}
 }

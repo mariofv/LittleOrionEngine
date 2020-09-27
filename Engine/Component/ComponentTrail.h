@@ -128,6 +128,9 @@ public:
 	float4 color = float4::one;
 	bool emissive = false;
 	float emissive_intensity = 1.f;
+	bool blend_colors = false;
+	float blend_percentage = 0.5f;
+	float4 color_to_blend = float4::one;
 
 	//Catmull-rom
 	Spline path_top, path_bottom;
