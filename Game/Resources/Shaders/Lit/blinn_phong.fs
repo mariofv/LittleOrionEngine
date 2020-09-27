@@ -199,6 +199,11 @@ void main()
 	vec3 occlusion_color = GetOcclusionColor(material, tiling);
 	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
+#if ENABLE_LIGHT_MAP
+		result += diffuse_color.rgb + emissive_color;
+		result *= GetLightMapColor(material, texCoordLightmap).rgb;
+#else
+
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)
 	{
 		result += CalculateDirectionalLight(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
@@ -214,12 +219,9 @@ void main()
 		result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
 
-#if USE_LIGHT_MAP
-	result += GetLightMapColor(material, texCoordLightmap);
-#endif
-
 	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
 	result += emissive_color;
+#endif
 
 	FragColor = vec4(result,1.0);
 
@@ -239,10 +241,6 @@ void main()
 		BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
 	}
 	PostProcessFilter = vec4(1.0, 0.0, 0.0, 1.0);
-
-	#if USE_LIGHT_MAP
-		FragColor.rgb = vec3(1.0);
-	#endif
 }
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
@@ -274,7 +272,7 @@ vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 
 vec3 GetLightMapColor(const Material mat, const vec2 texCoord)
 {
-	return texture(mat.light_map, texCoord).rgb;
+	return pow(texture(mat.light_map, texCoord).rgb, vec3(2.2));
 }
 
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord)

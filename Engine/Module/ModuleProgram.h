@@ -124,7 +124,7 @@ private:
 	{
 		"#define NORMAL_MAP 1\n",
 		"#define SPECULAR_MAP 1\n",
-		"#define LIGHT_MAP 1\n",
+		"#define ENABLE_LIGHT_MAP 1\n",
 		"#define ENABLE_RECEIVE_SHADOWS 1\n",
 
 		"#define ENABLE_SPRITESHEET 1\n",
