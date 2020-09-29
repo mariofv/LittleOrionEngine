@@ -122,31 +122,14 @@ void Viewport::LightCameraPass() const
 
 	if (!App->renderer->cascade_mapping)
 	{
-		DepthMapPass(App->lights->full_frustum, depth_full_fbo);
+		DepthMapPass(App->lights->full_frustum, depth_full_fbo, App->renderer->depth_map_debug);
 	}
 	else
 	{
-		DepthMapPass(App->lights->near_frustum, depth_near_fbo);
-		DepthMapPass(App->lights->mid_frustum, depth_mid_fbo);
-		DepthMapPass(App->lights->far_frustum, depth_far_fbo);
+		DepthMapPass(App->lights->near_frustum, depth_near_fbo, App->renderer->depth_map_debug && App->renderer->depth_map_debug_index == 0);
+		DepthMapPass(App->lights->mid_frustum, depth_mid_fbo, App->renderer->depth_map_debug && App->renderer->depth_map_debug_index == 1);
+		DepthMapPass(App->lights->far_frustum, depth_far_fbo, App->renderer->depth_map_debug && App->renderer->depth_map_debug_index == 2);
 	}
-
-	debug_depth_map_fbo->Bind();
-	debug_depth_map_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);
-	glDrawBuffer(GL_COLOR_ATTACHMENT0);
-
-	GLuint program = App->program->UseProgram("DepthMap");
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, depth_full_fbo->GetColorAttachement());
-	glUniform1i(glGetUniformLocation(program, "tex"), 0);
-
-	scene_quad->RenderArray();
-
-	glUseProgram(0);
-	FrameBuffer::UnBind();
-
-	depth_map_texture = depth_full_fbo->GetColorAttachement();
 }
 
 void Viewport::MeshRenderPass() const
@@ -324,7 +307,7 @@ void Viewport::SkyboxPass() const
 	App->cameras->world_skybox->Render(*camera);
 }
 
-void Viewport::DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo) const
+void Viewport::DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo, bool render_debug_depth_map) const
 {
 	depth_fbo->ClearAttachements();
 	depth_fbo->GenerateAttachements(width * light_frustum->multiplier, height * light_frustum->multiplier);
@@ -358,6 +341,27 @@ void Viewport::DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo)
 		}
 	}
 	FrameBuffer::UnBind();
+
+
+	if (render_debug_depth_map)
+	{
+		debug_depth_map_fbo->Bind();
+		debug_depth_map_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+		GLuint program = App->program->UseProgram("DepthMap");
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, depth_fbo->GetColorAttachement());
+		glUniform1i(glGetUniformLocation(program, "tex"), 0);
+
+		scene_quad->RenderArray();
+
+		glUseProgram(0);
+		FrameBuffer::UnBind();
+
+		depth_map_texture = depth_fbo->GetColorAttachement();
+	}
 }
 
 void Viewport::BloomPass()

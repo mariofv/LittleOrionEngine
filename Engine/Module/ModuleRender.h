@@ -90,6 +90,7 @@ public:
 
 	bool shadows_enabled = false;
 	bool depth_map_debug = false;
+	int depth_map_debug_index = 0;
 	bool cascade_mapping = false;
 	bool cascade_debug = false;
 

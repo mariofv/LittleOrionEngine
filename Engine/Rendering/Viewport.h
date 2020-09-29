@@ -58,7 +58,7 @@ private:
 	bool IsOptionSet(ViewportOption option) const;
 
 	void SkyboxPass() const;
-	void DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo) const;
+	void DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo, bool render_debug_depth_map) const;
 	void BloomPass();
 	void HDRPass() const;
 
