@@ -88,7 +88,7 @@ public:
 
 
 		size_t light_frustums_uniform_offset;
-		const size_t LIGHT_FRUSTUM_UNIFORMS_SIZE = 3 * sizeof(float4x4); // Size of light color, direction and num directional_lights
+		const size_t LIGHT_FRUSTUM_UNIFORMS_SIZE = 4 * sizeof(float4x4); // Size of light color, direction and num directional_lights
 
 		/*
 			Total buffer size depends on the alignment between uniform blocks, so it's size will be computed real time. 

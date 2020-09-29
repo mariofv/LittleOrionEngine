@@ -17,6 +17,7 @@ layout (std140) uniform Matrices
 
 layout (std140) uniform DepthMatrices
 {
+  mat4 full_depth_space_matrix;
   mat4 near_depth_space_matrix;
   mat4 mid_depth_space_matrix;
   mat4 far_depth_space_matrix;
@@ -37,6 +38,7 @@ out mat3 TBN;
 out vec3 view_pos;
 out vec3 view_dir;
 
+out vec4 position_full_depth_space;
 out vec4 position_near_depth_space;
 out vec4 position_mid_depth_space;
 out vec4 position_far_depth_space;
@@ -69,6 +71,7 @@ void main()
 	gl_Position = matrices.proj * eye_coordinate_pos;
 
   //Light space
+  position_full_depth_space = depth_matrices.full_depth_space_matrix * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
   position_near_depth_space = depth_matrices.near_depth_space_matrix * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
   position_mid_depth_space = depth_matrices.mid_depth_space_matrix * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
   position_far_depth_space = depth_matrices.far_depth_space_matrix * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);

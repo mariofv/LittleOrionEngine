@@ -119,8 +119,10 @@ void LightFrustum::UpdateMeshRenderersAABB()
 	for (auto& mesh_renderer : culled_meshes)
 	{
 		AABB mesh_renderer_aabb = mesh_renderer->owner->aabb.bounding_box;
-		mesh_renderer_aabb.TransformAsAABB(App->lights->directional_light_rotation.Inverted());
-		mesh_renderers_enclosing_aabb.Enclose(mesh_renderer_aabb);
+		OBB mesh_renderer_obb = mesh_renderer_aabb.Transform(App->lights->directional_light_rotation.Inverted());
+		AABB mesh_renderer_light_space_aabb = mesh_renderer_obb.MinimalEnclosingAABB();
+
+		mesh_renderers_enclosing_aabb.Enclose(mesh_renderer_light_space_aabb);
 	}
 }
 
@@ -183,6 +185,10 @@ void LightFrustum::RenderLightFrustum() const
 	{
 		light_orthogonal_frustum_corner_points[i] = light_orthogonal_frustum_corner_points[i];
 	}
+
+	std::swap(light_orthogonal_frustum_corner_points[2], light_orthogonal_frustum_corner_points[3]);
+	std::swap(light_orthogonal_frustum_corner_points[6], light_orthogonal_frustum_corner_points[7]);
+
 	App->debug_draw->RenderBox(light_orthogonal_frustum_corner_points, light_orthogonal_frustum_render_color);
 	float4x4 light_frustum_transform = App->lights->directional_light_rotation.ToFloat4x4() * float4x4::Translate(light_orthogonal_frustum.pos);
 	App->debug_draw->RenderAxis(light_frustum_transform, 1.f, 1.f, light_orthogonal_frustum_render_color);

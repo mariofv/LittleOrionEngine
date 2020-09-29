@@ -38,12 +38,7 @@ public:
 	{
 		SHADED,
 		WIREFRAME,
-		BRIGHTNESS,
-
-		DEPTH_NEAR,
-		DEPTH_MID,
-		DEPTH_FAR,
-		DEPTH_FULL
+		BRIGHTNESS
 	};
 
 	enum class HDRType
@@ -94,6 +89,7 @@ public:
 	float exposure = 0.5f;
 
 	bool shadows_enabled = false;
+	bool depth_map_debug = false;
 	bool cascade_debug = false;
 
 	bool bloom = false;

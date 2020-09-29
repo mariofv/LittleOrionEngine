@@ -99,6 +99,7 @@ uniform int num_point_lights;
 uniform PointLight point_lights[10];
 
 // SHADOWS
+uniform sampler2D full_depth_map;
 uniform sampler2D close_depth_map;
 uniform sampler2D mid_depth_map;
 uniform sampler2D far_depth_map;
@@ -150,6 +151,7 @@ in vec3 vertex_tangent_fs;
 //Tangent - Normal mapping variables
 in mat3 TBN;
 
+in vec4 position_full_depth_space;
 in vec4 position_near_depth_space;
 in vec4 position_mid_depth_space;
 in vec4 position_far_depth_space;
@@ -401,22 +403,15 @@ int ShadowCalculation()
 #if	!ENABLE_RECEIVE_SHADOWS
 	return 1;
 #endif
-	vec3 normalized_position_near_depth_space = position_near_depth_space.xyz / position_near_depth_space.w;
-	normalized_position_near_depth_space.xy = normalized_position_near_depth_space.xy * 0.5 + 0.5;
+	vec4 normalized_position_full_depth_space = position_full_depth_space / position_full_depth_space.w;
+	normalized_position_full_depth_space.xyz = normalized_position_full_depth_space.xyz * 0.5 + 0.5;
 
-	if(normalized_position_near_depth_space.z > 1.0 || normalized_position_near_depth_space.z < 0.0)
+	if(normalized_position_full_depth_space.z > 1.0)
 	{
 			return 1;
 	}
 
-
-	if(
-		normalized_position_near_depth_space.x >= 0.0
-		&& normalized_position_near_depth_space.x <= 1.0
-		&& normalized_position_near_depth_space.y >= 0.0
-		&& normalized_position_near_depth_space.y <= 1.0
-		&& normalized_position_near_depth_space.z < texture(close_depth_map, normalized_position_near_depth_space.xy).r
-	)
+	if(normalized_position_full_depth_space.z < texture(full_depth_map, normalized_position_full_depth_space.xy).r)
 	{
 		return 1;
 	}
