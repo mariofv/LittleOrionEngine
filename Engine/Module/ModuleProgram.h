@@ -36,7 +36,8 @@ public:
 		ENABLE_EXPOSURE = 1 << 13,
 
 		ENABLE_BLOOM = 1 << 14,
-		ENABLE_CASCADE_VISUALIZATION = 1 << 15
+		ENABLE_CASCADE_MAPPING = 1 << 15,
+		ENABLE_CASCADE_VISUALIZATION = 1 << 16
 	};
 
 	struct ShaderProgram
@@ -120,7 +121,7 @@ public:
 
 private:
 	std::unordered_map<std::string, ShaderProgram> loaded_programs;
-	std::array<std::string, 16> defines =
+	std::array<std::string, 17> defines =
 	{
 		"#define NORMAL_MAP 1\n",
 		"#define SPECULAR_MAP 1\n",
@@ -141,6 +142,7 @@ private:
 		"#define ENABLE_EXPOSURE 1\n",
 
 		"#define ENABLE_BLOOM 1\n",
+		"#define ENABLE_CASCADE_MAPPING 1\n"
 		"#define ENABLE_CASCADE_VISUALIZATION 1\n"
 	};
 

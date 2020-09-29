@@ -120,7 +120,16 @@ void Viewport::LightCameraPass() const
 		return;
 	}
 
-	DepthMapPass(App->lights->full_frustum, depth_full_fbo);
+	if (!App->renderer->cascade_mapping)
+	{
+		DepthMapPass(App->lights->full_frustum, depth_full_fbo);
+	}
+	else
+	{
+		DepthMapPass(App->lights->near_frustum, depth_near_fbo);
+		DepthMapPass(App->lights->mid_frustum, depth_mid_fbo);
+		DepthMapPass(App->lights->far_frustum, depth_far_fbo);
+	}
 
 	debug_depth_map_fbo->Bind();
 	debug_depth_map_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);
@@ -138,10 +147,6 @@ void Viewport::LightCameraPass() const
 	FrameBuffer::UnBind();
 
 	depth_map_texture = depth_full_fbo->GetColorAttachement();
-
-	/*DepthMapPass(App->lights->near_frustum, depth_near_fbo);
-	DepthMapPass(App->lights->mid_frustum, depth_mid_fbo);
-	DepthMapPass(App->lights->far_frustum, depth_far_fbo);*/
 }
 
 void Viewport::MeshRenderPass() const
@@ -322,7 +327,7 @@ void Viewport::SkyboxPass() const
 void Viewport::DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo) const
 {
 	depth_fbo->ClearAttachements();
-	depth_fbo->GenerateAttachements(width, height);
+	depth_fbo->GenerateAttachements(width * light_frustum->multiplier, height * light_frustum->multiplier);
 
 	light_frustum->RenderLightFrustum();
 
@@ -330,7 +335,7 @@ void Viewport::DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo)
 	BindCameraFrustumMatrices(light_frustum->light_orthogonal_frustum);
 
 	depth_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, width * light_frustum->multiplier, height * light_frustum->multiplier);
 	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 	std::vector<ComponentMeshRenderer*> culled_shadow_casters = App->space_partitioning->GetCullingMeshes(

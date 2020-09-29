@@ -125,8 +125,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    0.0,
-                    0.0
+                    416.5,
+                    291.0
                 ],
                 "Rotation": [
                     0.0,
@@ -148,7 +148,7 @@
                 ],
                 "SizeDelta": [
                     833.0,
-                    601.0
+                    582.0
                 ],
                 "Pivot": [
                     0.5,
@@ -110254,6 +110254,7 @@
         1.0,
         1.0
     ],
+    "Shadows": true,
     "HDR": true,
     "Exposure": 1.0,
     "Bloom": true,

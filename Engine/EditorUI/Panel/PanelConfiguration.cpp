@@ -267,7 +267,11 @@ void PanelConfiguration::ShowRenderOptions()
 		if (App->renderer->shadows_enabled)
 		{
 			ImGui::Checkbox("Depth map debug", &App->renderer->depth_map_debug);
-			ImGui::Checkbox("Cascade debug", &App->renderer->cascade_debug);
+			ImGui::Checkbox("Cascade Mapping", &App->renderer->cascade_mapping);
+			if (App->renderer->cascade_mapping)
+			{
+				ImGui::Checkbox("Cascade debug", &App->renderer->cascade_debug);
+			}
 		}
 		ImGui::Separator();
 

@@ -124,9 +124,14 @@ GLuint ComponentMeshRenderer::BindShaderProgram() const
 	{
 		shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_RECEIVE_SHADOWS);
 	}
-	if (App->renderer->cascade_debug)
+	if (App->renderer->cascade_mapping)
 	{
-		shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_CASCADE_VISUALIZATION);
+		shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_CASCADE_MAPPING);
+
+		if (App->renderer->cascade_debug)
+		{
+			shader_variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_CASCADE_VISUALIZATION);
+		}
 	}
 	if (App->renderer->bloom)
 	{

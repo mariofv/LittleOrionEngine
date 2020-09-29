@@ -45,6 +45,8 @@ public:
 
 	Frustum light_orthogonal_frustum;
 	float3 light_orthogonal_frustum_render_color;
+
+	float multiplier = 1.f;
 };
 
 #endif //__LIGHTFRUSTUM_H__

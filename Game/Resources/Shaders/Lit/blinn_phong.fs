@@ -133,6 +133,8 @@ vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel);
 //SHADOW MAPS
 int ShadowCalculation();
 vec3 CascadeVisualization();
+vec3 NormalizePosition(vec4 position);
+bool InsideUVRange(vec2 uv);
 
 //////////////////////////////////
 ///////     PARAMETERS    ////////
@@ -151,10 +153,10 @@ in vec3 vertex_tangent_fs;
 //Tangent - Normal mapping variables
 in mat3 TBN;
 
-in vec4 position_full_depth_space;
 in vec4 position_near_depth_space;
 in vec4 position_mid_depth_space;
 in vec4 position_far_depth_space;
+in vec4 position_full_depth_space;
 
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 BrightColor;
@@ -167,7 +169,7 @@ layout (location = 2) out vec4 PostProcessFilter;
 void main()
 {
 	vec3 result = vec3(0);
-	vec3 ambient = ambient_light_color.xyz* ambient_light_strength*ambient_light_intensity;
+	vec3 ambient = ambient_light_color.xyz * ambient_light_strength * ambient_light_intensity;
 	//tiling
 	vec2 tiling = material.tiling * texCoord;
 
@@ -403,15 +405,11 @@ int ShadowCalculation()
 #if	!ENABLE_RECEIVE_SHADOWS
 	return 1;
 #endif
-	vec4 normalized_position_full_depth_space = position_full_depth_space / position_full_depth_space.w;
-	normalized_position_full_depth_space.xyz = normalized_position_full_depth_space.xyz * 0.5 + 0.5;
 
-	if(normalized_position_full_depth_space.z > 1.0)
-	{
-			return 1;
-	}
+#if	!ENABLE_CASCADE_MAPPING
+	vec3 normalized_position_full_depth_space = NormalizePosition(position_full_depth_space);
 
-	if(normalized_position_full_depth_space.z < texture(full_depth_map, normalized_position_full_depth_space.xy).r)
+	if(normalized_position_full_depth_space.z > 1.0 || normalized_position_full_depth_space.z < texture(full_depth_map, normalized_position_full_depth_space.xy).r)
 	{
 		return 1;
 	}
@@ -419,51 +417,43 @@ int ShadowCalculation()
 	{
 		return 0;
 	}
+#else
+	return 1;
+#endif
 }
 
 vec3 CascadeVisualization()
 {
 	//Light frustums
-	vec3 normalized_position_near_depth_space = position_near_depth_space.xyz / position_near_depth_space.w;
-	normalized_position_near_depth_space.xy = normalized_position_near_depth_space.xy * 0.5 + 0.5;
-
-	if(
-		normalized_position_near_depth_space.x >= 0.0
-		&& normalized_position_near_depth_space.x <= 1.0
-		&& normalized_position_near_depth_space.y >= 0.0
-		&& normalized_position_near_depth_space.y <= 1.0
-	)
+	vec3 normalized_position_near_depth_space = NormalizePosition(position_near_depth_space);
+	if(InsideUVRange(normalized_position_near_depth_space.xy))
 	{
-			return vec3(1.0, 0.0, 0.0);
+		return vec3(1.0, 0.0, 0.0);
 	}
 
-	vec3 normalized_position_mid_depth_space = position_mid_depth_space.xyz / position_mid_depth_space.w;
-	normalized_position_mid_depth_space = normalized_position_mid_depth_space * 0.5 + 0.5;
-
-	if(
-		normalized_position_mid_depth_space.x >= 0.0
-		&& normalized_position_mid_depth_space.x <= 1.0
-		&& normalized_position_mid_depth_space.y >= 0.0
-		&& normalized_position_mid_depth_space.y <= 1.0
-	)
+	vec3 normalized_position_mid_depth_space = NormalizePosition(position_mid_depth_space);
+	if(InsideUVRange(normalized_position_mid_depth_space.xy))
 	{
-			return vec3(0.0, 1.0, 0.0);
+		return vec3(0.0, 1.0, 0.0);
 	}
 
-	vec3 normalized_position_far_depth_space = position_far_depth_space.xyz / position_far_depth_space.w;
-	normalized_position_far_depth_space = normalized_position_far_depth_space * 0.5 + 0.5;
-
-	if(
-		normalized_position_far_depth_space.x >= 0.0
-		&& normalized_position_far_depth_space.x <= 1.0
-		&& normalized_position_far_depth_space.y >= 0.0
-		&& normalized_position_far_depth_space.y <= 1.0
-	)
+	vec3 normalized_position_far_depth_space = NormalizePosition(position_far_depth_space);
+	if(InsideUVRange(normalized_position_far_depth_space.xy))
 	{
-			return vec3(0.0, 0.0, 1.0);
+		return vec3(0.0, 0.0, 1.0);
 	}
 
 	return vec3(1.0, 1.0, 1.0);
+}
+
+vec3 NormalizePosition(vec4 position)
+{
+	return (position.xyz / position.w) * 0.5 + 0.5;
+}
+
+bool InsideUVRange(vec2 uv)
+{
+	return uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0;
 }
 
 vec3 GetLiquidNormal(const Material material)
