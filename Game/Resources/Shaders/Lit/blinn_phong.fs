@@ -131,7 +131,8 @@ vec3 GetLiquidNormal(const Material material);
 vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel);
 
 //SHADOW MAPS
-int ShadowCalculation();
+float ShadowCalculation();
+float PercentageCloserFiltering(vec3 normalized_position, sampler2D depth_map);
 vec3 CascadeVisualization();
 vec3 NormalizePosition(vec4 position);
 bool InsideUVRange(vec2 uv);
@@ -203,7 +204,7 @@ void main()
 	vec3 occlusion_color = GetOcclusionColor(material, tiling);
 	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
- 	int lit_fragment = ShadowCalculation();
+ 	float lit_fragment = ShadowCalculation();
 
 #if ENABLE_LIGHT_MAP
 	result += diffuse_color.rgb * GetLightMapColor(material, texCoordLightmap).rgb * lit_fragment;
@@ -400,56 +401,58 @@ vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel)
 	return (1-frensel)*diffuse_color/PI;
 }
 
-int ShadowCalculation()
+float ShadowCalculation()
 {
 #if	!ENABLE_RECEIVE_SHADOWS
-	return 1;
+	return 1.0;
 #endif
 
 #if	!ENABLE_CASCADE_MAPPING
 	vec3 normalized_position_full_depth_space = NormalizePosition(position_full_depth_space);
+	if (normalized_position_full_depth_space.z > 1.0)
+	{
+		return 1.0;
+	}
+	return PercentageCloserFiltering(normalized_position_full_depth_space, full_depth_map);
 
-	if(normalized_position_full_depth_space.z > 1.0 || normalized_position_full_depth_space.z < texture(full_depth_map, normalized_position_full_depth_space.xy).r)
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
 #else
 	vec3 normalized_position_near_depth_space = NormalizePosition(position_near_depth_space);
-	if(
-		InsideUVRange(normalized_position_near_depth_space.xy)
-	 	&& normalized_position_near_depth_space.z <= 1.0
-		&& normalized_position_near_depth_space.z < texture(close_depth_map, normalized_position_near_depth_space.xy).r
-	)
+	if (InsideUVRange(normalized_position_near_depth_space.xy) && normalized_position_near_depth_space.z <= 1.0)
 	{
-		return 1;
+		return PercentageCloserFiltering(normalized_position_near_depth_space, close_depth_map);
 	}
 
 	vec3 normalized_position_mid_depth_space = NormalizePosition(position_mid_depth_space);
-	if(
-		InsideUVRange(normalized_position_mid_depth_space.xy)
-	 	&& normalized_position_mid_depth_space.z <= 1.0
-		&& normalized_position_mid_depth_space.z < texture(mid_depth_map, normalized_position_mid_depth_space.xy).r
-	)
+	if (InsideUVRange(normalized_position_mid_depth_space.xy)	&& normalized_position_mid_depth_space.z <= 1.0)
 	{
-		return 1;
+		return PercentageCloserFiltering(normalized_position_mid_depth_space, mid_depth_map);
 	}
 
 	vec3 normalized_position_far_depth_space = NormalizePosition(position_far_depth_space);
-	if(
-		InsideUVRange(normalized_position_far_depth_space.xy)
-	 	&& normalized_position_far_depth_space.z <= 1.0
-		&& normalized_position_far_depth_space.z < texture(far_depth_map, normalized_position_far_depth_space.xy).r
-	)
+	if (InsideUVRange(normalized_position_far_depth_space.xy) && normalized_position_far_depth_space.z <= 1.0)
 	{
-		return 1;
+		return PercentageCloserFiltering(normalized_position_far_depth_space, far_depth_map);
 	}
 
-	return 0;
+	return 1.0;
+
 #endif
+}
+
+float PercentageCloserFiltering(vec3 normalized_position, sampler2D depth_map)
+{
+	float shadow = 0.0;
+	vec2 texelSize = 1.0 / textureSize(depth_map, 0);
+	for(int x = -1; x <= 1; ++x)
+	{
+	    for(int y = -1; y <= 1; ++y)
+	    {
+	        float pcf_depth = texture(depth_map, normalized_position.xy + vec2(x, y) * texelSize).r;
+	        shadow += normalized_position.z > pcf_depth ? 1.0 : 0.0;
+	    }
+	}
+	shadow /= 9.0;
+	return (1 - shadow);
 }
 
 vec3 CascadeVisualization()

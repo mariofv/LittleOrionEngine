@@ -10,6 +10,8 @@
 #include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleRender.h"
 
+const int LIGHT_FRUSTUM_FAR_PLANE_EXTRA_DISTANCE = 20.f;
+
 LightFrustum::LightFrustum(FrustumSubDivision frustum_sub_division) : frustum_sub_division(frustum_sub_division)
 {
 	switch (frustum_sub_division)
@@ -150,7 +152,7 @@ void LightFrustum::UpdateLightOrthogonalFrustum()
 	light_orthogonal_frustum.nearPlaneDistance = 0;
 	light_orthogonal_frustum.front = App->lights->directional_light_rotation * float3::unitZ;
 	light_orthogonal_frustum.up = App->lights->directional_light_rotation * float3::unitY;
-	light_orthogonal_frustum.farPlaneDistance = max_point.z - min_point.z;
+	light_orthogonal_frustum.farPlaneDistance = max_point.z - min_point.z + LIGHT_FRUSTUM_FAR_PLANE_EXTRA_DISTANCE;
 	light_orthogonal_frustum.orthographicWidth = max_point.x - min_point.x;
 	light_orthogonal_frustum.orthographicHeight = max_point.y - min_point.y;
 }
