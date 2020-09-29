@@ -130,7 +130,7 @@ vec3 GetLiquidNormal(const Material material);
 vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel);
 
 //SHADOW MAPS
-float ShadowCalculation();
+int ShadowCalculation();
 vec3 CascadeVisualization();
 
 //////////////////////////////////
@@ -199,15 +199,18 @@ void main()
 	vec3 occlusion_color = GetOcclusionColor(material, tiling);
 	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
+ 	int lit_fragment = ShadowCalculation();
+
 #if ENABLE_LIGHT_MAP
-		result += diffuse_color.rgb + emissive_color;
-		result *= GetLightMapColor(material, texCoordLightmap).rgb;
+	result += diffuse_color.rgb * GetLightMapColor(material, texCoordLightmap).rgb * lit_fragment;
 #else
+	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
 
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)
 	{
-		result += CalculateDirectionalLight(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
+		result += CalculateDirectionalLight(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color) * lit_fragment;
 	}
+#endif
 
 	for (int i = 0; i < num_spot_lights; ++i)
 	{
@@ -219,9 +222,7 @@ void main()
 		result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
 
-	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
 	result += emissive_color;
-#endif
 
 	FragColor = vec4(result,1.0);
 
@@ -334,12 +335,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 		vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-ND),5);
 		vec3 specular =(spec * (shininess+8)/8*PI) *  fresnel;
 
-		vec3 return_value = directional_light.color * (
-		( (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular)*ShadowCalculation())
-		) * ND;
-
-
-		return return_value;
+		return directional_light.color * (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular) * ND;
 }
 
 vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
@@ -400,10 +396,10 @@ vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel)
 	return (1-frensel)*diffuse_color/PI;
 }
 
-float ShadowCalculation()
+int ShadowCalculation()
 {
 #if	!ENABLE_RECEIVE_SHADOWS
-	return 1.0;
+	return 1;
 #endif
 	vec3 normalized_position_near_depth_space = position_near_depth_space.xyz / position_near_depth_space.w;
 	normalized_position_near_depth_space.xy = normalized_position_near_depth_space.xy * 0.5 + 0.5;
