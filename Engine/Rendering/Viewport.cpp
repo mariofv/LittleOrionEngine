@@ -312,8 +312,6 @@ void Viewport::DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo,
 	depth_fbo->ClearAttachements();
 	depth_fbo->GenerateAttachements(width * light_frustum->multiplier, height * light_frustum->multiplier);
 
-	light_frustum->RenderLightFrustum();
-
 	depth_fbo->Bind();
 	BindCameraFrustumMatrices(light_frustum->light_orthogonal_frustum);
 
