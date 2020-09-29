@@ -142,7 +142,7 @@ private:
 		"#define ENABLE_EXPOSURE 1\n",
 
 		"#define ENABLE_BLOOM 1\n",
-		"#define ENABLE_CASCADE_MAPPING 1\n"
+		"#define ENABLE_CASCADE_MAPPING 1\n",
 		"#define ENABLE_CASCADE_VISUALIZATION 1\n"
 	};
 

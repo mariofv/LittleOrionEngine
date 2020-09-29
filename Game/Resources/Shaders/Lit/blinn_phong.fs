@@ -418,7 +418,37 @@ int ShadowCalculation()
 		return 0;
 	}
 #else
-	return 1;
+	vec3 normalized_position_near_depth_space = NormalizePosition(position_near_depth_space);
+	if(
+		InsideUVRange(normalized_position_near_depth_space.xy)
+	 	&& normalized_position_near_depth_space.z <= 1.0
+		&& normalized_position_near_depth_space.z < texture(close_depth_map, normalized_position_near_depth_space.xy).r
+	)
+	{
+		return 1;
+	}
+
+	vec3 normalized_position_mid_depth_space = NormalizePosition(position_mid_depth_space);
+	if(
+		InsideUVRange(normalized_position_mid_depth_space.xy)
+	 	&& normalized_position_mid_depth_space.z <= 1.0
+		&& normalized_position_mid_depth_space.z < texture(mid_depth_map, normalized_position_mid_depth_space.xy).r
+	)
+	{
+		return 1;
+	}
+
+	vec3 normalized_position_far_depth_space = NormalizePosition(position_far_depth_space);
+	if(
+		InsideUVRange(normalized_position_far_depth_space.xy)
+	 	&& normalized_position_far_depth_space.z <= 1.0
+		&& normalized_position_far_depth_space.z < texture(far_depth_map, normalized_position_far_depth_space.xy).r
+	)
+	{
+		return 1;
+	}
+
+	return 0;
 #endif
 }
 
