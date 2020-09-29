@@ -9,6 +9,8 @@ uniform vec4 color;
 uniform vec4 color_blend;
 uniform float emissive_intensity;
 uniform float percentage;
+uniform float gradient_before;
+uniform float percentage_after;
 
 void main()
 {
@@ -16,11 +18,19 @@ void main()
 	float f = fract(t.s);
 	vec4 texture_color = texture(tex, texCoord) * color * emissive_intensity;
 	vec4 texture_color2 = texture(tex, texCoord) * color_blend * emissive_intensity;
-	if(f < percentage)
+	if(f < percentage - gradient_before)
 	FragColor = texture_color;
+	else if(f < percentage)
+	FragColor =  texture(tex, texCoord) * vec4(mix(color, color_blend, (f - percentage))) * emissive_intensity;
+	else if (f < percentage + gradient_before)
+	FragColor =  texture(tex, texCoord) * vec4(mix(color, color_blend, (f - percentage + gradient_before))) * emissive_intensity;
 	else
 	FragColor = texture_color2;
 	
+	if(texture_color.a <0.1)
+	{
+			discard;
+	}
 	
 	float brightness = dot(texture_color.rgb, vec3(0.2126, 0.7152, 0.0722));
 	if(brightness > 1.0)

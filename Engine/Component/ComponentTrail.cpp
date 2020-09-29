@@ -245,7 +245,8 @@ void ComponentTrail::Render()
 {
 	if (active && trail_texture)
 	{
-
+		glDisable(GL_CULL_FACE);
+		//glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
 		GLuint shader_program = App->program->UseProgram("Trail");
 		glUseProgram(shader_program);
 
@@ -276,6 +277,8 @@ void ComponentTrail::Render()
 		glBindVertexArray(0);
 
 		glUseProgram(0);
+		glDisable(GL_BLEND);
+
 	}
 }
 
