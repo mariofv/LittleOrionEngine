@@ -105,12 +105,26 @@ void ComponentText::Render(float4x4* projection)
 	// Iterate through all characters
 	for (char const &c : text)
 	{
+		if (c == '\\') 
+		{
+			is_special_char = true;
+			continue;
+		}
+		if (is_special_char && c == 'n')
+		{
+			is_jump_line = true;
+			is_special_char = false;
+			/*line_sizes.push_back(cursor_x);
+			cursor_x = 0;*/
+			continue;
+		}
 		Font::Character character = font->GetCharacter(c);
 		float character_size = (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
 
 		float next_cursor_x = cursor_x + character_size;
-		if (next_cursor_x > owner->transform_2d.size.x)
+		if (next_cursor_x > owner->transform_2d.size.x || is_jump_line)
 		{
+			is_jump_line = false;
 			float next_cursor_y = cursor_y + font->GetMaxHeight() * scale_factor;
 			if (next_cursor_y > owner->transform_2d.size.y)
 			{
@@ -120,6 +134,10 @@ void ComponentText::Render(float4x4* projection)
 			{
 				cursor_x = 0;
 				++current_line;
+				if (current_line > line_sizes.size() - 1)
+				{
+					current_line = line_sizes.size() - 1;
+				}
 				x = GetLineStartPosition(line_sizes[current_line]);
 
 				cursor_y = font->GetMaxHeight() * scale_factor;
@@ -181,6 +199,7 @@ void ComponentText::ComputeTextLines()
 
 	while (!pending_characters.empty())
 	{
+		
 		Font::Character character = pending_characters.front();
 
 		float character_width = (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))

@@ -78,5 +78,7 @@ private:
 
 	float scale_factor = 0.f;
 	std::vector<float> line_sizes;
+	bool is_special_char = false;
+	bool is_jump_line = false;
 };
 #endif
