@@ -86,7 +86,7 @@ public:
 	bool antialiasing = true;
 
 	bool hdr = true;
-	float exposure = 0.5f;
+	float exposure = 1.f;
 
 	bool shadows_enabled = false;
 	bool depth_map_debug = false;
