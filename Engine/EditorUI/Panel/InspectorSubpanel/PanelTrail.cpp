@@ -115,8 +115,8 @@ void PanelTrail::Render(ComponentTrail* trail)
 			{
 				trail->modified_by_user |= ImGui::ColorEdit4("Color Blend", trail->color_to_blend.ptr());
 				trail->modified_by_user |= ImGui::DragFloat("Percentage Color2", &trail->blend_percentage, 0.1f, 0.0f, 1.0F);
-				trail->modified_by_user |= ImGui::DragFloat("Key before", &trail->emissive_intensity, 0.05f, 0.01f, 10.0f);
-				trail->modified_by_user |= ImGui::DragFloat("Key after", &trail->emissive_intensity, 0.05f, 0.01f, 10.0f);
+				trail->modified_by_user |= ImGui::DragFloat("Key Left", &trail->emissive_intensity, 0.05f, 0.01f, 10.0f);
+				trail->modified_by_user |= ImGui::DragFloat("Key Right", &trail->emissive_intensity, 0.05f, 0.01f, 10.0f);
 			}
 		}
 	}
