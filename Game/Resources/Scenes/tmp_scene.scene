@@ -4941,7 +4941,7 @@
                     "Active": true,
                     "FrustumType": 2,
                     "NearPlaneDistance": 1.0,
-                    "FarPlaneDistance": 300.0,
+                    "FarPlaneDistance": 100.0,
                     "VerticalFOV": 1.0,
                     "ClearMode": 0,
                     "Clear Color": [
@@ -23231,7 +23231,7 @@
                     "Mesh": 385889454,
                     "Material": 710463954,
                     "Skeleton": 0,
-                    "Properties": 1
+                    "Properties": 5
                 }
             ]
         },
@@ -23606,7 +23606,7 @@
                     "Mesh": 454339956,
                     "Material": 1782508606,
                     "Skeleton": 0,
-                    "Properties": 1
+                    "Properties": 5
                 }
             ]
         },
@@ -24642,7 +24642,7 @@
                     "Mesh": 1239719853,
                     "Material": 2440020246,
                     "Skeleton": 0,
-                    "Properties": 1
+                    "Properties": 5
                 }
             ]
         },
@@ -26275,7 +26275,7 @@
                     "Mesh": 2902053993,
                     "Material": 596020577,
                     "Skeleton": 0,
-                    "Properties": 1
+                    "Properties": 5
                 }
             ]
         },
@@ -27458,7 +27458,7 @@
                     "Mesh": 2558649193,
                     "Material": 1698783083,
                     "Skeleton": 0,
-                    "Properties": 1
+                    "Properties": 5
                 },
                 {
                     "UUID": 2941823705,
@@ -27618,7 +27618,7 @@
                     "Mesh": 4167107569,
                     "Material": 300677846,
                     "Skeleton": 0,
-                    "Properties": 1
+                    "Properties": 5
                 }
             ]
         },
@@ -27693,7 +27693,7 @@
                     "Mesh": 1887684776,
                     "Material": 1698783083,
                     "Skeleton": 0,
-                    "Properties": 1
+                    "Properties": 5
                 },
                 {
                     "UUID": 784106445,
@@ -27878,7 +27878,7 @@
                     "Mesh": 3728896717,
                     "Material": 989965534,
                     "Skeleton": 0,
-                    "Properties": 1
+                    "Properties": 5
                 }
             ]
         },
@@ -28253,7 +28253,7 @@
                     "Mesh": 3511502898,
                     "Material": 1581773341,
                     "Skeleton": 0,
-                    "Properties": 1
+                    "Properties": 5
                 }
             ]
         },
@@ -28553,7 +28553,7 @@
                     "Mesh": 3613265767,
                     "Material": 3705098373,
                     "Skeleton": 0,
-                    "Properties": 1
+                    "Properties": 5
                 }
             ]
         },
@@ -46317,7 +46317,7 @@
                     "Mesh": 710739921,
                     "Material": 2757921071,
                     "Skeleton": 171440236,
-                    "Properties": 1
+                    "Properties": 3
                 }
             ]
         },
@@ -47729,7 +47729,7 @@
                     "Mesh": 710739921,
                     "Material": 2757921071,
                     "Skeleton": 171440236,
-                    "Properties": 1
+                    "Properties": 3
                 }
             ]
         },
@@ -49141,7 +49141,7 @@
                     "Mesh": 710739921,
                     "Material": 2757921071,
                     "Skeleton": 171440236,
-                    "Properties": 1
+                    "Properties": 3
                 }
             ]
         },
@@ -70737,8 +70737,8 @@
                 ],
                 "Scale": [
                     0.30116701126098635,
-                    0.30116692185401919,
-                    0.30116692185401919
+                    0.3011667728424072,
+                    0.3011667728424072
                 ]
             },
             "Transform2D": {
