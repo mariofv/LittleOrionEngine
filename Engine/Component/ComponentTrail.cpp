@@ -33,7 +33,7 @@ void ComponentTrail::CleanUp()
 	if (trail_vbo != 0)
 	{
 		glDeleteBuffers(1, &trail_vbo);
-		glDeleteBuffers(1, &trail_vao);
+		glDeleteVertexArrays(1, &trail_vao);
 	}
 }
 
