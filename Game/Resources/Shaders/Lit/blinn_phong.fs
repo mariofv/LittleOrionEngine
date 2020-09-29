@@ -161,7 +161,6 @@ in vec4 position_full_depth_space;
 
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 BrightColor;
-layout (location = 2) out vec4 PostProcessFilter;
 
 //////////////////////////////////
 ///////     DEFINTIONS    ////////
@@ -246,7 +245,6 @@ void main()
 	{
 		BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
 	}
-	PostProcessFilter = vec4(1.0, 0.0, 0.0, 1.0);
 }
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
