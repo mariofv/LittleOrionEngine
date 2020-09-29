@@ -175,7 +175,7 @@ void ComponentText::Render(float4x4* projection)
 
 void ComponentText::ComputeTextLines()
 {
-	if (!font)
+	if (font == nullptr || font_uuid == 0)
 	{
 		return;
 	}
@@ -218,6 +218,7 @@ void ComponentText::ComputeTextLines()
 		{
 			if (character_rect_aabb.maxPoint.y > owner_rect.maxPoint.y)
 			{
+				line_sizes.clear();
 				return;
 			}
 			else
