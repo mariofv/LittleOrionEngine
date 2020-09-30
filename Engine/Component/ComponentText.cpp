@@ -105,20 +105,13 @@ void ComponentText::Render(float4x4* projection)
 	// Iterate through all characters
 	for (char const &c : text)
 	{
-		if (c == '\\') 
-		{
-			is_special_char = true;
-			continue;
-		}
-		if (is_special_char && c == 'n')
+
+		Font::Character character = font->GetCharacter(c);
+		if (c == '\n')
 		{
 			is_jump_line = true;
-			is_special_char = false;
-			/*line_sizes.push_back(cursor_x);
-			cursor_x = 0;*/
-			continue;
+			character = font->GetCharacter(' ');
 		}
-		Font::Character character = font->GetCharacter(c);
 		float character_size = (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
 
 		float next_cursor_x = cursor_x + character_size;
