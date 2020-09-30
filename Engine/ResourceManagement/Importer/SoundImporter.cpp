@@ -30,11 +30,16 @@ FileData SoundImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 
 	std::string soundbank_name = assets_file_path.GetFilenameWithoutExtension();
 	std::vector<std::string> event_list = soundbank_events[soundbank_name];
+	std::string event_list_single_string = "";
+	for (std::string soundbank_event : event_list)
+	{
+		event_list_single_string.append(soundbank_event);
+		event_list_single_string.append("\n");
+	}
 
 	std::string exported_events_directory = metafile.exported_file_path.substr(0, metafile.exported_file_path.find_last_of("/"));
 	std::string exported_events_file_name = std::to_string(metafile.uuid) + std::string("_events");
-
-	//App->filesystem->Save(exported_events_directory + "/" + exported_events_file_name, event_list);
+	App->filesystem->Save(exported_events_directory + "/" + exported_events_file_name, event_list_single_string);
 
 	return data;
 }
