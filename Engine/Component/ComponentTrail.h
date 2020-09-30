@@ -108,7 +108,7 @@ public:
 	int total_points = 1;
 	float3 last_point_added;
 	//Trail generation properties
-	float width = 0.1f;
+	float width = 1.0f;
 	float duration = 1000.0f; // in millis
 	float min_distance = 1.0f;
 

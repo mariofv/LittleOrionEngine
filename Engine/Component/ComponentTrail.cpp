@@ -357,10 +357,14 @@ void ComponentTrail::SpecializedSave(Config& config) const
 	config.AddInt(static_cast<int>(texture_mode), "Texture Mode");
 	config.AddUInt(rows, "Rows");
 	config.AddUInt(columns, "Columns");
+	config.AddBool(blend_colors, "Color Blend");
+	config.AddColor(color_to_blend, "Color To Blend");
+	config.AddFloat(blend_percentage, "Portion Color 2");
+	config.AddFloat(smoothening_step, "Smoothening Step");
 }
 void ComponentTrail::SpecializedLoad(const Config& config)
 {
-	width = config.GetFloat("Width", 0.1f);
+	width = config.GetFloat("Width", 1.0f);
 	duration = config.GetFloat("Duration", 1000.0f);
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
@@ -373,6 +377,10 @@ void ComponentTrail::SpecializedLoad(const Config& config)
 	texture_mode = static_cast<TextureMode>(config.GetInt("Texture Mode", static_cast<int>(TextureMode::STRETCH)));
 	rows = config.GetUInt("Rows", 1);
 	columns = config.GetUInt("Columns", 1);
+	blend_colors = config.GetBool("Color Blend", false);
+	config.GetColor("Color To Blend", color_to_blend, float4(1.0f, 1.0f, 1.0f, 1.0f));
+	blend_percentage = config.GetFloat("Portion Color 2", 0.5f);
+	smoothening_step = config.GetFloat("Smoothening Step", 0.3f);
 }
 
 void ComponentTrail::Disable()
