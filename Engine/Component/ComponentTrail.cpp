@@ -272,6 +272,7 @@ void ComponentTrail::Render()
 		glUniform4fv(glGetUniformLocation(shader_program, "color_blend"), 1, color_to_blend.ptr());
 		glUniform1f(glGetUniformLocation(shader_program, "emissive_intensity"), emissive_intensity);
 		glUniform1f(glGetUniformLocation(shader_program, "percentage"), blend_percentage);
+		glUniform1f(glGetUniformLocation(shader_program, "smooth_step"), smoothening_step);
 
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size());
 		glBindVertexArray(0);
