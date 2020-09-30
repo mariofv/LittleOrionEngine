@@ -29,11 +29,6 @@ FileData SoundImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 	}
 
 	std::string soundbank_name = assets_file_path.GetFilenameWithoutExtension();
-
-	if (soundbank_events.find(soundbank_name) == soundbank_events.end())
-	{
-		soundbank_events[soundbank_name] = std::vector<std::string>();
-	}
 	std::vector<std::string> event_list = soundbank_events[soundbank_name];
 
 	std::string exported_events_directory = metafile.exported_file_path.substr(0, metafile.exported_file_path.find_last_of("/"));
@@ -53,4 +48,23 @@ void SoundImporter::GenerateSoundBankEventsInfo() const
 
 	rapidxml::xml_document<> soundbanks_info_xml;
 	soundbanks_info_xml.parse<0>(&file_data[0]);
+
+	rapidxml::xml_node<>* soundbanks_node = soundbanks_info_xml.first_node("SoundBanksInfo")->first_node("SoundBanks");
+	for (rapidxml::xml_node<>* soundbank_node = soundbanks_node->first_node(); soundbank_node; soundbank_node = soundbank_node->next_sibling())
+	{
+		std::string soundbank_name = soundbank_node->first_node("ShortName")->value();
+		soundbank_events[soundbank_name] = std::vector<std::string>();
+
+		rapidxml::xml_node<>* soundbanks_events_node = soundbank_node->first_node("IncludedEvents");
+		if (soundbanks_events_node == nullptr)
+		{
+			continue;
+		}
+
+		for (rapidxml::xml_node<>* event_node = soundbanks_events_node->first_node(); event_node; event_node = event_node->next_sibling())
+		{
+			std::string event_name = event_node->first_attribute("Name")->value();
+			soundbank_events[soundbank_name].push_back(event_name);
+		}
+	}
 }
