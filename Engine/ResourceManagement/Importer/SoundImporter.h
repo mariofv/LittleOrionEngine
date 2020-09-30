@@ -8,7 +8,10 @@
 class SoundImporter : public Importer
 {
 public:
-	SoundImporter() : Importer(ResourceType::SOUND) {};
+	SoundImporter() : Importer(ResourceType::SOUND) 
+	{
+		soundbank_events.clear(); 
+	};
 	~SoundImporter() = default;
 
 	FileData ExtractData(Path& assets_file_path, const Metafile& metafile) const override;

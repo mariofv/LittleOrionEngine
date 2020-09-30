@@ -23,7 +23,7 @@ FileData SoundImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 
 	}	
 	
-	if (soundbank_events.size == 0)
+	if (soundbank_events.size() == 0)
 	{
 		GenerateSoundBankEventsInfo();
 	}
@@ -51,4 +51,6 @@ void SoundImporter::GenerateSoundBankEventsInfo() const
 	file_data.assign(static_cast <const char*> (file_imported_data.buffer), file_imported_data.size);
 	free((void*)file_imported_data.buffer);
 
+	rapidxml::xml_document<> soundbanks_info_xml;
+	soundbanks_info_xml.parse<0>(&file_data[0]);
 }
