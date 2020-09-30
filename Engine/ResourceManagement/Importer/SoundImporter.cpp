@@ -5,6 +5,8 @@
 #include "Filesystem/PathAtlas.h"
 #include "ResourceManagement/Metafile/Metafile.h"
 
+#include <rapidxml-1.13/rapidxml.hpp>
+
 FileData SoundImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
 	FileData data = assets_file_path.GetFile()->Load();
@@ -20,33 +22,33 @@ FileData SoundImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 		return { nullptr,0 };
 
 	}	
-	std::string soundbank_events_file_path = assets_file_path.GetFullPathWithoutExtension() + std::string(".txt");
-	std::string imported_events_file_name = std::to_string(metafile.uuid) + std::string("_events");
-	std::string exported_events_directory = metafile.exported_file_path.substr(0, metafile.exported_file_path.find_last_of("/"));
+	
+	if (soundbank_events.size == 0)
+	{
+		GenerateSoundBankEventsInfo();
+	}
 
-	FileData file_imported_data = App->filesystem->GetPath(soundbank_events_file_path)->GetFile()->Load();
+	std::string soundbank_name = assets_file_path.GetFilenameWithoutExtension();
+
+	if (soundbank_events.find(soundbank_name) == soundbank_events.end())
+	{
+		soundbank_events[soundbank_name] = std::vector<std::string>();
+	}
+	std::vector<std::string> event_list = soundbank_events[soundbank_name];
+
+	std::string exported_events_directory = metafile.exported_file_path.substr(0, metafile.exported_file_path.find_last_of("/"));
+	std::string exported_events_file_name = std::to_string(metafile.uuid) + std::string("_events");
+
+	//App->filesystem->Save(exported_events_directory + "/" + exported_events_file_name, event_list);
+
+	return data;
+}
+
+void SoundImporter::GenerateSoundBankEventsInfo() const
+{
+	FileData file_imported_data = App->filesystem->GetPath(SOUNDBANKS_XML_PATH)->GetFile()->Load();
 	std::string file_data;
 	file_data.assign(static_cast <const char*> (file_imported_data.buffer), file_imported_data.size);
 	free((void*)file_imported_data.buffer);
 
-	//Process the file '.txt' from Wwise to a file xxxxx_events which will contain only the names of the events of that soundbank
-	file_data = file_data.substr(file_data.find("\n"), file_data.find("\r\n\r\n") - file_data.find("\n"));
-	file_data.append("\r\n");
-
-	std::string delimiter = "\t\r\n";
-	size_t pos = 0;
-	std::string token;
-	std::string event_list;
-	
-	while ((pos = file_data.find(delimiter)) != std::string::npos) 
-	{
-		token = file_data.substr(0, pos);
-		event_list = event_list.append(token.substr(token.find_last_of("\\") +1, token.length()) + "\n");
-		file_data.erase(0, pos + delimiter.length());
-	}
-
-	App->filesystem->Save(exported_events_directory + "/" + imported_events_file_name, event_list);
-
-
-	return data;
 }
