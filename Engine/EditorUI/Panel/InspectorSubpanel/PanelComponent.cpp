@@ -52,6 +52,7 @@
 #include "Module/ModuleUI.h"
 
 #include "PanelParticleSystem.h"
+#include "PanelTrail.h"
 
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Resources/StateMachine.h"
@@ -63,11 +64,13 @@
 PanelComponent::PanelComponent()
 {
 	particle_system_panel = new PanelParticleSystem();
+	trail_panel = new PanelTrail();
 }
 
 PanelComponent::~PanelComponent()
 {
 	delete particle_system_panel;
+	delete trail_panel;
 }
 
 void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh_renderer)
@@ -163,9 +166,47 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 			ImGui::Button(tmp_string);
 		}
 
-		ImGui::Checkbox("Is Raycastable", &mesh_renderer->is_raycastable);
-		ImGui::Checkbox("Shadow caster", &mesh_renderer->shadow_caster);
-		ImGui::Checkbox("Shadow receiver", &mesh_renderer->shadow_receiver);
+		bool is_raycastable = mesh_renderer->IsPropertySet(ComponentMeshRenderer::MeshProperties::RAYCASTABLE);
+		if (ImGui::Checkbox("Is Raycastable", &is_raycastable))
+		{
+			if (is_raycastable)
+			{
+				mesh_renderer->AddProperty(ComponentMeshRenderer::MeshProperties::RAYCASTABLE);
+			}
+			else
+			{
+				mesh_renderer->RemoveProperty(ComponentMeshRenderer::MeshProperties::RAYCASTABLE);
+			}
+
+		}
+
+		bool shadow_caster = mesh_renderer->IsPropertySet(ComponentMeshRenderer::MeshProperties::SHADOW_CASTER);
+		if (ImGui::Checkbox("Shadow Caster", &shadow_caster))
+		{
+			if (shadow_caster)
+			{
+				mesh_renderer->AddProperty(ComponentMeshRenderer::MeshProperties::SHADOW_CASTER);
+			}
+			else
+			{
+				mesh_renderer->RemoveProperty(ComponentMeshRenderer::MeshProperties::SHADOW_CASTER);
+			}
+
+		}
+
+		bool shadow_receiver = mesh_renderer->IsPropertySet(ComponentMeshRenderer::MeshProperties::SHADOW_RECEIVER);
+		if (ImGui::Checkbox("Shadow Receiver", &shadow_receiver))
+		{
+			if (shadow_receiver)
+			{
+				mesh_renderer->AddProperty(ComponentMeshRenderer::MeshProperties::SHADOW_RECEIVER);
+			}
+			else
+			{
+				mesh_renderer->RemoveProperty(ComponentMeshRenderer::MeshProperties::SHADOW_RECEIVER);
+			}
+
+		}
 	}
 }
 
@@ -239,6 +280,7 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 		billboard->modified_by_user = true;
 	}
 	billboard->modified_by_user |= ImGui::ColorEdit4("Color Emissive", billboard->color_emissive);
+	billboard->modified_by_user |= ImGui::DragFloat("Emissive Intensity", &billboard->emissive_intensity, 0.01f, 1.f, 100.f);
 
 	int alignment_type = static_cast<int>(billboard->alignment_type);
 	if (ImGui::Combo("Billboard type", &alignment_type, "World\0View point\0Axial")) {
@@ -261,19 +303,19 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 
 	ImGui::Checkbox("Spritesheet", &billboard->is_spritesheet);
 
-	if (billboard->is_spritesheet) 
+	if (billboard->is_spritesheet)
 	{
 		billboard->modified_by_user |= ImGui::DragInt("Columns", &billboard->num_sprisheet_columns);
 		billboard->modified_by_user |= ImGui::DragInt("Rows", &billboard->num_sprisheet_rows);
 		billboard->modified_by_user |= ImGui::DragInt("Animation Time", &billboard->animation_time, 10.f, 0);
 		billboard->modified_by_user |= ImGui::Checkbox("Loop", &billboard->loop);
+		billboard->modified_by_user |= ImGui::Checkbox("Play once", &billboard->playing_once);
 
 		if (ImGui::Button("Play"))
 		{
 			billboard->Play();
 		}
 	}
-
 	ImGui::Separator();
 	ImGui::Text("Custom");
 	billboard->modified_by_user |= ImGui::DragFloat("Width:", &billboard->width, 0.2f, 0.f, 10.f);
@@ -283,42 +325,7 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 
 void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
 {
-	if (!ShowCommonComponentWindow(trail))
-	{
-		return;
-	}
-	ImGui::Separator();
-	if (ImGui::CollapsingHeader(ICON_FA_SHARE " Trail Renderer", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		trail->modified_by_user |= ImGui::InputFloat("Width", &trail->width, 0.1f);
-		trail->modified_by_user |= ImGui::InputFloat("Duration", &trail->duration, 1000.0f);
-		trail->modified_by_user |= ImGui::InputFloat("Distance", &trail->min_distance, 1.0f);
-		ImGui::Text("Texture");
-		ImGui::SameLine();
-
-		std::string texture_name = trail->trail_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(trail->trail_texture->GetUUID())->resource_name;
-		ImGuiID element_id = ImGui::GetID((std::to_string(trail->UUID) + "TextureSelector").c_str());
-		if (ImGui::Button(texture_name.c_str()))
-		{
-			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
-		}
-
-		uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
-		if (selected_resource_uuid != 0)
-		{
-			trail->SetTrailTexture(selected_resource_uuid);
-			trail->modified_by_user = true;
-		}
-		selected_resource_uuid = ImGui::ResourceDropper<Texture>();
-		if (selected_resource_uuid != 0)
-		{
-			trail->SetTrailTexture(selected_resource_uuid);
-			trail->modified_by_user = true;
-		}
-		trail->modified_by_user |= ImGui::ColorEdit4("Color", trail->color.ptr());
-		trail->modified_by_user |= ImGui::DragFloat("Intensity", &trail->bloom_intensity, 0.05f, 0.01f, 10.0f);
-		
-	}
+	trail_panel->Render(trail);
 }
 
 void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
@@ -329,6 +336,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		{
 			return;
 		}
+
 		ImGui::Separator();
 
 		camera->modified_by_user |= ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly);
@@ -395,7 +403,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 				break;
 			}
 		}
-		camera->modified_by_user |= ImGui::ColorEdit3("Clear Color", camera->camera_clear_color);
+		camera->modified_by_user |= ImGui::ColorEdit3("Clear Color", camera->camera_clear_color.ptr());
 		ImGui::Separator();
 
 		if (ImGui::DragFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0.01f, 0, 100))
@@ -897,7 +905,7 @@ void PanelComponent::ShowAddNewComponentButton()
 				App->space_partitioning->InsertAABBTree(App->editor->selected_game_object);
 			}
 		}
-		
+
 		sprintf_s(tmp_string, "%s Billboard", ICON_FA_SQUARE);
 		if (ImGui::Selectable(tmp_string))
 		{
@@ -1094,7 +1102,7 @@ bool PanelComponent::ShowCommonComponentWindow(Component* component)
 	{
 		App->actions->SetCopyComponent(component);
 	}
-	if (component->type != Component::ComponentType::MESH_RENDERER) 
+	if (component->type != Component::ComponentType::MESH_RENDERER)
 	{
 		if (ImGui::Button("Paste component as new"))
 		{
@@ -1124,7 +1132,7 @@ bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* component)
 		App->actions->DeleteComponentUndo(component);
 		return false;
 	}
-	if (ImGui::Button("Copy")) 
+	if (ImGui::Button("Copy"))
 	{
 		App->actions->SetCopyComponent(component);
 	}
@@ -1292,10 +1300,10 @@ void PanelComponent::ShowComponentAudioListenerWindow(ComponentAudioListener* co
 		}
 		ImGui::Separator();
 
-		//Add More Stuff here 
+		//Add More Stuff here
 
 	}
-	
+
 }
 
 void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source)
@@ -1321,7 +1329,7 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 		if (selected_resource != 0)
 		{
 			component_audio_source->SetSoundBank(selected_resource);
-			component_audio_source->modified_by_user = true;		
+			component_audio_source->modified_by_user = true;
 		}
 		selected_resource = ImGui::ResourceDropper<SoundBank>();
 		if (selected_resource != 0)

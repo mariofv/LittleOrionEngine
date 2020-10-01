@@ -33,7 +33,7 @@ bool ModuleDebug::Init()
 }
 
 
-void ModuleDebug::Render(ComponentCamera* cam)
+void ModuleDebug::Render()
 {
 	BROFILER_CATEGORY("Module Debug Render", Profiler::Color::NavajoWhite);
 
@@ -72,7 +72,7 @@ void ModuleDebug::Render(ComponentCamera* cam)
 		App->debug_draw->RenderPathfinding();
 	}
 
-	if (show_axis && App->renderer->meshes_to_render.size() != 0)
+	if (show_axis)
 	{
 		App->debug_draw->RenderTangentsAndBitangents();
 	}

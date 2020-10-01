@@ -24,15 +24,7 @@ public:
 	enum class ClearMode
 	{
 		COLOR = 0,
-		SKYBOX = 1,
-		ORTHO = 2
-	};
-
-	enum OrthoIndex
-	{
-		CLOSE = 0,
-		MID = 1,
-		AWAY = 2
+		SKYBOX = 1
 	};
 
 	ComponentCamera();
@@ -55,20 +47,16 @@ public:
 	Component* Clone(GameObject* owner, bool original_prefab) override;
 	void CopyTo(Component* component_to_copy) const override;
 
-	float GetWidth() const;
-	float GetHeight() const;
-
-	void RecordFrame(GLsizei width, GLsizei height, bool scene_mode = false);
-	void RecordZBufferFrame(GLsizei width, GLsizei height);
-	void SetWidthAndHeight(const GLsizei &width, const GLsizei &height);
-
-	ENGINE_API void RecordDebugDraws(bool scene_mode = false);
-	GLuint GetLastRecordedFrame() const;
+	bool HasSkybox() const;
 
 	void SetFOV(float fov);
 	void SetAspectRatio(float aspect_ratio);
+
 	void SetNearDistance(float distance);
+	float GetNearDistance() const;
 	void SetFarDistance(float distance);
+	float GetFarDistance() const;
+
 	void SetOrientation(const float3 & orientation);
 	ENGINE_API void SetStartFocusPosition(const float3& focus_position);
 	ENGINE_API void SetGoalFocusPosition(const float3& focus_position);
@@ -116,23 +104,23 @@ public:
 	std::vector<float> GetFrustumVertices() const;
 	
 	ENGINE_API bool IsInsideFrustum(const AABB& aabb) const;
+	ENGINE_API static bool IsInsideFrustum(const Frustum& frustum, const AABB& aabb);
 	ComponentAABB::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
+	static ComponentAABB::CollisionState CheckAABBCollision(const Frustum& frustum, const AABB& reference_AABB);
 
 	ENGINE_API bool IsInsideFrustum(const AABB2D& aabb) const;
-	ENGINE_API bool IsCompletlyInsideFrustum(const AABB & aabb) const;
+	ENGINE_API static bool IsInsideFrustum(const Frustum& frustum, const AABB2D& aabb);
 	ComponentAABB::CollisionState CheckAABB2DCollision(const AABB2D& reference_AABB) const;
+	static ComponentAABB::CollisionState CheckAABB2DCollision(const Frustum& frustum, const AABB2D& reference_AABB);
 
+	ENGINE_API bool IsCompletlyInsideFrustum(const AABB & aabb) const;
 	ENGINE_API void GetRay(const float2 &mouse_position, LineSegment &return_value) const;
 
 	AABB GetMinimalEnclosingAABB() const;
 	void GenerateMatrices();
 
 private:
-	void GenerateFrameBuffers(GLsizei width, GLsizei height);
 	void InitCamera();
-	void CreateFramebuffer(GLsizei width, GLsizei height);
-	void CreateMssaFramebuffer(GLsizei width, GLsizei height);
-	void CreateOrthographicFramebuffer(GLsizei width, GLsizei height);
 
 public:
 	const float SPEED_UP_FACTOR = 2.f;
@@ -144,35 +132,20 @@ public:
 
 	const float CAMERA_ROTATION_SPEED = 0.000625f;
 
-	float camera_clear_color[3] = {0.0f, 0.0f, 0.0f};
-
+	float3 camera_clear_color = float3::zero;
 	int depth = 0;
 
 	float4x4 proj;
 	float4x4 view;
 
-	GLuint depth_map = 0;
-	GLuint last_recorded_frame_texture = 0;
-	GLuint fbo = 0;
-
-	OrthoIndex ortho_index; //Only for orthographic cameras
-
-
-	bool toggle_msaa = false;
 	bool is_focusing = false;
 	Frustum camera_frustum;
 
 private:
-	GLuint rbo = 0;
-	GLuint depth_rbo = 0;
-	GLuint msfbo = 0;
-	GLuint msfb_color = 0;
-
 	float last_height = 0;
 	float last_width = 0;
 
 	float aspect_ratio = 1.f;
-	float orthographic_fov_ratio = 3;
 	int perpesctive_enable = 0;
 
 	bool is_speeding_up = false;
@@ -183,7 +156,6 @@ private:
 	float3 goal_focus_position = float3::zero;
 
 	ClearMode camera_clear_mode = ClearMode::SKYBOX;
-	float borderColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	uint32_t skybox_uuid = 0;
 	std::shared_ptr<Skybox> camera_skybox = nullptr;
 

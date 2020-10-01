@@ -24,7 +24,7 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	void RenderDebugDraws(const ComponentCamera& camera);
+	void Render(float width, float height, const float4x4& projection_view_matrix);
 
 	ENGINE_API void RenderSingleAABB(AABB& aabb, const float3& color = float3::one) const;
 	ENGINE_API void RenderBoundingBoxes(const float3& color = float3::one) const;
@@ -51,6 +51,9 @@ public:
 	ENGINE_API void RenderCircle(const float3& center, float radius= 1.f, const float3& normal = float3::unitY, const float3& color = float3::one) const;
 	ENGINE_API void RenderSphere(const float3& center, float radius= 1.f, const float3& color = float3::one) const;
 	ENGINE_API void RenderBox(const float3 points[8], const float3& color = float3::one);
+	ENGINE_API void RenderAxis(const float4x4& axis_space, float size = 1.f, float length = 10.f, const float3& color = float3::one);
+	ENGINE_API void RenderPerspectiveFrustum(const float4x4& inverse_clip_matrix, const float3& color = float3::one) const;
+	ENGINE_API void RenderOrtographicFrustum(const float3 points[8], const float3& color = float3::one) const;
 
 	ENGINE_API void RenderPhysics() const;
 

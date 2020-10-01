@@ -92,7 +92,7 @@ void ComponentVideoPlayer::RenderTexture(math::float4x4 * projection, GLuint tex
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
-	quad->Render();
+	quad->RenderArray();
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
 }

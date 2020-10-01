@@ -68,7 +68,7 @@ void ComponentImage::Render(float4x4* projection)
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture_to_render->opengl_texture);
 
-		quad->Render();
+		quad->RenderArray();
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glUseProgram(0);
 	}
@@ -145,6 +145,7 @@ void ComponentImage::LoadResource(uint32_t uuid, ResourceType resource)
 		//Delete file data buffer
 		delete[] file_data.buffer;
 		App->resources->AddResourceToCache(std::static_pointer_cast<Resource>(texture_to_render));
+		texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
 	}
 
 }
@@ -172,7 +173,11 @@ void ComponentImage::SetTextureToRender(uint32_t texture_uuid)
 	App->resources->loading_thread_communication.current_type = ResourceType::TEXTURE;
 	this->texture_uuid = texture_uuid;
 	texture_to_render = App->resources->Load<Texture>(texture_uuid);
+	if (texture_to_render)
+	{
+		texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
 
+	}
 	//Set to default loading component
 	App->resources->loading_thread_communication.current_component_loading = nullptr;
 }

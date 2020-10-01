@@ -288,10 +288,10 @@ void OLAABBTree::UpdateLeaf(unsigned leafNodeIndex, const AABB & newAaab)
 	return;
 }
 
-void OLAABBTree::GetIntersection(std::vector<GameObject*>& intersectionGO, const ComponentCamera* camera) const
+void OLAABBTree::GetIntersection(std::vector<GameObject*>& intersectionGO, const Frustum& camera_frustum) const
 {
 
-	AABB bbox = camera->GetMinimalEnclosingAABB();
+	AABB bbox = camera_frustum.MinimalEnclosingAABB();
 
 	//DFS simulating recursivity using stack
 
@@ -310,7 +310,7 @@ void OLAABBTree::GetIntersection(std::vector<GameObject*>& intersectionGO, const
 		{
 			if (node.isLeaf())
 			{
-				if(node.go->IsVisible(*camera))
+				if(node.go->IsVisible(camera_frustum))
 					intersectionGO.push_back(node.go);
 			}
 			else

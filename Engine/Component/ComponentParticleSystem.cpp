@@ -152,10 +152,7 @@ void ComponentParticleSystem::Render()
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, ssbo);
 
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-		glBindVertexArray(billboard->vao);
-		glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, particles.size());
-		glBindVertexArray(0);
-
+		billboard->quad->RenderInstanced(particles.size());
 
 		glUseProgram(0);
 	}

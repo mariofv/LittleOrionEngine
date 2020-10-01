@@ -35,7 +35,7 @@ public:
 	void Remove(GameObject* go);
 	void UpdateObject(GameObject* go);
 
-	void GetIntersection(std::vector<GameObject*> &intersection_go, const ComponentCamera* camera) const;
+	void GetIntersection(std::vector<GameObject*> &intersection_go, const Frustum& camera_frustum) const;
 
 	void Draw() const;
 

@@ -4,8 +4,12 @@
 #include "Log/EngineLog.h"
 #include <mutex>
 
+std::mutex log_mutex;
+
 void LittleOrionLogEntry(const EngineLog::LogEntryType type, const char file[], int line, const char* format, ...)
 {
+	std::lock_guard<std::mutex> lock(log_mutex);
+
 	static char message[4096];
 	static char complete_message[4096];
 	static va_list ap;
@@ -22,6 +26,8 @@ void LittleOrionLogEntry(const EngineLog::LogEntryType type, const char file[], 
 
 void OpenGLLogEntry(const EngineLog::LogEntryType type, const char file[], const int line, const char* format, ...)
 {
+	std::lock_guard<std::mutex> lock(log_mutex);
+
 	static char message[4096];
 	static char complete_message[4096];
 	static va_list ap;
@@ -38,6 +44,8 @@ void OpenGLLogEntry(const EngineLog::LogEntryType type, const char file[], const
 
 void AssimpLogEntry(const EngineLog::LogEntryType type, const char file[], const int line, const char* format, ...)
 {
+	std::lock_guard<std::mutex> lock(log_mutex);
+
 	static char message[4096];
 	static char complete_message[4096];
 	static va_list ap;
@@ -54,6 +62,8 @@ void AssimpLogEntry(const EngineLog::LogEntryType type, const char file[], const
 
 void ResourceLogEntry(const EngineLog::LogEntryType type, const char file[], const int line, const char* format, ...)
 {
+	std::lock_guard<std::mutex> lock(log_mutex);
+
 	static char message[4096];
 	static char complete_message[4096];
 	static va_list ap;
@@ -70,6 +80,8 @@ void ResourceLogEntry(const EngineLog::LogEntryType type, const char file[], con
 
 void DebugLogEntry(const char file[], const int line, const char* format, ...)
 {
+	std::lock_guard<std::mutex> lock(log_mutex);
+
 	static char message[4096];
 	static char complete_message[4096];
 	static va_list ap;

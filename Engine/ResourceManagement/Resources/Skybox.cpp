@@ -5,6 +5,7 @@
 #include "Main/Application.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleRender.h"
 #include "ResourceManagement/Manager/SkyboxManager.h"
 
 Skybox::Skybox() : Resource()
@@ -54,7 +55,7 @@ void Skybox::Load(const Config& config)
 
 void Skybox::Render(const ComponentCamera& camera) const
 {
-	glDepthFunc(GL_LEQUAL);
+	glDepthFunc(GL_ALWAYS);
 	GLuint shader_program = App->program->UseProgram("Skybox");
 
 	float4x4 view_matrix = camera.GetViewMatrix();
@@ -73,7 +74,6 @@ void Skybox::Render(const ComponentCamera& camera) const
 		GL_TRUE,
 		camera.GetProjectionMatrix().ptr()
 	);
-
 
 	//Draw skybox
 	glBindVertexArray(vao);
