@@ -545,3 +545,21 @@ std::string StateMachine::GetNameOfVariable(uint64_t name_hash) const
 
 	return name;
 }
+
+void StateMachine::ResetVariables()
+{
+	for(auto& integer : int_variables)
+	{
+		integer.second = 0;
+	}
+
+	for (auto& float_variable : float_variables)
+	{
+		float_variable.second = 0.f;
+	}
+
+	for (auto& boolean : bool_variables)
+	{
+		boolean.second = false;
+	}
+}
