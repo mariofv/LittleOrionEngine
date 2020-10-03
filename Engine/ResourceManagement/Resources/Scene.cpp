@@ -121,7 +121,7 @@ void Scene::Load(bool from_file)
 	for (unsigned int i = 0; i < prefabs_config.size(); ++i)
 	{
 		uint64_t parent_UUID = prefabs_config[i].GetUInt("ParentUUID", 0);
-		GameObject * loaded_gameobject = LoadPrefab(prefabs_config[i]);
+		GameObject* loaded_gameobject = LoadPrefab(prefabs_config[i]);
 		if (parent_UUID != 0)
 		{
 			prefab_parents[parent_UUID].push_back(loaded_gameobject);
