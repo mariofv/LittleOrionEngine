@@ -91,6 +91,8 @@ void PanelScene::Render()
 		}
 	}
 	ImGui::End();
+
+	RenderDepthMapPreview();
 }
 
 void PanelScene::RenderSceneBar()
@@ -108,26 +110,6 @@ void PanelScene::RenderSceneBar()
 			if (ImGui::MenuItem("Brightness", NULL, draw_mode == "Brightness"))
 			{
 				App->renderer->SetDrawMode(ModuleRender::DrawMode::BRIGHTNESS);
-			}
-			if (ImGui::BeginMenu("Depth Map"))
-			{
-				if (ImGui::MenuItem("Full Depth Map", NULL, draw_mode == "Full Depth Map"))
-				{
-					App->renderer->SetDrawMode(ModuleRender::DrawMode::DEPTH_FULL);
-				}
-				if (ImGui::MenuItem("Near Depth Map", NULL, draw_mode == "Near Depth Map"))
-				{
-					App->renderer->SetDrawMode(ModuleRender::DrawMode::DEPTH_NEAR);
-				}
-				if (ImGui::MenuItem("Mid Depth Map", NULL, draw_mode == "Mid Depth Map"))
-				{
-					App->renderer->SetDrawMode(ModuleRender::DrawMode::DEPTH_MID);
-				}
-				if (ImGui::MenuItem("Far Depth Map", NULL, draw_mode == "Far Depth Map"))
-				{
-					App->renderer->SetDrawMode(ModuleRender::DrawMode::DEPTH_FAR);
-				}
-				ImGui::EndMenu();
 			}
 
 			ImGui::EndMenu();
@@ -370,6 +352,28 @@ void PanelScene::RenderCameraPreview() const
 		);
 
 		ImGui::EndChild();
+	}
+}
+
+void PanelScene::RenderDepthMapPreview() const
+{
+	if (App->renderer->depth_map_debug)
+	{
+		if (ImGui::Begin("Depth Map Preview"))
+		{
+			ImVec2 content_area_max_point = ImGui::GetWindowContentRegionMax();
+
+			float width = content_area_max_point.x - ImGui::GetCursorPos().x;
+			float height = content_area_max_point.y - ImGui::GetCursorPos().y;
+
+			ImGui::Image(
+				(void *)App->renderer->scene_viewport->depth_map_texture,
+				ImVec2(width, height),
+				ImVec2(0, 1),
+				ImVec2(1, 0)
+			);
+		}
+		ImGui::End();
 	}
 }
 

@@ -19,6 +19,7 @@ LightFrustum::LightFrustum(FrustumSubDivision frustum_sub_division) : frustum_su
 		sub_perspective_frustum_enclosing_aabb_render_color = float3(1.f, 0.2f, 0.f);
 		mesh_renderers_enclosing_aabb_render_color = float3(1.f, 0.f, 0.4f);
 		light_orthogonal_frustum_render_color = float3(1.f, 0.6f, 0.f);
+		multiplier = 5.f;
 		break;
 
 	case LightFrustum::FrustumSubDivision::MID_FRUSTUM:
@@ -26,6 +27,7 @@ LightFrustum::LightFrustum(FrustumSubDivision frustum_sub_division) : frustum_su
 		sub_perspective_frustum_enclosing_aabb_render_color = float3(0.2f, 1.f, 0.f);
 		mesh_renderers_enclosing_aabb_render_color = float3(0.f, 1.f, 0.4f);
 		light_orthogonal_frustum_render_color = float3(0.6f, 1.f, 0.f);
+		multiplier = 3.f;
 		break;
 
 	case LightFrustum::FrustumSubDivision::FAR_FRUSTUM:
@@ -33,6 +35,7 @@ LightFrustum::LightFrustum(FrustumSubDivision frustum_sub_division) : frustum_su
 		sub_perspective_frustum_enclosing_aabb_render_color = float3(0.2f, 0.f, 1.f);
 		mesh_renderers_enclosing_aabb_render_color = float3(0.f, 0.4f, 1.f);
 		light_orthogonal_frustum_render_color = float3(0.6f, 0.f, 1.f);
+		multiplier = 1.f;
 		break;
 
 	case LightFrustum::FrustumSubDivision::FULL_FRUSTUM:
@@ -40,7 +43,9 @@ LightFrustum::LightFrustum(FrustumSubDivision frustum_sub_division) : frustum_su
 		sub_perspective_frustum_enclosing_aabb_render_color = float3(0.6f);
 		mesh_renderers_enclosing_aabb_render_color = float3(0.7f);
 		light_orthogonal_frustum_render_color = float3(0.8f);
+		multiplier = 1.f;
 		break;
+
 	default:
 		break;
 	}
@@ -119,8 +124,10 @@ void LightFrustum::UpdateMeshRenderersAABB()
 	for (auto& mesh_renderer : culled_meshes)
 	{
 		AABB mesh_renderer_aabb = mesh_renderer->owner->aabb.bounding_box;
-		mesh_renderer_aabb.TransformAsAABB(App->lights->directional_light_rotation.Inverted());
-		mesh_renderers_enclosing_aabb.Enclose(mesh_renderer_aabb);
+		OBB mesh_renderer_obb = mesh_renderer_aabb.Transform(App->lights->directional_light_rotation.Inverted());
+		AABB mesh_renderer_light_space_aabb = mesh_renderer_obb.MinimalEnclosingAABB();
+
+		mesh_renderers_enclosing_aabb.Enclose(mesh_renderer_light_space_aabb);
 	}
 }
 
@@ -143,7 +150,7 @@ void LightFrustum::UpdateLightOrthogonalFrustum()
 	light_orthogonal_frustum.nearPlaneDistance = 0;
 	light_orthogonal_frustum.front = App->lights->directional_light_rotation * float3::unitZ;
 	light_orthogonal_frustum.up = App->lights->directional_light_rotation * float3::unitY;
-	light_orthogonal_frustum.farPlaneDistance = max_point.z - min_point.z;
+	light_orthogonal_frustum.farPlaneDistance = max_point.z - min_point.z + LIGHT_FRUSTUM_FAR_PLANE_EXTRA_DISTANCE;
 	light_orthogonal_frustum.orthographicWidth = max_point.x - min_point.x;
 	light_orthogonal_frustum.orthographicHeight = max_point.y - min_point.y;
 }
@@ -183,6 +190,10 @@ void LightFrustum::RenderLightFrustum() const
 	{
 		light_orthogonal_frustum_corner_points[i] = light_orthogonal_frustum_corner_points[i];
 	}
+
+	std::swap(light_orthogonal_frustum_corner_points[2], light_orthogonal_frustum_corner_points[3]);
+	std::swap(light_orthogonal_frustum_corner_points[6], light_orthogonal_frustum_corner_points[7]);
+
 	App->debug_draw->RenderBox(light_orthogonal_frustum_corner_points, light_orthogonal_frustum_render_color);
 	float4x4 light_frustum_transform = App->lights->directional_light_rotation.ToFloat4x4() * float4x4::Translate(light_orthogonal_frustum.pos);
 	App->debug_draw->RenderAxis(light_frustum_transform, 1.f, 1.f, light_orthogonal_frustum_render_color);

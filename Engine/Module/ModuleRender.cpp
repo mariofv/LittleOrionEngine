@@ -225,26 +225,6 @@ void ModuleRender::SetDrawMode(DrawMode draw_mode)
 		scene_viewport->SetOutput(Viewport::ViewportOutput::BRIGHTNESS);
 		break;
 
-	case ModuleRender::DrawMode::DEPTH_FULL:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		scene_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_FULL);
-		break;
-
-	case ModuleRender::DrawMode::DEPTH_NEAR:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		scene_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_NEAR);
-		break;
-
-	case ModuleRender::DrawMode::DEPTH_MID:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		scene_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_MID);
-		break;
-
-	case ModuleRender::DrawMode::DEPTH_FAR:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		scene_viewport->SetOutput(Viewport::ViewportOutput::DEPTH_FAR);
-		break;
-
 	default:
 		break;
 	}
@@ -298,18 +278,6 @@ std::string ModuleRender::GetDrawMode() const
 
 	case ModuleRender::DrawMode::BRIGHTNESS:
 		return "Brightness";
-
-	case ModuleRender::DrawMode::DEPTH_NEAR:
-		return "Near Depth Map";
-
-	case ModuleRender::DrawMode::DEPTH_MID:
-		return "Mid Depth Map";
-
-	case ModuleRender::DrawMode::DEPTH_FAR:
-		return "Far Depth Map";
-
-	case ModuleRender::DrawMode::DEPTH_FULL:
-		return "Full Depth Map";
 
 	default:
 		return "Unknown";

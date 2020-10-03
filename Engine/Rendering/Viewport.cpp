@@ -25,9 +25,12 @@ Viewport::Viewport(int options) : viewport_options(options)
 	scene_quad = new Quad(2.f);
 	scene_quad->InitQuadUI();
 
-	framebuffers.emplace_back(scene_fbo = new FrameBuffer(6));
+
+	framebuffers.emplace_back(scene_fbo = new FrameBuffer(5));
+
 	framebuffers.emplace_back(ping_fbo = new FrameBuffer());
 	framebuffers.emplace_back(pong_fbo = new FrameBuffer());
+	framebuffers.emplace_back(debug_depth_map_fbo = new FrameBuffer());
 	framebuffers.emplace_back(postprocess_fbo = new FrameBuffer());
 	framebuffers.emplace_back(blit_fbo = new FrameBuffer());
 
@@ -95,17 +98,21 @@ void Viewport::BindCameraFrustumMatrices(const Frustum& camera_frustum) const
 
 void Viewport::BindDepthMaps(GLuint program) const
 {
-	glActiveTexture(GL_TEXTURE12);
-	glBindTexture(GL_TEXTURE_2D, depth_full_fbo->GetColorAttachement());
-	glUniform1i(glGetUniformLocation(program, "close_depth_map"), 12);
-
 	glActiveTexture(GL_TEXTURE13);
-	glBindTexture(GL_TEXTURE_2D, depth_mid_fbo->GetColorAttachement());
-	glUniform1i(glGetUniformLocation(program, "mid_depth_map"), 13);
+	glBindTexture(GL_TEXTURE_2D, depth_full_fbo->GetColorAttachement());
+	glUniform1i(glGetUniformLocation(program, "full_depth_map"), 13);
 
 	glActiveTexture(GL_TEXTURE14);
-	glBindTexture(GL_TEXTURE_2D, depth_full_fbo->GetColorAttachement());
-	glUniform1i(glGetUniformLocation(program, "far_depth_map"), 14);
+	glBindTexture(GL_TEXTURE_2D, depth_near_fbo->GetColorAttachement());
+	glUniform1i(glGetUniformLocation(program, "close_depth_map"), 14);
+
+	glActiveTexture(GL_TEXTURE15);
+	glBindTexture(GL_TEXTURE_2D, depth_mid_fbo->GetColorAttachement());
+	glUniform1i(glGetUniformLocation(program, "mid_depth_map"), 15);
+
+	glActiveTexture(GL_TEXTURE16);
+	glBindTexture(GL_TEXTURE_2D, depth_far_fbo->GetColorAttachement());
+	glUniform1i(glGetUniformLocation(program, "far_depth_map"), 16);
 }
 
 void Viewport::LightCameraPass() const
@@ -115,10 +122,16 @@ void Viewport::LightCameraPass() const
 		return;
 	}
 
-	DepthMapPass(App->lights->full_frustum, depth_full_fbo);
-	DepthMapPass(App->lights->near_frustum, depth_near_fbo);
-	DepthMapPass(App->lights->mid_frustum, depth_mid_fbo);
-	DepthMapPass(App->lights->far_frustum, depth_far_fbo);
+	if (!App->renderer->cascade_mapping)
+	{
+		DepthMapPass(App->lights->full_frustum, depth_full_fbo, App->renderer->depth_map_debug);
+	}
+	else
+	{
+		DepthMapPass(App->lights->near_frustum, depth_near_fbo, App->renderer->depth_map_debug && App->renderer->depth_map_debug_index == 0);
+		DepthMapPass(App->lights->mid_frustum, depth_mid_fbo, App->renderer->depth_map_debug && App->renderer->depth_map_debug_index == 1);
+		DepthMapPass(App->lights->far_frustum, depth_far_fbo, App->renderer->depth_map_debug && App->renderer->depth_map_debug_index == 2);
+	}
 }
 
 void Viewport::MeshRenderPass() const
@@ -129,17 +142,16 @@ void Viewport::MeshRenderPass() const
 	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT2);
 	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT3);
 	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT4);
-	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT5);
+
 
 	if (camera->HasSkybox())
 	{
-		static GLenum attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT2 };
-		glDrawBuffers(2, attachments);
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		SkyboxPass();
 	}
 
-	static GLenum attachments[6] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3,GL_COLOR_ATTACHMENT4,GL_COLOR_ATTACHMENT5 };
-	glDrawBuffers(6, attachments);
+	static GLenum attachments[5] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3,GL_COLOR_ATTACHMENT4 };
+	glDrawBuffers(5, attachments);
 
 	num_rendered_triangles = 0;
 	num_rendered_vertices = 0;
@@ -262,8 +274,7 @@ void Viewport::DebugDrawPass() const
 	}
 
 	scene_fbo->Bind();
-	static GLenum attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT2 };
-	glDrawBuffers(2, attachments);
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 	App->debug_draw->Render(width, height, camera->GetProjectionMatrix() * camera->GetViewMatrix());
 	FrameBuffer::UnBind();
@@ -277,8 +288,7 @@ void Viewport::EditorDrawPass() const
 	}
 
 	scene_fbo->Bind();
-	static GLenum attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT2 };
-	glDrawBuffers(2, attachments);
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 	App->debug_draw->RenderGrid();
 	if (App->debug->show_navmesh)
@@ -299,19 +309,17 @@ void Viewport::SkyboxPass() const
 	App->cameras->world_skybox->Render(*camera);
 }
 
-void Viewport::DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo) const
+void Viewport::DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo, bool render_debug_depth_map) const
 {
 	depth_fbo->ClearAttachements();
-	depth_fbo->GenerateAttachements(width, height);
-
-	light_frustum->RenderMeshRenderersAABB();
-	light_frustum->RenderLightFrustum();
+	depth_fbo->GenerateAttachements(width * light_frustum->multiplier, height * light_frustum->multiplier);
 
 	depth_fbo->Bind();
 	BindCameraFrustumMatrices(light_frustum->light_orthogonal_frustum);
 
-	depth_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);;
-	glViewport(0, 0, width, height);
+	depth_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);
+	glViewport(0, 0, width * light_frustum->multiplier, height * light_frustum->multiplier);
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 	std::vector<ComponentMeshRenderer*> culled_shadow_casters = App->space_partitioning->GetCullingMeshes(
 		App->cameras->main_camera,
@@ -333,6 +341,27 @@ void Viewport::DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo)
 		}
 	}
 	FrameBuffer::UnBind();
+
+
+	if (render_debug_depth_map)
+	{
+		debug_depth_map_fbo->Bind();
+		debug_depth_map_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+		GLuint program = App->program->UseProgram("DepthMap");
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, depth_fbo->GetColorAttachement());
+		glUniform1i(glGetUniformLocation(program, "tex"), 0);
+
+		scene_quad->RenderArray();
+
+		glUseProgram(0);
+		FrameBuffer::UnBind();
+
+		depth_map_texture = depth_fbo->GetColorAttachement();
+	}
 }
 
 void Viewport::BloomPass()
@@ -429,33 +458,13 @@ void Viewport::HDRPass() const
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, scene_fbo->GetColorAttachement());
 		glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
-
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, scene_fbo->GetColorAttachement(2));
-		glUniform1i(glGetUniformLocation(program, "post_processing_filter"), 2);
 	}
 	else
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement());
 		glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
-
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(2));
-		glUniform1i(glGetUniformLocation(program, "post_processing_filter"), 2);
 	}
-	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(3));
-	glUniform1i(glGetUniformLocation(program, "normalMap"), 3);
-
-	glActiveTexture(GL_TEXTURE4);
-	glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(4));
-	glUniform1i(glGetUniformLocation(program, "positionMap"), 4);
-
-	glActiveTexture(GL_TEXTURE5);
-	glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(5));
-	glUniform1i(glGetUniformLocation(program, "ssrValuesMap"), 5);
-
 	glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
 	glUniform1f(glGetUniformLocation(program, "exposure"), App->renderer->exposure);
 
@@ -465,6 +474,17 @@ void Viewport::HDRPass() const
 		glBindTexture(GL_TEXTURE_2D, ping_pong_fbo->GetColorAttachement());
 		glUniform1i(glGetUniformLocation(program, "brightness_texture"), 1);
 	}
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(2));
+	glUniform1i(glGetUniformLocation(program, "normalMap"), 2);
+
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(3));
+	glUniform1i(glGetUniformLocation(program, "positionMap"), 3);
+
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(4));
+	glUniform1i(glGetUniformLocation(program, "ssrValuesMap"), 4);
 
 	scene_quad->RenderArray();
 
@@ -528,22 +548,6 @@ void Viewport::SetOutput(ViewportOutput output)
 
 	case Viewport::ViewportOutput::BRIGHTNESS:
 		source_fbo = ping_pong_fbo;
-		break;
-
-	case Viewport::ViewportOutput::DEPTH_NEAR:
-		source_fbo = depth_near_fbo;
-		break;
-
-	case Viewport::ViewportOutput::DEPTH_MID:
-		source_fbo = depth_mid_fbo;
-		break;
-
-	case Viewport::ViewportOutput::DEPTH_FAR:
-		source_fbo = depth_far_fbo;
-		break;
-
-	case Viewport::ViewportOutput::DEPTH_FULL:
-		source_fbo = depth_full_fbo;
 		break;
 
 	default:

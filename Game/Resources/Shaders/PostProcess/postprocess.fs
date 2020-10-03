@@ -3,10 +3,8 @@ const float W = 11.2;
 
 #if ENABLE_MSAA
 uniform sampler2DMS screen_texture;
-uniform sampler2DMS post_processing_filter;
 #else
 uniform sampler2D screen_texture;
-uniform sampler2D post_processing_filter;
 #endif
 uniform sampler2D brightness_texture;
 
@@ -113,19 +111,8 @@ void main()
   vec4 sample4 = texelFetch(screen_texture, vp, 3);
 
   vec4 fragment_color = (sample1 + sample2 + sample3 + sample4) / 4.0f;
-
-  vp = ivec2(vec2(textureSize(post_processing_filter)) * texCoord);
-  sample1 = texelFetch(post_processing_filter, vp, 0);
-  sample2 = texelFetch(post_processing_filter, vp, 1);
-  sample3 = texelFetch(post_processing_filter, vp, 2);
-  sample4 = texelFetch(post_processing_filter, vp, 3);
-
-  vec2 fragment_filter = round((sample1 + sample2 + sample3 + sample4) / 4.0f).xy;
-
 #else
   vec4 fragment_color = texture(screen_texture, texCoord);
-  vec2 fragment_filter = texture(post_processing_filter, texCoord).xy;
-
 #endif
 
 #if ENABLE_BLOOM
@@ -142,11 +129,12 @@ void main()
 	if(reflection_strength > 0.0)
 	{
 		reflection_texture = Reflections(reflection_strength);
+
 	 }
-  	FragColor.rgb = fragment_color.rgb + reflection_texture;
-	FragColor.rgb = pow(FragColor.rgb, vec3(1 / gamma)) * fragment_filter.x + FragColor.rgb *(1- fragment_filter.x);
-	FragColor.a = 1.0;  
-	//FragColor = vec4(vec3(texture(positionMap, texCoord.xy).z),1.0);
+  	  FragColor.rgb = fragment_color.rgb + reflection_texture;
+	FragColor.rgb = pow(FragColor.rgb, vec3(1 / gamma));
+	FragColor.a = 1.0;
+
 }
 
 vec3 ToneMapping(vec3 color)
@@ -198,11 +186,11 @@ vec3 Reflections(float reflection_strength)
     vec3 Fresnel = FresnelSchlick(max(dot(normalize(view_normal), normalize(view_position)), 0.0), F0);*/
 
 	//Reflection
-	vec3 reflected = normalize(reflect(view_position, normalize(view_normal)));
+	vec3 reflected = normalize(reflect(normalize(view_position), normalize(view_normal)));
    
 	vec3 hit_position = view_position;
 	float depth_diff = 0.0;
-	vec4 coords = RayCast(reflected * max(MIN_RAY_STEP, -view_position.z), hit_position,depth_diff);
+	vec4 coords = RayCast(reflected * max(MIN_RAY_STEP, 1.0 -view_position.z), hit_position,depth_diff);
 
 	//Fade edged and ignore results outside screen
 	vec2 diff_coords = smoothstep(0.2, 0.6, abs(vec2(0.5, 0.5) - coords.xy));
