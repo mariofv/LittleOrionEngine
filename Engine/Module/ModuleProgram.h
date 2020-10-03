@@ -14,7 +14,7 @@ class PanelComponent;
 class ModuleProgram : public Module
 {
 public:
-	enum class ShaderVariation
+	enum class ShaderVariation : int64_t
 	{
 		ENABLE_NORMAL_MAP = 1 << 0,
 		ENABLE_SPECULAR_MAP = 1 << 1,

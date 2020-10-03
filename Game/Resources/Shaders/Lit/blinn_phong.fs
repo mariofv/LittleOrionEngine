@@ -205,10 +205,11 @@ void main()
 
  	float lit_fragment = ShadowCalculation();
 
+	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
+
 #if ENABLE_LIGHT_MAP
 	result += diffuse_color.rgb * GetLightMapColor(material, texCoordLightmap).rgb * lit_fragment;
 #else
-	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
 
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)
 	{

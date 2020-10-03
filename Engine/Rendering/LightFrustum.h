@@ -47,6 +47,8 @@ public:
 	float3 light_orthogonal_frustum_render_color;
 
 	float multiplier = 1.f;
+
+	const int LIGHT_FRUSTUM_FAR_PLANE_EXTRA_DISTANCE = 10.f;
 };
 
 #endif //__LIGHTFRUSTUM_H__

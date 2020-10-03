@@ -10,8 +10,6 @@
 #include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleRender.h"
 
-const int LIGHT_FRUSTUM_FAR_PLANE_EXTRA_DISTANCE = 10.f;
-
 LightFrustum::LightFrustum(FrustumSubDivision frustum_sub_division) : frustum_sub_division(frustum_sub_division)
 {
 	switch (frustum_sub_division)
