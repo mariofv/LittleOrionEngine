@@ -76,7 +76,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		{
 			display_image = (void*)(intptr_t)particle_system->billboard->billboard_texture->opengl_texture;
 		}
-		ImGuiID element_id = ImGui::GetID(std::to_string(particle_system->billboard->billboard_texture->GetUUID()).c_str());
+		ImGuiID element_id = ImGui::GetID(std::to_string(particle_system->billboard->UUID).c_str());
 		if (ImGui::ImageButton(
 			display_image,
 			ImVec2(billboard_texture_size, billboard_texture_size),
