@@ -186,15 +186,19 @@ void ModuleLight::BindLightFrustumsMatrices()
 {
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 
-	static size_t near_depth_space_matrix_offset = App->program->uniform_buffer.light_frustums_uniform_offset;
+	static size_t full_depth_space_matrix_offset = App->program->uniform_buffer.light_frustums_uniform_offset;
+	float4x4 full_depth_space_matrix = full_frustum->light_orthogonal_frustum.ProjectionMatrix() * full_frustum->light_orthogonal_frustum.ViewMatrix();
+	glBufferSubData(GL_UNIFORM_BUFFER, full_depth_space_matrix_offset, sizeof(float4x4), full_depth_space_matrix.Transposed().ptr());
+
+	static size_t near_depth_space_matrix_offset = App->program->uniform_buffer.light_frustums_uniform_offset + sizeof(float4x4);
 	float4x4 near_depth_space_matrix = near_frustum->light_orthogonal_frustum.ProjectionMatrix() * near_frustum->light_orthogonal_frustum.ViewMatrix();
 	glBufferSubData(GL_UNIFORM_BUFFER, near_depth_space_matrix_offset, sizeof(float4x4), near_depth_space_matrix.Transposed().ptr());
 
-	static size_t mid_depth_space_matrix_offset = App->program->uniform_buffer.light_frustums_uniform_offset + sizeof(float4x4);
+	static size_t mid_depth_space_matrix_offset = App->program->uniform_buffer.light_frustums_uniform_offset + 2 * sizeof(float4x4);
 	float4x4 mid_depth_space_matrix = mid_frustum->light_orthogonal_frustum.ProjectionMatrix() * mid_frustum->light_orthogonal_frustum.ViewMatrix();
 	glBufferSubData(GL_UNIFORM_BUFFER, mid_depth_space_matrix_offset, sizeof(float4x4), mid_depth_space_matrix.Transposed().ptr());
 
-	static size_t far_depth_space_matrix_offset = App->program->uniform_buffer.light_frustums_uniform_offset + 2 * sizeof(float4x4);
+	static size_t far_depth_space_matrix_offset = App->program->uniform_buffer.light_frustums_uniform_offset + 3 * sizeof(float4x4);
 	float4x4 far_depth_space_matrix = far_frustum->light_orthogonal_frustum.ProjectionMatrix() * far_frustum->light_orthogonal_frustum.ViewMatrix();
 	glBufferSubData(GL_UNIFORM_BUFFER, far_depth_space_matrix_offset, sizeof(float4x4), far_depth_space_matrix.Transposed().ptr());
 

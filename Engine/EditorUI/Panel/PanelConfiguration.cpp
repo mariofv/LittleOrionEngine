@@ -259,33 +259,41 @@ void PanelConfiguration::ShowRenderOptions()
 
 		ImGui::Separator();
 
-		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Lighting");
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1, 1, 1, 1), "and");
-		ImGui::SameLine();
 		ImGui::TextColored(ImVec4(0.3f, 0.3f, 0.3f, 1), "Shadows");
-
-		ImGui::Separator();
-
-		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Ambient Light");
-
-		ImGui::SliderFloat("Intensity", &App->lights->ambient_light_intensity, 0, 1, "%.2f");
-		ImGui::ColorEdit3("Color", App->lights->ambient_light_color);
-
-
-		ImGui::Separator();
-		
-		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Game Graphic Settings");
-		ImGui::PushID("Game Viewport");
-		ImGui::Checkbox("Render Effects", &App->renderer->game_viewport->effects_pass);
 		if (ImGui::Checkbox("Shadows", &App->renderer->shadows_enabled))
 		{
 			App->renderer->SetShadows(App->renderer->shadows_enabled);
 		}
 		if (App->renderer->shadows_enabled)
 		{
-			ImGui::Checkbox("Cascade debug", &App->renderer->cascade_debug);
+			ImGui::Checkbox("Cascade Mapping", &App->renderer->cascade_mapping);
+			ImGui::Checkbox("Depth map debug", &App->renderer->depth_map_debug);
+			if (App->renderer->cascade_mapping)
+			{
+				ImGui::Combo("Debugged Depth Map", &App->renderer->depth_map_debug_index, "Near\0Mid\0Far\0");
+			}
+			if (App->renderer->cascade_mapping)
+			{
+				ImGui::Checkbox("Cascade debug", &App->renderer->cascade_debug);
+			}
 		}
+		ImGui::Separator();
+
+
+
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Ambient Light");
+
+		ImGui::SliderFloat("Intensity", &App->lights->ambient_light_intensity, 0, 1, "%.2f");
+		ImGui::ColorEdit3("Color", App->lights->ambient_light_color);
+
+		ImGui::Separator();
+		
+
+
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Game Graphic Settings");
+		ImGui::PushID("Game Viewport");
+		ImGui::Checkbox("Render Effects", &App->renderer->game_viewport->effects_pass);
+		
 		ImGui::PopID();
 	}
 }

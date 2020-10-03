@@ -27,6 +27,7 @@ private:
 	void RenderGizmo();
 	void RenderSceneCameraGizmo() const;
 	void RenderCameraPreview() const;
+	void RenderDepthMapPreview() const;
 
 	void RenderDebugMetrics() const;
 
