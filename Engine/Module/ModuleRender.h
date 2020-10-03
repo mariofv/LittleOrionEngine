@@ -88,7 +88,7 @@ private:
 	std::string GetDrawMode() const;
 
 public:
-	bool antialiasing = true;
+	bool antialiasing = false;
 
 	bool hdr = true;
 	float exposure = 0.5f;

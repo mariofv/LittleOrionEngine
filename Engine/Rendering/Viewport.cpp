@@ -25,7 +25,7 @@ Viewport::Viewport(int options) : viewport_options(options)
 	scene_quad = new Quad(2.f);
 	scene_quad->InitQuadUI();
 
-	framebuffers.emplace_back(scene_fbo = new FrameBuffer(3));
+	framebuffers.emplace_back(scene_fbo = new FrameBuffer(6));
 	framebuffers.emplace_back(ping_fbo = new FrameBuffer());
 	framebuffers.emplace_back(pong_fbo = new FrameBuffer());
 	framebuffers.emplace_back(postprocess_fbo = new FrameBuffer());
@@ -127,6 +127,9 @@ void Viewport::MeshRenderPass() const
 	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0, camera->camera_clear_color);
 	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT1);
 	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT2);
+	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT3);
+	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT4);
+	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT5);
 
 	if (camera->HasSkybox())
 	{
@@ -135,8 +138,8 @@ void Viewport::MeshRenderPass() const
 		SkyboxPass();
 	}
 
-	static GLenum attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
-	glDrawBuffers(3, attachments);
+	static GLenum attachments[6] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3,GL_COLOR_ATTACHMENT4,GL_COLOR_ATTACHMENT5 };
+	glDrawBuffers(6, attachments);
 
 	num_rendered_triangles = 0;
 	num_rendered_vertices = 0;
@@ -441,6 +444,18 @@ void Viewport::HDRPass() const
 		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(2));
 		glUniform1i(glGetUniformLocation(program, "post_processing_filter"), 2);
 	}
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(3));
+	glUniform1i(glGetUniformLocation(program, "normalMap"), 3);
+
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(4));
+	glUniform1i(glGetUniformLocation(program, "positionMap"), 4);
+
+	glActiveTexture(GL_TEXTURE5);
+	glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(5));
+	glUniform1i(glGetUniformLocation(program, "ssrValuesMap"), 5);
+
 	glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
 	glUniform1f(glGetUniformLocation(program, "exposure"), App->renderer->exposure);
 

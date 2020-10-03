@@ -81,8 +81,8 @@ public:
 	float specular_color[4] = { 0.025f, 0.025f, 0.025f, 0.025f };
 	float smoothness = 1.0F;
 
-	float transparency = 0.5F;
-
+	float transparency = 1.0F;
+	float reflection_strength = 0.0f;
 	float2 tiling = float2::one;
 
 	//liquid material

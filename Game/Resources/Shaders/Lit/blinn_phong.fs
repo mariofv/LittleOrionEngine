@@ -32,6 +32,7 @@ struct Material
 	float roughness;
 	float metalness;
 	float transparency;
+	float reflection_strength;
 	vec2 tiling;
 
 	sampler2D liquid_map;
@@ -160,6 +161,10 @@ in vec4 position_far_depth_space;
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 BrightColor;
 layout (location = 2) out vec4 PostProcessFilter;
+layout(location = 3) out vec4 normalBuffer;
+layout(location = 4) out vec4 positionBuffer;
+layout(location = 5) out vec4 ssrValuesBuffer;
+
 
 //////////////////////////////////
 ///////     DEFINTIONS    ////////
@@ -227,7 +232,10 @@ void main()
 #endif
 
 	FragColor.a = material.transparency;
-
+	normalBuffer = vec4(fragment_normal,1.0);
+	positionBuffer = vec4(normalize(position - view_pos),gl_FragCoord.z);
+	ssrValuesBuffer = vec4(material.reflection_strength,0,0,1.0);
+	//FragColor = vec4(positionBuffer.xyz, 1.0);
 	float brightness = dot(result, vec3(0.2, 0.6, 0.0));
 	if (brightness > 1.0)
 	{
