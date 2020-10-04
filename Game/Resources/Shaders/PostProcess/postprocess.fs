@@ -38,31 +38,30 @@ const float MIN_RAY_STEP = 0.2;
 // Transform hit_coordinate to screen coordinate
 vec4 GetCoordinatesInScreenSpace(vec3 in_coordinates)
 {
-    vec4 out_coordinates = matrices.proj * vec4(in_coordinates, 1.0);
+    vec4 out_coordinates = matrices.proj * inverse(transpose(matrices.view))* vec4(in_coordinates, 1.0);
     out_coordinates.xy /= out_coordinates.w;
-    out_coordinates.xy = out_coordinates.xy * 0.5 + 0.5;
-	return clamp(out_coordinates,0,1);
+    out_coordinates.xy = out_coordinates.xy *0.5 + 0.5;
+	return out_coordinates;
 }
 
 vec4 RayCast(vec3 direction,vec3 hit_coordinate) {
-
     //Increase ray lenght until we find something
+
     for (int i = 0; i < MAX_NUMBER_INCREMENTS; i++) {
 
-        //hit_coordinate += direction;
+        hit_coordinate += direction;
 		vec4 projectedCoord = GetCoordinatesInScreenSpace(hit_coordinate);
 
 		float depth = texture(positionMap, projectedCoord.xy).z;
-		float depth_diff = hit_coordinate.z - depth;
+		float depth_diff = (abs(hit_coordinate.z) - abs(depth));
 		//Avoid going over the depth diferent threshold  and check if we have hit something
-        if ((direction.z - depth_diff) < 1.2) 
-		{	
-			//return  vec4(matrices.proj[0][0],matrices.proj[0][0], 0,0.0);
-           return  vec4(vec2(projectedCoord),depth, 0.0);
+        if ((abs(direction.z) - depth_diff) < 0.0) 
+		{		
+		  return  vec4(projectedCoord.xy, depth,0.0f);
 		}
     }
+	return vec4(1.0, 0,0,1.0);
 
-    return vec4(0, 0,0,0.0);
 }
 
 void main()
@@ -90,13 +89,13 @@ void main()
 #endif
 
 	float reflection_strength = texture(ssrValuesMap, texCoord).r;
-	vec3 reflection_texture = vec3(0.0);
+	vec3 reflection_texture = fragment_color.rgb ;
 	if(reflection_strength > 0.0)
 	{
 		reflection_texture = Reflections(reflection_strength);
 
 	 }
-  	  FragColor.rgb = fragment_color.rgb + reflection_texture;
+  	  FragColor.rgb =  reflection_texture;
 	FragColor.rgb = pow(FragColor.rgb, vec3(1 / gamma));
 	FragColor.a = 1.0;
 
@@ -140,10 +139,10 @@ vec3 Reflections(float reflection_strength)
 	vec3 view_position = vec3(texture(positionMap, texCoord));
 
 	//Reflection
-	vec3 reflected = normalize(reflect(normalize(view_position), normalize(view_normal))) ;
+	vec3 reflected = normalize( reflect(normalize(view_position), normalize(view_normal))) ;
    
 	vec3 hit_position = view_position;
-	vec4 coords = RayCast(reflected, hit_position);
+	vec4 coords = RayCast(reflected , hit_position);
 
 	vec3 SSR = texture(screen_texture, coords.xy).xyz;
 
