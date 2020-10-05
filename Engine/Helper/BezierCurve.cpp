@@ -117,7 +117,7 @@ bool BezierCurve::RemovePointWithIndex(const int point_index)
 	if (point_index <= 0 || point_index >= num_points - 1)
 		return false;
 
-	for (int i = point_index; i < num_points; i++)
+	for (int i = point_index; i < num_points - 1; i++)
 	{
 		assert(i + 1 < MAXIMUM_POINTS);
 		assert(i >= 0);

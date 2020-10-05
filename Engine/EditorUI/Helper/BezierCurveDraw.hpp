@@ -10,7 +10,7 @@
 
 namespace ImGui
 {
-	static int const SMOOTHNESS = 64;
+	static int const SMOOTHNESS = 128;
 	static int const CURVE_WIDTH = 3;
 	static int const LINE_WIDTH = 1;
 	static int const GRAB_RADIUS = 4;
