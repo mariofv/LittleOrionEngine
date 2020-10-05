@@ -3,8 +3,15 @@ const float W = 11.2;
 
 #if ENABLE_MSAA
 uniform sampler2DMS screen_texture;
+uniform sampler2DMS normalMap; // in view space
+uniform sampler2DMS positionMap; // in view space
+uniform sampler2DMS ssrValuesMap;
 #else
 uniform sampler2D screen_texture;
+//Reflections
+uniform sampler2D normalMap; // in view space
+uniform sampler2D positionMap; // in view space
+uniform sampler2D ssrValuesMap;
 #endif
 uniform sampler2D brightness_texture;
 
@@ -17,10 +24,6 @@ vec3 ToneMapping(vec3 color);
 vec3 Uncharted2Tonemap(vec3 x);
 vec3 Reflections(float reflection_strength);
 
-//Reflections
-uniform sampler2D normalMap; // in view space
-uniform sampler2D positionMap; // in view space
-uniform sampler2D ssrValuesMap;
 
 layout (std140) uniform Matrices
 {
@@ -35,6 +38,24 @@ const int MAX_NUMBER_INCREMENTS = 30; // 60
 const float RAY_STEP = 0.05; // 0.025
 const float MIN_RAY_STEP = 0.2;
 
+#if ENABLE_MSAA
+vec4 GetTexture(sampler2DMS texture_uniform,vec2 coordinates)
+#else
+vec4 GetTexture(sampler2D texture_uniform,vec2 coordinates)
+#endif
+{
+	#if ENABLE_MSAA
+		ivec2 vp = ivec2(vec2(textureSize(texture_uniform)) * coordinates);
+		vec4 sample1 = texelFetch(texture_uniform, vp, 0);
+		vec4 sample2 = texelFetch(texture_uniform, vp, 1);
+		vec4 sample3 = texelFetch(texture_uniform, vp, 2);
+		vec4 sample4 = texelFetch(texture_uniform, vp, 3);
+
+		return (sample1 + sample2 + sample3 + sample4) / 4.0f;
+	#else
+		return texture(texture_uniform, coordinates);
+	#endif
+}
 // Transform hit_coordinate to screen coordinate
 vec4 GetCoordinatesInScreenSpace(vec3 in_coordinates)
 {
@@ -47,12 +68,12 @@ vec4 GetCoordinatesInScreenSpace(vec3 in_coordinates)
 vec4 RayCast(vec3 direction,vec3 hit_coordinate) {
     //Increase ray lenght until we find something
 
-    for (int i = 0; i < MAX_NUMBER_INCREMENTS; i++) {
+   for (int i = 0; i < MAX_NUMBER_INCREMENTS; i++) {
 
         hit_coordinate += direction;
 		vec4 projectedCoord = GetCoordinatesInScreenSpace(hit_coordinate);
 
-		float depth = texture(positionMap, projectedCoord.xy).z;
+		float depth = GetTexture(positionMap,projectedCoord.xy).z;
 		float depth_diff = (abs(hit_coordinate.z) - abs(depth));
 		//Avoid going over the depth diferent threshold  and check if we have hit something
         if ((abs(direction.z) - depth_diff) < 0.0) 
@@ -66,18 +87,7 @@ vec4 RayCast(vec3 direction,vec3 hit_coordinate) {
 
 void main()
 {
-
-#if ENABLE_MSAA
-  ivec2 vp = ivec2(vec2(textureSize(screen_texture)) * texCoord);
-  vec4 sample1 = texelFetch(screen_texture, vp, 0);
-  vec4 sample2 = texelFetch(screen_texture, vp, 1);
-  vec4 sample3 = texelFetch(screen_texture, vp, 2);
-  vec4 sample4 = texelFetch(screen_texture, vp, 3);
-
-  vec4 fragment_color = (sample1 + sample2 + sample3 + sample4) / 4.0f;
-#else
-  vec4 fragment_color = texture(screen_texture, texCoord);
-#endif
+  vec4 fragment_color = GetTexture( screen_texture,texCoord);
 
 #if ENABLE_BLOOM
   vec4 brightness_color = texture(brightness_texture, texCoord);
@@ -88,14 +98,16 @@ void main()
   fragment_color.rgb = ToneMapping(fragment_color.rgb);
 #endif
 
-	float reflection_strength = texture(ssrValuesMap, texCoord).r;
+	float reflection_strength = GetTexture(ssrValuesMap, texCoord).r;
+
 	vec3 reflection_texture = fragment_color.rgb ;
+
 	if(reflection_strength > 0.0)
 	{
 		reflection_texture = Reflections(reflection_strength);
 
 	 }
-  	  FragColor.rgb =  reflection_texture;
+  	FragColor.rgb =  reflection_texture;
 	FragColor.rgb = pow(FragColor.rgb, vec3(1 / gamma));
 	FragColor.a = 1.0;
 
@@ -133,10 +145,8 @@ vec3 Uncharted2Tonemap(vec3 x)
 
 vec3 Reflections(float reflection_strength)
 {
-#ifndef ENABLE_MSAA
-
-	vec3 view_normal = vec3(texture(normalMap, texCoord));
-	vec3 view_position = vec3(texture(positionMap, texCoord));
+	vec3 view_normal = vec3(GetTexture(normalMap, texCoord));
+	vec3 view_position = vec3(GetTexture(positionMap, texCoord));
 
 	//Reflection
 	vec3 reflected = normalize( reflect(normalize(view_position), normalize(view_normal))) ;
@@ -144,8 +154,7 @@ vec3 Reflections(float reflection_strength)
 	vec3 hit_position = view_position;
 	vec4 coords = RayCast(reflected , hit_position);
 
-	vec3 SSR = texture(screen_texture, coords.xy).xyz;
+	vec3 SSR = GetTexture(screen_texture,coords.xy).xyz;
 
 	return SSR;
- #endif
 }
