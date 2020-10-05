@@ -240,11 +240,11 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	//update position
 	particle.position += ((velocity + vel_curve_interpolated) * time_increased) + (acceleration * time_increased * time_increased / 2);
 
-	if (orbit)
+	/*if (orbit)
 	{
 		particle.position.z += sin((particle.time_passed *0.001f) + particle.inital_random_orbit);
 		particle.position.x += cos((particle.time_passed *0.001f) + particle.inital_random_orbit);
-	}
+	}*/
 	//alpha fade
 	if (fade)
 	{
