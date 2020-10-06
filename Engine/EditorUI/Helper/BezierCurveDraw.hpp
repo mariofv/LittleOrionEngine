@@ -157,6 +157,11 @@ namespace ImGui
 			}
 		}
 
+		if (current_point_index == -1)
+		{
+			return;
+		}
+
 		//add or remove points
 		int detection_distance = 4 * GRAB_RADIUS * 4 * GRAB_RADIUS;
 		if (IsMouseDoubleClicked(0) && (rec.Contains(mouse)))
@@ -168,7 +173,7 @@ namespace ImGui
 		}
 
 		//drag and move points
-		if (current_point_distance < detection_distance)
+		else if (current_point_distance < detection_distance)
 		{
 			if (IsMouseClicked(0) || IsMouseDragging(0))
 			{
