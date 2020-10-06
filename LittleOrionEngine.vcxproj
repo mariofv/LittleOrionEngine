@@ -332,6 +332,7 @@
     <ClInclude Include="Engine\Rendering\FrameBuffer\FrameBuffer.h" />
     <ClInclude Include="Engine\Rendering\Viewport.h" />
     <ClInclude Include="Engine\Rendering\LightFrustum.h" />
+    <ClInclude Include="Engine\Animation\Timeline.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Component\ComponentVideoPlayer.cpp" />
@@ -518,6 +519,7 @@
     <ClCompile Include="Engine\Helper\Quad.cpp" />
     <ClCompile Include="Engine\Rendering\Viewport.cpp" />
     <ClCompile Include="Engine\Rendering\LightFrustum.cpp" />
+    <ClCompile Include="Engine\Animation\Timeline.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

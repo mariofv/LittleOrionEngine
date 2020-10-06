@@ -574,6 +574,9 @@
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTrail.cpp">
       <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Animation\Timeline.cpp">
+      <Filter>Engine\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1136,6 +1139,9 @@
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTrail.h">
       <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Animation\Timeline.h">
+      <Filter>Engine\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
