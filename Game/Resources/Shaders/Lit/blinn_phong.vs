@@ -31,6 +31,7 @@ uniform int has_skinning_value;
 out vec2 texCoord;
 out vec2 texCoordLightmap;
 out vec3 position;
+out vec4 eye_coordinate_pos;
 out vec3 normal;
 out mat3 TBN;
 
@@ -66,7 +67,7 @@ void main()
 	view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
 	view_dir    = normalize(view_pos - position);
 
-	vec4 eye_coordinate_pos = matrices.view * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
+	eye_coordinate_pos = matrices.view * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
 
 	gl_Position = matrices.proj * eye_coordinate_pos;
 

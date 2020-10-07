@@ -144,6 +144,7 @@ bool InsideUVRange(vec2 uv);
 
 //General variables
 in vec3 position;
+in vec4 eye_coordinate_pos;
 in vec3 normal;
 in vec2 texCoord;
 in vec2 texCoordLightmap;
@@ -242,7 +243,7 @@ void main()
 
 	FragColor.a = material.transparency;
 	normalBuffer = vec4(fragment_normal,1.0);
-	positionBuffer = vec4(position - view_pos,gl_FragCoord.z);
+	positionBuffer = eye_coordinate_pos;
 	ssrValuesBuffer = vec4(material.reflection_strength,0,0,1.0);
 	float brightness = dot(result, vec3(0.2, 0.6, 0.0));
 	if (brightness > 1.0)

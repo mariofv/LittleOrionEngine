@@ -16,6 +16,8 @@ uniform sampler2D ssrValuesMap;
 uniform sampler2D brightness_texture;
 
 uniform float exposure;
+uniform float zNear;
+uniform float zFar;
 
 noperspective in vec2 texCoord;
 layout (location = 0) out vec4 FragColor;
@@ -34,7 +36,7 @@ layout (std140) uniform Matrices
 
 
 const int MAX_BINARY_SEARCH_COUNT = 10;
-const int MAX_NUMBER_INCREMENTS = 30; // 60
+const int MAX_NUMBER_INCREMENTS = 60; // 60
 const float RAY_STEP = 0.05; // 0.025
 const float MIN_RAY_STEP = 0.2;
 
@@ -59,30 +61,36 @@ vec4 GetTexture(sampler2D texture_uniform,vec2 coordinates)
 // Transform hit_coordinate to screen coordinate
 vec4 GetCoordinatesInScreenSpace(vec3 in_coordinates)
 {
-    vec4 out_coordinates = matrices.proj * inverse(transpose(matrices.view))* vec4(in_coordinates, 1.0);
+    vec4 out_coordinates = matrices.proj* vec4(in_coordinates, 1.0);
     out_coordinates.xy /= out_coordinates.w;
     out_coordinates.xy = out_coordinates.xy *0.5 + 0.5;
 	return out_coordinates;
 }
 
+float linearize_depth(float d)
+{
+    return zNear * zFar / (zFar + abs(d) * (zNear - zFar)); // abs because z is negative in right handed system
+}
 vec4 RayCast(vec3 direction,vec3 hit_coordinate) {
     //Increase ray lenght until we find something
-
+	direction*=MIN_RAY_STEP;
+	vec4 projectedCoord ;
+	float original_depth = linearize_depth(hit_coordinate.z);
    for (int i = 0; i < MAX_NUMBER_INCREMENTS; i++) {
 
         hit_coordinate += direction;
-		vec4 projectedCoord = GetCoordinatesInScreenSpace(hit_coordinate);
+		projectedCoord = GetCoordinatesInScreenSpace(hit_coordinate);
 
-		float depth = GetTexture(positionMap,projectedCoord.xy).z;
-		float depth_diff = (abs(hit_coordinate.z) - abs(depth));
+		float depth = linearize_depth(GetTexture(positionMap,projectedCoord.xy).z);
+		float depth_diff = depth - linearize_depth(hit_coordinate.z);
 		//Avoid going over the depth diferent threshold  and check if we have hit something
-        if ((abs(direction.z) - depth_diff) < 0.0) 
+        if (depth_diff < 0 && original_depth  < depth)
 		{		
-		  return  vec4(projectedCoord.xy, depth,0.0f);
+			return  vec4(projectedCoord.xy, 0,1.0f);
 		}
     }
-	return vec4(1.0, 0,0,1.0);
 
+	return vec4(0,0,0,0.0);
 }
 
 void main()
@@ -145,7 +153,7 @@ vec3 Uncharted2Tonemap(vec3 x)
 
 vec3 Reflections(float reflection_strength)
 {
-	vec3 view_normal = vec3(GetTexture(normalMap, texCoord));
+	vec3 view_normal = vec3(GetTexture(normalMap, texCoord) * inverse(matrices.view));
 	vec3 view_position = vec3(GetTexture(positionMap, texCoord));
 
 	//Reflection
@@ -154,7 +162,14 @@ vec3 Reflections(float reflection_strength)
 	vec3 hit_position = view_position;
 	vec4 coords = RayCast(reflected , hit_position);
 
-	vec3 SSR = GetTexture(screen_texture,coords.xy).xyz;
 
-	return SSR;
+	if(coords.w > 0)
+	{
+		vec3 SSR = GetTexture(screen_texture,coords.xy).xyz;
+		return SSR;	
+	}else
+	{
+		return vec3(coords.x,coords.y,0);
+	}
+
 }
