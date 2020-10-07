@@ -36,8 +36,9 @@ layout (std140) uniform Matrices
 
 
 const int MAX_BINARY_SEARCH_COUNT = 10;
-const int MAX_NUMBER_INCREMENTS = 60; // 60
-const float RAY_STEP = 0.05; // 0.025
+const int MAX_NUMBER_INCREMENTS = 100; // 60
+const float MAX_Z_VALUE = -0.1; // 0.025
+const float MIN_Z_VALUE = -0.001; // 0.025
 const float MIN_RAY_STEP = 0.2;
 
 #if ENABLE_MSAA
@@ -71,6 +72,34 @@ float linearize_depth(float d)
 {
     return zNear * zFar / (zFar + abs(d) * (zNear - zFar)); // abs because z is negative in right handed system
 }
+
+vec3 BinarySearch(inout vec3 direction, inout vec3 hit_coordinate)
+{
+    float depth;
+
+    vec4 projectedCoord;
+ 
+    for(int i = 0; i < MAX_BINARY_SEARCH_COUNT; i++)
+    {
+
+		projectedCoord = GetCoordinatesInScreenSpace(hit_coordinate);
+ 
+        float depth = linearize_depth(GetTexture(positionMap,projectedCoord.xy).z);
+
+ 
+        float depth_diff =linearize_depth(hit_coordinate.z) - depth;
+
+        direction *= 0.2;
+        if(depth_diff > 0.0)
+            hit_coordinate += direction;
+        else
+            hit_coordinate -= direction;    
+    }
+
+	projectedCoord = GetCoordinatesInScreenSpace(hit_coordinate);
+ 
+    return vec3(projectedCoord.xy, depth);
+}
 vec4 RayCast(vec3 direction,vec3 hit_coordinate) {
     //Increase ray lenght until we find something
 	direction*=MIN_RAY_STEP;
@@ -84,9 +113,9 @@ vec4 RayCast(vec3 direction,vec3 hit_coordinate) {
 		float depth = linearize_depth(GetTexture(positionMap,projectedCoord.xy).z);
 		float depth_diff = depth - linearize_depth(hit_coordinate.z);
 		//Avoid going over the depth diferent threshold  and check if we have hit something
-        if (depth_diff < 0 && original_depth  < depth)
+        if (depth_diff < MIN_Z_VALUE && depth_diff > MAX_Z_VALUE && original_depth < depth)
 		{		
-			return  vec4(projectedCoord.xy, 0,1.0f);
+			return  vec4(BinarySearch(direction,hit_coordinate),1.0f);
 		}
     }
 
@@ -108,14 +137,14 @@ void main()
 
 	float reflection_strength = GetTexture(ssrValuesMap, texCoord).r;
 
-	vec3 reflection_texture = fragment_color.rgb ;
+	vec3 reflection_texture ;
 
 	if(reflection_strength > 0.0)
 	{
 		reflection_texture = Reflections(reflection_strength);
 
 	 }
-  	FragColor.rgb =  reflection_texture;
+  	FragColor.rgb =  reflection_texture +  fragment_color.rgb;
 	FragColor.rgb = pow(FragColor.rgb, vec3(1 / gamma));
 	FragColor.a = 1.0;
 
@@ -162,10 +191,12 @@ vec3 Reflections(float reflection_strength)
 	vec3 hit_position = view_position;
 	vec4 coords = RayCast(reflected , hit_position);
 
+	vec2 dCoords = smoothstep(0.2, 0.6, abs(vec2(0.5, 0.5) - coords.xy));
+	float screenEdgefactor = clamp(1.0 - (dCoords.x + dCoords.y), 0.0, 1.0) * reflection_strength;
 
 	if(coords.w > 0)
 	{
-		vec3 SSR = GetTexture(screen_texture,coords.xy).xyz;
+		vec3 SSR = GetTexture(screen_texture,coords.xy).xyz * screenEdgefactor;
 		return SSR;	
 	}else
 	{
