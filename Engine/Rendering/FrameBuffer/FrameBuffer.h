@@ -33,7 +33,7 @@ private:
 protected:
 	GLuint fbo = 0;
 	GLuint rbo = 0;
-	GLuint color_attachements[6];
+	GLuint color_attachements[5];
 
 	int num_color_attachements = 1;
 	bool multisampled = false;

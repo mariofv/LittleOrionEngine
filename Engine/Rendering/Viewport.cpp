@@ -458,15 +458,41 @@ void Viewport::HDRPass() const
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, scene_fbo->GetColorAttachement());
 		glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, scene_fbo->GetColorAttachement(2));
+		glUniform1i(glGetUniformLocation(program, "normalMap"), 2);
+
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, scene_fbo->GetColorAttachement(3));
+		glUniform1i(glGetUniformLocation(program, "positionMap"), 3);
+
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, scene_fbo->GetColorAttachement(4));
+		glUniform1i(glGetUniformLocation(program, "ssrValuesMap"), 4);
 	}
 	else
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement());
 		glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(2));
+		glUniform1i(glGetUniformLocation(program, "normalMap"), 2);
+
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(3));
+		glUniform1i(glGetUniformLocation(program, "positionMap"), 3);
+
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(4));
+		glUniform1i(glGetUniformLocation(program, "ssrValuesMap"), 4);
 	}
 	glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
 	glUniform1f(glGetUniformLocation(program, "exposure"), App->renderer->exposure);
+	glUniform1f(glGetUniformLocation(program, "zNear"), camera->camera_frustum.nearPlaneDistance);
+	glUniform1f(glGetUniformLocation(program, "zFar"), camera->camera_frustum.farPlaneDistance);
 
 	if (bloom)
 	{
@@ -474,17 +500,7 @@ void Viewport::HDRPass() const
 		glBindTexture(GL_TEXTURE_2D, ping_pong_fbo->GetColorAttachement());
 		glUniform1i(glGetUniformLocation(program, "brightness_texture"), 1);
 	}
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(2));
-	glUniform1i(glGetUniformLocation(program, "normalMap"), 2);
 
-	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(3));
-	glUniform1i(glGetUniformLocation(program, "positionMap"), 3);
-
-	glActiveTexture(GL_TEXTURE4);
-	glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(4));
-	glUniform1i(glGetUniformLocation(program, "ssrValuesMap"), 4);
 
 	scene_quad->RenderArray();
 

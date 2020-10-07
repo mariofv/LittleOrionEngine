@@ -84,6 +84,13 @@ void Skybox::Render(const ComponentCamera& camera) const
 
 	glDepthFunc(GL_LESS);
 	glUseProgram(0);
+
+	shader_program = App->program->UseProgram("Blinn phong");
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+	glUniform1i(glGetUniformLocation(shader_program, "skybox_texture"), 0);
+	glUseProgram(0);
+
 }
 
 void Skybox::GenerateSkyboxCube()

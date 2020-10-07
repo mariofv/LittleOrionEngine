@@ -108,6 +108,8 @@ uniform sampler2D far_depth_map;
 uniform float ambient_light_intensity;
 uniform vec4 ambient_light_color;
 
+// SKYBOX
+uniform samplerCube skybox_texture;
 //////////////////////////////////
 ///////     FUNCTIONS    /////////
 //////////////////////////////////
@@ -212,9 +214,14 @@ void main()
  	float lit_fragment = ShadowCalculation();
 
 	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
-
+#if ENABLE_LIQUID_PROPERTIES
+    vec3 I = normalize(position - view_pos);
+    vec3 R = reflect(I, fragment_normal);
+	result +=texture(skybox_texture, R).rgb* 0.5;
+#endif
 #if ENABLE_LIGHT_MAP
 	result += diffuse_color.rgb * GetLightMapColor(material, texCoordLightmap).rgb * lit_fragment;
+
 #else
 
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)

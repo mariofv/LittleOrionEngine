@@ -19,7 +19,7 @@ uniform float exposure;
 uniform float zNear;
 uniform float zFar;
 
-noperspective in vec2 texCoord;
+in vec2 texCoord;
 layout (location = 0) out vec4 FragColor;
 
 vec3 ToneMapping(vec3 color);
@@ -142,8 +142,7 @@ void main()
 	if(reflection_strength > 0.0)
 	{
 		reflection_texture = Reflections(reflection_strength);
-
-	 }
+	}
   	FragColor.rgb =  reflection_texture +  fragment_color.rgb;
 	FragColor.rgb = pow(FragColor.rgb, vec3(1 / gamma));
 	FragColor.a = 1.0;
