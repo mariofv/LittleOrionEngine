@@ -1,8 +1,13 @@
 #ifndef _TIMELINE_H_
 #define _TIMELINE_H_
 
+#ifndef ENGINE_EXPORTS
+#define ENGINE_EXPORTS
+#endif
+
 #include <vector>
-#include "MathGeoLib.h"
+#include <MathGeoLib.h>
+
 class GameObject;
 class Timeline
 {
@@ -15,21 +20,26 @@ public:
 
 	struct Track
 	{
-		GameObject* target;
+		Track(GameObject* target) : m_target(target) {};
+		virtual void Update(float current_time) = 0;
+
+	protected:
+		void AddKeyframe(Keyframe& keyframe);
 		Keyframe* GetNextKeyFrame(float current_time);
-		void AddKeyframe(Keyframe keyframe);
-	private:
+		GameObject* m_target;
 		std::vector<Keyframe> keyframes;
 	};
 
-	struct TranslationKeyframe : Keyframe
-	{
-		math::float3 target_translation;
-		const GameObject* target_translation_optional = nullptr;
-	};
 	struct TranslationTrack: Track
 	{
-		void Update(float current_time);
+		struct TranslationKeyframe : Keyframe
+		{
+			float4x4 target_transform;
+		};
+		TranslationTrack(GameObject* target) : Track(target) {};
+		void AddKeyframe(float time,const float4x4& transform);
+	protected:
+		void Update(float current_time) override;
 		TranslationKeyframe* next_keyframe = nullptr;
 	};
 
@@ -41,7 +51,7 @@ private:
 	float duration;
 	std::vector<Track> tracks;
 	bool playing = false;
-	float time_passed = 0;
+	float current_time = 0;
 };
 
 #endif //_TIMELINE_H_
