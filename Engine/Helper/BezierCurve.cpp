@@ -133,12 +133,22 @@ bool BezierCurve::RemovePointWithIndex(const int point_index)
 	return true;
 }
 
-void BezierCurve::MovePivotByIncrement(float2& handle, float2& increment, bool calculate_curve)
+void BezierCurve::MoveHandleToValue(float2& handle, const float2& value, bool calculate_curve)
+{
+	handle = Clamp(value, 0.0F, 1.0F);
+
+	if (calculate_curve)
+	{
+		CalculateCurveValues();
+	}
+}
+
+void BezierCurve::MoveHandleByIncrement(float2& handle, float2& increment, bool calculate_curve)
 {
 	float2 change = handle;
 
 	handle += increment;
-	Clamp(handle, 0, 1);
+	handle = Clamp(handle, 0.0F, 1.0F);
 
 	change = handle - change;
 	increment = change;
@@ -147,6 +157,20 @@ void BezierCurve::MovePivotByIncrement(float2& handle, float2& increment, bool c
 	{
 		CalculateCurveValues();
 	}
+}
+
+void BezierCurve::MovePointToValue(BezierPoint& point, const float2& value)
+{
+	float2 change = point.curve_point;
+
+	point.curve_point = Clamp(value, 0.0F, 1.0F);
+	CheckAllPoints();
+
+	change = point.curve_point - change;
+	MoveHandleByIncrement(point.left_pivot, change, false);
+	MoveHandleByIncrement(point.right_pivot, change, false);
+
+	CalculateCurveValues();
 }
 
 void BezierCurve::MovePointByIncrement(BezierPoint& point, float2& increment)
@@ -158,8 +182,8 @@ void BezierCurve::MovePointByIncrement(BezierPoint& point, float2& increment)
 
 	change = point.curve_point - change;
 	
-	MovePivotByIncrement(point.left_pivot, change, false);
-	MovePivotByIncrement(point.right_pivot, change, false);
+	MoveHandleByIncrement(point.left_pivot, change, false);
+	MoveHandleByIncrement(point.right_pivot, change, false);
 	increment = change;
 
 	CalculateCurveValues();

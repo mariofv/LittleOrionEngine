@@ -24,7 +24,9 @@ public:
 	bool AddPointAtCurve(const float point_x);
 	bool RemovePointWithIndex(const int point_index);
 
-	void MovePivotByIncrement(float2& handle, float2& increment, bool calculate_curve = true);
+	void MoveHandleToValue(float2& handle, const float2& value, bool calculate_curve = true);
+	void MoveHandleByIncrement(float2& handle, float2& increment, bool calculate_curve = true);
+	void MovePointToValue(BezierPoint& point, const float2& value);
 	void MovePointByIncrement(BezierPoint& point, float2& increment);
 
 	void SpecializedSave(Config& config, const std::string& name) const;

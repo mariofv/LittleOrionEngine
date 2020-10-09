@@ -164,7 +164,7 @@ namespace ImGui
 
 		//add or remove points
 		int detection_distance = 4 * GRAB_RADIUS * 4 * GRAB_RADIUS;
-		if (IsMouseDoubleClicked(0) && (rec.Contains(mouse)))
+		if (IsMouseDoubleClicked(0) && rec.Contains(mouse))
 		{
 			if (current_point_distance < detection_distance && current_point_side == 0)
 				bezier->RemovePointWithIndex(current_point_index);
@@ -175,16 +175,16 @@ namespace ImGui
 		//drag and move points
 		else if (current_point_distance < detection_distance)
 		{
-			if (IsMouseClicked(0) || IsMouseDragging(0))
+			if (IsMouseClicked(0) || IsMouseDragging(0) && rec.Contains(mouse))
 			{
 				if (current_point_side == -1)
-					bezier->MovePivotByIncrement(bezier->points[current_point_index].left_pivot, float2(GetIO().MouseDelta.x / canvas.x, -GetIO().MouseDelta.y / canvas.y));
+					bezier->MoveHandleToValue(bezier->points[current_point_index].left_pivot, float2((GetIO().MousePos.x - rec.Min.x ) / canvas.x, -(GetIO().MousePos.y - rec.Max.y)/ canvas.y));
 
 				else if (current_point_side == 0)
-					bezier->MovePointByIncrement(bezier->points[current_point_index], float2(GetIO().MouseDelta.x / canvas.x, -GetIO().MouseDelta.y / canvas.y));
+					bezier->MovePointToValue(bezier->points[current_point_index], float2((GetIO().MousePos.x - rec.Min.x) / canvas.x, -(GetIO().MousePos.y - rec.Max.y) / canvas.y));
 
 				else
-					bezier->MovePivotByIncrement(bezier->points[current_point_index].right_pivot, float2(GetIO().MouseDelta.x / canvas.x, -GetIO().MouseDelta.y / canvas.y));
+					bezier->MoveHandleToValue(bezier->points[current_point_index].right_pivot, float2((GetIO().MousePos.x - rec.Min.x) / canvas.x, -(GetIO().MousePos.y - rec.Max.y) / canvas.y));
 
 				changed = true;
 			}
