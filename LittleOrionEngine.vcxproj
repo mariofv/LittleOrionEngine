@@ -162,7 +162,6 @@
     <ClInclude Include="Engine\Actions\EditorActionMultipleTranslate.h" />
     <ClInclude Include="Engine\Component\ComponentAudioListener.h" />
     <ClInclude Include="Engine\Component\ComponentTrail.h" />
-    <ClInclude Include="Engine\EditorUI\Helper\BezierCurve.hpp" />
     <ClInclude Include="Engine\EditorUI\Helper\BezierCurveDraw.hpp" />
     <ClInclude Include="Engine\Helper\BezierCurve.h" />
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTrail.h" />

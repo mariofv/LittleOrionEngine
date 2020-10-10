@@ -1113,15 +1113,12 @@
     <ClInclude Include="Engine\Helper\ThreadSafeQueue.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Helper\BezierCurve.hpp">
-      <Filter>Engine\EditorUI\Helper</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Helper\BezierCurve.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Helper\BezierCurveDraw.hpp">
       <Filter>Engine\EditorUI\Helper</Filter>
-	</ClInclude>	
+    </ClInclude>
     <ClInclude Include="Engine\Actions\EditorActionMultipleTranslate.h">
       <Filter>Engine\Actions</Filter>
     </ClInclude>
