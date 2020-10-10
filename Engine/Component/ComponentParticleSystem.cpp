@@ -29,7 +29,7 @@ void ComponentParticleSystem::Init()
 
 	billboard = new ComponentBillboard(this->owner);
 	billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::WORLD);
-	billboard->ChangeTexture(3665414218); //default particle texture
+	billboard->ChangeTexture(DEFAULT_TEXTURE_UUID);
 
 	for (unsigned int i = 0; i < MAX_PARTICLES; ++i)
 	{

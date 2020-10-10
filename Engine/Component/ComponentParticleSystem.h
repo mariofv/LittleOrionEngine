@@ -135,6 +135,7 @@ public:
 
 	uint32_t texture_uuid;
 	ComponentBillboard* billboard;
+	static const int DEFAULT_TEXTURE_UUID = 3665414218;
 
 	TypeOfParticleSystem type_of_particle_system = BOX;
 
