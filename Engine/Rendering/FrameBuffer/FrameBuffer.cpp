@@ -52,7 +52,7 @@ GLuint FrameBuffer::GetColorAttachement(int index) const
 void FrameBuffer::ClearColorAttachement(GLenum color_attachement, const float3& clear_color, GLbitfield mask) const
 {
 	glDrawBuffer(color_attachement);
-	glClearColor(clear_color.x, clear_color.y, clear_color.z, 1.0f);
+	glClearColor(pow(clear_color.x, 2.2f), pow(clear_color.y, 2.2f), pow(clear_color.z, 2.2f), 1.0f);
 	glStencilMask(0xFF);
 	glClear(mask);
 	glClearColor(0.f, 0.f, 0.f, 1.0f);

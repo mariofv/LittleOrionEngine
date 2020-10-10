@@ -9,6 +9,7 @@
 #include "MathGeoLib.h"
 #include "Main/Application.h"
 #include "Module/ModuleTime.h"
+#include <Helper/BezierCurve.h>
 #include <GL/glew.h>
 
 class GameObject;
@@ -21,10 +22,7 @@ public:
 	struct Particle {
 		float4 position_initial;
 		float4 position;
-
 		float4 velocity_initial;
-		float4 velocity;
-
 		float4 color;
 
 		float particle_scale;
@@ -38,15 +36,15 @@ public:
 		float4x4 geometric_space;
 
 		float inital_random_orbit;
-		float float2;
-		float float3;
+		float random_velocity_percentage;
+		float random_size_percentage;
 		float float4;
 		/*
 		if you add a parameter here you have to put the equivalent in the shader particles.vs
 		Also you will need to add block of 4 floats, so if you add a float like this
-		
+
 		float f1;
-		 
+
 		Add 3 more even if you don't use them:
 
 		float f2,f3,f4;
@@ -62,17 +60,31 @@ public:
 
 	enum TypeOfVelocityOverTime
 	{
-		CONSTANT,
-		LINEAR,
-		RANDOM_BETWEEN_TWO_CONSTANTS,
-		//CURVE
+		VEL_CONSTANT,
+		VEL_LINEAR,
+		VEL_RANDOM_BETWEEN_TWO_CONSTANTS,
+		VEL_CURVE
+	};
+
+	enum TypeOfSizeOverTime
+	{
+		SIZE_LINEAR,
+		SIZE_RANDOM_BETWEEN_TWO_CONSTANTS,
+		SIZE_CURVE
+	};
+
+	enum TypeOfSizeColorChange
+	{
+		COLOR_NONE,
+		COLOR_LINEAR,
+		COLOR_CURVE
 	};
 
 	ComponentParticleSystem();
 	~ComponentParticleSystem();
 
 	ComponentParticleSystem(GameObject* owner);
-	
+
 
 	void Init() override;
 
@@ -91,7 +103,7 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 	//Copy and move
-	
+
 	void ReassignResource() override;
 	Component* Clone(GameObject* owner, bool original_prefab) override;
 	void CopyTo(Component* component_to_copy) const override;
@@ -109,6 +121,8 @@ public:
 	ENGINE_API void Pause();
 
 	void OrbitX(float angle, Particle& particle);
+	void CalculateGravityVector();
+
 	ENGINE_API bool IsEmitting() const;
 	ENGINE_API bool IsPlaying() const;
 
@@ -121,6 +135,7 @@ public:
 
 	uint32_t texture_uuid;
 	ComponentBillboard* billboard;
+	static const int DEFAULT_TEXTURE_UUID = 3665414218;
 
 	TypeOfParticleSystem type_of_particle_system = BOX;
 
@@ -128,8 +143,10 @@ public:
 
 	//Basic values
 	float velocity_particles_start = 1.0F;
-	float gravity_modifier = 0.f;
+	float gravity_modifier = 0.F;
 	float4 gravity_vector;
+	float velocity_factor_mod = 0.001F;
+	float gravity_factor_mod = 0.000001F;
 
 	//Spritesheet
 	float max_tile_value = 0;
@@ -141,12 +158,12 @@ public:
 	bool active = true;
 
 	//size
-	float min_size_of_particle = 0.2f;
-	float max_size_of_particle = 0.2f;
 	float2 particles_size = float2(0.2f);
-	bool size_random = false;
-	bool change_size = false;
-	float size_change_speed = 1.0F;
+	bool size_over_time = false;
+	TypeOfSizeOverTime type_of_size_over_time = TypeOfSizeOverTime::SIZE_LINEAR;
+	float min_size_of_particle = 1.0f;
+	float max_size_of_particle = 1.0f;
+	BezierCurve size_curve;
 
 	bool tile_random = false;
 
@@ -172,12 +189,13 @@ public:
 	//Cone properties
 	float inner_radius = 1.0F;
 	float outer_radius = 3.0F;
-	
+
 	//color
+	TypeOfSizeColorChange type_of_color_change = TypeOfSizeColorChange::COLOR_NONE;
 	float4 initial_color = float4::one;
-	bool fade_between_colors = false;
 	float4 color_to_fade = float4::one;;
 	float color_fade_time = 1.0F;
+	BezierCurve color_curve;
 
 	bool fade = false;
 	bool orbit = false;
@@ -185,13 +203,11 @@ public:
 
 	//Velocity over time
 	bool velocity_over_time = false;
-	TypeOfVelocityOverTime type_of_velocity_over_time = RANDOM_BETWEEN_TWO_CONSTANTS;
+	TypeOfVelocityOverTime type_of_velocity_over_time = TypeOfVelocityOverTime::VEL_CONSTANT;
 	float velocity_over_time_speed_modifier = 1.0F;
 	float velocity_over_time_speed_modifier_second = 2.0F;
-	float acceleration = 0.0F;
-	float3 velocity_over_time_acceleration;
+	BezierCurve vel_curve;
 
-	
 	//Runtime values
 	size_t playing_particles_number = MAX_PARTICLES;
 	size_t num_of_alive_particles = 0;

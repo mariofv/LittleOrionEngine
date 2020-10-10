@@ -14,28 +14,30 @@ class PanelComponent;
 class ModuleProgram : public Module
 {
 public:
-	enum class ShaderVariation
+	enum class ShaderVariation : int64_t
 	{
 		ENABLE_NORMAL_MAP = 1 << 0,
 		ENABLE_SPECULAR_MAP = 1 << 1,
-		ENABLE_RECEIVE_SHADOWS = 1 << 2,
+		ENABLE_LIGHT_MAP = 1 << 2,
+		ENABLE_RECEIVE_SHADOWS = 1 << 3,
 
-		ENABLE_SPRITESHEET = 1 << 3,
+		ENABLE_SPRITESHEET = 1 << 4,
 
-		ENABLE_BILLBOARD_VIEWPOINT_ALIGNMENT = 1 << 4,
-		ENABLE_BILLBOARD_AXIAL_ALIGNMENT = 1 << 5,
+		ENABLE_BILLBOARD_VIEWPOINT_ALIGNMENT = 1 << 5,
+		ENABLE_BILLBOARD_AXIAL_ALIGNMENT = 1 << 6,
 
-		ENABLE_LIQUID_PROPERTIES = 1 << 6,
-		ENABLE_DISSOLVING_PROPERTIES = 1 << 7,
-		ENABLE_MSAA = 1 << 8,
+		ENABLE_LIQUID_PROPERTIES = 1 << 7,
+		ENABLE_DISSOLVING_PROPERTIES = 1 << 8,
+		ENABLE_MSAA = 1 << 9,
 
-		ENABLE_HDR = 1 << 9,
-		ENABLE_REINHARD = 1 << 10,
-		ENABLE_FILMIC = 1 << 11,
-		ENABLE_EXPOSURE = 1 << 12,
+		ENABLE_HDR = 1 << 10,
+		ENABLE_REINHARD = 1 << 11,
+		ENABLE_FILMIC = 1 << 12,
+		ENABLE_EXPOSURE = 1 << 13,
 
-		ENABLE_BLOOM = 1 << 13,
-		ENABLE_CASCADE_VISUALIZATION = 1 << 14
+		ENABLE_BLOOM = 1 << 14,
+		ENABLE_CASCADE_MAPPING = 1 << 15,
+		ENABLE_CASCADE_VISUALIZATION = 1 << 16
 	};
 
 	struct ShaderProgram
@@ -87,7 +89,7 @@ public:
 
 
 		size_t light_frustums_uniform_offset;
-		const size_t LIGHT_FRUSTUM_UNIFORMS_SIZE = 3 * sizeof(float4x4); // Size of light color, direction and num directional_lights
+		const size_t LIGHT_FRUSTUM_UNIFORMS_SIZE = 4 * sizeof(float4x4); // Size of light color, direction and num directional_lights
 
 		/*
 			Total buffer size depends on the alignment between uniform blocks, so it's size will be computed real time. 
@@ -119,10 +121,11 @@ public:
 
 private:
 	std::unordered_map<std::string, ShaderProgram> loaded_programs;
-	std::array<std::string, 15> defines =
+	std::array<std::string, 17> defines =
 	{
 		"#define NORMAL_MAP 1\n",
 		"#define SPECULAR_MAP 1\n",
+		"#define ENABLE_LIGHT_MAP 1\n",
 		"#define ENABLE_RECEIVE_SHADOWS 1\n",
 
 		"#define ENABLE_SPRITESHEET 1\n",
@@ -139,6 +142,7 @@ private:
 		"#define ENABLE_EXPOSURE 1\n",
 
 		"#define ENABLE_BLOOM 1\n",
+		"#define ENABLE_CASCADE_MAPPING 1\n",
 		"#define ENABLE_CASCADE_VISUALIZATION 1\n"
 	};
 

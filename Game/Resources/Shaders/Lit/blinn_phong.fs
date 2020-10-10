@@ -99,15 +99,13 @@ uniform int num_point_lights;
 uniform PointLight point_lights[10];
 
 // SHADOWS
+uniform sampler2D full_depth_map;
 uniform sampler2D close_depth_map;
 uniform sampler2D mid_depth_map;
 uniform sampler2D far_depth_map;
 
 uniform float ambient_light_intensity;
 uniform vec4 ambient_light_color;
-
-// LIGHTMAPS
-uniform int use_light_map;
 
 //////////////////////////////////
 ///////     FUNCTIONS    /////////
@@ -134,7 +132,10 @@ vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 frensel);
 
 //SHADOW MAPS
 float ShadowCalculation();
+float PercentageCloserFiltering(vec3 normalized_position, sampler2D depth_map);
 vec3 CascadeVisualization();
+vec3 NormalizePosition(vec4 position);
+bool InsideUVRange(vec2 uv);
 
 //////////////////////////////////
 ///////     PARAMETERS    ////////
@@ -156,10 +157,10 @@ in mat3 TBN;
 in vec4 position_near_depth_space;
 in vec4 position_mid_depth_space;
 in vec4 position_far_depth_space;
+in vec4 position_full_depth_space;
 
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 BrightColor;
-layout (location = 2) out vec4 PostProcessFilter;
 
 //////////////////////////////////
 ///////     DEFINTIONS    ////////
@@ -168,7 +169,7 @@ layout (location = 2) out vec4 PostProcessFilter;
 void main()
 {
 	vec3 result = vec3(0);
-	vec3 ambient = ambient_light_color.xyz* ambient_light_strength*ambient_light_intensity;
+	vec3 ambient = ambient_light_color.xyz * ambient_light_strength * ambient_light_intensity;
 	//tiling
 	vec2 tiling = material.tiling * texCoord;
 
@@ -202,10 +203,19 @@ void main()
 	vec3 occlusion_color = GetOcclusionColor(material, tiling);
 	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
+ 	float lit_fragment = ShadowCalculation();
+
+	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
+
+#if ENABLE_LIGHT_MAP
+	result += diffuse_color.rgb * GetLightMapColor(material, texCoordLightmap).rgb * lit_fragment;
+#else
+
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)
 	{
-		result += CalculateDirectionalLight(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
+		result += CalculateDirectionalLight(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color) * lit_fragment;
 	}
+#endif
 
 	for (int i = 0; i < num_spot_lights; ++i)
 	{
@@ -216,8 +226,7 @@ void main()
 	{
 		result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 	}
-	result += GetLightMapColor(material,texCoordLightmap) * use_light_map;
-	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
+
 	result += emissive_color;
 
 	FragColor = vec4(result,1.0);
@@ -237,7 +246,6 @@ void main()
 	{
 		BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
 	}
-	PostProcessFilter = vec4(1.0, 0.0, 0.0, 1.0);
 }
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
@@ -269,11 +277,7 @@ vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 
 vec3 GetLightMapColor(const Material mat, const vec2 texCoord)
 {
-	if(use_light_map == 1)
-	{
-		gamma = 1.0;
-	}
-	return texture(mat.light_map, texCoord).rgb * use_light_map;
+	return pow(texture(mat.light_map, texCoord).rgb, vec3(2.2));
 }
 
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord)
@@ -335,12 +339,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 		vec3 fresnel =  specular_color.rgb + (1-specular_color.rgb)* pow((1.0-ND),5);
 		vec3 specular =(spec * (shininess+8)/8*PI) *  fresnel;
 
-		vec3 return_value = directional_light.color * (
-		( (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular)*ShadowCalculation())
-		) * ND;
-
-
-		return return_value;
+		return directional_light.color * (NormalizedDiffuse(diffuse_color.rgb, fresnel) + specular) * ND;
 }
 
 vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
@@ -406,74 +405,87 @@ float ShadowCalculation()
 #if	!ENABLE_RECEIVE_SHADOWS
 	return 1.0;
 #endif
-	vec3 normalized_position_near_depth_space = position_near_depth_space.xyz / position_near_depth_space.w;
-	normalized_position_near_depth_space.xy = normalized_position_near_depth_space.xy * 0.5 + 0.5;
 
-	if(normalized_position_near_depth_space.z > 1.0 || normalized_position_near_depth_space.z < 0.0)
+#if	!ENABLE_CASCADE_MAPPING
+	vec3 normalized_position_full_depth_space = NormalizePosition(position_full_depth_space);
+	if (normalized_position_full_depth_space.z > 1.0)
 	{
-			return 1;
+		return 1.0;
+	}
+	return PercentageCloserFiltering(normalized_position_full_depth_space, full_depth_map);
+
+#else
+	vec3 normalized_position_near_depth_space = NormalizePosition(position_near_depth_space);
+	if (InsideUVRange(normalized_position_near_depth_space.xy) && normalized_position_near_depth_space.z <= 1.0)
+	{
+		return PercentageCloserFiltering(normalized_position_near_depth_space, close_depth_map);
 	}
 
+	vec3 normalized_position_mid_depth_space = NormalizePosition(position_mid_depth_space);
+	if (InsideUVRange(normalized_position_mid_depth_space.xy)	&& normalized_position_mid_depth_space.z <= 1.0)
+	{
+		return PercentageCloserFiltering(normalized_position_mid_depth_space, mid_depth_map);
+	}
 
-	if(
-		normalized_position_near_depth_space.x >= 0.0
-		&& normalized_position_near_depth_space.x <= 1.0
-		&& normalized_position_near_depth_space.y >= 0.0
-		&& normalized_position_near_depth_space.y <= 1.0
-		&& normalized_position_near_depth_space.z < texture(close_depth_map, normalized_position_near_depth_space.xy).r
-	)
+	vec3 normalized_position_far_depth_space = NormalizePosition(position_far_depth_space);
+	if (InsideUVRange(normalized_position_far_depth_space.xy) && normalized_position_far_depth_space.z <= 1.0)
 	{
-		return 1;
+		return PercentageCloserFiltering(normalized_position_far_depth_space, far_depth_map);
 	}
-	else
+
+	return 1.0;
+
+#endif
+}
+
+float PercentageCloserFiltering(vec3 normalized_position, sampler2D depth_map)
+{
+	float shadow = 0.0;
+	vec2 texelSize = 1.0 / textureSize(depth_map, 0);
+	for(int x = -1; x <= 1; ++x)
 	{
-		return 0;
+	    for(int y = -1; y <= 1; ++y)
+	    {
+	        float pcf_depth = texture(depth_map, normalized_position.xy + vec2(x, y) * texelSize).r;
+	        shadow += normalized_position.z > pcf_depth ? 1.0 : 0.0;
+	    }
 	}
+	shadow /= 9.0;
+	return (1 - shadow);
 }
 
 vec3 CascadeVisualization()
 {
 	//Light frustums
-	vec3 normalized_position_near_depth_space = position_near_depth_space.xyz / position_near_depth_space.w;
-	normalized_position_near_depth_space.xy = normalized_position_near_depth_space.xy * 0.5 + 0.5;
-
-	if(
-		normalized_position_near_depth_space.x >= 0.0
-		&& normalized_position_near_depth_space.x <= 1.0
-		&& normalized_position_near_depth_space.y >= 0.0
-		&& normalized_position_near_depth_space.y <= 1.0
-	)
+	vec3 normalized_position_near_depth_space = NormalizePosition(position_near_depth_space);
+	if(InsideUVRange(normalized_position_near_depth_space.xy))
 	{
-			return vec3(1.0, 0.0, 0.0);
+		return vec3(1.0, 0.0, 0.0);
 	}
 
-	vec3 normalized_position_mid_depth_space = position_mid_depth_space.xyz / position_mid_depth_space.w;
-	normalized_position_mid_depth_space = normalized_position_mid_depth_space * 0.5 + 0.5;
-
-	if(
-		normalized_position_mid_depth_space.x >= 0.0
-		&& normalized_position_mid_depth_space.x <= 1.0
-		&& normalized_position_mid_depth_space.y >= 0.0
-		&& normalized_position_mid_depth_space.y <= 1.0
-	)
+	vec3 normalized_position_mid_depth_space = NormalizePosition(position_mid_depth_space);
+	if(InsideUVRange(normalized_position_mid_depth_space.xy))
 	{
-			return vec3(0.0, 1.0, 0.0);
+		return vec3(0.0, 1.0, 0.0);
 	}
 
-	vec3 normalized_position_far_depth_space = position_far_depth_space.xyz / position_far_depth_space.w;
-	normalized_position_far_depth_space = normalized_position_far_depth_space * 0.5 + 0.5;
-
-	if(
-		normalized_position_far_depth_space.x >= 0.0
-		&& normalized_position_far_depth_space.x <= 1.0
-		&& normalized_position_far_depth_space.y >= 0.0
-		&& normalized_position_far_depth_space.y <= 1.0
-	)
+	vec3 normalized_position_far_depth_space = NormalizePosition(position_far_depth_space);
+	if(InsideUVRange(normalized_position_far_depth_space.xy))
 	{
-			return vec3(0.0, 0.0, 1.0);
+		return vec3(0.0, 0.0, 1.0);
 	}
 
 	return vec3(1.0, 1.0, 1.0);
+}
+
+vec3 NormalizePosition(vec4 position)
+{
+	return (position.xyz / position.w) * 0.5 + 0.5;
+}
+
+bool InsideUVRange(vec2 uv)
+{
+	return uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0;
 }
 
 vec3 GetLiquidNormal(const Material material)

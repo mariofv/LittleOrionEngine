@@ -8,6 +8,7 @@
 #define LIBRARY_METADATA_PATH "/Library/Metadata"
 #define WWISE_INIT_PATH "/Library/Wwise"
 #define WWISE_INIT_NAME "Init.bnk"
+#define SOUNDBANKS_XML_PATH "/Assets/Wwise/SoundbanksInfo.xml"
 
 #define RESOURCES_PATH "/Resources"
 
