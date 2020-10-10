@@ -12,11 +12,11 @@ uniform float smooth_step;
 
 void main()
 {
-	vec2 t = texCoord;
-	float f = fract(t.s);
-	float s_step = smoothstep(percentage, percentage + smooth_step, f);
+	vec2 texture_coords = texCoord;
+	float fraction = fract(texture_coords.s);
+	float smoothening_step = smoothstep(percentage, percentage + smooth_step, fraction);
 	
-	vec4 texture_color = texture(tex, texCoord) * vec4(mix(color_blend, color, s_step)) * emissive_intensity;
+	vec4 texture_color = texture(tex, texCoord) * vec4(mix(color_blend, color, smoothening_step)) * emissive_intensity;
 
 	FragColor = texture_color;
 	
