@@ -46,6 +46,7 @@ public:
 	ENGINE_API void Play();
 	ENGINE_API void Stop();
 	ENGINE_API void ActiveAnimation(const std::string & trigger);
+	ENGINE_API void SetActiveState(const std::string & state, float interpolation_time);
 	ENGINE_API bool IsOnState(const std::string & trigger);
 	ENGINE_API float GetCurrentClipPercentatge() const;
 	ENGINE_API float GetTotalAnimationTime() const;
@@ -53,7 +54,7 @@ public:
 	ENGINE_API void SetFloat(std::string name, float value);
 	ENGINE_API void SetInt(std::string name, int value);
 	ENGINE_API void SetBool(std::string name, bool value);
-
+	ENGINE_API void SetIgnoreTransitions(bool enable);
 	void Update() override;
 	void UpdateMeshes();
 	void Delete() override;

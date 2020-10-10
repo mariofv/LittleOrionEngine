@@ -53,8 +53,8 @@ public:
 	void SetFloat(uint64_t name_hash, float value);
 	void SetInt(uint64_t name_hash, int value);
 	void SetBool(uint64_t name_hash, bool value);
-
-
+	void SetActiveState(const std::string & state, float interpolation_time);
+	void SetIgnoreTransitions(bool enable);
 private:
 	void SetActiveState(std::shared_ptr<State> & state);
 	void FinishActiveState();
@@ -71,6 +71,7 @@ private:
 	std::shared_ptr<Transition> active_transition;
 	bool apply_transition = false;
 	bool applying_automatic_transition = false;
+	bool ignore_transition = false;
 	std::shared_ptr<State> active_state = nullptr;
 	friend class PanelComponent;
 	friend class PanelStateMachine;

@@ -124,7 +124,7 @@ bool AnimController::Update()
 
 void AnimController::ApplyAutomaticTransitionIfNeeded()
 {
-	if (!applying_automatic_transition && active_transition && active_transition->automatic)
+	if (!applying_automatic_transition && active_transition && active_transition->automatic && !ignore_transition)
 	{
 
 		float animation_time_with_interpolation = playing_clips[ClipType::ACTIVE].current_time + active_transition->interpolation_time;
@@ -172,10 +172,11 @@ void AnimController::SetActiveState(std::shared_ptr<State> & state)
 
 void AnimController::StartNextState(const std::string& trigger)
 {
-	if (!active_state)
+	if (!active_state || ignore_transition)
 	{
 		return;
 	}
+
 	std::shared_ptr<Transition> next_transition = state_machine->GetTriggerTransition(trigger, active_state->name_hash);
 	if (!next_transition || next_transition == active_transition)
 	{
@@ -184,8 +185,7 @@ void AnimController::StartNextState(const std::string& trigger)
 	std::shared_ptr<State> next_state;
 	active_transition = next_transition;
 	next_state = state_machine->GetState(active_transition->target_hash);
-	playing_clips[ClipType::NEXT] = { next_state->clip, next_state->speed, 0.0f, true,  static_cast<float>(active_transition ->interpolation_time)};
-
+	playing_clips[ClipType::NEXT] = { next_state->clip, next_state->speed, 0.0f, true,  static_cast<float>(active_transition->interpolation_time) };
 	if (!playing_clips[ClipType::ACTIVE].playing)
 	{
 		FinishActiveState();
@@ -241,12 +241,38 @@ void AnimController::SetBool(uint64_t name_hash, bool value)
 	}
 }
 
+//This is for timelines
+void AnimController::SetActiveState(const std::string & state, float interpolation)
+{
+	uint64_t state_hash = std::hash<std::string>{}(state);
+	if (!playing_clips[ClipType::ACTIVE].playing)
+	{
+		SetActiveState(state_machine->GetState(state_hash));
+		playing_clips[ClipType::ACTIVE].playing = true;
+	}
+	else
+	{
+		auto& next_state = state_machine->GetState(state_hash);
+		active_transition = std::make_shared<Transition>();
+		active_transition->source_hash = active_state->name_hash;
+		active_transition->target_hash = state_hash;
+		active_transition->interpolation_time = interpolation;
+		playing_clips[ClipType::NEXT] = { next_state->clip, next_state->speed, 0.0f, true,  interpolation };
+	}
+}
+
+void AnimController::SetIgnoreTransitions(bool enable)
+{
+	ignore_transition = enable;
+}
+
 void AnimController::CheckConditions()
 {
-	if (!active_state)
+	if (!active_state || ignore_transition)
 	{
 		return;
 	}
+
 	std::shared_ptr<Transition> next_transition = state_machine->GetTransitionIfConditions(active_state->name_hash);
 	if (!next_transition || next_transition == active_transition)
 	{
@@ -256,7 +282,6 @@ void AnimController::CheckConditions()
 	active_transition = next_transition;
 	next_state = state_machine->GetState(active_transition->target_hash);
 	playing_clips[ClipType::NEXT] = { next_state->clip, next_state->speed, 0.0f, true,  static_cast<float>(active_transition->interpolation_time) };
-
 	if (!playing_clips[ClipType::ACTIVE].playing)
 	{
 		FinishActiveState();
@@ -265,6 +290,7 @@ void AnimController::CheckConditions()
 	{
 		AdjustInterpolationTimes();
 	}
+
 }
 
 void AnimController::FinishActiveState()
