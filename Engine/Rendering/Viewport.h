@@ -25,11 +25,7 @@ public:
 	enum class ViewportOutput
 	{
 		COLOR,
-		BRIGHTNESS,
-		DEPTH_NEAR,
-		DEPTH_MID,
-		DEPTH_FAR,
-		DEPTH_FULL
+		BRIGHTNESS
 	};
 
 	Viewport(int options);
@@ -62,12 +58,13 @@ private:
 	bool IsOptionSet(ViewportOption option) const;
 
 	void SkyboxPass() const;
-	void DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo) const;
+	void DepthMapPass(LightFrustum* light_frustum, FrameBuffer* depth_fbo, bool render_debug_depth_map) const;
 	void BloomPass();
 	void HDRPass() const;
 
 public:
 	GLuint displayed_texture = 0;
+	mutable GLuint depth_map_texture = 0;
 	ViewportOutput viewport_output = ViewportOutput::COLOR;
 	Quad* scene_quad = nullptr;
 
@@ -82,6 +79,7 @@ public:
 	FrameBuffer* source_fbo = nullptr;
 	FrameBuffer* blit_fbo = nullptr;
 
+	FrameBuffer* debug_depth_map_fbo = nullptr;
 	FrameBuffer* depth_full_fbo = nullptr;
 	FrameBuffer* depth_near_fbo = nullptr;
 	FrameBuffer* depth_mid_fbo = nullptr;

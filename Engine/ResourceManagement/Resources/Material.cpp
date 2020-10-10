@@ -251,6 +251,10 @@ unsigned int Material::GetShaderVariation() const
 	{
 		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_NORMAL_MAP);
 	}
+	if (textures[MaterialTextureType::LIGHTMAP] != nullptr)
+	{
+		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_LIGHT_MAP);
+	}
 	if (material_type == MaterialType::MATERIAL_LIQUID)
 	{
 		variation |= static_cast<unsigned int>(ModuleProgram::ShaderVariation::ENABLE_LIQUID_PROPERTIES);

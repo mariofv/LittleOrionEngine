@@ -156,6 +156,7 @@ void AnimController::SetStateMachine(uint32_t state_machine_uuid)
 	if (this->state_machine)
 	{
 		SetActiveState(state_machine->GetDefaultState());
+		state_machine->ResetVariables();
 	}
 }
 
