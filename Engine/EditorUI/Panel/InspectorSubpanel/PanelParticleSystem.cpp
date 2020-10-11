@@ -144,7 +144,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		if (ImGui::CollapsingHeader("Emission"))
 		{
 			ImGui::Spacing();
-			particle_system->modified_by_user |= ImGui::DragFloat("Time Between Particles", &particle_system->time_between_particles, 0.1F, 0.0F, 10.0f);
+			particle_system->modified_by_user |= ImGui::DragFloat("Time Between Particles", &particle_system->time_between_particles, 0.001F, 0.00001F, 10.0f, "%.5f");
 			ImGui::Spacing();
 		}
 

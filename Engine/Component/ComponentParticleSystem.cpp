@@ -166,13 +166,21 @@ void ComponentParticleSystem::Update()
 	{
 		time_counter += App->time->real_time_delta_time;
 
-		if (time_counter >= (time_between_particles * 1000))
+		if (loop)
 		{
-			if (loop)
+			if (time_counter >= (time_between_particles * 1000))
 			{
-				int unused_particle = FirstUnusedParticle();
-				RespawnParticle(particles[unused_particle]);
-				time_counter = 0.0F;
+				int spawning_count = time_counter / (time_between_particles * 1000);
+
+				for (int i = 0; i < spawning_count; i++)
+				{
+					int unused_particle = FirstUnusedParticle();
+					if (unused_particle != 0 || particles[unused_particle].life <= 0.0f)
+					{
+						RespawnParticle(particles[unused_particle]);
+					}
+					time_counter = 0.0F;
+				}
 			}
 		}
 
