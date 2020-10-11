@@ -260,7 +260,11 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 		break;
 	case TypeOfSizeColorChange::COLOR_LINEAR:
 	{
+		color_fade_time = color_fade_time > particles_life_time ? particles_life_time : color_fade_time;
+
 		float progress = particle.time_passed * 0.001f / color_fade_time;
+		progress = progress > 1 ? 1 : progress;
+		
 		particle.color = float4::Lerp(initial_color, color_to_fade, progress);
 		break;
 	}

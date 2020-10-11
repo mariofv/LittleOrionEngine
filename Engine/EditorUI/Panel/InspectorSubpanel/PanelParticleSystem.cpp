@@ -240,7 +240,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				break;
 			case ComponentParticleSystem::TypeOfSizeColorChange::COLOR_LINEAR:
 				particle_system->modified_by_user |= ImGui::ColorEdit4("Particle Color To Fade##2f", particle_system->color_to_fade.ptr(), ImGuiColorEditFlags_Float);
-				particle_system->modified_by_user |= ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
+				particle_system->modified_by_user |= ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, particle_system->particles_life_time);
 				break;
 			case ComponentParticleSystem::TypeOfSizeColorChange::COLOR_CURVE:
 				particle_system->modified_by_user |= ImGui::ColorEdit4("Particle Color To Fade##2f", particle_system->color_to_fade.ptr(), ImGuiColorEditFlags_Float);
