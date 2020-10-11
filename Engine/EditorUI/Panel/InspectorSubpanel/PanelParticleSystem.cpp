@@ -53,7 +53,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			{
 				particle_system->Emit(emit_count);
 			}
-			if (ImGui::Button("Start"))
+			if (ImGui::Button("Play"))
 			{
 				particle_system->Play();
 			}

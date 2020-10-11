@@ -141,7 +141,7 @@ void ComponentParticleSystem::Render()
 
 	BROFILER_CATEGORY("Particle Render", Profiler::Color::OrangeRed);
 
-	if (active && playing && billboard->billboard_texture != nullptr && billboard->billboard_texture->initialized)
+	if (active && billboard->billboard_texture != nullptr && billboard->billboard_texture->initialized && num_of_alive_particles > 0)
 	{
 		unsigned int variation = GetParticlesSystemVariation();
 		shader_program = App->program->UseProgram("Particles", variation);
@@ -164,17 +164,18 @@ void ComponentParticleSystem::Update()
 {
 	if (active && playing)
 	{
-		time_counter += App->time->real_time_delta_time;
-
-		if (loop)
+		if (loop && emitting)
 		{
+			time_counter += App->time->real_time_delta_time;
+
 			if (time_counter >= (time_between_particles * 1000))
 			{
 				int spawning_count = time_counter / (time_between_particles * 1000);
+				int unused_particle = 0;
 
 				for (int i = 0; i < spawning_count; i++)
 				{
-					int unused_particle = FirstUnusedParticle();
+					unused_particle = FirstUnusedParticle();
 					if (unused_particle != 0 || particles[unused_particle].life <= 0.0f)
 					{
 						RespawnParticle(particles[unused_particle]);
@@ -188,7 +189,7 @@ void ComponentParticleSystem::Update()
 
 		// update all particles
 		num_of_alive_particles = 0;
-		for (unsigned int i = 0; i < playing_particles_number; ++i)
+		for (unsigned int i = 0; i < playing_particles_number; i++)
 		{
 			Particle& p = particles[i];
 
@@ -198,14 +199,6 @@ void ComponentParticleSystem::Update()
 				std::iter_swap(particles.begin() + i, particles.begin() + num_of_alive_particles);
 				++num_of_alive_particles;
 			}
-			else if(emitting)
-			{
-				++number_emited;
-			}
-		}
-		if (emitting && number_emited >= playing_particles_number)
-		{
-			Stop();
 		}
 	}
 }
@@ -518,40 +511,31 @@ void ComponentParticleSystem::CopyTo(Component* component_to_copy) const
 void ComponentParticleSystem::Emit(size_t count)
 {
 	playing = true;
-	emitting = true;
-	number_emited = 0;
-	if (count < max_particles_number)
+	int unused_particle = 0;
+
+	for (int i = 0; i < count; i++)
 	{
-		playing_particles_number = count;
-		for (size_t i = 0; i < playing_particles_number; i++)
+		unused_particle = FirstUnusedParticle();
+		if (unused_particle != 0 || particles[unused_particle].life <= 0.0f)
 		{
-			RespawnParticle(particles[i]);
+			RespawnParticle(particles[unused_particle]);
 		}
 	}
-
 }
 
 void ComponentParticleSystem::Play()
 {
 	playing = true;
-	emitting = false;
+	emitting = true;
 	playing_particles_number = MAX_PARTICLES;
 }
 
 void ComponentParticleSystem::Stop()
 {
 	time_counter = 0.0F;
-	playing_particles_number = max_particles_number;
-	emitting = false;
-	for (unsigned int i = 0; i < max_particles_number; i++)
-	{
 
-		particles[i].life = 0.0F;
-		particles[i].particle_scale = 1.0F;
-		particles[i].time_counter = particles[i].life;
-		particles[i].time_passed = 0.0F;
-	}
-	playing = false;
+	playing = true;
+	emitting = false;
 }
 
 ENGINE_API void ComponentParticleSystem::Pause()
