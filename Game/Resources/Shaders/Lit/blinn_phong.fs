@@ -6,6 +6,7 @@
 
 float gamma = 2.2;
 const float ambient_light_strength = 0.1;
+const float amount_of_skybox_reflection = 0;
 
 //////////////////////////////////
 ////////     STRUCTS    //////////
@@ -217,7 +218,7 @@ void main()
 #if ENABLE_LIQUID_PROPERTIES
     vec3 I = normalize(position - view_pos);
     vec3 R = reflect(I, fragment_normal);
-	result +=texture(skybox_texture, R).rgb* 0.5;
+	//result +=texture(skybox_texture, R).rgb* amount_of_skybox_reflection;
 #endif
 #if ENABLE_LIGHT_MAP
 	result += diffuse_color.rgb * GetLightMapColor(material, texCoordLightmap).rgb * lit_fragment;

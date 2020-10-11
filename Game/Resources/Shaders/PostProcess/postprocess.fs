@@ -3,15 +3,15 @@ const float W = 11.2;
 
 #if ENABLE_MSAA
 uniform sampler2DMS screen_texture;
-uniform sampler2DMS normalMap; // in view space
-uniform sampler2DMS positionMap; // in view space
-uniform sampler2DMS ssrValuesMap;
+uniform sampler2DMS normal_map; // in view space
+uniform sampler2DMS position_map; // in view space
+uniform sampler2DMS ssr_value_map;
 #else
 uniform sampler2D screen_texture;
 //Reflections
-uniform sampler2D normalMap; // in view space
-uniform sampler2D positionMap; // in view space
-uniform sampler2D ssrValuesMap;
+uniform sampler2D normal_map; // in view space
+uniform sampler2D position_map; // in view space
+uniform sampler2D ssr_value_map;
 #endif
 uniform sampler2D brightness_texture;
 
@@ -84,7 +84,7 @@ vec3 BinarySearch(inout vec3 direction, inout vec3 hit_coordinate)
 
 		projectedCoord = GetCoordinatesInScreenSpace(hit_coordinate);
  
-        float depth = linearize_depth(GetTexture(positionMap,projectedCoord.xy).z);
+        float depth = linearize_depth(GetTexture(position_map,projectedCoord.xy).z);
 
  
         float depth_diff =linearize_depth(hit_coordinate.z) - depth;
@@ -110,7 +110,7 @@ vec4 RayCast(vec3 direction,vec3 hit_coordinate) {
         hit_coordinate += direction;
 		projectedCoord = GetCoordinatesInScreenSpace(hit_coordinate);
 
-		float depth = linearize_depth(GetTexture(positionMap,projectedCoord.xy).z);
+		float depth = linearize_depth(GetTexture(position_map,projectedCoord.xy).z);
 		float depth_diff = depth - linearize_depth(hit_coordinate.z);
 		//Avoid going over the depth diferent threshold  and check if we have hit something
         if (depth_diff < MIN_Z_VALUE && depth_diff > MAX_Z_VALUE && original_depth < depth)
@@ -135,7 +135,7 @@ void main()
   fragment_color.rgb = ToneMapping(fragment_color.rgb);
 #endif
 
-	float reflection_strength = GetTexture(ssrValuesMap, texCoord).r;
+	float reflection_strength = GetTexture(ssr_value_map, texCoord).r;
 
 	vec3 reflection_texture ;
 
@@ -181,8 +181,8 @@ vec3 Uncharted2Tonemap(vec3 x)
 
 vec3 Reflections(float reflection_strength)
 {
-	vec3 view_normal = vec3(GetTexture(normalMap, texCoord) * inverse(matrices.view));
-	vec3 view_position = vec3(GetTexture(positionMap, texCoord));
+	vec3 view_normal = vec3(GetTexture(normal_map, texCoord) * inverse(matrices.view));
+	vec3 view_position = vec3(GetTexture(position_map, texCoord));
 
 	//Reflection
 	vec3 reflected = normalize( reflect(normalize(view_position), normalize(view_normal))) ;
