@@ -128,7 +128,8 @@ public:
 
 private:
 	unsigned int GetParticlesSystemVariation();
-	bool emitting = false;
+	bool emitting = true;
+	bool playing = true;
 	size_t number_emited = 0;
 
 public:
@@ -212,7 +213,6 @@ public:
 	size_t playing_particles_number = MAX_PARTICLES;
 	size_t num_of_alive_particles = 0;
 	int max_particles_number = MAX_PARTICLES;
-	bool playing = true;
 	GLuint ssbo;
 	GLuint shader_program;
 };
