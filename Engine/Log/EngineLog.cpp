@@ -75,6 +75,14 @@ void EngineLog::Log(const char* message, ...)
 	game_logger->info(complete_message);
 }
 
+ENGINE_API void EngineLog::Log(const char * message, va_list ap)
+{
+	char complete_message[4096];
+	vsprintf_s(complete_message, 4096, message, ap);
+
+	game_logger->info(complete_message);
+}
+
 void EngineLog::LittleOrionLog(const char* message, const LogEntryType type)
 {
 	switch (type)
