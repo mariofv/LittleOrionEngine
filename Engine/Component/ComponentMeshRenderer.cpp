@@ -169,6 +169,7 @@ void ComponentMeshRenderer::BindMaterialUniforms(GLuint shader_program) const
 	AddDiffuseUniforms(shader_program);
 	AddEmissiveUniforms(shader_program);
 	AddSpecularUniforms(shader_program);
+	AddFinalAddedColorUniform(shader_program);
 
 	AddAmbientOclusionUniforms(shader_program);
 	AddNormalUniforms(shader_program);
@@ -227,6 +228,11 @@ void ComponentMeshRenderer::AddSpecularUniforms(unsigned int shader_program) con
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 5);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)material_to_render->specular_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.smoothness"), material_to_render->smoothness);
+}
+
+void ComponentMeshRenderer::AddFinalAddedColorUniform(unsigned int shader_program) const
+{
+	glUniform4fv(glGetUniformLocation(shader_program, "material.final_added_color"), 1, material_to_render->final_added_color.ptr());
 }
 
 void ComponentMeshRenderer::AddAmbientOclusionUniforms(unsigned int shader_program) const
