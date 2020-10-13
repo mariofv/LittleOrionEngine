@@ -272,3 +272,8 @@ void Material::SetDissolveProgress(float progress)
 {
 	dissolve_progress = progress;
 }
+
+void Material::SetFinalAddedColor(const float4& final_added_color)
+{
+	this->final_added_color = final_added_color;
+}

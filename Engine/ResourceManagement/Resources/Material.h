@@ -62,6 +62,7 @@ public:
 	unsigned int GetShaderVariation() const;
 
 	ENGINE_API void SetDissolveProgress(float progress);
+	ENGINE_API void SetFinalAddedColor(const float4& final_added_color);
 
 public:
 	static const size_t MAX_MATERIAL_TEXTURE_TYPES = static_cast<size_t>(MaterialTextureType::UNKNOWN);
@@ -91,6 +92,8 @@ public:
 	float2 liquid_vertical_normals_tiling = -float2::one;
 
 	float dissolve_progress = 0.f;
+
+	float4 final_added_color = float4::zero;
 
 	bool show_checkerboard_texture = false;
 };
