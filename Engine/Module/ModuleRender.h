@@ -65,6 +65,7 @@ public:
 	ENGINE_API int GetRenderedVerts() const;
 
 	ENGINE_API RaycastHit* GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* camera);
+	ENGINE_API bool MeshesIntersectsWithRay(const LineSegment& ray, const std::vector<ComponentMeshRenderer*>& meshes, int& index_intersection) const;
 	ENGINE_API void SetDrawMode(DrawMode draw_mode);
 	ENGINE_API void SetAntialiasing(bool antialiasing);
 	ENGINE_API void SetHDR(bool hdr);
