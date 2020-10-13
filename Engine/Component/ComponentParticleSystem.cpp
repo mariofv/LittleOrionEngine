@@ -1,9 +1,12 @@
 #include "ComponentParticleSystem.h"
 
 #include "Main/Application.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
+#include "Rendering/Viewport.h"
 
 #include "Component/ComponentBillboard.h"
 #include "GL/glew.h"
@@ -138,7 +141,6 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 void ComponentParticleSystem::Render()
 {
-
 	BROFILER_CATEGORY("Particle Render", Profiler::Color::OrangeRed);
 
 	if (active && billboard->billboard_texture != nullptr && billboard->billboard_texture->initialized && num_of_alive_particles > 0)
@@ -162,6 +164,11 @@ void ComponentParticleSystem::Render()
 
 void ComponentParticleSystem::Update()
 {
+	if (!HasToDrawParticleSystem())
+	{
+		return;
+	}
+
 	if (active && playing)
 	{
 		if (loop && emitting)
@@ -583,4 +590,19 @@ ENGINE_API bool ComponentParticleSystem::IsEmitting() const
 ENGINE_API bool ComponentParticleSystem::IsPlaying() const
 {
 	return playing;
+}
+
+bool ComponentParticleSystem::HasToDrawParticleSystem() const
+{
+	if (App->editor->selected_game_object == nullptr)
+	{
+		return false;
+	}
+
+	if (App->renderer->game_viewport->ps_draw_all || App->time->isGameRunning())
+	{
+		return true;
+	}
+
+	return App->editor->selected_game_object->UUID == owner->UUID;
 }

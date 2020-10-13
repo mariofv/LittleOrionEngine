@@ -126,6 +126,8 @@ public:
 	ENGINE_API bool IsEmitting() const;
 	ENGINE_API bool IsPlaying() const;
 
+	bool HasToDrawParticleSystem() const;
+
 private:
 	unsigned int GetParticlesSystemVariation();
 	bool emitting = true;

@@ -46,7 +46,10 @@ void ModuleEffects::Render()
 
 	for (auto &particles : particle_systems)
 	{
-		particles->Render();
+		if (particles->HasToDrawParticleSystem())
+		{
+			particles->Render();
+		}
 	}
 
 	for (auto &trail : trails)
