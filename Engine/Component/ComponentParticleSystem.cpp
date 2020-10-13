@@ -134,7 +134,11 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	particle.time_passed = 0.0F;
 
 	particle.geometric_space = float4x4::FromTRS(owner->transform.GetGlobalTranslation(), owner->transform.GetGlobalRotation(), float3::one);
-	particle.inital_random_orbit = rand();
+	
+	particle.orbit_random = rand();
+	particle.position.z += sin(particle.orbit_random);
+	particle.position.x += cos(particle.orbit_random);
+
 	particle.random_velocity_percentage = (float)rand() / RAND_MAX;
 	particle.random_size_percentage = (float)rand() / RAND_MAX;
 }
@@ -249,11 +253,12 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	//update position
 	particle.position += ((velocity + vel_curve_interpolated) * time_increased) + (acceleration * time_increased * time_increased / 2);
 
-	/*if (orbit)
+	if (orbit)
 	{
-		particle.position.z += sin((particle.time_passed *0.001f) + particle.inital_random_orbit);
-		particle.position.x += cos((particle.time_passed *0.001f) + particle.inital_random_orbit);
-	}*/
+		particle.position.z += sin((particle.time_passed * 0.001f) + particle.orbit_random) - sin(((particle.time_passed - time_increased) * 0.001f) + particle.orbit_random);
+		particle.position.x += cos((particle.time_passed * 0.001f) + particle.orbit_random) - cos(((particle.time_passed - time_increased) * 0.001f) + particle.orbit_random);
+	}
+
 	//alpha fade
 	if (fade)
 	{
@@ -549,19 +554,6 @@ ENGINE_API void ComponentParticleSystem::Pause()
 {
 	playing = false;
 	emitting = false;
-}
-
-void ComponentParticleSystem::OrbitX(float angle, Particle& particle)
-{
-	float3 focus_vector = owner->transform.GetTranslation() - owner->transform.GetTranslation();
-
-	const float adjusted_angle = App->time->real_time_delta_time  * -angle;
-	Quat rotation = Quat::RotateY(adjusted_angle);
-
-	focus_vector = rotation * focus_vector;
-	auto position = focus_vector + owner->transform.GetTranslation();
-	particle.position.x = position.x;
-	particle.position.z = position.z;
 }
 
 void ComponentParticleSystem::CalculateGravityVector()

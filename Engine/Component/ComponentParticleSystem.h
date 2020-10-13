@@ -35,7 +35,7 @@ public:
 		float4x4 model;
 		float4x4 geometric_space;
 
-		float inital_random_orbit;
+		float orbit_random;
 		float random_velocity_percentage;
 		float random_size_percentage;
 		float float4;
@@ -120,7 +120,6 @@ public:
 	ENGINE_API void Stop();
 	ENGINE_API void Pause();
 
-	void OrbitX(float angle, Particle& particle);
 	void CalculateGravityVector();
 
 	ENGINE_API bool IsEmitting() const;
@@ -200,8 +199,10 @@ public:
 	float color_fade_time = 1.0F;
 	BezierCurve color_curve;
 
-	bool fade = false;
+	//orbit
 	bool orbit = false;
+
+	bool fade = false;
 	float fade_time = 1.0F;
 
 	//Velocity over time
