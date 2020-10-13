@@ -347,7 +347,6 @@ void ComponentTrail::SpecializedSave(Config& config) const
 	config.AddFloat(duration, "Duration");
 	config.AddUInt(texture_uuid, "TextureUUID");
 	config.AddColor(color, "Color");
-	config.AddBool(emissive, "Emissive");
 	config.AddFloat(emissive_intensity, "Emissive Intensity");
 	config.AddUInt(points_in_curve, "Curve Points");
 	config.AddInt(static_cast<int>(texture_mode), "Texture Mode");
@@ -367,7 +366,6 @@ void ComponentTrail::SpecializedLoad(const Config& config)
 	texture_uuid = config.GetUInt("TextureUUID", 0);
 	ChangeTexture(texture_uuid);
 	config.GetColor("Color", color, float4(1.0f, 1.0f, 1.0f, 1.0f));
-	emissive = config.GetBool("Emissive", false);
 	emissive_intensity = config.GetFloat("Emissive Intensity", 1.f);
 	points_in_curve = config.GetUInt("Curve Points", 5);
 	texture_mode = static_cast<TextureMode>(config.GetInt("Texture Mode", static_cast<int>(TextureMode::STRETCH)));

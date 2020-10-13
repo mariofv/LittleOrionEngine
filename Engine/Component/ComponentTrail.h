@@ -126,7 +126,6 @@ public:
 
 	//Color properties
 	float4 color = float4::one;
-	bool emissive = false;
 	float emissive_intensity = 1.f;
 	bool blend_colors = false;
 	float blend_percentage = 0.5f;
