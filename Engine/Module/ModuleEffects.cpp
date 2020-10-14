@@ -41,7 +41,10 @@ void ModuleEffects::Render()
 	glBlendEquation(GL_FUNC_ADD);
 	for (auto &billboard : billboards)
 	{
-		billboard->Render(billboard->owner->transform.GetGlobalTranslation());
+		if (billboard->HasToDrawBillboard())
+		{
+			billboard->Render(billboard->owner->transform.GetGlobalTranslation());
+		}
 	}
 
 	for (auto &particles : particle_systems)

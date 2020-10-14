@@ -6,12 +6,14 @@
 #include "Main/GameObject.h"
 
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleTexture.h"
+#include "Rendering/Viewport.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
@@ -333,6 +335,21 @@ void ComponentBillboard::SetOrientation(bool is_oriented)
 ENGINE_API void ComponentBillboard::SetAnimationTime(size_t time)
 {
 	animation_time = time;
+}
+
+bool ComponentBillboard::HasToDrawBillboard() const
+{
+	if (App->editor->selected_game_object == nullptr)
+	{
+		return false;
+	}
+
+	if (App->renderer->game_viewport->effects_draw_all || App->time->isGameRunning())
+	{
+		return true;
+	}
+
+	return App->editor->selected_game_object->UUID == owner->UUID;
 }
 
 void ComponentBillboard::Disable()

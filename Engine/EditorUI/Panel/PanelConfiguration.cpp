@@ -293,7 +293,7 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Game Graphic Settings");
 		ImGui::PushID("Game Viewport");
 		ImGui::Checkbox("Render Effects", &App->renderer->game_viewport->effects_pass);
-		ImGui::Checkbox("Render All Particle Systems", &App->renderer->game_viewport->ps_draw_all);
+		ImGui::Checkbox("Render Unselected Effects", &App->renderer->game_viewport->effects_draw_all);
 		
 		ImGui::PopID();
 	}

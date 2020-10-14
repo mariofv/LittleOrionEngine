@@ -591,7 +591,7 @@ bool ComponentParticleSystem::HasToDrawParticleSystem() const
 		return false;
 	}
 
-	if (App->renderer->game_viewport->ps_draw_all || App->time->isGameRunning())
+	if (App->renderer->game_viewport->effects_draw_all || App->time->isGameRunning())
 	{
 		return true;
 	}
