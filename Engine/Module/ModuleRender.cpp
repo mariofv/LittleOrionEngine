@@ -363,6 +363,43 @@ RaycastHit* ModuleRender::GetRaycastIntersection(const LineSegment& ray, const C
 	return result;
 }
 
+ENGINE_API bool ModuleRender::MeshesIntersectsWithRay(const LineSegment& ray, const std::vector<ComponentMeshRenderer*>& meshes, int& index_intersection) const
+{
+	float min_distance = INFINITY;
+	
+	index_intersection = 0;
+	for (const ComponentMeshRenderer* mesh : meshes)
+	{
+		LineSegment transformed_ray = ray;
+		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
+		BROFILER_CATEGORY("Triangles", Profiler::Color::HotPink);
+		std::vector<Mesh::Vertex> &vertices = mesh->mesh_to_render->vertices;
+		std::vector<uint32_t> &indices = mesh->mesh_to_render->indices;
+		for (size_t i = 0; i < indices.size(); i += 3)
+		{
+			float3 first_point = vertices[indices[i]].position;
+			float3 second_point = vertices[indices[i + 1]].position;
+			float3 third_point = vertices[indices[i + 2]].position;
+			Triangle triangle(first_point, second_point, third_point);
+
+			float distance;
+			float3 intersected_point;
+			bool intersected = triangle.Intersects(transformed_ray, &distance, &intersected_point);
+			if (intersected)
+			{
+				return true;
+			}
+
+		}
+
+		++index_intersection;
+	}
+
+	index_intersection = -1;
+
+	return false;
+}
+
 int ModuleRender::GetRenderedTris() const
 {
 	return game_viewport->num_rendered_triangles;

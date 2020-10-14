@@ -7,6 +7,7 @@
 #include "EditorUI/Panel/PopupsPanel/PanelPopupResourceSelector.h"
 #include "Module/ModuleActions.h"
 #include "Module/ModuleEditor.h"
+#include "EditorUI/Helper/BezierCurveDraw.hpp"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -116,26 +117,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			ImGui::Spacing();
 
 			ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "Size");
-
-			int random_size = particle_system->size_random ? 1 : 0;
-			if (ImGui::Combo("Initial Size Type", &random_size, "Constant\0Random\0"))
-			{
-				particle_system->size_random = random_size == 1;
-				particle_system->modified_by_user = true;
-			}
-
-			if (particle_system->size_random)
-			{
-				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				particle_system->modified_by_user |= ImGui::DragFloat("Initial Min size", &particle_system->min_size_of_particle, 0.1f, 0, 999);
-				ImGui::SameLine();
-				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragFloat("Initial Max size", &particle_system->max_size_of_particle, 0.1f, 0, 999);
-			}
-			else
-			{
-				ImGui::DragFloat2("Initial Size", particle_system->particles_size.ptr(), 0.1f, 0, 999);
-			}
+			ImGui::DragFloat2("Initial Size", particle_system->particles_size.ptr(), 0.1f, 0, 999);
 
 			ImGui::Spacing();
 			ImGui::Separator();
@@ -185,6 +167,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::CONE;
 					break;
 				}
+				particle_system->modified_by_user = true;
 			}
 
 			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::BOX)
@@ -224,26 +207,48 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		}
 
 		//Color of Particles
-
 		if (ImGui::CollapsingHeader("Color"))
 		{
 			particle_system->modified_by_user |= ImGui::ColorEdit4("Particle Color##2f", particle_system->initial_color.ptr(), ImGuiColorEditFlags_Float);
-			ImGui::Text("Fade Between Colors");
-			particle_system->modified_by_user |= ImGui::Checkbox("###Fade Between Colors", &particle_system->fade_between_colors);
-			ImGui::SameLine();
-			if (!particle_system->fade_between_colors)
+
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+
+			int color_fade_type = static_cast<int>(particle_system->type_of_color_change);
+			if (ImGui::Combo("Fade Between Colors", &color_fade_type, "None\0Linear\0Curve\0"))
 			{
-				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+				switch (color_fade_type)
+				{
+				case 0:
+					particle_system->type_of_color_change = ComponentParticleSystem::TypeOfSizeColorChange::COLOR_NONE;
+					break;
+				case 1:
+					particle_system->type_of_color_change = ComponentParticleSystem::TypeOfSizeColorChange::COLOR_LINEAR;
+					break;
+				case 2:
+					particle_system->type_of_color_change = ComponentParticleSystem::TypeOfSizeColorChange::COLOR_CURVE;
+					break;
+				}
+				particle_system->modified_by_user = true;
 			}
-			particle_system->modified_by_user |= ImGui::ColorEdit4("Particle Color To Fade##2f", particle_system->color_to_fade.ptr(), ImGuiColorEditFlags_Float);
-			particle_system->modified_by_user |= ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
-			if (!particle_system->fade_between_colors)
+
+			ImGui::Spacing();
+			switch (color_fade_type)
 			{
-				ImGui::PopItemFlag();
-				ImGui::PopStyleVar();
+			case ComponentParticleSystem::TypeOfSizeColorChange::COLOR_NONE:
+				break;
+			case ComponentParticleSystem::TypeOfSizeColorChange::COLOR_LINEAR:
+				particle_system->modified_by_user |= ImGui::ColorEdit4("Particle Color To Fade##2f", particle_system->color_to_fade.ptr(), ImGuiColorEditFlags_Float);
+				particle_system->modified_by_user |= ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
+				break;
+			case ComponentParticleSystem::TypeOfSizeColorChange::COLOR_CURVE:
+				particle_system->modified_by_user |= ImGui::ColorEdit4("Particle Color To Fade##2f", particle_system->color_to_fade.ptr(), ImGuiColorEditFlags_Float);
+				particle_system->modified_by_user |= ImGui::DrawBezierCubic(&particle_system->color_curve, ImVec2(0,1));
+				break;
 			}
 		}
+
 		//Velocity over time
 		ImGui::Checkbox("###Velocity over lifetime", &particle_system->velocity_over_time);
 		ImGui::SameLine();
@@ -256,49 +261,63 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
 			}
 
+			ImGui::Spacing();
 			int velocity_type = static_cast<int>(particle_system->type_of_velocity_over_time);
-			if (ImGui::Combo("Speed", &velocity_type, "Constant\0Linear\0Random Between Two Constants\0"))
+			if (ImGui::Combo("Speed", &velocity_type, "Constant\0Linear\0Random Between Two Constants\0Curve\0"))
 			{
 				switch (velocity_type)
 				{
 				case 0:
-					particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::CONSTANT;
-					particle_system->modified_by_user = true;
+					particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::VEL_CONSTANT;
 					break;
 				case 1:
-					particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::LINEAR;
-					particle_system->modified_by_user = true;
+					particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::VEL_LINEAR;
 					break;
 				case 2:
-					particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::RANDOM_BETWEEN_TWO_CONSTANTS;
-					particle_system->modified_by_user = true;
+					particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::VEL_RANDOM_BETWEEN_TWO_CONSTANTS;
+					break;
+				case 3:
+					particle_system->type_of_velocity_over_time = ComponentParticleSystem::TypeOfVelocityOverTime::VEL_CURVE;
 					break;
 				}
+				particle_system->modified_by_user = true;
 			}
 
 			switch (velocity_type)
 			{
-			case ComponentParticleSystem::TypeOfVelocityOverTime::CONSTANT:
-				particle_system->velocity_over_time_speed_modifier;
+			case ComponentParticleSystem::TypeOfVelocityOverTime::VEL_CONSTANT:
 				particle_system->modified_by_user |= ImGui::DragFloat("Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
 				break;
-			case ComponentParticleSystem::TypeOfVelocityOverTime::LINEAR:
-				particle_system->modified_by_user |= ImGui::DragFloat("Start Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
-				particle_system->modified_by_user |= ImGui::DragFloat("End Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
+			case ComponentParticleSystem::TypeOfVelocityOverTime::VEL_LINEAR:
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				particle_system->modified_by_user |= ImGui::DragFloat("Start Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				particle_system->modified_by_user |= ImGui::DragFloat("End Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
 				break;
-			case ComponentParticleSystem::TypeOfVelocityOverTime::RANDOM_BETWEEN_TWO_CONSTANTS:
-				particle_system->velocity_over_time_speed_modifier;
-				particle_system->modified_by_user |= ImGui::DragFloat("Min Velocity Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
-				particle_system->modified_by_user |= ImGui::DragFloat("Max Velocity Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
+			case ComponentParticleSystem::TypeOfVelocityOverTime::VEL_RANDOM_BETWEEN_TWO_CONSTANTS:
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				particle_system->modified_by_user |= ImGui::DragFloat("Min Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				particle_system->modified_by_user |= ImGui::DragFloat("Max Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
+				break;
+			case ComponentParticleSystem::TypeOfVelocityOverTime::VEL_CURVE:
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				particle_system->modified_by_user |= ImGui::DragFloat("Min Modifier", &particle_system->velocity_over_time_speed_modifier, 0.01F);
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				particle_system->modified_by_user |= ImGui::DragFloat("Max Modifier", &particle_system->velocity_over_time_speed_modifier_second, 0.01F);
+				particle_system->modified_by_user |= ImGui::DrawBezierCubic(&particle_system->vel_curve, ImVec2(particle_system->velocity_over_time_speed_modifier, particle_system->velocity_over_time_speed_modifier_second));
 				break;
 			}
+			ImGui::Spacing();
 
 			if (!particle_system->velocity_over_time)
 			{
 				ImGui::PopItemFlag();
 				ImGui::PopStyleVar();
 			}
-
 		}
 
 		ImGui::Checkbox("###Orbit", &particle_system->orbit);
@@ -325,27 +344,63 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			}
 		}
 
-		particle_system->modified_by_user |= ImGui::Checkbox("###Size change over time", &particle_system->change_size);
+		particle_system->modified_by_user |= ImGui::Checkbox("###Size change over time", &particle_system->size_over_time);
 		ImGui::SameLine();
 		if (ImGui::CollapsingHeader("Size Over Lifetime"))
 		{
-			if (!particle_system->change_size)
+			if (!particle_system->size_over_time)
 			{
 				ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 				ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
 			}
-		
-			
-			ImGui::Spacing();
-			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-			particle_system->modified_by_user |= ImGui::DragFloat("Min size", &particle_system->min_size_of_particle, 0.1f, 0, 999);
-			ImGui::SameLine();
-			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-			particle_system->modified_by_user |= ImGui::DragFloat("Max size", &particle_system->max_size_of_particle, 0.1f, 0, 999);
-			
-			particle_system->modified_by_user |= ImGui::DragFloat("Speed", &particle_system->size_change_speed, 0.01f, 0.0f, 10.0F);
 
-			if (!particle_system->change_size)
+			ImGui::Spacing();
+			int size_type = static_cast<int>(particle_system->type_of_size_over_time);
+			if (ImGui::Combo("Size", &size_type, "Linear\0Random Between Two Constants\0Curve\0"))
+			{
+				switch (size_type)
+				{
+				case 0:
+					particle_system->type_of_size_over_time = ComponentParticleSystem::TypeOfSizeOverTime::SIZE_LINEAR;
+					break;
+				case 1:
+					particle_system->type_of_size_over_time = ComponentParticleSystem::TypeOfSizeOverTime::SIZE_RANDOM_BETWEEN_TWO_CONSTANTS;
+					break;
+				case 2:
+					particle_system->type_of_size_over_time = ComponentParticleSystem::TypeOfSizeOverTime::SIZE_CURVE;
+					break;
+				}
+				particle_system->modified_by_user = true;
+			}
+
+			switch (size_type)
+			{
+			case ComponentParticleSystem::TypeOfSizeOverTime::SIZE_LINEAR:
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				particle_system->modified_by_user |= ImGui::DragFloat("Min Modifier", &particle_system->min_size_of_particle, 0.1f, 0, 999);
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				particle_system->modified_by_user |= ImGui::DragFloat("Max Modifier", &particle_system->max_size_of_particle, 0.1f, 0, 999);
+				break;
+			case ComponentParticleSystem::TypeOfSizeOverTime::SIZE_RANDOM_BETWEEN_TWO_CONSTANTS:
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				particle_system->modified_by_user |= ImGui::DragFloat("Min Modifier", &particle_system->min_size_of_particle, 0.1f, 0, 999);
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				particle_system->modified_by_user |= ImGui::DragFloat("Max Modifier", &particle_system->max_size_of_particle, 0.1f, 0, 999);
+				break;
+			case ComponentParticleSystem::TypeOfSizeOverTime::SIZE_CURVE:
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				particle_system->modified_by_user |= ImGui::DragFloat("Min Modifier", &particle_system->min_size_of_particle, 0.1f, 0, 999);
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+				particle_system->modified_by_user |= ImGui::DragFloat("Max Modifier", &particle_system->max_size_of_particle, 0.1f, 0, 999);
+				particle_system->modified_by_user |= ImGui::DrawBezierCubic(&particle_system->size_curve, ImVec2(particle_system->min_size_of_particle, particle_system->max_size_of_particle));
+				break;
+			}
+			ImGui::Spacing();
+			
+			if (!particle_system->size_over_time)
 			{
 				ImGui::PopItemFlag();
 				ImGui::PopStyleVar();
@@ -385,17 +440,15 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				{
 				case 0:
 					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::WORLD);
-					particle_system->modified_by_user = true;
 					break;
 				case 1:
 					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
-					particle_system->modified_by_user = true;
 					break;
 				case 2:
 					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
-					particle_system->modified_by_user = true;
 					break;
 				}
+				particle_system->modified_by_user = true;
 			}
 
 			
