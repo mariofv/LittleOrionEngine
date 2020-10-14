@@ -44,6 +44,8 @@ struct Material
 	sampler2D dissolved_emissive;
 	sampler2D dissolved_noise;
 	float dissolve_progress;
+
+	vec4 final_added_color;
 };
 
 struct SpotLight
@@ -243,7 +245,7 @@ void main()
 
 	result += emissive_color;
 
-	FragColor = vec4(result,1.0);
+	FragColor = vec4(result,1.0) + material.final_added_color;
 
 #if	ENABLE_CASCADE_VISUALIZATION
 	FragColor.rgb = CascadeVisualization();

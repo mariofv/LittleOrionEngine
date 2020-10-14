@@ -13,6 +13,12 @@
 
 #include "ResourceManagement/Metafile/Metafile.h"
 
+Material::Material()
+{
+	textures.resize(MAX_MATERIAL_TEXTURE_TYPES);
+	textures_uuid.resize(MAX_MATERIAL_TEXTURE_TYPES);
+}
+
 Material::Material(uint32_t uuid) : Resource(uuid)
 {
 	textures.resize(MAX_MATERIAL_TEXTURE_TYPES);
@@ -273,4 +279,20 @@ unsigned int Material::GetShaderVariation() const
 void Material::SetDissolveProgress(float progress)
 {
 	dissolve_progress = progress;
+}
+
+void Material::SetFinalAddedColor(const float4& final_added_color)
+{
+	this->final_added_color = final_added_color;
+}
+
+std::shared_ptr<Material> Material::GetInstance()
+{
+	Config material_config;
+	Save(material_config);
+	App->resources->loading_thread_communication.load_scene_asyncronously = false;
+	std::shared_ptr<Material> new_instance = std::make_shared<Material>(uuid);
+	new_instance->Load(material_config);
+	App->resources->loading_thread_communication.load_scene_asyncronously = MULTITHREADING;
+	return new_instance;
 }

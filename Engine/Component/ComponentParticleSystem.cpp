@@ -3,33 +3,33 @@
 #include "Main/Application.h"
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleResourceManager.h"
 
 #include "Component/ComponentBillboard.h"
-#include "Module/ModuleResourceManager.h"
 #include "GL/glew.h"
-
 
 ComponentParticleSystem::ComponentParticleSystem() : Component(nullptr, ComponentType::PARTICLE_SYSTEM)
 {
-	
+
 }
 
 ComponentParticleSystem::ComponentParticleSystem(GameObject* owner) : Component(owner, ComponentType::PARTICLE_SYSTEM)
 {
-	
+
 }
 ComponentParticleSystem::~ComponentParticleSystem()
 {
 	delete billboard;
 }
 
-void ComponentParticleSystem::Init() 
+void ComponentParticleSystem::Init()
 {
 	glGenBuffers(1, &ssbo);
 	particles.reserve(MAX_PARTICLES);
 
 	billboard = new ComponentBillboard(this->owner);
 	billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::WORLD);
+	billboard->ChangeTexture(DEFAULT_TEXTURE_UUID);
 
 	for (unsigned int i = 0; i < MAX_PARTICLES; ++i)
 	{
@@ -39,21 +39,25 @@ void ComponentParticleSystem::Init()
 		particles[i].time_counter = particles[i].life;
 		particles[i].time_passed = 0.0F;
 	}
+
+	vel_curve = BezierCurve();
+	size_curve = BezierCurve();
+	color_curve = BezierCurve();
 }
 
 unsigned int ComponentParticleSystem::FirstUnusedParticle()
 {
 	for (unsigned int i =last_used_particle; i < max_particles_number; ++i)
 	{
-		if (particles[i].life <= 0.0f) 
+		if (particles[i].life <= 0.0f)
 		{
 			last_used_particle = i;
 			return i;
 		}
 	}
-	for (unsigned int i = 0; i < last_used_particle; ++i) 
+	for (unsigned int i = 0; i < last_used_particle; ++i)
 	{
-		if (particles[i].life <= 0.0f) 
+		if (particles[i].life <= 0.0f)
 		{
 			last_used_particle = i;
 			return i;
@@ -67,31 +71,16 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 {
 	particle.position_initial = float4(0.0f, 0.0f, 0.0f,0.0f);
 
-
 	if (tile_random)
 	{
 		particle.current_sprite_x = (rand() % static_cast<int>((max_tile_value - min_tile_value) + 1) + min_tile_value);
 		particle.current_sprite_y = (rand() % static_cast<int>((max_tile_value - min_tile_value) + 1) + min_tile_value);
 	}
 
-	if (change_size)
-	{
-		particle.size = float2(min_size_of_particle);
-	}
-	else if (size_random)
-	{
-		float size = min_size_of_particle + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max_size_of_particle - min_size_of_particle)));
-		particle.size = float2(size);
-	}
-	else
-	{
-		particle.size = particles_size;
-	}
-
 	switch (type_of_particle_system)
 	{
 		case SPHERE:
-			particle.velocity_initial = float4(float3::RandomDir(LCG(), velocity_particles_start) / 1000, 0.0f);
+			particle.velocity_initial = float4(float3::RandomDir(LCG(), 1), 0.0f);
 		break;
 		case BOX:
 		{
@@ -99,7 +88,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 			float random_z = (rand() % ((max_range_random_z - min_range_random_z) + 1) + min_range_random_z) / 100.f;
 
-			particle.velocity_initial.y = velocity_particles_start / 1000;
+			particle.velocity_initial = float4::unitY;
 			if (enabled_random_x)
 			{
 				particle.position_initial.x = random_x;
@@ -116,7 +105,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 			{
 				particle.position_initial.z = position_z / 100.0F;
 			}
-		
+
 		break;
 		}
 		case CONE:
@@ -129,38 +118,22 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 			float height = sqrt((distance*distance) - ((radius*proportion) - radius)*((radius*proportion) - radius));
 			float4 final_local_position = float4(particle.position_initial.x*proportion, height, particle.position_initial.z*proportion,0.0f);
 			particle.velocity_initial = (final_local_position - particle.position_initial);
-			particle.velocity_initial = particle.velocity_initial.ScaledToLength3(velocity_particles_start) / 1000;
 		break;
+	}
 
-	}
-	
-	//Velocity over time setup
-	if (velocity_over_time)
-	{
-		switch (type_of_velocity_over_time)
-		{
-		case CONSTANT:
-			particle.velocity_initial *= velocity_over_time_speed_modifier;
-			break;
-		case LINEAR:
-			particle.velocity = particle.velocity_initial * velocity_over_time_speed_modifier_second;
-			particle.velocity_initial *= velocity_over_time_speed_modifier;
-			break;
-		case RANDOM_BETWEEN_TWO_CONSTANTS:
-			float random_velocity_modifier = LCG().Float(velocity_over_time_speed_modifier, velocity_over_time_speed_modifier_second);
-			particle.velocity_initial *= random_velocity_modifier;
-			break;
-		}
-	}
-	
+	particle.velocity_initial.Normalize3();
+	particle.size = particles_size;
+	particle.position = particle.position_initial;
+
 	particle.color = initial_color;
-	particle.life = particles_life_time*1000;
+	particle.life = particles_life_time * 1000;
 	particle.time_counter = particle.life;
 	particle.time_passed = 0.0F;
-	particle.velocity_initial = particle.velocity_initial;
 
 	particle.geometric_space = float4x4::FromTRS(owner->transform.GetGlobalTranslation(), owner->transform.GetGlobalRotation(), float3::one);
 	particle.inital_random_orbit = rand();
+	particle.random_velocity_percentage = (float)rand() / RAND_MAX;
+	particle.random_size_percentage = (float)rand() / RAND_MAX;
 }
 
 void ComponentParticleSystem::Render()
@@ -184,7 +157,7 @@ void ComponentParticleSystem::Render()
 
 		glUseProgram(0);
 	}
-	
+
 }
 
 void ComponentParticleSystem::Update()
@@ -203,14 +176,7 @@ void ComponentParticleSystem::Update()
 			}
 		}
 
-		//update velocity over time
-		if (velocity_over_time && type_of_velocity_over_time == LINEAR)
-		{
-			acceleration = velocity_particles_start * (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) / particles_life_time;
-		}
-
-
-		gravity_vector = float4(0, gravity_modifier *0.000001f, 0, 0);
+		CalculateGravityVector();
 
 		// update all particles
 		num_of_alive_particles = 0;
@@ -238,31 +204,48 @@ void ComponentParticleSystem::Update()
 
 void ComponentParticleSystem::UpdateParticle(Particle& particle)
 {
-	particle.life -= App->time->real_time_delta_time; // reduce life
-	particle.time_passed += App->time->real_time_delta_time;
+	float time_increased = App->time->real_time_delta_time;
+	particle.life -= time_increased; // reduce life
+	particle.time_passed += time_increased;
+
+	//velocity over time
+	float4 velocity = particle.velocity_initial * velocity_particles_start * velocity_factor_mod;
+	float4 vel_curve_interpolated = float4::zero;
+	float4 acceleration = gravity_vector;
+	if (velocity_over_time)
+	{
+		switch (type_of_velocity_over_time)
+		{
+		case TypeOfVelocityOverTime::VEL_CONSTANT:
+			velocity *= velocity_over_time_speed_modifier;
+			break;
+		case TypeOfVelocityOverTime::VEL_LINEAR:
+		{
+			velocity *= velocity_over_time_speed_modifier;
+			float accel = (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * velocity_factor_mod / particles_life_time * 0.001f;
+			acceleration += particle.velocity_initial * accel;
+			break;
+		}
+		case TypeOfVelocityOverTime::VEL_RANDOM_BETWEEN_TWO_CONSTANTS:
+			velocity *= velocity_over_time_speed_modifier + (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * particle.random_velocity_percentage;
+			break;
+		case TypeOfVelocityOverTime::VEL_CURVE:
+			velocity *= velocity_over_time_speed_modifier;
+			float curve_value = vel_curve.BezierValue(particle.time_passed / particles_life_time * 0.001f).y;
+			float vel_in_range = (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * curve_value + velocity_over_time_speed_modifier;
+			vel_curve_interpolated = particle.velocity_initial * vel_in_range * velocity_factor_mod;
+			break;
+		}
+	}
 
 	//update position
-	if (velocity_over_time && type_of_velocity_over_time == LINEAR)
-	{
-		float4 acceleration = (particle.velocity - particle.velocity_initial) / particles_life_time / 1000;
-		acceleration += gravity_vector;
+	particle.position += ((velocity + vel_curve_interpolated) * time_increased) + (acceleration * time_increased * time_increased / 2);
 
-		particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
-			(acceleration * Pow(particle.time_passed, 2) / 2);
-	}
-	else
-	{
-		particle.position = particle.position_initial + (particle.velocity_initial * particle.time_passed) +
-			(gravity_vector * Pow(particle.time_passed, 2) / 2);
-
-
-	}
-
-	if (orbit)
+	/*if (orbit)
 	{
 		particle.position.z += sin((particle.time_passed *0.001f) + particle.inital_random_orbit);
 		particle.position.x += cos((particle.time_passed *0.001f) + particle.inital_random_orbit);
-	}
+	}*/
 	//alpha fade
 	if (fade)
 	{
@@ -270,25 +253,47 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 		particle.color.w = math::Lerp(0.f, 1.f, 1 - progress);
 	}
 
-
 	//fade color
-	if (fade_between_colors)
+	switch (type_of_color_change)
+	{
+	case TypeOfSizeColorChange::COLOR_NONE:
+		break;
+	case TypeOfSizeColorChange::COLOR_LINEAR:
 	{
 		float progress = particle.time_passed * 0.001f / color_fade_time;
-		float3 tmp_color = float3::Lerp(initial_color.xyz(), color_to_fade.xyz(), progress);
-		particle.color.x = tmp_color.x;
-		particle.color.y = tmp_color.y;
-		particle.color.z = tmp_color.z;
+		particle.color = float4::Lerp(initial_color, color_to_fade, progress);
+		break;
+	}
+	case TypeOfSizeColorChange::COLOR_CURVE:
+		float color_value = color_curve.BezierValue(particle.time_passed * 0.001f / particles_life_time).y;
+		particle.color = float4::Lerp(initial_color, color_to_fade, color_value);
+		break;
 	}
 
-	//size fade
-	if (change_size)
+	//size change
+	if (size_over_time)
 	{
-		float progress = particle.time_passed * 0.001f / size_change_speed;
-		particle.size = float2::Lerp(float2(min_size_of_particle), float2(max_size_of_particle), progress);
+		switch (type_of_size_over_time)
+		{
+
+		case TypeOfSizeOverTime::SIZE_LINEAR:
+		{
+			float progress = particle.time_passed * 0.001f / particles_life_time;
+			particle.size = particles_size * ((max_size_of_particle - min_size_of_particle) * progress + min_size_of_particle);
+			break;
+		}
+		case TypeOfSizeOverTime::SIZE_RANDOM_BETWEEN_TWO_CONSTANTS:
+			particle.size = particles_size * ((max_size_of_particle - min_size_of_particle) * particle.random_size_percentage + 1);
+			break;
+		case TypeOfSizeOverTime::SIZE_CURVE:
+			float size_value = size_curve.BezierValue(particle.time_passed * 0.001f / particles_life_time).y;
+			float size_in_range = (max_size_of_particle - min_size_of_particle) * size_value + min_size_of_particle;
+			particle.size = particles_size * size_in_range;
+			break;
+		}
 	}
 
-	//animation 
+	//animation
 	if (billboard->is_spritesheet && !tile_random)
 	{
 		float progress = particle.time_passed * 0.001f / particles_life_time;
@@ -343,13 +348,10 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 {
 	billboard->SpecializedSave(config);
 	config.AddInt(static_cast<int>(type_of_particle_system), "Type of particle system");
+
 	config.AddBool(loop, "EmissionLoop");
 	config.AddBool(active, "Active");
-	config.AddFloat(min_size_of_particle, "Max Size Particles");
-	config.AddFloat(max_size_of_particle, "Min Size Particles");
 	config.AddFloat2(particles_size, "Particle Size");
-	config.AddBool(size_random, "Size random");
-	config.AddBool(change_size, "Change size");
 	config.AddBool(tile_random, "Tile random");
 	config.AddFloat(max_tile_value, "Max Tile");
 	config.AddFloat(min_tile_value, "Min Tile");
@@ -377,34 +379,39 @@ void ComponentParticleSystem::SpecializedSave(Config& config) const
 	config.AddFloat(inner_radius, "Inner Radius");
 	config.AddFloat(outer_radius, "Outer Radius");
 
+	config.AddInt(type_of_color_change, "Type of Color Fade");
 	config.AddColor(initial_color, "Intial Color");
+	config.AddColor(color_to_fade, "Color to fade");
+	config.AddFloat(color_fade_time, "Color Fade Time");
+	color_curve.SpecializedSave(config, "Color Curve");
+
 	config.AddBool(fade, "Fade");
 	config.AddFloat(fade_time, "Fade Time");
-	config.AddFloat(size_change_speed, "Size Fade Time");
-	config.AddFloat(color_fade_time, "Color Fade Time");
-	config.AddBool(fade_between_colors, "Fade between Colors");
-	config.AddColor(color_to_fade, "Color to fade");
 	config.AddBool(orbit, "Orbit");
 
+	config.AddInt(type_of_velocity_over_time, "Type of Velocity");
 	config.AddBool(velocity_over_time, "Velocity Random");
 	config.AddFloat(velocity_over_time_speed_modifier, "Velocity Speed First");
 	config.AddFloat(velocity_over_time_speed_modifier_second, "Velocity Speed Second");
-	
-}
+	vel_curve.SpecializedSave(config, "Velocity Curve");
+
+	config.AddBool(size_over_time, "Size Over Time");
+	config.AddInt(type_of_size_over_time, "Type of Size");
+	config.AddFloat(min_size_of_particle, "Max Size Particles");
+	config.AddFloat(max_size_of_particle, "Min Size Particles");
+	size_curve.SpecializedSave(config, "Size Curve");
+	}
 
 void ComponentParticleSystem::SpecializedLoad(const Config& config)
 {
-
 	billboard->SpecializedLoad(config);
 	type_of_particle_system = static_cast<TypeOfParticleSystem>(config.GetInt("Type of particle system", static_cast<int>(TypeOfParticleSystem::BOX)));
-	
+
 	loop = config.GetBool("EmissionLoop", true);
 	min_size_of_particle = config.GetFloat("Max Size Particles", 0.2);
 	max_size_of_particle = config.GetFloat("Min Size Particles", 0.2);
 	config.GetFloat2("Particle Size", particles_size, float2(0.2f));
-	size_random = config.GetBool("Size random", false);
 	tile_random = config.GetBool("Tile random", false);
-	change_size = config.GetBool("Change size", false);
 	max_tile_value = config.GetFloat("Max Tile", 0);
 	min_tile_value = config.GetFloat("Min Tile", 4);
 
@@ -431,22 +438,27 @@ void ComponentParticleSystem::SpecializedLoad(const Config& config)
 	inner_radius = config.GetFloat("Inner Radius", 1.0F);
 	outer_radius = config.GetFloat("Outer Radius", 3.0F);
 
-	float4 color_aux;
+	type_of_color_change = static_cast<TypeOfSizeColorChange>(config.GetInt("Type of Color Fade", TypeOfSizeColorChange::COLOR_NONE));
 	config.GetColor("Intial Color", initial_color, float4::one);
+	config.GetColor("Color to fade", color_to_fade, float4::one);
+	color_fade_time = config.GetFloat("Color Fade Time", 1.0F);
+	color_curve.SpecializedLoad(config, "Color Curve");
 
 	fade = config.GetBool("Fade", false);
 	fade_time = config.GetFloat("Fade Time", 1.0F);
-	size_change_speed = config.GetFloat("Fade Time", 1.0F);
-	color_fade_time = config.GetFloat("Color Fade Time", 1.0F);
-
-	fade_between_colors = config.GetBool("Fade between Colors", false);
-	config.GetColor("Color to fade", color_to_fade, float4::one);
-
 	orbit = config.GetBool("Orbit", false);
 
+	type_of_velocity_over_time = static_cast<TypeOfVelocityOverTime>(config.GetInt("Type of Velocity", TypeOfVelocityOverTime::VEL_CONSTANT));
 	velocity_over_time = config.GetBool("Velocity Random", false);
 	velocity_over_time_speed_modifier = config.GetFloat("Velocity Speed First", 0.f);
 	velocity_over_time_speed_modifier_second = config.GetFloat("Velocity Speed Second", 0.f);
+	vel_curve.SpecializedLoad(config, "Velocity Curve");
+
+	size_over_time = config.GetBool("Size Over Time", false);
+	type_of_size_over_time = static_cast<TypeOfSizeOverTime>(config.GetInt("Type of Size", TypeOfSizeOverTime::SIZE_LINEAR));
+	min_size_of_particle = config.GetFloat("Max Size Particles", 1.0f);
+	max_size_of_particle = config.GetFloat("Min Size Particles", 1.0f);
+	size_curve.SpecializedLoad(config, "Size Curve");
 }
 
 void ComponentParticleSystem::ReassignResource()
@@ -536,7 +548,6 @@ ENGINE_API void ComponentParticleSystem::Pause()
 	emitting = false;
 }
 
-
 void ComponentParticleSystem::OrbitX(float angle, Particle& particle)
 {
 	float3 focus_vector = owner->transform.GetTranslation() - owner->transform.GetTranslation();
@@ -548,6 +559,13 @@ void ComponentParticleSystem::OrbitX(float angle, Particle& particle)
 	auto position = focus_vector + owner->transform.GetTranslation();
 	particle.position.x = position.x;
 	particle.position.z = position.z;
+}
+
+void ComponentParticleSystem::CalculateGravityVector()
+{
+	float4x4 gravity_rotation = float4x4::FromTRS(float3::one, owner->transform.GetGlobalRotation(), float3::one);
+	gravity_rotation.Transpose();
+	gravity_vector = gravity_rotation * float4(0, gravity_modifier * gravity_factor_mod, 0, 0);
 }
 
 void ComponentParticleSystem::Disable()

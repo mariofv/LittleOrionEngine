@@ -33,6 +33,8 @@ public:
 
 	ENGINE_API void Log(const char* message, ...);
 
+	ENGINE_API void Log(const char* message, va_list ap);
+
 	void LittleOrionLog(const char* message, const LogEntryType type);
 	void AssimpLog(const char* message, const LogEntryType type);
 	void OpenGLLog(const char* message, const LogEntryType type);

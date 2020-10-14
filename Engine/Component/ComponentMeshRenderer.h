@@ -61,6 +61,7 @@ private:
 	void AddEmissiveUniforms(unsigned int shader_program) const;
 	void AddSpecularUniforms(unsigned int shader_program) const;
 	void AddAmbientOclusionUniforms(unsigned int shader_program) const;
+	void AddFinalAddedColorUniform(unsigned int shader_program) const;
 	void AddNormalUniforms(unsigned int shader_program) const;
 	void AddLightMapUniforms(unsigned int shader_program) const;
 	void AddLiquidMaterialUniforms(unsigned int shader_program) const;
