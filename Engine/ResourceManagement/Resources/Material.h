@@ -38,7 +38,7 @@ public:
 		UNKNOWN = 10
 	};
 
-	Material() = default;
+	Material();
 	Material(uint32_t uuid);
 	~Material() = default;
 
@@ -63,6 +63,8 @@ public:
 
 	ENGINE_API void SetDissolveProgress(float progress);
 	ENGINE_API void SetFinalAddedColor(const float4& final_added_color);
+
+	ENGINE_API std::shared_ptr<Material> GetInstance();
 
 public:
 	static const size_t MAX_MATERIAL_TEXTURE_TYPES = static_cast<size_t>(MaterialTextureType::UNKNOWN);
@@ -96,6 +98,7 @@ public:
 	float4 final_added_color = float4::zero;
 
 	bool show_checkerboard_texture = false;
+
 };
 
 namespace ResourceManagement
