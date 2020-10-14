@@ -135,10 +135,13 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 	particle.geometric_space = float4x4::FromTRS(owner->transform.GetGlobalTranslation(), owner->transform.GetGlobalRotation(), float3::one);
 	
-	particle.orbit_random = rand();
-	particle.position.z += sin(particle.orbit_random);
-	particle.position.x += cos(particle.orbit_random);
-
+	if (orbit)
+	{
+		particle.orbit_random = rand();
+		particle.position.z += sin(particle.orbit_random);
+		particle.position.x += cos(particle.orbit_random);
+	}
+	
 	particle.random_velocity_percentage = (float)rand() / RAND_MAX;
 	particle.random_size_percentage = (float)rand() / RAND_MAX;
 }
@@ -233,9 +236,8 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 			break;
 		case TypeOfVelocityOverTime::VEL_LINEAR:
 		{
-			velocity *= velocity_over_time_speed_modifier;
-			float accel = (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * velocity_factor_mod / particles_life_time * 0.001f;
-			acceleration += particle.velocity_initial * accel;
+			float vel_perc = (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * (particle.time_passed / particles_life_time * 0.001f);
+			velocity *= vel_perc + velocity_over_time_speed_modifier;
 			break;
 		}
 		case TypeOfVelocityOverTime::VEL_RANDOM_BETWEEN_TWO_CONSTANTS:
@@ -251,7 +253,7 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	}
 
 	//update position
-	particle.position += ((velocity + vel_curve_interpolated) * time_increased) + (acceleration * time_increased * time_increased / 2);
+	particle.position += (((velocity + vel_curve_interpolated) * time_increased) + (acceleration * particle.time_passed * particle.time_passed / 2));
 
 	if (orbit)
 	{
