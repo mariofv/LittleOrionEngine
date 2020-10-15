@@ -23,6 +23,8 @@ public:
 		GLbitfield mask = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT
 	) const;
 
+	GLint GetDepthAttachement() const;
+
 	void SetMultiSampled(bool multisampled);
 
 	void CheckCompleteness() const;

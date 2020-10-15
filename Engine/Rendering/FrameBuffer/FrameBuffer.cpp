@@ -61,6 +61,11 @@ void FrameBuffer::ClearColorAttachement(GLenum color_attachement, const float3& 
 	glDrawBuffer(0);
 }
 
+GLint FrameBuffer::GetDepthAttachement() const
+{
+	return depth_stencil_attachement;
+}
+
 void FrameBuffer::GenerateColorAttachement(float width, float height)
 {
 	glGenTextures(num_color_attachements, &color_attachements[0]);

@@ -459,7 +459,6 @@ void Viewport::HDRPass() const
 		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement());
 		glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
 	}
-	glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
 	glUniform1f(glGetUniformLocation(program, "exposure"), App->renderer->exposure);
 
 	if (bloom)
@@ -469,6 +468,23 @@ void Viewport::HDRPass() const
 		glUniform1i(glGetUniformLocation(program, "brightness_texture"), 1);
 	}
 
+	if (antialiasing)
+	{
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, scene_fbo->GetDepthAttachement());
+		glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_DEPTH_STENCIL_TEXTURE_MODE, GL_DEPTH_COMPONENT);
+		glUniform1i(glGetUniformLocation(program, "depth_texture"), 2);
+	}
+	else
+	{
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetDepthAttachement());
+		glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_STENCIL_TEXTURE_MODE, GL_DEPTH_COMPONENT);
+		glUniform1i(glGetUniformLocation(program, "depth_texture"), 2);
+	}
+	glUniform1f(glGetUniformLocation(program, "z_near"), camera->GetNearDistance());
+	glUniform1f(glGetUniformLocation(program, "z_far"), camera->GetFarDistance());
+	
 	scene_quad->RenderArray();
 
 	glUseProgram(0);

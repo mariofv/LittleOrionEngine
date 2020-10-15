@@ -1,14 +1,22 @@
 const float gamma = 2.2;
 const float W = 11.2;
 
+const float density = 2.0;
+const float gradient = 1.5;
+
 #if ENABLE_MSAA
 uniform sampler2DMS screen_texture;
+uniform sampler2DMS depth_texture;
 #else
 uniform sampler2D screen_texture;
+uniform sampler2D depth_texture;
 #endif
 uniform sampler2D brightness_texture;
 
 uniform float exposure;
+
+uniform float z_near;
+uniform float z_far;
 
 in vec2 texCoord;
 layout (location = 0) out vec4 FragColor;
@@ -26,9 +34,21 @@ void main()
   vec4 sample4 = texelFetch(screen_texture, vp, 3);
 
   vec4 fragment_color = (sample1 + sample2 + sample3 + sample4) / 4.0f;
+
+
+  vp = ivec2(vec2(textureSize(depth_texture)) * texCoord);
+  float sample1_depth = texelFetch(depth_texture, vp, 0).r;
+  float sample2_depth = texelFetch(depth_texture, vp, 1).r;
+  float sample3_depth = texelFetch(depth_texture, vp, 2).r;
+  float sample4_depth = texelFetch(depth_texture, vp, 3).r;
+
+  float fragment_depth = (sample1_depth + sample2_depth + sample3_depth + sample4_depth) / 4.0f;
 #else
   vec4 fragment_color = texture(screen_texture, texCoord);
+  float fragment_depth = texture(depth_texture, texCoord).r;
 #endif
+
+  fragment_depth = (2.0 * z_near) / (z_far + z_near - fragment_depth * (z_far - z_near));
 
 #if ENABLE_BLOOM
   vec4 brightness_color = texture(brightness_texture, texCoord);
@@ -42,6 +62,15 @@ void main()
   FragColor.rgb = fragment_color.rgb;
   FragColor.rgb = pow(FragColor.rgb, vec3(1 / gamma));
   FragColor.a = 1.0;
+
+
+  //float visibility = exp(-pow((fragment_depth * density), gradient));
+  //visibility = clamp(visibility, 0.0, 1.0);
+  const float LOG2 = 1.442695;
+  float fog_factor = exp2( -density *  density * fragment_depth * fragment_depth *  LOG2);
+  fog_factor = clamp(fog_factor, 0.0, 1.0);
+  FragColor = mix(vec4(0.0, 0.0, 0.0, 1.0), FragColor, fog_factor);
+  //FragColor.rgb = vec3(fragment_depth);
 }
 
 vec3 ToneMapping(vec3 color)
