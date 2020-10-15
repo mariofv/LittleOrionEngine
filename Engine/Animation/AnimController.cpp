@@ -160,7 +160,7 @@ void AnimController::SetStateMachine(uint32_t state_machine_uuid)
 	}
 }
 
-void AnimController::SetActiveState(std::shared_ptr<State> & state)
+void AnimController::SetActiveState(std::shared_ptr<State>& state)
 {
 	if (state != nullptr && state->clip != nullptr)
 	{
@@ -242,7 +242,7 @@ void AnimController::SetBool(uint64_t name_hash, bool value)
 }
 
 //This is for timelines
-void AnimController::SetActiveState(const std::string & state, float interpolation)
+void AnimController::SetActiveState(const std::string& state, float interpolation)
 {
 	uint64_t state_hash = std::hash<std::string>{}(state);
 	if (!playing_clips[ClipType::ACTIVE].playing)

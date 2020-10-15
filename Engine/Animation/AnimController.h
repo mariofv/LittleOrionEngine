@@ -53,10 +53,10 @@ public:
 	void SetFloat(uint64_t name_hash, float value);
 	void SetInt(uint64_t name_hash, int value);
 	void SetBool(uint64_t name_hash, bool value);
-	void SetActiveState(const std::string & state, float interpolation_time);
+	void SetActiveState(const std::string& state, float interpolation_time);
 	void SetIgnoreTransitions(bool enable);
 private:
-	void SetActiveState(std::shared_ptr<State> & state);
+	void SetActiveState(std::shared_ptr<State>& state);
 	void FinishActiveState();
 	void AdjustInterpolationTimes();
 	void ApplyAutomaticTransitionIfNeeded();
