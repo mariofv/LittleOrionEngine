@@ -9,7 +9,7 @@
 #include "Helper/Timer.h"
 #include "Main/Globals.h"
 
-#include <MathGeoLib/Geometry/LineSegment.h>
+#include <MathGeoLib/MathGeoLib.h>
 #include <GL/glew.h>
 #include <list>
 #include <vector>
@@ -97,6 +97,9 @@ public:
 
 	bool bloom = false;
 	int amount_of_blur = 20;
+
+	float4 fog_color = float4::zero;
+	float fog_density = 0.5f;
 
 	Viewport* scene_viewport = nullptr;
 	Viewport* game_viewport = nullptr;

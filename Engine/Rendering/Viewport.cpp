@@ -482,6 +482,8 @@ void Viewport::HDRPass() const
 		glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_STENCIL_TEXTURE_MODE, GL_DEPTH_COMPONENT);
 		glUniform1i(glGetUniformLocation(program, "depth_texture"), 2);
 	}
+	glUniform4fv(glGetUniformLocation(program, "fog_color"), 1, App->renderer->fog_color.ptr());
+	glUniform1f(glGetUniformLocation(program, "fog_density"), App->renderer->fog_density);
 	glUniform1f(glGetUniformLocation(program, "z_near"), camera->GetNearDistance());
 	glUniform1f(glGetUniformLocation(program, "z_far"), camera->GetFarDistance());
 	

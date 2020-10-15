@@ -307,6 +307,9 @@ void PanelConfiguration::ShowPostProcessingOptions() const
 			App->renderer->SetAntialiasing(App->renderer->antialiasing);
 		}
 
+		ImGui::DragFloat("Fog Density", &App->renderer->fog_density, 0.01f, 0.f, 10.f);
+		ImGui::ColorPicker4("Fog Color", App->renderer->fog_color.ptr());
+
 		if (ImGui::Checkbox("HDR", &App->renderer->hdr))
 		{
 			App->renderer->SetHDR(App->renderer->hdr);
