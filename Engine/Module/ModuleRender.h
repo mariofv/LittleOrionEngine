@@ -99,7 +99,7 @@ public:
 	int amount_of_blur = 20;
 
 	float4 fog_color = float4::zero;
-	float fog_density = 0.5f;
+	float fog_density = 1.0f;
 
 	Viewport* scene_viewport = nullptr;
 	Viewport* game_viewport = nullptr;
