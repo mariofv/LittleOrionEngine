@@ -1,4 +1,5 @@
 #include "FrameBuffer.h"
+#include "Log/EngineLog.h"
 
 FrameBuffer::FrameBuffer(int num_color_attachements) : num_color_attachements(num_color_attachements)
 {
@@ -14,8 +15,9 @@ FrameBuffer::~FrameBuffer()
 void FrameBuffer::GenerateAttachements(float width, float height)
 {
 	GenerateColorAttachement(width, height);
-	GenerateDepthAttachement(width, height);
+	GenerateDepthStencilAttachement(width, height);
 	LinkAttachements();
+	CheckCompleteness();
 }
 
 void FrameBuffer::ClearAttachements()
@@ -28,9 +30,9 @@ void FrameBuffer::ClearAttachements()
 		}
 	}
 
-	if (rbo != 0)
+	if (depth_stencil_attachement != 0)
 	{
-		glDeleteRenderbuffers(1, &rbo);
+		glDeleteTextures(1, &depth_stencil_attachement);
 	}
 }
 
@@ -87,19 +89,29 @@ void FrameBuffer::GenerateColorAttachement(float width, float height)
 	}	
 }
 
-void FrameBuffer::GenerateDepthAttachement(float width, float height)
+void FrameBuffer::GenerateDepthStencilAttachement(float width, float height)
 {
-	glGenRenderbuffers(1, &rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glGenTextures(1, &depth_stencil_attachement);
 	if (multisampled)
 	{
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, width, height);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depth_stencil_attachement);
+		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH24_STENCIL8, width, height, GL_TRUE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 	}
 	else
 	{
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+		glBindTexture(GL_TEXTURE_2D, depth_stencil_attachement);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width, height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 
 void FrameBuffer::LinkAttachements() const
@@ -116,7 +128,15 @@ void FrameBuffer::LinkAttachements() const
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, color_attachements[i], 0);
 		}
 	}
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	if (multisampled)
+	{
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, depth_stencil_attachement, 0);
+	}
+	else
+	{
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depth_stencil_attachement, 0);
+	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -124,4 +144,45 @@ void FrameBuffer::LinkAttachements() const
 void FrameBuffer::SetMultiSampled(bool multisampled)
 {
 	this->multisampled = multisampled;
+}
+
+void FrameBuffer::CheckCompleteness() const
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	GLenum fbo_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	switch (fbo_status)
+	{
+	case GL_FRAMEBUFFER_COMPLETE:
+		APP_LOG_INFO("Framebuffer is complete");
+		break;
+
+	case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+		APP_LOG_ERROR("Framebuffer attachements are incomplete");
+		break;
+
+	case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+		APP_LOG_ERROR("Framebuffer has no images attached");
+		break;
+
+	case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+		APP_LOG_ERROR("Framebuffer has imcomplete draw buffers");
+		break;
+
+	case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+		APP_LOG_ERROR("Framebuffer has imcomplete read buffers");
+		break;
+
+	case GL_FRAMEBUFFER_UNSUPPORTED:
+		APP_LOG_ERROR("Framebuffer has unsupported internal format");
+		break;
+
+	case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+		APP_LOG_ERROR("Framebuffer textures don't share sampling ratio");
+		break;
+
+	default:
+		APP_LOG_ERROR("What did you do?");
+		break;
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
