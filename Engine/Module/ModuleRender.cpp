@@ -257,6 +257,12 @@ void ModuleRender::SetBloom(bool bloom)
 	game_viewport->SetBloom(bloom);
 }
 
+void ModuleRender::SetFog(bool fog_enabled)
+{
+	this->fog_enabled = fog_enabled;
+	game_viewport->SetFog(fog_enabled);
+}
+
 void ModuleRender::SetShadows(bool shadows_enabled)
 {
 	this->shadows_enabled = shadows_enabled;

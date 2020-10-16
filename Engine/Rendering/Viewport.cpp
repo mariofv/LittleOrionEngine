@@ -423,6 +423,10 @@ void Viewport::HDRPass() const
 	{
 		shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_MSAA;
 	}
+	if (fog)
+	{
+		shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_FOG;
+	}
 	if (hdr)
 	{
 		shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_HDR;
@@ -459,7 +463,6 @@ void Viewport::HDRPass() const
 		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement());
 		glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
 	}
-	glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
 	glUniform1f(glGetUniformLocation(program, "exposure"), App->renderer->exposure);
 
 	if (bloom)
@@ -469,6 +472,28 @@ void Viewport::HDRPass() const
 		glUniform1i(glGetUniformLocation(program, "brightness_texture"), 1);
 	}
 
+	if (fog)
+	{
+		if (antialiasing)
+		{
+			glActiveTexture(GL_TEXTURE2);
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, scene_fbo->GetDepthAttachement());
+			glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_DEPTH_STENCIL_TEXTURE_MODE, GL_DEPTH_COMPONENT);
+			glUniform1i(glGetUniformLocation(program, "depth_texture"), 2);
+		}
+		else
+		{
+			glActiveTexture(GL_TEXTURE2);
+			glBindTexture(GL_TEXTURE_2D, scene_fbo->GetDepthAttachement());
+			glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_STENCIL_TEXTURE_MODE, GL_DEPTH_COMPONENT);
+			glUniform1i(glGetUniformLocation(program, "depth_texture"), 2);
+		}
+		glUniform4fv(glGetUniformLocation(program, "fog_color"), 1, App->renderer->fog_color.ptr());
+		glUniform1f(glGetUniformLocation(program, "fog_density"), App->renderer->fog_density);
+		glUniform1f(glGetUniformLocation(program, "z_near"), camera->GetNearDistance());
+		glUniform1f(glGetUniformLocation(program, "z_far"), camera->GetFarDistance());
+	}
+	
 	scene_quad->RenderArray();
 
 	glUseProgram(0);
@@ -518,6 +543,11 @@ void Viewport::SetHDR(bool hdr)
 void Viewport::SetBloom(bool bloom)
 {
 	this->bloom = bloom;
+}
+
+void Viewport::SetFog(bool fog)
+{
+	this->fog = fog;
 }
 
 void Viewport::SetOutput(ViewportOutput output)
