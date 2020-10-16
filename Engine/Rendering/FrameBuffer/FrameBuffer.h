@@ -18,8 +18,8 @@ public:
 
 	GLuint GetColorAttachement(int index = 0) const;
 	void ClearColorAttachement(
-		GLenum color_attachement, 
-		const float3& clear_color = float3::zero, 
+		GLenum color_attachement,
+		const float3& clear_color = float3::zero,
 		GLbitfield mask = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT
 	) const;
 
@@ -36,7 +36,7 @@ private:
 
 protected:
 	GLuint fbo = 0;
-	GLuint color_attachements[3];
+	GLuint color_attachements[5];
 	GLuint depth_stencil_attachement;
 
 	int num_color_attachements = 1;

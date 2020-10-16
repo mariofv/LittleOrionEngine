@@ -291,7 +291,7 @@ void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
 	{
 		glUniform1f(glGetUniformLocation(shader_program, "material.transparency"), material_to_render->transparency);
 	}
-
+	glUniform1f(glGetUniformLocation(shader_program, "material.reflection_strength"), material_to_render->reflection_strength);
 	glUniform2fv(glGetUniformLocation(shader_program, "material.tiling"), 1, material_to_render->tiling.ptr());
 
 	//Ambient light intesity and color
