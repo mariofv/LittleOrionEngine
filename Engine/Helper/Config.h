@@ -95,6 +95,24 @@ public:
 		config_document.AddMember(member_name, vector_value, *allocator);
 	};
 
+	template<>
+	void AddVector(const std::vector<float3>& value_to_add, const std::string& name)
+	{
+		rapidjson::Value member_name(name.c_str(), *allocator);
+		rapidjson::Value vector_value(rapidjson::kArrayType);
+		for (size_t i = 0; i < value_to_add.size(); ++i)
+		{
+			rapidjson::Value array_value(rapidjson::kArrayType);
+			array_value.PushBack(value_to_add[i].x, *allocator);
+			array_value.PushBack(value_to_add[i].y, *allocator);
+			array_value.PushBack(value_to_add[i].z, *allocator);
+
+			vector_value.PushBack(array_value, *allocator);
+		}
+
+		config_document.AddMember(member_name, vector_value, *allocator);
+	};
+
 	template<class T> void GetVector(const std::string& name, std::vector<T>& return_value, const std::vector<T>& opt_value) const
 	{
 		if (!config_document.HasMember(name.c_str()))
@@ -126,6 +144,32 @@ public:
 			for (size_t i = 0; i < current_value.Capacity(); ++i)
 			{
 				return_value.push_back(current_value[i].GetString());
+			}
+		}
+	};
+
+	template<>
+	void GetVector(const std::string& name, std::vector<float3>& return_value, const std::vector<float3>& opt_value) const
+	{
+		if (!config_document.HasMember(name.c_str()))
+		{
+			return_value = opt_value;
+		}
+		else
+		{
+			const rapidjson::Value& current_value = config_document[name.c_str()];
+			return_value = std::vector<float3>();
+
+			for (size_t i = 0; i < current_value.Capacity(); ++i)
+			{
+				const rapidjson::Value& current_float3_value = current_value[i];
+				return_value.push_back(
+					float3(
+						current_float3_value[0].GetFloat(),
+						current_float3_value[1].GetFloat(),
+						current_float3_value[2].GetFloat()
+					)
+				);
 			}
 		}
 	};
