@@ -164,7 +164,7 @@ void Viewport::MeshRenderPass() const
 
 	for (auto& opaque_mesh_renderer : opaque_mesh_renderers)
 	{
-		if (opaque_mesh_renderer.mesh_renderer->mesh_to_render != nullptr 
+		if (opaque_mesh_renderer.mesh_renderer->mesh_to_render != nullptr
 			&& opaque_mesh_renderer.mesh_renderer->material_to_render != nullptr
 			&& opaque_mesh_renderer.mesh_renderer->IsEnabled()
 		)
@@ -370,17 +370,17 @@ void Viewport::BloomPass()
 	{
 		return;
 	}
-	
+
 	scene_fbo->Bind(GL_READ_FRAMEBUFFER);
 	glReadBuffer(GL_COLOR_ATTACHMENT1);
 	blit_fbo->Bind(GL_DRAW_FRAMEBUFFER);
 	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	FrameBuffer::UnBind();
-	
+
 	FrameBuffer* current_fbo = ping_fbo;
 	FrameBuffer* other_fbo = pong_fbo;
-	
+
 	current_fbo->Bind();
 	current_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);
 	other_fbo->Bind();
@@ -493,10 +493,8 @@ void Viewport::HDRPass() const
 		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(4));
 		glUniform1i(glGetUniformLocation(program, "ssr_value_map"), 4);
 	}
-	glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
 	glUniform1f(glGetUniformLocation(program, "exposure"), App->renderer->exposure);
-	glUniform1f(glGetUniformLocation(program, "z_near"), camera->GetNearDistance());
-	glUniform1f(glGetUniformLocation(program, "z_far"), camera->GetFarDistance());
+
 	if (bloom)
 	{
 		glActiveTexture(GL_TEXTURE1);
@@ -522,8 +520,10 @@ void Viewport::HDRPass() const
 		}
 		glUniform4fv(glGetUniformLocation(program, "fog_color"), 1, App->renderer->fog_color.ptr());
 		glUniform1f(glGetUniformLocation(program, "fog_density"), App->renderer->fog_density);
+		glUniform1f(glGetUniformLocation(program, "z_near"), camera->GetNearDistance());
+		glUniform1f(glGetUniformLocation(program, "z_far"), camera->GetFarDistance());
 	}
-	
+
 	scene_quad->RenderArray();
 
 	glUseProgram(0);
