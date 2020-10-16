@@ -38,22 +38,6 @@ uniform float z_far;
 uniform float fog_density;
 uniform vec4 fog_color;
 
-
-#if ENABLE_FOG
-
-  #if ENABLE_MSAA
-uniform sampler2DMS depth_texture;
-  #else
-uniform sampler2D depth_texture;
-  #endif
-
-uniform float z_near;
-uniform float z_far;
-uniform float fog_density;
-uniform vec4 fog_color;
-
-#endif
-
 in vec2 texCoord;
 layout (location = 0) out vec4 FragColor;
 
@@ -191,10 +175,10 @@ vec3 BinarySearch(inout vec3 direction, inout vec3 hit_coordinate)
 
 		projectedCoord = GetCoordinatesInScreenSpace(hit_coordinate);
 
-        float depth = linearize_depth(GetTexture(position_map,projectedCoord.xy).z);
+        float depth = LinearizeDepth(GetTexture(position_map,projectedCoord.xy).z);
 
 
-        float depth_diff =linearize_depth(hit_coordinate.z) - depth;
+        float depth_diff = LinearizeDepth(hit_coordinate.z) - depth;
 
         direction *= 0.2;
         if(depth_diff > 0.0)
@@ -213,14 +197,14 @@ vec4 RayCast(vec3 direction,vec3 hit_coordinate)
     //Increase ray lenght until we find something
 	direction*=MIN_RAY_STEP;
 	vec4 projectedCoord ;
-	float original_depth = linearize_depth(hit_coordinate.z);
+	float original_depth = LinearizeDepth(hit_coordinate.z);
    for (int i = 0; i < MAX_NUMBER_INCREMENTS; i++) {
 
         hit_coordinate += direction;
 		projectedCoord = GetCoordinatesInScreenSpace(hit_coordinate);
 
-		float depth = linearize_depth(GetTexture(position_map,projectedCoord.xy).z);
-		float depth_diff = depth - linearize_depth(hit_coordinate.z);
+		float depth = LinearizeDepth(GetTexture(position_map,projectedCoord.xy).z);
+		float depth_diff = depth - LinearizeDepth(hit_coordinate.z);
 		//Avoid going over the depth diferent threshold  and check if we have hit something
         if (depth_diff < MIN_Z_VALUE && depth_diff > MAX_Z_VALUE && original_depth < depth)
 		{
