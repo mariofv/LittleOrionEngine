@@ -121,6 +121,11 @@ void ComponentAnimation::ActiveAnimation(const std::string& trigger)
 	animation_controller->StartNextState(trigger);
 }
 
+void ComponentAnimation::SetActiveState(const std::string& state, float interpolation_time)
+{
+	animation_controller->SetActiveState(state, interpolation_time);
+}
+
 ENGINE_API bool ComponentAnimation::IsOnState(const std::string& trigger)
 {
 	return animation_controller->IsOnState(trigger);
@@ -174,6 +179,11 @@ ENGINE_API void ComponentAnimation::SetBool(std::string name, bool value)
 {
 	uint64_t name_hash = std::hash<std::string>{}(name);
 	animation_controller->SetBool(name_hash, value);
+}
+
+ENGINE_API void ComponentAnimation::SetIgnoreTransitions(bool enable)
+{
+	return animation_controller->SetIgnoreTransitions(enable);
 }
 
 

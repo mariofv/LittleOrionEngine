@@ -106,6 +106,10 @@ void ComponentTrail::Update()
 			it = test_points.erase(it);
 		}
 	}
+	if (!blend_colors)
+	{
+		color_to_blend = color;
+	}
 }
 
 void  ComponentTrail::GetPerpendiculars()
@@ -241,7 +245,6 @@ void ComponentTrail::Render()
 {
 	if (active && trail_texture)
 	{
-
 		GLuint shader_program = App->program->UseProgram("Trail");
 		glUseProgram(shader_program);
 
@@ -264,8 +267,10 @@ void ComponentTrail::Render()
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		glUniform4fv(glGetUniformLocation(shader_program, "color"), 1, color.ptr());
-
+		glUniform4fv(glGetUniformLocation(shader_program, "color_blend"), 1, color_to_blend.ptr());
 		glUniform1f(glGetUniformLocation(shader_program, "emissive_intensity"), emissive_intensity);
+		glUniform1f(glGetUniformLocation(shader_program, "percentage"), blend_percentage);
+		glUniform1f(glGetUniformLocation(shader_program, "smooth_step"), smoothening_step);
 
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size());
 		glBindVertexArray(0);
@@ -342,28 +347,34 @@ void ComponentTrail::SpecializedSave(Config& config) const
 	config.AddFloat(duration, "Duration");
 	config.AddUInt(texture_uuid, "TextureUUID");
 	config.AddColor(color, "Color");
-	config.AddBool(emissive, "Emissive");
 	config.AddFloat(emissive_intensity, "Emissive Intensity");
 	config.AddUInt(points_in_curve, "Curve Points");
 	config.AddInt(static_cast<int>(texture_mode), "Texture Mode");
 	config.AddUInt(rows, "Rows");
 	config.AddUInt(columns, "Columns");
+	config.AddBool(blend_colors, "Color Blend");
+	config.AddColor(color_to_blend, "Color To Blend");
+	config.AddFloat(blend_percentage, "Portion Color 2");
+	config.AddFloat(smoothening_step, "Smoothening Step");
 }
 void ComponentTrail::SpecializedLoad(const Config& config)
 {
-	width = config.GetFloat("Width", 0.1f);
+	width = config.GetFloat("Width", 1.0f);
 	duration = config.GetFloat("Duration", 1000.0f);
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
 	texture_uuid = config.GetUInt("TextureUUID", 0);
 	ChangeTexture(texture_uuid);
 	config.GetColor("Color", color, float4(1.0f, 1.0f, 1.0f, 1.0f));
-	emissive = config.GetBool("Emissive", false);
 	emissive_intensity = config.GetFloat("Emissive Intensity", 1.f);
 	points_in_curve = config.GetUInt("Curve Points", 5);
 	texture_mode = static_cast<TextureMode>(config.GetInt("Texture Mode", static_cast<int>(TextureMode::STRETCH)));
 	rows = config.GetUInt("Rows", 1);
 	columns = config.GetUInt("Columns", 1);
+	blend_colors = config.GetBool("Color Blend", false);
+	config.GetColor("Color To Blend", color_to_blend, float4(1.0f, 1.0f, 1.0f, 1.0f));
+	blend_percentage = config.GetFloat("Portion Color 2", 0.5f);
+	smoothening_step = config.GetFloat("Smoothening Step", 0.3f);
 }
 
 void ComponentTrail::Disable()
