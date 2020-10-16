@@ -23,17 +23,22 @@ public:
 		GLbitfield mask = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT
 	) const;
 
+	GLint GetDepthAttachement() const;
+
 	void SetMultiSampled(bool multisampled);
+
+	void CheckCompleteness() const;
 
 private:
 	void GenerateColorAttachement(float width, float height);
-	void GenerateDepthAttachement(float width, float height);
+	void GenerateDepthStencilAttachement(float width, float height);
 	void LinkAttachements() const;
 
 protected:
 	GLuint fbo = 0;
 	GLuint rbo = 0;
 	GLuint color_attachements[5];
+	GLuint depth_stencil_attachement;
 
 	int num_color_attachements = 1;
 	bool multisampled = false;
