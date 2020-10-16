@@ -1,6 +1,8 @@
 const float gamma = 2.2;
 const float W = 11.2;
 
+const float LOG2 = 1.442695;
+
 #if ENABLE_MSAA
 uniform sampler2DMS screen_texture;
 uniform sampler2DMS normal_map; // in view space
@@ -16,8 +18,20 @@ uniform sampler2D ssr_value_map;
 uniform sampler2D brightness_texture;
 
 uniform float exposure;
-uniform float zNear;
-uniform float zFar;
+#if ENABLE_FOG
+
+  #if ENABLE_MSAA
+uniform sampler2DMS depth_texture;
+  #else
+uniform sampler2D depth_texture;
+  #endif
+#endif
+
+uniform float z_near;
+uniform float z_far;
+uniform float fog_density;
+uniform vec4 fog_color;
+
 
 in vec2 texCoord;
 layout (location = 0) out vec4 FragColor;
@@ -70,7 +84,7 @@ vec4 GetCoordinatesInScreenSpace(vec3 in_coordinates)
 
 float linearize_depth(float d)
 {
-    return zNear * zFar / (zFar + abs(d) * (zNear - zFar)); // abs because z is negative in right handed system
+	 return z_near * z_far / (z_far + abs(d) * (z_near - z_far)); // abs because z is negative in right handed system
 }
 
 vec3 BinarySearch(inout vec3 direction, inout vec3 hit_coordinate)
@@ -124,8 +138,16 @@ vec4 RayCast(vec3 direction,vec3 hit_coordinate) {
 
 void main()
 {
+
   vec4 fragment_color = GetTexture( screen_texture,texCoord);
 
+ #if ENABLE_FOG
+  float fragment_depth = GetTexture( depth_texture,texCoord).r;
+	fragment_depth =  (2.0 * z_near) / (z_far + z_near - fragment_depth * (z_far - z_near));
+  float fog_factor = exp2(- fog_density * fog_density * fragment_depth * fragment_depth * LOG2);
+  fog_factor = clamp(fog_factor, 0.0, 1.0);
+  fragment_color = mix(fog_color, fragment_color, fog_factor);
+#endif
 #if ENABLE_BLOOM
   vec4 brightness_color = texture(brightness_texture, texCoord);
   fragment_color += brightness_color;
@@ -137,7 +159,7 @@ void main()
 
 	float reflection_strength = GetTexture(ssr_value_map, texCoord).r;
 
-	vec3 reflection_texture ;
+	vec3 reflection_texture = vec3(0.0);
 
 	if(reflection_strength > 0.0)
 	{
