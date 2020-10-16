@@ -495,7 +495,8 @@ void Viewport::HDRPass() const
 	}
 	glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
 	glUniform1f(glGetUniformLocation(program, "exposure"), App->renderer->exposure);
-
+	glUniform1f(glGetUniformLocation(program, "z_near"), camera->GetNearDistance());
+	glUniform1f(glGetUniformLocation(program, "z_far"), camera->GetFarDistance());
 	if (bloom)
 	{
 		glActiveTexture(GL_TEXTURE1);
@@ -521,8 +522,6 @@ void Viewport::HDRPass() const
 		}
 		glUniform4fv(glGetUniformLocation(program, "fog_color"), 1, App->renderer->fog_color.ptr());
 		glUniform1f(glGetUniformLocation(program, "fog_density"), App->renderer->fog_density);
-		glUniform1f(glGetUniformLocation(program, "z_near"), camera->GetNearDistance());
-		glUniform1f(glGetUniformLocation(program, "z_far"), camera->GetFarDistance());
 	}
 	
 	scene_quad->RenderArray();
