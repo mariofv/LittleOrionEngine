@@ -113,8 +113,8 @@ void PanelTrail::Render(ComponentTrail* trail)
 			if (trail->blend_colors)
 			{
 				trail->modified_by_user |= ImGui::ColorEdit4("Color Blend", trail->color_to_blend.ptr());
-				trail->modified_by_user |= ImGui::DragFloat("Color Percentage Change", &trail->blend_percentage, 0.1f, 0.0f, 1.0F);
-				trail->modified_by_user |= ImGui::DragFloat("Fading Percentage", &trail->smoothening_step, 0.01f, 0.1f, 1.0F);
+				trail->modified_by_user |= ImGui::DragFloat("Fraction Color 2", &trail->blend_percentage, 0.1f, 0.0f, 1.0F);
+				trail->modified_by_user |= ImGui::DragFloat("Blending Width", &trail->smoothening_step, 0.01f, 0.1f, 1.0F);
 			}
 		}
 	}
