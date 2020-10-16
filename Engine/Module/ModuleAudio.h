@@ -38,6 +38,8 @@ public:
 	ENGINE_API void SetRTPCValue(const std::string& name, int value);
 	ENGINE_API void ResetRTPCValues(const std::string& name);
 
+	int volume = 100;
+
 public:
 	const AkGameObjectID default_listener = 0;
 	ComponentAudioListener * main_listener = nullptr;
