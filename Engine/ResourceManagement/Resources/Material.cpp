@@ -293,6 +293,7 @@ std::shared_ptr<Material> Material::GetInstance()
 	App->resources->loading_thread_communication.load_scene_asyncronously = false;
 	std::shared_ptr<Material> new_instance = std::make_shared<Material>(uuid);
 	new_instance->Load(material_config);
+	new_instance->dissolve_progress = dissolve_progress;
 	App->resources->loading_thread_communication.load_scene_asyncronously = MULTITHREADING;
 	return new_instance;
 }
