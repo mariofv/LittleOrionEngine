@@ -79,7 +79,7 @@ void Skybox::Render(const ComponentCamera& camera) const
 	glBindVertexArray(vao);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
-	glUniform1i(glGetUniformLocation(shader_program, "skybox_texture"), 0);
+	glUniform1i(glGetUniformLocation(shader_program, "skybox"), 0);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
 
