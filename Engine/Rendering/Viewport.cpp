@@ -25,7 +25,9 @@ Viewport::Viewport(int options) : viewport_options(options)
 	scene_quad = new Quad(2.f);
 	scene_quad->InitQuadUI();
 
-	framebuffers.emplace_back(scene_fbo = new FrameBuffer(2));
+
+	framebuffers.emplace_back(scene_fbo = new FrameBuffer(5));
+
 	framebuffers.emplace_back(ping_fbo = new FrameBuffer());
 	framebuffers.emplace_back(pong_fbo = new FrameBuffer());
 	framebuffers.emplace_back(debug_depth_map_fbo = new FrameBuffer());
@@ -137,6 +139,10 @@ void Viewport::MeshRenderPass() const
 	scene_fbo->Bind();
 	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0, camera->camera_clear_color);
 	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT1);
+	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT2);
+	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT3);
+	scene_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT4);
+
 
 	if (camera->HasSkybox())
 	{
@@ -144,8 +150,8 @@ void Viewport::MeshRenderPass() const
 		SkyboxPass();
 	}
 
-	static GLenum attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-	glDrawBuffers(2, attachments);
+	static GLenum attachments[5] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3,GL_COLOR_ATTACHMENT4 };
+	glDrawBuffers(5, attachments);
 
 	num_rendered_triangles = 0;
 	num_rendered_vertices = 0;
@@ -158,7 +164,7 @@ void Viewport::MeshRenderPass() const
 
 	for (auto& opaque_mesh_renderer : opaque_mesh_renderers)
 	{
-		if (opaque_mesh_renderer.mesh_renderer->mesh_to_render != nullptr 
+		if (opaque_mesh_renderer.mesh_renderer->mesh_to_render != nullptr
 			&& opaque_mesh_renderer.mesh_renderer->material_to_render != nullptr
 			&& opaque_mesh_renderer.mesh_renderer->IsEnabled()
 		)
@@ -364,17 +370,17 @@ void Viewport::BloomPass()
 	{
 		return;
 	}
-	
+
 	scene_fbo->Bind(GL_READ_FRAMEBUFFER);
 	glReadBuffer(GL_COLOR_ATTACHMENT1);
 	blit_fbo->Bind(GL_DRAW_FRAMEBUFFER);
 	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	FrameBuffer::UnBind();
-	
+
 	FrameBuffer* current_fbo = ping_fbo;
 	FrameBuffer* other_fbo = pong_fbo;
-	
+
 	current_fbo->Bind();
 	current_fbo->ClearColorAttachement(GL_COLOR_ATTACHMENT0);
 	other_fbo->Bind();
@@ -423,6 +429,10 @@ void Viewport::HDRPass() const
 	{
 		shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_MSAA;
 	}
+	if (fog)
+	{
+		shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_FOG;
+	}
 	if (hdr)
 	{
 		shader_variation |= (int)ModuleProgram::ShaderVariation::ENABLE_HDR;
@@ -452,21 +462,67 @@ void Viewport::HDRPass() const
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, scene_fbo->GetColorAttachement());
 		glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, scene_fbo->GetColorAttachement(2));
+		glUniform1i(glGetUniformLocation(program, "normal_map"), 2);
+
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, scene_fbo->GetColorAttachement(3));
+		glUniform1i(glGetUniformLocation(program, "position_map"), 3);
+
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, scene_fbo->GetColorAttachement(4));
+		glUniform1i(glGetUniformLocation(program, "ssr_value_map"), 4);
 	}
 	else
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement());
 		glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(2));
+		glUniform1i(glGetUniformLocation(program, "normal_map"), 2);
+
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(3));
+		glUniform1i(glGetUniformLocation(program, "position_map"), 3);
+
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, scene_fbo->GetColorAttachement(4));
+		glUniform1i(glGetUniformLocation(program, "ssr_value_map"), 4);
 	}
-	glUniform1i(glGetUniformLocation(program, "screen_texture"), 0);
 	glUniform1f(glGetUniformLocation(program, "exposure"), App->renderer->exposure);
+
+	glUniform1f(glGetUniformLocation(program, "z_near"), camera->GetNearDistance());
+	glUniform1f(glGetUniformLocation(program, "z_far"), camera->GetFarDistance());
 
 	if (bloom)
 	{
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, ping_pong_fbo->GetColorAttachement());
 		glUniform1i(glGetUniformLocation(program, "brightness_texture"), 1);
+	}
+
+	if (fog)
+	{
+		if (antialiasing)
+		{
+			glActiveTexture(GL_TEXTURE5);
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, scene_fbo->GetDepthAttachement());
+			glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_DEPTH_STENCIL_TEXTURE_MODE, GL_DEPTH_COMPONENT);
+			glUniform1i(glGetUniformLocation(program, "depth_texture"), 5);
+		}
+		else
+		{
+			glActiveTexture(GL_TEXTURE5);
+			glBindTexture(GL_TEXTURE_2D, scene_fbo->GetDepthAttachement());
+			glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_STENCIL_TEXTURE_MODE, GL_DEPTH_COMPONENT);
+			glUniform1i(glGetUniformLocation(program, "depth_texture"), 5);
+		}
+		glUniform4fv(glGetUniformLocation(program, "fog_color"), 1, App->renderer->fog_color.ptr());
+		glUniform1f(glGetUniformLocation(program, "fog_density"), App->renderer->fog_density);
 	}
 
 	scene_quad->RenderArray();
@@ -518,6 +574,11 @@ void Viewport::SetHDR(bool hdr)
 void Viewport::SetBloom(bool bloom)
 {
 	this->bloom = bloom;
+}
+
+void Viewport::SetFog(bool fog)
+{
+	this->fog = fog;
 }
 
 void Viewport::SetOutput(ViewportOutput output)

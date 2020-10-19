@@ -45,7 +45,7 @@ public:
 	ENGINE_API float3 GetRotationRadiants() const;
 	ENGINE_API void SetRotation(const float3x3& rotation);
 	ENGINE_API void SetRotation(const float3& rotation);
-	void SetRotationRad(const float3& rotation);
+	ENGINE_API void SetRotationRad(const float3& rotation);
 	ENGINE_API void SetRotation(const Quat& rotation);
 
 	ENGINE_API void SetGlobalMatrixRotation(const float3x3& rotation);

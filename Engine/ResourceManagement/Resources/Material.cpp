@@ -13,6 +13,12 @@
 
 #include "ResourceManagement/Metafile/Metafile.h"
 
+Material::Material()
+{
+	textures.resize(MAX_MATERIAL_TEXTURE_TYPES);
+	textures_uuid.resize(MAX_MATERIAL_TEXTURE_TYPES);
+}
+
 Material::Material(uint32_t uuid) : Resource(uuid)
 {
 	textures.resize(MAX_MATERIAL_TEXTURE_TYPES);
@@ -80,6 +86,7 @@ void Material::Save(Config& config) const
 	config.AddFloat(smoothness, "Smoothness");
 	config.AddFloat(emissive_intensity, "Emissive Intensity");
 	config.AddFloat(transparency, "Transparency");
+	config.AddFloat(reflection_strength, "Reflection");
 
 
 	config.AddFloat2(tiling, "Tiling");
@@ -111,6 +118,7 @@ void Material::Load(const Config& config)
 	material_type = static_cast<MaterialType>(config.GetInt("MaterialType", 0));
 
 	transparency = config.GetFloat("Transparency", 1.f);
+	reflection_strength = config.GetFloat("Reflection", 0.f);
 	smoothness = config.GetFloat("Smoothness", 1.f);
 	emissive_intensity = config.GetFloat("Emissive Intensity", 1.f);
 
@@ -271,4 +279,21 @@ unsigned int Material::GetShaderVariation() const
 void Material::SetDissolveProgress(float progress)
 {
 	dissolve_progress = progress;
+}
+
+void Material::SetFinalAddedColor(const float4& final_added_color)
+{
+	this->final_added_color = final_added_color;
+}
+
+std::shared_ptr<Material> Material::GetInstance()
+{
+	Config material_config;
+	Save(material_config);
+	App->resources->loading_thread_communication.load_scene_asyncronously = false;
+	std::shared_ptr<Material> new_instance = std::make_shared<Material>(uuid);
+	new_instance->Load(material_config);
+	new_instance->dissolve_progress = dissolve_progress;
+	App->resources->loading_thread_communication.load_scene_asyncronously = MULTITHREADING;
+	return new_instance;
 }

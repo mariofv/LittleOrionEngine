@@ -37,6 +37,7 @@ public:
 	void SetAntialiasing(bool antialiasing);
 	void SetHDR(bool hdr);
 	void SetBloom(bool bloom);
+	void SetFog(bool fog);
 
 	void SetOutput(ViewportOutput output);
 
@@ -105,6 +106,7 @@ private:
 	bool antialiasing = false;
 	bool hdr = false;
 	bool bloom = false;
+	bool fog = false;
 };
 
 #endif //_VIEWPORT_H_

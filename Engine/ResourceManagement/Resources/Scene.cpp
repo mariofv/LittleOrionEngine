@@ -90,6 +90,9 @@ void Scene::Save(GameObject* gameobject_to_save) const
 	scene_config.AddFloat(App->renderer->exposure, "Exposure");
 	scene_config.AddBool(App->renderer->bloom, "Bloom");
 	scene_config.AddInt(App->renderer->amount_of_blur, "Amount of Blur");
+	scene_config.AddBool(App->renderer->fog_enabled, "Fog");
+	scene_config.AddFloat(App->renderer->fog_density, "Fog Density");
+	scene_config.AddColor(App->renderer->fog_color, "Fog Color");
 }
 
 void Scene::Load(bool from_file)
@@ -176,6 +179,9 @@ void Scene::Load(bool from_file)
 	App->renderer->SetBloom(scene_config.GetBool("Bloom", true));
 	App->renderer->amount_of_blur = scene_config.GetInt("Amount of Blur", 10);
 	App->renderer->exposure = scene_config.GetFloat("Exposure", 1.f);
+	App->renderer->fog_enabled = scene_config.GetBool("Fog", false);
+	App->renderer->fog_density = scene_config.GetFloat("Fog Density", 1.0f);
+	scene_config.GetColor("Fog Color", App->renderer->fog_color, float4::zero);
 	App->scripts->ReLink();
 	App->animations->UpdateAnimationMeshes();
 }

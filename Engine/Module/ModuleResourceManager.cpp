@@ -439,15 +439,10 @@ bool ModuleResourceManager::RetrieveFileDataByUUID(uint32_t uuid, FileData& file
 
 void ModuleResourceManager::RefreshResourceCache()
 {
-	const auto it = std::remove_if(resource_cache.begin(), resource_cache.end(), [](const std::shared_ptr<Resource> & resource) {
+	//Erase Resource Cache
+	resource_cache.erase(std::remove_if(resource_cache.begin(), resource_cache.end(), [](const std::shared_ptr<Resource> & resource) {
 		return resource.use_count() == 1;
-	});
-
-	if (it != resource_cache.end())
-	{
-		//Erase Resource Cache
-		resource_cache.erase(it, resource_cache.end());
-	}
+	}), resource_cache.end());
 }
 void ModuleResourceManager::AddResourceToCache(std::shared_ptr<Resource> resource)
 {
