@@ -588,14 +588,14 @@ ENGINE_API bool ComponentParticleSystem::IsPlaying() const
 
 bool ComponentParticleSystem::HasToDrawParticleSystem() const
 {
+	if (App->time->isGameRunning() || App->renderer->game_viewport->effects_draw_all)
+	{
+		return true;
+	}
+
 	if (App->editor->selected_game_object == nullptr)
 	{
 		return false;
-	}
-
-	if (App->renderer->game_viewport->effects_draw_all || App->time->isGameRunning())
-	{
-		return true;
 	}
 
 	return App->editor->selected_game_object->UUID == owner->UUID;
