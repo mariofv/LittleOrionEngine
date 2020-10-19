@@ -344,7 +344,7 @@ bool ComponentBillboard::HasToDrawBillboard() const
 		return true;
 	}
 
-	if (App->editor->selected_game_object == nullptr)
+	if (!owner->IsEnabled() || App->editor->selected_game_object == nullptr)
 	{
 		return false;
 	}
