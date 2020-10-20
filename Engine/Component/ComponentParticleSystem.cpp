@@ -581,6 +581,11 @@ ENGINE_API bool ComponentParticleSystem::IsEmitting() const
 	return emitting;
 }
 
+ENGINE_API bool ComponentParticleSystem::HasParticlesAlive() const
+{
+	return num_of_alive_particles > 0;
+}
+
 ENGINE_API bool ComponentParticleSystem::IsPlaying() const
 {
 	return playing;

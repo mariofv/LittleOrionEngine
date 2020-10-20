@@ -122,8 +122,9 @@ public:
 
 	void CalculateGravityVector();
 
-	ENGINE_API bool IsEmitting() const;
 	ENGINE_API bool IsPlaying() const;
+	ENGINE_API bool IsEmitting() const;
+	ENGINE_API bool HasParticlesAlive() const;
 
 	bool HasToDrawParticleSystem() const;
 
