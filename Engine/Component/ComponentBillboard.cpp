@@ -341,15 +341,20 @@ bool ComponentBillboard::HasToDrawBillboard() const
 {
 	if (App->time->isGameRunning() || App->renderer->game_viewport->effects_draw_all)
 	{
-		return true;
+		return owner->IsEnabled();
 	}
 
-	if (!owner->IsEnabled() || App->editor->selected_game_object == nullptr)
+	if (App->editor->selected_game_object == nullptr)
 	{
 		return false;
 	}
 
-	return App->editor->selected_game_object->UUID == owner->UUID;
+	if (owner->IsEnabled())
+	{
+		return App->editor->selected_game_object->UUID == owner->UUID;
+	}
+
+	return false;
 }
 
 void ComponentBillboard::Disable()
