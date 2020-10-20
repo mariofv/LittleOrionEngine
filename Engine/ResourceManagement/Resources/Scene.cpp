@@ -179,7 +179,7 @@ void Scene::Load(bool from_file)
 	App->renderer->SetBloom(scene_config.GetBool("Bloom", true));
 	App->renderer->amount_of_blur = scene_config.GetInt("Amount of Blur", 10);
 	App->renderer->exposure = scene_config.GetFloat("Exposure", 1.f);
-	App->renderer->fog_enabled = scene_config.GetBool("Fog", false);
+	App->renderer->SetFog(scene_config.GetBool("Fog", false));
 	App->renderer->fog_density = scene_config.GetFloat("Fog Density", 1.0f);
 	scene_config.GetColor("Fog Color", App->renderer->fog_color, float4::zero);
 	App->scripts->ReLink();
