@@ -38,6 +38,8 @@ PanelProjectExplorer::PanelProjectExplorer()
 
 void PanelProjectExplorer::Render()
 {
+	BROFILER_CATEGORY("Render Project Explorer", Profiler::Color::BlueViolet);
+
 	if (ImGui::Begin(ICON_FA_FOLDER " Project Explorer", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
@@ -249,6 +251,8 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 
 void PanelProjectExplorer::SearchFilesInExplorer(Path* path)
 {
+	BROFILER_CATEGORY("SearchFilesInExplorer", Profiler::Color::BlueViolet);
+
 	transform(searching_file.begin(), searching_file.end(), searching_file.begin(), ::tolower);
 	for (auto & child_path : path->children)
 	{
@@ -282,6 +286,8 @@ void PanelProjectExplorer::CalculateNextLinePosition(int &current_file_in_line, 
 
 void PanelProjectExplorer::ShowMetafile(Path* metafile_path, Metafile* metafile,const std::string& filename)
 {
+	BROFILER_CATEGORY("ShowMetafile", Profiler::Color::BlueViolet);
+
 	bool is_model = metafile->resource_type == ResourceType::MODEL;
 
 	float size_plus = is_model ? 30.f : 0.f;
@@ -326,6 +332,7 @@ void PanelProjectExplorer::ShowMetafile(Path* metafile_path, Metafile* metafile,
 
 void PanelProjectExplorer::ShowMetafileIcon(Metafile * metafile)
 {
+	BROFILER_CATEGORY("Show metafile icon", Profiler::Color::BlueViolet);
 
 	ImGui::SetWindowFontScale(2);
 
@@ -414,6 +421,8 @@ size_t PanelProjectExplorer::GetResourcePreviewImage(uint32_t uuid)
 
 void PanelProjectExplorer::ShowSearchedFiles()
 {
+	BROFILER_CATEGORY("ShowSearchedFiles", Profiler::Color::BlueViolet);
+
 	ImVec2 available_region = ImGui::GetContentRegionAvail();
 	int files_per_line = static_cast<int>(available_region.x / file_size_width);
 
