@@ -245,7 +245,7 @@ void ComponentTransform::OnTransformChange()
 		child->transform.OnTransformChange();
 	}
 	owner->aabb.GenerateBoundingBox();
-	App->event_manager->Publish(new Event(owner));
+	//App->event_manager->Publish(new Event(owner));
 }
 
 float4x4 ComponentTransform::GetModelMatrix() const
