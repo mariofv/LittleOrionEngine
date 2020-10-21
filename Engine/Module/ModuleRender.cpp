@@ -263,6 +263,16 @@ void ModuleRender::SetFog(bool fog_enabled)
 	game_viewport->SetFog(fog_enabled);
 }
 
+void ModuleRender::SetFogDensity(float fog_density)
+{
+	this->fog_density = fog_density;
+}
+
+void ModuleRender::SetFogColor(const float4& fog_color)
+{
+	this->fog_color = fog_color;
+}
+
 void ModuleRender::SetShadows(bool shadows_enabled)
 {
 	this->shadows_enabled = shadows_enabled;
