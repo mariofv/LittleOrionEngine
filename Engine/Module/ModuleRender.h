@@ -71,6 +71,8 @@ public:
 	ENGINE_API void SetHDR(bool hdr);
 	ENGINE_API void SetBloom(bool bloom);
 	ENGINE_API void SetFog(bool fog_enabled);
+	ENGINE_API void SetFogDensity(float fog_density);
+	ENGINE_API void SetFogColor(const float4&  fog_color);
 	ENGINE_API void SetShadows(bool shadows_enabled);
 
 private:
