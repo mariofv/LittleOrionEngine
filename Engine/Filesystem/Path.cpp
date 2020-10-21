@@ -95,7 +95,7 @@ Path* Path::Save(const char* file_name, const FileData& data, bool append)
 		saved_file_path = App->filesystem->GetPath(saved_file_path_string);
 	}
 
-	free((void*)data.buffer);
+	delete[] data.buffer;
 
 	return saved_file_path;
 }

@@ -38,7 +38,7 @@ FileData File::Load() const
 
 	if (length_read != res_size)
 	{
-		free(res);
+		delete[] res;
 		APP_LOG_ERROR("Error loading file %s", file_path->GetFullPath().c_str())
 
 		loaded_data.size = 0;
