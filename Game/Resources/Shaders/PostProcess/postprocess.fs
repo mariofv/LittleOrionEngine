@@ -5,7 +5,7 @@ const float LOG2 = 1.442695;
 
 const int MAX_BINARY_SEARCH_COUNT = 10;
 const int MAX_NUMBER_INCREMENTS = 100; // 60
-const float MAX_Z_VALUE = -0.1; // 0.025
+const float MAX_Z_VALUE = -0.002; // 0.025
 const float MIN_Z_VALUE = -0.001; // 0.025
 const float MIN_RAY_STEP = 0.2;
 
