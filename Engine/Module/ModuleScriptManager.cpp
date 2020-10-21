@@ -38,7 +38,7 @@ update_status ModuleScriptManager::Update()
 			BROFILER_CATEGORY("AwakeScript", Profiler::Color::CadetBlue);
 			if (scripts[i]->active && !scripts[i]->awaken)
 			{
-				//scripts[i]->AwakeScript();
+				scripts[i]->AwakeScript();
 			}
 		}
 
@@ -47,11 +47,11 @@ update_status ModuleScriptManager::Update()
 			BROFILER_CATEGORY("StartScript", Profiler::Color::DeepSkyBlue);
 			if (scripts[i]->active && scripts[i]->awaken && !scripts[i]->started)
 			{
-				//scripts[i]->StartScript();
+				scripts[i]->StartScript();
 			}
 		}
 
-		//RunScripts();
+		RunScripts();
 	}
 
 #if !GAME
