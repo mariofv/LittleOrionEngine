@@ -88,6 +88,7 @@ public:
 
 	bool shadows_pass = false;
 	bool effects_pass = true;
+	bool effects_draw_all = false;
 	bool debug_pass = true;
 	bool debug_draw_pass = true;
 

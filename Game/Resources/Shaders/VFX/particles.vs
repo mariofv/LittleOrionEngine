@@ -44,7 +44,7 @@ struct Particle
 	
 	float orbit_random;
     float random_velocity_percentage;
-    float float3;
+    float random_size_percentage;
     float float4;
 };
 
