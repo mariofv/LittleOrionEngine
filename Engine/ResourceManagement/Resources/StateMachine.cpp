@@ -227,10 +227,16 @@ void StateMachine::Save(Config& config) const
 	for (auto& clip : clips)
 	{
 		Config clip_config;
-		clip_config.AddUInt(clip->animation->GetUUID(), "AnimationUUID");
-		clip_config.AddString(clip->name, "Name");
-		clip_config.AddBool(clip->loop, "Loop");
-		clips_config.push_back(clip_config);
+		if (clip != nullptr)
+		{
+			if (clip->animation != nullptr)
+			{
+				clip_config.AddUInt(clip->animation->GetUUID(), "AnimationUUID");
+			}
+			clip_config.AddString(clip->name, "Name");
+			clip_config.AddBool(clip->loop, "Loop");
+			clips_config.push_back(clip_config);
+		}
 	}
 	config.AddChildrenConfig(clips_config, "Clips");
 
@@ -421,10 +427,14 @@ void StateMachine::LoadNames(const Config & config)
 		uint64_t name_hash = (std::hash<std::string>{}(name));
 		for (auto & clip : clips)
 		{
-			if (clip->name_hash == name_hash)
+			if (clip != nullptr)
 			{
-				clip->name = name;
+				if (clip->name_hash == name_hash)
+				{
+					clip->name = name;
+				}
 			}
+			
 		}
 	}
 
