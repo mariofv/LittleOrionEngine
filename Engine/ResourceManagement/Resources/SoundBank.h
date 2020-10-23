@@ -20,7 +20,7 @@ public:
 private:
 	AkBankID bank_id = 0;
 	AkGameObjectID game_obj = 0;
-	char * aligned_buffer;
+	char * aligned_buffer = nullptr;
 	char * cursor;
 	size_t aligned_buffer_size = 0;
 };

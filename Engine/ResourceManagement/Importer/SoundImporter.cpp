@@ -49,7 +49,7 @@ void SoundImporter::GenerateSoundBankEventsInfo() const
 	FileData file_imported_data = App->filesystem->GetPath(SOUNDBANKS_XML_PATH)->GetFile()->Load();
 	std::string file_data;
 	file_data.assign(static_cast <const char*> (file_imported_data.buffer), file_imported_data.size);
-	free((void*)file_imported_data.buffer);
+	delete[] file_imported_data.buffer;
 
 	rapidxml::xml_document<> soundbanks_info_xml;
 	soundbanks_info_xml.parse<0>(&file_data[0]);

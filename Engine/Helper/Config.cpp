@@ -13,7 +13,7 @@ Config::Config()
 Config::Config(FileData & data)
 {
 	std::string serialized_string((char*)data.buffer, data.size);
-	free((char*)data.buffer);
+	delete[] data.buffer;
 	config_document.Parse(serialized_string.c_str());
 	allocator = &config_document.GetAllocator();
 }
