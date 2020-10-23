@@ -53,7 +53,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 			{
 				particle_system->Emit(emit_count);
 			}
-			if (ImGui::Button("Start"))
+			if (ImGui::Button("Play"))
 			{
 				particle_system->Play();
 			}
@@ -144,7 +144,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 		if (ImGui::CollapsingHeader("Emission"))
 		{
 			ImGui::Spacing();
-			particle_system->modified_by_user |= ImGui::DragFloat("Time Between Particles", &particle_system->time_between_particles, 0.1F, 0.0F, 10.0f);
+			particle_system->modified_by_user |= ImGui::DragFloat("Time Between Particles", &particle_system->time_between_particles, 0.001F, 0.00001F, 10.0f, "%.5f");
 			ImGui::Spacing();
 		}
 
@@ -240,7 +240,7 @@ void PanelParticleSystem::Render(ComponentParticleSystem* particle_system)
 				break;
 			case ComponentParticleSystem::TypeOfSizeColorChange::COLOR_LINEAR:
 				particle_system->modified_by_user |= ImGui::ColorEdit4("Particle Color To Fade##2f", particle_system->color_to_fade.ptr(), ImGuiColorEditFlags_Float);
-				particle_system->modified_by_user |= ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
+				particle_system->modified_by_user |= ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, particle_system->particles_life_time);
 				break;
 			case ComponentParticleSystem::TypeOfSizeColorChange::COLOR_CURVE:
 				particle_system->modified_by_user |= ImGui::ColorEdit4("Particle Color To Fade##2f", particle_system->color_to_fade.ptr(), ImGuiColorEditFlags_Float);

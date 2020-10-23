@@ -70,6 +70,8 @@ public:
 	ENGINE_API void SetOrientation(bool is_oriented);
 	ENGINE_API void SetAnimationTime(size_t time);
 
+	bool HasToDrawBillboard() const;
+
 private:
 	unsigned int GetBillboardVariation();
 

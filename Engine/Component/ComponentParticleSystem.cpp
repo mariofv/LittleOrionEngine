@@ -1,9 +1,12 @@
 #include "ComponentParticleSystem.h"
 
 #include "Main/Application.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
+#include "Rendering/Viewport.h"
 
 #include "Component/ComponentBillboard.h"
 #include "GL/glew.h"
@@ -131,17 +134,23 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	particle.time_passed = 0.0F;
 
 	particle.geometric_space = float4x4::FromTRS(owner->transform.GetGlobalTranslation(), owner->transform.GetGlobalRotation(), float3::one);
-	particle.inital_random_orbit = rand();
+	
+	if (orbit)
+	{
+		particle.orbit_random = rand();
+		particle.position.z += sin(particle.orbit_random);
+		particle.position.x += cos(particle.orbit_random);
+	}
+	
 	particle.random_velocity_percentage = (float)rand() / RAND_MAX;
 	particle.random_size_percentage = (float)rand() / RAND_MAX;
 }
 
 void ComponentParticleSystem::Render()
 {
-
 	BROFILER_CATEGORY("Particle Render", Profiler::Color::OrangeRed);
 
-	if (active && playing && billboard->billboard_texture != nullptr && billboard->billboard_texture->initialized)
+	if (active && billboard->billboard_texture != nullptr && billboard->billboard_texture->initialized && num_of_alive_particles > 0)
 	{
 		unsigned int variation = GetParticlesSystemVariation();
 		shader_program = App->program->UseProgram("Particles", variation);
@@ -162,17 +171,31 @@ void ComponentParticleSystem::Render()
 
 void ComponentParticleSystem::Update()
 {
+	if (!HasToDrawParticleSystem())
+	{
+		return;
+	}
+
 	if (active && playing)
 	{
-		time_counter += App->time->real_time_delta_time;
-
-		if (time_counter >= (time_between_particles * 1000))
+		if (loop && emitting)
 		{
-			if (loop)
+			time_counter += App->time->real_time_delta_time;
+
+			if (time_counter >= (time_between_particles * 1000))
 			{
-				int unused_particle = FirstUnusedParticle();
-				RespawnParticle(particles[unused_particle]);
-				time_counter = 0.0F;
+				int spawning_count = time_counter / (time_between_particles * 1000);
+				int unused_particle = 0;
+
+				for (int i = 0; i < spawning_count; i++)
+				{
+					unused_particle = FirstUnusedParticle();
+					if (unused_particle != 0 || particles[unused_particle].life <= 0.0f)
+					{
+						RespawnParticle(particles[unused_particle]);
+					}
+					time_counter = 0.0F;
+				}
 			}
 		}
 
@@ -180,7 +203,7 @@ void ComponentParticleSystem::Update()
 
 		// update all particles
 		num_of_alive_particles = 0;
-		for (unsigned int i = 0; i < playing_particles_number; ++i)
+		for (unsigned int i = 0; i < playing_particles_number; i++)
 		{
 			Particle& p = particles[i];
 
@@ -190,14 +213,6 @@ void ComponentParticleSystem::Update()
 				std::iter_swap(particles.begin() + i, particles.begin() + num_of_alive_particles);
 				++num_of_alive_particles;
 			}
-			else if(emitting)
-			{
-				++number_emited;
-			}
-		}
-		if (emitting && number_emited >= playing_particles_number)
-		{
-			Stop();
 		}
 	}
 }
@@ -221,9 +236,8 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 			break;
 		case TypeOfVelocityOverTime::VEL_LINEAR:
 		{
-			velocity *= velocity_over_time_speed_modifier;
-			float accel = (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * velocity_factor_mod / particles_life_time * 0.001f;
-			acceleration += particle.velocity_initial * accel;
+			float vel_perc = (velocity_over_time_speed_modifier_second - velocity_over_time_speed_modifier) * (particle.time_passed / particles_life_time * 0.001f);
+			velocity *= vel_perc + velocity_over_time_speed_modifier;
 			break;
 		}
 		case TypeOfVelocityOverTime::VEL_RANDOM_BETWEEN_TWO_CONSTANTS:
@@ -239,13 +253,14 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 	}
 
 	//update position
-	particle.position += ((velocity + vel_curve_interpolated) * time_increased) + (acceleration * time_increased * time_increased / 2);
+	particle.position += (((velocity + vel_curve_interpolated) * time_increased) + (acceleration * particle.time_passed * particle.time_passed / 2));
 
-	/*if (orbit)
+	if (orbit)
 	{
-		particle.position.z += sin((particle.time_passed *0.001f) + particle.inital_random_orbit);
-		particle.position.x += cos((particle.time_passed *0.001f) + particle.inital_random_orbit);
-	}*/
+		particle.position.z += sin((particle.time_passed * 0.001f) + particle.orbit_random) - sin(((particle.time_passed - time_increased) * 0.001f) + particle.orbit_random);
+		particle.position.x += cos((particle.time_passed * 0.001f) + particle.orbit_random) - cos(((particle.time_passed - time_increased) * 0.001f) + particle.orbit_random);
+	}
+
 	//alpha fade
 	if (fade)
 	{
@@ -260,7 +275,11 @@ void ComponentParticleSystem::UpdateParticle(Particle& particle)
 		break;
 	case TypeOfSizeColorChange::COLOR_LINEAR:
 	{
+		color_fade_time = color_fade_time > particles_life_time ? particles_life_time : color_fade_time;
+
 		float progress = particle.time_passed * 0.001f / color_fade_time;
+		progress = progress > 1 ? 1 : progress;
+		
 		particle.color = float4::Lerp(initial_color, color_to_fade, progress);
 		break;
 	}
@@ -506,59 +525,37 @@ void ComponentParticleSystem::CopyTo(Component* component_to_copy) const
 void ComponentParticleSystem::Emit(size_t count)
 {
 	playing = true;
-	emitting = true;
-	number_emited = 0;
-	if (count < max_particles_number)
+	int unused_particle = 0;
+
+	for (int i = 0; i < count; i++)
 	{
-		playing_particles_number = count;
-		for (size_t i = 0; i < playing_particles_number; i++)
+		unused_particle = FirstUnusedParticle();
+		if (unused_particle != 0 || particles[unused_particle].life <= 0.0f)
 		{
-			RespawnParticle(particles[i]);
+			RespawnParticle(particles[unused_particle]);
 		}
 	}
-
 }
 
 void ComponentParticleSystem::Play()
 {
 	playing = true;
-	emitting = false;
+	emitting = true;
 	playing_particles_number = MAX_PARTICLES;
 }
 
 void ComponentParticleSystem::Stop()
 {
 	time_counter = 0.0F;
-	playing_particles_number = max_particles_number;
-	emitting = false;
-	for (unsigned int i = 0; i < max_particles_number; i++)
-	{
 
-		particles[i].life = 0.0F;
-		particles[i].particle_scale = 1.0F;
-		particles[i].time_counter = particles[i].life;
-		particles[i].time_passed = 0.0F;
-	}
-	playing = false;
+	playing = true;
+	emitting = false;
 }
 
 ENGINE_API void ComponentParticleSystem::Pause()
 {
 	playing = false;
 	emitting = false;
-}
-
-void ComponentParticleSystem::OrbitX(float angle, Particle& particle)
-{
-	float3 focus_vector = owner->transform.GetTranslation() - owner->transform.GetTranslation();
-
-	const float adjusted_angle = App->time->real_time_delta_time  * -angle;
-	Quat rotation = Quat::RotateY(adjusted_angle);
-
-	focus_vector = rotation * focus_vector;
-	auto position = focus_vector + owner->transform.GetTranslation();
-	particle.position.x = position.x;
-	particle.position.z = position.z;
 }
 
 void ComponentParticleSystem::CalculateGravityVector()
@@ -584,7 +581,32 @@ ENGINE_API bool ComponentParticleSystem::IsEmitting() const
 	return emitting;
 }
 
+ENGINE_API bool ComponentParticleSystem::HasParticlesAlive() const
+{
+	return num_of_alive_particles > 0;
+}
+
 ENGINE_API bool ComponentParticleSystem::IsPlaying() const
 {
 	return playing;
+}
+
+bool ComponentParticleSystem::HasToDrawParticleSystem() const
+{
+	if (App->time->isGameRunning() || App->renderer->game_viewport->effects_draw_all)
+	{
+		return owner->IsEnabled();
+	}
+
+	if (App->editor->selected_game_object == nullptr)
+	{
+		return false;
+	}
+
+	if (owner->IsEnabled())
+	{
+		return App->editor->selected_game_object->UUID == owner->UUID;
+	}
+
+	return false;
 }

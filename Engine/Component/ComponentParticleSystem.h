@@ -35,7 +35,7 @@ public:
 		float4x4 model;
 		float4x4 geometric_space;
 
-		float inital_random_orbit;
+		float orbit_random;
 		float random_velocity_percentage;
 		float random_size_percentage;
 		float float4;
@@ -120,15 +120,18 @@ public:
 	ENGINE_API void Stop();
 	ENGINE_API void Pause();
 
-	void OrbitX(float angle, Particle& particle);
 	void CalculateGravityVector();
 
-	ENGINE_API bool IsEmitting() const;
 	ENGINE_API bool IsPlaying() const;
+	ENGINE_API bool IsEmitting() const;
+	ENGINE_API bool HasParticlesAlive() const;
+
+	bool HasToDrawParticleSystem() const;
 
 private:
 	unsigned int GetParticlesSystemVariation();
-	bool emitting = false;
+	bool emitting = true;
+	bool playing = true;
 	size_t number_emited = 0;
 
 public:
@@ -197,8 +200,10 @@ public:
 	float color_fade_time = 1.0F;
 	BezierCurve color_curve;
 
-	bool fade = false;
+	//orbit
 	bool orbit = false;
+
+	bool fade = false;
 	float fade_time = 1.0F;
 
 	//Velocity over time
@@ -212,7 +217,6 @@ public:
 	size_t playing_particles_number = MAX_PARTICLES;
 	size_t num_of_alive_particles = 0;
 	int max_particles_number = MAX_PARTICLES;
-	bool playing = true;
 	GLuint ssbo;
 	GLuint shader_program;
 };
