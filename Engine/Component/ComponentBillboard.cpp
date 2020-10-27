@@ -106,7 +106,7 @@ void ComponentBillboard::Render(const float3& global_position)
 
 	CommonUniforms(shader_program);
 	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color"), 1, color.ptr());
-	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color_emissive"), 1, (float*)color_emissive);
+	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color_emissive"), 1, color_emissive.ptr());
 
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_x"), current_sprite_x);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.current_sprite_y"), current_sprite_y);

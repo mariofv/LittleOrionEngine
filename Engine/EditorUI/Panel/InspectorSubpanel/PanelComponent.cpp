@@ -279,7 +279,7 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 		billboard->ChangeTextureEmissive(selected_resource_uuid);
 		billboard->modified_by_user = true;
 	}
-	billboard->modified_by_user |= ImGui::ColorEdit4("Color Emissive", billboard->color_emissive);
+	billboard->modified_by_user |= ImGui::ColorEdit4("Color Emissive", billboard->color_emissive.ptr());
 	billboard->modified_by_user |= ImGui::DragFloat("Emissive Intensity", &billboard->emissive_intensity, 0.01f, 1.f, 100.f);
 
 	int alignment_type = static_cast<int>(billboard->alignment_type);
