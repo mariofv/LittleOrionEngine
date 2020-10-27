@@ -41,15 +41,22 @@ bool ModuleWindow::Init()
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
+#if !GAME
 		if (RESIZABLE)
 		{
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
-
+#endif
 		if (!BORDERED)
 		{
 			flags |= SDL_WINDOW_BORDERLESS;
 		}
+
+#if GAME
+		width = 1920;
+		height = 1080;
+		flags |= SDL_WINDOW_BORDERLESS;
+#endif
 
 		InitOpenGLAttributes();
 
