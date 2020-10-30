@@ -55,7 +55,10 @@ bool ModuleWindow::Init()
 #if GAME
 		width = 1920;
 		height = 1080;
-		flags |= SDL_WINDOW_BORDERLESS;
+		if(screen_width == width && screen_height == height)
+		{
+			flags |= SDL_WINDOW_BORDERLESS;
+		}
 #endif
 
 		InitOpenGLAttributes();
