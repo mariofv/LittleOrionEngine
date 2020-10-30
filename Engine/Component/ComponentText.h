@@ -71,6 +71,7 @@ public:
 
 	float text_width = 0;
 	float text_heigth = 0;
+	float pacing = 20.f;
 
 private:
 	GLuint program = 0;

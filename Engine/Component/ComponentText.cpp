@@ -118,7 +118,7 @@ void ComponentText::Render(float4x4* projection)
 		if (next_cursor_x > owner->transform_2d.size.x || is_jump_line)
 		{
 			is_jump_line = false;
-			float next_cursor_y = cursor_y + font->GetMaxHeight() * scale_factor;
+			float next_cursor_y = cursor_y + font->GetMaxHeight() * scale_factor + pacing;
 			if (next_cursor_y > owner->transform_2d.size.y)
 			{
 				break;
@@ -133,8 +133,8 @@ void ComponentText::Render(float4x4* projection)
 				}
 				x = GetLineStartPosition(line_sizes[current_line]);
 
-				cursor_y = font->GetMaxHeight() * scale_factor;
-				y -= font->GetMaxHeight() * scale_factor;
+				cursor_y = font->GetMaxHeight() * scale_factor + pacing;
+				y -= font->GetMaxHeight() * scale_factor + pacing;
 			}
 
 		}

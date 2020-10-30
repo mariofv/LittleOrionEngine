@@ -785,7 +785,7 @@ void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 		{
 			text->SetText(text->text);
 		}
-
+		ImGui::DragFloat("Pacing", &text->pacing);
 		ImGui::Separator();
 		ImGui::Text("Font");
 		ImGui::SameLine();
