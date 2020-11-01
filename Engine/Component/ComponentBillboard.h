@@ -85,7 +85,7 @@ public:
 	int current_sprite_x = 0;
 	int current_sprite_y = 0;
 	float4 color = float4::one;
-	float color_emissive[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float4 color_emissive = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float emissive_intensity = 1.f;
 	bool playing_once = false;
 private:
