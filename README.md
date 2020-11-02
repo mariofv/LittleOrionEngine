@@ -20,7 +20,7 @@
   </a>
 </p>
 
-![](https://github.com/Unnamed-Company/LittleOrionEngine/blob/master/Media/README_usage/engine_usage_v1_0_1.gif)
+![](https://github.com/Unnamed-Company/LittleOrionEngine/blob/develop/Media/README_usage/engine.png)
 
 ## Highlights
 - Create, save and load scenes.

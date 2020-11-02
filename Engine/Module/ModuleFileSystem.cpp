@@ -122,7 +122,7 @@ FileData ModuleFileSystem::LoadFromSystem(const std::string & load_path)
 		return loaded_data;
 
 	size_t res_size = static_cast<size_t>(SDL_RWsize(rw));
-	loaded_data.buffer = malloc(res_size + 1);
+	loaded_data.buffer = new char[res_size + 1];
 
 	size_t nb_read_total = 0, nb_read = 1;
 	char* buf = (char*) loaded_data.buffer;
@@ -133,7 +133,7 @@ FileData ModuleFileSystem::LoadFromSystem(const std::string & load_path)
 	}
 	SDL_RWclose(rw);
 	if (nb_read_total != res_size) {
-		free((void*)loaded_data.buffer);
+		delete[] loaded_data.buffer;
 		return loaded_data;
 	}
 

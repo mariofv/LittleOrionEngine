@@ -25,6 +25,8 @@ SoundBank::~SoundBank()
 
 void SoundBank::InitData(size_t data_size, const void* data)
 {
+	RESOURCES_LOG_INFO("Init sound bank");
+	assert(!aligned_buffer);
 	aligned_buffer_size = data_size + AK_BANK_PLATFORM_DATA_ALIGNMENT;
 	aligned_buffer = new char[aligned_buffer_size];
 	cursor = aligned_buffer + intptr_t(aligned_buffer) % AK_BANK_PLATFORM_DATA_ALIGNMENT;

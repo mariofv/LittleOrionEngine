@@ -27,6 +27,10 @@ public:
 			if (handler != nullptr && event->emitter == handler->suscriber)
 			{
 				handler->Execute(event);
+				if (event)
+				{
+					delete event;
+				}
 			}
 		}
 	}
