@@ -159,7 +159,7 @@ vec4 GetCoordinatesInScreenSpace(vec3 in_coordinates)
 //values between [0, z_far]
 float LinearizeDepth(float d)
 {
-	return (matrices.proj[3][2] / (abs(d) - matrices.proj[2][2]));
+	return (matrices.proj[3][2] / (abs(d) - matrices.proj[2][2])); // abs because z is negative in right handed system
 }
 
 vec3 BinarySearch(vec3 direction, vec3 hit_coordinate)
