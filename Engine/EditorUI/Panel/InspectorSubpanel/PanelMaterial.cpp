@@ -221,12 +221,11 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 			{
 				modified_by_user = true;
 			}
-			if (ImGui::SliderFloat("Reflection strength", &material->reflection_strength, 0.0f, 1.0f))
-			{
-				modified_by_user = true;
-			}
 		}
-
+		if (ImGui::SliderFloat("Reflection strength", &material->reflection_strength, 0.0f, 1.0f))
+		{
+			modified_by_user = true;
+		}
 		ImGui::Unindent();
 
 		break;

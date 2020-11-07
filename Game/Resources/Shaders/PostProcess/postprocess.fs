@@ -190,7 +190,7 @@ vec4 RayCast(vec3 direction,vec3 hit_coordinate)
 	float current_hit_distance = 0.0;
 	vec4 projectedCoord ;
 	float original_depth = LinearizeDepth(hit_coordinate.z);
-	float increase_step_limit = MAX_NUMBER_INCREMENTS/3;
+	float increase_step_limit = MAX_NUMBER_INCREMENTS - MAX_NUMBER_INCREMENTS/4;
 	float ray_cast_step = MIN_RAY_STEP;
    for (int i = 0; i < MAX_NUMBER_INCREMENTS; i++) {
 
@@ -208,7 +208,7 @@ vec4 RayCast(vec3 direction,vec3 hit_coordinate)
 			return vec4(BinarySearch(direction,current_hit_coordinate), 1.0);
 		}else if(i == increase_step_limit) // If we are almost finish and there is not hit lets make the ray bigger, maybe things are too far away
 		{
-			ray_cast_step *=3;  
+			ray_cast_step *=4;  
 		}
     }
 
