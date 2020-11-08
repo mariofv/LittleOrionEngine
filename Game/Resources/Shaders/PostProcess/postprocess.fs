@@ -4,9 +4,8 @@ const float W = 11.2;
 const float LOG2 = 1.442695;
 
 const int MAX_BINARY_SEARCH_COUNT = 10;
-const int MAX_NUMBER_INCREMENTS = 100; // 60
-const float MAX_Z_VALUE = -0.002; // 0.025
-const float MIN_Z_VALUE = -0.001; // 0.025
+const int MAX_NUMBER_INCREMENTS = 60; // 60
+const float MAX_Z_VALUE_DIFFERENCE = 0.002; // 0.025 To make sure that the ray didn't hit to far away'
 const float MIN_RAY_STEP = 0.2;
 
 #if ENABLE_MSAA
@@ -53,7 +52,7 @@ vec3 Reflections(float reflection_strength);
 
 vec4 GetCoordinatesInScreenSpace(vec3 in_coordinates);
 float LinearizeDepth(float d);
-vec3 BinarySearch(inout vec3 direction, inout vec3 hit_coordinate);
+vec3 BinarySearch(vec3 direction, vec3 hit_coordinate);
 vec4 RayCast(vec3 direction,vec3 hit_coordinate);
 
 layout (std140) uniform Matrices
@@ -65,9 +64,7 @@ layout (std140) uniform Matrices
 
 void main()
 {
-
   vec4 fragment_color = GetTexture(screen_texture,texCoord);
-
  #if ENABLE_FOG
   float fragment_depth = GetTexture(depth_texture,texCoord).r;
 	fragment_depth =  (2.0 * z_near) / (z_far + z_near - fragment_depth * (z_far - z_near));
@@ -159,60 +156,63 @@ vec4 GetCoordinatesInScreenSpace(vec3 in_coordinates)
 	return out_coordinates;
 }
 
+//values between [0, z_far]
 float LinearizeDepth(float d)
 {
-	 return z_near * z_far / (z_far + abs(d) * (z_near - z_far)); // abs because z is negative in right handed system
+	return (matrices.proj[3][2] / (abs(d) - matrices.proj[2][2])); // abs because z is negative in right handed system
 }
 
-vec3 BinarySearch(inout vec3 direction, inout vec3 hit_coordinate)
+vec3 BinarySearch(vec3 direction, vec3 hit_coordinate)
 {
-    float depth;
 
-    vec4 projectedCoord;
-
+    vec4 projectedCoord = GetCoordinatesInScreenSpace(hit_coordinate);
     for(int i = 0; i < MAX_BINARY_SEARCH_COUNT; i++)
     {
 
-		projectedCoord = GetCoordinatesInScreenSpace(hit_coordinate);
+		float current_ray_depth = LinearizeDepth(hit_coordinate.z);
+		float hitted_fragment_depth = LinearizeDepth(GetTexture(position_map,projectedCoord.xy).z);
 
-        float depth = LinearizeDepth(GetTexture(position_map,projectedCoord.xy).z);
-
-
-        float depth_diff = LinearizeDepth(hit_coordinate.z) - depth;
-
-        direction *= 0.2;
-        if(depth_diff > 0.0)
-            hit_coordinate += direction;
-        else
+        direction *= 0.05;
+        if(current_ray_depth >= hitted_fragment_depth)
             hit_coordinate -= direction;
+        else
+            hit_coordinate += direction;
+
+		projectedCoord = GetCoordinatesInScreenSpace(hit_coordinate);
     }
 
-	projectedCoord = GetCoordinatesInScreenSpace(hit_coordinate);
-
-    return vec3(projectedCoord.xy, depth);
+    return vec3(projectedCoord.xy, 1.0);
 }
 
 vec4 RayCast(vec3 direction,vec3 hit_coordinate)
 {
     //Increase ray lenght until we find something
-	direction*=MIN_RAY_STEP;
+	float current_hit_distance = 0.0;
 	vec4 projectedCoord ;
 	float original_depth = LinearizeDepth(hit_coordinate.z);
+	float increase_step_limit = MAX_NUMBER_INCREMENTS - MAX_NUMBER_INCREMENTS/4;
+	float ray_cast_step = MIN_RAY_STEP;
    for (int i = 0; i < MAX_NUMBER_INCREMENTS; i++) {
 
-        hit_coordinate += direction;
-		projectedCoord = GetCoordinatesInScreenSpace(hit_coordinate);
+		current_hit_distance += ray_cast_step;
+        vec3 current_hit_coordinate = hit_coordinate + direction*current_hit_distance;
+		projectedCoord = GetCoordinatesInScreenSpace(current_hit_coordinate);
 
-		float depth = LinearizeDepth(GetTexture(position_map,projectedCoord.xy).z);
-		float depth_diff = depth - LinearizeDepth(hit_coordinate.z);
+		float current_ray_depth = LinearizeDepth(current_hit_coordinate.z);
+		float hitted_fragment_depth = LinearizeDepth(GetTexture(position_map,projectedCoord.xy).z);
+		float depth_diff = (current_ray_depth - hitted_fragment_depth);
+
 		//Avoid going over the depth diferent threshold  and check if we have hit something
-        if (depth_diff < MIN_Z_VALUE && depth_diff > MAX_Z_VALUE && original_depth < depth)
+        if (current_ray_depth >= hitted_fragment_depth && depth_diff < MAX_Z_VALUE_DIFFERENCE && original_depth < hitted_fragment_depth)
 		{
-			return  vec4(BinarySearch(direction,hit_coordinate),1.0f);
+			return vec4(BinarySearch(direction,current_hit_coordinate), 1.0);
+		}else if(i == increase_step_limit) // If we are almost finish and there is not hit lets make the ray bigger, maybe things are too far away
+		{
+			ray_cast_step *=4;  
 		}
     }
 
-	return vec4(0,0,0,0.0);
+	return vec4(texCoord,0,0.0);
 }
 
 vec3 Reflections(float reflection_strength)
@@ -229,13 +229,7 @@ vec3 Reflections(float reflection_strength)
 	vec2 dCoords = smoothstep(0.2, 0.6, abs(vec2(0.5, 0.5) - coords.xy));
 	float screenEdgefactor = clamp(1.0 - (dCoords.x + dCoords.y), 0.0, 1.0) * reflection_strength;
 
-	if(coords.w > 0)
-	{
-		vec3 SSR = GetTexture(screen_texture,coords.xy).xyz * screenEdgefactor;
-		return SSR;
-	}
-  else
-	{
-		return vec3(coords.x,coords.y,0);
-	}
+
+	vec3 SSR = GetTexture(screen_texture,coords.xy).xyz * screenEdgefactor;
+	return SSR;
 }
