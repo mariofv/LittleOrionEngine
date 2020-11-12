@@ -68,7 +68,9 @@ public:
 	ENGINE_API bool MeshesIntersectsWithRay(const LineSegment& ray, const std::vector<ComponentMeshRenderer*>& meshes, int& index_intersection) const;
 	ENGINE_API void SetDrawMode(DrawMode draw_mode);
 	ENGINE_API void SetAntialiasing(bool antialiasing);
+	ENGINE_API void SetVSync(bool vsync);
 	ENGINE_API void SetHDR(bool hdr);
+	ENGINE_API void SetHDRType(const HDRType type);
 	ENGINE_API void SetBloom(bool bloom);
 	ENGINE_API void SetFog(bool fog_enabled);
 	ENGINE_API void SetFogDensity(float fog_density);
@@ -76,20 +78,20 @@ public:
 	ENGINE_API void SetShadows(bool shadows_enabled);
 
 private:
-	void SetVSync(bool vsync);
 	void SetDepthTest(bool gl_depth_test);
 	void SetFaceCulling(bool gl_cull_face);
 	void SetCulledFaces(GLenum culled_faces) const;
 	void SetFrontFaces(GLenum front_faces) const;
-	void SetHDRType(const HDRType type);
 	std::string GetHDRType(const HDRType type) const;
 
 	std::string GetDrawMode() const;
 
 public:
+	bool vsync = false;
 	bool antialiasing = true;
 
 	bool hdr = true;
+	HDRType hdr_type = HDRType::FILMIC;
 	float exposure = 1.f;
 
 	bool shadows_enabled = false;
@@ -113,7 +115,6 @@ public:
 private:
 	void* context = nullptr;
 
-	bool vsync = false;
 	bool gl_depth_test = false;
 	bool gl_blend = true;
 	bool gl_cull_face = false;
@@ -122,7 +123,6 @@ private:
 	int filling_mode = 0;
 
 	DrawMode draw_mode = DrawMode::SHADED;
-	HDRType hdr_type = HDRType::FILMIC;
 
 	friend class ModuleDebugDraw;
 	friend class ModuleDebug;

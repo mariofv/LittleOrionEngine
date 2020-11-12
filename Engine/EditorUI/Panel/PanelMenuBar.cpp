@@ -29,6 +29,7 @@
 #include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleUI.h"
+#include "Module/ModuleWindow.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
@@ -97,9 +98,7 @@ void PanelMenuBar::ShowFileMenu()
 		}
 		if (ImGui::MenuItem(ICON_FA_SIGN_OUT_ALT " Exit"))
 		{
-			SDL_Event quit_event;
-			quit_event.type = SDL_QUIT;
-			SDL_PushEvent(&quit_event);
+			App->window->CloseWindow();
 		}
 
 		ImGui::EndMenu();

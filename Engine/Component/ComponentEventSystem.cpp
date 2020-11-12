@@ -71,7 +71,7 @@ void ComponentEventSystem::SpecializedLoad(const Config& config)
 
 void ComponentEventSystem::Update()
 {
-	if (App->input->GetMouseButtonDown(MouseButton::Left) && App->ui->main_canvas->IsFocused())
+	if (App->input->GetMouseButtonDown(MouseButton::Left) && App->ui->main_canvas != nullptr && App->ui->main_canvas->IsFocused())
 	{
 		MousePicking(App->input->GetMousePosition());
 	}

@@ -298,7 +298,7 @@ void Viewport::EditorDrawPass() const
 	App->debug_draw->RenderBillboards();
 	if (App->editor->selected_game_object != nullptr)
 	{
-		App->debug_draw->RenderOutline();
+		App->debug_draw->RenderSelectedGameObjectsOutline();
 	}
 	FrameBuffer::UnBind();
 }
