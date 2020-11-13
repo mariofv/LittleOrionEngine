@@ -22,13 +22,7 @@ void FrameBuffer::GenerateAttachements(float width, float height)
 
 void FrameBuffer::ClearAttachements()
 {
-	for (size_t i = 0; i < num_color_attachements; ++i)
-	{
-		if (color_attachements[i] != 0)
-		{
-			glDeleteTextures(1, &color_attachements[i]);
-		}
-	}
+	glDeleteTextures(num_color_attachements, &color_attachements[0]);
 
 	if (depth_stencil_attachement != 0)
 	{
