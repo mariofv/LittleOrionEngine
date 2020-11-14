@@ -537,7 +537,7 @@ void Viewport::SetSize(float width, float height)
 	{
 		return;
 	}
-
+	
 	this->width = width;
 	this->height = height;
 

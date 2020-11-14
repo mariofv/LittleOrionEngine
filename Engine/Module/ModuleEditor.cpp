@@ -249,7 +249,7 @@ ImFont* ModuleEditor::GetFont(const Fonts & font) const
 	return io.Fonts->Fonts[static_cast<int>(font)];
 }
 
-ImGuiContext * ModuleEditor::GetImGuiContext() const
+ImGuiContext* ModuleEditor::GetImGuiContext() const
 {
 	return imgui_context;
 }
