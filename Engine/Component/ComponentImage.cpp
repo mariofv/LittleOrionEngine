@@ -62,11 +62,11 @@ void ComponentImage::Render(float4x4* projection)
 		}
 
 		glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
-		glUniform1i(glGetUniformLocation(program, "image"), 0);
 		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, model.ptr());
 		glUniform4fv(glGetUniformLocation(program, "spriteColor"), 1, color.ptr());
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture_to_render->opengl_texture);
+		glUniform1i(glGetUniformLocation(program, "image"), 0);
 
 		quad->RenderArray();
 		glBindTexture(GL_TEXTURE_2D, 0);
