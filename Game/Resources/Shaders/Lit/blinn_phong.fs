@@ -216,7 +216,6 @@ void main()
 
  	float lit_fragment = ShadowCalculation();
 
-	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
 #if ENABLE_LIQUID_PROPERTIES
     vec3 I = normalize(position - view_pos);
     vec3 R = reflect(I, fragment_normal);
@@ -224,8 +223,8 @@ void main()
 #endif
 #if ENABLE_LIGHT_MAP
 	result += diffuse_color.rgb * GetLightMapColor(material, texCoordLightmap).rgb * lit_fragment;
-
 #else
+	result += diffuse_color.rgb * ambient * occlusion_color.rgb; //Ambient light
 
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)
 	{
