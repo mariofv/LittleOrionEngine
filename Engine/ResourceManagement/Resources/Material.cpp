@@ -88,7 +88,7 @@ void Material::Save(Config& config) const
 	config.AddFloat(transparency, "Transparency");
 	config.AddFloat(reflection_strength, "Reflection");
 
-
+	config.AddFloat(dissolve_progress, "Dissolving progress");
 	config.AddFloat2(tiling, "Tiling");
 
 	//liquid properties
@@ -122,7 +122,7 @@ void Material::Load(const Config& config)
 	smoothness = config.GetFloat("Smoothness", 1.f);
 	emissive_intensity = config.GetFloat("Emissive Intensity", 1.f);
 
-
+	dissolve_progress = config.GetFloat("Dissolving progress", 0.f);
 	config.GetFloat2("Tiling", tiling, float2::one);
 
 	//liquid properties

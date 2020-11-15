@@ -76,15 +76,16 @@ void Skybox::Render(const ComponentCamera& camera) const
 	);
 
 	//Draw skybox
-	glBindVertexArray(vao);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
 	glUniform1i(glGetUniformLocation(shader_program, "skybox"), 0);
+
+	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
 
-	glDepthFunc(GL_LESS);
 	glUseProgram(0);
+	glDepthFunc(GL_LESS);
 
 	shader_program = App->program->UseProgram("Blinn phong");
 	glActiveTexture(GL_TEXTURE0);

@@ -9,8 +9,10 @@
 
 #include <GL/glew.h>
 #include <MathGeoLib.h>
+#include <queue>
 
 class ComponentCamera;
+class ComponentMeshRenderer;
 class GameObject;
 class Grid;
 class IDebugDrawOpenGLImplementation;
@@ -18,6 +20,12 @@ class IDebugDrawOpenGLImplementation;
 class ModuleDebugDraw : public Module
 {
 public:
+	struct OutlineEntity
+	{
+		ComponentMeshRenderer* mesh_renderer = nullptr;
+		float4 color = float4::one;
+	};
+
 	ModuleDebugDraw() = default;
 	~ModuleDebugDraw() = default;
 
@@ -39,7 +47,7 @@ public:
 	
 	void RenderSelectedGameObjectHelpers() const;
 	
-	void RenderOutline() const;
+	void RenderSelectedGameObjectsOutline();
 	void RenderGrid() const;
 	void RenderBillboards() const;
 	void RenderTangentsAndBitangents() const;
@@ -54,18 +62,21 @@ public:
 	ENGINE_API void RenderAxis(const float4x4& axis_space, float size = 1.f, float length = 10.f, const float3& color = float3::one);
 	ENGINE_API void RenderPerspectiveFrustum(const float4x4& inverse_clip_matrix, const float3& color = float3::one) const;
 	ENGINE_API void RenderOrtographicFrustum(const float3 points[8], const float3& color = float3::one) const;
+	ENGINE_API void RenderOutline(ComponentMeshRenderer* mesh_renderer, const float4& color = float4::one);
 
 	ENGINE_API void RenderPhysics() const;
 
 private:
-
 	void RenderCameraFrustum() const;
 	void RenderParticleSystem() const;
 	void RenderLightGizmo() const;
 	void RenderBones(GameObject * game_object) const;
+	void RenderOutlineInternal(ComponentMeshRenderer* mesh_renderer, const float4& color = float4::one) const;
 
 private:
 	static IDebugDrawOpenGLImplementation* dd_interface_implementation;
+
+	std::queue<OutlineEntity> outline_entities;
 
 	const float MIN_MAGNITUDE_ORDER_GRID = 0;
 	const float MAX_MAGNITUDE_ORDER_GRID = 20;

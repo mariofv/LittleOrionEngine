@@ -183,6 +183,13 @@ void ModuleWindow::WindowResized(unsigned width, unsigned height)
 	this->height = height;
 }
 
+void ModuleWindow::CloseWindow() const
+{
+	SDL_Event quit_event;
+	quit_event.type = SDL_QUIT;
+	SDL_PushEvent(&quit_event);
+}
+
 void ModuleWindow::InitOpenGLAttributes() const
 {
 	APP_LOG_INFO("Creating Glew Renderer context");

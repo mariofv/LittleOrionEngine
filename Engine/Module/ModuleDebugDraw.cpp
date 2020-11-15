@@ -611,82 +611,80 @@ void ModuleDebugDraw::RenderBones(GameObject* game_object) const
 	}
 }
 
-void ModuleDebugDraw::RenderOutline() const
+void ModuleDebugDraw::RenderOutlineInternal(ComponentMeshRenderer* mesh_renderer, const float4& color) const
 {
 	BROFILER_CATEGORY("Render Outline", Profiler::Color::Lavender);
 
-	for (auto selected_game_object : App->editor->selected_game_objects) {
+	if (mesh_renderer != nullptr && mesh_renderer->IsEnabled())
+	{
+		BROFILER_CATEGORY("Render Outline Write Stencil", Profiler::Color::Lavender);
 
-		Component* selected_object_mesh_component = selected_game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
-
-		if (selected_object_mesh_component != nullptr && selected_object_mesh_component->IsEnabled())
+		if (!mesh_renderer->mesh_to_render)
 		{
-			BROFILER_CATEGORY("Render Outline Write Stencil", Profiler::Color::Lavender);
-
-			ComponentMeshRenderer* selected_object_mesh = static_cast<ComponentMeshRenderer*>(selected_object_mesh_component);
-			if (!selected_object_mesh->mesh_to_render)
-			{
-				return;
-			}
-
-			glDrawBuffer(0);
-			glEnable(GL_STENCIL_TEST);
-			glStencilFunc(GL_ALWAYS, 1, 0xFF);
-			glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
-			glStencilMask(0xFF);
-
-			GLuint mesh_renderer_program = selected_object_mesh->BindDepthShaderProgram();
-			selected_object_mesh->BindMeshUniforms(mesh_renderer_program);
-			selected_object_mesh->RenderModel();
-			glUseProgram(0);
-
-			glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-			glStencilMask(0x00);
-			glDisable(GL_DEPTH_TEST);
-
-			BROFILER_CATEGORY("Render Outline Read Stencil", Profiler::Color::Lavender);
-
-			GLuint outline_shader_program = App->program->UseProgram("Outline");
-			float4x4 new_transformation_matrix;
-			if (selected_game_object->parent != nullptr)
-			{
-				new_transformation_matrix = selected_game_object->parent->transform.GetGlobalModelMatrix() * selected_game_object->transform.GetModelMatrix() * float4x4::Scale(float3(1.01f));
-
-				ComponentTransform object_transform_copy = selected_game_object->transform;
-				float3 object_scale = object_transform_copy.GetScale();
-				object_transform_copy.SetScale(object_scale*1.01f);
-				object_transform_copy.GenerateGlobalModelMatrix();
-			}
-			else
-			{
-				new_transformation_matrix = selected_game_object->transform.GetGlobalModelMatrix() * float4x4::Scale(float3(1.01f));
-			}
-
-
-			ModuleRender::DrawMode last_draw_mode = App->renderer->draw_mode;
-			App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
-			glLineWidth(15.f);
-			glDrawBuffer(GL_COLOR_ATTACHMENT0);
-			glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-			glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), selected_game_object->transform.GetGlobalModelMatrix().Transposed().ptr());
-			glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-			float color[4] = { 1.0, 0.4, 0.0, 1.0 };
-			glUniform4fv(glGetUniformLocation(outline_shader_program, "base_color"), 1, color);
-
-			selected_object_mesh->RenderModel();
-
-			glLineWidth(1.f);
-			App->renderer->SetDrawMode(last_draw_mode);
-
-			glStencilMask(0xFF);
-			glEnable(GL_DEPTH_TEST);
-			glDisable(GL_STENCIL_TEST);
-
-			glUseProgram(0);
-
+			return;
 		}
+
+		GameObject* mesh_renderer_owner = mesh_renderer->owner;
+
+		glDrawBuffer(0);
+		glEnable(GL_STENCIL_TEST);
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
+		glStencilMask(0xFF);
+
+		GLuint mesh_renderer_program = mesh_renderer->BindDepthShaderProgram();
+		mesh_renderer->BindMeshUniforms(mesh_renderer_program);
+		mesh_renderer->RenderModel();
+		glUseProgram(0);
+
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+
+		BROFILER_CATEGORY("Render Outline Read Stencil", Profiler::Color::Lavender);
+
+		GLuint outline_shader_program = App->program->UseProgram("Outline");
+		float4x4 new_transformation_matrix;
+		if (mesh_renderer_owner->parent != nullptr)
+		{
+			new_transformation_matrix = mesh_renderer_owner->parent->transform.GetGlobalModelMatrix() * mesh_renderer_owner->transform.GetModelMatrix() * float4x4::Scale(float3(1.01f));
+
+			ComponentTransform object_transform_copy = mesh_renderer_owner->transform;
+			float3 object_scale = object_transform_copy.GetScale();
+			object_transform_copy.SetScale(object_scale*1.01f);
+			object_transform_copy.GenerateGlobalModelMatrix();
+		}
+		else
+		{
+			new_transformation_matrix = mesh_renderer_owner->transform.GetGlobalModelMatrix() * float4x4::Scale(float3(1.01f));
+		}
+
+
+		ModuleRender::DrawMode last_draw_mode = App->renderer->draw_mode;
+		App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
+		glLineWidth(15.f);
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+		mesh_renderer->BindMeshUniforms(outline_shader_program);
+		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), mesh_renderer_owner->transform.GetGlobalModelMatrix().Transposed().ptr());
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		glUniform4fv(glGetUniformLocation(outline_shader_program, "base_color"), 1, color.ptr());
+
+		mesh_renderer->RenderModel();
+
+		glLineWidth(1.f);
+		App->renderer->SetDrawMode(last_draw_mode);
+
+		glStencilMask(0xFF);
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_STENCIL_TEST);
+
+		glUseProgram(0);
+
 	}
+	
 }
 
 void ModuleDebugDraw::RenderBoundingBoxes(const float3& color) const
@@ -747,6 +745,15 @@ void ModuleDebugDraw::RenderPathfinding() const
 	for(const auto& point : App->artificial_intelligence->debug_path)
 	{
 		dd::point(point, float3(0, 0, 255), 10.0f);
+	}
+}
+
+void ModuleDebugDraw::RenderSelectedGameObjectsOutline()
+{
+	for (auto selected_game_object : App->editor->selected_game_objects)
+	{
+		ComponentMeshRenderer* selected_object_mesh = static_cast<ComponentMeshRenderer*>(selected_game_object->GetComponent(Component::ComponentType::MESH_RENDERER));
+		RenderOutline(selected_object_mesh, float4(1.0, 0.4, 0.0, 1.0));
 	}
 }
 
@@ -852,9 +859,24 @@ void ModuleDebugDraw::RenderOrtographicFrustum(const float3 points[8], const flo
 	dd::box(points, color);
 }
 
+void ModuleDebugDraw::RenderOutline(ComponentMeshRenderer* mesh_renderer, const float4& color)
+{
+	if (mesh_renderer != nullptr)
+	{
+		outline_entities.push({ mesh_renderer, color });
+	}
+}
+
 void ModuleDebugDraw::Render(float width, float height, const float4x4& projection_view_matrix)
 {
 	BROFILER_CATEGORY("Flush Debug Draw", Profiler::Color::Lavender);
+
+	while (!outline_entities.empty())
+	{
+		OutlineEntity current_outline_entity = outline_entities.front();
+		outline_entities.pop();
+		RenderOutlineInternal(current_outline_entity.mesh_renderer, current_outline_entity.color);
+	}
 
 	dd_interface_implementation->width = static_cast<unsigned int>(width);
 	dd_interface_implementation->height = static_cast<unsigned int>(height);

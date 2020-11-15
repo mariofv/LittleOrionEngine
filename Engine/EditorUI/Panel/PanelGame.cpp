@@ -3,6 +3,7 @@
 #include "Component/ComponentCamera.h"
 #include "Main/Application.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleInput.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleRender.h"
@@ -29,6 +30,29 @@ void PanelGame::Render()
 		hovered = ImGui::IsWindowHovered();
 		focused = ImGui::IsWindowFocused();
 
+		if(App->input->GetKey(KeyCode::LeftControl) &&
+			App->input->GetKey(KeyCode::LeftShift) &&
+			App->input->GetKeyDown(KeyCode::F))
+		{
+			fullscreen = !fullscreen;
+
+			if(fullscreen)
+			{
+				previous_game_window_content_area_width = ImGui::GetWindowWidth();
+				previous_game_window_content_area_height = ImGui::GetWindowHeight();
+				game_window_content_area_width = 1920;
+				game_window_content_area_height = 1080;			
+			}
+			else
+			{
+				game_window_content_area_width = previous_game_window_content_area_width;
+				game_window_content_area_height = previous_game_window_content_area_height;
+			}
+			
+			ImGui::SetWindowSize(ImVec2(game_window_content_area_width, game_window_content_area_height));
+		}
+
+
 		if (App->cameras->main_camera != nullptr)
 		{
 			ImVec2 game_window_pos_ImVec2 = ImGui::GetWindowPos();
@@ -44,8 +68,11 @@ void PanelGame::Render()
 			ImVec2 game_window_content_area_pos_ImVec2 = ImGui::GetCursorScreenPos();
 			game_window_content_area_pos = float2(game_window_content_area_pos_ImVec2.x, game_window_content_area_pos_ImVec2.y);
 
-			game_window_content_area_width = game_window_content_area_max_point.x - game_window_content_area_pos.x;
-			game_window_content_area_height = game_window_content_area_max_point.y - game_window_content_area_pos.y;
+			if(!fullscreen)
+			{
+				game_window_content_area_width = game_window_content_area_max_point.x - game_window_content_area_pos.x;
+				game_window_content_area_height = game_window_content_area_max_point.y - game_window_content_area_pos.y;
+			}
 
 			App->renderer->game_viewport->SetSize(game_window_content_area_width, game_window_content_area_height);
 			App->renderer->game_viewport->Render(App->cameras->main_camera);

@@ -20,7 +20,7 @@
     },
     {
       "Name": "Outline",
-      "Vertex": "/Resources/Shaders/Editor/simple_color.vs",
+      "Vertex": "/Resources/Shaders/Shadows/depth.vs",
       "Fragment": "/Resources/Shaders/Editor/simple_color.fs",
       "Selectable": false
     },
