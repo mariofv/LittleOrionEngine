@@ -451,6 +451,18 @@ void ComponentMeshRenderer::RemoveProperty(MeshProperties property_to_remove)
 	properties &= ~(int)property_to_remove;
 }
 
+ENGINE_API void ComponentMeshRenderer::SetShadowCaster(bool caster)
+{
+	if(caster)
+	{
+		AddProperty(MeshProperties::SHADOW_CASTER);
+	}
+	else
+	{
+		RemoveProperty(MeshProperties::SHADOW_CASTER);
+	}
+}
+
 bool ComponentMeshRenderer::CheckFilters(int filters) const
 {
 	return (filters & properties) == filters;

@@ -1,6 +1,10 @@
 #ifndef _COMPONENTMESHRENDERER_H_
 #define _COMPONENTMESHRENDERER_H_
 
+#ifndef ENGINE_EXPORTS
+#define ENGINE_EXPORTS
+#endif
+
 #include "Component.h"
 #include "ResourceManagement/Resources/Mesh.h"
 #include "ResourceManagement/Resources/Material.h"
@@ -54,6 +58,7 @@ public:
 	bool IsPropertySet(MeshProperties property_to_check) const;
 	void AddProperty(MeshProperties property_to_add);
 	void RemoveProperty(MeshProperties property_to_remove);
+	ENGINE_API void SetShadowCaster(bool caster);
 	bool CheckFilters(int filters) const;
 
 private:
