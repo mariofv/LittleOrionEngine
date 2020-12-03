@@ -13,11 +13,12 @@ public:
 	ComponentBoxCollider(GameObject* owner);
 	~ComponentBoxCollider() = default;
 
-	Component* Clone(GameObject* owner, bool original_prefab = false) const;
+	Component* Clone(GameObject* owner, bool original_prefab = false) override;
 	ComponentBoxCollider& operator=(const ComponentBoxCollider& component_to_copy);
 
 	void UpdateDimensions();
 	void Scale();
+	void InitData();
 };
 
 #endif // !_COMPONENTBOXCOLLIDER_H

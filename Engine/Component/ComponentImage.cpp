@@ -17,42 +17,15 @@ ComponentImage::ComponentImage(GameObject * owner) : Component(owner, ComponentT
 	InitData();
 }
 
-ComponentImage::~ComponentImage()
-{
-	glDeleteBuffers(1, &vbo);
-	glDeleteVertexArrays(1, &vao);
-}
 
 void ComponentImage::InitData()
 {
-	program = App->program->GetShaderProgramId("Sprite");
-
-	GLfloat vertices[] = {
-		// Pos      // Tex
-		-0.5f, 0.5f, 0.0f, 1.0f,
-		0.5f, -0.5f, 1.0f, 0.0f,
-		-0.5f, -0.5f, 0.0f, 0.0f,
-
-		-0.5f, 0.5f, 0.0f, 1.0f,
-		0.5f, 0.5f, 1.0f, 1.0f,
-		0.5f, -0.5f, 1.0f, 0.0f
-	};
-
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindVertexArray(vao);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	quad = App->ui->quad.get();
 }
 
 void ComponentImage::Render(float4x4* projection)
 {
+
 	if (!active)
 	{
 		return;
@@ -79,24 +52,29 @@ void ComponentImage::Render(float4x4* projection)
 		}
 		float4x4 model = owner->transform_2d.GetGlobalModelMatrix()  * aspect_ratio_scaling;
 
-		glUseProgram(program);
+		if (program == 0)
+		{
+			program = App->program->UseProgram("Sprite");
+		}
+		else
+		{
+			glUseProgram(program);
+		}
+
 		glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
-		glUniform1i(glGetUniformLocation(program, "image"), 0);
 		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, model.ptr());
 		glUniform4fv(glGetUniformLocation(program, "spriteColor"), 1, color.ptr());
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture_to_render->opengl_texture);
+		glUniform1i(glGetUniformLocation(program, "image"), 0);
 
-		glBindVertexArray(vao);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glBindVertexArray(0);
+		quad->RenderArray();
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glUseProgram(0);
-
 	}
 }
 
-Component* ComponentImage::Clone(bool original_prefab) const
+Component* ComponentImage::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentImage * created_component;
 	if (original_prefab)
@@ -109,10 +87,16 @@ Component* ComponentImage::Clone(bool original_prefab) const
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
+
+	created_component->ReassignResource();
+
 	return created_component;
 };
 
-void ComponentImage::Copy(Component* component_to_copy) const
+void ComponentImage::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentImage*>(component_to_copy) = *this;
@@ -134,7 +118,7 @@ void ComponentImage::SpecializedSave(Config& config) const
 void ComponentImage::SpecializedLoad(const Config& config)
 {
 	config.GetColor("ImageColor", color, float4::one);
-	texture_uuid = config.GetUInt("TextureUUID", 0);
+	texture_uuid = config.GetUInt32("TextureUUID", 0);
 	preserve_aspect_ratio = config.GetBool("PreserveAspectRatio", false);
 	if (texture_uuid != 0)
 	{
@@ -142,11 +126,69 @@ void ComponentImage::SpecializedLoad(const Config& config)
 	}
 }
 
+void ComponentImage::LoadResource(uint32_t uuid, ResourceType resource)
+{
+
+	texture_to_render = std::static_pointer_cast<Texture>(App->resources->RetrieveFromCacheIfExist(uuid));
+
+	if(texture_to_render)
+	{
+		return;
+	}
+
+	FileData file_data;
+	bool succes = App->resources->RetrieveFileDataByUUID(uuid, file_data);
+	if(succes)
+	{
+		//THINK WHAT TO DO IF IS IN CACHE
+		texture_to_render = ResourceManagement::Load<Texture>(uuid, file_data, true);
+		//Delete file data buffer
+		delete[] file_data.buffer;
+		App->resources->AddResourceToCache(std::static_pointer_cast<Resource>(texture_to_render));
+		texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
+	}
+
+}
+
+void ComponentImage::InitResource(uint32_t uuid, ResourceType resource)
+{
+	if(texture_to_render && !texture_to_render.get()->initialized)
+	{
+		texture_to_render.get()->LoadInMemory();
+	}
+}
+
+void ComponentImage::ReassignResource()
+{
+	if(texture_uuid != 0)
+	{
+		SetTextureToRender(texture_uuid);
+	}
+}
+
 void ComponentImage::SetTextureToRender(uint32_t texture_uuid)
 {
+	//Prepare multithreading loading
+	App->resources->loading_thread_communication.current_component_loading = this;
+	App->resources->loading_thread_communication.current_type = ResourceType::TEXTURE;
 	this->texture_uuid = texture_uuid;
 	texture_to_render = App->resources->Load<Texture>(texture_uuid);
-	texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
+	if (texture_to_render)
+	{
+		texture_aspect_ratio = (float)texture_to_render->width / texture_to_render->height;
+
+	}
+	//Set to default loading component
+	App->resources->loading_thread_communication.current_component_loading = nullptr;
+}
+
+void ComponentImage::SetTextureToRenderFromInspector(uint32_t texture_uuid)
+{
+	this->texture_uuid = texture_uuid;
+
+	App->resources->loading_thread_communication.normal_loading_flag = true;
+	texture_to_render = App->resources->Load<Texture>(texture_uuid);
+	App->resources->loading_thread_communication.normal_loading_flag = false;
 }
 
 void ComponentImage::SetColor(float4 color)
@@ -156,5 +198,8 @@ void ComponentImage::SetColor(float4 color)
 
 void ComponentImage::SetNativeSize() const
 {
-	owner->transform_2d.SetSize(float2(texture_to_render->width, texture_to_render->height));
+	if(texture_to_render)
+	{
+		owner->transform_2d.SetSize(float2(texture_to_render->width, texture_to_render->height));
+	}
 }

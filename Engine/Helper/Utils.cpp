@@ -1,5 +1,9 @@
 #include "Utils.h"
 
+#include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentTransform.h"
+#include "Main/GameObject.h"
+
 #include <fstream>
 #include <IL/il.h>
 
@@ -281,4 +285,43 @@ size_t Utils::GetImageType(const std::string& file_extension)
 btVector3 Utils::Float3TobtVector3(const float3& vector)
 {
 	return btVector3(vector.x, vector.y, vector.z);
+}
+
+void Utils::SplitCulledMeshRenderers(
+	const std::vector<ComponentMeshRenderer*>& culled_mesh_renderers, 
+	float3 camera_position,
+	std::vector<MeshRendererDistancePair>& opaque_mesh_renderers,
+	std::vector<MeshRendererDistancePair>& transparent_mesh_renderers
+)
+{
+	for (ComponentMeshRenderer* culled_mesh_renderer : culled_mesh_renderers)
+	{
+		if (culled_mesh_renderer->mesh_to_render == nullptr || culled_mesh_renderer->material_to_render == nullptr)
+		{
+			continue;
+		}
+
+		float3 mesh_renderer_position = culled_mesh_renderer->owner->transform.GetGlobalTranslation();;
+		float distance = mesh_renderer_position.Distance(camera_position);
+
+		if (
+			culled_mesh_renderer->material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT
+			|| culled_mesh_renderer->material_to_render->material_type == Material::MaterialType::MATERIAL_LIQUID
+			|| culled_mesh_renderer->material_to_render->material_type == Material::MaterialType::MATERIAL_DISSOLVING
+			)
+		{
+			transparent_mesh_renderers.push_back(Utils::MeshRendererDistancePair{ distance, culled_mesh_renderer });
+		}
+		else if (culled_mesh_renderer->material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)
+		{
+			opaque_mesh_renderers.push_back(Utils::MeshRendererDistancePair{ distance, culled_mesh_renderer });
+		}
+	}
+}
+
+void Utils::SortMeshRendererVector(std::vector<MeshRendererDistancePair>& mesh_renderers)
+{
+	std::sort(mesh_renderers.begin(), mesh_renderers.end(), [](const MeshRendererDistancePair& a, const MeshRendererDistancePair& b) {
+		return a.distance > b.distance; 
+	});
 }

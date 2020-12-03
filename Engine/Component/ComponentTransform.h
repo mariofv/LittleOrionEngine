@@ -1,7 +1,9 @@
 #ifndef _COMPONENTTRANSFORM_H_
 #define _COMPONENTTRANSFORM_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Component.h"
 
@@ -24,8 +26,8 @@ public:
 	ComponentTransform& operator=(const ComponentTransform& component_to_copy);
 	ComponentTransform& operator=(ComponentTransform&& component_to_move) = default;
 
-	Component* Clone(bool create_on_module = true) const override;
-	void Copy(Component * component_to_copy) const override;
+	Component* Clone(GameObject* owner, bool original_prefab) override;
+	void CopyTo(Component* component_to_copy) const override;
 
 	void Delete() override {};
 
@@ -43,6 +45,7 @@ public:
 	ENGINE_API float3 GetRotationRadiants() const;
 	ENGINE_API void SetRotation(const float3x3& rotation);
 	ENGINE_API void SetRotation(const float3& rotation);
+	ENGINE_API void SetRotationRad(const float3& rotation);
 	ENGINE_API void SetRotation(const Quat& rotation);
 
 	ENGINE_API void SetGlobalMatrixRotation(const float3x3& rotation);
@@ -55,18 +58,23 @@ public:
 
 	ENGINE_API float3 GetScale() const;
 	ENGINE_API void SetScale(const float3& scale);
+	ENGINE_API void SetGlobalMatrixScale(const float3& scale);
 	float3 GetGlobalScale() const;
 
 	ENGINE_API float3 GetUpVector() const;
 	ENGINE_API float3 GetFrontVector() const;
 	ENGINE_API float3 GetRightVector() const;
 
+	ENGINE_API float3 GetGlobalUpVector() const;
+	ENGINE_API float3 GetGlobalFrontVector() const;
+	ENGINE_API float3 GetGlobalRightVector() const;
+
 	void ChangeLocalSpace(const float4x4& new_local_space);
 
 	float4x4 GetModelMatrix() const;
 
 	void GenerateGlobalModelMatrix();
-	float4x4 GetGlobalModelMatrix() const;
+	ENGINE_API float4x4 GetGlobalModelMatrix() const;
 	virtual void SetGlobalModelMatrix(const float4x4& new_global_matrix);
 
 protected:

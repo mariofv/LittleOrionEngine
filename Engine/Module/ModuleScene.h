@@ -1,11 +1,17 @@
 #ifndef _MODULESCENE_H_
 #define _MODULESCENE_H_
+
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Module.h"
 #include "Helper/BuildOptions.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
+#include <thread>
+#include <atomic>
+#include <mutex>
 
 class Scene;
 
@@ -26,6 +32,9 @@ public:
 	void RemoveGameObject(GameObject* game_object_to_remove);
 	GameObject* AddGameObject(std::unique_ptr<GameObject> & game_object_to_add);
 	ENGINE_API GameObject* DuplicateGameObject(GameObject* game_object, GameObject* parent_go);
+	void DuplicateGameObjectList(std::vector<GameObject*> game_objects);
+	bool HasParentInList(GameObject* go, std::vector<GameObject*>) const;
+	bool BelongsToList(GameObject* go, std::vector<GameObject*>) const;
 	void InitDuplicatedScripts(GameObject* clone_go);
 
 	ENGINE_API GameObject* GetRoot() const;
@@ -34,9 +43,10 @@ public:
 
 	ENGINE_API GameObject* GetGameObjectWithTag(const std::string& tag) const;
 	ENGINE_API std::vector<GameObject*> GetGameObjectsWithTag(const std::string& tag) const;
+	ENGINE_API std::vector<GameObject*> GetGameObjectsWithComponent(const Component::ComponentType component_type) const;
 
 	Component* GetComponent(uint64_t UUID) const;
-
+	void SortGameObjectChilds(GameObject* go) const;
 
 	void OpenPendingScene();
 	void DeleteCurrentScene();
@@ -51,8 +61,17 @@ public:
 	void LoadTmpScene();
 	void SaveTmpScene();
 
+	void LoadLoadingScreen();
+	void DeleteLoadingScreen();
+
 	bool HasPendingSceneToLoad() const;
 	bool CurrentSceneIsSaved() const;
+
+	void StopSceneTimer();
+
+	//Multiselection
+	bool HasParent(GameObject* go) const;
+	bool BelongsToList(GameObject* go) const;
 
 private:
 	void OpenScene();
@@ -74,6 +93,10 @@ private:
 	std::shared_ptr<Scene> last_scene = 0;
 
 	std::unique_ptr<BuildOptions> build_options = nullptr;
+
+	GameObject* loading_screen_canvas = nullptr;
+
+	Timer timer;
 
 	friend class PanelScene;
 	friend class PanelBuildOptions;

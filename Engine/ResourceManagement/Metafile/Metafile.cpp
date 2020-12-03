@@ -19,7 +19,7 @@ void Metafile::Save(Config& config) const
 
 void Metafile::Load(const Config& config)
 {
-	uuid = config.GetUInt("UUID", uuid);
+	uuid = config.GetUInt32("UUID", uuid);
 	config.GetString("ResourceName", resource_name, "");
 	resource_type = static_cast<ResourceType>(config.GetUInt("ResourceType",  static_cast<unsigned int>(ResourceType::UNKNOWN)));
 

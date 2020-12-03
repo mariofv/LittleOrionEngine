@@ -73,17 +73,19 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Engine/;./Libraries/include/cr;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/recast;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Libraries/include/spdlog;./Engine/;./Libraries/include/cr;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/recast;./Libraries/include/par_shapes;./Libraries/include/BlueprintUtilities;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PreprocessorDefinitions>_MBCS;WINDOWS_IGNORE_PACKING_MISMATCH;DEBUG;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;ENGINE_EXPORTS;WINDOWS_IGNORE_PACKING_MISMATCH;DEBUG;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeaderFile />
+      <PrecompiledHeaderOutputFile />
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiDebug.lib;MathGeoLibDebug.lib;recastDebug.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiDebug.lib;MathGeoLibDebug.lib;recastDebug.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;opencv_calib3d411d.lib;opencv_dnn411d.lib;opencv_features2d411d.lib;opencv_flann411d.lib;opencv_gapi411d.lib;opencv_imgcodecs411d.lib;opencv_imgproc411d.lib;opencv_ml411d.lib;opencv_objdetect411d.lib;opencv_photo411d.lib;opencv_stitching411d.lib;opencv_ts411d.lib;opencv_video411d.lib;opencv_videoio411d.lib;opencv_highgui411d.lib;opencv_core411d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -100,11 +102,13 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/recast;./Libraries/include/imgui;./Libraries/include/cr;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Libraries/include/spdlog;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/recast;./Libraries/include/imgui;./Libraries/include/cr;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include/BlueprintUtilities;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;ENGINE_EXPORTS;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeaderFile />
+      <PrecompiledHeaderOutputFile />
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -112,7 +116,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;recastRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;recastRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;opencv_calib3d411.lib;opencv_dnn411.lib;opencv_features2d411.lib;opencv_flann411.lib;opencv_gapi411.lib;opencv_imgcodecs411.lib;opencv_imgproc411.lib;opencv_ml411.lib;opencv_objdetect411.lib;opencv_photo411.lib;opencv_stitching411.lib;opencv_ts411.lib;opencv_video411.lib;opencv_videoio411.lib;opencv_highgui411.lib;opencv_core411.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -129,11 +133,13 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/recast;./Libraries/include/cr;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Game/Assets/Scripts/src;./Libraries/include/spdlog;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/recast;./Libraries/include/cr;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include/BlueprintUtilities;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>_MBCS;GAME;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;ENGINE_EXPORTS;GAME;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeaderFile />
+      <PrecompiledHeaderOutputFile />
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -141,20 +147,32 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;recastRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;recastRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;opencv_calib3d411.lib;opencv_dnn411.lib;opencv_features2d411.lib;opencv_flann411.lib;opencv_gapi411.lib;opencv_imgcodecs411.lib;opencv_imgproc411.lib;opencv_ml411.lib;opencv_objdetect411.lib;opencv_photo411.lib;opencv_stitching411.lib;opencv_ts411.lib;opencv_video411.lib;opencv_videoio411.lib;opencv_highgui411.lib;opencv_core411.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /y /d "$(OutDir)TwinlightSouls.lib" "./Libraries/lib/x86"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Actions\EditorActionMultipleRotation.h" />
+    <ClInclude Include="Engine\Actions\EditorActionMultipleScale.h" />
+    <ClInclude Include="Engine\Actions\EditorActionMultipleTranslate.h" />
+    <ClInclude Include="Engine\Component\ComponentAudioListener.h" />
+    <ClInclude Include="Engine\Component\ComponentTrail.h" />
+    <ClInclude Include="Engine\EditorUI\Helper\BezierCurveDraw.hpp" />
+    <ClInclude Include="Engine\Helper\BezierCurve.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTrail.h" />
+    <ClInclude Include="Engine\Helper\ThreadSafeQueue.h" />
+    <ClInclude Include="Engine\Log\EngineSink.h" />
+    <ClInclude Include="Engine\Actions\EditorActionAddMultipleGO.h" />
+    <ClInclude Include="Engine\Actions\EditorActionDeleteMultipleGO.h" />
     <ClInclude Include="Engine\Animation\Tween\LOTween.h" />
     <ClInclude Include="Engine\Animation\Tween\Tween.h" />
     <ClInclude Include="Engine\Animation\Tween\TweenSequence.h" />
+    <ClInclude Include="Engine\Component\ComponentBillboard.h" />
     <ClInclude Include="Engine\Component\ComponentCanvasRenderer.h" />
     <ClInclude Include="Engine\Component\ComponentBoxCollider.h" />
     <ClInclude Include="Engine\Component\ComponentCapsuleCollider.h" />
@@ -162,21 +180,26 @@
     <ClInclude Include="Engine\Component\ComponentCylinderCollider.h" />
     <ClInclude Include="Engine\Component\ComponentEventSystem.h" />
     <ClInclude Include="Engine\Component\ComponentMeshCollider.h" />
+    <ClInclude Include="Engine\Component\ComponentParticleSystem.h" />
     <ClInclude Include="Engine\Component\ComponentSphereCollider.h" />
     <ClInclude Include="Engine\Component\ComponentAudioSource.h" />
     <ClInclude Include="Engine\Component\ComponentSpriteMask.h" />
     <ClInclude Include="Engine\DLL\DLLManager.h" />
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupNewFileName.h" />
+    <ClInclude Include="Engine\Event\Event.h" />
+    <ClInclude Include="Engine\Event\EventManager.h" />
+    <ClInclude Include="Engine\Event\FunctionHandler.h" />
     <ClInclude Include="Engine\Helper\BuildOptions.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
-    <ClInclude Include="Engine\ResourceManagement\Importer\FontImporter.h" />
+    <ClInclude Include="Engine\Module\ModuleEffects.h" />
+    <ClInclude Include="Engine\Rendering\FrameBuffer\DepthFrameBuffer.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\FontManager.h" />
     <ClInclude Include="Engine\Module\ModulePhysics.h" />
     <ClInclude Include="Engine\Module\ModuleAudio.h" />
     <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h" />
-    <ClInclude Include="Engine\ResourceManagement\Importer\SceneImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Metafile\ModelMetafile.h" />
     <ClInclude Include="Engine\ResourceManagement\Metafile\TextureMetafile.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h" />
@@ -195,8 +218,6 @@
     <ClInclude Include="Engine\AI\SampleDebugDraw.h" />
     <ClInclude Include="Engine\Animation\AnimController.h" />
     <ClInclude Include="Engine\Component\ComponentAnimation.h" />
-    <ClInclude Include="Engine\Component\ComponentBillboard.h" />
-    <ClInclude Include="Engine\Component\ComponentParticleSystem.h" />
     <ClInclude Include="Engine\Component\ComponentButton.h" />
     <ClInclude Include="Engine\Component\ComponentCanvas.h" />
     <ClInclude Include="Engine\Component\ComponentImage.h" />
@@ -224,7 +245,6 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\MaterialImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\PrefabImporter.h" />
-    <ClInclude Include="Engine\ResourceManagement\Importer\SkyboxImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\SceneManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\SkyboxManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Metafile\Metafile.h" />
@@ -266,7 +286,7 @@
     <ClInclude Include="Engine\Component\ComponentMeshRenderer.h" />
     <ClInclude Include="Engine\Component\ComponentTransform.h" />
     <ClInclude Include="Engine\Component\Component.h" />
-    <ClInclude Include="Engine\EditorUI\EngineLog.h" />
+    <ClInclude Include="Engine\Log\EngineLog.h" />
     <ClInclude Include="Engine\Module\ModuleCamera.h" />
     <ClInclude Include="Engine\Module\ModuleTime.h" />
     <ClInclude Include="Engine\Module\Module.h" />
@@ -308,12 +328,28 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\SoundImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h" />
     <ClInclude Include="Engine\Helper\TagManager.h" />
-    <ClInclude Include="Engine\Module\ModuleEffects.h" />
+    <ClInclude Include="Engine\Helper\PerlinNoise.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.h" />
+    <ClInclude Include="Engine\Helper\Quad.h" />
+    <ClInclude Include="Engine\Rendering\FrameBuffer\FrameBuffer.h" />
+    <ClInclude Include="Engine\Rendering\Viewport.h" />
+    <ClInclude Include="Engine\Rendering\LightFrustum.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Component\ComponentVideoPlayer.cpp" />
+    <ClCompile Include="Engine\Rendering\FrameBuffer\DepthFrameBuffer.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Video.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTrail.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionAddMultipleGO.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionDeleteMultipleGO.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionMultipleRotation.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionMultipleScale.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionMultipleTranslate.cpp" />
     <ClCompile Include="Engine\Animation\Tween\LOTween.cpp" />
     <ClCompile Include="Engine\Animation\Tween\Tween.cpp" />
     <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp" />
+    <ClCompile Include="Engine\Component\ComponentAudioListener.cpp" />
+    <ClCompile Include="Engine\Component\ComponentBillboard.cpp" />
     <ClCompile Include="Engine\Component\ComponentCanvasRenderer.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddGameObject.cpp" />
@@ -330,8 +366,6 @@
     <ClCompile Include="Engine\Animation\AnimController.cpp" />
     <ClCompile Include="Engine\Component\Component.cpp" />
     <ClCompile Include="Engine\Component\ComponentAnimation.cpp" />
-    <ClCompile Include="Engine\Component\ComponentBillboard.cpp" />
-    <ClCompile Include="Engine\Component\ComponentParticleSystem.cpp" />
     <ClCompile Include="Engine\Component\ComponentAudioSource.cpp" />
     <ClCompile Include="Engine\Component\ComponentBoxCollider.cpp" />
     <ClCompile Include="Engine\Component\ComponentButton.cpp" />
@@ -342,20 +376,24 @@
     <ClCompile Include="Engine\Component\ComponentEventSystem.cpp" />
     <ClCompile Include="Engine\Component\ComponentImage.cpp" />
     <ClCompile Include="Engine\Component\ComponentMeshCollider.cpp" />
+    <ClCompile Include="Engine\Component\ComponentParticleSystem.cpp" />
     <ClCompile Include="Engine\Component\ComponentScript.cpp" />
     <ClCompile Include="Engine\Component\ComponentSphereCollider.cpp" />
     <ClCompile Include="Engine\Component\ComponentSpriteMask.cpp" />
     <ClCompile Include="Engine\Component\ComponentText.cpp" />
+    <ClCompile Include="Engine\Component\ComponentTrail.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform2D.cpp" />
     <ClCompile Include="Engine\DLL\DLLManager.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelTags.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupNewFileName.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelStateMachine.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp" />
     <ClCompile Include="Engine\Filesystem\File.cpp" />
+    <ClCompile Include="Engine\Helper\BezierCurve.cpp" />
     <ClCompile Include="Engine\Helper\BuildOptions.cpp" />
     <ClCompile Include="Engine\Helper\Config.cpp" />
     <ClCompile Include="Engine\Helper\TemplatedGameObjectCreator.cpp" />
@@ -364,21 +402,19 @@
     <ClCompile Include="Engine\Helper\Utils.cpp" />
     <ClCompile Include="Engine\Main\Application.cpp" />
     <ClCompile Include="Engine\Main\GameObject.cpp" />
-    <ClCompile Include="Engine\Main\Log.cpp" />
+    <ClCompile Include="Engine\Log\Log.cpp" />
     <ClCompile Include="Engine\Main\Main.cpp" />
     <ClCompile Include="Engine\Module\ModuleAnimation.cpp" />
+    <ClCompile Include="Engine\Module\ModuleEffects.cpp" />
     <ClCompile Include="Engine\Module\ModulePhysics.cpp" />
     <ClCompile Include="Engine\Module\ModuleAudio.cpp" />
     <ClCompile Include="Engine\Module\ModuleResourceManager.cpp" />
     <ClCompile Include="Engine\Module\ModuleScriptManager.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Importer\FontImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\PrefabImporter.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Importer\SceneImporter.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Importer\SkyboxImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\FontManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\SoundImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\SceneManager.cpp" />
@@ -425,7 +461,7 @@
     <ClCompile Include="Engine\Component\ComponentCamera.cpp" />
     <ClCompile Include="Engine\Component\ComponentMeshRenderer.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform.cpp" />
-    <ClCompile Include="Engine\EditorUI\EngineLog.cpp" />
+    <ClCompile Include="Engine\Log\EngineLog.cpp" />
     <ClCompile Include="Engine\Module\ModuleCamera.cpp" />
     <ClCompile Include="Engine\Module\ModuleTime.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelGameObject.cpp" />
@@ -443,6 +479,10 @@
     <ClCompile Include="Engine\EditorUI\Panel\PanelResourceDatabase.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\ImGuiHelper.cpp" />
+    <ClCompile Include="Engine\Rendering\FrameBuffer\FrameBuffer.cpp" />
+    <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Builders.cpp" />
+    <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Drawing.cpp" />
+    <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Widgets.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGradient.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGuizmo.cpp" />
@@ -477,7 +517,10 @@
     <ClCompile Include="Libraries\include\SoundEngine\AkMultipleFileLocation.cpp" />
     <ClCompile Include="Libraries\include\SoundEngine\stdafx.cpp" />
     <ClCompile Include="Engine\Helper\TagManager.cpp" />
-    <ClCompile Include="Engine\Module\ModuleEffects.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.cpp" />
+    <ClCompile Include="Engine\Helper\Quad.cpp" />
+    <ClCompile Include="Engine\Rendering\Viewport.cpp" />
+    <ClCompile Include="Engine\Rendering\LightFrustum.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

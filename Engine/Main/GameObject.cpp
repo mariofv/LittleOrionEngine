@@ -1,12 +1,16 @@
 #include "GameObject.h"
+
 #include "Application.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
 #include "Helper/Config.h"
+#include "Log/EngineLog.h"
+
 #include "Module/ModuleAnimation.h"
 #include "Module/ModuleAudio.h"
 #include "Module/ModuleEffects.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScriptManager.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleLight.h"
@@ -22,6 +26,7 @@
 
 #include "Component/Component.h"
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioListener.h"
 #include "Component/ComponentAudioSource.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
@@ -36,7 +41,9 @@
 #include "Component/ComponentSpriteMask.h"
 #include "Component/ComponentBillboard.h"
 #include "Component/ComponentText.h"
+#include "Component/ComponentTrail.h"
 #include "Component/ComponentTransform.h"
+#include "Component/ComponentVideoPlayer.h"
 
 #include <Brofiler/Brofiler.h>
 #include <pcg_basic.h>
@@ -44,6 +51,7 @@
 #include <rapidjson/prettywriter.h>
 
 #include <algorithm>
+#include <stack>
 
 GameObject::GameObject() : aabb(this), UUID(pcg32_random())
 {
@@ -73,6 +81,7 @@ GameObject::GameObject(const GameObject& gameobject_to_copy) :
 	transform_2d.owner = this;
 	aabb.owner = this;
 	*this << gameobject_to_copy;
+
 }
 
 GameObject& GameObject::operator<<(const GameObject& gameobject_to_copy)
@@ -82,18 +91,29 @@ GameObject& GameObject::operator<<(const GameObject& gameobject_to_copy)
 	{
 		transform.SetTranslation(gameobject_to_copy.transform.GetTranslation());
 		transform.SetRotation(gameobject_to_copy.transform.GetRotation());
-		//gameobject_to_copy.transform.modified_by_user = false;
 	}
-
 	transform.SetScale(gameobject_to_copy.transform.GetScale());
-	CopyComponentsPrefabs(gameobject_to_copy);
+	gameobject_to_copy.transform_2d.CopyTo(&transform_2d);
+	for (int i = (components.size() - 1); i >= 0; --i)
+	{
+		components[i]->Delete();
+		components[i] = nullptr;
+	}
+	CopyComponents(gameobject_to_copy);
+	CopyParameters(gameobject_to_copy);
+	return *this;
+}
+
+void GameObject::CopyParameters(const GameObject & gameobject_to_copy)
+{
 	this->name = gameobject_to_copy.name;
 	this->active = gameobject_to_copy.active;
+	this->transform_2d_enabled = gameobject_to_copy.transform_2d_enabled;
 	this->SetStatic(gameobject_to_copy.is_static);
 	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
 	this->original_UUID = gameobject_to_copy.original_UUID;
-	return *this;
+	this->tag = gameobject_to_copy.tag;
 }
 
 void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
@@ -126,39 +146,28 @@ void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 		prefab_reference->RemoveInstance(this);
 	}
 }
-void GameObject::Duplicate(const GameObject& gameobject_to_copy)
+
+void GameObject::Duplicate(const GameObject& gameobject_to_copy, GameObject* parent)
 {
-	if (!is_prefab_parent && gameobject_to_copy.transform.modified_by_user)
-	{
-		transform.SetTranslation(gameobject_to_copy.transform.GetTranslation());
-		transform.SetRotation(gameobject_to_copy.transform.GetRotationRadiants());
-		//gameobject_to_copy.transform.modified_by_user = false;
-	}
-	transform.SetScale(gameobject_to_copy.transform.GetScale());
-	transform_2d = gameobject_to_copy.transform_2d;
+	SetParent(parent);
+
+	gameobject_to_copy.transform.CopyTo(&transform);
+	gameobject_to_copy.transform_2d.CopyTo(&transform_2d);
+
 	CopyComponents(gameobject_to_copy);
-	this->name = gameobject_to_copy.name;
-	this->active = gameobject_to_copy.active;
-	this->transform_2d_enabled = gameobject_to_copy.transform_2d_enabled;
-	this->SetStatic(gameobject_to_copy.is_static);
-	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
-	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
-	this->original_UUID = gameobject_to_copy.original_UUID;
-	this->tag = gameobject_to_copy.tag;
-	if(gameobject_to_copy.prefab_reference != nullptr && !gameobject_to_copy.is_prefab_parent)
+	CopyParameters(gameobject_to_copy);
+	if (gameobject_to_copy.prefab_reference != nullptr && !gameobject_to_copy.is_prefab_parent)
 	{
 		this->original_UUID = 0;
 		this->prefab_reference = nullptr;
 	}
-
-
 	return;
 }
 
 void GameObject::SetTransform(GameObject* game_object)
 {
 	transform.SetTranslation(game_object->transform.GetTranslation());
-	transform.SetRotation(game_object->transform.GetRotationRadiants());
+	transform.SetRotation(math::RadToDeg(game_object->transform.GetRotationRadiants()));
 	transform.SetScale(game_object->transform.GetScale());
 }
 
@@ -231,8 +240,13 @@ bool GameObject::IsStatic() const
 
 bool GameObject::IsVisible(const ComponentCamera& camera) const
 {
+	return IsVisible(camera.camera_frustum);
+}
+
+bool GameObject::IsVisible(const Frustum& frustum) const
+{
 	ComponentMeshRenderer* mesh = static_cast<ComponentMeshRenderer*>(GetComponent(Component::ComponentType::MESH_RENDERER));
-	if ((mesh != nullptr && !mesh->IsEnabled()) || !IsEnabled() || !camera.IsInsideFrustum(aabb.bounding_box))
+	if ((mesh != nullptr && !mesh->IsEnabled()) || !IsEnabled() || !ComponentCamera::IsInsideFrustum(frustum, aabb.bounding_box))
 	{
 		return false;
 	}
@@ -253,10 +267,9 @@ void GameObject::PreUpdate()
 	}
 }
 
-ENGINE_API void GameObject::Update()
+void GameObject::Update()
 {
 	BROFILER_CATEGORY("GameObject Update", Profiler::Color::Green);
-
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
 		if (components[i]->type != Component::ComponentType::SCRIPT)
@@ -345,7 +358,8 @@ void GameObject::Load(const Config& config)
 		Component::ComponentType component_type = static_cast<Component::ComponentType>(component_type_uint);
 
 		Component* created_component = nullptr;
-		if (component_type == Component::ComponentType::COLLIDER) {
+		if (component_type == Component::ComponentType::COLLIDER) 
+		{
 			ComponentCollider::ColliderType collider_type = static_cast<ComponentCollider::ColliderType>(gameobject_components_config[i].GetUInt("ColliderType", 0));
 			created_component = CreateComponent(collider_type);
 		}
@@ -376,6 +390,7 @@ void GameObject::AddChild(GameObject* child)
 {
 	if (child->parent != nullptr)
 	{
+		//Potencial lock
 		child->parent->RemoveChild(child);
 	}
 
@@ -418,8 +433,9 @@ void GameObject::SetTransform2DStatus(bool enabled)
 	transform_2d_enabled = enabled;
 }
 
-ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType type)
+Component* GameObject::CreateComponent(const Component::ComponentType type)
 {
+	assert(!original_prefab);
 	Component* created_component;
 	switch (type)
 	{
@@ -465,7 +481,9 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	case Component::ComponentType::UI_IMAGE:
 		created_component = App->ui->CreateComponentUI<ComponentImage>();
 		break;
-
+	case Component::ComponentType::VIDEO_PLAYER:
+		created_component = App->ui->CreateComponentUI<ComponentVideoPlayer>();
+		break;
 	case Component::ComponentType::UI_SPRITE_MASK:
 		created_component = App->ui->CreateComponentUI<ComponentSpriteMask>();
 		break;
@@ -473,7 +491,6 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	case Component::ComponentType::UI_TEXT:
 		created_component = App->ui->CreateComponentUI<ComponentText>();
 		break;
-
 	case Component::ComponentType::BILLBOARD:
 		created_component = App->effects->CreateComponentBillboard();
 		break;
@@ -482,8 +499,16 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		created_component = App->effects->CreateComponentParticleSystem();
 		break;
 
+	case Component::ComponentType::TRAIL:
+		created_component = App->effects->CreateComponentTrail(this);
+		break;
+
 	case Component::ComponentType::AUDIO_SOURCE:
 		created_component = App->audio->CreateComponentAudioSource();
+		break;
+
+	case Component::ComponentType::AUDIO_LISTENER:
+		created_component = App->audio->CreateComponentAudioListener();
 		break;
 		
 	default:
@@ -492,9 +517,9 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	}
 	created_component->owner = this;
 
+	components.push_back(created_component);
 	created_component->Init();
 
-	components.push_back(created_component);
 
 	if (created_component->Is2DComponent())
 	{
@@ -505,7 +530,7 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 }
 
 
-ENGINE_API Component* GameObject::CreateComponent(const ComponentCollider::ColliderType collider_type)
+Component* GameObject::CreateComponent(const ComponentCollider::ColliderType collider_type)
 {
 	Component* created_component = App->physics->CreateComponentCollider(collider_type, this);
 	components.push_back(created_component);
@@ -529,9 +554,10 @@ void GameObject::RemoveComponent(uint64_t UUID)
 		RemoveComponent(component);
 	}
 }
-ENGINE_API Component* GameObject::GetComponent(const Component::ComponentType type) const
+
+Component* GameObject::GetComponent(const Component::ComponentType type) const
 {
-	for (unsigned int i = 0; i < components.size(); ++i)
+ 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
 		if (components[i]->GetType() == type)
 		{
@@ -541,7 +567,7 @@ ENGINE_API Component* GameObject::GetComponent(const Component::ComponentType ty
 	return nullptr;
 }
 
-ENGINE_API Component* GameObject::GetComponent(uint64_t UUID) const
+Component* GameObject::GetComponent(uint64_t UUID) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
@@ -553,7 +579,7 @@ ENGINE_API Component* GameObject::GetComponent(uint64_t UUID) const
 	return nullptr;
 }
 
-ENGINE_API ComponentScript* GameObject::GetComponentScript(const char* name) const
+ComponentScript* GameObject::GetComponentScript(const char* name) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
@@ -646,6 +672,60 @@ void GameObject::UpdateHierarchyBranch()
 	}
 }
 
+GameObject* GameObject::GetChildrenWithTag(const std::string& tag)
+{
+	std::stack<GameObject*> pending_game_objects;
+	for (auto& child : children)
+	{
+		pending_game_objects.push(child);
+	}
+
+	while (!pending_game_objects.empty())
+	{
+		GameObject* current_game_object = pending_game_objects.top();
+		pending_game_objects.pop();
+
+		if (current_game_object->tag == tag)
+		{
+			return current_game_object;
+		}
+
+		for (auto& child : current_game_object->children)
+		{
+			pending_game_objects.push(child);
+		}
+	}
+
+	return nullptr;
+}
+
+GameObject* GameObject::GetChildrenWithName(const std::string& name)
+{
+	std::stack<GameObject*> pending_game_objects;
+	for (auto& child : children)
+	{
+		pending_game_objects.push(child);
+	}
+
+	while (!pending_game_objects.empty())
+	{
+		GameObject* current_game_object = pending_game_objects.top();
+		pending_game_objects.pop();
+
+		if (current_game_object->name == name)
+		{
+			return current_game_object;
+		}
+
+		for (auto& child : current_game_object->children)
+		{
+			pending_game_objects.push(child);
+		}
+	}
+
+	return nullptr;
+}
+
 int GameObject::GetHierarchyDepth() const
 {
 	return hierarchy_depth;
@@ -684,54 +764,23 @@ void GameObject::UnpackPrefab()
 	}
 }
 
-void GameObject::CopyComponentsPrefabs(const GameObject& gameobject_to_copy)
+void GameObject::Reassign()
 {
-	this->components.reserve(gameobject_to_copy.components.size());
-	for (const auto& component : gameobject_to_copy.components)
+	for(const auto& component : components)
 	{
-		component->modified_by_user = false;
-		Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
-		if (my_component != nullptr && !my_component->modified_by_user)
-		{
-			component->Copy(my_component);
-			my_component->owner = this;
-		}
-		else if (my_component == nullptr)
-		{
-			Component *copy = component->Clone(this->original_prefab);
-			copy->owner = this;
-			this->components.push_back(copy);
-		}
+		component->ReassignResource();
 	}
-	RemoveComponentsCopying(gameobject_to_copy);
 }
 
 void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 {
+	this->components.clear();
 	this->components.reserve(gameobject_to_copy.components.size());
 	for (const auto& component : gameobject_to_copy.components)
 	{
 		component->modified_by_user = false;
-		//Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
-		Component* copy = nullptr;
-		if(component->type == Component::ComponentType::SCRIPT)
-		{
-			copy = new ComponentScript(this, static_cast<ComponentScript*>(component)->name);
-			ComponentScript* copied_script = static_cast<ComponentScript*>(copy);
-			copied_script->name = static_cast<ComponentScript*>(component)->name;
-		}
-		else if (component->type == Component::ComponentType::COLLIDER)
-		{
-			copy = component->Clone(this, this->original_prefab);
-		}
-		else
-		{
-			copy = component->Clone(this->original_prefab);
-		}
-		copy->owner = this;
-		this->components.push_back(copy);
+		component->Clone(this, this->original_prefab);
 	}
-
 	RemoveComponentsCopying(gameobject_to_copy);
 }
 

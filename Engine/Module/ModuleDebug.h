@@ -9,24 +9,15 @@
 class ModuleDebug : public Module
 {
 public:
-	enum class CullingMode
-	{
-		NONE,
-		FRUSTUM_CULLING,
-		QUADTREE_CULLING,
-		OCTTREE_CULLING,
-		AABBTREE_CULLING,
-		COMBINED_CULLING
-	};
-
+	
 	ModuleDebug() = default;
 	~ModuleDebug() = default;
 
 	bool Init() override;
-	bool CleanUp() override;
-	void Render(ComponentCamera* cam);
+	void Render();
 	
 	void CreateFrustumCullingDebugScene() const;
+
 public:
 	bool show_imgui_demo = false;
 	bool show_debug_metrics = true;
@@ -41,14 +32,13 @@ public:
 	bool show_navmesh = false;
 	bool show_pathfind_points = true;
 	bool show_axis = false;
-	bool show_physics = true;
+	bool show_physics = false;
 
 #if !GAME
 	bool culling_scene_mode = false;
 #else
 	bool culling_scene_mode = true;
 #endif
-	CullingMode culling_mode = CullingMode::FRUSTUM_CULLING;
 	float rendering_time = 0;
 
 private:

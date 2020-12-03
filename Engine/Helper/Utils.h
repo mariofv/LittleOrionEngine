@@ -6,9 +6,16 @@
 #include <assimp/mesh.h>
 #include <vector>
 
+class ComponentMeshRenderer;
+
 class Utils
 {
 public:
+	struct MeshRendererDistancePair
+	{
+		float distance;
+		ComponentMeshRenderer* mesh_renderer;
+	};
 
 	Utils() = default;
 	~Utils() = default;
@@ -34,6 +41,15 @@ public:
 	static size_t GetImageType(const std::string& file_extension);
 
 	static btVector3 Float3TobtVector3(const float3& vector);
+
+	static void SplitCulledMeshRenderers(
+		const std::vector<ComponentMeshRenderer*>& culled_mesh_renderers,
+		float3 camera_position,
+		std::vector<MeshRendererDistancePair>& opaque_mesh_renderers,
+		std::vector<MeshRendererDistancePair>& transparent_mesh_renderers
+	);
+
+	static void SortMeshRendererVector(std::vector<MeshRendererDistancePair>& mesh_renderers);
 };
 
 #endif //_UTILS_H_

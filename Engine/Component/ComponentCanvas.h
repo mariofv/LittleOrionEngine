@@ -19,11 +19,11 @@ public:
 	ComponentCanvas & operator=(const ComponentCanvas& component_to_copy);
 	ComponentCanvas & operator=(ComponentCanvas&& component_to_move) = default;
 
-	Component* Clone(bool original_prefab = false) const override;
-	void Copy(Component* component_to_copy) const override;
+	Component* Clone(GameObject* owner, bool original_prefab) override;
+	void CopyTo(Component* component_to_copy) const override;
 	void Delete() override;
 
-	void Render(bool scene_mode = false);
+	void Render(float width, float height, bool scene_mode = false);
 	void RenderGameObject(GameObject* owner, float4x4* projection) const;
 
 	void SpecializedSave(Config& config) const override;
@@ -36,8 +36,6 @@ public:
 	ComponentButton* GetUIElementAtPosition(float2 mouse_position);
 
 private:
-	std::vector<ComponentCanvasRenderer*> GetComponentCanvasRendererToRender() const;
-
 	float2 canvas_screen_size = float2::zero;
 	float2 canvas_screen_position = float2::zero;
 

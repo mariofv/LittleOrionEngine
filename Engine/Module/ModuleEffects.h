@@ -3,14 +3,23 @@
 
 #include "Module.h"
 
+#include <vector>
+#include <memory>
+#include "Helper/Quad.h"
 
 class ComponentBillboard;
 class ComponentParticleSystem;
+class ComponentTrail;
+class PanelConfiguration;
+
+class GameObject;
 
 class ModuleEffects : public Module
 {
 
 public:
+
+	bool Init() override;
 
 	bool CleanUp() override;
 	void Render();
@@ -21,13 +30,19 @@ public:
 	ComponentParticleSystem* CreateComponentParticleSystem();
 	void RemoveComponentParticleSystem(ComponentParticleSystem* particle_system_to_remove);
 
-private:
+	ComponentTrail* CreateComponentTrail(GameObject* owner);
+	void RemoveComponentTrail(ComponentTrail* trail_to_remove);
 
+	std::unique_ptr<Quad> quad = nullptr;
+private:
 	std::vector<ComponentBillboard*> billboards;
 	std::vector<ComponentBillboard*> billboards_to_render;
 
 	std::vector<ComponentParticleSystem*> particle_systems;
 	std::vector<ComponentParticleSystem*> particle_systems_to_render;
+
+	std::vector<ComponentTrail*> trails;
+	friend PanelConfiguration;
 };
 
 #endif

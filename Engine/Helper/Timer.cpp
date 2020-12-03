@@ -2,13 +2,9 @@
 
 #include <SDL/SDL.h>
 
-Timer::~Timer()
-{
-}
-
 void Timer::Start()
 {
-	start_ticks = SDL_GetTicks();
+	start_ticks = static_cast<float>(SDL_GetTicks());
 	running = true;
 }
 
@@ -42,7 +38,7 @@ void Timer::Resume()
 	if (paused)
 	{
 		paused = false;
-		start_ticks = SDL_GetTicks();
+		start_ticks = static_cast<float>(SDL_GetTicks());
 	}
 }
 

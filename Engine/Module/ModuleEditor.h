@@ -1,7 +1,9 @@
 #ifndef _MODULEEDITOR_H_
 #define _MODULEEDITOR_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Module.h"
 #include "Main/Globals.h"
@@ -65,6 +67,7 @@ private:
 
 public:
 	GameObject *selected_game_object = nullptr;
+	std::vector<GameObject*> selected_game_objects;
 	bool show_game_object_inspector = true;
 
 	float3 selected_position = float3(0.0f, 0.0f, 0.0f);

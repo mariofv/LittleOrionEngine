@@ -3,17 +3,11 @@
 #include "Helper/Utils.h"
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
-#include "ResourceManagement/Importer/ModelImporters/SkeletonImporter.h"
 #include "ResourceManagement/Resources/Animation.h"
 
 #include <assimp/scene.h>
 #include <cmath>
 #include <map>
-
-FileData AnimationImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
-{
-	return assets_file_path.GetFile()->Load();
-}
 
 FileData AnimationImporter::ExtractAnimationFromAssimp(const aiScene* scene, const aiAnimation* animation, float unit_scale_factor) const
 {
@@ -36,7 +30,7 @@ FileData AnimationImporter::ExtractAnimationFromAssimp(const aiScene* scene, con
 
 void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float unit_scale_factor) const
 {
-	float animation_duration = animation->mDuration;
+	float animation_duration = static_cast<float>(animation->mDuration);
 	std::map<std::string, std::vector<aiNodeAnim*>> aiNode_by_channel;
 
 	//Organize channels
@@ -63,7 +57,7 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 		{
 			float4x4 pre_transform;
 			GetAcumulatedAssimpTransformations(channel, channel_set.second, root_node, pre_transform);
-			GetChannelTransform(pre_transform, channel, animation_duration, channel_transform);
+			GetChannelTransform(pre_transform, channel, static_cast<size_t>(animation_duration), channel_transform);
 		}
 
 		for (size_t i = 0; i < animation_duration; ++i)
@@ -112,12 +106,12 @@ void AnimationImporter::GetChannelTransform(const float4x4 & pre_transform, cons
 	Quat rotation = Quat::identity;
 	for (size_t j = 0; j <= animation_duration; j++)
 	{
-		if (sample->mNumPositionKeys >= j && sample->mPositionKeys[j].mTime >= 0.0f)
+		if (sample->mNumPositionKeys > j && sample->mPositionKeys[j].mTime >= 0.0f)
 		{
 			aiVector3D position_assimp = sample->mPositionKeys[j].mValue;
 			position = float3(position_assimp.x, position_assimp.y, position_assimp.z);
 		}
-		if (sample->mNumRotationKeys >= j &&sample->mRotationKeys[j].mTime >= 0.0f )
+		if (sample->mNumRotationKeys > j &&sample->mRotationKeys[j].mTime >= 0.0f )
 		{
 			aiQuaternion rotation_assimp = sample->mRotationKeys[j].mValue;
 			rotation = Quat(rotation_assimp.x, rotation_assimp.y, rotation_assimp.z, rotation_assimp.w);

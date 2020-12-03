@@ -33,17 +33,15 @@ public:
 		uint32_t num_joints = 0;
 	};
 
-	Mesh(uint32_t uuid, std::vector<Vertex> && vertices, std::vector<uint32_t> && indices);
+	Mesh(uint32_t uuid, std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, bool async = false);
 	~Mesh();
 
 	GLuint GetVAO() const;
 	GLuint GetEBO() const;
-	void ChangeTiling();
 	int GetNumTriangles() const;
 	int GetNumVerts() const;
 	std::vector<Triangle> GetTriangles() const;
 
-private:
 	void LoadInMemory();
 
 
@@ -61,9 +59,9 @@ private:
 namespace ResourceManagement
 {
 	template<>
-	static std::shared_ptr<Mesh> Load(uint32_t uuid, const FileData& resource_data)
+	static std::shared_ptr<Mesh> Load(uint32_t uuid, const FileData& resource_data, bool async)
 	{
-		return MeshManager::Load(uuid, resource_data);
+		return MeshManager::Load(uuid, resource_data, async);
 	}
 }
 

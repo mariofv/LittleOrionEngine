@@ -5,6 +5,7 @@
 #include "Main/Application.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleRender.h"
 #include "ResourceManagement/Manager/SkyboxManager.h"
 
 Skybox::Skybox() : Resource()
@@ -40,23 +41,22 @@ void Skybox::Save(Config& config) const
 
 void Skybox::Load(const Config& config)
 {
-	textures_id[(size_t)SkyboxFace::RIGHT] = config.GetUInt("Right", 0);
-	textures_id[(size_t)SkyboxFace::LEFT] = config.GetUInt("Left", 0);
+	textures_id[(size_t)SkyboxFace::RIGHT] = config.GetUInt32("Right", 0);
+	textures_id[(size_t)SkyboxFace::LEFT] = config.GetUInt32("Left", 0);
 
-	textures_id[(size_t)SkyboxFace::UP] = config.GetUInt("Up", 0);
-	textures_id[(size_t)SkyboxFace::DOWN] = config.GetUInt("Down", 0);
+	textures_id[(size_t)SkyboxFace::UP] = config.GetUInt32("Up", 0);
+	textures_id[(size_t)SkyboxFace::DOWN] = config.GetUInt32("Down", 0);
 
-	textures_id[(size_t)SkyboxFace::FRONT] = config.GetUInt("Front", 0);
-	textures_id[(size_t)SkyboxFace::BACK] = config.GetUInt("Back", 0);
+	textures_id[(size_t)SkyboxFace::FRONT] = config.GetUInt32("Front", 0);
+	textures_id[(size_t)SkyboxFace::BACK] = config.GetUInt32("Back", 0);
 
 	GenerateSkyboxCubeMap();
 }
 
 void Skybox::Render(const ComponentCamera& camera) const
 {
-	glDepthFunc(GL_LEQUAL);
-	GLuint shader_program = App->program->GetShaderProgramId("Skybox");
-	glUseProgram(shader_program);
+	glDepthFunc(GL_ALWAYS);
+	GLuint shader_program = App->program->UseProgram("Skybox");
 
 	float4x4 view_matrix = camera.GetViewMatrix();
 	view_matrix.SetRow(3, float4::zero);
@@ -75,16 +75,24 @@ void Skybox::Render(const ComponentCamera& camera) const
 		camera.GetProjectionMatrix().ptr()
 	);
 
-
 	//Draw skybox
-	glBindVertexArray(vao);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+	glUniform1i(glGetUniformLocation(shader_program, "skybox"), 0);
+
+	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
 
-	glDepthFunc(GL_LESS);
 	glUseProgram(0);
+	glDepthFunc(GL_LESS);
+
+	shader_program = App->program->UseProgram("Blinn phong");
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+	glUniform1i(glGetUniformLocation(shader_program, "skybox_texture"), 0);
+	glUseProgram(0);
+
 }
 
 void Skybox::GenerateSkyboxCube()
@@ -153,6 +161,7 @@ void Skybox::GenerateSkyboxCubeMap()
 	glGenTextures(1, &cubemap);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
 
+	App->resources->loading_thread_communication.normal_loading_flag = true;
 	for (size_t i = 0; i <= (size_t)SkyboxFace::BACK; i++)
 	{
 		uint32_t texture_id = textures_id[i];
@@ -163,6 +172,7 @@ void Skybox::GenerateSkyboxCubeMap()
 			glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, texture->width, texture->height, 0, texture->data.size(), texture->data.data());
 		}
 	}
+	App->resources->loading_thread_communication.normal_loading_flag = false;
 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

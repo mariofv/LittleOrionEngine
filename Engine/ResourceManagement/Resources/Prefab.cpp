@@ -9,6 +9,8 @@
 
 #include "ResourceManagement/Manager/PrefabManager.h"
 #include "ResourceManagement/Metafile/Metafile.h"
+#include "Component/ComponentParticleSystem.h"
+#include "Component/ComponentBillboard.h"
 
 #include <algorithm>
 
@@ -39,9 +41,13 @@ GameObject* Prefab::Instantiate(GameObject* prefab_parent, std::unordered_map<in
 		{
 			continue;
 		}
+		auto particles = gameObject->GetComponent(Component::ComponentType::PARTICLE_SYSTEM);
+		if (particles)
+		{
+			assert(static_cast<ComponentParticleSystem*>(particles)->billboard->emissive_intensity > -1);
+		}
 		GameObject* copy_in_scene = App->scene->AddGameObject(std::make_unique<GameObject>(*gameObject.get()));
 		original_gameObject_reference[gameObject->UUID] = copy_in_scene;
-		
 		if (UUIDS_pairs != nullptr && UUIDS_pairs->find(gameObject->UUID) != UUIDS_pairs->end())
 		{
 			copy_in_scene->UUID = (*UUIDS_pairs)[gameObject->UUID];
@@ -247,4 +253,18 @@ GameObject * Prefab::GetOriginalGameObject(int64_t UUID) const
 bool Prefab::IsOverwritable() const
 {
 	return overwritable;
+}
+
+void Prefab::Reassign()
+{
+	for(const auto instance : instances)
+	{
+		for(const auto go : instance->children)
+		{
+			if(go->prefab_reference)
+			{
+				go->Reassign();
+			}
+		}
+	}
 }

@@ -16,6 +16,7 @@ public:
 	struct Joint 
 	{
 		math::float4x4 transform_global;
+		math::float4x4 transform_local;
 		uint32_t parent_index;
 		std::string name;
 	};
@@ -32,7 +33,7 @@ public:
 namespace ResourceManagement
 {
 	template<>
-	static std::shared_ptr<Skeleton> Load(uint32_t uuid, const FileData& resource_data)
+	static std::shared_ptr<Skeleton> Load(uint32_t uuid, const FileData& resource_data, bool async)
 	{
 		return SkeletonManager::Load(uuid, resource_data);
 	}

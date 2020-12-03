@@ -2,12 +2,15 @@
 
 #include "ResourceManagement/Metafile/Metafile.h"
 
-Mesh::Mesh(uint32_t uuid, std::vector<Vertex> && vertices, std::vector<uint32_t> && indices)
+Mesh::Mesh(uint32_t uuid, std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, bool async)
 	: vertices(vertices)
 	, indices(indices)
 	, Resource(uuid)
 {
-	LoadInMemory();
+	if(!async)
+	{
+		LoadInMemory();
+	}
 }
 
 Mesh::~Mesh() 
@@ -72,7 +75,7 @@ void Mesh::LoadInMemory()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)0);
 
-	// VERTEX TEXTURE COORDS
+	// VERTEX UV 0
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tex_coords[0]));
 
@@ -92,11 +95,18 @@ void Mesh::LoadInMemory()
 	glEnableVertexAttribArray(5);
 	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, weights));
 
+	// NUM JOINTS
 	glEnableVertexAttribArray(6);
 	glVertexAttribIPointer(6, 1, GL_UNSIGNED_INT, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, num_joints));
 
+	// VERTEX UV 1
 	glEnableVertexAttribArray(7);
 	glVertexAttribPointer(7, 2, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tex_coords[1]));
 	glBindVertexArray(0);
+
+
+	glBindVertexArray(0);
+
+	initialized = true;
 }
 

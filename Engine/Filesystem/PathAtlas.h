@@ -8,6 +8,7 @@
 #define LIBRARY_METADATA_PATH "/Library/Metadata"
 #define WWISE_INIT_PATH "/Library/Wwise"
 #define WWISE_INIT_NAME "Init.bnk"
+#define SOUNDBANKS_XML_PATH "/Assets/Wwise/SoundbanksInfo.xml"
 
 #define RESOURCES_PATH "/Resources"
 
@@ -46,6 +47,7 @@
 #define SAVED_SCENE_PATH "/Assets/Scenes/scene.scene"
 #define TMP_SCENE_PATH "/Resources/Scenes/tmp_scene.scene"
 #define SCENE_ROOT_PATH "/Resources/Scenes"
+#define LOADING_SCREEN_PATH "/Resources/Scenes/loadingscreen.scene"
 
 
 #endif // !_PATHATLAS_H_

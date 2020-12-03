@@ -1,7 +1,7 @@
-#include "Path.h".
+#include "Path.h"
 
 #include "File.h"
-
+#include "Log/EngineLog.h"
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 
@@ -95,7 +95,7 @@ Path* Path::Save(const char* file_name, const FileData& data, bool append)
 		saved_file_path = App->filesystem->GetPath(saved_file_path_string);
 	}
 
-	free((void*)data.buffer);
+	delete[] data.buffer;
 
 	return saved_file_path;
 }
@@ -237,7 +237,8 @@ bool Path::IsImportable() const
 		|| file_type == FileType::SKYBOX
 		|| file_type == FileType::STATE_MACHINE
 		|| file_type == FileType::TEXTURE
-		|| file_type == FileType::SOUND;
+		|| file_type == FileType::SOUND
+		|| file_type == FileType::VIDEO;
 }
 
 bool Path::IsBinary() const
@@ -250,9 +251,20 @@ std::string Path::GetFullPath() const
 	return file_path;
 }
 
+std::string Path::GetFilename(const std::string& path)
+{
+	return path.substr(path.find_last_of('/') + 1, -1);
+}
+
+std::string Path::GetFilenameWindows(const std::string& path)
+{
+	return path.substr(path.find_last_of('\\') + 1, -1);
+}
+
+
 std::string Path::GetFilename() const
 {
-	return file_path.substr(file_path.find_last_of('/') + 1, -1);
+	return GetFilename(file_path);
 }
 
 std::string Path::GetFilenameWithoutExtension() const

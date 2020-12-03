@@ -1,11 +1,12 @@
 #include "ModuleTime.h"
 
-#include "EditorUI/EngineLog.h"
 #include "Filesystem/PathAtlas.h"
+#include "Log/EngineLog.h"
 #include "Helper/Timer.h"
 #include "Main/Application.h"
 #include "ModuleEditor.h"
 #include "ModuleAnimation.h"
+#include "ModuleAudio.h"
 #include "ModuleScene.h"
 #include "ModuleScriptManager.h"
 #include "ModuleWindow.h"
@@ -24,7 +25,7 @@ bool ModuleTime::Init()
 {
 	APP_LOG_SECTION("************ Module Time Init ************");
 
-	APP_LOG_INIT("Initializing Engine clocks");
+	APP_LOG_INFO("Initializing Engine clocks");
 	real_time_clock = new Timer();
 	game_time_clock = new Timer();
 
@@ -34,14 +35,9 @@ bool ModuleTime::Init()
 	game_time_clock->Start();
 #endif
 
-	APP_LOG_SUCCESS("Engine clocks initialized correctly");
+	APP_LOG_INFO("Engine clocks initialized correctly");
 
 	return true;
-}
-
-update_status ModuleTime::PreUpdate()
-{
-	return update_status::UPDATE_CONTINUE;
 }
 
 
@@ -84,8 +80,6 @@ void ModuleTime::EndFrame()
 	if (frame_count % 10 == 0)
 	{
 		current_fps = 1000.f / real_time_delta_time;
-		App->engine_log->LogFPS(current_fps);
-		App->engine_log->LogMS(real_time_delta_time);
 	}
 
 	if (stepping_frame)

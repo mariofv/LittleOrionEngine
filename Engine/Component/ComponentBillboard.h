@@ -1,36 +1,37 @@
 #ifndef _COMPONENTBILLBOARD_H_
 #define _COMPONENTBILLBOARD_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Component.h"
-#include "Component/ComponentAABB.h"
-#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
-#include "EditorUI/Panel/PanelScene.h"
 
-#include "MathGeoLib.h"
+#include <MathGeoLib.h>
 #include <GL/glew.h>
 
 class GameObject;
-
+class Texture;
+class Quad;
 class ComponentBillboard : public Component
 {
 public:
 
-	enum AlignmentType {
+	enum AlignmentType
+	{
+		WORLD,
 		VIEW_POINT,
-		AXIAL,	
-		SPRITESHEET,
-		CROSSED			
+		AXIAL
 	};
-	
+
 	enum AnimationType {
 		CONSTANT,
 		RANDOM_BETWEEN_VALUES
 	};
+
 	ComponentBillboard();
 	ComponentBillboard(GameObject* owner);
-	~ComponentBillboard();
+	~ComponentBillboard() = default;
 
 	//Copy and move
 	ComponentBillboard(const ComponentBillboard& component_to_copy) = default;
@@ -43,58 +44,80 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
-	Component* Clone(bool original_prefab = false) const override;
-	void Copy(Component* component_to_copy) const override;
+	Component* Clone(GameObject* owner, bool original_prefab) override;
+	void CopyTo(Component* component_to_copy) const override;
 
 	void InitData();
+	void Update() override;
 
-	void Render(const float3& position);
-	void SwitchFrame();
+	void Render(const float3& global_position);
+	void CommonUniforms(const GLuint &shader_program);
 
 	void ChangeTexture(uint32_t texture_uuid);
-	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
+	void LoadResource(uint32_t uuid, ResourceType resource) override;
+	void InitResource(uint32_t uuid, ResourceType resource) override;
 
-	ENGINE_API void EmitOnce();
+	void ReassignResource() override;
+
+	void ChangeTextureEmissive(uint32_t texture_uuid);
+	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
+	void Disable() override;
+
+	void ComputeAnimationFrame(float progress);
+
+	ENGINE_API void Play();
 	ENGINE_API bool IsPlaying();
+	ENGINE_API void SetOrientation(bool is_oriented);
+	ENGINE_API void SetAnimationTime(size_t time);
+
+	bool HasToDrawBillboard() const;
+
+private:
+	unsigned int GetBillboardVariation();
 
 public:
 	float width = 5.f;
 	float height = 5.f;
 	float transparency = 1.f;
-	bool play_once = false;
-	float current_sprite_x = 0, current_sprite_y = 0;
+	bool oriented_to_camera;
+	bool loop = false;
+	bool pulse = false;
+	int current_sprite_x = 0;
+	int current_sprite_y = 0;
+	float4 color = float4::one;
+	float4 color_emissive = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float emissive_intensity = 1.f;
+	bool playing_once = false;
 private:
-	AlignmentType alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
+	GLuint shader_program;
+	Quad* quad = nullptr;
 
     uint32_t texture_uuid = 0;
 	std::shared_ptr<Texture> billboard_texture = nullptr;
-	
-	//Spritesheet params
-	int x_tiles = 1;
-	int y_tiles = 1;
+	uint32_t texture_emissive_uuid = 0;
+	std::shared_ptr<Texture> billboard_texture_emissive = nullptr;
 
 	//color
-	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-	//Current sprite position
-	float time_since_start = 0.f;
+	AlignmentType alignment_type = ComponentBillboard::AlignmentType::WORLD;
 
-	float sheet_speed = 1;
-	bool oriented_to_camera;
-	AnimationType animation_type = AnimationType::CONSTANT;
-	int num_of_tiles = 0;
+
+	//Spritesheet params
 	bool is_spritesheet = false;
+	int num_sprisheet_rows = 1;
+	int num_sprisheet_columns = 1;
+	int num_sprites = 1;
 
-	int total_frame = 0;
-	int current_frame = 0;
-	bool play = true;
-	unsigned int vbo, vao, ebo;
+	int time_since_start = 0;
+	int animation_time = 1000;
 
-	//Determines when the sprite is changed
-	int innerCount = 0;
+	AnimationType animation_type = AnimationType::CONSTANT;
+	bool playing = false;
 
 	friend class PanelComponent;
+	friend class PanelParticleSystem;
 	friend class ComponentParticleSystem;
+
 };
 
 #endif //_COMPONENTBILLBOARD_H_

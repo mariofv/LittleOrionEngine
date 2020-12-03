@@ -40,7 +40,7 @@ Metafile* MetafileManager::GetMetafile(const Path& metafile_path)
 	delete created_metafile;
 
 	specialized_metafile->Load(meta_config);
-
+	specialized_metafile->metafile_path = specialized_metafile->metafile_path.empty() ? metafile_path.GetFullPath() : specialized_metafile->metafile_path;
 	metafiles[specialized_metafile->metafile_path] = specialized_metafile;
 
 	return specialized_metafile;
@@ -58,7 +58,6 @@ Metafile* MetafileManager::CreateMetafile(Path& asset_file_path, ResourceType re
 	Metafile* created_metafile = CreateSpecializedMetafile(resource_type);
 
 	std::string metafile_path_string = GetMetafilePath(asset_file_path);
-	assert(metafiles.find(metafile_path_string) == metafiles.end());
 
 	created_metafile->uuid = uuid == 0 ? pcg32_random() : uuid;
 	created_metafile->resource_name = asset_file_path.GetFilenameWithoutExtension();
@@ -156,6 +155,7 @@ void MetafileManager::RefreshMetafile(const Path& metafile_path)
 	Path* new_imported_file_path = App->filesystem->GetPath(assets_file);
 	assert(new_imported_file_path);
 	metafile->imported_file_path = new_imported_file_path->GetFullPath();
+	metafile->resource_name = new_imported_file_path->GetFilename();
 	SaveMetafile(metafile, *new_imported_file_path);
 }
 

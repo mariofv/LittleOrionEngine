@@ -16,7 +16,7 @@ void Tween::Pause()
 	state = TweenState::PAUSED;
 }
 
-Tween * Tween::LOTranslate(ComponentTransform2D* transform, float2 end_value, float desired_time)
+Tween * Tween::LOTranslate(ComponentTransform2D* transform, const float2 end_value, float desired_time)
 {
 	Tween* tween = new Tween();
 	tween->transform = transform;
@@ -28,7 +28,7 @@ Tween * Tween::LOTranslate(ComponentTransform2D* transform, float2 end_value, fl
 	return tween;
 }
 
-Tween * Tween::LORotate(ComponentTransform2D* transform, float end_value, float desired_time)
+Tween* Tween::LORotate(ComponentTransform2D* transform, const float end_value, float desired_time)
 {
 	Tween* tween = new Tween();
 	tween->transform = transform;
@@ -40,19 +40,19 @@ Tween * Tween::LORotate(ComponentTransform2D* transform, float end_value, float 
 	return tween;
 }
 
-Tween * Tween::LOScale(ComponentTransform2D* transform, float end_scale, float desired_time)
+Tween * Tween::LOScale(ComponentTransform2D* transform, const float3 end_scale, float desired_time)
 {
 	Tween* tween = new Tween();
 	tween->transform = transform;
-	tween->initial_value = 1.0f;
-	tween->desired_value = end_scale;
+	tween->initial_scale = transform->GetGlobalScale();
+	tween->desired_scale = end_scale;
 	tween->duration = desired_time;
 	tween->tween_type = TweenType::SCALE;
 
 	return tween;
 }
 
-Tween * Tween::LOColor(ComponentImage* image, float4 end_color, float desired_time)
+Tween * Tween::LOColor(ComponentImage* image, const float4 end_color, float desired_time)
 {
 	Tween* tween = new Tween();
 	tween->image = image;
@@ -112,8 +112,8 @@ float Tween::UpdateTweenByType()
 		break;
 
 	case Tween::SCALE:
-		tweened_value = math::Lerp(initial_value, desired_value, eased_time);
-		transform->SetScale(float3::one * tweened_value);
+		tweened_scale = math::Lerp(initial_scale, desired_scale, eased_time);
+		transform->SetScale(tweened_scale);
 		break;
 
 	case Tween::COLOR:
@@ -223,46 +223,55 @@ void Tween::ResetTween()
 	}
 }
 
-float Tween::Linear(float t) const {
+float Tween::Linear(float t) const 
+{
 	return t;
 }
 
-float Tween::SmoothStep(float t) const {
+float Tween::SmoothStep(float t) const 
+{
 	return (t*t *(3 - 2 * t));
 }
 
-float Tween::EaseInSine(float t) const {
-	return 1 - cos(t * (3.1416 / 2));
+float Tween::EaseInSine(float t) const 
+{
+	return 1 - cos(t * (math::pi / 2));
 }
 
-float Tween::Sine(float t) const {
-	return (sin(t * (3.1416 * 2) - 3.1416 / 2) + 1.0) / 2.0;
+float Tween::Sine(float t) const 
+{
+	return (sin(t * (math::pi * 2) - math::pi / 2) + 1.0f) / 2.0f;
 }
 
-float Tween::EaseOutSine(float t) const {
-	return sin(t * (3.1416 / 2));
+float Tween::EaseOutSine(float t) const 
+{
+	return sin(t * (math::pi / 2));
 }
 
-float Tween::EaseInOutSine(float t) const {
-	return -0.5 * (cos(3.1416 * t) - 1);
+float Tween::EaseInOutSine(float t) const 
+{
+	return -0.5f * (cos(math::pi * t) - 1);
 }
 
-float Tween::EaseInBack(float t) const {
+float Tween::EaseInBack(float t) const 
+{
 	float s = 1.70158f;
 	return t * t*((s + 1)*t - s);
 }
 
-float Tween::EaseOutBack(float t) const {
+float Tween::EaseOutBack(float t) const 
+{
 	float s = 1.70158f;
 	t--;
 	return (t*t*((s + 1)*t + s) + 1);
 }
 
-float Tween::EaseInOutBack(float t) const {
+float Tween::EaseInOutBack(float t) const 
+{
 	float s = 1.70158f * 1.525f;
 	//float s2 = s * 1.525f;
 	t *= 2;
-	if (t < 1) return 1.0 / 2 * (t*t*((s + 1)*t - s));
+	if (t < 1) return 1.0f / 2 * (t*t*((s + 1)*t - s));
 	float postFix = t -= 2;
-	return 1.0 / 2 * ((postFix)*t*((s + 1)*t + s) + 2);
+	return 1.0f / 2 * ((postFix)*t*((s + 1)*t + s) + 2);
 }

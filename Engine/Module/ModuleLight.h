@@ -2,11 +2,12 @@
 #define _MODULELIGHT_H_
 
 #include "Module.h"
-#include "Component/ComponentLight.h"
-
 #include <vector>
 #include <MathGeoLib.h>
 #include <GL/glew.h>
+
+class ComponentLight;
+class LightFrustum;
 
 class ModuleLight : public Module
 {
@@ -16,20 +17,19 @@ public:
 
 	bool Init() override;
 	bool CleanUp() override;
-	update_status PostUpdate() override;
+	update_status Update() override;
 
 	void Render(const float3& mesh_position, GLuint program);
-	void RenderDirectionalLight(const float3& mesh_position);
-	void RenderSpotLights(const float3& mesh_position, GLuint program);
-	void RenderPointLights(const float3& mesh_position, GLuint program);
-	void UpdateLightAABB(GameObject& object_aabb);
+	void BindLightFrustumsMatrices();
 
 	ComponentLight* CreateComponentLight();
 	void RemoveComponentLight(ComponentLight* light_to_remove);
 
 private:
-	void SortClosestLights(const float3& position, ComponentLight::LightType light_type);
-	void SendShadowMatricesToShader(GLuint program);
+	void SortClosestLights(const float3& position);
+	void RenderDirectionalLight(const ComponentLight& light);
+	void RenderSpotLights(const ComponentLight& light, GLuint program);
+	void RenderPointLights(const ComponentLight& light, GLuint program);
 
 public:
 	static const unsigned int MAX_DIRECTIONAL_LIGHTS_RENDERED = 1;
@@ -43,20 +43,17 @@ public:
 
 	std::vector<ComponentLight*> lights;
 
-	float ambient_light_intensity = 0.3;
-	float ambient_light_color[4] = { 1, 1, 1, 1 };
-	
-	AABB   light_aabb;
-	float3 light_position = float3::zero;
-	
-	OBB light_obb;
-	OBB object_obb;
+	//Configurable values
+	float ambient_light_intensity = 0.3f;
+	float ambient_light_color[4] = { 1.f, 1.f, 1.f, 1.f };
 
-private:
-	std::vector< std::pair<float, ComponentLight*> >  closest_lights;
-	friend class ModuleEditor;
 	Quat directional_light_rotation;
+	LightFrustum* full_frustum = nullptr;
+	LightFrustum* near_frustum = nullptr;
+	LightFrustum* mid_frustum = nullptr;
+	LightFrustum* far_frustum = nullptr;
 
+	friend class ModuleEditor;
 };
 
 #endif // !_MODULELIGHT_H_

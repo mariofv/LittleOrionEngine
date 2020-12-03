@@ -31,28 +31,35 @@ ComponentText::~ComponentText()
 
 void ComponentText::InitData()
 {
-	program = App->program->GetShaderProgramId("UI Text");
-
 	GLfloat vertices[] = {
-		// Pos      // Tex
-		0.f, 1.f, 0.0f, 0.0f,
-		1.f, 0.f, 1.0f, 1.0f,
-		0.f, 0.f, 0.0f, 1.0f,
+		// Pos      // Tex	
+		0.f, 1.f, 0.f, 0.0f, 0.0f,
+		1.f, 0.f, 0.f, 1.0f, 1.0f,
+		0.f, 0.f, 0.f, 0.0f, 1.0f,
 
-		0.f, 1.f, 0.0f, 0.0f,
-		1.f, 1.f, 1.0f, 0.0f,
-		1.f, 0.f, 1.0f, 1.0f
+		0.f, 1.f, 0.f, 0.0f, 0.0f,
+		1.f, 1.f, 0.f, 1.0f, 0.0f,
+		1.f, 0.f, 0.f, 1.0f, 1.0f
 	};
 
+	glGenBuffers(1, &ebo);
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
 	glBindVertexArray(vao);
+
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
@@ -64,8 +71,8 @@ void ComponentText::Update()
 
 //TODO: Improve this shit
 void ComponentText::Render(float4x4* projection)
-{	
-	if (font_uuid == 0)
+{
+	if (font_uuid == 0 || !font)
 	{
 		return;
 	}
@@ -74,7 +81,14 @@ void ComponentText::Render(float4x4* projection)
 		return;
 	}
 
-	glUseProgram(program);
+	if (program == 0)
+	{
+		program = App->program->UseProgram("UI Text");
+	}
+	else
+	{
+		glUseProgram(program);
+	}
 	glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
 	glUniform4fv(glGetUniformLocation(program, "font_color"), 1, font_color.ptr());
 	glActiveTexture(GL_TEXTURE0);
@@ -82,7 +96,7 @@ void ComponentText::Render(float4x4* projection)
 
 
 	int current_line = 0;
-	
+
 	float cursor_x = 0;
 	float cursor_y = 0;
 	float x = GetLineStartPosition(line_sizes[current_line]);
@@ -91,13 +105,20 @@ void ComponentText::Render(float4x4* projection)
 	// Iterate through all characters
 	for (char const &c : text)
 	{
+
 		Font::Character character = font->GetCharacter(c);
-		float character_size = (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
-		
-		float next_cursor_x = cursor_x + character_size; 
-		if (next_cursor_x > owner->transform_2d.size.x)
+		if (c == '\n')
 		{
-			float next_cursor_y = cursor_y + font->GetMaxHeight() * scale_factor;
+			is_jump_line = true;
+			character = font->GetCharacter(' ');
+		}
+		float character_size = (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+
+		float next_cursor_x = cursor_x + character_size;
+		if (next_cursor_x > owner->transform_2d.size.x || is_jump_line)
+		{
+			is_jump_line = false;
+			float next_cursor_y = cursor_y + font->GetMaxHeight() * scale_factor + pacing;
 			if (next_cursor_y > owner->transform_2d.size.y)
 			{
 				break;
@@ -106,12 +127,16 @@ void ComponentText::Render(float4x4* projection)
 			{
 				cursor_x = 0;
 				++current_line;
+				if (current_line > line_sizes.size() - 1)
+				{
+					current_line = line_sizes.size() - 1;
+				}
 				x = GetLineStartPosition(line_sizes[current_line]);
 
-				cursor_y = font->GetMaxHeight() * scale_factor;
-				y -= font->GetMaxHeight() * scale_factor;
+				cursor_y = font->GetMaxHeight() * scale_factor + pacing;
+				y -= font->GetMaxHeight() * scale_factor + pacing;
 			}
-			
+
 		}
 		else
 		{
@@ -143,12 +168,17 @@ void ComponentText::Render(float4x4* projection)
 
 void ComponentText::ComputeTextLines()
 {
+	if (font == nullptr || font_uuid == 0)
+	{
+		return;
+	}
+
 	line_sizes.clear();
 
 	float cursor_x = 0;
 	float cursor_y = 0;
 
-	float2 owner_rect_aabb_min_point(0.f,0.f);
+	float2 owner_rect_aabb_min_point(0.f, 0.f);
 	float2 owner_rect_aabb_max_point(owner->transform_2d.GetWidth(), owner->transform_2d.GetHeight());
 	AABB2D owner_rect(owner_rect_aabb_min_point, owner_rect_aabb_max_point);
 
@@ -160,8 +190,9 @@ void ComponentText::ComputeTextLines()
 		pending_characters.push(character);
 	}
 
-	while(!pending_characters.empty())
+	while (!pending_characters.empty())
 	{
+		
 		Font::Character character = pending_characters.front();
 
 		float character_width = (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
@@ -180,6 +211,7 @@ void ComponentText::ComputeTextLines()
 		{
 			if (character_rect_aabb.maxPoint.y > owner_rect.maxPoint.y)
 			{
+				line_sizes.clear();
 				return;
 			}
 			else
@@ -189,7 +221,7 @@ void ComponentText::ComputeTextLines()
 				cursor_y += character_height;
 			}
 
-		}		
+		}
 	}
 
 	line_sizes.push_back(cursor_x);
@@ -207,10 +239,12 @@ float ComponentText::GetLineStartPosition(float line_size) const
 
 	case HorizontalAlignment::RIGHT:
 		return owner->transform_2d.size.x * 0.5f - line_size;
+	default:
+		return 0.0f;
 	}
 }
 
-Component* ComponentText::Clone(bool original_prefab) const
+Component* ComponentText::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentText* created_component;
 	if (original_prefab)
@@ -223,10 +257,16 @@ Component* ComponentText::Clone(bool original_prefab) const
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
+
+	created_component->ReassignResource();
+
 	return created_component;
 };
 
-void ComponentText::Copy(Component* component_to_copy) const
+void ComponentText::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentText*>(component_to_copy) = *this;
@@ -241,12 +281,12 @@ void ComponentText::Delete()
 void ComponentText::SpecializedSave(Config& config) const
 {
 	config.AddString(text, "Text");
-	
+
 	config.AddUInt(font_uuid, "FontUUID");
 
 	config.AddFloat(font_size, "FontSize");
 	config.AddColor(font_color, "FontColor");
-	
+
 	config.AddUInt((uint32_t)horizontal_alignment, "HorizontalAlignment");
 }
 
@@ -254,7 +294,7 @@ void ComponentText::SpecializedLoad(const Config& config)
 {
 	config.GetString("Text", text, "");
 
-	font_uuid = config.GetUInt("FontUUID", 0);
+	font_uuid = config.GetUInt32("FontUUID", 0);
 	if (font_uuid != 0)
 	{
 		SetFont(font_uuid);
@@ -265,8 +305,25 @@ void ComponentText::SpecializedLoad(const Config& config)
 
 	config.GetColor("FontColor", font_color, float4::one);
 
-	uint32_t horizontal_alignment_uint32 = config.GetUInt("HorizontalAlignment", 0);
+	uint32_t horizontal_alignment_uint32 = config.GetUInt32("HorizontalAlignment", 0);
 	horizontal_alignment = static_cast<HorizontalAlignment>(horizontal_alignment_uint32);
+}
+
+void ComponentText::InitResource(uint32_t uuid, ResourceType resource)
+{
+	this->font_uuid = font_uuid;
+	App->resources->loading_thread_communication.normal_loading_flag = true;
+	font = App->resources->Load<Font>(uuid);
+	App->resources->loading_thread_communication.normal_loading_flag = false;
+	ComputeTextLines();
+}
+
+void ComponentText::ReassignResource()
+{
+	if (font_uuid != 0)
+	{
+		SetFont(font_uuid);
+	}
 }
 
 void ComponentText::SetText(const std::string& new_text)
@@ -283,11 +340,13 @@ void ComponentText::SetHorizontalAlignment(HorizontalAlignment horizontal_alignm
 void ComponentText::SetFont(uint32_t font_uuid)
 {
 	this->font_uuid = font_uuid;
+	App->resources->loading_thread_communication.current_component_loading = this;
 	font = App->resources->Load<Font>(font_uuid);
+	App->resources->loading_thread_communication.current_component_loading = nullptr;
 	ComputeTextLines();
 }
 
-void ComponentText::SetFontSize(int font_size)
+void ComponentText::SetFontSize(float font_size)
 {
 	this->font_size = font_size;
 	scale_factor = font_size / 64.f;

@@ -12,6 +12,7 @@
 #include "Helper/Utils.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioListener.h"
 #include "Component/ComponentAudioSource.h"
 #include "Component/ComponentBillboard.h"
 #include "Component/ComponentBoxCollider.h"
@@ -34,6 +35,8 @@
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
+#include "Component/ComponentTrail.h"
+#include "Component/ComponentVideoPlayer.h"
 
 #include "Helper/Utils.h"
 
@@ -48,12 +51,27 @@
 #include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleUI.h"
 
+#include "PanelParticleSystem.h"
+#include "PanelTrail.h"
+
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Resources/StateMachine.h"
 
 #include <imgui.h>
 #include <imgui_stdlib.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
+
+PanelComponent::PanelComponent()
+{
+	particle_system_panel = new PanelParticleSystem();
+	trail_panel = new PanelTrail();
+}
+
+PanelComponent::~PanelComponent()
+{
+	delete particle_system_panel;
+	delete trail_panel;
+}
 
 void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh_renderer)
 {
@@ -148,176 +166,55 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 			ImGui::Button(tmp_string);
 		}
 
-		ImGui::Checkbox("Is Raycastable", &mesh_renderer->is_raycastable);
+		bool is_raycastable = mesh_renderer->IsPropertySet(ComponentMeshRenderer::MeshProperties::RAYCASTABLE);
+		if (ImGui::Checkbox("Is Raycastable", &is_raycastable))
+		{
+			if (is_raycastable)
+			{
+				mesh_renderer->AddProperty(ComponentMeshRenderer::MeshProperties::RAYCASTABLE);
+			}
+			else
+			{
+				mesh_renderer->RemoveProperty(ComponentMeshRenderer::MeshProperties::RAYCASTABLE);
+			}
+
+		}
+
+		bool shadow_caster = mesh_renderer->IsPropertySet(ComponentMeshRenderer::MeshProperties::SHADOW_CASTER);
+		if (ImGui::Checkbox("Shadow Caster", &shadow_caster))
+		{
+			if (shadow_caster)
+			{
+				mesh_renderer->AddProperty(ComponentMeshRenderer::MeshProperties::SHADOW_CASTER);
+			}
+			else
+			{
+				mesh_renderer->RemoveProperty(ComponentMeshRenderer::MeshProperties::SHADOW_CASTER);
+			}
+
+		}
+
+		bool shadow_receiver = mesh_renderer->IsPropertySet(ComponentMeshRenderer::MeshProperties::SHADOW_RECEIVER);
+		if (ImGui::Checkbox("Shadow Receiver", &shadow_receiver))
+		{
+			if (shadow_receiver)
+			{
+				mesh_renderer->AddProperty(ComponentMeshRenderer::MeshProperties::SHADOW_RECEIVER);
+			}
+			else
+			{
+				mesh_renderer->RemoveProperty(ComponentMeshRenderer::MeshProperties::SHADOW_RECEIVER);
+			}
+
+		}
 	}
 }
 
 void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* particle_system)
 {
-	
-	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Particle System", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		
-		ImGui::Checkbox("Active", &particle_system->active);
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
-		{
-			App->actions->DeleteComponentUndo(particle_system);
-		}
-		ImGui::Separator();
-		if (ImGui::CollapsingHeader("Debug", ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			static int emit_count = 0;
-			ImGui::InputInt("##Emit_amount", &emit_count);
-			if (ImGui::Button("Emit"))
-			{
-				particle_system->Emit(emit_count);
-			}
-			if (ImGui::Button("Start"))
-			{
-				particle_system->Play();
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Pause"))
-			{
-				particle_system->Pause();
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Stop"))
-			{
-				particle_system->Stop();
-			}
-		}
-		if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			if (ImGui::InputInt("Max particles", &particle_system->max_particles_number) && particle_system->max_particles_number > MAX_PARTICLES)
-			{
-				particle_system->max_particles_number = MAX_PARTICLES;
-			}
-			ShowBillboardOptions(particle_system->billboard);
-			if (particle_system->billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET)
-			{
-				ImGui::Checkbox("Tile random", &particle_system->tile_random);
-				if (particle_system->tile_random)
-				{
-					ImGui::InputFloat("Max", &particle_system->max_tile_value);
-					ImGui::InputFloat("Min", &particle_system->min_tile_value);
-				}
-			}
-
-			int particle_shape = static_cast<int>(particle_system->type_of_particle_system);
-			if (ImGui::Combo("Shape", &particle_shape, "Sphere\0Box\0Cone\0"))
-			{
-				switch (particle_shape)
-				{
-				case 0:
-					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::SPHERE;
-					break;
-				case 1:
-					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::BOX;
-					break;
-				case 2:
-					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::CONE;
-					break;
-				}
-			}
-		
-			ImGui::Checkbox("Loop", &particle_system->loop);
-			ImGui::SameLine();
-			ImGui::Checkbox("Follow GO Parent", &particle_system->follow_owner);
-			ImGui::Spacing();
-			ImGui::Separator();
-
-			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-			ImGui::DragFloat("Width", &particle_system->particles_width, 0.01f, 0.0f, 100.0F);
-			ImGui::SameLine();
-			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-			ImGui::DragFloat("Height", &particle_system->particles_height, 0.01f, 0.0f, 100.0F);
-
-
-			ImGui::Checkbox("Rand size", &particle_system->size_random);ImGui::SameLine();
-			ImGui::Checkbox("Size change over time", &particle_system->change_size);
-			if (particle_system->size_random || particle_system->change_size)
-			{
-				ImGui::Spacing();
-				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragInt("Min size", &particle_system->min_size_of_particle, 10, 0, 999);
-				ImGui::SameLine();
-				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragInt("Max size", &particle_system->max_size_of_particle, 100, 1, 1000);
-			}
-			
-
-			if (particle_system->change_size)
-			{
-				ImGui::DragFloat("Speed", &particle_system->size_change_speed, 0.01f, 0.0f, 10.0F);
-			}
-			ImGui::Separator();
-			ImGui::Spacing();
-
-			ImGui::DragFloat("Velocity", &particle_system->velocity_particles, 0.01f, 0.0f, 100.0F);
-			ImGui::Spacing();
-
-			ImGui::DragFloat("Life (in seconds)", &particle_system->particles_life_time, 1.0F, 0.0F, 100.0F);
-			ImGui::Spacing();
-
-			ImGui::DragFloat("Time Between Particles", &particle_system->time_between_particles, 0.1F, 0.0F, 10.0f);
-			ImGui::Spacing();
-			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::BOX)
-			{
-				if (particle_system->enabled_random_x)
-				{
-					ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 10000);
-					ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -10000, 0);
-				}
-				else
-				{
-					ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -100, 10000);
-				}
-				ImGui::SameLine();
-				ImGui::Checkbox("Rand X", &particle_system->enabled_random_x);
-
-				ImGui::Spacing();
-
-				if (particle_system->enabled_random_z)
-				{
-					ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 10000);
-					ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -10000, 0);
-				}
-				else
-				{
-					ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -100, 10000);
-				}
-				ImGui::SameLine();
-				ImGui::Checkbox("Rand Z", &particle_system->enabled_random_z);
-			
-			}
-			if (particle_system->type_of_particle_system == ComponentParticleSystem::TypeOfParticleSystem::CONE)
-			{
-				ImGui::DragFloat("Outer radius", &particle_system->outer_radius, 0.1F, 0.1, 10);
-				ImGui::DragFloat("Inner radius", &particle_system->inner_radius, 0.1F, 0.1, 10);
-			}
-		}
-
-		//Color of Particles
-		if (ImGui::CollapsingHeader(ICON_FA_SQUARE "Color Over Time"))
-		{
-			ImGui::Checkbox("Fade", &particle_system->fade);
-			ImGui::Checkbox("Fade Between Colors", &particle_system->fade_between_colors);
-			if (particle_system->fade)
-			{
-				ImGui::DragFloat("Fade time", &particle_system->fade_time, 0.01f, 0.0f, 10.0F);
-			}
-			ImGui::ColorEdit4("Particle Color##2f", (float*)&particle_system->color_particle, ImGuiColorEditFlags_Float );
-			if (particle_system->fade_between_colors)
-			{
-				ImGui::ColorEdit4("Particle Color To Fade##2f", (float*)&particle_system->color_to_fade, ImGuiColorEditFlags_Float);
-				ImGui::DragFloat("Color Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
-			}
-		}		
-	}
-
+	particle_system_panel->Render(particle_system);
 }
+
 void PanelComponent::ShowComponentBillboard(ComponentBillboard* billboard)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Billboard", ImGuiTreeNodeFlags_DefaultOpen))
@@ -351,54 +248,84 @@ void PanelComponent::ShowBillboardOptions(ComponentBillboard* billboard)
 	if (selected_resource_uuid != 0)
 	{
 		billboard->ChangeTexture(selected_resource_uuid);
+		billboard->modified_by_user = true;
 	}
 	selected_resource_uuid = ImGui::ResourceDropper<Texture>();
 	if (selected_resource_uuid != 0)
 	{
 		billboard->ChangeTexture(selected_resource_uuid);
+		billboard->modified_by_user = true;
 	}
+	billboard->modified_by_user |= ImGui::ColorEdit4("Color", billboard->color.ptr());
+
+	ImGui::Text("TextureEmissive");
+	ImGui::SameLine();
+	texture_name = billboard->billboard_texture_emissive == nullptr ? "None ( Emissive Texture)" : App->resources->resource_DB->GetEntry(billboard->billboard_texture_emissive->GetUUID())->resource_name;
+	element_id = ImGui::GetID((std::to_string(billboard->UUID) + "TextureEmissiveSelector").c_str());
+	if (ImGui::Button(texture_name.c_str()))
+	{
+		App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+	}
+
+	selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+	if (selected_resource_uuid != 0)
+	{
+		billboard->ChangeTextureEmissive(selected_resource_uuid);
+		billboard->modified_by_user = true;
+	}
+	selected_resource_uuid = ImGui::ResourceDropper<Texture>();
+	if (selected_resource_uuid != 0)
+	{
+		billboard->ChangeTextureEmissive(selected_resource_uuid);
+		billboard->modified_by_user = true;
+	}
+	billboard->modified_by_user |= ImGui::ColorEdit4("Color Emissive", billboard->color_emissive.ptr());
+	billboard->modified_by_user |= ImGui::DragFloat("Emissive Intensity", &billboard->emissive_intensity, 0.01f, 1.f, 100.f);
+
 	int alignment_type = static_cast<int>(billboard->alignment_type);
-	if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) {
+	if (ImGui::Combo("Billboard type", &alignment_type, "World\0View point\0Axial")) {
 		switch (alignment_type)
 		{
 		case 0:
-			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::WORLD);
+			billboard->modified_by_user = true;
 			break;
 		case 1:
-			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
+			billboard->modified_by_user = true;
 			break;
 		case 2:
-			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::SPRITESHEET);
-			break;
-		case 3:
-			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
+			billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
+			billboard->modified_by_user = true;
 			break;
 		}
 	}
 
-	if (billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
-		ImGui::InputInt("Columns", &billboard->x_tiles, 1);
-		ImGui::InputInt("Rows", &billboard->y_tiles, 1);
-		ImGui::InputFloat("current x", &billboard->current_sprite_x, 1);
-		ImGui::InputFloat("current y", &billboard->current_sprite_y, 1);
-		ImGui::InputFloat("Speed", &billboard->sheet_speed, 1);
-		ImGui::Checkbox("Oriented to camera", &billboard->oriented_to_camera);
-		if (ImGui::Button("Play once"))
-		{
-			billboard->EmitOnce();
-		}
-		if (ImGui::Button("Reset"))
-		{
-			billboard->play = true;
-		}
+	ImGui::Checkbox("Spritesheet", &billboard->is_spritesheet);
 
+	if (billboard->is_spritesheet)
+	{
+		billboard->modified_by_user |= ImGui::DragInt("Columns", &billboard->num_sprisheet_columns);
+		billboard->modified_by_user |= ImGui::DragInt("Rows", &billboard->num_sprisheet_rows);
+		billboard->modified_by_user |= ImGui::DragInt("Animation Time", &billboard->animation_time, 10.f, 0);
+		billboard->modified_by_user |= ImGui::Checkbox("Loop", &billboard->loop);
+		billboard->modified_by_user |= ImGui::Checkbox("Play once", &billboard->playing_once);
+
+		if (ImGui::Button("Play"))
+		{
+			billboard->Play();
+		}
 	}
-
 	ImGui::Separator();
 	ImGui::Text("Custom");
-	ImGui::DragFloat("Width:", &billboard->width, 0.2f, 0.f, 10.f);
-	ImGui::DragFloat("Height:", &billboard->height, 0.2f, 0.f, 10.f);
-	ImGui::DragFloat("Transparency:", &billboard->transparency, 0.1f, 0.f, 1.f);
+	billboard->modified_by_user |= ImGui::DragFloat("Width:", &billboard->width, 0.2f, 0.f, 10.f);
+	billboard->modified_by_user |= ImGui::DragFloat("Height:", &billboard->height, 0.2f, 0.f, 10.f);
+	billboard->modified_by_user |= ImGui::DragFloat("Transparency:", &billboard->transparency, 0.1f, 0.f, 1.f);
+}
+
+void PanelComponent::ShowComponentTrail(ComponentTrail* trail)
+{
+	trail_panel->Render(trail);
 }
 
 void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
@@ -409,14 +336,15 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		{
 			return;
 		}
-		ImGui::Separator();
-
-		if (ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; }
-		if (ImGui::InputFloat3("Up", &camera->camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; }
 
 		ImGui::Separator();
 
-		if (ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED)) { camera->modified_by_user = true; }
+		camera->modified_by_user |= ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly);
+		camera->modified_by_user |= ImGui::InputFloat3("Up", &camera->camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly);
+
+		ImGui::Separator();
+
+		camera->modified_by_user |= ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
 
 		//UndoRedo
 		CheckClickedCamera(camera);
@@ -475,7 +403,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 				break;
 			}
 		}
-		if (ImGui::ColorEdit3("Clear Color", camera->camera_clear_color)) { camera->modified_by_user = true; }
+		camera->modified_by_user |= ImGui::ColorEdit3("Clear Color", camera->camera_clear_color.ptr());
 		ImGui::Separator();
 
 		if (ImGui::DragFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0.01f, 0, 100))
@@ -501,7 +429,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		}
 		ImGui::Separator();
 
-		if (ImGui::DragInt("Depth", &camera->depth, 0.05f)) { camera->modified_by_user = true; }
+		camera->modified_by_user |= ImGui::DragInt("Depth", &camera->depth, 0.05f);
 
 		//UndoRedo
 		CheckClickedCamera(camera);
@@ -518,13 +446,13 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 		}
 		ImGui::Separator();
 
-		if (ImGui::ColorEdit3("Color", light->light_color)) { light->modified_by_user = true; }
+		light->modified_by_user |= ImGui::ColorEdit3("Color", light->light_color);
 
-		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
+		App->actions->CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
-		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 100.f)) { light->modified_by_user = true; }
+		light->modified_by_user |= ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 100.f);
 
-		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
+		App->actions->CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
 		int light_type = static_cast<int>(light->light_type);
 
@@ -534,12 +462,15 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 			{
 			case 0:
 				light->light_type = ComponentLight::LightType::POINT_LIGHT;
+				light->modified_by_user = true;
 				break;
 			case 1:
 				light->light_type = ComponentLight::LightType::SPOT_LIGHT;
+				light->modified_by_user = true;
 				break;
 			case 2:
 				light->light_type = ComponentLight::LightType::DIRECTIONAL_LIGHT;
+				light->modified_by_user = true;
 				break;
 			default:
 				break;
@@ -618,6 +549,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		if (animation->animation_controller->state_machine && animation->animation_controller->active_state)
 		{
 			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(animation->animation_controller->active_state->name_hash), nullptr, nullptr, nullptr, ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputText("Active State", &animation->animation_controller->active_state->name, ImGuiInputTextFlags_ReadOnly);
 			static std::string trigger;
 			ImGui::InputText("Trigger ", &trigger);
 			if (ImGui::Button("Activate"))
@@ -645,8 +577,9 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 			{
 				break;
 			}
+			ImGui::InputText("Playing clip:", &playing_clip.clip->name, ImGuiInputTextFlags_ReadOnly);
 			ImGui::Checkbox("Loop", &(playing_clip.clip->loop));
-			ImGui::SliderInt("Animation time", &playing_clip.current_time, 0, playing_clip.clip->animation_time);
+			ImGui::SliderFloat("Animation time", &playing_clip.current_time, 0, playing_clip.clip->animation_time);
 		}
 
 	}
@@ -747,21 +680,76 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image)
 		uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
 		if (selected_resource != 0)
 		{
-			component_image->SetTextureToRender(selected_resource);
+			component_image->SetTextureToRenderFromInspector(selected_resource);
 		}
 		selected_resource = ImGui::ResourceDropper<Texture>();
 		if (selected_resource != 0)
 		{
-			component_image->SetTextureToRender(selected_resource);
+			component_image->SetTextureToRenderFromInspector(selected_resource);
 		}
 
-		ImGui::ColorEdit3("Color", component_image->color.ptr());
+		ImGui::ColorEdit4("Color", component_image->color.ptr());
 
 		ImGui::Checkbox("Preserve Aspect Ratio", &component_image->preserve_aspect_ratio);
 
 		if (ImGui::Button("Set Native Size"))
 		{
 			component_image->SetNativeSize();
+		}
+	}
+}
+
+void PanelComponent::ShowComponentVideoPlayerWindow(ComponentVideoPlayer* video_player)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_FILM " Video Player", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (!ShowCommonComponentWindow(video_player))
+		{
+			return;
+		}
+		ImGui::Separator();
+		ImGui::Text("Video");
+		std::string video_name = video_player->video_to_render == nullptr ? "None (Video)" : App->resources->resource_DB->GetEntry(video_player->video_to_render->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(video_player->UUID) + "VideoSelector").c_str());
+		if (ImGui::Button(video_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::VIDEO);
+		}
+
+		uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource != 0)
+		{
+			video_player->SetVideoToRenderFromInspector(selected_resource);
+		}
+		selected_resource = ImGui::ResourceDropper<Video>();
+		if (selected_resource != 0)
+		{
+			video_player->SetVideoToRenderFromInspector(selected_resource);
+		}
+
+		std::string soundbank_name = video_player->soundbank == nullptr ? "None (Sound Bank)" : App->resources->resource_DB->GetEntry(video_player->soundbank->GetUUID())->resource_name;
+		element_id = ImGui::GetID((std::to_string(video_player->UUID) + "SoundBankSelector").c_str());
+		if (ImGui::Button(soundbank_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::SOUND);
+		}
+		selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource != 0)
+		{
+			video_player->SetSoundBank(selected_resource);
+			video_player->modified_by_user = true;
+		}
+		selected_resource = ImGui::ResourceDropper<SoundBank>();
+		if (selected_resource != 0)
+		{
+			video_player->SetSoundBank(selected_resource);
+			video_player->modified_by_user = true;
+		}
+		ImGui::InputText("Sound Event Name ", &video_player->sound_event);
+
+		if (ImGui::Button("Play Video"))
+		{
+			video_player->PlayVideo();
 		}
 	}
 }
@@ -797,7 +785,7 @@ void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 		{
 			text->SetText(text->text);
 		}
-
+		ImGui::DragFloat("Pacing", &text->pacing);
 		ImGui::Separator();
 		ImGui::Text("Font");
 		ImGui::SameLine();
@@ -873,48 +861,6 @@ void PanelComponent::CheckClickedCamera(ComponentCamera* camera)
 	}
 }
 
-void PanelComponent::CheckClickForUndo(ModuleActions::UndoActionType  type, Component* component)
-{
-	if (ImGui::IsItemActive() && !ImGui::IsItemActiveLastFrame())
-	{
-		switch (type)
-		{
-		case ModuleActions::UndoActionType::TRANSLATION:
-			App->actions->previous_transform = ((ComponentTransform*)component)->GetTranslation();
-			break;
-		case ModuleActions::UndoActionType::ROTATION:
-			App->actions->previous_transform = ((ComponentTransform*)component)->GetRotationRadiants();
-			break;
-		case ModuleActions::UndoActionType::SCALE:
-			App->actions->previous_transform = ((ComponentTransform*)component)->GetScale();
-			break;
-		case ModuleActions::UndoActionType::EDIT_RECT2D:
-		case ModuleActions::UndoActionType::EDIT_RECT2D_ROTATION:
-			App->actions->action_component = (ComponentTransform2D*) component;
-			break;
-		case ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT:
-			App->actions->previous_light_color[0] = ((ComponentLight*)component)->light_color[0];
-			App->actions->previous_light_color[1] = ((ComponentLight*)component)->light_color[1];
-			App->actions->previous_light_color[2] = ((ComponentLight*)component)->light_color[2];
-			App->actions->previous_light_intensity = ((ComponentLight*)component)->light_intensity;
-			App->actions->action_component = component;
-			break;
-		default:
-			break;
-		}
-
-
-		App->actions->clicked = true;
-	}
-
-	if (ImGui::IsItemDeactivatedAfterChange())
-	{
-		App->actions->AddUndoAction(type);
-		App->actions->clicked = false;
-	}
-
-}
-
 void PanelComponent::ShowAddNewComponentButton()
 {
 	float window_width = ImGui::GetWindowWidth();
@@ -959,7 +905,7 @@ void PanelComponent::ShowAddNewComponentButton()
 				App->space_partitioning->InsertAABBTree(App->editor->selected_game_object);
 			}
 		}
-		
+
 		sprintf_s(tmp_string, "%s Billboard", ICON_FA_SQUARE);
 		if (ImGui::Selectable(tmp_string))
 		{
@@ -971,6 +917,11 @@ void PanelComponent::ShowAddNewComponentButton()
 		if (ImGui::Selectable(tmp_string))
 		{
 			App->editor->selected_game_object->CreateComponent(Component::ComponentType::PARTICLE_SYSTEM);
+		}
+		sprintf_s(tmp_string, "%s Trail", ICON_FA_SHARE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::TRAIL);
 		}
 
 		sprintf_s(tmp_string, "%s Animation", ICON_FA_PLAY_CIRCLE);
@@ -1037,6 +988,12 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_IMAGE);
 		}
 
+		sprintf_s(tmp_string, "%s Video Player", ICON_FA_FILM);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::VIDEO_PLAYER);
+		}
+
 		sprintf_s(tmp_string, "%s Sprite Mask", ICON_FA_THEATER_MASKS);
 		if (ImGui::Selectable(tmp_string))
 		{
@@ -1056,13 +1013,19 @@ void PanelComponent::ShowAddNewComponentButton()
 		}
 		ImGui::Separator();
 
-		sprintf_s(tmp_string, "%s Audio Source", ICON_FA_AUDIO_DESCRIPTION);
+		sprintf_s(tmp_string, "%s Audio Source", ICON_FA_VOLUME_UP);
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::AUDIO_SOURCE);
 
 		}
 
+		sprintf_s(tmp_string, "%s Audio Listener", ICON_FA_HEADPHONES);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::AUDIO_LISTENER);
+
+		}
 		ImGui::EndPopup();
 	}
 
@@ -1082,6 +1045,7 @@ void PanelComponent::ShowScriptsCreated(ComponentScript* component_script)
 			if (ImGui::Selectable(script_name.c_str()))
 			{
 				component_script->LoadName(script_name);
+				component_script->modified_by_user = true;
 
 			}
 		}
@@ -1134,70 +1098,108 @@ bool PanelComponent::ShowCommonComponentWindow(Component* component)
 		App->actions->DeleteComponentUndo(component);
 		return false;
 	}
+	if (ImGui::Button("Copy"))
+	{
+		App->actions->SetCopyComponent(component);
+	}
+	if (component->type != Component::ComponentType::MESH_RENDERER)
+	{
+		if (ImGui::Button("Paste component as new"))
+		{
+			App->actions->PasteComponent(component->owner);
+		}
+	}
+	if (ImGui::Button("Paste component values"))
+	{
+		App->actions->PasteComponentValues(component);
+	}
 
 	return true;
 }
 
-bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
+bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* component)
 {
-	if (ImGui::Checkbox("Active", &collider->active))
+	if (ImGui::Checkbox("Active", &component->active))
 	{
 		//UndoRedo
-		collider->SwitchPhysics();
-		App->actions->action_component = collider;
+		component->SwitchPhysics();
+		App->actions->action_component = component;
 		App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Delete"))
 	{
-		App->actions->DeleteComponentUndo(collider);
+		App->actions->DeleteComponentUndo(component);
 		return false;
+	}
+	if (ImGui::Button("Copy"))
+	{
+		App->actions->SetCopyComponent(component);
+	}
+	if (ImGui::Button("Paste component as new"))
+	{
+		App->actions->PasteComponent(component->owner);
+	}
+	if (ImGui::Button("Paste component values"))
+	{
+		App->actions->PasteComponentValues(component);
 	}
 	ImGui::Separator();
 
-	if (ImGui::DragFloat("Mass", &collider->mass, 1.0F, 0.1F, 1000.F))
+	if (ImGui::DragFloat("Mass", &component->mass, 1.0F, 0.1F, 1000.F))
 	{
-		collider->SetMass(collider->mass);
+		component->SetMass(component->mass);
+		component->modified_by_user = true;
 	}
-	if (ImGui::DragFloat("Friction", &collider->friction, 0.1F, 0.1F, 1.F)) {
-		collider->UpdateFriction();
+	if (ImGui::DragFloat("Friction", &component->friction, 0.1F, 0.1F, 1.F)) {
+		component->UpdateFriction();
+		component->modified_by_user = true;
 	}
-	if (ImGui::DragFloat("Rolling friction", &collider->rolling_friction, 1.0F, 0.1F, 2000.F))
+	if (ImGui::DragFloat("Rolling friction", &component->rolling_friction, 1.0F, 0.1F, 2000.F))
 	{
-		collider->SetRollingFriction();
+		component->SetRollingFriction();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Visualize", &collider->visualize))
+	if (ImGui::Checkbox("Visualize", &component->visualize))
 	{
-		collider->SetVisualization();
+		component->SetVisualization();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Static", &collider->is_static))
+	if (ImGui::Checkbox("Static", &component->is_static))
 	{
-		collider->SetStatic();
+		component->SetStatic();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Collision Detection", &collider->detect_collision))
+	if (ImGui::Checkbox("Collision Detection", &component->detect_collision))
 	{
-		collider->SetCollisionDetection();
+		component->SetCollisionDetection();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Active Physics", &collider->active_physics))
+	if (ImGui::Checkbox("Active Physics", &component->active_physics))
 	{
-		collider->SwitchPhysics();
+		component->SwitchPhysics();
+		component->modified_by_user = true;
 	}
 	ImGui::Text("Freeze Axis Rotation");
-	if (ImGui::Checkbox("X Axis", &collider->freeze_rotation_x))
+	if (ImGui::Checkbox("X Axis", &component->freeze_rotation_x))
 	{
-		collider->SetRotationAxis();
+		component->SetRotationAxis();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Y Axis", &collider->freeze_rotation_y))
+	if (ImGui::Checkbox("Y Axis", &component->freeze_rotation_y))
 	{
-		collider->SetRotationAxis();
+		component->SetRotationAxis();
+		component->modified_by_user = true;
 	}
-	if (ImGui::Checkbox("Z Axis", &collider->freeze_rotation_z))
+	if (ImGui::Checkbox("Z Axis", &component->freeze_rotation_z))
 	{
-		collider->SetRotationAxis();
+		component->SetRotationAxis();
+		component->modified_by_user = true;
 	}
-	if (ImGui::DragFloat3("Center", collider->center.ptr(), 0.01F))
+	if (ImGui::DragFloat3("Center", component->center.ptr(), 0.01F))
 	{
-		collider->SetColliderCenter(collider->center);
+		component->SetColliderCenter(component->center);
+		component->modified_by_user = true;
 	}
 	return true;
 }
@@ -1212,6 +1214,7 @@ void PanelComponent::ShowComponentBoxColliderWindow(ComponentBoxCollider* box_co
 			if (ImGui::DragFloat3("Scale", box_collider->scale.ptr(), 0.01F, 0.1F, 10.0F))
 			{
 				box_collider->Scale();
+				box_collider->modified_by_user = true;
 			}
 		}
 	}
@@ -1226,10 +1229,12 @@ void PanelComponent::ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider
 			if (ImGui::DragFloat("Radius", &capsule_collider->scale.x, 0.01F, 0.1F, 10.0F))
 			{
 				capsule_collider->Scale();
+				capsule_collider->modified_by_user = true;
 			}
 			if (ImGui::DragFloat("Height", &capsule_collider->scale.y, 0.01F, 0.1F, 10.0F))
 			{
 				capsule_collider->Scale();
+				capsule_collider->modified_by_user = true;
 			}
 		}
 	}
@@ -1244,6 +1249,7 @@ void PanelComponent::ShowComponentSphereColliderWindow(ComponentSphereCollider* 
 			if (ImGui::DragFloat("Radius", &sphere_collider->scale.x, 0.01F, 0.01F, 10.0F))
 			{
 				sphere_collider->Scale();
+				sphere_collider->modified_by_user = true;
 			}
 		}
 	}
@@ -1258,10 +1264,12 @@ void PanelComponent::ShowComponentCylinderColliderWindow(ComponentCylinderCollid
 			if (ImGui::DragFloat("Radius", &cylinder_collider->scale.x, 0.01F, 0.1F, 10.0F))
 			{
 				cylinder_collider->Scale();
+				cylinder_collider->modified_by_user = true;
 			}
 			if (ImGui::DragFloat("Height", &cylinder_collider->scale.y, 0.01F, 0.1F, 10.0F))
 			{
 				cylinder_collider->Scale();
+				cylinder_collider->modified_by_user = true;
 			}
 		}
 	}
@@ -1276,13 +1284,31 @@ void PanelComponent::ShowComponentMeshColliderWindow(ComponentMeshCollider* mesh
 			if (ImGui::DragFloat3("Scale", mesh_collider->scale.ptr(), 0.01F))
 			{
 				mesh_collider->Scale();
+				mesh_collider->modified_by_user = true;
 			}
 		}
 	}
 }
+
+void PanelComponent::ShowComponentAudioListenerWindow(ComponentAudioListener* component_audio_listener)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_HEADPHONES " Audio Listener", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (!ShowCommonComponentWindow(component_audio_listener))
+		{
+			return;
+		}
+		ImGui::Separator();
+
+		//Add More Stuff here
+
+	}
+
+}
+
 void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_AUDIO_DESCRIPTION " Audio Source", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_VOLUME_UP " Audio Source", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (!ShowCommonComponentWindow(component_audio_source))
 		{
@@ -1292,6 +1318,7 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 
 		//ImGui::AlignTextToFramePadding();
 		ImGui::Checkbox("3D Sound", &component_audio_source->sound_3d);
+		ImGui::Checkbox("Play on Awake", &component_audio_source->play_on_awake);
 		std::string soundbank_name = component_audio_source->soundbank == nullptr ? "None (Sound Bank)" : App->resources->resource_DB->GetEntry(component_audio_source->soundbank->GetUUID())->resource_name;
 		ImGuiID element_id = ImGui::GetID((std::to_string(component_audio_source->UUID) + "SoundBankSelector").c_str());
 		if (ImGui::Button(soundbank_name.c_str()))
@@ -1312,16 +1339,42 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 		}
 		if (component_audio_source->soundbank)
 		{
-			static std::string soundbank;
-			ImGui::InputText("SoundBank ", &soundbank);
-			if (ImGui::Button("Play"))
+			std::string event_name = component_audio_source->GetEventName();
+			if (ImGui::BeginCombo("Event Name", event_name.c_str()))
 			{
-				component_audio_source->PlayEvent(soundbank);
+				for (int i = 0; i < component_audio_source->soundbank->events.size(); ++i)
+				{
+					if (ImGui::Selectable(component_audio_source->soundbank->events[i].c_str()))
+					{
+						component_audio_source->selected_event = i;
+						component_audio_source->modified_by_user = true;
+					}
+				}
+
+				ImGui::Separator();
+				ImGui::EndCombo();
+			}
+
+			if (component_audio_source->selected_event != -1)
+			{
+				if (ImGui::Button("Play Event"))
+				{
+					component_audio_source->PlayEvent(component_audio_source->soundbank->events[component_audio_source->selected_event]);
+
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Stop Event"))
+				{
+					component_audio_source->StopSelectedEvent();
+
+				}
 			}
 		}
+
 		if (ImGui::SliderFloat("Volume", &component_audio_source->volume, 0, 30))
 		{
 			component_audio_source->SetVolume(component_audio_source->volume);
+			component_audio_source->modified_by_user = true;
 		}
 	}
 }

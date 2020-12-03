@@ -1,3 +1,9 @@
+# Version number
+Versioning standard to use:
+```
+<major>.<minor>.<revision>
+```
+
 # Making changes and branching
 This repo follows the branching model explained in [this](https://nvie.com/posts/a-successful-git-branching-model/
 ) fantastic post. 

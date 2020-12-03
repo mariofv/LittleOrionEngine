@@ -35,6 +35,8 @@ public:
 
 	void WindowResized(unsigned width, unsigned height);
 
+	ENGINE_API void CloseWindow() const;
+
 private:
 	void InitOpenGLAttributes() const;
 

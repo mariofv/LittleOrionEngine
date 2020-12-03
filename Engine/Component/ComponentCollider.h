@@ -1,7 +1,9 @@
 #ifndef _COMPONENTCOLLIDER_H
 #define _COMPONENTCOLLIDER_H
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Component.h"
 #include <bullet3/btBulletDynamicsCommon.h>
@@ -53,14 +55,13 @@ public:
 	ComponentCollider(GameObject* owner, ColliderType collider_type);
 	~ComponentCollider() = default;
 
-	void Copy(Component* component_to_copy) const override;
+	void CopyTo(Component* component_to_copy) const override;
 	void Delete() override;
 
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config &config) override;
 
-	Component* Clone(bool original_prefab = false) const { return nullptr; }
-	virtual Component* Clone(GameObject* owner, bool original_prefab = false) const { return nullptr; }
+	virtual Component* Clone(GameObject* owner, bool original_prefab) override { return nullptr; }
 	
 	void Disable() override;
 	void Enable() override;

@@ -1,5 +1,6 @@
 #include "TextureImporter.h"
 
+#include "Log/EngineLog.h"
 #include "Main/Application.h"
 #include "Helper/Utils.h"
 #include "Module/ModuleFileSystem.h"
@@ -10,14 +11,14 @@
 
 TextureImporter::TextureImporter() : Importer(ResourceType::TEXTURE) 
 {
-	APP_LOG_INIT("Initializing DevIL image loader.")
+	RESOURCES_LOG_INFO("Initializing DevIL image loader.")
 	ilInit();
 	ilEnable(IL_ORIGIN_SET);
 	ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
 	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
 	iluInit();
 	ilutInit();
-	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
+	RESOURCES_LOG_INFO("DevIL image loader initialized correctly.")
 
 }
 
@@ -105,7 +106,7 @@ ILubyte* TextureImporter::LoadImageDataInMemory(const Path& file_path, int image
 	error = ilGetError();
 	if (error == IL_COULD_NOT_OPEN_FILE)
 	{
-		APP_LOG_ERROR("Error loading texture %s. File not found", file_path.GetFullPath().c_str());
+		RESOURCES_LOG_ERROR("Error loading texture %s. File not found", file_path.GetFullPath().c_str());
 		return nullptr;
 	}
 

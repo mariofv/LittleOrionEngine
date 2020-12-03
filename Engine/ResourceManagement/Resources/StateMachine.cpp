@@ -23,10 +23,17 @@ void Clip::SetAnimation(const std::shared_ptr<Animation>& animation)
 
 
 State::State(std::string name, std::shared_ptr<Clip> clip) :
-	name(name), name_hash(std::hash<std::string>{}(name)),clip(clip)  {
+	name(name), name_hash(std::hash<std::string>{}(name)),clip(clip) {
 }
 
-Transition::Transition(uint64_t source, uint64_t target, std::string & trigger, long interpolation) :
+State::State(std::string name, std::shared_ptr<Clip> clip, float speed) :
+	name(name), name_hash(std::hash<std::string>{}(name)), clip(clip), speed(speed) {
+}
+
+State::State(std::string name, std::shared_ptr<Clip> clip, float speed, float2& position) :
+	name(name), name_hash(std::hash<std::string>{}(name)), clip(clip), speed(speed), position(position){
+}
+Transition::Transition(uint64_t source, uint64_t target, std::string & trigger, uint64_t interpolation) :
 	source_hash(source), 
 	trigger(trigger),
 	target_hash(target),
@@ -52,6 +59,10 @@ StateMachine & StateMachine::operator=(const StateMachine & state_machine_to_cop
 
 std::shared_ptr<State> StateMachine::GetDefaultState() const
 {
+	if (states.size() == 0)
+	{
+		return nullptr;
+	}
 	if (default_state == 0)
 	{
 		return states[0];
@@ -63,7 +74,7 @@ std::shared_ptr<State> StateMachine::GetDefaultState() const
 			return state;
 		}
 	}
-	return nullptr;
+	 return states[0];
 }
 
 std::shared_ptr<State> StateMachine::GetState(uint64_t state_hash) const
@@ -102,6 +113,19 @@ std::shared_ptr<Transition> StateMachine::GetAutomaticTransition(uint64_t state_
 		}
 	}
 	return automatic_transition;
+}
+
+std::shared_ptr<Transition> StateMachine::GetTransitionIfConditions(uint64_t state_hash) const
+{
+	for(auto transition : transitions)
+	{
+		if(transition->source_hash == state_hash && CheckTransitionConditions(transition))
+		{
+			return transition;
+		}
+	}
+
+	return nullptr;
 }
 
 
@@ -157,16 +181,62 @@ void StateMachine::AddClipToState(std::shared_ptr<State>& state, uint32_t animat
 	clips.push_back(new_clip);
 }
 
+bool StateMachine::CheckTransitionConditions(std::shared_ptr<Transition>& transition) const
+{
+	size_t counter = 0;
+	size_t goal = transition->float_conditions.size() + transition->int_conditions.size() + transition->bool_conditions.size();
+
+	for(auto condition : transition->float_conditions)
+	{
+		float value_of_variable = float_variables.at(condition.name_hash_variable);
+		if(condition.comparator_function(value_of_variable, condition.value))
+		{
+			++counter;
+		}
+	}
+
+	for (auto condition : transition->int_conditions)
+	{
+		int value_of_variable = int_variables.at(condition.name_hash_variable);
+		if (condition.comparator_function(value_of_variable, condition.value))
+		{
+			++counter;
+		}
+	}
+
+	for (auto condition : transition->bool_conditions)
+	{
+		bool value_of_variable = bool_variables.at(condition.name_hash_variable);
+		if (condition.comparator_function(value_of_variable, condition.value))
+		{
+			++counter;
+		}
+	}
+
+	if(counter == goal && goal != 0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void StateMachine::Save(Config& config) const
 {
 	std::vector<Config> clips_config;
 	for (auto& clip : clips)
 	{
 		Config clip_config;
-		clip_config.AddUInt(clip->animation->GetUUID(), "AnimationUUID");
-		clip_config.AddString(clip->name, "Name");
-		clip_config.AddBool(clip->loop, "Loop");
-		clips_config.push_back(clip_config);
+		if (clip != nullptr)
+		{
+			if (clip->animation != nullptr)
+			{
+				clip_config.AddUInt(clip->animation->GetUUID(), "AnimationUUID");
+			}
+			clip_config.AddString(clip->name, "Name");
+			clip_config.AddBool(clip->loop, "Loop");
+			clips_config.push_back(clip_config);
+		}
 	}
 	config.AddChildrenConfig(clips_config, "Clips");
 
@@ -179,6 +249,9 @@ void StateMachine::Save(Config& config) const
 		{
 			state_config.AddString(state->clip->name, "ClipName");
 		}
+		state_config.AddFloat(state->speed, "Speed");//Saving speed
+		state_config.AddFloat(state->position.x, "XPosition");
+		state_config.AddFloat(state->position.y, "YPosition");
 		states_config.push_back(state_config);
 	}
 	config.AddChildrenConfig(states_config, "States");
@@ -193,9 +266,81 @@ void StateMachine::Save(Config& config) const
 		transition_config.AddUInt(transition->interpolation_time, "Interpolation");
 		transition_config.AddBool(transition->automatic, "Automatic");
 		transition_config.AddUInt(transition->priority, "Priority");
+
+		//Conditions
+		std::vector<Config> float_conditions_config;
+		for(auto& condition : transition->float_conditions)
+		{
+			Config condition_config;
+			condition_config.AddUInt(condition.name_hash_variable, "VariableNameHash");
+			condition_config.AddUInt(static_cast<unsigned>(condition.comparator), "Comparator");
+			condition_config.AddFloat(condition.value, "Value");
+			float_conditions_config.emplace_back(condition_config);
+		}
+		transition_config.AddChildrenConfig(float_conditions_config, "FloatConditions");
+
+		std::vector<Config> int_conditions_config;
+		for (auto& condition : transition->int_conditions)
+		{
+			Config condition_config;
+			condition_config.AddUInt(condition.name_hash_variable, "VariableNameHash");
+			condition_config.AddUInt(static_cast<unsigned>(condition.comparator), "Comparator");
+			condition_config.AddInt(condition.value, "Value");
+			int_conditions_config.emplace_back(condition_config);
+		}
+		transition_config.AddChildrenConfig(int_conditions_config, "IntConditions");
+
+		std::vector<Config> bool_conditions_config;
+		for (auto& condition : transition->bool_conditions)
+		{
+			Config condition_config;
+			condition_config.AddUInt(condition.name_hash_variable, "VariableNameHash");
+			condition_config.AddUInt(static_cast<unsigned>(condition.comparator), "Comparator");
+			condition_config.AddBool(condition.value, "Value");
+			bool_conditions_config.emplace_back(condition_config);
+		}
+		transition_config.AddChildrenConfig(bool_conditions_config, "BoolConditions");
+
 		transitions_config.push_back(transition_config);
 	}
 	config.AddChildrenConfig(transitions_config, "Transitions");
+
+
+	//Float variables
+	std::vector<Config> float_variables_config;
+	for (auto& variable : float_variables)
+	{
+		Config float_variable_config;
+		float_variable_config.AddUInt(variable.first, "FloatNameHash");
+		float_variable_config.AddFloat(variable.second, "FloatValue");
+		float_variable_config.AddString(GetNameOfVariable(variable.first), "FloatName");
+		float_variables_config.push_back(float_variable_config);
+	}
+	config.AddChildrenConfig(float_variables_config, "FloatVariables");
+
+	//Int variables
+	std::vector<Config> int_variables_config;
+	for (auto& variable : int_variables)
+	{
+		Config int_variable_config;
+		int_variable_config.AddUInt(variable.first, "IntNameHash");
+		int_variable_config.AddInt(variable.second, "IntValue");
+		int_variable_config.AddString(GetNameOfVariable(variable.first), "IntName");
+		int_variables_config.push_back(int_variable_config);
+	}
+	config.AddChildrenConfig(int_variables_config, "IntVariables");
+
+	//Bool variables
+	std::vector<Config> bool_variables_config;
+	for (auto& variable : bool_variables)
+	{
+		Config bool_variable_config;
+		bool_variable_config.AddUInt(variable.first, "BoolNameHash");
+		bool_variable_config.AddBool(variable.second, "BoolValue");
+		bool_variable_config.AddString(GetNameOfVariable(variable.first), "BoolName");
+		bool_variables_config.push_back(bool_variable_config);
+	}
+	config.AddChildrenConfig(bool_variables_config, "BoolVariables");
 
 	config.AddUInt(default_state, "Default");
 }
@@ -205,6 +350,9 @@ void StateMachine::Load(const Config& config)
 	this->clips.clear();
 	this->transitions.clear();
 	this->states.clear();
+	this->float_variables.clear();
+	this->int_variables.clear();
+	this->bool_variables.clear();
 	std::vector<Config> clips_config;
 	config.GetChildrenConfig("Clips", clips_config);
 	for (auto& clip_config : clips_config)
@@ -231,6 +379,7 @@ void StateMachine::Load(const Config& config)
 		std::string name;
 		state_config.GetString("Name", name, "");
 		state_config.GetString("ClipName", clip_name, "");
+		float clip_speed = state_config.GetFloat("Speed", 1.0f);
 		std::shared_ptr<Clip> state_clip;
 		for (auto& clip : clips)
 		{
@@ -239,7 +388,10 @@ void StateMachine::Load(const Config& config)
 				state_clip = clip;
 			}
 		}
-		this->states.push_back(std::make_shared<State>(name, state_clip));
+		float2 position(10.0f, 10.0f);
+		position.x = state_config.GetFloat("XPosition", 10.0f);
+		position.y = state_config.GetFloat("YPosition", 10.0f);
+		this->states.push_back(std::make_shared<State>(name, state_clip, clip_speed, position));
 	}
 
 	std::vector<Config> transitions_config;
@@ -257,4 +409,167 @@ void StateMachine::Load(const Config& config)
 	}
 
 	default_state = config.GetUInt("Default", 0);
+
+
+
+}
+
+void StateMachine::LoadNames(const Config & config)
+{
+
+	std::vector<Config> clips_config;
+	config.GetChildrenConfig("Clips", clips_config);
+	for (auto& clip_config : clips_config)
+	{
+		std::string name;
+		clip_config.GetString("Name", name, "");
+
+		uint64_t name_hash = (std::hash<std::string>{}(name));
+		for (auto & clip : clips)
+		{
+			if (clip != nullptr)
+			{
+				if (clip->name_hash == name_hash)
+				{
+					clip->name = name;
+				}
+			}
+			
+		}
+	}
+
+	std::vector<Config> states_config;
+	config.GetChildrenConfig("States", states_config);
+	for (auto& state_config : states_config)
+	{
+		std::string name;
+		state_config.GetString("Name", name, "");
+		uint64_t name_hash = (std::hash<std::string>{}(name));
+
+		float2 position(10.0f, 10.0f);
+		position.x = state_config.GetFloat("XPosition", 10.0f);
+		position.y = state_config.GetFloat("YPosition", 10.0f);
+		for (auto & state : states)
+		{
+			if (state->name_hash == name_hash)
+			{
+				state->name = name;
+				state->position = position;
+			}
+		}
+	}
+
+	std::vector<Config> transitions_config;
+	config.GetChildrenConfig("Transitions", transitions_config);
+	for (auto& transition_config : transitions_config)
+	{
+		std::string trigger;
+		transition_config.GetString("Trigger", trigger, "");
+		uint64_t trigger_hash = (std::hash<std::string>{}(trigger));
+		for (auto & transition : transitions)
+		{
+			if (transition->trigger_hash == trigger_hash)
+			{
+				transition->trigger = trigger;
+			}
+		}
+	}
+
+	//Float variables
+	std::vector<Config> float_variables_config;
+	config.GetChildrenConfig("FloatVariables", float_variables_config);
+	for (auto& float_variable_config : float_variables_config)
+	{
+		std::string auxiliar_name;
+		float_variable_config.GetString("FloatName", auxiliar_name, "");
+		float_variables_names.push_back(auxiliar_name);
+	}
+
+	//Int variables
+	std::vector<Config> int_variables_config;
+	config.GetChildrenConfig("IntVariables", int_variables_config);
+	for (auto& int_variable_config : int_variables_config)
+	{
+		std::string auxiliar_name;
+		int_variable_config.GetString("IntName", auxiliar_name, "");
+		int_variables_names.push_back(auxiliar_name);
+	}
+
+	//Bool variables
+	std::vector<Config> bool_variables_config;
+	config.GetChildrenConfig("BoolVariables", bool_variables_config);
+	for (auto& bool_variable_config : bool_variables_config)
+	{
+		std::string auxiliar_name;
+		bool_variable_config.GetString("BoolName", auxiliar_name, "");
+		bool_variables_names.push_back(auxiliar_name);
+	}
+
+}
+
+void StateMachine::SetFloatVariables(std::unordered_map<uint64_t, float>& map)
+{
+	this->float_variables = map;
+}
+
+void StateMachine::SetIntVariables(std::unordered_map<uint64_t, int>& map)
+{
+	this->int_variables = map;
+}
+
+void StateMachine::SetBoolVariables(std::unordered_map<uint64_t, bool>& map)
+{
+	this->bool_variables = map;
+}
+
+std::string StateMachine::GetNameOfVariable(uint64_t name_hash) const
+{
+	std::string name;
+
+	for(auto float_variable_name : float_variables_names)
+	{
+		uint64_t variable_hash = std::hash<std::string>{}(float_variable_name);
+		if(variable_hash == name_hash)
+		{
+			return float_variable_name;
+		}
+	}
+
+	for (auto int_variable_name : int_variables_names)
+	{
+		uint64_t variable_hash = std::hash<std::string>{}(int_variable_name);
+		if (variable_hash == name_hash)
+		{
+			return int_variable_name;
+		}
+	}
+
+	for (auto bool_variable_name : bool_variables_names)
+	{
+		uint64_t variable_hash = std::hash<std::string>{}(bool_variable_name);
+		if (variable_hash == name_hash)
+		{
+			return bool_variable_name;
+		}
+	}
+
+	return name;
+}
+
+void StateMachine::ResetVariables()
+{
+	for(auto& integer : int_variables)
+	{
+		integer.second = 0;
+	}
+
+	for (auto& float_variable : float_variables)
+	{
+		float_variable.second = 0.f;
+	}
+
+	for (auto& boolean : bool_variables)
+	{
+		boolean.second = false;
+	}
 }

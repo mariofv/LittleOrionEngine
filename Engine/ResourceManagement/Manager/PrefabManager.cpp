@@ -1,15 +1,28 @@
 #include "PrefabManager.h"
 
-#include "Component/ComponentCamera.h"
-#include "Component/ComponentMeshRenderer.h"
-#include "Component/ComponentLight.h"
 #include "Component/ComponentAnimation.h"
-#include "Component/ComponentScript.h"
+#include "Component/ComponentAudioListener.h"
+#include "Component/ComponentAudioSource.h"
+#include "Component/ComponentBillboard.h"
+#include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
-#include "Component/ComponentImage.h"
+#include "Component/ComponentCapsuleCollider.h"
+#include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentCanvasRenderer.h"
-#include "Component/ComponentAudioSource.h"
+#include "Component/ComponentCollider.h"
+#include "Component/ComponentCylinderCollider.h"
+#include "Component/ComponentEventSystem.h"
+#include "Component/ComponentImage.h"
+#include "Component/ComponentLight.h"
+#include "Component/ComponentMeshCollider.h"
+#include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentParticleSystem.h"
+#include "Component/ComponentScript.h"
+#include "Component/ComponentSphereCollider.h"
+#include "Component/ComponentTrail.h"
+#include "Component/ComponentText.h"
+#include "Component/ComponentVideoPlayer.h"
 
 #include "Helper/Config.h"
 
@@ -64,6 +77,11 @@ std::shared_ptr<Prefab> PrefabManager::Load(uint32_t uuid, const FileData& resou
 		created_game_object->original_UUID = game_objects_config[i].GetUInt("UUID", 0);
 		created_game_object->original_prefab = true;
 		gameObjects.emplace_back(std::move(created_game_object));
+		auto particles = gameObjects.back()->GetComponent(Component::ComponentType::PARTICLE_SYSTEM);
+		if (particles)
+		{
+			assert(static_cast<ComponentParticleSystem*>(particles)->billboard->emissive_intensity > -1);
+		}
 	}
 
 
@@ -83,6 +101,7 @@ void PrefabManager::LoadBasicParameters(const Config& config, std::unique_ptr<Ga
 	loaded_gameObject->UUID = config.GetUInt("UUID", 0);
 
 	config.GetString("Name", loaded_gameObject->name, "GameObject");
+	config.GetString("Tag", loaded_gameObject->tag, "");
 
 	loaded_gameObject->SetStatic(config.GetBool("IsStatic", false));
 	loaded_gameObject->SetEnabled(config.GetBool("Active", true));
@@ -94,6 +113,8 @@ void PrefabManager::LoadBasicParameters(const Config& config, std::unique_ptr<Ga
 	Config transform_2d_config;
 	config.GetChildConfig("Transform2D", transform_2d_config);
 	loaded_gameObject->transform_2d.Load(transform_2d_config);
+
+	loaded_gameObject->SetTransform2DStatus(config.GetBool("Transform2DEnabled", false));
 
 }
 
@@ -134,6 +155,9 @@ void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameO
 		case Component::ComponentType::UI_IMAGE:
 			created_component = new ComponentImage();
 			break;
+		case Component::ComponentType::VIDEO_PLAYER:
+			created_component = new ComponentVideoPlayer();
+			break;
 		case Component::ComponentType::CANVAS:
 			created_component = new ComponentCanvas();
 			break;
@@ -146,9 +170,52 @@ void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameO
 		case Component::ComponentType::AUDIO_SOURCE:
 			created_component = new ComponentAudioSource();
 			break;
+		case Component::ComponentType::AUDIO_LISTENER:
+			created_component = new ComponentAudioListener();
+			break;
+		case Component::ComponentType::PARTICLE_SYSTEM:
+			created_component = new ComponentParticleSystem();
+			break;
+		case Component::ComponentType::BILLBOARD:
+			created_component = new ComponentBillboard();
+			break;
+		case Component::ComponentType::EVENT_SYSTEM:
+			created_component = new ComponentEventSystem();
+			break;
+		case Component::ComponentType::TRAIL:
+			created_component = new ComponentTrail();
+			break;
+		case Component::ComponentType::UI_TEXT:
+			created_component = new ComponentText();
+			break;
+		case Component::ComponentType::COLLIDER:
+			ComponentCollider::ColliderType collider_type = static_cast<ComponentCollider::ColliderType>(gameobject_components_config[i].GetUInt("ColliderType", 0));
+			switch (collider_type)
+			{
+			case ComponentCollider::ColliderType::BOX:
+				created_component = new ComponentBoxCollider(loaded_gameObject.get());
+				break;
+			case ComponentCollider::ColliderType::CAPSULE:
+				created_component = new ComponentCapsuleCollider(loaded_gameObject.get());
+				break;
+			case ComponentCollider::ColliderType::SPHERE:
+				created_component = new ComponentSphereCollider(loaded_gameObject.get());
+				break;
+			case ComponentCollider::ColliderType::CYLINDER:
+				created_component = new ComponentCylinderCollider(loaded_gameObject.get());
+				break;
+			case ComponentCollider::ColliderType::MESH:
+				created_component = new ComponentMeshCollider(loaded_gameObject.get());
+				break;
+			}
+			break;
 		}
-		created_component->owner = loaded_gameObject.get();
-		created_component->Load(gameobject_components_config[i]);
-		loaded_gameObject->components.push_back(created_component);
+		if (component_type != Component::ComponentType::AABB && created_component)
+		{
+			created_component->owner = loaded_gameObject.get();
+			created_component->Init();
+			created_component->Load(gameobject_components_config[i]);
+			loaded_gameObject->components.push_back(created_component);
+		}
 	}
 }

@@ -9,12 +9,18 @@ class SoundBank : public Resource
 {
 public:
 	SoundBank(uint32_t uuid, const void* data, size_t image_size);
+	SoundBank(uint32_t uuid, const void* data, size_t image_size, std::vector<std::string> events);
 	~SoundBank();
 
+	void InitData(size_t data_size, const void* data);
+
+public:
+	std::vector<std::string> events;
+
 private:
-	AkBankID banck_id = 0;
+	AkBankID bank_id = 0;
 	AkGameObjectID game_obj = 0;
-	char * aligned_buffer;
+	char * aligned_buffer = nullptr;
 	char * cursor;
 	size_t aligned_buffer_size = 0;
 };
@@ -22,7 +28,7 @@ private:
 namespace ResourceManagement
 {
 	template<>
-	static std::shared_ptr<SoundBank> Load(uint32_t uuid, const FileData& resource_data)
+	static std::shared_ptr<SoundBank> Load(uint32_t uuid, const FileData& resource_data, bool async)
 	{
 		return SoundManager::Load(uuid, resource_data);
 	}

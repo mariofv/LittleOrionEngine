@@ -20,27 +20,32 @@ ComponentMeshCollider::ComponentMeshCollider(GameObject* owner) : ComponentColli
 	{
 		vertices.clear();
 		indices.clear();
-		std::shared_ptr<Mesh> mesh = mesh_renderer->mesh_to_render;
-		for (auto vertex : mesh->vertices)
+		mesh = mesh_renderer->mesh_to_render;
+
+		if (mesh)
 		{
-			vertices.push_back(vertex.position.x);
-			vertices.push_back(vertex.position.y);
-			vertices.push_back(vertex.position.z);
+			InitMeshCollider();
+		}
+		else
+		{
+			mesh_renderer->mesh_collider = this;
 		}
 
-		indices = std::vector<int>(mesh->indices.begin(), mesh->indices.end());
-		
 	}
-	CreateMeshBody();
-	AddBody();
+	else
+	{
+		CreateMeshBody();
+		AddBody();
+	}
 }
 
-Component* ComponentMeshCollider::Clone(GameObject* owner, bool original_prefab) const
+
+Component* ComponentMeshCollider::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentMeshCollider* created_component;
 	if (original_prefab)
 	{
-		created_component = new ComponentMeshCollider();
+		created_component = new ComponentMeshCollider(owner);
 	}
 	else
 	{
@@ -49,6 +54,9 @@ Component* ComponentMeshCollider::Clone(GameObject* owner, bool original_prefab)
 	*created_component = *this;
 	created_component->SetConfiguration();
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 }
 
@@ -69,8 +77,36 @@ void ComponentMeshCollider::UpdateDimensions()
 
 void ComponentMeshCollider::Scale()
 {
-	float3 global_scale = owner->transform.GetGlobalScale();
-	body->getCollisionShape()->setLocalScaling(btVector3(global_scale.x * scale.x, global_scale.y * scale.y, global_scale.z * scale.z));
+	float3 global_scale = owner->transform.GetGlobalScale();	
+	if(body)
+	{
+		body->getCollisionShape()->setLocalScaling(btVector3(global_scale.x * scale.x, global_scale.y * scale.y, global_scale.z * scale.z));
+	}
+}
+
+void ComponentMeshCollider::InitMeshCollider()
+{
+	ComponentMeshRenderer* mesh_renderer = static_cast<ComponentMeshRenderer*>(owner->GetComponent(ComponentType::MESH_RENDERER));
+	if (mesh_renderer)
+	{
+		vertices.clear();
+		indices.clear();
+		mesh = mesh_renderer->mesh_to_render;
+
+		for (auto vertex : mesh->vertices)
+		{
+			vertices.push_back(vertex.position.x);
+			vertices.push_back(vertex.position.y);
+			vertices.push_back(vertex.position.z);
+		}
+
+		indices = std::vector<int>(mesh->indices.begin(), mesh->indices.end());
+
+
+		CreateMeshBody();
+		AddBody();
+		SetConfiguration();
+	}
 }
 
 
@@ -106,7 +142,7 @@ void ComponentMeshCollider::InitData()
 }
 void ComponentMeshCollider::CreateMeshBody()
 {
-	btTriangleIndexVertexArray* vertex_array = new btTriangleIndexVertexArray(indices.size() / 3, indices.data(), static_cast <int>(3 * sizeof(int)), static_cast<int>(vertices.size()), vertices.data(), static_cast <int>(3 * sizeof(float)));
+	btTriangleIndexVertexArray* vertex_array = new btTriangleIndexVertexArray(indices.size() / 3, indices.data(), static_cast<int>(3 * sizeof(int)), static_cast<int>(vertices.size()), vertices.data(), static_cast <int>(3 * sizeof(float)));
 	col_shape = new btBvhTriangleMeshShape(vertex_array, false);
 }
 

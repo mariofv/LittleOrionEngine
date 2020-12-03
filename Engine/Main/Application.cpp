@@ -1,5 +1,6 @@
 #include "Application.h"
-#include "EditorUI/EngineLog.h"
+#include "Log/EngineLog.h"
+#include "Event/EventManager.h"
 #include "Module/ModuleActions.h"
 #include "Module/ModuleAI.h"
 #include "Module/ModuleAudio.h"
@@ -33,12 +34,12 @@ Application::Application()
 	// Order matters: they will Init/start/update in this order
 	modules.emplace_back(window = new ModuleWindow());
 	modules.emplace_back(filesystem = new ModuleFileSystem());
+	modules.emplace_back(time = new ModuleTime());
 	modules.emplace_back(resources = new ModuleResourceManager());
 	modules.emplace_back(input = new ModuleInput());
-	modules.emplace_back(ui = new ModuleUI());
-	modules.emplace_back(time = new ModuleTime());
-	modules.emplace_back(texture = new ModuleTexture());
 	modules.emplace_back(renderer = new ModuleRender());
+	modules.emplace_back(ui = new ModuleUI());
+	modules.emplace_back(texture = new ModuleTexture());
 	modules.emplace_back(effects = new ModuleEffects());
 	modules.emplace_back(animations = new ModuleAnimation());
 	modules.emplace_back(editor = new ModuleEditor());
@@ -56,6 +57,7 @@ Application::Application()
 	modules.emplace_back(debug_draw = new ModuleDebugDraw());
 		
 	engine_log = std::make_unique<EngineLog>();
+	event_manager = std::make_unique<EventManager>();
 }
 
 Application::~Application()

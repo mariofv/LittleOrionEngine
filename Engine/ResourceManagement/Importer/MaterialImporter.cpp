@@ -8,16 +8,12 @@
 
 #include "ResourceManagement/Importer/TextureImporter.h"
 #include "ResourceManagement/Resources/Material.h"
+#include "ResourceManagement/Metafile/TextureMetafile.h"
 
 #include <assimp/scene.h>
 
 #include <regex>
 
-
-FileData MaterialImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
-{
-	return assets_file_path.GetFile()->Load();
-}
 
 FileData MaterialImporter::ExtractMaterialFromAssimp(const aiMaterial* assimp_mesh_material, const Path& material_file_folder_path) const
 {
@@ -50,6 +46,12 @@ FileData MaterialImporter::ExtractMaterialFromAssimp(const aiMaterial* assimp_me
 				case aiTextureType_AMBIENT_OCCLUSION:
 					material_config.AddUInt(material_texture_uuid, "Occlusion");
 					break;
+				case aiTextureType_NORMALS:
+					material_config.AddUInt(material_texture_uuid, "Normal");
+					break;
+				case aiTextureType_LIGHTMAP:
+					material_config.AddUInt(material_texture_uuid, "Lightmap");
+					break;
 				default:
 					material_config.AddUInt(material_texture_uuid, "Unknown");
 					break;
@@ -60,10 +62,6 @@ FileData MaterialImporter::ExtractMaterialFromAssimp(const aiMaterial* assimp_me
 	material_config.AddBool(imported_material.show_checkerboard_texture, "Checkboard");
 	material_config.AddString(imported_material.shader_program, "ShaderProgram");
 
-	//k
-	material_config.AddFloat(imported_material.k_ambient, "kAmbient");
-	material_config.AddFloat(imported_material.k_specular, "kSpecular");
-	material_config.AddFloat(imported_material.k_diffuse, "kDiffuse");
 
 	//colors
 	material_config.AddColor(
@@ -114,51 +112,34 @@ uint32_t MaterialImporter::ImportMaterialTexture(const std::string& texture_desc
 		pos += std::string("/").length();
 	}
 
-	APP_LOG_INIT("Loading material texture in described path %s.", sanitazed_string.c_str());
+	if (sanitazed_string.empty())
+	{
+		return 0;
+	}
+
+	RESOURCES_LOG_INFO("Loading material texture in described path %s.", sanitazed_string.c_str());
 	if (App->filesystem->Exists(sanitazed_string))
 	{
-		APP_LOG_SUCCESS("Material loaded correctly from %s.", sanitazed_string.c_str());
+		RESOURCES_LOG_INFO("Material loaded correctly from %s.", sanitazed_string.c_str());
 		return App->resources->InternalImport(*App->filesystem->GetPath(sanitazed_string));
 	}
 
 	std::string texture_file_name = texture_described_path.substr(sanitazed_string.find_last_of('/') + 1, -1);;
 	std::string textures_path = material_file_folder_path.GetFullPath() + "/" + texture_file_name;
-	APP_LOG_INIT("Loading material texture in model folder path %s.", material_file_folder_path.GetFullPath().c_str());
+	RESOURCES_LOG_INFO("Loading material texture in model folder path %s.", material_file_folder_path.GetFullPath().c_str());
 	if (App->filesystem->Exists(textures_path))
 	{
-		APP_LOG_SUCCESS("Material loaded correctly from %s.", textures_path.c_str());
+		RESOURCES_LOG_INFO("Material loaded correctly from %s.", textures_path.c_str());
 		return App->resources->InternalImport(*App->filesystem->GetPath(textures_path));
 	}
 
 	textures_path = std::string(TEXTURES_PATH) + "/" +  texture_file_name;
-	APP_LOG_INIT("Loading material texture in textures folder %s.", textures_path.c_str());
+	RESOURCES_LOG_INFO("Loading material texture in textures folder %s.", textures_path.c_str());
 	if (App->filesystem->Exists(textures_path))
 	{
-		APP_LOG_SUCCESS("Material loaded correctly from %s.", textures_path.c_str());
+		RESOURCES_LOG_INFO("Material loaded correctly from %s.", textures_path.c_str());
 		return App->resources->InternalImport(*App->filesystem->GetPath(textures_path));
 	}
 
 	return 0;
-}
-
-Material::MaterialTextureType MaterialImporter::GetTextureTypeFromAssimpType(aiTextureType type) const
-{
-	switch (type)
-	{
-	case aiTextureType_DIFFUSE:
-		return Material::MaterialTextureType::DIFFUSE;
-		break;
-	case aiTextureType_SPECULAR:
-		return Material::MaterialTextureType::SPECULAR;
-		break;
-	case aiTextureType_EMISSIVE:
-		return Material::MaterialTextureType::EMISSIVE;
-		break;
-	case aiTextureType_AMBIENT_OCCLUSION:
-		return Material::MaterialTextureType::OCCLUSION;
-		break;
-	default:
-		return Material::MaterialTextureType::UNKNOWN;
-		break;
-	}
 }

@@ -2,6 +2,7 @@
 #include <ctime>
 
 #include "Application.h"
+#include "Log/EngineLog.h"
 #include "Globals.h"
 #include "Helper/TimerUs.h"
 
@@ -28,10 +29,9 @@ int main(int argc, char ** argv)
 
 	// Random number generator
 	pcg32_srandom(time(NULL), 0);
-	srand(time(NULL));
+	srand(static_cast<size_t>(time(NULL)));
 	if(PHYSFS_init(argv[0]) == 0)
 	{
-		APP_LOG_ERROR("Error initializing physfs: %s", PHYSFS_getLastError());
 		return main_return;
 	}
 
@@ -41,12 +41,11 @@ int main(int argc, char ** argv)
 		{
 		case MAIN_CREATION:
 
-			APP_LOG_SECTION("-------------- Application Creation --------------");
 			main_timer.Start();
 
 			App = new Application();
 
-			APP_LOG_SUCCESS("Application Creation ends. Elapsed time: %f ms", main_timer.Read() * 1000);
+			APP_LOG_INFO("Application Creation ends. Elapsed time: %f ms", main_timer.Read() * 1000);
 			state = MAIN_START;
 			break;
 
@@ -62,7 +61,7 @@ int main(int argc, char ** argv)
 			}
 			else
 			{
-				APP_LOG_SUCCESS("Application Init ends. Elapsed time: %f ms", main_timer.Read() * 1000);
+				APP_LOG_INFO("Application Init ends. Elapsed time: %f ms", main_timer.Read() * 1000);
 				state = MAIN_UPDATE;
 				APP_LOG_SECTION("-------------- Application Update --------------");
 			}
@@ -94,7 +93,7 @@ int main(int argc, char ** argv)
 			}
 			else
 			{
-				APP_LOG_SUCCESS("Application CleanUp ends. Elapsed time: %f ms", main_timer.Read() * 1000);
+				APP_LOG_INFO("Application CleanUp ends. Elapsed time: %f ms", main_timer.Read() * 1000);
 				main_return = EXIT_SUCCESS;
 			}
 

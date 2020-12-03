@@ -1,20 +1,24 @@
 #ifndef _MODULERENDER_H_
 #define _MODULERENDER_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Module.h"
 #include "Helper/Timer.h"
 #include "Main/Globals.h"
 
-#include <MathGeoLib/Geometry/LineSegment.h>
+#include <MathGeoLib/MathGeoLib.h>
 #include <GL/glew.h>
 #include <list>
+#include <vector>
 
 class ComponentMeshRenderer;
 class ComponentCamera;
 
 class GameObject;
+class Viewport;
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -33,7 +37,16 @@ public:
 	enum class DrawMode
 	{
 		SHADED,
-		WIREFRAME
+		WIREFRAME,
+		BRIGHTNESS
+	};
+
+	enum class HDRType
+	{
+		REINHARD = 0,
+		FILMIC = 1,
+		EXPOSURE = 2,
+		MAX_HDR_TYPE = 3
 	};
 
 	ModuleRender() = default;
@@ -44,8 +57,6 @@ public:
 	bool CleanUp();
 	
 	void Render() const;
-	void RenderFrame(const ComponentCamera& camera);
-
 
 	ComponentMeshRenderer* CreateComponentMeshRenderer();
 	void RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove);
@@ -53,70 +64,73 @@ public:
 	ENGINE_API int GetRenderedTris() const;
 	ENGINE_API int GetRenderedVerts() const;
 
-	ENGINE_API RaycastHit* GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* cam);
+	ENGINE_API RaycastHit* GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* camera);
+	ENGINE_API bool MeshesIntersectsWithRay(const LineSegment& ray, const std::vector<ComponentMeshRenderer*>& meshes, int& index_intersection) const;
 	ENGINE_API void SetDrawMode(DrawMode draw_mode);
+	ENGINE_API void SetAntialiasing(bool antialiasing);
+	ENGINE_API void SetVSync(bool vsync);
+	ENGINE_API void SetHDR(bool hdr);
+	ENGINE_API void SetHDRType(const HDRType type);
+	ENGINE_API void SetBloom(bool bloom);
+	ENGINE_API void SetFog(bool fog_enabled);
+	ENGINE_API void SetFogDensity(float fog_density);
+	ENGINE_API void SetFogColor(const float4&  fog_color);
+	ENGINE_API void SetShadows(bool shadows_enabled);
 
 private:
-	void SetVSync(bool vsync);
-	void SetAlphaTest(bool gl_alpha_test);
 	void SetDepthTest(bool gl_depth_test);
-	void SetScissorTest(bool gl_scissor_test);
-	void SetStencilTest(bool gl_stencil_test);
-	void SetBlending(bool gl_blend);
 	void SetFaceCulling(bool gl_cull_face);
 	void SetCulledFaces(GLenum culled_faces) const;
 	void SetFrontFaces(GLenum front_faces) const;
-	void SetDithering(bool gl_dither);
-	void SetMinMaxing(bool gl_minmax);
+	std::string GetHDRType(const HDRType type) const;
 
 	std::string GetDrawMode() const;
 
-	void GetMeshesToRender(const ComponentCamera* camera);
-	void SetListOfMeshesToRender(const ComponentCamera* camera);
-
 public:
-	bool anti_aliasing = false;
-	bool toggle_ortho_frustum = false;
-	bool toggle_directional_light_aabb = true;
-	bool toggle_perspective_sub_frustums = false;
-	bool render_shadows = true;
+	bool vsync = false;
+	bool antialiasing = true;
+
+	bool hdr = true;
+	HDRType hdr_type = HDRType::FILMIC;
+	float exposure = 1.f;
+
+	bool shadows_enabled = false;
+	bool depth_map_debug = false;
+	int depth_map_debug_index = 0;
+	bool cascade_mapping = false;
+	bool cascade_debug = false;
+
+	bool bloom = false;
+	int amount_of_blur = 20;
+
+	bool fog_enabled = false;
+	float4 fog_color = float4::zero;
+	float fog_density = 1.0f;
+
+	Viewport* scene_viewport = nullptr;
+	Viewport* game_viewport = nullptr;
+
+	std::vector<ComponentMeshRenderer*> mesh_renderers;
 
 private:
 	void* context = nullptr;
 
-
-	bool vsync = false;
-	bool gl_alpha_test = false;
 	bool gl_depth_test = false;
-	bool gl_scissor_test = false;
-	bool gl_stencil_test = false;
 	bool gl_blend = true;
 	bool gl_cull_face = false;
 	int culled_faces = 0;
 	int front_faces = 0;
 	int filling_mode = 0;
-	bool gl_dither = false;
-	bool gl_minmax = false;
 
 	DrawMode draw_mode = DrawMode::SHADED;
-
-	std::vector<ComponentMeshRenderer*> meshes;
-	std::vector<ComponentMeshRenderer*> meshes_to_render;
-
-	typedef std::pair<float, ComponentMeshRenderer*> ipair;
-	std::list <ipair> opaque_mesh_to_render, transparent_mesh_to_render;
-
-	int num_rendered_tris = 0;
-	int num_rendered_verts = 0;
-	Timer * rendering_measure_timer = new Timer();
 
 	friend class ModuleDebugDraw;
 	friend class ModuleDebug;
 	friend class ModuleSpacePartitioning;
 	friend class PanelConfiguration;
 	friend class PanelScene;
-	friend class NavMesh;
-	friend class ComponentParticleSystem;
+	friend class NavMesh; 
+	friend class Viewport; 
 };
 
 #endif //_MODULERENDER_H_

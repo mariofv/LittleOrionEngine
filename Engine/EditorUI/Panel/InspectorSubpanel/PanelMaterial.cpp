@@ -75,11 +75,10 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 
 			for (int i = 0; i < Material::MAX_MATERIAL_TYPES; ++i)
 			{
-				bool is_selected = (material->material_type == ((Material::MaterialType)i));
+				bool is_selected = (static_cast<int>(material->material_type) == i);
 				if (ImGui::Selectable(Material::GetMaterialTypeName((Material::MaterialType)i).c_str(), is_selected))
 				{
 					material->ChangeTypeOfMaterial((Material::MaterialType)i);
-					const char* name = Material::GetMaterialTypeName(material->material_type).c_str();
 					if (is_selected)
 					{
 						ImGui::SetItemDefaultFocus();
@@ -94,12 +93,19 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 		ImGui::Spacing();
 		ImGui::Separator();
 		ImGui::Spacing();
-		
+
 		ImGui::Text("Main Maps");
 		ImGui::Spacing();
 		ImGui::Spacing();
 
 		ShowMaterialTextureMap(material, Material::MaterialTextureType::DIFFUSE);
+		if (material->material_type == Material::MaterialType::MATERIAL_DISSOLVING || material->material_type == Material::MaterialType::MATERIAL_LIQUID)
+		{
+			ShowMaterialTextureMap(material, Material::MaterialTextureType::DISSOLVED_DIFFUSE);
+			ShowMaterialTextureMap(material, Material::MaterialTextureType::DISSOLVED_EMISSIVE);
+			ShowMaterialTextureMap(material, Material::MaterialTextureType::NOISE);
+			ImGui::DragFloat("Dissolve Progress", &material->dissolve_progress, 0.01f, 0.f, 1.f);
+		}
 		ImGui::Spacing();
 
 		ShowMaterialTextureMap(material, Material::MaterialTextureType::SPECULAR);
@@ -144,7 +150,7 @@ bool PanelMaterial::IsMaterialExtracted(const std::shared_ptr<Material> &materia
 	return meta->version == 0;
 }
 
-bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, Material::MaterialTextureType type)
+void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, Material::MaterialTextureType type)
 {
 	
 	ImGui::PushID(static_cast<unsigned int>(type));
@@ -154,19 +160,6 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 	void* display_image;
 	if (material->textures[type].get() != nullptr)
 	{
-
-		if (type == Material::MaterialTextureType::NORMAL)
-		{
-			material->use_normal_map = true;
-		}
-		if (type == Material::MaterialTextureType::LIQUID)
-		{
-			material->use_liquid_map = true;
-		}
-		if (type == Material::MaterialTextureType::SPECULAR)
-		{
-			material->use_specular_map = true;
-		}
 		std::shared_ptr<Texture>& texture = material->textures[type];
 		display_image = (void*)(intptr_t)texture->opengl_texture;
 	}
@@ -213,20 +206,12 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Spacing();
 		ImGui::Indent();
 
-		if (ImGui::ColorEdit3("Color", material->diffuse_color))
-		{
-			modified_by_user = true;
-		}
-		if (ImGui::SliderFloat("K diffuse", &material->k_diffuse, 0.f, 1.f))
+		if (ImGui::ColorEdit3("Color", material->diffuse_color, ImGuiColorEditFlags_Float))
 		{
 			modified_by_user = true;
 		}
 
-		if (ImGui::SliderFloat("Tiling X", &material->tiling_x, 0.f, 10.f))
-		{
-			modified_by_user = true;
-		}
-		if (ImGui::SliderFloat("Tiling Y", &material->tiling_y, 0.f, 10.f))
+		if (ImGui::DragFloat2("Tiling", material->tiling.ptr(), 0.1f, 0.f, 10.f))
 		{
 			modified_by_user = true;
 		}
@@ -237,10 +222,10 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 				modified_by_user = true;
 			}
 		}
-		
-		
-
-		
+		if (ImGui::SliderFloat("Reflection strength", &material->reflection_strength, 0.0f, 1.0f))
+		{
+			modified_by_user = true;
+		}
 		ImGui::Unindent();
 
 		break;
@@ -255,6 +240,10 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		{
 			modified_by_user = true;
 		}
+		if (ImGui::DragFloat("Intensity", &material->emissive_intensity, 0.01f, 1.f, 100.f))
+		{
+			modified_by_user = true;
+		}
 		ImGui::Unindent();
 
 		break;
@@ -263,13 +252,6 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Text("Occlusion");
 
 		ImGui::Spacing();
-		ImGui::Indent();
-
-		if (ImGui::SliderFloat("k ambient", &material->k_ambient, 0, 1))
-		{
-			modified_by_user = true;
-		}
-		ImGui::Unindent();
 
 		break;
 
@@ -279,15 +261,11 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Spacing();
 		ImGui::Indent();
 		
-		if (ImGui::ColorEdit3("Color", material->specular_color))
+		if (ImGui::ColorEdit3("Color", material->specular_color, ImGuiColorEditFlags_Float))
 		{
 			modified_by_user = true;
 		}
-		if (ImGui::SliderFloat("k specular", &material->k_specular, 0.f, 1.f))
-		{
-			modified_by_user = true;
-		}
-		if (ImGui::SliderFloat("Shininess", &material->specular_color[3], 0.f, 1.f))
+		if (ImGui::SliderFloat("Smoothenss", &material->smoothness, 0.f, 1.f))
 		{
 			modified_by_user = true;
 		}
@@ -309,76 +287,33 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 	case Material::MaterialTextureType::LIQUID:
 		ImGui::Text("Liquid");
 
-		if (material->material_type == Material::MaterialType::MATERIAL_LIQUID)
+		if (ImGui::DragFloat2("Liquid Tiling Speed", material->liquid_tiling_speed.ptr(), 0.1f, 0.f, 1.0f))
 		{
-			//TODO->change it to liquid maps and not hardcoded
-			/*if (material->tiling_liquid_x_x >= 1)
-			{
-				material->tiling_liquid_x_x = 0;
-				material->tiling_liquid_x_y = 0;
-			}
-			if (material->tiling_liquid_y_x <= -1)
-			{
-				material->tiling_liquid_y_x = 0;
-				material->tiling_liquid_y_y = 0;
-			}*/
-
-			if (ImGui::SliderFloat("Speed Tiling X", &material->speed_tiling_x, 0.01f, 1.0f))
-			{
-				modified_by_user = true;
-			}
-			if (ImGui::SliderFloat("Speed Tiling Y", &material->speed_tiling_y, 0.01f, 1.0f))
-			{
-				modified_by_user = true;
-			}
+			modified_by_user = true;
 		}
-	break;
+		
+		break;
+
+	case Material::MaterialTextureType::DISSOLVED_DIFFUSE:
+		ImGui::Text("Dissolved Diffuse");
+		break;
+
+	case Material::MaterialTextureType::DISSOLVED_EMISSIVE:
+		ImGui::Text("Dissolved Emissive");
+		break;
+
+	case Material::MaterialTextureType::NOISE:
+		ImGui::Text("Noise Map");
+		break;
 	}
+
 
 	if (ImGui::Button(ICON_FA_TIMES))
 	{
 		material->RemoveMaterialTexture(type);
-		if (type == Material::MaterialTextureType::NORMAL)
-		{
-			material->use_normal_map = false;
-		}
-		if (type == Material::MaterialTextureType::LIQUID)
-		{
-			material->use_liquid_map = false;
-		}
-		if (type == Material::MaterialTextureType::SPECULAR)
-		{
-			material->use_specular_map = false;
-		}
 		modified_by_user = true;
 	}
 	ImGui::SameLine();
 	ImGui::Text("Remove Texture");
 	ImGui::PopID();
-
-	return modified_by_user;
-}
-
-std::string PanelMaterial::GetTypeName(Material::MaterialTextureType type)
-{
-	switch (type)
-	{
-	case  Material::MaterialTextureType::DIFFUSE:
-		return "Difusse";
-	case  Material::MaterialTextureType::SPECULAR:
-		return "Specular";
-	case  Material::MaterialTextureType::EMISSIVE:
-		return "Emissive";
-	case  Material::MaterialTextureType::OCCLUSION:
-		return "Oclusion";
-	case  Material::MaterialTextureType::NORMAL:
-		return "Normal";
-	case  Material::MaterialTextureType::LIGHTMAP:
-		return "Lightmap";
-	case  Material::MaterialTextureType::LIQUID:
-		return "Liquid";
-
-	default:
-		return "";
-	}
 }

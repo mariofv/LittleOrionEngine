@@ -1,7 +1,9 @@
 #ifndef _GAMEOBJECT_H_
 #define _GAMEOBJECT_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Globals.h"
 #include "Component/Component.h"
@@ -29,9 +31,10 @@ public:
 
 	GameObject& operator=(const GameObject& gameobject_to_copy) = default;
 	GameObject& operator<<(const GameObject& gameobject_to_copy);
+	void CopyParameters(const GameObject & gameobject_to_copy);
 	GameObject& operator=(GameObject&& gameobject_to_move) = default;
 
-	void Duplicate(const GameObject& gameobject_to_copy);
+	void Duplicate(const GameObject& gameobject_to_copy, GameObject* parent);
 
 	void SetTransform(GameObject* game_object);
 
@@ -71,21 +74,28 @@ public:
 	void UpdateHierarchyDepth();
 	void UpdateHierarchyBranch();
 
+	// Returns the first GO with specified tag that is under the hierarchy of this GO
+	ENGINE_API GameObject* GetChildrenWithTag(const std::string& tag);
+
+	// Returns the first GO with specified name that is under the hierarchy of this GO
+	ENGINE_API GameObject* GetChildrenWithName(const std::string& name);
+
 	int GetHierarchyDepth() const;
 	void SetHierarchyDepth(int value);
 
 	bool IsVisible(const ComponentCamera& camera) const;
+	bool IsVisible(const Frustum& frustum) const;
 
 	//Prefabs
 	GameObject * GetPrefabParent();
 	void UnpackPrefab();
+	void Reassign();
 
 private:
 	void SetHierarchyStatic(bool is_static);
 
 	void LoadTransforms(Config config);
 	void CreateTransforms();
-	void CopyComponentsPrefabs(const GameObject & gameobject_to_copy);
 	void CopyComponents(const GameObject& gameobject_to_copy);
 	void RemoveComponentsCopying(const GameObject& gameobject_to_copy);
 

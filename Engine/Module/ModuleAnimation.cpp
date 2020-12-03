@@ -1,9 +1,14 @@
 #include "ModuleAnimation.h"
 
+#include "Component/ComponentAnimation.h"
+
+#include "Log/EngineLog.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTime.h"
-#include "Component/ComponentAnimation.h"
+
+#include <Brofiler/Brofiler.h>
 
 bool ModuleAnimation::Init()
 {
@@ -15,9 +20,24 @@ bool ModuleAnimation::Init()
 
 update_status ModuleAnimation::Update()
 {
+	BROFILER_CATEGORY("Module Animation Update", Profiler::Color::LemonChiffon);
 	if (App->time->isGameRunning())
 	{
-		tweener->Update(App->time->delta_time);
+		tweener->Update(App->time->real_time_delta_time);
+	}
+	else
+	{
+		tweener->Reset();
+	}
+
+	return update_status::UPDATE_CONTINUE;
+}
+
+update_status ModuleAnimation::PostUpdate()
+{
+	if (App->time->isGameRunning())
+	{
+		tweener->CleanSequences();
 	}
 
 	return update_status::UPDATE_CONTINUE;

@@ -35,7 +35,7 @@ ComponentCanvas& ComponentCanvas::operator=(const ComponentCanvas& component_to_
 	return *this;
 }
 
-Component* ComponentCanvas::Clone(bool original_prefab) const
+Component* ComponentCanvas::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentCanvas* created_component;
 	if (original_prefab)
@@ -47,11 +47,14 @@ Component* ComponentCanvas::Clone(bool original_prefab) const
 		created_component = App->ui->CreateComponentCanvas();
 	}
 	*created_component = *this;
-	CloneBase(static_cast<Component*>(created_component));
+	CloneBase(static_cast<Component*>(created_component));	
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 };
 
-void ComponentCanvas::Copy(Component* component_to_copy) const
+void ComponentCanvas::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentCanvas*>(component_to_copy) = *this;
@@ -62,24 +65,21 @@ void ComponentCanvas::Delete()
 	App->ui->RemoveComponentCanvas(this);
 }
 
-void ComponentCanvas::Render(bool scene_mode)
+void ComponentCanvas::Render(float width, float height, bool scene_mode)
 {
 	float2 last_canvas_screen_size = canvas_screen_size;
 
 #if GAME
-	canvas_screen_size.x = App->window->GetWidth();
-	canvas_screen_size.y = App->window->GetHeight();
-
 	canvas_screen_position = float2::zero;
 	focused = App->window->IsFocused();
 	
 #else
-	canvas_screen_size.x = App->editor->game_panel->game_window_content_area_width;
-	canvas_screen_size.y = App->editor->game_panel->game_window_content_area_height;
-
 	canvas_screen_position = App->editor->game_panel->game_window_content_area_pos;
 	focused = App->editor->game_panel->IsFocused();
 #endif
+
+	canvas_screen_size.x = width;
+	canvas_screen_size.y = height;
 
 	float4x4 projection_view;
 	if (scene_mode)
@@ -136,7 +136,7 @@ void ComponentCanvas::RenderGameObject(GameObject* game_object_to_render, float4
 		{
 			glEnable(GL_STENCIL_TEST);
 			glEnable(GL_ALPHA_TEST);
-			glAlphaFunc(GL_GREATER, 0.05);
+			glAlphaFunc(GL_GREATER, 0.05f);
 			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 			glStencilFunc(GL_ALWAYS, 1, 0xFF);
 			glStencilMask(0xFF); // each bit is written to the stencil buffer as is

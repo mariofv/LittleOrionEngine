@@ -1,5 +1,6 @@
 #include "File.h"
 
+#include "Log/EngineLog.h"
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 
@@ -32,12 +33,12 @@ FileData File::Load() const
 	size_t res_size = static_cast<size_t>(PHYSFS_fileLength(physfs_file_handle));
 	char* res = new char[res_size + 1];
 
-	int length_read = PHYSFS_read(physfs_file_handle, res, 1, res_size);
+	int length_read = static_cast<int>(PHYSFS_read(physfs_file_handle, res, 1, res_size));
 	PHYSFS_close(physfs_file_handle);
 
 	if (length_read != res_size)
 	{
-		free(res);
+		delete[] res;
 		APP_LOG_ERROR("Error loading file %s", file_path->GetFullPath().c_str())
 
 		loaded_data.size = 0;
@@ -137,6 +138,10 @@ FileType File::CalculateFileType(const PHYSFS_FileType& file_type) const
 	if (file_extension == "bnk")
 	{
 		return FileType::SOUND;
+	}
+	if (file_extension == "mp4")
+	{
+		return FileType::VIDEO;
 	}
 	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
 	{

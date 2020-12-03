@@ -2,6 +2,7 @@
 
 #include "Component/ComponentCamera.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
+#include "Filesystem/PathAtlas.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleAI.h"
@@ -19,6 +20,8 @@
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Resources/Prefab.h"
 
+#include "Rendering/Viewport.h"
+
 #include <Brofiler/Brofiler.h>
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -28,11 +31,14 @@ PanelScene::PanelScene()
 	opened = true;
 	enabled = true;
 	window_name = ICON_FA_TH " Scene";
+
+	camera_preview_viewport = new Viewport((int)Viewport::ViewportOption::BLIT_FRAMEBUFFER);
 }
 
 
 PanelScene::~PanelScene()
 {
+	delete camera_preview_viewport;
 }
 
 void PanelScene::Render()
@@ -58,32 +64,23 @@ void PanelScene::Render()
 
 		scene_window_content_area_width = scene_window_content_area_max_point.x - scene_window_content_area_pos.x;
 		scene_window_content_area_height = scene_window_content_area_max_point.y - scene_window_content_area_pos.y;
-		
-		if (App->renderer->render_shadows)
-		{
-			App->cameras->directional_light_camera->RecordFrame(scene_window_content_area_width * 4, scene_window_content_area_height * 4);
-			App->cameras->directional_light_mid->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
-			App->cameras->directional_light_far->RecordFrame(scene_window_content_area_width / 4, scene_window_content_area_height / 4);
-		}
-		
 
-
-		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height, true);
-		App->debug->Render(App->cameras->scene_camera);
-		App->cameras->scene_camera->RecordDebugDraws(true);
+		App->renderer->scene_viewport->SetSize(scene_window_content_area_width, scene_window_content_area_height);
+		App->renderer->scene_viewport->Render(App->cameras->scene_camera);
 
 		ImGui::Image(
-			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),
+			(void *)App->renderer->scene_viewport->displayed_texture,
 			ImVec2(scene_window_content_area_width, scene_window_content_area_height),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
+
 		SceneDropTarget();
 
 		AABB2D content_area = AABB2D(scene_window_content_area_pos, scene_window_content_area_max_point);
 		float2 mouse_pos_f2 = float2(ImGui::GetMousePos().x, ImGui::GetMousePos().y);
 		AABB2D mouse_pos = AABB2D(mouse_pos_f2, mouse_pos_f2);
-		hovered = ImGui::IsWindowHovered(); // TODO: This seems to be inneficient, check with partner
+		hovered = ImGui::IsWindowHovered();
 		focused = ImGui::IsWindowFocused();
 
 		RenderEditorDraws(); // This should be render after rendering framebuffer texture.
@@ -94,6 +91,8 @@ void PanelScene::Render()
 		}
 	}
 	ImGui::End();
+
+	RenderDepthMapPreview();
 }
 
 void PanelScene::RenderSceneBar()
@@ -108,9 +107,9 @@ void PanelScene::RenderSceneBar()
 			{
 				App->renderer->SetDrawMode(ModuleRender::DrawMode::SHADED);
 			}
-			if (ImGui::MenuItem("Wireframe", NULL, draw_mode == "Wireframe"))
+			if (ImGui::MenuItem("Brightness", NULL, draw_mode == "Brightness"))
 			{
-				App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
+				App->renderer->SetDrawMode(ModuleRender::DrawMode::BRIGHTNESS);
 			}
 
 			ImGui::EndMenu();
@@ -135,11 +134,14 @@ void PanelScene::RenderSceneBar()
 			App->debug->show_debug_metrics = !App->debug->show_debug_metrics;
 		}
 
+		if (ImGui::Selectable("Reload shaders", false, ImGuiSelectableFlags_None, ImVec2(100, 0)))
+		{
+			App->program->LoadPrograms(SHADERS_PATH);
+		}
 		ImGui::EndMenuBar();
 
 	}
 }
-
 
 void PanelScene::RenderEditorDraws()
 {
@@ -169,6 +171,7 @@ void PanelScene::RenderEditorDraws()
 void PanelScene::RenderGizmo()
 {
 	ComponentTransform* selected_object_transform = nullptr;
+
 	if (App->editor->selected_game_object->GetTransformType() == Component::ComponentType::TRANSFORM)
 	{
 		selected_object_transform = &App->editor->selected_game_object->transform;
@@ -212,8 +215,63 @@ void PanelScene::RenderGizmo()
 	scene_camera_gizmo_hovered = ImGuizmo::IsOver();
 	if (ImGuizmo::IsUsing())
 	{
+		float3 prev_transform = float3::zero;
+		float3 translation_vector = float3::zero;
+		float3 scale_factor = float3::one;
+		float3 prev_rotation = float3::zero;
+		float3 rotation_factor = float3::zero;
+
+		prev_transform = selected_object_transform->GetTranslation();
+		prev_rotation = selected_object_transform->GetRotationRadiants();
+
+		float3 prev_scale = float3::one;
+		prev_scale = selected_object_transform->GetScale();
+
 		gizmo_released = true;
 		selected_object_transform->SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
+		float3 new_position = selected_object_transform->GetTranslation();
+		float3 new_scale = selected_object_transform->GetScale();
+		float3 new_rotation = selected_object_transform->GetRotationRadiants();
+
+		scale_factor = new_scale.Div(prev_scale);
+		translation_vector = new_position - prev_transform;
+		
+		rotation_factor = new_rotation - prev_rotation;
+		
+		if (translation_vector.Length() > 0)
+		{
+			for (auto go : App->editor->selected_game_objects)
+			{
+				if (go->UUID != App->editor->selected_game_object->UUID && !App->scene->HasParent(go))
+				{
+					float3 trans = go->transform.GetTranslation();
+					trans = trans + translation_vector;
+					go->transform.SetTranslation(trans);
+				}
+			}
+		}
+		if (!scale_factor.Equals(float3::one))
+		{
+			for (auto go : App->editor->selected_game_objects)
+			{
+				if (go->UUID != App->editor->selected_game_object->UUID && !App->scene->HasParent(go))
+				{
+					go->transform.SetScale(go->transform.GetScale().Mul(scale_factor));
+				}
+			}
+		}
+
+		if (!rotation_factor.Equals(float3::zero))
+		{
+			for (auto go : App->editor->selected_game_objects)
+			{
+				if (go->UUID != App->editor->selected_game_object->UUID && !App->scene->HasParent(go))
+				{
+					float3 aux = go->transform.GetRotationRadiants() + rotation_factor;
+					go->transform.SetRotationRad(aux);
+				}
+			}
+		}
 		selected_object_transform->modified_by_user = true;
 	}
 	else if (gizmo_released)
@@ -223,15 +281,15 @@ void PanelScene::RenderGizmo()
 		switch (App->editor->gizmo_operation)
 		{
 		case ImGuizmo::TRANSLATE:
-			action_type = ModuleActions::UndoActionType::TRANSLATION;
+			action_type = ModuleActions::UndoActionType::MULTIPLE_TRANSLATION;
 			break;
 
 		case ImGuizmo::ROTATE:
-			action_type = ModuleActions::UndoActionType::ROTATION;
+			action_type = ModuleActions::UndoActionType::MULTIPLE_ROTATION;
 			break;
 
 		case ImGuizmo::SCALE:
-			action_type = ModuleActions::UndoActionType::SCALE;
+			action_type = ModuleActions::UndoActionType::MULTIPLE_SCALE;
 			break;
 
 		default:
@@ -266,8 +324,9 @@ void PanelScene::RenderSceneCameraGizmo() const
 
 void PanelScene::RenderCameraPreview() const
 {
-	Component * selected_camera_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::CAMERA);
-	if (selected_camera_component != nullptr) {
+	Component* selected_camera_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::CAMERA);
+	if (selected_camera_component != nullptr) 
+	{
 		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
 
 		ImGui::SetCursorPos(ImVec2(scene_window_content_area_width - 200, scene_window_content_area_height - 200));
@@ -283,15 +342,38 @@ void PanelScene::RenderCameraPreview() const
 		float width = content_area_max_point.x - ImGui::GetCursorPos().x;
 		float height = content_area_max_point.y - ImGui::GetCursorPos().y;
 
-		selected_camera->RecordFrame(width, height);
+		camera_preview_viewport->SetSize(width, height);
+		camera_preview_viewport->Render(selected_camera);
 		ImGui::Image(
-			(void *)selected_camera->GetLastRecordedFrame(),
+			(void *)camera_preview_viewport->displayed_texture,
 			ImVec2(width, height),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
 
 		ImGui::EndChild();
+	}
+}
+
+void PanelScene::RenderDepthMapPreview() const
+{
+	if (App->renderer->depth_map_debug)
+	{
+		if (ImGui::Begin("Depth Map Preview"))
+		{
+			ImVec2 content_area_max_point = ImGui::GetWindowContentRegionMax();
+
+			float width = content_area_max_point.x - ImGui::GetCursorPos().x;
+			float height = content_area_max_point.y - ImGui::GetCursorPos().y;
+
+			ImGui::Image(
+				(void *)App->renderer->scene_viewport->depth_map_texture,
+				ImVec2(width, height),
+				ImVec2(0, 1),
+				ImVec2(1, 0)
+			);
+		}
+		ImGui::End();
 	}
 }
 
@@ -306,10 +388,12 @@ void PanelScene::RenderDebugMetrics() const
 	}
 
 	ImGui::Text("FPS: %f.2", App->time->GetFPS());
-	ImGui::Text("Tris: %d", App->renderer->GetRenderedTris());
+	ImGui::Text("Triangles: %d", App->renderer->scene_viewport->num_rendered_triangles);
+	ImGui::Text("Vertices: %d", App->renderer->scene_viewport->num_rendered_vertices);
 
 	ImGui::EndChild();
 }
+
 
 void PanelScene::MousePicking(const float2& mouse_position)
 {
@@ -321,7 +405,50 @@ void PanelScene::MousePicking(const float2& mouse_position)
 	LineSegment ray;
 	App->cameras->scene_camera->GetRay(mouse_position, ray);
 	RaycastHit* hit = App->renderer->GetRaycastIntersection(ray, App->cameras->scene_camera);
-	App->editor->selected_game_object = hit->game_object;
+
+	if (hit->game_object != nullptr)
+	{
+		control_key_down = true;
+	}
+	if (App->input->GetKeyUp(KeyCode::LeftControl))
+	{
+		control_key_down = false;
+	}
+	if (control_key_down && App->input->GetKey(KeyCode::LeftControl))
+	{
+		App->editor->selected_game_object = hit->game_object;
+		bool already_selected = false;
+		for (auto go : App->editor->selected_game_objects)
+		{
+			if ((go->UUID == hit->game_object->UUID))
+			{
+				already_selected = true;
+			}
+		}
+		if (!already_selected)
+		{
+			App->editor->selected_game_objects.push_back(hit->game_object);
+		}
+
+		control_key_down = false;
+	}
+	else
+	{
+		if (control_key_down)
+		{
+			App->editor->selected_game_object = hit->game_object;
+			App->editor->selected_game_objects.erase(App->editor->selected_game_objects.begin(), App->editor->selected_game_objects.end());
+			App->editor->selected_game_objects.push_back(hit->game_object);
+			control_key_down = false;
+		}
+		else
+		{
+			App->editor->selected_game_object = nullptr;
+			App->editor->selected_game_objects.erase(App->editor->selected_game_objects.begin(), App->editor->selected_game_objects.end());
+		}
+	}
+
+
 	delete(hit);
 }
 

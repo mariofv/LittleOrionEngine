@@ -2,6 +2,7 @@
 
 #include "EditorUI/Panel/PanelInspector.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelMetaFile.h"
+#include "EditorUI/Panel/PanelPopups.h"
 
 #include "Filesystem/PathAtlas.h"
 #include "Main/Application.h"
@@ -28,7 +29,6 @@
 #include <algorithm>
 
 
-static std::string new_name_file;
 PanelProjectExplorer::PanelProjectExplorer()
 {
 	opened = true;
@@ -38,9 +38,21 @@ PanelProjectExplorer::PanelProjectExplorer()
 
 void PanelProjectExplorer::Render()
 {
+	BROFILER_CATEGORY("Render Project Explorer", Profiler::Color::BlueViolet);
+
 	if (ImGui::Begin(ICON_FA_FOLDER " Project Explorer", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
+
+		ImGui::SameLine();
+		ImGui::Text(ICON_FA_SEARCH);
+
+		ImGui::SameLine();
+		if(ImGui::InputText("###File Searching Input", &searching_file))
+		{
+			searching_file_paths.clear();
+			SearchFilesInExplorer(App->filesystem->assets_folder_path);
+		}
 
 		project_explorer_dockspace_id = ImGui::GetID("ProjectExplorerDockspace");
 		bool initialized = ImGui::DockBuilderGetNode(project_explorer_dockspace_id) != NULL;
@@ -68,7 +80,14 @@ void PanelProjectExplorer::Render()
 		{
 			ImGui::BeginChild("Project File Explorer Drop Target");
 			hovered = ImGui::IsWindowHovered() ? true : hovered;
-			ShowFilesInExplorer();
+			if (searching_file == "")
+			{
+				ShowFilesInExplorer();
+			}
+			else
+			{
+				ShowSearchedFiles();
+			}
 			ImGui::EndChild();
 			FilesDrop();
 		}
@@ -106,9 +125,58 @@ void PanelProjectExplorer::InitResourceExplorerDockspace()
 
 void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 {
+	if (!App->resources->first_import_completed)
+	{
+		return;
+	}
 	for (auto & path_child : path.children)
 	{
 		if (path_child->IsDirectory())
+		{
+
+			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
+
+			std::string filename = ICON_FA_FOLDER " " + path_child->GetFilename();
+			if (path_child->sub_folders == 0)
+			{
+				flags |= ImGuiTreeNodeFlags_Leaf;
+			}
+			if (selected_folder == path_child)
+			{
+				flags |= ImGuiTreeNodeFlags_Selected;
+				filename = ICON_FA_FOLDER_OPEN " " + path_child->GetFilename();
+			}
+			else
+			{
+				if(IsOneOfMyChildrens(path_child))
+				{
+					flags |= ImGuiTreeNodeFlags_DefaultOpen;
+					filename = ICON_FA_FOLDER_OPEN " " + path_child->GetFilename();
+				}
+			}
+			bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
+			ResourceDropTarget(path_child);
+			ImGui::PushID(filename.c_str());
+			ProcessMouseInput(path_child);
+			if (expanded)
+			{
+				ShowFoldersHierarchy(*path_child);
+				ImGui::TreePop();
+			}
+			ImGui::PopID();
+		}
+	}
+}
+
+void PanelProjectExplorer::ShowFoldersHierarchySearch(const Path & path)
+{
+	
+	transform(searching_file.begin(), searching_file.end(), searching_file.begin(), ::tolower);
+	for (auto & path_child : path.children)
+	{
+		std::string name = path_child->GetFilename();
+		transform(name.begin(), name.end(), name.begin(), ::tolower);
+		if (path_child->IsDirectory() && name.find(searching_file) != std::string::npos)
 		{
 
 			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
@@ -134,6 +202,12 @@ void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 			}
 			ImGui::PopID();
 		}
+		
+		if (path.IsDirectory() && path_child->sub_folders > 0)
+		{
+			ShowFoldersHierarchySearch(*path_child);				
+		}
+		
 	}
 }
 
@@ -141,11 +215,12 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 {
 	if (selected_folder == nullptr)
 	{
+		selected_folder = App->filesystem->assets_folder_path;
 		return;
 	}
 
 	ImVec2 available_region = ImGui::GetContentRegionAvail();
-	int files_per_line = available_region.x / file_size_width;
+	int files_per_line = static_cast<int>(available_region.x / file_size_width);
 
 	int current_line = 0;
 	int current_file_in_line = 0;
@@ -174,6 +249,26 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 	}
 }
 
+void PanelProjectExplorer::SearchFilesInExplorer(Path* path)
+{
+	BROFILER_CATEGORY("SearchFilesInExplorer", Profiler::Color::BlueViolet);
+
+	transform(searching_file.begin(), searching_file.end(), searching_file.begin(), ::tolower);
+	for (auto & child_path : path->children)
+	{
+		std::string name = child_path->GetFilename();
+		transform(name.begin(), name.end(), name.begin(), ::tolower);
+		if (child_path != nullptr && child_path->IsMeta() && name.find(searching_file) != std::string::npos)
+		{
+			searching_file_paths.emplace_back(child_path);
+		}
+		if (child_path->IsDirectory())
+		{
+			SearchFilesInExplorer(child_path);
+		}
+	}
+}
+
 void PanelProjectExplorer::CalculateNextLinePosition(int &current_file_in_line, int files_per_line, int &current_line)
 {
 
@@ -191,6 +286,8 @@ void PanelProjectExplorer::CalculateNextLinePosition(int &current_file_in_line, 
 
 void PanelProjectExplorer::ShowMetafile(Path* metafile_path, Metafile* metafile,const std::string& filename)
 {
+	BROFILER_CATEGORY("ShowMetafile", Profiler::Color::BlueViolet);
+
 	bool is_model = metafile->resource_type == ResourceType::MODEL;
 
 	float size_plus = is_model ? 30.f : 0.f;
@@ -201,7 +298,7 @@ void PanelProjectExplorer::ShowMetafile(Path* metafile_path, Metafile* metafile,
 		ResourceDragSource(metafile);
 		ProcessResourceMouseInput(metafile_path, metafile);
 
-		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75 * file_size_width) * 0.5f);
+		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75f * file_size_width) * 0.5f);
 		ShowMetafileIcon(metafile);
 		if (is_model)
 		{
@@ -213,26 +310,19 @@ void PanelProjectExplorer::ShowMetafile(Path* metafile_path, Metafile* metafile,
 		}
 		ImGui::Spacing();
 
-		if (renaming_file && metafile_path == renaming_file)
+		float text_width = ImGui::CalcTextSize(filename.c_str()).x;
+		if (text_width < file_size_width)
 		{
-			ImGui::InputText("###NewName", &new_name_file);
+			ImGui::SetCursorPosX((ImGui::GetWindowWidth() - text_width) * 0.5f);
+			ImGui::Text(filename.c_str());
 		}
 		else
 		{
-			float text_width = ImGui::CalcTextSize(filename.c_str()).x;
-			if (text_width < file_size_width)
-			{
-				ImGui::SetCursorPosX((ImGui::GetWindowWidth() - text_width) * 0.5f);
-				ImGui::Text(filename.c_str());
-			}
-			else
-			{
-				int character_width = text_width / filename.length();
-				int string_position_wrap = file_size_width / character_width - 5;
-				assert(string_position_wrap < filename.length());
-				std::string wrapped_filename = filename.substr(0, string_position_wrap + 3) + "\n" + filename.substr(string_position_wrap, filename.size());
-				ImGui::Text(wrapped_filename.c_str());
-			}
+			float character_width = text_width / filename.length();
+			size_t string_position_wrap = static_cast<size_t>(file_size_width / character_width - 5);
+			assert(string_position_wrap < filename.length());
+			std::string wrapped_filename = filename.substr(0, string_position_wrap + 3) + "\n" + filename.substr(string_position_wrap, filename.size());
+			ImGui::Text(wrapped_filename.c_str());
 		}
 		
 	}
@@ -242,12 +332,13 @@ void PanelProjectExplorer::ShowMetafile(Path* metafile_path, Metafile* metafile,
 
 void PanelProjectExplorer::ShowMetafileIcon(Metafile * metafile)
 {
+	BROFILER_CATEGORY("Show metafile icon", Profiler::Color::BlueViolet);
 
 	ImGui::SetWindowFontScale(2);
 
 	if(metafile->resource_type == ResourceType::TEXTURE)
 	{
-		ImGui::Image((void *)GetResourcePreviewImage(metafile->uuid), ImVec2(0.75*file_size_width, 0.75*file_size_width));
+		ImGui::Image((void *)GetResourcePreviewImage(metafile->uuid), ImVec2(0.75f*file_size_width, 0.75f*file_size_width));
 	}
 	else
 	{
@@ -290,6 +381,9 @@ void PanelProjectExplorer::ShowMetafileIcon(Metafile * metafile)
 		case ResourceType::STATE_MACHINE:
 			icon = ICON_FA_PROJECT_DIAGRAM;
 			break;
+		case ResourceType::VIDEO:
+			icon = ICON_FA_FILM;
+			break;
 		default:
 			icon = ICON_FA_FILE;
 			break;
@@ -297,10 +391,10 @@ void PanelProjectExplorer::ShowMetafileIcon(Metafile * metafile)
 
 		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 
-		static ImVec4 color = ImVec4(0, 0.4, 0.6, 1);
+		static ImVec4 color = ImVec4(0.f, 0.4f, 0.6f, 1.f);
 		ImGui::PushStyleColor(ImGuiCol_Button, color);
 
-		ImGui::Button(icon.c_str(),ImVec2(0.75*file_size_width, 0.75*file_size_width));
+		ImGui::Button(icon.c_str(),ImVec2(0.75f*file_size_width, 0.75f*file_size_width));
 		ImGui::PopStyleColor(1);
 		ImGui::PopItemFlag();
 	}
@@ -313,7 +407,9 @@ size_t PanelProjectExplorer::GetResourcePreviewImage(uint32_t uuid)
 	size_t opengl_id = 0;
 	if (project_explorer_icon_cache.find(uuid) == project_explorer_icon_cache.end())
 	{
+		App->resources->loading_thread_communication.normal_loading_flag = true;
 		opengl_id = (project_explorer_icon_cache[uuid] = App->resources->Load<Texture>(uuid))->opengl_texture;
+		App->resources->loading_thread_communication.normal_loading_flag = false;
 	}
 	else
 	{
@@ -323,12 +419,34 @@ size_t PanelProjectExplorer::GetResourcePreviewImage(uint32_t uuid)
 	return opengl_id;
 }
 
-void PanelProjectExplorer::ApplyRename()
+void PanelProjectExplorer::ShowSearchedFiles()
 {
-	if (renaming_file)
+	BROFILER_CATEGORY("ShowSearchedFiles", Profiler::Color::BlueViolet);
+
+	ImVec2 available_region = ImGui::GetContentRegionAvail();
+	int files_per_line = static_cast<int>(available_region.x / file_size_width);
+
+	int current_line = 0;
+	int current_file_in_line = 0;
+
+	for(auto& path : searching_file_paths)
 	{
-		App->filesystem->Rename(renaming_file, new_name_file);
-		renaming_file = nullptr;
+		ImGui::PushID(current_line * files_per_line + current_file_in_line);
+		Metafile* metafile = App->resources->metafile_manager->GetMetafile(*path);
+		std::string filename = path->GetFilenameWithoutExtension();
+		ShowMetafile(path, metafile, filename);
+		ImGui::PopID();
+		CalculateNextLinePosition(current_file_in_line, files_per_line, current_line);
+		if (opened_model && metafile->uuid == opened_model->uuid)
+		{
+			for (auto & meta : opened_model->nodes)
+			{
+				ImGui::PushID(meta->resource_name.c_str());
+				ShowMetafile(App->filesystem->GetPath(meta->exported_file_path), meta.get(), meta->resource_name);
+				ImGui::PopID();
+				CalculateNextLinePosition(current_file_in_line, files_per_line, current_line);
+			}
+		}
 	}
 }
 
@@ -341,6 +459,7 @@ void PanelProjectExplorer::ResourceDragSource(const Metafile* metafile) const
 		ImGui::EndDragDropSource();
 	}
 }
+
 void PanelProjectExplorer::ResourceDropTarget(Path * folder_path) const
 {
 	if (ImGui::BeginDragDropTarget())
@@ -356,6 +475,7 @@ void PanelProjectExplorer::ResourceDropTarget(Path * folder_path) const
 		ImGui::EndDragDropTarget();
 	}
 }
+
 void PanelProjectExplorer::ResourceDropFromOutside(const std::string& dropped_filedir)
 {
 	if (!selected_folder)
@@ -374,6 +494,7 @@ void PanelProjectExplorer::ResourceDropFromOutside(const std::string& dropped_fi
 		}
 	}
 }
+
 void PanelProjectExplorer::ProcessResourceMouseInput(Path* metafile_path, Metafile* metafile)
 {
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseReleased(0))
@@ -387,7 +508,7 @@ void PanelProjectExplorer::ProcessResourceMouseInput(Path* metafile_path, Metafi
 	{
 		if (metafile->resource_type == ResourceType::STATE_MACHINE)
 		{
-			App->editor->state_machine->SwitchOpen();
+			App->editor->state_machine->Open();
 			App->editor->state_machine->OpenStateMachine(metafile->uuid);
 		}
 	}
@@ -399,9 +520,7 @@ void PanelProjectExplorer::ProcessMouseInput(Path* file_path)
 	{
 		if (ImGui::IsMouseClicked(0))
 		{
-			//selected_folder = file_path;
 			selected_file = nullptr;
-			ApplyRename();
 		}
 		if (ImGui::IsMouseDoubleClicked(0))
 		{
@@ -419,34 +538,62 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 	}
 	if (ImGui::BeginPopup("Menu"))
 	{
-		if (selected_folder != nullptr && path->IsDirectory() && ImGui::BeginMenu("Create"))
+		if (selected_folder != nullptr && path->IsDirectory())
 		{
-			if (ImGui::Selectable("Folder"))
+			if (ImGui::BeginMenu("Create"))
 			{
-				std::string new_directory_path = path->GetFullPath() + "/New folder";
-				size_t i = 0;
-				while (App->filesystem->Exists(new_directory_path))
+				if (ImGui::Selectable("Folder"))
 				{
-					new_directory_path = path->GetFullPath() + "/New folder" +" " + std::to_string(i);
-					i++;
+					auto & choose_name_popup = App->editor->popups->new_filename_chooser;
+					choose_name_popup.show_new_filename_popup = true;
+					choose_name_popup.new_filename = "New folder";
+					choose_name_popup.apply_new_name = [path] (std::string & new_directory_path){
+		
+						new_directory_path = path->GetFullPath() + "/" + new_directory_path;
+						size_t i = 0;
+						while (App->filesystem->Exists(new_directory_path))
+						{
+							new_directory_path = path->GetFullPath() + "/New folder" + " " + std::to_string(i);
+							i++;
+						}
+						App->filesystem->MakeDirectory(new_directory_path);
+					};
 				}
-				App->filesystem->MakeDirectory(new_directory_path);
-			}
-			ImGui::Separator();
-			if (ImGui::Selectable("Material"))
-			{
-				App->resources->Create<Material>(*selected_folder, "New Material.mat");
+				ImGui::Separator();
+				if (ImGui::Selectable("Material"))
+				{
+					auto & choose_name_popup = App->editor->popups->new_filename_chooser;
+					choose_name_popup.show_new_filename_popup = true;
+					choose_name_popup.new_filename = "New Material";
+					choose_name_popup.apply_new_name = [this](std::string & new_directory_path) {
 
+						App->resources->Create<Material>(*selected_folder, new_directory_path +".mat");
+					};
+
+
+				}
+				if (ImGui::Selectable("Skybox"))
+				{
+					auto & choose_name_popup = App->editor->popups->new_filename_chooser;
+					choose_name_popup.show_new_filename_popup = true;
+					choose_name_popup.new_filename = "New Skybox";
+					choose_name_popup.apply_new_name = [this](std::string & new_directory_path) {
+
+						App->resources->Create<Skybox>(*selected_folder, new_directory_path + ".skybox");
+					};
+				}
+				if (ImGui::Selectable("State Machine"))
+				{
+					auto & choose_name_popup = App->editor->popups->new_filename_chooser;
+					choose_name_popup.show_new_filename_popup = true;
+					choose_name_popup.new_filename = "New State Machine";
+					choose_name_popup.apply_new_name = [this](std::string & new_directory_path) {
+
+						App->resources->Create<StateMachine>(*selected_folder, new_directory_path + ".stm");
+					};
+				}
+				ImGui::EndMenu();
 			}
-			if (ImGui::Selectable("Skybox"))
-			{
-				App->resources->Create<Skybox>(*selected_folder, "New Skybox.skybox");
-			}
-			if (ImGui::Selectable("State Machine"))
-			{
-				App->resources->Create<StateMachine>(*selected_folder, "New State Machine.stm");
-			}
-			ImGui::EndMenu();
 		}
 
 		if (selected_file != nullptr )
@@ -459,14 +606,21 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 				if (success)
 				{
 					selected_file = nullptr;
-					renaming_file = nullptr;
 					opened_model = nullptr;
 				}
 			}
-			if (has_uuid && ImGui::Selectable("Rename"))
+			if (!has_uuid && ImGui::Selectable("Rename"))
 			{
-				renaming_file = selected_file;
-				new_name_file = selected_file->GetFilename();
+				auto & choose_name_popup = App->editor->popups->new_filename_chooser;
+				choose_name_popup.show_new_filename_popup = true;
+				std::string original_file = selected_file->GetFilenameWithoutExtension();
+				std::string extension = original_file.substr(original_file.find_last_of("."));
+				choose_name_popup.new_filename = original_file.substr(0, original_file.find_last_of("."));
+				choose_name_popup.apply_new_name = [this, extension](std::string & new_filename) {
+
+					new_filename +=  extension + ".meta";
+					App->filesystem->Rename(selected_file, new_filename);
+				};
 			}
 			ImGui::Separator();
 			Metafile * selected_metafile = App->editor->selected_meta_file;
@@ -505,11 +659,6 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 		}
 		ImGui::EndPopup();
 	}
-	bool enter_pressed = ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Enter));
-	if (enter_pressed || renaming_file && renaming_file != selected_file)
-	{
-		ApplyRename();
-	}
 }
 
 void PanelProjectExplorer::FilesDrop() const
@@ -520,14 +669,38 @@ void PanelProjectExplorer::FilesDrop() const
 		{
 			assert(payload->DataSize == sizeof(GameObject*));
 			GameObject *incoming_game_object = *(GameObject**)payload->Data;
-			uint32_t prefab_uuid = PrefabManager::CreateFromGameObject(*selected_folder, *incoming_game_object);
-			if (prefab_uuid != 0)
-			{
-				App->scene->RemoveGameObject(incoming_game_object);
-				std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(prefab_uuid);
-				App->editor->selected_game_object = prefab->Instantiate(App->scene->GetRoot());
-			}
+			CreatePrefabInSelectedFolder(incoming_game_object);
 		}
 		ImGui::EndDragDropTarget();
 	}
+}
+
+void PanelProjectExplorer::CreatePrefabInSelectedFolder(GameObject * incoming_game_object) const
+{
+	Path* destination_folder = selected_folder ? selected_folder : App->filesystem->GetRootPath();
+	uint32_t prefab_uuid = PrefabManager::CreateFromGameObject(*destination_folder, *incoming_game_object);
+	if (prefab_uuid != 0)
+	{
+		std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(prefab_uuid);
+		App->editor->selected_game_object = prefab->Instantiate(incoming_game_object->parent ? incoming_game_object->parent : App->scene->GetRoot());
+		App->scene->RemoveGameObject(incoming_game_object);
+	}
+}
+
+bool PanelProjectExplorer::IsOneOfMyChildrens(Path* path) const
+{
+	bool found = false;
+	for (auto& child : path->children)
+	{
+		found = std::find(child->children.begin(), child->children.end(), selected_folder) != child->children.end() || child == selected_folder;
+		if (!found && child->children.size() > 0)
+		{
+			found = IsOneOfMyChildrens(child);
+		}
+		if (found)
+		{
+			break;
+		}
+	}
+	return found;
 }

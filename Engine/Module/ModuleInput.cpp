@@ -7,6 +7,7 @@
 
 #include "Filesystem/File.h"
 #include "Filesystem/PathAtlas.h"
+#include "Log/EngineLog.h"
 
 #include "Main/Application.h"
 #include "Module/ModuleWindow.h"
@@ -24,12 +25,37 @@
 #include <imgui_impl_sdl.h>
 #include <SDL/SDL.h>
 
+
+void GameInput::Load(Config &config)
+{
+	config.GetString("Name", name, "DefaultName");
+	uint64_t size_keys = config.GetUInt("SizeKeys", 0);
+	for (size_t i = 0; i < size_keys; ++i)
+	{
+		std::string name_k("k" + std::to_string(i));
+		keys[i] = ((KeyCode)config.GetUInt(name_k, 0));
+	}
+
+	uint64_t size_mouse = config.GetUInt("SizeMouse", 0);
+	for (size_t j = 0; j < size_mouse; ++j)
+	{
+		std::string name_m("m" + std::to_string(j));
+		mouse_buttons[j] = ((MouseButton)config.GetUInt(name_m, 0));
+	}
+
+	uint64_t size_controller = config.GetUInt("SizeController", 0);
+	for (size_t k = 0; k < size_controller; ++k)
+	{
+		std::string name_c("c" + std::to_string(k));
+		controller_buttons[k] = ((ControllerCode)config.GetUInt(name_c, 0));
+	}
+}
 // Called before render is available
 bool ModuleInput::Init()
 {
 	APP_LOG_SECTION("************ Module Input Init ************");
 
-	APP_LOG_INIT("Init SDL input event system");
+	APP_LOG_INFO("Init SDL input event system");
 	bool ret = true;
 	SDL_Init(0);
 
@@ -39,19 +65,19 @@ bool ModuleInput::Init()
 		ret = false;
 	}
 
-	for (int i = 0; i < MAX_KEYS; ++i)
+	for (size_t i = 0; i < MAX_KEYS; ++i)
 	{
 		key_bible[(KeyCode)i] = KeyState::IDLE;
 	}
 
-	for (int i = 0; i < MAX_MOUSE_BUTTONS; ++i)
+	for (size_t i = 0; i < MAX_MOUSE_BUTTONS; ++i)
 	{
 		mouse_bible[(MouseButton)i] = KeyState::IDLE;
 	}
 
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
 
-	APP_LOG_SUCCESS("SDL input event system initialized correctly.");
+	APP_LOG_INFO("SDL input event system initialized correctly.");
 
 	//Load Game Inputs
 	game_inputs_file_path = App->filesystem->GetPath(RESOURCES_GAME_INPUTS_PATH + std::string("/") + RESOURCES_GAME_INPUTS_FILENAME);
@@ -75,7 +101,7 @@ bool ModuleInput::Init()
 // Called every draw update
 update_status ModuleInput::PreUpdate()
 {
-	BROFILER_CATEGORY("Inputs PreUpdate", Profiler::Color::BlueViolet);
+	BROFILER_CATEGORY("Module Inputs PreUpdate", Profiler::Color::BlueViolet);
 
 	mouse_motion = { 0, 0 };
 	mouse_wheel_motion = 0;
@@ -92,7 +118,7 @@ update_status ModuleInput::PreUpdate()
 			mouse.second = KeyState::IDLE;
 		}
 	}
-	for(int x = 0; x < controller.size(); ++x)
+	for(size_t x = 0; x < controller.size(); ++x)
 	{
 		for (auto& controller : controller[x]->controller_bible)
 		{
@@ -152,7 +178,7 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_CONTROLLERBUTTONDOWN:
-			for (int i = 0; i < controller.size(); ++i) 
+			for (size_t i = 0; i < controller.size(); ++i)
 			{
 				if (event.cbutton.which == controller[i]->joystick)
 				{
@@ -162,7 +188,7 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_CONTROLLERBUTTONUP:
-			for (int i = 0; i < controller.size(); ++i) 
+			for (size_t i = 0; i < controller.size(); ++i)
 			{
 				if (event.cbutton.which == controller[i]->joystick)
 				{
@@ -173,7 +199,7 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_CONTROLLERAXISMOTION:
 		{
-			for (int i = 0; i < controller.size(); ++i) 
+			for (size_t i = 0; i < controller.size(); ++i) 
 			{
 				if (event.caxis.which == controller[i]->joystick)
 				{
@@ -223,7 +249,7 @@ update_status ModuleInput::PreUpdate()
 
 	keys = SDL_GetKeyboardState(nullptr);
 
-	for (int i = 0; i < MAX_KEYS; ++i)
+	for (size_t i = 0; i < MAX_KEYS; ++i)
 	{
 		if (keys[i] == 1)
 		{
@@ -268,7 +294,7 @@ bool ModuleInput::CleanUp()
 }
 
 // Returns true while the user holds down the key identified by name
-ENGINE_API bool ModuleInput::GetKey(KeyCode key)
+bool ModuleInput::GetKey(KeyCode key)
 {
 	BROFILER_CATEGORY("Get Key", Profiler::Color::Lavender);
 	//If map[x] does not find x it will add the default value
@@ -276,51 +302,51 @@ ENGINE_API bool ModuleInput::GetKey(KeyCode key)
 }
 
 // Returns true during the frame the user starts pressing down the key identified by name
-ENGINE_API bool ModuleInput::GetKeyDown(KeyCode key)
+bool ModuleInput::GetKeyDown(KeyCode key)
 {
 	return key_bible[key] == KeyState::DOWN;
 }
 
 // Returns true during the frame the user releases the key identified by name
-ENGINE_API bool ModuleInput::GetKeyUp(KeyCode key)
+bool ModuleInput::GetKeyUp(KeyCode key)
 {
 	return key_bible[key] == KeyState::UP;
 }
 
 // Returns whether the given mouse button is held down
-ENGINE_API bool ModuleInput::GetMouseButton(MouseButton button)
+bool ModuleInput::GetMouseButton(MouseButton button)
 {
 	return mouse_bible[button] == KeyState::REPEAT;
 }
 
 // Returns true during the frame the user pressed the given mouse button
-ENGINE_API bool ModuleInput::GetMouseButtonDown(MouseButton button)
+bool ModuleInput::GetMouseButtonDown(MouseButton button)
 {
 	return mouse_bible[button] == KeyState::DOWN;
 }
 
 // Returns true during the frame the user releases the given mouse button
-ENGINE_API bool ModuleInput::GetMouseButtonUp(MouseButton button)
+bool ModuleInput::GetMouseButtonUp(MouseButton button)
 {
 	return mouse_bible[button] == KeyState::UP;
 }
 
-ENGINE_API bool ModuleInput::GetControllerButton(ControllerCode code, ControllerID controller_id)
+bool ModuleInput::GetControllerButton(ControllerCode code, ControllerID controller_id)
 {
 	return controller[(int)controller_id]->controller_bible[code] == KeyState::REPEAT;
 }
 
-ENGINE_API bool ModuleInput::GetControllerButtonDown(ControllerCode code, ControllerID controller_id)
+bool ModuleInput::GetControllerButtonDown(ControllerCode code, ControllerID controller_id)
 {
 	return controller[(int)controller_id]->controller_bible[code] == KeyState::DOWN;
 }
 
-ENGINE_API bool ModuleInput::GetControllerButtonUp(ControllerCode code, ControllerID controller_id)
+bool ModuleInput::GetControllerButtonUp(ControllerCode code, ControllerID controller_id)
 {
 	return controller[(int)controller_id]->controller_bible[code] == KeyState::UP;
 }
 
-ENGINE_API bool ModuleInput::GetAnyKeyPressedDown() const
+bool ModuleInput::GetAnyKeyPressedDown() const
 {
 	for (auto& key : key_bible)
 	{
@@ -400,7 +426,7 @@ bool ModuleInput::IsMouseMoving() const
 	return mouse_moving;
 }
 
-ENGINE_API float2 ModuleInput::GetAxisController(ControllerAxis type, ControllerID controller_id) const
+float2 ModuleInput::GetAxisController(ControllerAxis type, ControllerID controller_id) const
 {
 	switch (type)
 	{
@@ -421,7 +447,7 @@ ENGINE_API float2 ModuleInput::GetAxisController(ControllerAxis type, Controller
 	}
 }
 
-ENGINE_API float ModuleInput::GetTriggerController(ControllerAxis type, ControllerID controller_id) const
+float ModuleInput::GetTriggerController(ControllerAxis type, ControllerID controller_id) const
 {
 	switch (type)
 	{
@@ -442,7 +468,7 @@ ENGINE_API float ModuleInput::GetTriggerController(ControllerAxis type, Controll
 	}
 }
 
-ENGINE_API float2 ModuleInput::GetAxisControllerRaw(ControllerAxis type, ControllerID controller_id) const
+float2 ModuleInput::GetAxisControllerRaw(ControllerAxis type, ControllerID controller_id) const
 {
 	switch (type)
 	{
@@ -457,7 +483,7 @@ ENGINE_API float2 ModuleInput::GetAxisControllerRaw(ControllerAxis type, Control
 	}
 }
 
-ENGINE_API Sint16 ModuleInput::GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const
+Sint16 ModuleInput::GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const
 {
 	switch (type)
 	{
@@ -468,7 +494,7 @@ ENGINE_API Sint16 ModuleInput::GetTriggerControllerRaw(ControllerAxis type, Cont
 			return controller[(int)controller_id]->right_controller_trigger_raw;
 
 		default:
-			0.0f;
+			return 0.0f;
 	}
 }
 
@@ -655,7 +681,7 @@ void ModuleInput::AddGamepad(int device)
 	gamepad->controller = SDL_GameControllerOpen(device);
 	gamepad->device = device;
 	gamepad->joystick = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(gamepad->controller));
-	for (int i = 0; i < MAX_CONTROLLER_BUTTONS; ++i)
+	for (size_t i = 0; i < MAX_CONTROLLER_BUTTONS; ++i)
 	{
 		gamepad->controller_bible[(ControllerCode)i] = KeyState::IDLE;
 	}

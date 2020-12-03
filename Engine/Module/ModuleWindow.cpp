@@ -1,9 +1,11 @@
+#include "ModuleWindow.h"
+
+#include "Log/EngineLog.h"
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleRender.h"
-#include "ModuleWindow.h"
 
 #include <SDL_image/SDL_image.h>
 
@@ -12,7 +14,7 @@ bool ModuleWindow::Init()
 {
 	APP_LOG_SECTION("************ Module Window Init ************");
 
-	APP_LOG_INIT("Init SDL window & surface.");
+	APP_LOG_INFO("Init SDL window & surface.");
 	bool ret = true;
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -39,15 +41,25 @@ bool ModuleWindow::Init()
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
+#if !GAME
 		if (RESIZABLE)
 		{
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
-
+#endif
 		if (!BORDERED)
 		{
 			flags |= SDL_WINDOW_BORDERLESS;
 		}
+
+#if GAME
+		width = 1920;
+		height = 1080;
+		if(screen_width == width && screen_height == height)
+		{
+			flags |= SDL_WINDOW_BORDERLESS;
+		}
+#endif
 
 		InitOpenGLAttributes();
 
@@ -72,7 +84,7 @@ bool ModuleWindow::Init()
 	bordered = BORDERED;
 	resizable = RESIZABLE;
 
-	APP_LOG_SUCCESS("SDL window & surface initialized correctly.");
+	APP_LOG_INFO("SDL window & surface initialized correctly.");
 
 	return ret;
 }
@@ -171,9 +183,16 @@ void ModuleWindow::WindowResized(unsigned width, unsigned height)
 	this->height = height;
 }
 
+void ModuleWindow::CloseWindow() const
+{
+	SDL_Event quit_event;
+	quit_event.type = SDL_QUIT;
+	SDL_PushEvent(&quit_event);
+}
+
 void ModuleWindow::InitOpenGLAttributes() const
 {
-	APP_LOG_INIT("Creating Glew Renderer context");
+	APP_LOG_INFO("Creating Glew Renderer context");
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);

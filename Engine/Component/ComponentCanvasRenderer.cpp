@@ -1,6 +1,7 @@
 #include "ComponentCanvasRenderer.h"
 
 #include "ComponentImage.h"
+#include "ComponentVideoPlayer.h"
 #include "ComponentSpriteMask.h"
 #include "ComponentText.h"
 
@@ -25,7 +26,7 @@ ComponentCanvasRenderer& ComponentCanvasRenderer::operator=(const ComponentCanva
 	return *this;
 }
 
-Component* ComponentCanvasRenderer::Clone(bool original_prefab) const
+Component* ComponentCanvasRenderer::Clone(GameObject* owner, bool original_prefab)
 {
 	ComponentCanvasRenderer* created_component;
 	if (original_prefab)
@@ -38,10 +39,13 @@ Component* ComponentCanvasRenderer::Clone(bool original_prefab) const
 	}
 	*created_component = *this;
 	CloneBase(static_cast<Component*>(created_component));
+
+	created_component->owner = owner;
+	created_component->owner->components.push_back(created_component);
 	return created_component;
 };
 
-void ComponentCanvasRenderer::Copy(Component* component_to_copy) const
+void ComponentCanvasRenderer::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentCanvasRenderer*>(component_to_copy) = *this;
@@ -64,6 +68,12 @@ void ComponentCanvasRenderer::Render(float4x4* projection)
 	if (component_text != nullptr)
 	{
 		static_cast<ComponentText*>(component_text)->Render(projection);
+	}
+
+	Component* component_video_player = owner->GetComponent(Component::ComponentType::VIDEO_PLAYER);
+	if (component_video_player != nullptr)
+	{
+		static_cast<ComponentVideoPlayer*>(component_video_player)->Render(projection);
 	}
 }
 

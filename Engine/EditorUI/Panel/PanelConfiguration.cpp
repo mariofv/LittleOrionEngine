@@ -4,13 +4,17 @@
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleEffects.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleResourceManager.h"
+#include "Module/ModuleScene.h"
 #include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleWindow.h"
 #include "PanelConfiguration.h"
 #include "Module/ModulePhysics.h"
+#include "Rendering/Viewport.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <GL/glew.h>
@@ -37,6 +41,9 @@ void PanelConfiguration::Render()
 
 		ImGui::Spacing();
 		ShowRenderOptions();
+		
+		ImGui::Spacing();
+		ShowPostProcessingOptions();
 
 		ImGui::Spacing();
 		ShowTimeOptions();
@@ -202,20 +209,6 @@ void PanelConfiguration::ShowRenderOptions()
 			App->renderer->SetVSync(App->renderer->vsync);
 		}
 
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Depth test", &App->renderer->gl_depth_test))
-		{
-			App->renderer->SetDepthTest(App->renderer->gl_depth_test);
-
-		}
-
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Anti-aliasing", &App->renderer->anti_aliasing))
-		{
-			App->cameras->scene_camera->toggle_msaa = true;
-			App->cameras->main_camera->toggle_msaa = true;
-		}
-
 		ImGui::Separator();
 
 		if (ImGui::Checkbox("Face culling", &App->renderer->gl_cull_face))
@@ -263,57 +256,107 @@ void PanelConfiguration::ShowRenderOptions()
 				break;
 			}
 		}
+
 		ImGui::Separator();
-		HelpMarker("This settings have no visual impact, WIP.");
-		ImGui::SameLine();
-		if (ImGui::TreeNode("Non-functional settings"))
+
+		ImGui::TextColored(ImVec4(0.3f, 0.3f, 0.3f, 1), "Shadows");
+		if (ImGui::Checkbox("Shadows", &App->renderer->shadows_enabled))
 		{
-			if (ImGui::Checkbox("Alpha test", &App->renderer->gl_alpha_test))
-			{
-				App->renderer->SetAlphaTest(App->renderer->gl_alpha_test);
-			}
-			if (ImGui::Checkbox("Scissor test", &App->renderer->gl_scissor_test))
-			{
-				App->renderer->SetScissorTest(App->renderer->gl_scissor_test);
-			}
-			if (ImGui::Checkbox("Stencil test", &App->renderer->gl_stencil_test))
-			{
-				App->renderer->SetStencilTest(App->renderer->gl_stencil_test);
-			}
-			if (ImGui::Checkbox("Blending", &App->renderer->gl_blend))
-			{
-				App->renderer->SetBlending(App->renderer->gl_blend);
-			}
-			if (ImGui::Checkbox("Dithering", &App->renderer->gl_dither))
-			{
-				App->renderer->SetDithering(App->renderer->gl_dither);
-			}
-			if (ImGui::Checkbox("Min Maxing", &App->renderer->gl_minmax))
-			{
-				App->renderer->SetMinMaxing(App->renderer->gl_minmax);
-			}
-			ImGui::TreePop();
+			App->renderer->SetShadows(App->renderer->shadows_enabled);
 		}
-
+		if (App->renderer->shadows_enabled)
+		{
+			ImGui::Checkbox("Cascade Mapping", &App->renderer->cascade_mapping);
+			ImGui::Checkbox("Depth map debug", &App->renderer->depth_map_debug);
+			if (App->renderer->cascade_mapping)
+			{
+				ImGui::Combo("Debugged Depth Map", &App->renderer->depth_map_debug_index, "Near\0Mid\0Far\0");
+			}
+			if (App->renderer->cascade_mapping)
+			{
+				ImGui::Checkbox("Cascade debug", &App->renderer->cascade_debug);
+			}
+		}
 		ImGui::Separator();
 
-		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Lighting");
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1, 1, 1, 1), "and");
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.3, 0.3, 0.3, 1), "Shadows");
 
-		ImGui::Separator();
 
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Ambient Light");
 
 		ImGui::SliderFloat("Intensity", &App->lights->ambient_light_intensity, 0, 1, "%.2f");
 		ImGui::ColorEdit3("Color", App->lights->ambient_light_color);
 
-		//ImGui::Checkbox("Toggle directional camera frustum", &App->renderer->toggle_ortho_frustum);
-		ImGui::Checkbox("Render shadows", &App->renderer->render_shadows);
+		ImGui::Separator();
+		
 
 
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Game Graphic Settings");
+		ImGui::PushID("Game Viewport");
+		ImGui::Checkbox("Render Effects", &App->renderer->game_viewport->effects_pass);
+		ImGui::Checkbox("Render Unselected Effects", &App->renderer->game_viewport->effects_draw_all);
+		
+		ImGui::PopID();
+	}
+}
+
+void PanelConfiguration::ShowPostProcessingOptions() const
+{
+	if (ImGui::CollapsingHeader(ICON_FA_IMAGES " Post Processing"))
+	{
+		if (ImGui::Checkbox("Antialiasing", &App->renderer->antialiasing))
+		{
+			App->renderer->SetAntialiasing(App->renderer->antialiasing);
+		}
+
+		if (ImGui::Checkbox("Fog", &App->renderer->fog_enabled))
+		{
+			App->renderer->SetFog(App->renderer->fog_enabled);
+		}
+		if (App->renderer->fog_enabled)
+		{
+			ImGui::DragFloat("Fog Density", &App->renderer->fog_density, 0.01f, 0.f, 10.f);
+			ImGui::ColorPicker4("Fog Color", App->renderer->fog_color.ptr());
+		}
+
+		if (ImGui::Checkbox("HDR", &App->renderer->hdr))
+		{
+			App->renderer->SetHDR(App->renderer->hdr);
+		}
+
+		if (App->renderer->hdr)
+		{
+			if (ImGui::BeginCombo("Tonemapping Type", App->renderer->GetHDRType(App->renderer->hdr_type).c_str()))
+			{
+
+				for (int i = 0; i < static_cast<int>(ModuleRender::HDRType::MAX_HDR_TYPE); ++i)
+				{
+					bool is_selected = (static_cast<int>(App->renderer->hdr_type) == i);
+					if (ImGui::Selectable(App->renderer->GetHDRType((ModuleRender::HDRType)i).c_str(), is_selected))
+					{
+						App->renderer->SetHDRType((ModuleRender::HDRType)i);
+						if (is_selected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+				}
+				ImGui::EndCombo();
+			}
+			if (App->renderer->hdr_type == ModuleRender::HDRType::FILMIC || App->renderer->hdr_type == ModuleRender::HDRType::EXPOSURE)
+			{
+				ImGui::DragFloat("Exposure", &App->renderer->exposure, 0.1f, 0.0f, 10.0f);
+			}
+		}
+
+		if (ImGui::Checkbox("Bloom", &App->renderer->bloom))
+		{
+			App->renderer->SetBloom(App->renderer->bloom);
+		}
+
+		if (App->renderer->bloom)
+		{
+			ImGui::DragInt("Amount of blur", &App->renderer->amount_of_blur, 2, 0, 100);
+		}
 	}
 }
 
@@ -355,12 +398,6 @@ void PanelConfiguration::ShowTimeOptions()
 		sprintf(frame_info, "FPS: %.0f Frame Count: %d", App->time->current_fps, App->time->frame_count);
 		ImGui::Text(frame_info);
 
-		std::vector<float> ms_data = App->engine_log->getMSData();
-		std::vector<float> frame_data = App->engine_log->getFPSData();
-
-		ImGui::PlotLines("Miliseconds", &ms_data[0], ms_data.size(), 0, nullptr, 0, 80);
-
-		ImGui::PlotLines("Frame Rate", &frame_data[0], frame_data.size(), 20, nullptr, 0, 80);
 	}
 
 }
@@ -543,7 +580,7 @@ void PanelConfiguration::ShowInputOptions()
 
 			if(ImGui::Button("Add KeyCode"))
 			{
-				keys.insert((int)selected_key);
+				keys.insert(static_cast<int>(selected_key));
 				string_keys.insert(selected_combo);
 			}
 
@@ -560,7 +597,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Text("Mouse:");
 			for (const auto mouse_key : mouse_keys)
 			{
-				ImGui::Text(mouse_keys_string[(int)mouse_key]);
+				ImGui::Text(mouse_keys_string[static_cast<int>(mouse_key)]);
 			}
 
 			ImGui::Separator();
@@ -584,7 +621,7 @@ void PanelConfiguration::ShowInputOptions()
 
 			if (ImGui::Button("Add Mouse Button"))
 			{
-				mouse_keys.insert((int)selected_mouse);
+				mouse_keys.insert(static_cast<int>(selected_mouse));
 			}
 
 			ImGui::SameLine();
@@ -600,7 +637,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Text("Controller Keys:");
 			for (const auto controller_key : controller_keys)
 			{
-				ImGui::Text(controller_keys_string[(int)controller_key]);
+				ImGui::Text(controller_keys_string[static_cast<int>(controller_key)]);
 			}
 
 			ImGui::Separator();
@@ -624,7 +661,7 @@ void PanelConfiguration::ShowInputOptions()
 
 			if (ImGui::Button("Add Controller Button"))
 			{
-				controller_keys.insert((int)selected_controller);
+				controller_keys.insert(static_cast<int>(selected_controller));
 			}
 
 			ImGui::SameLine();
@@ -685,7 +722,7 @@ void PanelConfiguration::ShowInputOptions()
 						continue;
 					}
 
-					int aux = static_cast<int>(key);
+					size_t aux = static_cast<size_t>(key);
 					if (aux > FIRST_OFFSET_COND)
 						aux -= FIRST_OFFSET;
 					else if (aux > SECOND_OFFSET_COND)
@@ -706,7 +743,7 @@ void PanelConfiguration::ShowInputOptions()
 						continue;
 					}
 
-					ImGui::Text("	%s", mouse_keys_string[(int)mouse]);
+					ImGui::Text("	%s", mouse_keys_string[static_cast<int>(mouse)]);
 				}
 				ImGui::Text("ControllerCodes:");
 				for (const auto& controller_key : game_input.second.controller_buttons)
@@ -716,7 +753,7 @@ void PanelConfiguration::ShowInputOptions()
 						continue;
 					}
 
-					ImGui::Text("	%s", controller_keys_string[(int)controller_key]);
+					ImGui::Text("	%s", controller_keys_string[static_cast<int>(controller_key)]);
 				}
 				
 				
@@ -754,29 +791,28 @@ void PanelConfiguration::ShowSpacePartitioningOptions()
 {
 	if (ImGui::CollapsingHeader(ICON_FA_TREE " SpacePartitioning"))
 	{
-		ImGui::Checkbox("Scene window culling", &App->debug->culling_scene_mode);
-		int culling_mode_int = static_cast<int>(App->debug->culling_mode);
+		int culling_mode_int = static_cast<int>(App->space_partitioning->culling_mode);
 		if (ImGui::Combo("Culling Mode", &culling_mode_int, "None\0Frustum Culling\0QuadTree Culling\0OctTree Culling\0AabbTree Culling\0Combined Culling"))
 		{
 			switch (culling_mode_int)
 			{
 			case 0:
-				App->debug->culling_mode = ModuleDebug::CullingMode::NONE;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::NONE;
 				break;
 			case 1:
-				App->debug->culling_mode = ModuleDebug::CullingMode::FRUSTUM_CULLING;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::FRUSTUM_CULLING;
 				break;
 			case 2:
-				App->debug->culling_mode = ModuleDebug::CullingMode::QUADTREE_CULLING;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::QUADTREE_CULLING;
 				break;
 			case 3:
-				App->debug->culling_mode = ModuleDebug::CullingMode::OCTTREE_CULLING;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::OCTTREE_CULLING;
 				break;
 			case 4:
-				App->debug->culling_mode = ModuleDebug::CullingMode::AABBTREE_CULLING;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::AABBTREE_CULLING;
 				break;
 			case 5:
-				App->debug->culling_mode = ModuleDebug::CullingMode::COMBINED_CULLING;
+				App->space_partitioning->culling_mode = ModuleSpacePartitioning::CullingMode::COMBINED_CULLING;
 				break;
 			}
 		}

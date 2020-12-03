@@ -1,7 +1,9 @@
 #ifndef _MODULEPHYSICS_H_
 #define _MODULEPHYSICS_H_
 
+#ifndef ENGINE_EXPORTS
 #define ENGINE_EXPORTS
+#endif
 
 #include "Module.h"
 #include "Component/ComponentCollider.h"
@@ -36,11 +38,9 @@ class ModulePhysics : public Module
 public:
 	
 	ModulePhysics();
-	~ModulePhysics();
+	~ModulePhysics() = default;
 
 	bool Init() override;
-	bool CleanUp() override;
-	update_status PreUpdate() override;
 	update_status Update() override;
 
 	void SetGravity(float3& newGgravity);

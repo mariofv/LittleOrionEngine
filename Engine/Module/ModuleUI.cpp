@@ -8,12 +8,13 @@
 #include "Component/ComponentText.h"
 #include "Component/ComponentButton.h"
 
+
+#include "Log/EngineLog.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
 
 #include <algorithm>
 #include <Brofiler/Brofiler.h>
-#include <GL/glew.h>
 #include <SDL/SDL.h>
 
 
@@ -21,29 +22,30 @@
 bool ModuleUI::Init()
 {
 	APP_LOG_SECTION("************ Module UI Init ************");
-
+	quad = std::make_unique<Quad>();
+	quad->InitQuadUI();
 	return true;
 }
 
 // Called every draw update
 update_status ModuleUI::Update()
 {
+	BROFILER_CATEGORY("Module UI Update", Profiler::Color::GreenYellow);
 	SelectMainCanvas();
 	return update_status::UPDATE_CONTINUE;
 }
 
-// Called before quitting
-bool ModuleUI::CleanUp()
+void ModuleUI::Render(float width, float height, bool scene_mode)
 {
-	return true;
-}
+	if(disable_ui_render)
+	{
+		return;
+	}
 
-void ModuleUI::Render(bool scene_mode)
-{
-	BROFILER_CATEGORY("UI: Module Render", Profiler::Color::LightSeaGreen);
+	BROFILER_CATEGORY("Module UI Render", Profiler::Color::LightSeaGreen);
 	if (main_canvas != nullptr)
 	{
-		main_canvas->Render(scene_mode);
+		main_canvas->Render(width, height, scene_mode);
 	}
 }
 

@@ -94,9 +94,6 @@
     <ClCompile Include="Engine\SpacePartition\OLOctTree.cpp">
       <Filter>Engine\SpacePartition</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Main\Log.cpp">
-      <Filter>Engine\Main</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Helper\Config.cpp">
       <Filter>Engine\Helper</Filter>
     </ClCompile>
@@ -235,9 +232,6 @@
     <ClCompile Include="Engine\EditorUI\Panel\PanelToolBar.cpp">
       <Filter>Engine\EditorUI\Panel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\EngineLog.cpp">
-      <Filter>Engine\EditorUI</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp">
       <Filter>Engine\EditorUI\Helper</Filter>
     </ClCompile>
@@ -310,9 +304,6 @@
     <ClCompile Include="Engine\ResourceManagement\Manager\SkyboxManager.cpp">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\SkyboxImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
@@ -370,9 +361,6 @@
     <ClCompile Include="Engine\ResourceManagement\Manager\StateMachineManager.cpp">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\SceneImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Resources\Scene.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
@@ -396,9 +384,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Component\Component.cpp">
       <Filter>Engine\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\FontImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Manager\FontManager.cpp">
       <Filter>Engine\ResourceManagement\Manager</Filter>
@@ -499,20 +484,17 @@
     <ClCompile Include="Engine\Helper\TagManager.cpp">
       <Filter>Engine\Helper</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentBillboard.cpp">
-      <Filter>Engine\Component</Filter>
+    <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Builders.cpp">
+      <Filter>Libraries\BlueprintUtilities</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentParticleSystem.cpp">
-      <Filter>Engine\Component</Filter>
+    <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Drawing.cpp">
+      <Filter>Libraries\BlueprintUtilities</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PanelTags.cpp">
-      <Filter>Engine\EditorUI\Panel</Filter>
+    <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Widgets.cpp">
+      <Filter>Libraries\BlueprintUtilities</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Module\ModuleEffects.cpp">
-      <Filter>Engine\Module</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentSpriteMask.cpp">
-      <Filter>Engine\Component</Filter>
+    <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp">
+      <Filter>Engine\Animation\Tween</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Animation\Tween\LOTween.cpp">
       <Filter>Engine\Animation\Tween</Filter>
@@ -520,8 +502,80 @@
     <ClCompile Include="Engine\Animation\Tween\Tween.cpp">
       <Filter>Engine\Animation\Tween</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp">
-      <Filter>Engine\Animation\Tween</Filter>
+    <ClCompile Include="Engine\Component\ComponentSpriteMask.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentParticleSystem.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentBillboard.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleEffects.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelTags.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupNewFileName.cpp">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionDeleteMultipleGO.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Log\Log.cpp">
+      <Filter>Engine\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Log\EngineLog.cpp">
+      <Filter>Engine\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.cpp">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionAddMultipleGO.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentAudioListener.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentTrail.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Helper\BezierCurve.cpp">
+      <Filter>Engine\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionMultipleTranslate.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionMultipleScale.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionMultipleRotation.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Helper\Quad.cpp">
+      <Filter>Engine\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentVideoPlayer.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Video.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\Viewport.cpp">
+      <Filter>Engine\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\LightFrustum.cpp">
+      <Filter>Engine\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\FrameBuffer\FrameBuffer.cpp">
+      <Filter>Engine\Rendering\FrameBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Rendering\FrameBuffer\DepthFrameBuffer.cpp">
+      <Filter>Engine\Rendering\FrameBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTrail.cpp">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -756,9 +810,6 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\PrefabImporter.h">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\EditorUI\EngineLog.h">
-      <Filter>Engine\EditorUI</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\EditorUI\Helper\Grid.h">
       <Filter>Engine\EditorUI\Helper</Filter>
     </ClInclude>
@@ -831,9 +882,6 @@
     <ClInclude Include="Engine\ResourceManagement\Manager\SkyboxManager.h">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\SkyboxImporter.h">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
@@ -873,9 +921,6 @@
     <ClInclude Include="Engine\ResourceManagement\Manager\StateMachineManager.h">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\SceneImporter.h">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\Scene.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
@@ -896,9 +941,6 @@
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\FontImporter.h">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Manager\FontManager.h">
       <Filter>Engine\ResourceManagement\Manager</Filter>
@@ -1008,20 +1050,8 @@
     <ClInclude Include="Engine\Helper\TagManager.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentBillboard.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentParticleSystem.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h">
-      <Filter>Engine\EditorUI\Panel</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Module\ModuleEffects.h">
-      <Filter>Engine\Module</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentSpriteMask.h">
-      <Filter>Engine\Component</Filter>
+    <ClInclude Include="Engine\Animation\Tween\TweenSequence.h">
+      <Filter>Engine\Animation\Tween</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Animation\Tween\LOTween.h">
       <Filter>Engine\Animation\Tween</Filter>
@@ -1029,8 +1059,92 @@
     <ClInclude Include="Engine\Animation\Tween\Tween.h">
       <Filter>Engine\Animation\Tween</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Animation\Tween\TweenSequence.h">
-      <Filter>Engine\Animation\Tween</Filter>
+    <ClInclude Include="Engine\Component\ComponentSpriteMask.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentParticleSystem.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentBillboard.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleEffects.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelTags.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Event\Event.h">
+      <Filter>Engine\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Event\EventManager.h">
+      <Filter>Engine\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Event\FunctionHandler.h">
+      <Filter>Engine\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupNewFileName.h">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helper\PerlinNoise.h">
+      <Filter>Engine\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionAddMultipleGO.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionDeleteMultipleGO.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Log\EngineSink.h">
+      <Filter>Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Log\EngineLog.h">
+      <Filter>Engine\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelParticleSystem.h">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentAudioListener.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentTrail.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helper\ThreadSafeQueue.h">
+      <Filter>Engine\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helper\BezierCurve.h">
+      <Filter>Engine\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Helper\BezierCurveDraw.hpp">
+      <Filter>Engine\EditorUI\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionMultipleTranslate.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionMultipleScale.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionMultipleRotation.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helper\Quad.h">
+      <Filter>Engine\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\Viewport.h">
+      <Filter>Engine\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\LightFrustum.h">
+      <Filter>Engine\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\FrameBuffer\FrameBuffer.h">
+      <Filter>Engine\Rendering\FrameBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Rendering\FrameBuffer\DepthFrameBuffer.h">
+      <Filter>Engine\Rendering\FrameBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTrail.h">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1124,8 +1238,23 @@
     <Filter Include="Engine\Component\Collider">
       <UniqueIdentifier>{2234ff4f-964f-49d9-9553-0f966006fc99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libraries\BlueprintUtilities">
+      <UniqueIdentifier>{b3408590-e54b-470d-a5dd-dfb526b78367}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\Animation\Tween">
-      <UniqueIdentifier>{e7d08611-64ed-4f00-9fef-3df8aa3fcb03}</UniqueIdentifier>
+      <UniqueIdentifier>{5591d29d-9c42-4d4d-87a9-9e2ce3b5ccac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Event">
+      <UniqueIdentifier>{182de5df-40ff-40a2-ae90-2adaa77cbdfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Log">
+      <UniqueIdentifier>{d22e17b5-e141-4631-a234-4cf691074a55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Rendering">
+      <UniqueIdentifier>{78aa80fc-bf92-45f7-930b-469a45d58e66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Rendering\FrameBuffer">
+      <UniqueIdentifier>{690eddaa-f84a-46a4-bbbf-3441da24d4d8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

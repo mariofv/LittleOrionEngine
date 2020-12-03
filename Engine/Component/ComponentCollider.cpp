@@ -1,5 +1,7 @@
 #include "ComponentCollider.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Event/Event.h"
+#include "Event/EventManager.h"
 #include "Helper/Utils.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -36,7 +38,7 @@ ComponentCollider::ComponentCollider(GameObject* owner, ColliderType collider_ty
 }
 
 
-void ComponentCollider::Copy(Component* component_to_copy) const
+void ComponentCollider::CopyTo(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentCollider*>(component_to_copy) = *this;
@@ -101,8 +103,12 @@ void ComponentCollider::SpecializedLoad(const Config & config)
 	friction = config.GetFloat("Friction", 1.0F);
 	rolling_friction = config.GetFloat("Rolling_friction", 1.0F);
 	config.GetFloat3("Center", center, float3::zero);
-	AddBody();
-	SetConfiguration();
+
+	if(collider_type != ColliderType::MESH)
+	{
+		AddBody();
+		SetConfiguration();	
+	}
 
 }
 
@@ -200,11 +206,13 @@ void ComponentCollider::UpdateCommonDimensions()
 		btQuaternion::getIdentity(),
 		btVector3(center.x, center.y, center.z)
 	);
-
-	motion_state->setWorldTransform(new_body_transformation * center_of_mass);
-	body->setMotionState(motion_state);
+	if(motion_state)
+	{
+		motion_state->setWorldTransform(new_body_transformation * center_of_mass);
+		body->setMotionState(motion_state);		
+		App->physics->world->updateSingleAabb(body);
+	}
 	
-	App->physics->world->updateSingleAabb(body);
 }
 
 void ComponentCollider::SetMass(float new_mass)
@@ -221,7 +229,7 @@ void ComponentCollider::SetVisualization()
 	flags |= body->CF_DISABLE_VISUALIZE_OBJECT;
 	if (visualize)
 	{
-		flags -= body->CF_DISABLE_VISUALIZE_OBJECT;
+		flags &= ~(body->CF_DISABLE_VISUALIZE_OBJECT);
 		
 	}
 	body->setCollisionFlags(flags);
@@ -282,7 +290,7 @@ CollisionInformation ComponentCollider::DetectCollisionWith(ComponentCollider* c
 	
 	CollisionInformation collision_info;
 
-	if (detect_collision && collider->detect_collision)
+	if (detect_collision && collider->detect_collision && (active_physics || collider->active_physics))
 	{	
 		int numManifolds = App->physics->world->getDispatcher()->getNumManifolds();
 		for (int i = 0; i < numManifolds; i++)
@@ -342,7 +350,7 @@ void ComponentCollider::SetStatic()
 	float new_mass = 0.0F;
 	if (!is_static)
 	{
-		flags -= body->CF_KINEMATIC_OBJECT;
+		flags &= ~(body->CF_KINEMATIC_OBJECT);
 		new_mass = mass;
 	}
 	mass = new_mass;
@@ -421,14 +429,11 @@ CollisionInformation ComponentCollider::RaycastClosestHit(float3& start, float3&
 	size_t num_hits = raycallback.m_hitPointWorld.size();
 	for (size_t i = 0; i < num_hits; ++i)
 	{
-		if (raycallback.m_collisionObjects[i]->hasContactResponse())
-		{
-			end = float3(raycallback.m_hitPointWorld[i]);
-			info.collider = App->physics->FindColliderByWorldId(raycallback.m_collisionObjects[i]->getWorldArrayIndex());
-			info.normal = float3(raycallback.m_hitNormalWorld[i]);
-			info.distance = (end - start).Length();
-			break;
-		}
+		end = float3(raycallback.m_hitPointWorld[i]);
+		info.collider = App->physics->FindColliderByWorldId(raycallback.m_collisionObjects[i]->getWorldArrayIndex());
+		info.normal = float3(raycallback.m_hitNormalWorld[i]);
+		info.distance = (end - start).Length();
+		break;
 	}
 
 	return info;
@@ -447,13 +452,9 @@ std::vector<CollisionInformation> ComponentCollider::RaycastAllHits(float3& star
 	for (size_t i = 0; i < num_hits; ++i)
 	{
 		CollisionInformation collision;
-		if (raycallback.m_collisionObjects[i]->hasContactResponse())
-		{
-			
-			collision.collider = App->physics->FindColliderByWorldId(raycallback.m_collisionObjects[i]->getWorldArrayIndex());
-			collision.normal = float3(raycallback.m_hitNormalWorld[i]);
-			collision.distance = (end - start).Length();
-		}
+		collision.collider = App->physics->FindColliderByWorldId(raycallback.m_collisionObjects[i]->getWorldArrayIndex());
+		collision.normal = float3(raycallback.m_hitNormalWorld[i]);
+		collision.distance = (end - start).Length();
 	}
 
 	return info;

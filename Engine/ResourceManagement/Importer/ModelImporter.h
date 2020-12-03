@@ -33,6 +33,7 @@ struct CurrentModelData
 	 ModelMetafile* model_metafile;
 	 bool remmaped_changed = false;
 	 bool any_new_node = false;
+	 bool animated_model = false;
 };
 
 public:
@@ -62,25 +63,7 @@ public:
 	AssimpStream(const unsigned int severety) :severety(severety) {}
 	~AssimpStream() = default;
 
-	void write(const char* message)
-	{
-		switch (severety)
-		{
-		case Assimp::Logger::Debugging:
-			MYASSIMP_LOG_INFO("%s", message);
-			break;
-		case Assimp::Logger::Info:
-			MYASSIMP_LOG_INFO("%s", message);
-			break;
-		case Assimp::Logger::Err:
-			MYASSIMP_LOG_ERROR("%s", message);
-			break;
-		case Assimp::Logger::Warn:
-			MYASSIMP_LOG_INIT("%s", message); // Actually not an itialization entry, I use this type of entry because the yellow color
-			break;
-
-		}
-	}
+	void write(const char* message);
 
 public:
 	unsigned int severety = 0;
