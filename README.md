@@ -1,26 +1,26 @@
 <h1 align="center" style="border-bottom: none;">
-  <a href="https://github.com/Unnamed-Company/LittleOrionEngine/">LittleOrion Engine</a>
+  <a href="https://github.com/OnionGalaxy/LittleOrionEngine/">LittleOrion Engine</a>
 </h1>
 <h3 align="center">C++ 3D Engine developed during the Master's Degree in AAA Videogames Development</h3>
 <p align="center">
-  <a href="https://github.com/Unnamed-Company/LittleOrionEngine/releases/">
-    <img alt="GitHub version" src="https://img.shields.io/github/v/release/Unnamed-Company/LittleOrionEngine?include_prereleases">
+  <a href="https://github.com/OnionGalaxy/LittleOrionEngine/releases/">
+    <img alt="GitHub version" src="https://img.shields.io/github/v/release/OnionGalaxy/LittleOrionEngine?include_prereleases">
   </a>
-  <a href="https://github.com/Unnamed-Company/LittleOrionEngine/stargazers/">
-    <img alt="GitHub stars" src="https://img.shields.io/github/stars/Unnamed-Company/LittleOrionEngine.svg">
+  <a href="https://github.com/OnionGalaxy/LittleOrionEngine/stargazers/">
+    <img alt="GitHub stars" src="https://img.shields.io/github/stars/OnionGalaxy/LittleOrionEngine.svg">
   </a>
-  <a href="https://github.com/Unnamed-Company/LittleOrionEngine/network/">
-    <img alt="GitHub forks" src="https://img.shields.io/github/forks/Unnamed-Company/LittleOrionEngine.svg">
+  <a href="https://github.com/OnionGalaxy/LittleOrionEngine/network/">
+    <img alt="GitHub forks" src="https://img.shields.io/github/forks/OnionGalaxy/LittleOrionEngine.svg">
   </a>
-  <a href="https://github.com/Unnamed-Company/LittleOrionEngine/">
-    <img alt="GitHub repo size in bytes" src="https://img.shields.io/github/repo-size/Unnamed-Company/LittleOrionEngine.svg">
+  <a href="https://github.com/OnionGalaxy/LittleOrionEngine/">
+    <img alt="GitHub repo size in bytes" src="https://img.shields.io/github/repo-size/OnionGalaxy/LittleOrionEngine.svg">
   </a>
-  <a href="https://github.com/Unnamed-Company/LittleOrionEngine/blob/master/LICENSE">
-    <img alt="GitHub license" src="https://img.shields.io/github/license/Unnamed-Company/LittleOrionEngine.svg">
+  <a href="https://github.com/OnionGalaxy/LittleOrionEngine/blob/master/LICENSE">
+    <img alt="GitHub license" src="https://img.shields.io/github/license/OnionGalaxy/LittleOrionEngine.svg">
   </a>
 </p>
 
-![](https://github.com/Unnamed-Company/LittleOrionEngine/blob/develop/Media/README_usage/engine.png)
+![](https://github.com/OnionGalaxy/LittleOrionEngine/blob/master/Media/README_usage/engine.png)
 
 ## Highlights
 - Create, save and load scenes.
